@@ -1,0 +1,3 @@
+rule_id,type,description,applies_to,window_seasons,penalty_weight,notes,window_years
+R1,hard,No consecutive seasons with the same crop family on the same parcel.,parcel_id,2.0,1.0,Implement as hard constraint or large penalty.,
+R2,soft,Prefer legumes at least once every 2 years (improves soil N).,parcel_id,,0.3,Legume families defined in crop_family mapping.,2.0

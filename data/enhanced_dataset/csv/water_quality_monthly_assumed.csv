@@ -1,0 +1,313 @@
+month,fill_pct,storage_m3,ec_dS_m_assumed,water_quality_class_assumed,notes
+2000-01-01,15.6092865403003,905338.6193374177,2.89,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-02-01,14.18791165992838,822898.8762758458,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-03-01,10.30464327015015,597669.3096687088,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-04-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-05-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-06-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-08-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-09-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-10-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-11-01,12.019289549241,697118.7938559782,2.96,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2000-12-01,17.48229421629423,1013973.064545065,2.85,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-01-01,20.37108337592258,1181522.835803509,2.79,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-02-01,20.23613638967141,1173695.910600942,2.8,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-03-01,17.34930665900328,1006259.78622219,2.85,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-04-01,13.08385928313946,758863.8384220883,2.94,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-05-01,8.773995098027612,508891.7156856015,3.02,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-06-01,6.020415795103538,349184.1161160052,3.08,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-07-01,5.841051999604353,338781.0159770525,3.08,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-08-01,8.7298411592327,506330.7872354966,3.03,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-09-01,14.23726263553395,825761.232860969,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-10-01,21.21213537552693,1230303.851780562,2.78,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-11-01,28.54845751824387,1655810.536058144,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2001-12-01,34.35015122875959,1992308.771268056,2.51,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-01-01,37.65500174658306,2183990.101301818,2.45,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-02-01,38.00861020571224,2204499.39193131,2.44,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-03-01,35.62934586073288,2066502.059922507,2.49,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-04-01,31.95148269496859,1853185.996308178,2.56,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-05-01,28.21461212635023,1636447.503328313,2.64,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-06-01,26.01236998993308,1508717.459416119,2.68,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-07-01,26.3069710462082,1525804.320680076,2.67,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-08-01,29.61182156403166,1717485.650713837,2.61,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-09-01,35.47252267740146,2057406.315289285,2.49,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-10-01,42.74983741726432,2479490.570201331,2.35,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-11-01,47.00387596954162,2726224.806233414,2.26,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2002-12-01,49.77571629606597,2886991.545171826,2.2,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-01-01,49.85230767829901,2891433.845341343,2.2,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-02-01,46.87079548612483,2718506.13819524,2.26,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-03-01,41.38144859546201,2400124.018536797,2.37,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-04-01,34.22248923324359,1984904.375528128,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-05-01,27.11038343247583,1572402.239083598,2.66,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-06-01,21.48047585746101,1245867.599732738,2.77,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-07-01,18.5458172267375,1075657.399150775,2.83,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-08-01,18.62240860897055,1080099.699320292,2.83,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-09-01,21.34739537404423,1238148.931694565,2.77,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-10-01,25.64828748777219,1487600.674290787,2.69,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-11-01,30.46161259634998,1766773.530588299,2.59,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2003-12-01,33.89543131552388,1965935.016300385,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-01-01,34.90630401302937,2024565.632755704,2.5,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-02-01,33.13358835226715,1921748.124431495,2.54,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-03-01,28.97479003902638,1680537.82226353,2.62,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-04-01,23.39962196719186,1357178.074097128,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-05-01,17.83674168508729,1034531.017735063,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-06-01,13.65336779238662,791895.3319584238,2.93,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-07-01,11.89293992135435,689790.5154385522,2.96,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-08-01,12.90381261885984,748421.1318938708,2.94,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-09-01,16.32534354830378,946869.9258016194,2.87,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-10-01,21.15095644661153,1226755.473903469,2.78,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-11-01,28.43078511068499,1648985.536419729,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2004-12-01,34.06375855365375,1975697.996111918,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-01-01,36.95788172828171,2143557.140240339,2.46,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-02-01,36.64144565760182,2125203.848140906,2.47,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-03-01,33.41985692477804,1938351.701637126,2.53,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-04-01,28.71771536465266,1665627.491149854,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-05-01,23.97399820607651,1390491.895952438,2.72,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-06-01,20.87713626860505,1210873.903579093,2.78,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-07-01,20.5191245994744,1190109.226769515,2.79,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-08-01,23.41324777410235,1357968.370897936,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-09-01,29.08779681552189,1687092.21530027,2.62,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-10-01,36.32604988114457,2106910.893106385,2.47,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-11-01,40.10038854461033,2325822.535587399,2.4,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2005-12-01,42.54593829385479,2467664.421043578,2.35,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-01-01,42.57125285958577,2469132.665855974,2.35,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-02-01,39.85209130697481,2311421.295804539,2.4,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-03-01,34.88649115064907,2023416.486737646,2.5,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-04-01,28.41830550030333,1648261.719017593,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-05-01,21.99356899490728,1275627.001704622,2.76,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-06-01,16.89762140373251,980062.0414164854,2.86,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-07-01,14.22190899607123,824870.7217721313,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-08-01,14.2472235618022,826338.9665845277,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-09-01,16.649324166097,965660.8016336258,2.87,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-10-01,20.46711197451242,1187092.494521721,2.79,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-11-01,25.85843608640643,1499789.293011573,2.68,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2006-12-01,29.69556619737794,1722342.83944792,2.61,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-01-01,30.79977381155629,1786386.881070265,2.58,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-02-01,28.76559433144003,1668404.471223522,2.62,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-03-01,24.05849053942983,1395392.45128693,2.72,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-04-01,17.73719456159792,1028757.28457268,2.85,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-05-01,11.43089812999082,662992.0915394673,2.97,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-06-01,6.678795699306207,387370.15055976,3.07,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-08-01,5.763823379593106,334301.7560164001,3.08,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-09-01,9.58595394433981,555985.328771709,3.01,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-10-01,14.99227760245862,869552.1009425998,2.9,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-11-01,21.13707317772793,1225950.24430822,2.78,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2007-12-01,25.74692200277231,1493321.476160794,2.69,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-01-01,27.73987494214551,1608912.74664444,2.65,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-02-01,26.69346812701207,1548221.1513667,2.67,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-03-01,22.98436480729262,1333093.158822972,2.74,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-04-01,17.78611535626307,1031594.690663258,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-05-01,12.57259903226192,729210.7438711912,2.95,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-06-01,8.894029458485686,515853.7085921698,3.02,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-07-01,7.832355770380637,454276.634682077,3.04,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-08-01,9.825308709753845,569867.9051657228,3.0,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-09-01,14.45042440776983,838124.6156506501,2.91,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-10-01,20.57995311006753,1193637.280383917,2.79,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-11-01,28.87198840342865,1674575.327398862,2.62,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2008-12-01,35.5938867585776,2064445.431997501,2.49,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-01-01,39.83991741503216,2310715.210071865,2.4,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-02-01,41.12406710961187,2385195.892357489,2.38,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-03-01,39.57556327639823,2295382.670031098,2.41,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-04-01,36.8137083340714,2135195.083376141,2.46,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-05-01,33.96265693446982,1969834.10219925,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-06-01,32.68174247308041,1895541.063438664,2.55,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-07-01,33.87669571038538,1964848.351202352,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-08-01,38.12272636683996,2211118.129276718,2.44,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-09-01,44.93382117926364,2606161.628397291,2.3,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-10-01,53.13666001535002,3081926.280890301,2.14,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-11-01,55.61144525763345,3225463.82494274,2.09,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2009-12-01,56.78144874556424,3293324.027242726,2.06,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-01-01,55.45156970362844,3216191.042810449,2.09,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-02-01,51.33648309990147,2977516.019794286,2.17,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-03-01,45.0728020724797,2614222.520203822,2.3,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-04-01,37.1530511845335,2154876.968702943,2.46,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-05-01,29.32112232313025,1700625.094741555,2.61,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-06-01,22.79397521607963,1322050.562532618,2.74,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-07-01,18.76671063889561,1088469.217055946,2.82,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-08-01,17.43683159695981,1011336.232623669,2.85,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-09-01,18.51901305834766,1074102.757384164,2.83,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-10-01,21.08162032717404,1222733.978976094,2.78,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-11-01,28.49716229162091,1652835.412914013,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2010-12-01,34.33224696855848,1991270.324176392,2.51,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-01-01,37.58191127001964,2179750.853661139,2.45,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-02-01,37.78194146405896,2191352.60491542,2.44,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-03-01,35.17399034742831,2040091.440150842,2.5,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-04-01,31.20814287848192,1810072.286951951,2.58,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-05-01,27.18665517573714,1576826.000192754,2.66,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-06-01,24.74562476050167,1435246.236109097,2.71,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-07-01,24.8900147207426,1443620.853803071,2.7,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-08-01,28.13967902220377,1632101.383287818,2.64,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-09-01,34.03040393293972,1973763.428110504,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-10-01,41.3903056635882,2400637.728488116,2.37,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-11-01,43.42998316316354,2518939.023463485,2.33,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2011-12-01,44.09685978777516,2557617.867690959,2.32,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-01-01,42.07701265752674,2440466.734136551,2.36,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-02-01,37.08538724367006,2150952.460132863,2.46,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-03-01,29.74630287547455,1725285.566777524,2.61,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-04-01,20.6951528317941,1200318.864244058,2.79,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-05-01,11.75709105495406,681911.2811873355,2.96,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-06-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-08-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-09-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-10-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-11-01,10.32053717528109,598591.156166303,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2012-12-01,14.21544071114584,824495.5612464584,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-01-01,15.64107435056217,907182.3123326058,2.89,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-02-01,14.21544071114583,824495.5612464583,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-03-01,10.32053717528109,598591.156166303,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-04-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-05-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-06-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-08-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-09-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-10-01,5.8,336400.0,3.08,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-11-01,13.65051151994232,791729.6681566543,2.93,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2013-12-01,19.83587031586675,1150480.478320271,2.8,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-01-01,23.30102303988463,1351459.336313309,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-02-01,23.55587031586675,1366240.478320271,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-03-01,20.85051151994232,1209329.668156654,2.78,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-04-01,16.72,969760.0,2.87,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-05-01,12.52948848005768,726710.3318433455,2.95,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-06-01,10.00412968413325,580239.5216797283,3.0,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-07-01,10.19897696011537,591540.6636866912,3.0,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-08-01,13.66412968413325,792519.5216797285,2.93,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-09-01,19.90948848005768,1154750.331843346,2.8,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-10-01,27.7,1606600.0,2.65,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-11-01,33.8796945081633,1965022.281473472,2.52,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2014-12-01,38.56168392428741,2236577.66760867,2.43,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-01-01,40.70870408481976,2361104.836919546,2.39,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-02-01,39.90360173250659,2314408.900485382,2.4,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-03-01,36.47695478213591,2115663.377363883,2.47,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-04-01,31.63917808219178,1835072.328767123,2.57,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-05-01,26.77975754663121,1553225.93770461,2.66,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-06-01,23.41804210310985,1358246.441980371,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-07-01,22.59129591518023,1310295.163080453,2.75,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-08-01,24.73831607571259,1434822.33239133,2.71,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-09-01,29.44194932745313,1707633.060992282,2.61,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-10-01,35.6,2064800.0,2.49,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-11-01,40.35914707356626,2340830.530266843,2.39,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2015-12-01,43.61949994300544,2529930.996694315,2.33,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-01-01,44.20026136024727,2563615.158894342,2.32,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-02-01,41.72223218344259,2419889.466639671,2.37,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-03-01,36.65641483312911,2126072.060321488,2.47,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-04-01,30.0,1740000.0,2.6,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-05-01,23.37418625976708,1355702.80306649,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-06-01,18.24716672366123,1058335.669972351,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-07-01,15.79973863975273,916384.841105658,2.88,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-08-01,16.38050005699456,950069.0033056848,2.87,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-09-01,19.61025183353757,1137394.606345179,2.81,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-10-01,24.4,1415200.0,2.71,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-11-01,28.43183717055034,1649046.55589192,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2016-12-01,31.03303878095332,1799916.249295293,2.58,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-01-01,31.02531817671712,1799468.454249593,2.58,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-02-01,28.06043604122729,1627505.290391183,2.64,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-03-01,22.6784125130161,1315347.925754934,2.75,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-04-01,15.67397260273972,909090.4109589038,2.89,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-05-01,8.717477897942805,505613.7180806827,3.03,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-06-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-08-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-09-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-10-01,6.9,400200.0000000001,3.06,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-11-01,13.21145353622131,766264.3051008361,2.94,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2017-12-01,17.96881764903512,1042191.423644037,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-01-01,20.0856697997926,1164968.848387971,2.8,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-02-01,19.13186061889172,1109647.91589572,2.82,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-03-01,15.46250444562119,896825.257846029,2.89,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-04-01,10.31409387925647,598217.4449968752,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-05-01,5.146924555313428,298521.6242081788,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-06-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-08-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-09-01,7.454251737448296,432346.6007720012,3.05,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-10-01,13.74694651609128,797322.8979332941,2.93,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-11-01,20.08232091202139,1164774.612897241,2.8,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2018-12-01,24.95646814967505,1447475.152681153,2.7,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-01-01,27.38806575306851,1588507.813677973,2.65,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-02-01,26.96190040291686,1563790.223369178,2.66,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-03-01,23.96380269248942,1389900.556164386,2.72,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-04-01,19.63386054980112,1138763.911888465,2.81,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-05-01,15.27157272560892,885751.2180853175,2.89,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-06-01,12.37051205969318,717489.6994622042,2.95,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-07-01,11.91200102803763,690896.0596261828,2.96,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-08-01,14.34359863143109,831928.7206230032,2.91,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-09-01,19.25009155058865,1116505.309934142,2.81,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-10-01,25.55312026501486,1482080.975370862,2.69,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-11-01,30.71583264697959,1781518.293524816,2.59,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2019-12-01,34.34845330165293,1992210.29149587,2.51,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-01-01,35.27600501319621,2046008.29076538,2.49,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-02-01,33.10320393577351,1919985.828274863,2.54,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-03-01,28.28558791679557,1640564.099174143,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-04-01,21.87762616895142,1268902.317799183,2.76,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-05-01,15.48974908829889,898405.4471213354,2.89,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-06-01,10.63196373493773,616653.8966263881,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-07-01,8.479247324706638,491796.344832985,3.03,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-08-01,9.406799036249916,545594.3441024951,3.01,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-09-01,13.01933502373165,755121.4313764359,2.94,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-10-01,18.20213207288798,1055723.660227503,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-11-01,23.61853872010887,1369875.245766315,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2020-12-01,27.56753977156934,1598917.306751022,2.65,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-01-01,28.96890564680188,1680196.527514509,2.62,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-02-01,27.43105768247838,1591001.345583746,2.65,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-03-01,23.35437983799733,1354554.030603845,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-04-01,17.80149110168548,1032486.483897758,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-05-01,12.25080368939122,710546.6139846909,2.95,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-06-01,8.167521872857389,473716.2686257286,3.04,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-07-01,6.631875232551483,384648.763487986,3.07,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-08-01,8.033241107784026,465927.9842514734,3.04,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-09-01,11.98004083522689,694842.3684431599,2.96,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-10-01,17.39864880646538,1009121.630774992,2.85,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-11-01,23.59796393474963,1368681.908215479,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2021-12-01,28.25578560023568,1638835.564813669,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-01-01,30.28838662939606,1756726.424504971,2.59,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-02-01,29.27074123738419,1697702.991768283,2.61,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-03-01,25.56239420019838,1482618.863611506,2.69,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-04-01,20.37803470906266,1181926.013125634,2.79,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-05-01,15.17730496571486,880283.6880114621,2.9,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-06-01,11.51806868516526,668047.9837395853,2.97,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-07-01,10.48405304094133,608075.076374597,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-08-01,12.51665407010171,725965.9360658993,2.95,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-09-01,17.19084598779983,997069.0672923904,2.86,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-10-01,23.37379086387201,1355679.870104576,2.73,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-11-01,27.45677221364122,1592492.788391191,2.65,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2022-12-01,30.2292301320927,1753295.347661377,2.6,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-01-01,30.65084328117808,1777748.910308328,2.59,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-02-01,28.39214888214583,1646744.635164458,2.63,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-03-01,23.90113108471179,1386265.602913284,2.72,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-04-01,17.98106848499571,1042901.972129751,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-05-01,12.09063622802071,701256.901225201,2.96,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-06-01,7.510727402363427,435622.1893370788,3.05,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-07-01,5.281663346072264,306336.4740721913,3.09,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-08-01,5.703276495157636,330790.0367191429,3.09,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-09-01,8.446104070868042,489874.0361103464,3.03,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-10-01,12.55871576337833,728405.5142759434,2.95,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-11-01,18.39030970083145,1066637.962648224,2.83,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2023-12-01,22.62166214110909,1312056.404184327,2.75,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-01-01,24.06722904204666,1395899.284438706,2.72,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-02-01,22.30200130888408,1293516.075915276,2.75,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-03-01,17.76645549600522,1030454.418768303,2.84,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-04-01,11.61520072632709,673681.6421269712,2.97,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-05-01,5.469101776523561,317207.9030383666,3.09,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-06-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-07-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-08-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-09-01,5.0,290000.0,3.1,C4 (very high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-10-01,10.67168568927585,618957.7699779992,2.99,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-11-01,17.42694742005544,1010762.950363216,2.85,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2024-12-01,22.68091869610528,1315493.284374106,2.75,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-01-01,25.45003769416732,1476102.186261705,2.69,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-02-01,25.30109768565866,1467463.665768202,2.69,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-03-01,22.49826159338458,1304899.172416306,2.75,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-04-01,18.36317885215837,1065064.373425185,2.83,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-05-01,14.18583515948776,822778.4392502898,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-06-01,11.50978192154689,667567.3514497197,2.97,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-07-01,11.31858096159383,656477.6957724419,2.97,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-08-01,14.08769995965588,817086.5976600407,2.92,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-09-01,19.38393218715012,1124268.066854707,2.81,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-10-01,26.0969329664853,1513622.112056148,2.68,C3 (high),Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-11-01,,,,nan,Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.
+2025-12-01,,,,nan,Proxy only (EC increases as reservoir shrinks). Replace with measured EC/quality from DSİ or lab.

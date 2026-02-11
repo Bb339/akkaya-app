@@ -1,0 +1,16 @@
+urun,water_m3_da,net_kar_tl_da,verim_kg_da,fiyat_tl_kg,maliyet_tl_da,season_mode,crop_family
+Bamya,490.49281870410294,-5226.232046760258,0,0,0,primary,malvaceae
+Biber (Salçalık),656.491441674497,9155.900582416629,0,0,0,primary,solanaceae
+Domates (Salçalık),708.1566867691043,15991.719251096129,0,0,0,primary,solanaceae
+Domates (Sofralık),778.1208396385588,8679.697900903606,0,0,0,primary,solanaceae
+Fasulye (Taze),528.8247647093085,575.634680315843,0,0,0,primary,fabaceae
+Ispanak,269.81253574047116,-4396.219373539212,0,0,0,secondary_winter,amaranthaceae
+Kabak (Sakız),521.5603565632921,436.1257043364524,0,0,0,primary,cucurbitaceae
+Kabak (Çerezlik),437.71853274568906,-4895.5593056251555,0,0,0,primary,cucurbitaceae
+Lahana (Beyaz),666.7468521990228,4972.7484709504315,0,0,0,primary,brassicaceae
+Maydanoz,381.50001241287003,-3713.750031032176,0,0,0,primary,apiaceae
+Patates,614.0583145805529,2321.017071798033,0,0,0,primary,solanaceae
+Pırasa,506.92932425237353,-4240.050583358207,0,0,0,primary,allium
+Sarımsak (Kuru),371.3579475919885,10046.808053097953,0,0,0,primary,allium
+Soğan (Kuru),462.4556566922213,12779.785937760702,0,0,0,primary,allium
+Turp (Kırmızı),284.3064953779908,-2874.6165058246556,0,0,0,secondary_autumn,brassicaceae

@@ -1,0 +1,167 @@
+{
+  "Bahçeli": {
+    "total_area_da": 132.68424598930483,
+    "top_crops": [
+      {
+        "crop": "Ispanak",
+        "area_da": 66.34212299465241,
+        "share": 0.5
+      },
+      {
+        "crop": "Turp (Kırmızı)",
+        "area_da": 66.34212299465241,
+        "share": 0.5
+      }
+    ]
+  },
+  "Balcı (Bor)": {
+    "total_area_da": 346.05247164635887,
+    "top_crops": [
+      {
+        "crop": "Ispanak",
+        "area_da": 173.02623582317943,
+        "share": 0.5
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "area_da": 86.51323582317941,
+        "share": 0.2500003407332684
+      },
+      {
+        "crop": "Domates (Salçalık)",
+        "area_da": 86.513,
+        "share": 0.24999965926673157
+      }
+    ]
+  },
+  "Koyunlu": {
+    "total_area_da": 134.00258490566037,
+    "top_crops": [
+      {
+        "crop": "Turp (Kırmızı)",
+        "area_da": 51.048660377358495,
+        "share": 0.3809528033604534
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "area_da": 25.524264150943395,
+        "share": 0.1904759088708089
+      },
+      {
+        "crop": "Ispanak",
+        "area_da": 19.143396226415096,
+        "share": 0.14285841008136005
+      },
+      {
+        "crop": "Pırasa",
+        "area_da": 12.762264150943397,
+        "share": 0.09523894005424002
+      },
+      {
+        "crop": "Badem",
+        "area_da": 6.381,
+        "share": 0.047618484408284444
+      },
+      {
+        "crop": "Elma (Golden/Starking)",
+        "area_da": 6.381,
+        "share": 0.047618484408284444
+      },
+      {
+        "crop": "Maydanoz",
+        "area_da": 6.381,
+        "share": 0.047618484408284444
+      },
+      {
+        "crop": "Üzüm (Sofralık)",
+        "area_da": 6.381,
+        "share": 0.047618484408284444
+      }
+    ]
+  },
+  "Kızılca": {
+    "total_area_da": 1018.8276666666669,
+    "top_crops": [
+      {
+        "crop": "Ispanak",
+        "area_da": 291.0936666666667,
+        "share": 0.2857143324533459
+      },
+      {
+        "crop": "Ceviz",
+        "area_da": 145.547,
+        "share": 0.1428573298133835
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "area_da": 145.547,
+        "share": 0.1428573298133835
+      },
+      {
+        "crop": "Kabak (Çerezlik)",
+        "area_da": 145.5466666666667,
+        "share": 0.14285700263996234
+      },
+      {
+        "crop": "Soğan (Kuru)",
+        "area_da": 145.5466666666667,
+        "share": 0.14285700263996234
+      },
+      {
+        "crop": "Turp (Kırmızı)",
+        "area_da": 145.5466666666667,
+        "share": 0.14285700263996234
+      }
+    ]
+  },
+  "Obruk": {
+    "total_area_da": 323.2878356164384,
+    "top_crops": [
+      {
+        "crop": "Fasulye (Taze)",
+        "area_da": 161.6439178082192,
+        "share": 0.5
+      },
+      {
+        "crop": "Turp (Kırmızı)",
+        "area_da": 161.6439178082192,
+        "share": 0.5
+      }
+    ]
+  },
+  "Yeşilburç": {
+    "total_area_da": 92.08316546762589,
+    "top_crops": [
+      {
+        "crop": "Ispanak",
+        "area_da": 46.041582733812945,
+        "share": 0.5
+      },
+      {
+        "crop": "Domates (Salçalık)",
+        "area_da": 11.510395683453236,
+        "share": 0.125
+      },
+      {
+        "crop": "Lahana (Beyaz)",
+        "area_da": 11.510395683453236,
+        "share": 0.125
+      },
+      {
+        "crop": "Soğan (Kuru)",
+        "area_da": 11.510395683453236,
+        "share": 0.125
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "area_da": 5.755395683453237,
+        "share": 0.06250214851135508
+      },
+      {
+        "crop": "Patates",
+        "area_da": 5.755,
+        "share": 0.06249785148864493
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+weight_set,alpha_water,beta_profit,gamma_risk,notes
+WS1_water_priority,0.7,0.3,0.0,Water-saving priority.
+WS2_balanced,0.5,0.5,0.0,Balanced water and profit.
+WS3_profit_priority,0.3,0.7,0.0,Profit priority under water constraint.

@@ -1,0 +1,135 @@
+{
+  "Patates": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık (yaygın)",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağışa bağlı / Destek sulama (yağmurlama)"
+  },
+  "Silajlık Mısır": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık / Yağmurlama",
+    "secondary_options": [
+      "Fiğ (Yeşilot)",
+      "Yem Bezelyesi"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağmurlama"
+  },
+  "Yonca (Yeşilot)": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Salma / Yağmurlama",
+    "secondary_options": []
+  },
+  "Buğday (Dane)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [
+      "Silajlık Mısır"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "Karık / Yağmurlama"
+  },
+  "Arpa (Dane)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [
+      "Ayçiçeği"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "Yağmurlama"
+  },
+  "Şeker Pancarı": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağışa bağlı / Yağmurlama"
+  },
+  "Çavdar (Dane)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Genelde sulamasız",
+    "secondary_options": [
+      "Kabak (Çerezlik)"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "Karık"
+  },
+  "Domates (Salçalık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Ispanak"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağmurlama"
+  },
+  "Domates (Sofralık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Marul"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağmurlama"
+  },
+  "Lahana (Beyaz)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Karık / Yağmurlama",
+    "secondary_options": [
+      "Fasulye (Taze)"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "Karık"
+  },
+  "Kabak (Çerezlik)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağışa bağlı"
+  },
+  "Fasulye (Taze)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Ispanak"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağmurlama"
+  },
+  "Soğan (Kuru)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Arpa (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağışa bağlı"
+  },
+  "Kavun": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağışa bağlı"
+  },
+  "Biber (Salçalık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Karık",
+    "secondary_options": [
+      "Marul",
+      "Ispanak"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "Yağmurlama"
+  }
+}

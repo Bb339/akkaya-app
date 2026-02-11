@@ -1,0 +1,16 @@
+parcel_id,soil_unit_code,soil_group,land_capability_class,village,lat_deg,lon_deg,irrig_efficiency_default
+P1,K1.1 Bs I,Bs,I,Yeşilburç,38.05,34.68,0.9
+P10,B12.t.3 M VIse,M,VI,Koyunlu,38.0,34.62,0.65
+P11,B16.t.3 M VIes,M,VI,Koyunlu,38.0,34.62,0.65
+P12,B4.R2 M VIse,M,VI,Obruk,37.88,34.5,0.65
+P13,B8.2 M VIse,M,VI,Bahçeli,37.92,34.4,0.65
+P14,B12.2 M VIse,M,VI,Koyunlu,38.0,34.62,0.65
+P15,B6.2 K VIIes,K,VII,Kızılca,37.95,34.52,0.6
+P2,K10.2 Bs IIe,Bs,II,Yeşilburç,38.05,34.68,0.9
+P3,K13.2 M IIe,M,II,Koyunlu,38.0,34.62,0.9
+P4,A4 S IIw,S,II,Yeşilburç,38.05,34.68,0.9
+P5,B7.2 M IIIse,M,III,Balcı (Bor),37.9,34.55,0.8
+P6,B3.1 K IIIs,K,III,Kızılca,37.95,34.52,0.8
+P7,K15.2 M IIIse,M,III,Yeşilburç,38.05,34.68,0.8
+P8,B11.3 K IVes,K,IV,Koyunlu,38.0,34.62,0.75
+P9,B11.t.3 M VIse,M,VI,Koyunlu,38.0,34.62,0.65

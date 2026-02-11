@@ -1,0 +1,412 @@
+{
+  "MERKEZ": {
+    "top_crops": [
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "share": 0.4507873280676831
+      },
+      {
+        "crop": "SALÇALIK DOMATES",
+        "share": 0.29865827118355814
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "share": 0.10453039491424536
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "share": 0.09221074122792358
+      },
+      {
+        "crop": "KAVUN",
+        "share": 0.030799134215804436
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "share": 0.005413181165201991
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "share": 0.005263852029610213
+      },
+      {
+        "crop": "PATATES",
+        "share": 0.005205240343890439
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "share": 0.0018666141948972385
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "share": 0.001833295131518323
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "share": 0.0014890914739792722
+      },
+      {
+        "crop": "BUĞDAY (DANE)",
+        "share": 0.001448455282956359
+      }
+    ],
+    "raw": {
+      "PATATES": 557.72,
+      "SİLAJLIK MISIR": 196.43,
+      "YONCA (YEŞİLOT)": 159.55,
+      "BUĞDAY (DANE)": 155.196,
+      "ARPA (DANE)": 35.958,
+      "ŞEKER PANCARI": 9.805,
+      "ÇAVDAR (DANE)": 7.21,
+      "SALÇALIK DOMATES": 32000.0,
+      "SOFRALIK DOMATES": 11200.0,
+      "LAHANA (BEYAZ)": 48300.0,
+      "KABAK (ÇEREZLİK)": 580.0,
+      "FASULYE (TAZE)": 564.0,
+      "SOĞAN (KURU)": 9880.0,
+      "KAVUN": 3300.0,
+      "SALÇALIK BİBER": 200.0
+    }
+  },
+  "ALTUNHİSAR": {
+    "top_crops": [
+      {
+        "crop": "SALÇALIK DOMATES",
+        "share": 0.9000920357799668
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "share": 0.08094133925539931
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "share": 0.014605955955861531
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "share": 0.001278021146137884
+      },
+      {
+        "crop": "PATATES",
+        "share": 0.0009510100211260953
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "share": 0.000568009398283504
+      },
+      {
+        "crop": "BUĞDAY (DANE)",
+        "share": 0.00047631645256059546
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "share": 0.00046373910159860357
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "share": 0.0002956691778565025
+      },
+      {
+        "crop": "ARPA (DANE)",
+        "share": 0.00021482926885079667
+      },
+      {
+        "crop": "ÇAVDAR (DANE)",
+        "share": 6.641652749929257e-05
+      },
+      {
+        "crop": "ŞEKER PANCARI",
+        "share": 4.665791485900211e-05
+      }
+    ],
+    "raw": {
+      "PATATES": 46.88,
+      "SİLAJLIK MISIR": 14.575,
+      "YONCA (YEŞİLOT)": 22.86,
+      "BUĞDAY (DANE)": 23.48,
+      "ARPA (DANE)": 10.59,
+      "ŞEKER PANCARI": 2.3,
+      "ÇAVDAR (DANE)": 3.274,
+      "SALÇALIK DOMATES": 44370.0,
+      "SOFRALIK DOMATES": 0.0,
+      "LAHANA (BEYAZ)": 0.0,
+      "KABAK (ÇEREZLİK)": 28.0,
+      "FASULYE (TAZE)": 63.0,
+      "SOĞAN (KURU)": 3990.0,
+      "KAVUN": 0.0,
+      "SALÇALIK BİBER": 720.0
+    }
+  },
+  "BOR": {
+    "top_crops": [
+      {
+        "crop": "SALÇALIK DOMATES",
+        "share": 0.8056042184581176
+      },
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "share": 0.13182614483860106
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "share": 0.02441224904418538
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "share": 0.020628350442336647
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "share": 0.0158679618787205
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "share": 0.0004389322378144532
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "share": 0.0004028021092290588
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "share": 0.00023435759082417965
+      },
+      {
+        "crop": "ŞEKER PANCARI",
+        "share": 0.0001798987456564109
+      },
+      {
+        "crop": "KAVUN",
+        "share": 0.00014647349426511228
+      },
+      {
+        "crop": "BUĞDAY (DANE)",
+        "share": 9.540306926467647e-05
+      },
+      {
+        "crop": "ARPA (DANE)",
+        "share": 6.604733978904354e-05
+      }
+    ],
+    "raw": {
+      "PATATES": 24.0,
+      "SİLAJLIK MISIR": 179.8,
+      "YONCA (YEŞİLOT)": 165.0,
+      "BUĞDAY (DANE)": 39.08,
+      "ARPA (DANE)": 27.055,
+      "ŞEKER PANCARI": 73.692,
+      "ÇAVDAR (DANE)": 4.8,
+      "SALÇALIK DOMATES": 330000.0,
+      "SOFRALIK DOMATES": 6500.0,
+      "LAHANA (BEYAZ)": 54000.0,
+      "KABAK (ÇEREZLİK)": 11.0,
+      "FASULYE (TAZE)": 96.0,
+      "SOĞAN (KURU)": 8450.0,
+      "KAVUN": 60.0,
+      "SALÇALIK BİBER": 10000.0
+    }
+  },
+  "ÇAMARDI": {
+    "top_crops": [
+      {
+        "crop": "SOFRALIK DOMATES",
+        "share": 0.7386181258429163
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "share": 0.17722431931551347
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "share": 0.0429301146168014
+      },
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "share": 0.013209266035938892
+      },
+      {
+        "crop": "BUĞDAY (DANE)",
+        "share": 0.009574076022848509
+      },
+      {
+        "crop": "KAVUN",
+        "share": 0.007925559621563334
+      },
+      {
+        "crop": "ARPA (DANE)",
+        "share": 0.004244357331781098
+      },
+      {
+        "crop": "PATATES",
+        "share": 0.0021878947644193452
+      },
+      {
+        "crop": "ÇAVDAR (DANE)",
+        "share": 0.001922168362663041
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "share": 0.0009114393564797834
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "share": 0.0008123698612102419
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "share": 0.0004403088678646297
+      }
+    ],
+    "raw": {
+      "PATATES": 9.938,
+      "SİLAJLIK MISIR": 4.14,
+      "YONCA (YEŞİLOT)": 3.69,
+      "BUĞDAY (DANE)": 43.488,
+      "ARPA (DANE)": 19.279,
+      "ŞEKER PANCARI": 0.0,
+      "ÇAVDAR (DANE)": 8.731,
+      "SALÇALIK DOMATES": 0.0,
+      "SOFRALIK DOMATES": 3355.0,
+      "LAHANA (BEYAZ)": 60.0,
+      "KABAK (ÇEREZLİK)": 2.0,
+      "FASULYE (TAZE)": 805.0,
+      "SOĞAN (KURU)": 195.0,
+      "KAVUN": 36.0,
+      "SALÇALIK BİBER": 0.0
+    }
+  },
+  "ÇİFTLİK": {
+    "top_crops": [
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "share": 0.33055712238068646
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "share": 0.2855450886948057
+      },
+      {
+        "crop": "PATATES",
+        "share": 0.19186379358606653
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "share": 0.10127707579323159
+      },
+      {
+        "crop": "BUĞDAY (DANE)",
+        "share": 0.035154398308672834
+      },
+      {
+        "crop": "KAVUN",
+        "share": 0.018286138684889038
+      },
+      {
+        "crop": "ÇAVDAR (DANE)",
+        "share": 0.015008699982135849
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "share": 0.011253008421470177
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "share": 0.0069768652213115095
+      },
+      {
+        "crop": "ARPA (DANE)",
+        "share": 0.0040778089267302555
+      }
+    ],
+    "raw": {
+      "PATATES": 136.4,
+      "SİLAJLIK MISIR": 8.0,
+      "YONCA (YEŞİLOT)": 4.96,
+      "BUĞDAY (DANE)": 24.992,
+      "ARPA (DANE)": 2.899,
+      "ŞEKER PANCARI": 0.0,
+      "ÇAVDAR (DANE)": 10.67,
+      "SALÇALIK DOMATES": 0.0,
+      "SOFRALIK DOMATES": 0.0,
+      "LAHANA (BEYAZ)": 0.0,
+      "KABAK (ÇEREZLİK)": 235.0,
+      "FASULYE (TAZE)": 203.0,
+      "SOĞAN (KURU)": 72.0,
+      "KAVUN": 13.0,
+      "SALÇALIK BİBER": 0.0
+    }
+  },
+  "ULUKIŞLA": {
+    "top_crops": [
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "share": 0.5137075153506875
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "share": 0.32344547262821066
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "share": 0.13750756724033555
+      },
+      {
+        "crop": "KAVUN",
+        "share": 0.008648274669203494
+      },
+      {
+        "crop": "ARPA (DANE)",
+        "share": 0.005137594049987027
+      },
+      {
+        "crop": "BUĞDAY (DANE)",
+        "share": 0.004032344547262821
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "share": 0.002262388653463634
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "share": 0.0020236962725936176
+      },
+      {
+        "crop": "ÇAVDAR (DANE)",
+        "share": 0.0016096168814321542
+      },
+      {
+        "crop": "ŞEKER PANCARI",
+        "share": 0.0008648274669203494
+      },
+      {
+        "crop": "PATATES",
+        "share": 0.0005877367465190695
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "share": 0.00017296549338406987
+      }
+    ],
+    "raw": {
+      "PATATES": 3.398,
+      "SİLAJLIK MISIR": 13.08,
+      "YONCA (YEŞİLOT)": 11.7,
+      "BUĞDAY (DANE)": 23.313,
+      "ARPA (DANE)": 29.703,
+      "ŞEKER PANCARI": 5.0,
+      "ÇAVDAR (DANE)": 9.306,
+      "SALÇALIK DOMATES": 0.0,
+      "SOFRALIK DOMATES": 0.0,
+      "LAHANA (BEYAZ)": 2970.0,
+      "KABAK (ÇEREZLİK)": 1.0,
+      "FASULYE (TAZE)": 1870.0,
+      "SOĞAN (KURU)": 795.0,
+      "KAVUN": 50.0,
+      "SALÇALIK BİBER": 0.0
+    }
+  },
+  "__meta__": {
+    "unit": "relative_weights_from_district_production_tables",
+    "note": "Shares derived from user-provided district production figures; used as recommendation bonus only."
+  }
+}

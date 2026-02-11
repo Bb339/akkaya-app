@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <link rel="icon" href="/favicon.ico">
+  <meta charset="UTF-8" />
+  <title>Akkaya Barajı – Optimum Bitki Deseni Paneli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css?v=114" />
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <!-- Esri Leaflet for uydu görüntüsü -->
+  <script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Akkaya Barajı – Optimum Bitki Deseni Paneli</h1>
+        <p>Niğde Akkaya barajı çevresindeki parseller için su–kâr analizi ve senaryo karşılaştırması</p>
+      </div>
+      <div class="header-badge">Panel</div>
+    </header>
+
+    <main class="app-main">
+      <section class="layout">
+        <!-- Sol kolon -->
+        <div class="left-col">
+          <!-- 1) Parsel + veri kaynağı -->
+          <div class="card">
+            <h2 class="card-title">Parsel seç</h2>
+            <select id="parcelSelect" class="select-input"></select>
+
+            <div class="algo-actions">
+              <button id="runOptBtn" class="btn-primary">Optimizasyonu Çalıştır</button>
+              <span id="algoStatus" class="algo-status">Hazır</span>
+            </div>
+
+            <div class="data-loader">
+              <div class="data-status">
+                Veri kaynağı: <strong id="dataSourceLabel">Backend/CSV</strong>
+                <span id="dataLoadBadge" class="badge badge-warn">CSV bağlanmadı</span>
+              </div>
+              <div class="data-actions">
+                <input id="dataFileInput" type="file" accept=".csv" multiple class="file-input" />
+                <button id="loadDefaultCsvBtn" class="btn-secondary">Projeden CSV yükle</button>
+              </div>
+
+              <div id="activeFilesBox" class="active-files">
+                <div class="active-files-title">Aktif dosyalar</div>
+                <div id="activeFilesBadges" class="active-files-badges"></div>
+              </div>
+
+              <p class="card-help small">
+                Not: CSV dosyaları otomatik okunabilmesi için projeyi “Live Server” ile açın (örn. VS Code Live Server).
+                İstersen CSV'leri buradan manuel seçip de yükleyebilirsin.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2) Optimizasyon algoritması (aktif dosyalar ile senaryo arasına) -->
+          <div class="card" id="algoCard">
+            <h2 class="card-title">Optimizasyon algoritması</h2>
+            <select id="algoSelect" class="select-input">
+              <option value="ga" selected>Genetik Algoritma (GA)</option>
+              <option value="abc">Yapay Arı Kolonisi Algoritması (ABC)</option>
+              <option value="aco">Karınca Koloni Optimizasyonu (ACO)</option>
+            </select>
+          </div>
+
+          <!-- Algoritma karşılaştırması (benchmark) sekme olarak sağ tarafta gösterilir -->
+
+          <!-- 3) Senaryo -->
+          <div class="card" id="scenarioCard">
+            <h2 class="card-title">Senaryo</h2>
+            <div class="radio-group">
+              <label><input type="radio" name="scenario" value="mevcut" checked /> Mevcut desen</label>
+              <label><input type="radio" name="scenario" value="su_tasarruf" /> Su tasarruf odaklı</label>
+              <!-- Proje hedefi: her zaman su tasarrufu. "Maksimum kâr" seçeneği bilinçli olarak kaldırıldı. -->
+            </div>
+
+            <div class="water-controls" style="padding-top:6px;">
+              <div class="field-row">
+                <label class="field-label">Sezon veri seti</label>
+                <select id="seasonSourceSel" class="select-input">
+                  <option value="s1" selected>Senaryo-1 (tek başına)</option>
+                  <option value="s2">Senaryo-2 (tek başına)</option>
+                </select>
+              </div>
+              <p class="card-help small" style="margin-top:6px;">
+                Not: Bu seçim, hem "Mevcut" deseni (yıl bazlı) hem de optimizasyon aday ürün havuzunu belirler.
+              </p>
+            </div>
+
+            <div class="water-controls">
+              <div class="field-row">
+                <label class="field-label">Su yılı</label>
+                <select id="waterYear" class="select-input"></select>
+              </div>
+              <div class="field-row">
+                <label class="field-label">Projeksiyon senaryosu (2025–2050)</label>
+                <select id="waterScenarioSel" class="select-input">
+                  <option value="mevcut" selected>mevcut</option>
+                  <option value="iyi_adaptasyon">iyi_adaptasyon</option>
+                  <option value="kotu_kuraklik">kotu_kuraklik</option>
+                </select>
+              </div>
+              <div class="data-status">
+                Kullanılabilir su: <strong id="availableWaterLabel">–</strong> m³
+                <span id="waterIndexBadge" class="badge badge-info">doluluk: –</span>
+              </div>
+              
+
+              <p class="card-help small">
+                Not: 2000–2025 değerleri ölçüm/indeks serisinden, 2025–2050 değerleri ise seçili projeksiyon senaryosundan hesaplanır.
+              </p>
+            </div>
+
+            <p class="card-help">
+              Seçilen senaryo ürün deseni, su kullanımı ve kâr değerlerini günceller.
+            </p>
+          </div>
+
+          
+          <!-- Gelişmiş / opsiyonel ayarlar: katlanabilir -->
+          <details class="card details-card" id="liveSettingsCard">
+            <summary>Gelişmiş ayarlar (Canlı veri & fiyat/teşvik)</summary>
+            <div class="details-body">
+
+              <h2 class="card-title" style="margin-top:8px;">Canlı veri ayarları</h2>
+
+              <div class="form-row">
+                <label class="label">Meteoroloji kaynağı</label>
+                <select id="weatherSourceSel" class="select-input">
+                  <option value="parcel" selected>Parsel içi özet (offline)</option>
+                  <option value="openmeteo">Open‑Meteo (online)</option>
+                </select>
+              </div>
+
+              <div class="grid-2">
+                <div class="form-row">
+                  <label class="label">Enlem (lat)</label>
+                  <input id="weatherLat" class="text-input" type="number" step="0.0001" placeholder="37.97" />
+                </div>
+                <div class="form-row">
+                  <label class="label">Boylam (lon)</label>
+                  <input id="weatherLon" class="text-input" type="number" step="0.0001" placeholder="34.68" />
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="form-row">
+                  <label class="label">Başlangıç</label>
+                  <input id="weatherStart" class="text-input" type="date" />
+                </div>
+                <div class="form-row">
+                  <label class="label">Bitiş</label>
+                  <input id="weatherEnd" class="text-input" type="date" />
+                </div>
+              </div>
+
+              <div class="algo-actions" style="margin-top:8px;">
+                <button id="btnFetchWeather" class="btn-secondary">Meteorolojiyi Güncelle</button>
+                <span id="weatherStatus" class="algo-status">Offline</span>
+              </div>
+
+              <hr class="hr" />
+
+              <div class="form-row">
+                <label class="label">Fiyat/Teşvik kaynağı</label>
+                <select id="marketSourceSel" class="select-input">
+                  <option value="local" selected>Yerel katalog (CSV)</option>
+                  <option value="url">URL (CSV/JSON)</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="label">URL</label>
+                <input id="marketUrl" class="text-input" type="text" placeholder="https://.../prices.csv veya .json" />
+                <div class="hint small">
+                  CSV kolon örneği: <code>urun,fiyat_tl_kg,degisken_maliyet_tl_da,tesvik_tl_da</code>
+                </div>
+              </div>
+
+              <div class="algo-actions" style="margin-top:8px;">
+                <button id="btnLoadMarket" class="btn-secondary">Fiyat/Teşviki Yükle</button>
+                <span id="marketStatus" class="algo-status">Yerel</span>
+              </div>
+            </div>
+          </details>
+
+          <div class="card" id="parcelSummary">
+            <h2 class="card-title">Parsel Özeti</h2>
+            <div class="parcel-summary-body">
+              <!-- JS ile dolduruluyor -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Sağ ana kolon -->
+        <div class="right-col">
+
+          <!-- v72: Kullanıcı seçim yaptı ama yeni optimizasyon çalıştırmadıysa uyarı -->
+          <div id="staleBanner" class="stale-banner" style="display:none;">
+            <div class="stale-banner-title">⚠️ Seçim değişti</div>
+            <div class="stale-banner-body">Ekrandaki sonuçlar <b>önceki çalıştırmaya</b> aittir. Yeni sonuçlar için <b>Optimizasyonu Çalıştır</b> butonuna basın.</div>
+          </div>
+          
+          
+
+<div class="right-top">
+            <div class="card map-card">
+              <div class="card-header-row">
+                <h2 class="card-title">
+Parsel Haritası</h2>
+                <span class="card-subtitle">Harita üzerindeki parseller tıklanarak da seçilebilir.</span>
+              </div>
+<div id="map" class="map-container"></div>
+            </div>
+
+            <div class="card metrics-card">
+              <h2 class="card-title" id="metricsTitle">Senaryo Özeti (15 parsel toplamı)</h2>
+              <div class="metrics-topnote">
+                <span class="badge badge-info" id="globalBudgetBadge">Küresel su bütçesi: –</span>
+                <span class="badge badge-warn" id="globalBudgetStatus">bütçe durumu: –</span>
+              </div>
+
+              <!-- v72: Karar gerekçesi + koşul şeffaflığı -->
+              <div id="runMetaBox" class="runmeta-box" style="display:none;"></div>
+              <div class="metrics-grid">
+                <div class="metric">
+                  <div class="metric-label">Su Kullanımı (Mevcut)</div>
+                  <div class="metric-value"><span id="mWaterCurrent">–</span> m³</div>
+                  <div class="metric-note">Referans durum</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Su Kullanımı (Seçili senaryo)</div>
+                  <div class="metric-value"><span id="mWaterScenario">–</span> m³</div>
+                  <div class="metric-pill pill-water" id="mWaterDiff">–</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Toplam Net Kâr (Mevcut)</div>
+                  <div class="metric-value"><span id="mProfitCurrent">–</span> TL</div>
+                  <div class="metric-note">Referans kâr</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Toplam Net Kâr (Seçili senaryo)</div>
+                  <div class="metric-value"><span id="mProfitScenario">–</span> TL</div>
+                  <div class="metric-pill pill-profit" id="mProfitDiff">–</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Su Verimliliği (TL/m³ – Mevcut)</div>
+                  <div class="metric-value"><span id="mEffCurrent">–</span></div>
+                  <div class="metric-note">Mevcut desen</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Su Verimliliği (TL/m³ – Seçili senaryo)</div>
+                  <div class="metric-value"><span id="mEffScenario">–</span></div>
+                  <div class="metric-pill pill-eff" id="mEffDiff">–</div>
+                </div>
+              </div>
+
+              <!-- Karar gerekçesi: Sayısal kartların hemen altında, kuraklık önerisinin üstünde -->
+              <div id="decisionRationale" class="rationale-box" style="display:none;"></div>
+
+
+            
+<div class="drought-impact-box" id="droughtImpactBox">
+  <div class="drought-impact-title">⚠️ Kuraklık Etkisi – Öneri</div>
+  <div class="drought-impact-body">
+    <div class="drought-impact-col">
+      <div class="drought-impact-sub">Kaçın / azalt</div>
+      <ul class="drought-impact-list" id="droughtAvoidList"></ul>
+    </div>
+    <div class="drought-impact-col">
+      <div class="drought-impact-sub">Tercih et</div>
+      <ul class="drought-impact-list" id="droughtPreferList"></ul>
+    </div>
+  </div>
+  <div class="drought-impact-note" id="droughtImpactNote">—</div>
+              </div>
+            </div>
+          </div>
+
+<div class="card drought-details-card">
+  <details class="drought-details" open>
+    <summary class="drought-details__summary"><span class="drought-details__title">Kuraklık göstergeleri (2000–2025) – Detay</span><span class="drought-summary-badge" id="droughtSummaryBadge">KRİTİK</span></summary>
+    <div class="drought-details__body">
+      <div class="card drought-main-container">
+            <h2 class="card-title">Akkaya Barajı Kuraklık Göstergeleri (2000–2025)</h2>
+            <p class="card-help small">Grafik üzerinde gezerek yıllık değerleri görebilirsiniz. Seçili “Su yılı” vurgulanır; kritik yıllarda panel dikkat çekici biçimde öne çıkar.</p>
+            <div id="droughtAlarmCard" class="drought-card">
+                            <div class="drought-card__head">
+                              <span class="drought-card__title">Kuraklık Alarmı</span>
+                              <span id="droughtAlarmLevel" class="badge badge-warn">–</span>
+                            </div>
+                            <div class="drought-layout">
+                              <div class="drought-chart-wrap drought-chart-wrap--main">
+                                <canvas id="droughtSeriesChart" height="260"></canvas>
+                              </div>
+
+                              <div class="drought-side">
+                                <div class="drought-grid drought-grid--side">
+                                  <div class="drought-metric">
+                                    <div class="drought-metric__label">Min doluluk</div>
+                                    <div class="drought-metric__value drought-metric__value--big"><span id="droughtMinPct">–</span><span class="unit">%</span></div>
+                                  </div>
+                                  <div class="drought-metric">
+                                    <div class="drought-metric__label">Ortalama</div>
+                                    <div class="drought-metric__value drought-metric__value--big"><span id="droughtAvgPct">–</span><span class="unit">%</span></div>
+                                  </div>
+                                  <div class="drought-metric">
+                                    <div class="drought-metric__label">Stres endeksi</div>
+                                    <div class="drought-metric__value drought-metric__value--big"><span id="droughtStressIdx">–</span></div>
+                                  </div>
+                                </div>
+
+                                <div id="droughtAlarmText" class="drought-note small">–</div>
+                                <div class="small muted" style="margin-top:8px;">İpucu: Grafikteki noktalara gelerek yıllık değerleri görebilirsiniz.</div>
+                              </div>
+                            </div>
+
+                          </div>
+</div>
+    </div>
+  </details>
+</div>
+
+
+
+          <div class="right-middle">
+                      <div class="card small-chart-card">
+                        <h3 class="card-subtitle">Senaryolara Göre Toplam Su Kullanımı</h3>
+                        <canvas id="waterChart" height="150"></canvas>
+                      </div>
+                      <div class="card small-chart-card">
+                        <h3 class="card-subtitle">Senaryolara Göre Toplam Net Kâr</h3>
+                        <canvas id="profitChart" height="150"></canvas>
+                      </div>
+                      <div class="card small-chart-card">
+                        <h3 class="card-subtitle">Seçili Parsel – Önerilen Ürünler (Rotasyon)</h3>
+                        <div id="productCards" class="product-cards" aria-label="Önerilen ürünler"></div>
+                      </div>
+                    </div>
+
+<div class="tabs">
+              <button class="tab active" data-tab="parcel">Parsel düzeyi desen</button>
+              <button class="tab" data-tab="district">İlçe / il düzeyi özet</button>
+              <button class="tab" data-tab="official">Resmî tablolar (özet)</button>
+              <button class="tab" data-tab="water">Su bütçesi (2000–2050)</button>
+<button class="tab" data-tab="benchmark">Algoritma karşılaştırması</button>
+              <button class="tab" data-tab="plan5">5 yıllık plan</button>
+              <button class="tab" data-tab="impact">15 yıllık etki</button>
+            </div>
+
+            <div class="tab-panels">
+              <div class="tab-panel active" id="tab-parcel">
+                <div class="tables-row">
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">Mevcut Ürün Deseni</h3>
+                    <p class="card-help small">
+                      Seçili parselde bugünkü varsayılan desen.
+                    </p>
+                    <table class="data-table" id="tblCurrent">
+                      <thead>
+                        <tr>
+                          <th>Ürün</th>
+                          <th>Mevsim</th>
+                          <th>Sulama (Mevcut)</th>
+                          <th>Ekim Alanı (da – sezon)</th>
+                          <th>Su (m³/da)</th>
+                          <th>Toplam Su</th>
+                          <th>Kâr (TL/da)</th>
+                          <th>Toplam Kâr</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                    <div class="table-footer" id="tblCurrentFooter"></div>
+                  </div>
+
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">Önerilen Ürün Deseni (Senaryo + Algoritma)</h3>
+                    <p class="card-help small">
+                      Seçili senaryo ve algoritmaya göre oluşan yeni desen.
+                    </p>
+                    <table class="data-table" id="tblRecommended">
+                      <thead>
+                        <tr>
+                          <th>Ürün</th>
+                          <th>Mevsim</th>
+                          <th>Sulama (Öneri)</th>
+                          <th>Ekim Alanı (da – sezon)</th>
+                          <th>Su (m³/da)</th>
+                          <th>Toplam Su</th>
+                          <th>Kâr (TL/da)</th>
+                          <th>Toplam Kâr</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                    <div class="table-footer" id="tblRecommendedFooter"></div>
+                  </div>
+                </div>
+
+                <div class="tables-row" style="margin-top:14px;">
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">Açıklanabilirlik (kısıtlar & nedenler)</h3>
+                    <div id="explainBox" class="explain-box">—</div>
+                  </div>
+
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">Rotasyon / 2. Ürün Önerisi (basit kurallar)</h3>
+                    <div id="rotationBox" class="explain-box">—</div>
+                  </div>
+                </div>
+
+                <div class="card table-card" style="margin-top:14px;">
+                  <h3 class="card-subtitle">Aylık Su Dağıtım Kapasitesi Kontrolü</h3>
+                  <p class="card-help small">İletim kapasitesi varsa, seçili desenin aylık su talebi ile karşılaştırılır. FAO-56 aylık ETc tahmini mevcutsa onunla; yoksa ay-ağırlık yaklaşımıyla hesaplanır.</p>
+                  <div id="deliveryBox" class="explain-box">—</div>
+                </div>
+
+                <div class="card" style="margin-top:14px;">
+                  <h3 class="card-subtitle">Seçili parsel için dönemsel sulama planı (ETo×Kc – hızlı tahmin)</h3>
+                  <p class="card-help small">Not: Bu tablo, parselin yıllık ETo/yağış özeti üzerinden basitleştirilmiş bir ETc hesabıyla üretilir. Gerçek uygulamada aylık MGM verisi ile hassaslaştırılır.</p>
+                  <div id="irrigPlanBox" class="explain-box">—</div>
+                </div>
+
+ 
+              </div>
+
+              <div class="tab-panel" id="tab-district">
+                <div class="card">
+                  <h3 class="card-subtitle">İlçe / il düzeyi özet</h3>
+                  <p class="card-help">
+                    Bu bölümde Niğde ilçeleri için 2024 yılı tarla, sebze ve meyve alanlarının
+                    özet dağılımı ve sulanan/sulanmayan alan oranları gösterilmektedir.
+                    Veriler temsili olarak eklenmiştir.
+                  </p>
+                  <div class="district-row">
+                    <canvas id="districtAreaChart" height="150"></canvas>
+                    <canvas id="districtIrrigChart" height="150"></canvas>
+                    <canvas id="provinceShareChart" height="150"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="tab-official">
+                <div class="tables-row">
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">Havza Su Bütçesi – Resmî Özet</h3>
+                    <p class="card-help small">Seçili su yılı/senaryosu üzerinden hesaplanan toplam kullanılabilir su ve mevcut talep.</p>
+                    <table class="data-table" id="tblOfficialWater">
+                      <thead>
+                        <tr><th>Gösterge</th><th>Değer</th><th>Birim</th></tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                    <div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                      <button class="btn" id="btnExportWaterCsv">CSV indir</button>
+                      <span class="small muted" id="officialWaterNote">—</span>
+                    </div>
+                  </div>
+
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">Seçili Senaryoya Göre Optimum Bitki Deseni – Resmî</h3>
+                    <p class="card-help small">15 parselin tamamı için ürün bazında ekim alanı (sezon/dönem bazında), su ve kâr toplulaştırması. Rotasyon/2. ürün varsa aynı parsel alanı yıl içinde birden fazla ürünle değerlendirilebilir.</p>
+                    <table class="data-table" id="tblOfficialScenario">
+                      <thead>
+                        <tr>
+                          <th>Ürün</th><th>Ekim Alanı (da – sezon)</th><th>Toplam Su (m³)</th><th>Toplam Kâr (TL)</th><th>Su Verimliliği (TL/m³)</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                    <div class="table-footer" id="tblOfficialScenarioFooter" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                      <button class="btn" id="btnExportScenarioCsv">CSV indir</button>
+                      <span class="small muted" id="officialScenarioNote">—</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card table-card" style="margin-top:14px;">
+                  <h3 class="card-subtitle">Parsel Bazlı Özet – Resmî</h3>
+                  <p class="card-help small">Her parsel için seçili senaryo+algoritma sonucunun su/kâr özeti (küresel su bütçesi sonrası).</p>
+                  <table class="data-table" id="tblOfficialParcels">
+                    <thead>
+                      <tr>
+                        <th>Parsel</th><th>Alan (da)</th><th>Toplam Su (m³)</th><th>Toplam Kâr (TL)</th><th>Su Verimliliği (TL/m³)</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                  <div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <button class="btn" id="btnExportParcelsCsv">CSV indir</button>
+                    <span class="small muted">Not: Bu tablolar, rapora doğrudan eklenebilir/Excel’e aktarılabilir formatta üretilir.</span>
+                  </div>
+                </div>
+
+                <div class="card table-card" style="margin-top:14px;">
+                  <h3 class="card-subtitle">Tüm Parseller – Mevcut vs Önerilen (Şeffaf Karşılaştırma)</h3>
+                  <p class="card-help small">
+                    Çiftçi için: Her parselde mevcut ekim deseni ile seçili senaryo+algoritma sonucu önerilen desen yan yana.
+                    Her parsel satırında "Kıyasla" ile alternatif ürünlerin su/kâr karşılaştırması görülebilir.
+                  </p>
+                  <div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                    <button class="btn" id="btnExportAllParcelCompareCsv">CSV indir</button>
+                    <span class="small muted" id="allParcelCompareNote">Not: Öneriler, son "Optimizasyonu Çalıştır" sonucuyla senkron tutulur.</span>
+                  </div>
+                  <div style="overflow:auto;">
+                    <table class="data-table" id="tblOfficialAllParcelCompare">
+                      <thead>
+                        <tr>
+                          <th>Parsel</th>
+                          <th>Alan (da)</th>
+                          <th>Mevcut Desen (mevsim)</th>
+                          <th>Mevcut Su (m³)</th>
+                          <th>Mevcut Kâr (TL)</th>
+                          <th>Önerilen Desen (mevsim)</th>
+                          <th>Öneri Su (m³)</th>
+                          <th>Öneri Kâr (TL)</th>
+                          <th>Δ Su</th>
+                          <th>Δ Kâr</th>
+                          <th>Neden?</th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="card table-card" style="margin-top:14px;">
+                  <h3 class="card-subtitle">Köy / İlçe bazlı resmî ekim desenleri (paketten özet)</h3>
+                  <p class="card-help small">Bu bölüm, veri paketindeki Excel tablolarından türetilen özetleri gösterir (kullanılan bonuslar buradan gelir).</p>
+                  <div id="officialSummary" class="small"></div>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="tab-water">
+                <div class="card">
+                  <h3 class="card-subtitle">Su bütçesi ve zaman serisi (2000–2050)</h3>
+                  <p class="card-help">
+                    Akkaya barajı için 2000–2025 dönemi yıllık görece doluluk endeksi ve 2050’ye kadar
+                    üç senaryo (mevcut gidişat, su tasarruf odaklı desen, maksimum kâr odaklı desen)
+                    için projeksiyonlar gösterilmektedir.
+                  </p>
+                  <div class="district-row">
+                    <canvas id="storageHistoryChart" height="150"></canvas>
+                    <canvas id="storageScenarioChart" height="150"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-panel" id="tab-drought">
+                <div class="card">
+                  <h2 class="card-title">Kuraklık göstergeleri</h2>
+                  <p class="card-help small">Kuraklık grafikleri üst bölümde “Kuraklık göstergeleri (2000–2025) – Detay” alanında yer almaktadır.</p>
+                </div>
+              </div>
+
+          <!-- Algoritma Karşılaştırma Sekmesi -->
+              <div class="tab-panel" id="tab-benchmark">
+                <div class="card">
+                  <h2 class="card-title">Algoritma karşılaştırması (Benchmark)</h2>
+                  <div id="benchmarkLoadedBadge" class="badge badge-info" style="display:inline-block; margin-top:6px;">Benchmark sekmesi yüklendi.</div>
+                  <p class="card-help small" style="margin-top:-6px;">
+                    GA/ABC/ACO stokastik olduğu için her koşuşta farklı sonuç üretmesi normaldir. Buradan aynı koşullarda
+                    algoritmaları tekrar tekrar çalıştırıp ortalama–en iyi–oynaklık (std) değerlerini ve <strong>önerilen desenleri</strong> karşılaştırabilirsiniz.
+                    <br/><span class="muted">Not: “Mevcut desen” seçiliyken algoritma kıyası anlamlı değildir; kıyas için Su Tasarruf / Maks Kâr / Dengeli seçin.</span>
+                  </p>
+
+                  <div class="water-controls" style="padding-top:6px;">
+                    <div class="field-row">
+                      <label class="field-label">Karşılaştırma senaryosu</label>
+                      <select id="benchmarkSeasonSourceSel" class="select-input">
+                        <option value="use_selected" selected>Seçili (soldaki Sezon veri seti)</option>
+                        <option value="s1">Senaryo-1 (tek başına)</option>
+                        <option value="s2">Senaryo-2 (tek başına)</option>
+                        <option value="all">Üçünü de çalıştır (karşılaştır)</option>
+                      </select>
+                    </div>
+                    <div class="field-row">
+                      <label class="field-label">Tekrar sayısı</label>
+                      <input id="benchmarkRepeats" class="text-input" type="number" min="1" max="60" value="15" />
+                    </div>
+                    <div class="field-row">
+                      <label class="field-label">Seed (opsiyonel)</label>
+                      <input id="benchmarkSeed" class="text-input" type="number" placeholder="boş = rastgele" />
+                    </div>
+                    <div class="algo-actions" style="margin-top:8px;">
+                      <button id="runBenchmarkBtn" class="btn-secondary">Karşılaştırmayı Çalıştır</button>
+                      <span id="benchmarkStatus" class="algo-status">Hazır</span>
+                    </div>
+                  </div>
+
+                  <div id="benchmarkResults" class="small" style="margin-top:10px;"></div>
+
+
+                  <div class="chart-grid" style="margin-top:10px;">
+                    <div class="chart-card" style="height:210px;">
+                      <div class="chart-title">Ortalama Net Kâr (TL)</div>
+                      <canvas id="benchmarkProfitChart"></canvas>
+                    </div>
+                    <div class="chart-card" style="height:210px;">
+                      <div class="chart-title">Ortalama Su Kullanımı (m³)</div>
+                      <canvas id="benchmarkWaterChart"></canvas>
+                    </div>
+                    <div class="chart-card" style="height:210px;">
+                      <div class="chart-title">Ortalama Su Verimliliği (TL/m³)</div>
+                      <canvas id="benchmarkEffChart"></canvas>
+                    </div>
+                  </div>
+
+                  <div id="benchmarkPatterns" style="margin-top:14px;"></div>
+                </div>
+              </div>
+
+              <!-- 15 Yıllık Etki Analizi Sekmesi -->
+              <div class="tab-panel" id="tab-plan5">
+                <div class="tables-row">
+                  <div class="card table-card">
+                    <h3 class="card-subtitle">5 Yıllık (Kayan) Ekim Planı</h3>
+                    <p class="card-help small">
+                      Bu plan “kesin takvim” değildir. Yıl 1 önerisi seçili senaryo ve algoritma çıktısıdır; Yıl 2–5 ise münavebe kuralları ve su bütçesi projeksiyonuna göre üretilen öneri rotalardır.
+                      Her sezon sonunda veriler güncellenerek plan yenilenmelidir.
+                    </p>
+
+                    
+                    <div class="row" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin:10px 0 6px;">
+                      <div style="min-width:220px;">
+                        <div class="small" style="margin-bottom:6px; opacity:.8;">Parsel bazlı görüntüle</div>
+                        <select id="plan5ParcelSelect" class="select-input"></select>
+                      </div>
+                      <div class="small" id="plan5ParcelNote" style="opacity:.8; padding-bottom:6px;">
+                        “Tümü” seçilirse genel özet ve tüm parseller listelenir.
+                      </div>
+                    </div>
+                    <div class="kpi-row" style="margin-top:8px;">
+                      <div class="kpi">
+                        <div class="kpi-label">5 yılda kâr etkisi</div>
+                        <div class="kpi-value" id="plan5ProfitKpi">—</div>
+                        <div class="kpi-sub" id="plan5ProfitKpiSub">Mevcut desene göre</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Nadas payı</div>
+                        <div class="kpi-value" id="plan5NadasKpi2">—</div>
+                        <div class="kpi-sub" id="plan5NadasKpi2Sub">Toplam alan payı</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Toprak etkisi nasıl hesaplandı?</div>
+                        <div class="kpi-value" id="plan5SoilExplain">—</div>
+                        <div class="kpi-sub">Baklagil + örtü bitkisi + rotasyon bonusu, tekdüze ekim cezası</div>
+                      </div>
+                    </div>
+
+<div class="kpi-row">
+                      <div class="kpi">
+                        <div class="kpi-label">5 yılda su etkisi</div>
+                        <div class="kpi-value" id="plan5WaterKpi">—</div>
+                        <div class="kpi-sub" id="plan5WaterKpiSub">Mevcut desene göre</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Toprak sağlığı etkisi</div>
+                        <div class="kpi-value" id="plan5SoilKpi">—</div>
+                        <div class="kpi-sub" id="plan5SoilKpiSub">Münavebe + baklagil + örtü bitkisi</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Nadas etkisi</div>
+                        <div class="kpi-value" id="plan5NadasKpi">—</div>
+                        <div class="kpi-sub" id="plan5NadasKpiSub">Toplam alan payı</div>
+                      </div>
+                    </div>
+
+                    <div class="kpi-row">
+                      <div class="kpi">
+                        <div class="kpi-label">Refaha geçiş (tahmini)</div>
+                        <div class="kpi-value" id="plan5ProsperKpi">—</div>
+                        <div class="kpi-sub" id="plan5ProsperKpiSub">Su bütçesi toparlanınca yüksek kârlı desenlere geçiş</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Ürün deseni değişimi</div>
+                        <div class="kpi-value" id="plan5ShiftKpi">—</div>
+                        <div class="kpi-sub" id="plan5ShiftKpiSub">Düşük su → dengeli → yüksek kâr fazları</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Hesap mantığı</div>
+                        <div class="kpi-value" style="font-size:16px; line-height:1.2;" id="plan5Formula">Alan×(Verim×Fiyat−Maliyet)</div>
+                        <div class="kpi-sub">Su = Alan×(m³/da). Yıl-1: algoritma çıktısı; Yıl-2..5: su bütçesi+rotasyon</div>
+                      </div>
+                    </div>
+
+                    <div class="table-scroll">
+                      <table class="data-table" id="plan5Table">
+                        <thead>
+                          <tr>
+                            <th>Parsel</th>
+                            <th>Yıl</th>
+                            <th>1. Ürün</th>
+                            <th>2. Ürün</th>
+                            <th>Su (m³)</th>
+                            <th>Kâr (TL)</th>
+                            <th>Toprak Etkisi</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+
+                    <div class="callout" id="plan5Callout">
+                      <strong>Çarpıcı not:</strong>
+                      <span>Baklagil (nohut/mercimek vb.) rotasyona girdiğinde azot bağlama ile gübre ihtiyacı azalır; örtü bitkileri yüzeyin çıplak kalmasını engelleyerek erozyon ve organik madde kaybını düşürür.
+                      Bu nedenle “nadas yerine düşük su rotasyonu” uzun vadede hem su verimliliğini hem de toprak dayanıklılığını artırır.</span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="tab-panel" id="tab-impact">
+                <div class="card">
+                  <h2 class="card-title">15 yıllık etki analizi</h2>
+                  <p class="card-help small" style="margin-top:-6px;">
+                    Seçili senaryo/Sezon veri setine göre GA/ACO/ABC için <strong>15 yıllık su tasarrufu</strong> ve <strong>15 yıllık kâr projeksiyonu</strong> hesaplanır.
+                    Ayrıca <strong>GA+ACO+ABC ortalaması</strong> ayrı gösterilir.
+                  </p>
+
+                  <div class="water-controls" style="padding-top:6px;">
+                    <div class="field-row">
+                      <label class="field-label">Hesaplama veri seti</label>
+                      <select id="impactSeasonSourceSel" class="select-input">
+                        <option value="use_selected" selected>Seçili (soldaki Sezon veri seti)</option>
+                        <option value="s1" selected>Senaryo-1 (tek başına)</option>
+                        <option value="s2">Senaryo-2 (tek başına)</option>
+                      </select>
+                    </div>
+                    <div class="field-row">
+                      <label class="field-label">Ufuk (yıl)</label>
+                      <input id="impactHorizonYears" class="text-input" type="number" value="15" min="1" max="30" />
+                    </div>
+                    <div class="field-row">
+                      <label class="field-label">Tekrar (her algoritma)</label>
+                      <input id="impactRepeats" class="text-input" type="number" value="8" min="1" max="30" />
+                    </div>
+                  </div>
+
+                  <div class="algo-actions" style="margin-top:8px; gap:8px; flex-wrap:wrap;">
+                    <button id="runImpact15yBtn" class="btn-secondary">15Y Su Tasarrufu (GeoJSON)</button>
+                    <button id="runProfit15yBtn" class="btn-secondary">15Y Ortalama Kâr (GeoJSON)</button>
+                    <span id="impact15yStatus" class="algo-status">Hazır</span>
+                  </div>
+
+                  <div id="impact15ySummary" class="small" style="margin-top:10px;"></div>
+                  <div id="profit15ySummary" class="small" style="margin-top:10px;"></div>
+
+                  <div class="chart-grid" style="margin-top:10px;">
+                    <div class="chart-card" style="height:240px;">
+                      <div class="chart-title">15 Yıllık Kümülatif Su Tasarrufu (m³)</div>
+                      <canvas id="impactWater15Chart"></canvas>
+                    </div>
+                    <div class="chart-card" style="height:240px;">
+                      <div class="chart-title">15 Yıllık Kümülatif Kâr Farkı (TL)</div>
+                      <canvas id="impactProfit15Chart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+<section class="thesis-quote enhanced">
+  <div class="quote-wrap">
+    <img src="images/ohmu_logo_1992.png" alt="Niğde Ömer Halisdemir Üniversitesi Logosu" class="quote-logo left">
+    <div class="quote-center">
+      <p class="quote-text">
+        “Suyunu koruyamayan bir tarım, toprağını;<br>
+        toprağını koruyamayan bir millet, geleceğini kaybeder.”
+      </p>
+      <p class="quote-author">
+        Hazırlayan: <strong>Betül Demir</strong> – Yüksek Lisans Tezi<br>
+        Niğde Ömer Halisdemir Üniversitesi
+      </p>
+
+      <div class="quote-audio" aria-label="Ziraat Marşı Ses Oynatıcı">
+        <div class="quote-audio-label">
+          <span class="music-emoji" aria-hidden="true">🎵</span>
+          <span>Ziraat Marşı</span>
+        </div>
+        <audio controls preload="metadata">
+          <source src="audio/ziraat_marsi.mp4" type="audio/mp4" />
+          Tarayıcınız ses oynatmayı desteklemiyor.
+        </audio>
+      </div>
+    </div>
+
+    <img src="images/ahmet_sahenk_logo.png" alt="Niğde Ömer Halisdemir Üniversitesi Mührü" class="quote-logo right">
+
+  </div>
+</section>
+
+</main>
+
+    <footer class="app-footer">
+      Akkaya Barajı Optimum Bitki Deseni Çalışması
+    </footer>
+  </div>
+
+  <script src="script.js?v=114"></script>
+</body>
+</html>

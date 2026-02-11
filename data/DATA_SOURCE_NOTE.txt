@@ -1,0 +1,3 @@
+Bu projedeki tüm veri kaynakları, backend_datasets_2000_2025_ENHANCED.zip paketinden türetilmiştir.
+UI uyumluluğu için bazı dosyalar (urun_parametreleri_demo.csv, parsel_su_kar_ozet.csv vb.) bu paketteki CSV'lerden otomatik üretilmiştir.
+Asıl 'birebir' kaynak veriler data/enhanced_dataset/csv/ altında tutulur.

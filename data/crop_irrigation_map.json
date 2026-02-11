@@ -1,0 +1,70 @@
+{
+  "Patates": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "Silajlık Mısır": {
+    "current": "pivot",
+    "recommended": "drip"
+  },
+  "Yonca (Yeşilot)": {
+    "current": "surface",
+    "recommended": "sprinkler"
+  },
+  "Buğday (Dane)": {
+    "current": "rainfed",
+    "recommended": "sprinkler"
+  },
+  "Arpa (Dane)": {
+    "current": "rainfed",
+    "recommended": "sprinkler"
+  },
+  "Şeker Pancarı": {
+    "current": "surface",
+    "recommended": "sprinkler"
+  },
+  "Çavdar (Dane)": {
+    "current": "rainfed",
+    "recommended": "sprinkler"
+  },
+  "Salçalık Domates": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "Sofralık Domates": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "Lahana (Beyaz)": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "Kabak (Çerezlik)": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "Fasulye (Taze)": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "Soğan (Kuru)": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "Kavun": {
+    "current": "surface",
+    "recommended": "drip"
+  },
+  "Salçalık Biber": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "Ispanak": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "Nohut (Kuru)": {
+    "current": "rainfed",
+    "recommended": "rainfed"
+  }
+}

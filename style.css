@@ -1,0 +1,1691 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f3f7fb;
+  --card: #ffffff;
+  --accent: #0b7285;
+  --accent-soft: #e3fafc;
+  --accent-strong: #0c8599;
+  --text: #212529;
+  --muted: #6c757d;
+  --border: #e1e5ec;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: radial-gradient(circle at top left, #e3f2fd 0, #f8fafc 55%, #edf2ff 100%);
+  color: var(--text);
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #0b7285, #1971c2);
+  color: #fff;
+  box-shadow: 0 1px 8px rgba(15, 23, 42, 0.25);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+}
+
+.app-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.header-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 11px;
+}
+
+.app-main {
+  padding: 18px 24px 40px;
+  /* Daha akışkan (fluid) yerleşim: dar ekranda sıkışmasın, geniş ekranda da aşırı dar kalmasın */
+  width: calc(100% - 48px);
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+
+.layout {
+  display: grid;
+  /* Sol paneli biraz genişlet, sağ tarafı nefes aldır */
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 1024px){
+  .layout{ grid-template-columns: 1fr; }
+}
+
+/* Sol kolon: sabit (sticky) ve kendi içinde kaydırılabilir */
+.left-col{
+  align-self: start;
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+/* Sol panelde en üst kontrol kartını panel içinde sabitle */
+.left-col > .card:first-child{
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: var(--bg);
+  padding-top: 12px;
+  margin-top: -12px;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+/* Details (katlanabilir) kartlar */
+.details-card summary{
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.details-card summary::-webkit-details-marker{ display:none; }
+.details-card summary::after{
+  content: "▾";
+  color: var(--muted);
+  font-size: 14px;
+}
+.details-card[open] summary::after{ content: "▴"; }
+.details-card .details-body{ margin-top: 10px; }
+
+.card-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.card-subtitle {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.card-help {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.card-help.small {
+  margin-top: 4px;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.card-header-row .card-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Left column */
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.select-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text);
+  background: #fff;
+}
+
+/* Algoritma seçim kartları (dropdown yerine) */
+.algo-choice{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top: 2px;
+}
+
+.algo-pill{
+  width:100%;
+  text-align:left;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:12px;
+  padding:12px 12px;
+  cursor:pointer;
+  transition: transform .06s ease, box-shadow .06s ease, border-color .06s ease;
+}
+
+.algo-pill:hover{
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
+
+.algo-pill.is-active{
+  border-color: rgba(46, 204, 113, .55);
+  box-shadow: 0 10px 26px rgba(46, 204, 113, .12);
+}
+
+.algo-pill-title{
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.algo-pill-sub{
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#parcelSummary .parcel-summary-body {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#parcelSummary .label {
+  color: var(--muted);
+}
+
+#parcelSummary .value {
+  font-weight: 500;
+}
+
+/* Right column */
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.right-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.map-card {
+  padding-bottom: 10px;
+}
+
+.map-container {
+  width: 100%;
+  height: 260px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin-top: 8px;
+}
+
+.metrics-card {
+  padding-bottom: 10px;
+}
+
+.metrics-grid {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.metric {
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.metric-value {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.metric-note {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.metric-pill {
+  margin-top: 4px;
+  display: inline-flex;
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.pill-water {
+  background: #228be6;
+}
+
+.pill-profit {
+  background: #37b24d;
+}
+
+.pill-eff {
+  background: #845ef7;
+}
+
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;line-height:1.2;}
+.pill.ok{background:#e8f7ee;color:#1f7a3a;border:1px solid #bfe7cc;}
+.pill.bad{background:#ffecec;color:#b42318;border:1px solid #f5b5b5;}
+
+
+/* Charts row */
+.right-middle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.small-chart-card {
+  padding-bottom: 8px;
+}
+
+/* Tabs */
+.tabs-card {
+  margin-top: 4px;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  background: #e7f5ff;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.tab.active {
+  background: #fff;
+  color: var(--accent-strong);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+}
+
+.tab-panels {
+  margin-top: 4px;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* Tables */
+.tables-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.table-card {
+  padding-bottom: 10px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #edf2ff;
+  text-align: right;
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  text-align: left;
+}
+
+.data-table thead {
+  background: #f1f3f5;
+}
+
+.table-footer {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* District + water charts */
+.district-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* Benchmark charts layout (was missing -> elements looked "iç içe") */
+.chart-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.chart-card{
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+  padding: 10px 12px;
+  display:flex;
+  flex-direction:column;
+}
+
+.chart-title{
+  font-size: 12px;
+  font-weight: 700;
+  opacity: .85;
+  margin-bottom: 6px;
+}
+
+.chart-card canvas{
+  width: 100% !important;
+  height: 160px !important;
+}
+
+/* Benchmark results: make tables readable on narrow widths */
+#benchmarkResults{ margin-top: 12px; }
+#benchmarkResults .mini-table{ min-width: 760px; }
+
+/* Benchmark patterns grid should wrap nicely */
+.benchmark-pattern-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+/* Footer */
+.app-footer {
+  margin-top: auto;
+  padding: 8px 24px 14px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width: 1040px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .right-top {
+    grid-template-columns: 1fr;
+  }
+
+  .right-middle {
+    grid-template-columns: 1fr;
+  }
+
+  .district-row,
+  .tables-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Dar ekranda sol paneli sticky yapma: içerik üst üste gelsin */
+  .left-col{
+    position: relative;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+}
+
+/* Orta ekranlar: iki kolon kalsın ama sağ tarafı daha rahatlat */
+@media (max-width: 1360px){
+  .layout{ grid-template-columns: 320px minmax(0, 1fr); }
+  .right-top{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px){
+  .app-header{ padding: 14px 16px; }
+  .app-main{ width: calc(100% - 24px); padding: 14px 12px 28px; }
+  .tabs{ width: 100%; overflow-x: auto; }
+}
+
+
+/* Ek: grafik kartlarının ve canvas'ların görünümünü iyileştir */
+.small-chart-card {
+  /* üç senaryo grafiğinin bulunduğu kartlar */
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+.small-chart-card canvas {
+  flex: 0 0 auto;
+  margin-top: 8px;
+  width: 100% !important;
+  height: 210px !important;
+}
+
+/* --- Product cards (donut yerine) --- */
+.product-cards{
+  display:flex;
+  gap:10px;
+  align-items:stretch;
+  justify-content:flex-start;
+  flex-wrap:wrap;
+  margin-top: 8px;
+}
+
+.product-card{
+  flex: 1 1 160px;
+  max-width: 280px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.product-card .pc-top{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.product-card .pc-emoji{
+  font-size: 24px;
+  line-height: 1;
+}
+
+.product-card .pc-title{
+  font-weight: 700;
+  font-size: 13px;
+  margin: 0;
+}
+
+.product-card .pc-sub{
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.product-card .pc-meta{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top: 8px;
+}
+
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid #e5e7eb;
+  background:#f9fafb;
+  color:#111827;
+}
+
+.chip .muted{ color:#6b7280; }
+
+.product-empty{
+  color:#6b7280;
+  font-size: 12px;
+  padding: 10px 2px;
+}
+
+/* İlçe / il özeti ve su bütçesi grafik satırları */
+.district-row {
+  align-items: stretch;
+}
+
+.district-row canvas {
+  width: 100% !important;
+  height: 220px !important;
+  display: block;
+}
+
+
+/* --- Optimizasyon aksiyonları --- */
+.algo-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+.btn-primary{
+  background: var(--accent);
+  color:#fff;
+  border:none;
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+.btn-primary:hover{ filter: brightness(0.95); }
+.algo-status{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- Grafiklerin yassılaşmasını azalt + sayfa uzamasını engelle --- */
+.small-chart-card{
+  height: 250px;            /* daha dik */
+}
+.small-chart-card canvas{
+  height: 190px !important; /* chart alanı */
+}
+
+.donut-card{
+  height: 250px;
+}
+.donut-card canvas{
+  height: 190px !important;
+}
+
+/* Alt sekmelerdeki grafik kartları */
+.district-row .card{
+  height: 280px;
+}
+.district-row canvas{
+  height: 210px !important;
+}
+
+
+/* --- Data loader (CSV bağlama) --- */
+.data-loader{ margin-top:10px; padding-top:10px; border-top:1px dashed rgba(0,0,0,.12); }
+.data-status{ font-size:13px; color: var(--muted); margin-bottom:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.data-actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.file-input{ width: 100%; max-width: 260px; }
+.btn-secondary{
+  background:#ffffff;
+  border:1px solid rgba(0,0,0,.18);
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+.btn-secondary:hover{ border-color: rgba(0,0,0,.28); }
+.badge{ display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; font-weight:700; }
+.badge-warn{ background:#fff3bf; color:#5f3dc4; }
+.badge-ok{ background:#d3f9d8; color:#2b8a3e; }
+.badge-err{ background:#ffe3e3; color:#c92a2a; }
+.badge-info{ background:#e7f5ff; color:#1864ab; }
+
+.metrics-topnote{
+  display:flex;
+  gap:8px;
+  margin: 8px 0 10px 0;
+  flex-wrap:wrap;
+}
+
+.explain-box{
+  /* Tek kart dili: koyu kutu yerine yumuşak vurgu */
+  background: #f8f9fa;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-x: auto;
+}
+.water-controls .field-row{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+.field-label{ font-size:12px; color: var(--muted); font-weight:700; }
+.official-grid{ display:grid; grid-template-columns: 1fr; gap:12px; }
+@media(min-width: 900px){ .official-grid{ grid-template-columns: 1fr 1fr; } }
+.mini-block{ background: rgba(0,0,0,.03); border: 1px solid rgba(0,0,0,.08); border-radius:12px; padding:10px; }
+.mini-row{ padding:6px 0; border-bottom:1px dashed rgba(0,0,0,.12); }
+.mini-row:last-child{ border-bottom:none; }
+.muted{ color: var(--muted); font-size:12px; }
+
+
+/* --- canlı veri ayarları --- */
+.grid-2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+@media (max-width: 820px){
+  .grid-2{ grid-template-columns: 1fr; }
+}
+.text-input{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background: #fff;
+  color: var(--text);
+  outline:none;
+}
+.text-input:focus{
+  border-color: rgba(11,114,133,0.55);
+}
+.label{
+  display:block;
+  margin-bottom:6px;
+  opacity:0.85;
+}
+.hr{
+  border:0;
+  border-top:1px solid rgba(255,255,255,0.10);
+  margin:12px 0;
+}
+.hint code{
+  font-size: 12px;
+}
+
+
+
+/* Harita üzerindeki sabit parsel etiketleri */
+.parcel-label{
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111;
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  pointer-events: none; /* tıklamayı engellemesin */
+}
+
+/* Harita hover bilgi kutusu (parsel alanı) */
+.leaflet-popup.parcel-popup .leaflet-popup-content-wrapper{
+  border-radius: 10px;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+}
+.leaflet-popup.parcel-popup .leaflet-popup-content{
+  margin: 0;
+}
+.parcel-pop{
+  padding: 8px 10px;
+  min-width: 120px;
+}
+.parcel-pop .t{
+  font-weight: 800;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.parcel-pop .s{
+  font-size: 12px;
+  opacity: .9;
+}
+
+
+/* Aktif dosyalar (daha kompakt, rozetli görünüm) */
+.active-files{
+  margin-top:10px;
+  padding:10px 10px 8px 10px;
+  background:#f7fafc;
+  border:1px solid #e5eef7;
+  border-radius:12px;
+  color:#334155;
+}
+.active-files-title{
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.active-files-badges{
+  display:flex;
+  flex-direction:column;
+  flex-wrap:nowrap;
+  gap:6px;
+  /* Keep the section compact: show ~4 items then allow scrolling */
+  max-height:150px;
+  overflow-y:auto;
+  padding-right:6px; /* room for scrollbar */
+}
+.file-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:11px;
+  line-height:1.1;
+  background:#eef3f8;
+  border:1px solid #d7e3f0;
+  color:#1f2937;
+}
+.file-badge .dot{
+  width:8px;height:8px;border-radius:999px;display:inline-block;
+}
+.file-badge.backend .dot{ background:#10b981; }      /* yeşil */
+.file-badge.season .dot{ background:#3b82f6; }       /* mavi */
+.file-badge.reservoir .dot{ background:#a855f7; }    /* mor */
+.file-badge.manual .dot{ background:#f59e0b; }       /* turuncu */
+.file-badge.optional .dot{ background:#64748b; }     /* gri */
+.file-badge.optional{ background:#f1f5f9; border-color:#e2e8f0; color:#334155; }
+
+
+/* Water budget tab: 2 charts side-by-side */
+#tab-water .district-row{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+#tab-water .district-row canvas{ height: 200px !important; }
+
+
+
+/* ====== 5 Yıllık Plan KPI & Çağrı Kutusu ====== */
+.kpi-row{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 10px 0 14px 0;
+}
+.kpi{
+  background:#f8f9fa;
+  border:1px solid #e9ecef;
+  border-radius:14px;
+  padding:12px;
+}
+.kpi-label{
+  font-size:12px;
+  color:#495057;
+  margin-bottom:6px;
+}
+.kpi-value{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:0.2px;
+}
+.kpi-sub{
+  font-size:12px;
+  color:#6c757d;
+  margin-top:6px;
+}
+.table-scroll{
+  overflow:auto;
+  border-radius:12px;
+  border:1px solid #e9ecef;
+}
+.table-scroll .data-table{
+  border:none;
+}
+.callout{
+  margin-top:12px;
+  padding:12px 14px;
+  border-radius:14px;
+  background: #f1f3f5;
+  border:1px solid #e9ecef;
+  color:#212529;
+  line-height:1.4;
+}
+@media (max-width: 980px){
+  .kpi-row{ grid-template-columns: 1fr; }
+}
+
+
+
+/* Plan5: use full width layout (avoid empty white column) */
+#tab-plan5 .tables-row{
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+
+/* --- Kuraklık Alarmı kartı --- */
+.drought-card{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  background: rgba(0,0,0,0.12);
+}
+.drought-card__head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.drought-card__title{
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.drought-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+.drought-metric{
+  padding:8px 8px;
+  border-radius:10px;
+  background: rgba(255,255,255,0.06);
+}
+.drought-metric__label{
+  font-size: 12px;
+  opacity: .85;
+  margin-bottom: 4px;
+}
+.drought-metric__value{
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.drought-metric__value .unit{
+  font-size: 12px;
+  font-weight: 700;
+  opacity: .9;
+  margin-left: 2px;
+}
+.drought-note{
+  margin-top: 8px;
+  opacity: .9;
+  line-height: 1.25;
+}
+
+
+/* Kuraklık kartı: Grafik + sağ panel yerleşimi */
+.drought-layout{
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+.drought-chart-wrap--main{
+  flex: 2.2;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 10px;
+}
+.drought-chart-wrap--main canvas{
+  max-height: 260px;
+}
+.drought-side{
+  flex: 1;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.drought-grid--side{
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.drought-metric__value--big{
+  font-size: 22px;
+}
+@media (max-width: 920px){
+  .drought-layout{ flex-direction: column; }
+  .drought-side{ min-width: auto; }
+}
+
+/* Kuraklık Alarmı için dikkat çekici (ama rahatsız etmeyen) arka plan alarm efekti
+   Not: Efekt sadece "Kuraklık Alarmı" kartına uygulanır (pulse-attn sınıfı). */
+@keyframes droughtAlarmFlash {
+  0%, 100% {
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 10px 28px rgba(0,0,0,.06);
+  }
+  50% {
+    background: rgba(255, 59, 48, 0.10);
+    box-shadow: 0 12px 34px rgba(255, 59, 48, 0.18);
+  }
+}
+.drought-card.pulse-attn{
+  animation: droughtAlarmFlash 1.6s ease-in-out infinite;
+  border: 1px solid rgba(255, 59, 48, 0.28);
+}
+@keyframes badgeBlinkSoft{
+  0%, 100% { opacity: 1; }
+  50% { opacity: .65; }
+}
+#droughtAlarmLevel.blink-soft{
+  animation: badgeBlinkSoft 1.8s ease-in-out infinite;
+}
+
+@media (max-width: 920px){
+  .drought-grid{ grid-template-columns: 1fr; }
+}
+
+
+/* Drought series mini-chart */
+.drought-chart-wrap{
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0,0,0,0.12);
+}
+.drought-chart-wrap canvas{
+  width: 100%;
+  max-height: 180px;
+}
+.drought-chart-hint{
+  margin-top: 6px;
+  opacity: 0.75;
+}
+
+
+/* Kuraklık paneli ana sayfa yerleşimi */
+.drought-main-container{
+  margin-top: 12px;
+}
+.drought-main-container .drought-card{
+  margin-top: 8px;
+  background: #f3f6fb;
+  border: 1px solid #e4e8f0;
+  color: #152238;
+}
+.drought-main-container .drought-card .badge{
+  border-color: rgba(0,0,0,0.08);
+}
+.drought-main-container .drought-chart-wrap--main{
+  background: #ffffff;
+  border: 1px solid #edf0f6;
+}
+.drought-main-container .drought-chart-wrap--main canvas{
+  max-height: 340px;
+}
+.drought-main-container .drought-metric{
+  background: #ffffff;
+  border: 1px solid #edf0f6;
+}
+
+
+70%{box-shadow:0 0 0 14px rgba(122,0,0,0);}
+ 100%{box-shadow:0 0 0 0 rgba(122,0,0,0);}
+}
+
+/* Kuraklık göstergelerini parsel haritasının üstünde göstermek için */
+.drought-inline-above-map{
+  margin-bottom: 12px;
+}
+.drought-inline-above-map .card,
+.drought-inline-above-map .panel,
+.drought-inline-above-map .box{
+  border-radius: 14px;
+}
+.drought-inline-above-map canvas{
+  max-height: 260px;
+}
+
+/* Kuraklık alarm kartını sağ kolonda ilk satırda tam genişlikte göster */
+.right-col > .drought-main-container{
+  width: 100%;
+  margin-bottom: 14px;
+}
+.right-col > .drought-main-container canvas{
+  max-height: 260px;
+}
+
+70%{ box-shadow:0 0 0 14px rgba(122,0,0,0), 0 8px 26px rgba(122,0,0,.35);}
+  100%{ box-shadow:0 0 0 0 rgba(122,0,0,0), 0 8px 26px rgba(122,0,0,.35);}
+}
+
+/* Detay kuraklık kartı */
+.drought-details-card{ margin-top: 12px; }
+.drought-details__summary{
+  cursor:pointer;
+  font-weight:800;
+  padding: 10px 6px;
+}
+.drought-details__body{ padding: 8px 2px 2px; }
+
+@keyframes pulseAlarm{
+  0%{ box-shadow:0 0 0 0 rgba(122,0,0,.55), 0 8px 26px rgba(122,0,0,.35);}
+  70%{ box-shadow:0 0 0 14px rgba(122,0,0,0), 0 8px 26px rgba(122,0,0,.35);}
+  100%{ box-shadow:0 0 0 0 rgba(122,0,0,0), 0 8px 26px rgba(122,0,0,.35);}
+}
+
+/* Kuraklık Detay başlığında sağda kritik uyarı */
+.drought-details__summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.drought-details__title{ font-weight:800; }
+.drought-summary-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:#7a0000;
+  color:#fff;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.3px;
+  box-shadow:0 6px 18px rgba(122,0,0,.35);
+  animation:pulseAlarm 1.6s infinite;
+}
+
+/* Otomatik yorum satırı */
+.drought-auto-comment{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(122,0,0,.06);
+  border: 1px solid rgba(122,0,0,.18);
+  color: #2b2b2b;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.drought-auto-comment b{ color:#7a0000; }
+
+/* Senaryo özetinde kuraklık etkisi kutusu */
+.drought-impact-box{
+  margin-top: 12px;
+  padding: 12px 12px 10px;
+  border-radius: 14px;
+  background: rgba(122,0,0,.04);
+  border: 1px solid rgba(122,0,0,.14);
+}
+.drought-impact-title{
+  font-weight: 900;
+  color:#7a0000;
+  margin-bottom: 8px;
+}
+.drought-impact-body{
+  display:flex;
+  gap:14px;
+}
+.drought-impact-col{
+  flex:1;
+  min-width: 140px;
+}
+.drought-impact-sub{
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.drought-impact-list{
+  margin:0;
+  padding-left: 18px;
+}
+.drought-impact-list li{
+  margin: 2px 0;
+}
+.drought-impact-note{
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: .85;
+}
+
+/* Su hesabı kutusu (bitki/yöntem bazlı) */
+.watercalc-title{
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+.watercalc-help{
+  font-size: 12px;
+  opacity: .85;
+  margin-bottom: 10px;
+}
+.watercalc-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.watercalc-table th, .watercalc-table td{
+  padding: 7px 8px;
+  border-bottom: 1px solid #eef2f6;
+  vertical-align: top;
+}
+.watercalc-table th{
+  text-align: left;
+  color: #344054;
+  font-weight: 800;
+  background: #f8fafc;
+  border-top: 1px solid #eef2f6;
+}
+.watercalc-kpi{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.watercalc-pill{
+  background: #f2f4f7;
+  border: 1px solid #eaecf0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.watercalc-pill b{ font-weight: 900; }
+
+/* Map height override */
+#map, #mapid, #parcelMap, .leaflet-container{
+  min-height: 360px;
+}
+.card.map-card{
+  min-height: 420px;
+}
+
+/* Map height override v2 (explicit height for Leaflet) */
+#map, #mapid, #parcelMap{
+  height: 440px !important;
+  min-height: 440px !important;
+}
+.card.map-card{
+  min-height: 500px;
+}
+
+/* Map height override v3 (no empty gap in card) */
+#map, #mapid, #parcelMap{
+  height: 460px !important;
+  min-height: 460px !important;
+}
+.card.map-card{
+  min-height: unset !important;
+  height: auto !important;
+}
+
+/* Ensure top row cards align in height */
+.right-top{
+  align-items: stretch;
+}
+.right-top > .card{
+  height: auto;
+}
+
+/* Drought chart canvas height */
+#droughtSeriesChart{
+  height: 260px !important;
+  max-height: 260px !important;
+}
+
+/* Equalize top row heights (map vs summary) */
+.right-top{
+  align-items: stretch;
+}
+.right-top > .card{
+  height: 100%;
+}
+.map-card{
+  display: flex;
+  flex-direction: column;
+}
+.map-card .card-header-row{
+  flex: 0 0 auto;
+}
+.map-card .map-container{
+  flex: 1 1 auto;
+  height: auto !important;
+  min-height: 420px;
+}
+
+/* ---- Sulama plan tablosu (ETo×Kc) okunabilirlik ---- */
+#irrigPlanBox .table-scroll{
+  overflow-x: visible;
+  padding-bottom: 0;
+}
+
+#irrigPlanBox table{
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+#irrigPlanBox th,
+#irrigPlanBox td{
+  padding: 6px 8px;
+  vertical-align: top;
+  white-space: normal;
+  word-break: break-word;
+}
+
+#irrigPlanBox th{
+  font-weight: 700;
+}
+
+#irrigPlanBox .muted{
+  white-space: normal;
+}
+
+
+/* --- UI polish for monthly capacity + irrigation plan tables --- */
+.data-table,
+.tbl {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+  background: #ffffff;
+  border: 1px solid #e7eefc;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Parsel düzeyi desen tabloları: küçük ekranlarda taşmayı kırmadan yatay kaydırma */
+.table-card{
+  overflow-x: visible;
+}
+
+.table-card .data-table{
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.table-card .data-table th,
+.table-card .data-table td{
+  white-space: normal;
+  word-break: break-word;
+}
+
+.table-card .data-table th,
+.table-card .data-table td{
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table thead,
+.tbl thead {
+  background: #f6f8ff;
+}
+
+.data-table th,
+.data-table td,
+.tbl th,
+.tbl td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #edf2ff;
+  vertical-align: middle;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.data-table th:first-child,
+.data-table td:first-child,
+.tbl th:first-child,
+.tbl td:first-child {
+  text-align: left;
+}
+
+.data-table tbody tr:nth-child(odd),
+.tbl tbody tr:nth-child(odd) {
+  background: rgba(246, 248, 255, 0.55);
+}
+
+.data-table tbody tr:hover,
+.tbl tbody tr:hover {
+  background: rgba(231, 238, 252, 0.65);
+}
+
+/* Small table variant */
+.tbl.small th,
+.tbl.small td {
+  padding: 6px 8px;
+  font-size: 11.5px;
+}
+
+/* Muted helper */
+.muted {
+  color: var(--muted);
+}
+
+/* Recommended irrigation selector (parcel table) */
+.irr-cell{ display:flex; flex-direction:column; gap:4px; }
+.irr-select{ width:100%; padding:6px 8px; border:1px solid #e5e7eb; border-radius:10px; background:#fff; font-size:13px; }
+.irr-hint{ font-size:11px; color:#6b7280; }
+
+
+/* Thesis Quote (Centered, Non-intrusive) */
+.thesis-quote {
+  margin: 38px auto 18px auto;
+  padding: 18px 24px;
+  max-width: 920px;
+  text-align: center;
+  color: #1f2d3d;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-top: 3px solid rgba(0,0,0,0.12);
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+  backdrop-filter: blur(6px);
+  position: relative;
+}
+
+.thesis-quote::before {
+  content: "\201C";
+  position: absolute;
+  left: 18px;
+  top: 10px;
+  font-size: 42px;
+  line-height: 1;
+  opacity: 0.18;
+}
+
+.quote-text {
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.quote-author {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+@media (max-width: 640px) {
+  .thesis-quote {
+    margin: 24px 12px 14px 12px;
+    padding: 16px 16px;
+  }
+  .thesis-quote::before { left: 12px; }
+  .quote-text { font-size: 1.05rem; }
+}
+
+/* Enhanced thesis quote with university logos */
+.thesis-quote.enhanced {
+  margin: 50px auto 25px;
+  padding: 22px 28px;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(248,252,255,0.86));
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.quote-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;   /* ✅ */
+  gap: 0;                   /* gap'i kapat */
+}
+
+.quote-center {
+  flex: 1;
+  text-align: center;
+}
+
+.quote-logo{
+  width:120px;
+  opacity:.9;
+  margin: 0 50px;           /* ✅ logoyu merkeze yaklaştırır/uzaklaştırır */
+}
+
+/* Quote audio (Ziraat Marşı) */
+.quote-audio{
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.quote-audio-label{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  font-weight: 700;
+}
+.quote-audio .music-emoji{ font-size: 1rem; }
+.quote-audio audio{
+  width: min(520px, 100%);
+}
+
+@media (max-width: 768px) {
+  .quote-wrap {
+    flex-direction: column;
+  }
+  .quote-logo {
+    width: 70px;
+  }
+}
+
+/* --- v57b: "Kıyasla" popover (Resmî tablolar) --- */
+.compare-details { position: relative; }
+.compare-details > summary {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.compare-details > summary::-webkit-details-marker { display: none; }
+.compare-details > summary::after {
+  content: "▾";
+  margin-left: 6px;
+  font-size: 12px;
+  opacity: .7;
+}
+.compare-details[open] > summary::after { content: "▴"; }
+
+.compare-popover {
+  position: absolute;
+  right: 0;
+  top: 28px;
+  width: min(860px, 88vw);
+  max-height: 320px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+  padding: 10px;
+  z-index: 50;
+}
+
+/* Make the alt table readable on narrow screens */
+.compare-popover table th,
+.compare-popover table td {
+  font-size: 12px;
+  padding: 8px 10px;
+  vertical-align: top;
+}
+
+@media (max-width: 768px) {
+  .compare-popover {
+    left: 0;
+    right: auto;
+    width: 94vw;
+  }
+}
+
+
+/* --- Rotasyon ürün şeridi (grafik yerine) --- */
+.crop-strip{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:14px 16px;
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+}
+.crop-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:999px;
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  box-shadow:0 10px 22px rgba(0,0,0,.06);
+  font-weight:800;
+  font-size:15px;
+}
+.crop-emoji{font-size:22px;line-height:1;display:inline-flex;align-items:center;justify-content:center}
+.crop-sep{opacity:.35;font-weight:800}
+.pill-name{white-space:nowrap}
+.pill-season{margin-left:6px;font-weight:600;opacity:.7}
+.crop-note{margin-top:8px;color:#6b7280;font-size:12px;line-height:1.35}
+
+.audio-box{margin-top:12px;padding:12px;border:1px solid #e5e7eb;background:#ffffff;border-radius:14px}
+.audio-title{font-weight:800;margin-bottom:8px;color:#0f172a}
+.audio-box audio{width:100%}
+
+/* ------------------------------
+   v72: Selection changed (stale results)
+------------------------------ */
+.stale-banner{
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(245,158,11,.35);
+  background: rgba(255,247,237,.9);
+  border-radius: 14px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.05);
+}
+.stale-banner-title{font-weight:900;color:#92400e;margin-bottom:4px}
+.stale-banner-body{color:#7c2d12;font-size:13px;line-height:1.45}
+
+/* When selection changes but optimization is not rerun yet:
+   Dim ONLY the result/summary cards. The map must stay fully readable and NOT be greyed out. */
+.right-col{ position: relative; }
+
+/* Never dim the entire right column (avoid affecting the map via inherited opacity/filter) */
+body.stale-results .right-col{
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Dim all cards EXCEPT the map card and the warning banner */
+body.stale-results .right-col .card:not(.map-card):not(.stale-banner){
+  /* subtle, eye-friendly hint that values are from the previous run */
+  opacity: .86;
+  filter: saturate(.97);
+}
+
+/* Keep map card untouched */
+body.stale-results .right-col .card.map-card{
+  opacity: 1;
+  filter: none;
+}
+
+/* Extra safety: never apply filters to the Leaflet map itself */
+body.stale-results #map,
+body.stale-results .leaflet-container{
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Uyarı bandı kaplamanın üstünde kalsın */
+.stale-banner{ position: relative; z-index: 3; }
+
+/* v72: Explanation / meta boxes */
+.runmeta-box{
+  margin: 10px 0 8px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: rgba(255,255,255,.85);
+  color: #0f172a;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.runmeta-box b{font-weight:900}
+
+/* v74: koşullar kutusunu "etiket" şeklinde okunabilir yap */
+.runmeta-title{font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.runmeta-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.runmeta-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  font-size:12px;
+}
+.runmeta-ic{opacity:.85}
+.runmeta-details{margin-top:6px}
+.runmeta-details summary{cursor:pointer;font-weight:800}
+
+/* Parsel özeti içindeki küçük detay (toprak kodu çözümü) */
+.mini-details{margin-top:8px}
+.mini-details > summary{cursor:pointer;font-weight:700;list-style:none;}
+.mini-details > summary::-webkit-details-marker{display:none;}
+.mini-details > summary::after{content:"▾";float:right;opacity:.7}
+.mini-details[open] > summary::after{content:"▴";}
+.runmeta-kv{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
+.runmeta-kv .k{display:inline-block;min-width:120px;color:#475569;font-weight:800}
+.runmeta-kv .v{font-weight:800;color:#0f172a}
+.rationale-box{
+  margin: 8px 0 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid #dbeafe;
+  background: rgba(239,246,255,.75);
+  color: #0f172a;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.rationale-box .rationale-title{font-weight:900;margin-bottom:4px}
+.rationale-box .rationale-kpis{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.rationale-box .rationale-pill{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid #bfdbfe;background:#ffffff;font-weight:800;font-size:12px}

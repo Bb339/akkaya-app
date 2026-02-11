@@ -1,0 +1,268 @@
+{
+  "Bahçeli": {
+    "top_crops": [
+      {
+        "crop": "Sarımsak (Kuru)",
+        "share": -0.014042889012493643
+      },
+      {
+        "crop": "Bamya",
+        "share": 0.04331507982525057
+      },
+      {
+        "crop": "Pırasa",
+        "share": 0.08885417698840689
+      },
+      {
+        "crop": "Maydanoz",
+        "share": 0.09285041137503469
+      },
+      {
+        "crop": "Kabak (Çerezlik)",
+        "share": 0.09430025491816528
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "share": 0.10882500014107523
+      },
+      {
+        "crop": "Ispanak",
+        "share": 0.18455444499645055
+      },
+      {
+        "crop": "Turp (Kırmızı)",
+        "share": 0.4013435207681104
+      }
+    ],
+    "notes": "Derived from scenario options (profit-weighted shares). Replace with official stats if available."
+  },
+  "Balcı (Bor)": {
+    "top_crops": [
+      {
+        "crop": "Soğan (Kuru)",
+        "share": 1.1780177057398222
+      },
+      {
+        "crop": "Sarımsak (Kuru)",
+        "share": 0.8577376609239646
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "share": 0.3427985690259116
+      },
+      {
+        "crop": "Domates (Salçalık)",
+        "share": 0.29080027801357217
+      },
+      {
+        "crop": "Lahana (Beyaz)",
+        "share": 0.18958415547280308
+      },
+      {
+        "crop": "Domates (Sofralık)",
+        "share": 0.15369978102412524
+      },
+      {
+        "crop": "Patates",
+        "share": 0.03029039911807363
+      },
+      {
+        "crop": "Kabak (Sakız)",
+        "share": 0.01692508048396813
+      },
+      {
+        "crop": "Ispanak",
+        "share": -2.0598536298022405
+      }
+    ],
+    "notes": "Derived from scenario options (profit-weighted shares). Replace with official stats if available."
+  },
+  "Koyunlu": {
+    "top_crops": [
+      {
+        "crop": "Elma (Golden/Starking)",
+        "share": -0.5845808972631555
+      },
+      {
+        "crop": "Sarımsak (Kuru)",
+        "share": -0.29830146444034517
+      },
+      {
+        "crop": "Soğan (Kuru)",
+        "share": -0.12708793046752762
+      },
+      {
+        "crop": "Domates (Salçalık)",
+        "share": -0.08791921128677917
+      },
+      {
+        "crop": "Badem",
+        "share": -0.05216695349359666
+      },
+      {
+        "crop": "Lahana (Beyaz)",
+        "share": -0.030682804934664486
+      },
+      {
+        "crop": "Biber (Salçalık)",
+        "share": -0.023982312427554307
+      },
+      {
+        "crop": "Patates",
+        "share": -0.009907225638848435
+      },
+      {
+        "crop": "Kabak (Sakız)",
+        "share": 0.003217515811003687
+      },
+      {
+        "crop": "Bamya",
+        "share": 0.05990305556001034
+      },
+      {
+        "crop": "Maydanoz",
+        "share": 0.06943625916043862
+      },
+      {
+        "crop": "Pırasa",
+        "share": 0.1441491997193651
+      }
+    ],
+    "notes": "Derived from scenario options (profit-weighted shares). Replace with official stats if available."
+  },
+  "Kızılca": {
+    "top_crops": [
+      {
+        "crop": "Soğan (Kuru)",
+        "share": -0.6701258860161399
+      },
+      {
+        "crop": "Sarımsak (Kuru)",
+        "share": -0.38854232274135214
+      },
+      {
+        "crop": "Lahana (Beyaz)",
+        "share": -0.28759570857656325
+      },
+      {
+        "crop": "Domates (Sofralık)",
+        "share": -0.17486600427298618
+      },
+      {
+        "crop": "Ceviz",
+        "share": -0.07930875917631475
+      },
+      {
+        "crop": "Domates (Salçalık)",
+        "share": -0.07352185969044225
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "share": -0.02161613998689367
+      },
+      {
+        "crop": "Patates",
+        "share": -0.020106946136308947
+      },
+      {
+        "crop": "Kabak (Sakız)",
+        "share": -0.019255822687760396
+      },
+      {
+        "crop": "Kabak (Çerezlik)",
+        "share": 0.19922868666851684
+      },
+      {
+        "crop": "Pırasa",
+        "share": 0.22554728438522634
+      },
+      {
+        "crop": "Turp (Kırmızı)",
+        "share": 0.6597892468541269
+      }
+    ],
+    "notes": "Derived from scenario options (profit-weighted shares). Replace with official stats if available."
+  },
+  "Obruk": {
+    "top_crops": [
+      {
+        "crop": "Sarımsak (Kuru)",
+        "share": -0.0368406693101735
+      },
+      {
+        "crop": "Bamya",
+        "share": 0.01514832925999199
+      },
+      {
+        "crop": "Pırasa",
+        "share": 0.05856072459029491
+      },
+      {
+        "crop": "Maydanoz",
+        "share": 0.06481628864796564
+      },
+      {
+        "crop": "Kabak (Çerezlik)",
+        "share": 0.07067125023662582
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "share": 0.1427190025698549
+      },
+      {
+        "crop": "Ispanak",
+        "share": 0.2638459800072582
+      },
+      {
+        "crop": "Turp (Kırmızı)",
+        "share": 0.42107909399818205
+      }
+    ],
+    "notes": "Derived from scenario options (profit-weighted shares). Replace with official stats if available."
+  },
+  "Yeşilburç": {
+    "top_crops": [
+      {
+        "crop": "Soğan (Kuru)",
+        "share": 0.49180329365872805
+      },
+      {
+        "crop": "Sarımsak (Kuru)",
+        "share": 0.3805142420404631
+      },
+      {
+        "crop": "Fasulye (Taze)",
+        "share": 0.2386022755223699
+      },
+      {
+        "crop": "Domates (Salçalık)",
+        "share": 0.2110656217648196
+      },
+      {
+        "crop": "Lahana (Beyaz)",
+        "share": 0.19925389114270547
+      },
+      {
+        "crop": "Biber (Salçalık)",
+        "share": 0.08277741668995872
+      },
+      {
+        "crop": "Patates",
+        "share": 0.06122366831339711
+      },
+      {
+        "crop": "Domates (Sofralık)",
+        "share": 0.007248089184716783
+      },
+      {
+        "crop": "Kabak (Sakız)",
+        "share": 0.0007981149870582409
+      },
+      {
+        "crop": "Ispanak",
+        "share": -0.6732866133042167
+      }
+    ],
+    "notes": "Derived from scenario options (profit-weighted shares). Replace with official stats if available."
+  }
+}

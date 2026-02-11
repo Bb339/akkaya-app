@@ -1,0 +1,193 @@
+land_capability_class,crop,suitability_score_assumed,rule
+I,Badem,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Bamya,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Biber (Salçalık),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Ceviz,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Domates (Salçalık),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Domates (Sofralık),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Elma (Golden/Starking),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Fasulye (Taze),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Ispanak,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Kabak (Sakız),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Kabak (Çerezlik),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Lahana (Beyaz),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Maydanoz,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Patates,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Pırasa,0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Sarımsak (Kuru),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Soğan (Kuru),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Turp (Kırmızı),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Üzüm (Sofralık),0.95,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Badem,0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Bamya,0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Biber (Salçalık),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Ceviz,0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Domates (Salçalık),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Domates (Sofralık),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Elma (Golden/Starking),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Fasulye (Taze),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Ispanak,0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Kabak (Sakız),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Kabak (Çerezlik),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Lahana (Beyaz),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Maydanoz,0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Patates,0.81,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Pırasa,0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Sarımsak (Kuru),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Soğan (Kuru),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Turp (Kırmızı),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+II,Üzüm (Sofralık),0.85,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Badem,0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Bamya,0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Biber (Salçalık),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Ceviz,0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Domates (Salçalık),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Domates (Sofralık),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Elma (Golden/Starking),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Fasulye (Taze),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Ispanak,0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Kabak (Sakız),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Kabak (Çerezlik),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Lahana (Beyaz),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Maydanoz,0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Patates,0.63,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Pırasa,0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Sarımsak (Kuru),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Soğan (Kuru),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Turp (Kırmızı),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+III,Üzüm (Sofralık),0.7,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Badem,0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Bamya,0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Biber (Salçalık),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Ceviz,0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Domates (Salçalık),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Domates (Sofralık),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Elma (Golden/Starking),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Fasulye (Taze),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Ispanak,0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Kabak (Sakız),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Kabak (Çerezlik),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Lahana (Beyaz),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Maydanoz,0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Patates,0.47,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Pırasa,0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Sarımsak (Kuru),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Soğan (Kuru),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Turp (Kırmızı),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+IV,Üzüm (Sofralık),0.55,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Badem,0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Bamya,0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Biber (Salçalık),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Ceviz,0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Domates (Salçalık),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Domates (Sofralık),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Elma (Golden/Starking),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Fasulye (Taze),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Ispanak,0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Kabak (Sakız),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Kabak (Çerezlik),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Lahana (Beyaz),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Maydanoz,0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Patates,0.28,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Pırasa,0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Sarımsak (Kuru),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Soğan (Kuru),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Turp (Kırmızı),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+V,Üzüm (Sofralık),0.35,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Badem,0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Bamya,0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Biber (Salçalık),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Ceviz,0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Domates (Salçalık),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Domates (Sofralık),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Elma (Golden/Starking),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Fasulye (Taze),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Ispanak,0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Kabak (Sakız),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Kabak (Çerezlik),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Lahana (Beyaz),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Maydanoz,0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Patates,0.14,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Pırasa,0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Sarımsak (Kuru),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Soğan (Kuru),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Turp (Kırmızı),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VI,Üzüm (Sofralık),0.2,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Badem,0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Bamya,0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Biber (Salçalık),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Ceviz,0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Domates (Salçalık),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Domates (Sofralık),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Elma (Golden/Starking),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Fasulye (Taze),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Ispanak,0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Kabak (Sakız),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Kabak (Çerezlik),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Lahana (Beyaz),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Maydanoz,0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Patates,0.06,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Pırasa,0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Sarımsak (Kuru),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Soğan (Kuru),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Turp (Kırmızı),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VII,Üzüm (Sofralık),0.1,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Badem,0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Bamya,0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Biber (Salçalık),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Ceviz,0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Domates (Salçalık),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Domates (Sofralık),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Elma (Golden/Starking),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Fasulye (Taze),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Ispanak,0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Kabak (Sakız),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Kabak (Çerezlik),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Lahana (Beyaz),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Maydanoz,0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Patates,0.03,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Pırasa,0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Sarımsak (Kuru),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Soğan (Kuru),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Turp (Kırmızı),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+VIII,Üzüm (Sofralık),0.05,Assumed suitability by LCC; refine with local soil/terrain constraints.
+I,Nohut (Kuru),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+I,Mercimek (Kırmızı),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+I,Buğday (Kuru),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+I,Arpa (Kuru),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+I,Aspir (Yağlık),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+II,Nohut (Kuru),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+II,Mercimek (Kırmızı),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+II,Buğday (Kuru),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+II,Arpa (Kuru),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+II,Aspir (Yağlık),0.95,Assumed suitability for low-water field crops; refine with local agronomy.
+III,Nohut (Kuru),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+III,Mercimek (Kırmızı),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+III,Buğday (Kuru),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+III,Arpa (Kuru),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+III,Aspir (Yağlık),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+IV,Nohut (Kuru),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+IV,Mercimek (Kırmızı),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+IV,Buğday (Kuru),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+IV,Arpa (Kuru),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+IV,Aspir (Yağlık),0.9,Assumed suitability for low-water field crops; refine with local agronomy.
+V,Nohut (Kuru),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+V,Mercimek (Kırmızı),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+V,Buğday (Kuru),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+V,Arpa (Kuru),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+V,Aspir (Yağlık),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+VI,Nohut (Kuru),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+VI,Mercimek (Kırmızı),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+VI,Buğday (Kuru),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+VI,Arpa (Kuru),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+VI,Aspir (Yağlık),0.8,Assumed suitability for low-water field crops; refine with local agronomy.
+VII,Nohut (Kuru),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VII,Mercimek (Kırmızı),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VII,Buğday (Kuru),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VII,Arpa (Kuru),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VII,Aspir (Yağlık),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VIII,Nohut (Kuru),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VIII,Mercimek (Kırmızı),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VIII,Buğday (Kuru),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VIII,Arpa (Kuru),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
+VIII,Aspir (Yağlık),0.7,Assumed suitability for low-water field crops; refine with local agronomy.
