@@ -1,0 +1,98 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65902479873354,
+            37.8803191129559
+          ],
+          [
+            34.65987855848452,
+            37.88698124025102
+          ],
+          [
+            34.66180448088279,
+            37.886542342429664
+          ],
+          [
+            34.662817078938566,
+            37.886855841191675
+          ],
+          [
+            34.66412749995191,
+            37.8864953174823
+          ],
+          [
+            34.66547763008701,
+            37.88693421558395
+          ],
+          [
+            34.66647037267302,
+            37.88693421558395
+          ],
+          [
+            34.66682776022211,
+            37.8873260870115
+          ],
+          [
+            34.66803890752219,
+            37.8871536640125
+          ],
+          [
+            34.67083844514121,
+            37.8847553733183
+          ],
+          [
+            34.673260736105824,
+            37.884144031825016
+          ],
+          [
+            34.667997152736255,
+            37.87336889042275
+          ],
+          [
+            34.66222942612709,
+            37.8768778634922
+          ],
+          [
+            34.65898310909561,
+            37.88021247883674
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_kuru_bugday_dane_1690 da_P1.geojson",
+        "source_label": "sazlica_kuru_bugday_dane_1690 da_P1.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P1",
+        "name": "P1",
+        "parcel_id": "P1",
+        "district": "Merkez",
+        "current_crop": "BUĞDAY (Dane)",
+        "crop": "BUĞDAY (Dane)",
+        "assigned_pattern": "BUĞDAY (Dane)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "kuru",
+        "irrigation_key": "rainfed",
+        "irrigation_current": "Yağışa bağlı (kuru)",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1690,
+        "area_official_da": 2700,
+        "farmer_id": "C001",
+        "farmer_name": "Ahmet Demir"
+      },
+      "id": 1773607041780
+    }
+  ]
+}

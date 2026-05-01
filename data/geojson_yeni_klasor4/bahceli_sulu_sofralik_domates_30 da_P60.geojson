@@ -1,0 +1,95 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P60",
+    "name": "P60",
+    "display_name": "P60",
+    "area_da": 30,
+    "area_m2": 30000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "SOFRALIK DOMATES",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Yusuf Kurt",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_sofralik_domates_30 da_P60.geojson",
+    "owner_username": "C060",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:27:49.415Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 30,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C060",
+    "farmer_name": "Yusuf Kurt",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "SOFRALIK DOMATES",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 23647.8,
+    "profit_tl_current": 260390.94,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 23647.8,
+    "assigned_profit_tl": 260390.94,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:27:54.659Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 30000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Sebze",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "SOFRALIK DOMATES",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_sofralik_domates_30 da_P60.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.6299204788197,
+          37.81253716953453
+        ],
+        [
+          34.62970592513907,
+          37.81333417073011
+        ],
+        [
+          34.62853660757961,
+          37.814165077709575
+        ],
+        [
+          34.62756038833273,
+          37.81384289039897
+        ],
+        [
+          34.62677726739843,
+          37.812842405051505
+        ],
+        [
+          34.625758137415424,
+          37.810782040823135
+        ],
+        [
+          34.62891207652075,
+          37.81031569526125
+        ],
+        [
+          34.6299204788197,
+          37.81253716953453
+        ]
+      ]
+    ]
+  }
+}

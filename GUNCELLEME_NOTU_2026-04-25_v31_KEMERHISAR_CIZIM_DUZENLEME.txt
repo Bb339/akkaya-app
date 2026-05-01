@@ -1,0 +1,11 @@
+v31 Kemerhisar çizim/düzenleme güncellemesi
+
+- Kemerhisar P122–P156 arası 35 parsel çizim/düzenleme için hazırlandı.
+- Parsel çizim ve bilgi atama paneline köy filtresi eklendi; varsayılan Kemerhisar seçili gelir.
+- Kemerhisar çizimine geç butonu eklendi.
+- Panelde seçilen Kemerhisar kaydı, ürün/alan/çiftçi/sulama/atama bilgilerini otomatik forma doldurur.
+- Haritada çizimi bitirince GeoJSON Flask üzerinden data/geojson_yeni_klasor4 içine doğru adla kaydedilir.
+- /api/save_panel_geojson artık sadece dosya yazmaz; parcel_drawing_registry_2024.csv/json ve parcel_meta_map.json dosyalarını da günceller.
+- Kemerhisar çizim planı data/kemerhisar_drawing_plan_v31.csv/json olarak eklendi.
+
+Not: Bu paket Kemerhisar geometri dosyası üretmez; geometriyi panelde siz çizeceksiniz. Çizim tamamlanınca kayıt kalıcı hale gelir.

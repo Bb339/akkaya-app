@@ -1,0 +1,79 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P51",
+    "name": "P51",
+    "display_name": "P51",
+    "area_da": 50,
+    "area_m2": 50000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "KURU FASULYE",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "Ahmet Kaya",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_kuru_fasulye_50 da_P51.geojson",
+    "owner_username": "C051",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:21:31.546Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 50,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C051",
+    "farmer_name": "Ahmet Kaya",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "KURU FASULYE",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 41725.5,
+    "profit_tl_current": 275000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 41725.5,
+    "assigned_profit_tl": 275000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:21:34.508Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 50000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Tarla",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "KURU FASULYE",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_kuru_fasulye_50 da_P51.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.61502774480865,
+          37.815267137923435
+        ],
+        [
+          34.607861651875474,
+          37.81876018424973
+        ],
+        [
+          34.616323574339646,
+          37.80882874322989
+        ],
+        [
+          34.61502774480865,
+          37.815267137923435
+        ]
+      ]
+    ]
+  }
+}

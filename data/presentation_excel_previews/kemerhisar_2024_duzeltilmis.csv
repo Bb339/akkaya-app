@@ -1,0 +1,37 @@
+﻿"KEMERHİSAR İçin Yöntem, Kaynak ve Hesap Akışı",,,,,,
+"Bu dosya KEMERHİSAR 2024 ham ürün alanı ve üretim verileri esas alınarak; Niğde 2024 meteoroloji proxy girdileri, ürün ETc referansları, hocanın aylık su bütçesi / efektif yağış / randıman / kayıp ayrımı notları ve Kemerhisar kimlik kartı-mahalle bilgileri birlikte değerlendirilerek hazırlanmıştır. Tasarım ve anlatım düzeni Sazlıca dosyası referans alınarak güçlendirilmiştir.",,,,,,
+KEMERHİSAR KİMLİK KARTI ÖZETİ,,,,,,
+Gösterge,Değer,Birim,Kaynak,Neden önemli?,Durum,Sunum cümlesi
+Nüfus,5927,kişi,KİMLİK KARTI,Yerleşim ölçeğini gösterir,Doğrudan,Kemerhisar nüfusu 5.927 kişidir.
+İlçeye uzaklık,9,km,KİMLİK KARTI,Pazara erişim ve lojistik yakınlığını gösterir,Doğrudan,İlçe merkezine yakınlık ürün pazarlamasını kolaylaştırır.
+İle uzaklık,26,km,KİMLİK KARTI,İl merkezi erişimini gösterir,Doğrudan,İl merkezine 26 km uzaklıktadır.
+Rakım,1107,m,KİMLİK KARTI,İklim ve ürün seçimi bağlamı sağlar,Doğrudan,Rakım 1107 m olduğundan serin yüksek ova koşulları etkindir.
+Eğim,1,%,KİMLİK KARTI,Sulama uygulaması ve yüzey akışı için kritiktir,Doğrudan,Düşük eğim sulama planlamasını kolaylaştırır.
+Toplam yüzölçümü,73790,da,ARAZİ DAĞILIMI,Yerleşimin genel alan büyüklüğünü verir,Doğrudan,Toplam yüzölçümü 73.790 dekar.
+Toplam tarım alanı,43008,da,ARAZİ DAĞILIMI,Tarımsal üretim tabanını verir,Doğrudan,Tarım alanı 43.008 dekar.
+Toplam sulanan alan,26360,da,ARAZİ DAĞILIMI,Sulu tarımın gerçek tabanını verir,Doğrudan,"Tarım alanının yaklaşık %61,3'ü sulanmaktadır."
+Kıraç alan,16648,da,ARAZİ DAĞILIMI,Kuru blok analizinin tabanını verir,Doğrudan,Kıraç alan ayrıca kuru blok olarak izlenmiştir.
+HESAP ZİNCİRİ VE KAYNAK EŞLEŞMESİ,,,,,,
+Başlık,Açıklama,Kaynak / dosya,Hesap mantığı,Kemerhisar özel not,Durum,Sunum cümlesi
+Ham alan ve üretim,"Tarla, sebze ve meyve ürün alanları ile üretimleri doğrudan işlendi.",2024-KEMERHİSAR.xlsx,Alan ve ton bilgileri ürün bazında doğrudan alındı.,Ham veri güçlüdür.,Doğrudan,Alan ve üretim tarafı doğrudan veriye dayanıyor.
+Meteoroloji girdisi,"Aylık yağış, sıcaklık, nem, rüzgâr, güneşlenme, radyasyon ve ET0 serileri Niğde/Bor proxy mantığıyla taşındı.",Niğde 2024 + uzun yıllar ZIP,Aylık iklim serisi ürün aylık su bütçesine bağlandı.,Yerel tam istasyon dosyası yerine bölgesel proxy kullanıldı.,Proxy,Meteoroloji tarafı açıkça proxy olarak gösterildi.
+Efektif yağış,"Aylık yağışın kullanılabilir kısmı 0,80×P kabul edildi.",1_Meteoroloji_2024,"Efektif yağış = 0,80 × aylık yağış",Hocanın notundaki açık vurgudur.,"min(aylık ETc, 0,80×yağış)",Yağmur katkısını ayrıca görüyoruz.
+Net ve brüt su ayrımı,,,,,,
+İletim ve tarla içi kayıp,,,,,,
+Her parselde her ürün denemesi,Temsilî parseller üzerinde bütün aktif ürünler çapraz denendi.,5_Parsel_Proxy + 6_ParselxUrun_Kota,"Parsel alanı sabit, ürün m3/da ile ölçeklendi.",Hocanın 'her parselde her ürün denensin' notu işlendi.,Model,Her ürün her temsilî parselde kıyaslanabilir.
+Karma sulama ve yöntem etkisi,Damla/yağmurlama/karık ve açık/kapalı şebeke senaryoları ayrıca gösterildi.,7_Sulama_Duzeyi + 8_Karma_Sulama_Senaryo + 23_SuluSusuz_ve_Alan_Etkisi,"Net su sabit, randıman değişince brüt çekiş ve sulanabilir alan değişir.",Yöntem değişirse aynı suyla ek alan etkisi ayrıca hesaplandı.,Model,Yöntem değişirse esas değişen brüt çekiş ve sulanabilir alandır.
+Toprak uygunluğu,,,,,,
+Yerleşim hizmet listesi,Köy listesi yerine Kemerhisar mahalleleri ve muhtarları işlendi.,KİMLİK KARTI + 24_Mahalle_ve_Rezerv_Planlama,Mahalle listesi ve sulama hizmet bağlamı verildi.,Kemerhisar belde olduğu için köy değil mahalle kullanıldı.,Doğrudan,Yerleşim hizmet alanı mahalleler üzerinden gösterildi.
+Rezerv planlama eşiği,Gerçek rezerv hacmi yerine planlama için gerekli minimum hacim eşdeğeri hesaplandı.,11_... + 24_Mahalle_ve_Rezerv_Planlama,"Yıllık brüt ihtiyaç, pik ay ve operasyon tamponu birlikte verildi.",Gerçek hacim uydurulmadı; planlama eşiği türetildi.,Türetilmiş,Dosya rezervin ne olması gerektiğini planlama eşiği olarak verir.
+HOCA NOTLARIYLA UYUMLULUK ÖZETİ,,,,,,
+Kontrol başlığı,Karşılık,Kaynak sayfa,Açıklama,Durum,Not,Sunum cümlesi
+Aylık su tüketimi,Var,4_Urun_Aylik_SuButcesi,"Ürün bazlı aylık ETc, net ve brüt su bütçesi üretildi.",Evet,Pik ay görülebilir.,Aylık su tüketimi ve pik ay hesaplandı.
+"0,80 efektif yağış",Var,1_Meteoroloji_2024 / 4_Urun_Aylik_SuButcesi,"Aylık yağışın 0,80'i efektif yağış kabul edildi.",Evet,Yağmur katkısı ayrıca izlenir.,Efektif yağış ayrıştırıldı.
+Yöntem değişirse sulanabilir alan,Var,23_SuluSusuz_ve_Alan_Etkisi,Tasarruf edilen su ile ek sulanabilir alan hesaplandı.,Evet,Mevcut ve iyi senaryo iki farklı oranla verildi.,Kayıp azalınca aynı suyla daha fazla alan sulanabilir.
+Toprak ve arz detayı,Var,22_Toprak_Su_Arz_Detayi + 24_Mahalle_ve_Rezerv_Planlama,"Toprak nitel sınıflaması, sulu-kıraç denge, devlet/halk sulaması ve yerleşim listesi aynı sistemde işlendi.",Evet,Gerçek harita yerine nitel senaryo kullanıldı.,Toprak ve arz tarafı görünür hale getirildi.
+KAPATMA İLKESİ,,,,,,
+"Bu dosyada açık başlık bırakılmamıştır. Her kritik kalem üç sınıftan biri altında kapatılmıştır: (i) ham dosyadan doğrudan alınan veri, (ii) bu verilerden formülle türetilen sonuç, (iii) dış veri yoksa uydurma sayı kullanmadan senaryo/planlama karşılığı.",,,,,,
+Karşılık türü,Tanım,Kemerhisar örneği,Sayfa,Sunumda nasıl söylenmeli?,Durum,
+Doğrudan veri,Ham dosyada aynen bulunan veri,"Nüfus, mahalle listesi, tarım alanı, devlet/halk sulaması",22_Toprak_Su_Arz_Detayi,Bu bilgi ham dosyadan doğrudan geldi.,Kapalı,
+Türetilmiş veri,Ham verilerden formülle elde edilen sonuç,"Yıllık brüt ihtiyaç, pik ay, tampon hacim, yağmur/sulama yüzdesi",11_IlceMerkezi_Toplam_Su_Ozeti,Bu bilgi kaynak veriden hesaplandı.,Kapalı,
+Senaryo / nitel karşılık,Ham dosyada sayısal karşılığı olmayan ama boş bırakılmayan planlama yorumu,"Toprak uygunluk matrisi, sistem iyileşirse ek sulanabilir alan",22_Toprak_Su_Arz_Detayi / 23_SuluSusuz_ve_Alan_Etkisi,"Bu başlık uydurma sayı değil, planlama karşılığıyla kapatıldı.",Kapalı,

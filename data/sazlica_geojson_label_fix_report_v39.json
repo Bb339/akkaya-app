@@ -1,0 +1,252 @@
+{
+  "version": "v39",
+  "renamed_sazlica_files": 49,
+  "renamed": [
+    [
+      "sazlica_kuru_arpa(dane)_1000 da.geojson",
+      "sazlica_kuru_arpa_dane_1000 da_P2.geojson",
+      "P2"
+    ],
+    [
+      "sazlica_kuru_bugday(dane)_1690 da.geojson",
+      "sazlica_kuru_bugday_dane_1690 da_P1.geojson",
+      "P1"
+    ],
+    [
+      "sazlica_kuru_cavdar(dane)_40 da.geojson",
+      "sazlica_kuru_cavdar_dane_40 da_P3.geojson",
+      "P3"
+    ],
+    [
+      "sazlica_kuru_nohut_80 da.geojson",
+      "sazlica_kuru_nohut_80 da_P7.geojson",
+      "P7"
+    ],
+    [
+      "sazlica_kuru_tiritikale_70 da.geojson",
+      "sazlica_kuru_trtikale_dane_70 da_P4.geojson",
+      "P4"
+    ],
+    [
+      "sazlica_kuru_yulaf(dane)_50 da.geojson",
+      "sazlica_kuru_yulaf_dane_50 da_P5.geojson",
+      "P5"
+    ],
+    [
+      "sazlica_sulu_armut_86 da.geojson",
+      "sazlica_sulu_armut_86 da_P37.geojson",
+      "P37"
+    ],
+    [
+      "sazlica_sulu_arpa(yesilot)_20 da.geojson",
+      "sazlica_sulu_arpa_yesilot_20 da_P11.geojson",
+      "P11"
+    ],
+    [
+      "sazlica_sulu_aycicegi_20 da.geojson",
+      "sazlica_sulu_aycicegi_20 da_P8.geojson",
+      "P8"
+    ],
+    [
+      "sazlica_sulu_badem_71 da.geojson",
+      "sazlica_sulu_badem_71 da_P45.geojson",
+      "P45"
+    ],
+    [
+      "sazlica_sulu_bag_63 da.geojson",
+      "sazlica_sulu_bag_63 da_P36.geojson",
+      "P36"
+    ],
+    [
+      "sazlica_sulu_barbunya fazulye(taze)_2 da.geojson",
+      "sazlica_sulu_barbunya_fasulye_taze_2 da_P19.geojson",
+      "P19"
+    ],
+    [
+      "sazlica_sulu_bugda(dane)_1010 da.geojson",
+      "sazlica_sulu_bugday_dane_1010 da_P1.geojson",
+      "P1"
+    ],
+    [
+      "sazlica_sulu_bugday(yesilot)_20 da.geojson",
+      "sazlica_sulu_bugday_yesilot_20 da_P10.geojson",
+      "P10"
+    ],
+    [
+      "sazlica_sulu_cavdar_350 da.geojson",
+      "sazlica_sulu_cavdar_yesilot_350 da_P12.geojson",
+      "P12"
+    ],
+    [
+      "sazlica_sulu_ceviz_251 da.geojson",
+      "sazlica_sulu_ceviz_251 da_P46.geojson",
+      "P46"
+    ],
+    [
+      "sazlica_sulu_cilek_12 da.geojson",
+      "sazlica_sulu_cilek_12 da_P47.geojson",
+      "P47"
+    ],
+    [
+      "sazlica_sulu_digeralan_472 da.geojson",
+      "sazlica_sulu_diger_alan_472 da_P180.geojson",
+      "P180"
+    ],
+    [
+      "sazlica_sulu_elma_3826 da.geojson",
+      "sazlica_sulu_elma_3826 da_P38.geojson",
+      "P38"
+    ],
+    [
+      "sazlica_sulu_erik_126 da.geojson",
+      "sazlica_sulu_erik_126 da_P39.geojson",
+      "P39"
+    ],
+    [
+      "sazlica_sulu_fasulye(taze)_11 da.geojson",
+      "sazlica_sulu_fasulye_taze_11 da_P24.geojson",
+      "P24"
+    ],
+    [
+      "sazlica_sulu_fig(yesilot)_70 da.geojson",
+      "sazlica_sulu_fig_yesilot_70 da_P15.geojson",
+      "P15"
+    ],
+    [
+      "sazlica_sulu_hiyar(sofralik)_2 da.geojson",
+      "sazlica_sulu_hiyar_sofralik_2 da_P25.geojson",
+      "P25"
+    ],
+    [
+      "sazlica_sulu_kabak_1 da.geojson",
+      "sazlica_sulu_kabak_bal_1 da_P27.geojson",
+      "P27"
+    ],
+    [
+      "sazlica_sulu_kabak_11 da.geojson",
+      "sazlica_sulu_kabak_sakiz_11 da_P26.geojson",
+      "P26"
+    ],
+    [
+      "sazlica_sulu_kabak_9 da.geojson",
+      "sazlica_sulu_kabak_cerezlik_9 da_P28.geojson",
+      "P28"
+    ],
+    [
+      "sazlica_sulu_karpuz_106 da.geojson",
+      "sazlica_sulu_karpuz_106 da_P29.geojson",
+      "P29"
+    ],
+    [
+      "sazlica_sulu_kavun_90 da.geojson",
+      "sazlica_sulu_kavun_90 da_P30.geojson",
+      "P30"
+    ],
+    [
+      "sazlica_sulu_kayisi_456 da.geojson",
+      "sazlica_sulu_kaysi_456 da_P40.geojson",
+      "P40"
+    ],
+    [
+      "sazlica_sulu_kiraz_129 da.geojson",
+      "sazlica_sulu_kiraz_129 da_P41.geojson",
+      "P41"
+    ],
+    [
+      "sazlica_sulu_kurufasulye_80 da.geojson",
+      "sazlica_sulu_kuru_fasulye_80 da_P6.geojson",
+      "P6"
+    ],
+    [
+      "sazlica_sulu_lahana(kirmizi)_700 da.geojson",
+      "sazlica_sulu_lahana_kirmizi_700 da_P32.geojson",
+      "P32"
+    ],
+    [
+      "sazlica_sulu_lahana_7300 da.geojson",
+      "sazlica_sulu_lahana_beyaz_7300 da_P31.geojson",
+      "P31"
+    ],
+    [
+      "sazlica_sulu_nektar_2525 da.geojson",
+      "sazlica_sulu_nektar_2525 da_P42.geojson",
+      "P42"
+    ],
+    [
+      "sazlica_sulu_patates_475 da.geojson",
+      "sazlica_sulu_patates_475 da_P9.geojson",
+      "P9"
+    ],
+    [
+      "sazlica_sulu_salcalikbiber_60 da.geojson",
+      "sazlica_sulu_salcalik_biber_60 da_P21.geojson",
+      "P21"
+    ],
+    [
+      "sazlica_sulu_sarimsak_1 da.geojson",
+      "sazlica_sulu_sarimsak_kuru_1 da_P34.geojson",
+      "P34"
+    ],
+    [
+      "sazlica_sulu_seftali_596 da.geojson",
+      "sazlica_sulu_seftali_596 da_P43.geojson",
+      "P43"
+    ],
+    [
+      "sazlica_sulu_silajlikmisir_650 da.geojson",
+      "sazlica_sulu_silajlik_misir_650 da_P17.geojson",
+      "P17"
+    ],
+    [
+      "sazlica_sulu_sivribiber_17 da.geojson",
+      "sazlica_sulu_sivri_biber_17 da_P20.geojson",
+      "P20"
+    ],
+    [
+      "sazlica_sulu_sofralikdomaes_1248 da.geojson",
+      "sazlica_sulu_sofralik_domates_1248 da_P22.geojson",
+      "P22"
+    ],
+    [
+      "sazlica_sulu_sogan_1 da.geojson",
+      "sazlica_sulu_sogan_taze_1 da_P35.geojson",
+      "P35"
+    ],
+    [
+      "sazlica_sulu_sogan_67 da.geojson",
+      "sazlica_sulu_sogan_kuru_67 da_P33.geojson",
+      "P33"
+    ],
+    [
+      "sazlica_sulu_sorgum_20 da.geojson",
+      "sazlica_sulu_sorgum_20 da_P18.geojson",
+      "P18"
+    ],
+    [
+      "sazlica_sulu_ssalcalikdomates_3754 da.geojson",
+      "sazlica_sulu_salcalik_domates_3754 da_P23.geojson",
+      "P23"
+    ],
+    [
+      "sazlica_sulu_tiritikale(ye#U015filot)_70 da.geojson",
+      "sazlica_sulu_tritikale_yesilot_70 da_P13.geojson",
+      "P13"
+    ],
+    [
+      "sazlica_sulu_visne_2 da.geojson",
+      "sazlica_sulu_visne_2 da_P44.geojson",
+      "P44"
+    ],
+    [
+      "sazlica_sulu_yonca_1650 da.geojson",
+      "sazlica_sulu_yonca_yesilot_1650 da_P16.geojson",
+      "P16"
+    ],
+    [
+      "sazlica_sulu_yulaf(yesilot)_10 da.geojson",
+      "sazlica_sulu_yulaf_yesilot_10 da_P14.geojson",
+      "P14"
+    ]
+  ],
+  "total_geojson": 181
+}

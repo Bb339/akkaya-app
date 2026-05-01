@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65207770864085,
+            37.89023313875602
+          ],
+          [
+            34.65251846278431,
+            37.88990451994408
+          ],
+          [
+            34.65281229887995,
+            37.89056175610121
+          ],
+          [
+            34.654281479358154,
+            37.889479247039844
+          ],
+          [
+            34.65450185642988,
+            37.89052309505294
+          ],
+          [
+            34.65592206497274,
+            37.89119965559988
+          ],
+          [
+            34.65653422425259,
+            37.89046510388492
+          ],
+          [
+            34.65521196182221,
+            37.88897664797888
+          ],
+          [
+            34.656044495931994,
+            37.88636694538593
+          ],
+          [
+            34.65166144158596,
+            37.88828073633128
+          ],
+          [
+            34.651906304625356,
+            37.89019447753519
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_kuru_yulaf_dane_50 da_P5.geojson",
+        "source_label": "sazlica_kuru_yulaf_dane_50 da_P5.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P5",
+        "name": "P5",
+        "parcel_id": "P5",
+        "district": "Merkez",
+        "current_crop": "YULAF (Dane)",
+        "crop": "YULAF (Dane)",
+        "assigned_pattern": "YULAF (Dane)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "kuru",
+        "irrigation_key": "rainfed",
+        "irrigation_current": "Yağışa bağlı (kuru)",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 50,
+        "area_official_da": 50,
+        "farmer_id": "C005",
+        "farmer_name": "Hasan Eren"
+      },
+      "id": 1773607473044
+    }
+  ]
+}

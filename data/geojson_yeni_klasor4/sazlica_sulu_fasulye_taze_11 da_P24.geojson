@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64322144452395,
+            37.900967233456555
+          ],
+          [
+            34.64582531992595,
+            37.90270680431429
+          ],
+          [
+            34.643462372220846,
+            37.904932494895135
+          ],
+          [
+            34.641016026687055,
+            37.903785002092505
+          ],
+          [
+            34.64125695470209,
+            37.90331722922568
+          ],
+          [
+            34.64086776356238,
+            37.903156431466996
+          ],
+          [
+            34.64174807747569,
+            37.90241821976156
+          ],
+          [
+            34.643202911673136,
+            37.90094908331794
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_fasulye_taze_11 da_P24.geojson",
+        "source_label": "sazlica_sulu_fasulye_taze_11 da_P24.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P24",
+        "name": "P24",
+        "parcel_id": "P24",
+        "district": "Merkez",
+        "current_crop": "FASULYE (TAZE)",
+        "crop": "FASULYE (TAZE)",
+        "assigned_pattern": "FASULYE (TAZE)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 11,
+        "area_official_da": 11,
+        "farmer_id": "C024",
+        "farmer_name": "Ömer Koç"
+      },
+      "id": 1773615697364
+    }
+  ]
+}

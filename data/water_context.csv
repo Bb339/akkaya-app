@@ -1,0 +1,4 @@
+﻿water_year,projection_mode,available_water_m3,risk_level,note
+2024,planning_reference_current_crop_pattern,100700080.81,referans,Gerçek baraj arzı değil; 2024 mevcut ürün deseninden hesaplanan toplam brüt sulama talebi.
+2024,equal_village_comparison,20140016.162,karşılaştırma,Toplam mevcut talebin aktif köy sayısına bölünmesiyle oluşan idari eşitlik senaryosu.
+2024,area_fair_per_da,746.374349,ana_model_m3_da,Dekar başına adil kota yoğunluğu; parsel kotası alan_da × bu değer olarak hesaplanır.

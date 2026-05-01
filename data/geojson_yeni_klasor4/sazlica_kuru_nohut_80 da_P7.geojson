@@ -1,0 +1,70 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65519504620276,
+            37.883694663643155
+          ],
+          [
+            34.65572037298152,
+            37.88458340908424
+          ],
+          [
+            34.657071213269745,
+            37.885847382538344
+          ],
+          [
+            34.65709622959405,
+            37.88618312222165
+          ],
+          [
+            34.65989797088724,
+            37.88683484724034
+          ],
+          [
+            34.65894738033673,
+            37.88011982848998
+          ],
+          [
+            34.65522006252708,
+            37.88371441424103
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_kuru_nohut_80 da_P7.geojson",
+        "source_label": "sazlica_kuru_nohut_80 da_P7.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P7",
+        "name": "P7",
+        "parcel_id": "P7",
+        "district": "Merkez",
+        "current_crop": "NOHUT",
+        "crop": "NOHUT",
+        "assigned_pattern": "NOHUT",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "kuru",
+        "irrigation_key": "rainfed",
+        "irrigation_current": "Yağışa bağlı (kuru)",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 80,
+        "area_official_da": 80,
+        "farmer_id": "C007",
+        "farmer_name": "İbrahim Turan"
+      },
+      "id": 1773607195196
+    }
+  ]
+}

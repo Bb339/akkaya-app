@@ -1,0 +1,307 @@
+﻿year,parcel_id,season,crop,area_da,water_m3_calib_gross,profit_tl,village,district,parcel_type
+2024,P1,primary,BUĞDAY (Dane),1890.0,1158248.7,5078499.93,Sazlıca,Merkez,field
+2024,P1,secondary,ARPA (YEŞİLOT),810.0,358724.7,3402000.0,Sazlıca,Merkez,field
+2024,P2,primary,ARPA (Dane),700.0,360745.0,1820000.0,Sazlıca,Merkez,field
+2024,P2,secondary,ARPA (YEŞİLOT),300.0,132861.0,1260000.0,Sazlıca,Merkez,field
+2024,P3,primary,ÇAVDAR (Dane),28.0,14390.32,70000.0,Sazlıca,Merkez,field
+2024,P3,secondary,ARPA (YEŞİLOT),12.0,5314.44,50400.0,Sazlıca,Merkez,field
+2024,P4,primary,TRTİKALE (Dane),49.0,26565.35,132300.0,Sazlıca,Merkez,field
+2024,P4,secondary,ARPA (YEŞİLOT),21.0,9300.27,88200.0,Sazlıca,Merkez,field
+2024,P5,primary,YULAF (Dane),35.0,17249.05,87500.0,Sazlıca,Merkez,field
+2024,P5,secondary,ARPA (YEŞİLOT),15.0,6643.05,63000.0,Sazlıca,Merkez,field
+2024,P6,primary,KURU FASULYE,56.0,46732.56,308000.0,Sazlıca,Merkez,field
+2024,P6,secondary,ARPA (YEŞİLOT),24.0,10628.88,100800.0,Sazlıca,Merkez,field
+2024,P7,primary,NOHUT,56.0,37232.16,179200.0,Sazlıca,Merkez,field
+2024,P7,secondary,ARPA (YEŞİLOT),24.0,10628.88,100800.0,Sazlıca,Merkez,field
+2024,P8,primary,AYÇİÇEĞİ,14.0,13592.74,58800.0,Sazlıca,Merkez,field
+2024,P8,secondary,ARPA (YEŞİLOT),6.0,2657.22,25200.0,Sazlıca,Merkez,field
+2024,P9,primary,PATATES,332.5,295765.4,771738.1525,Sazlıca,Merkez,field
+2024,P9,secondary,ARPA (YEŞİLOT),142.5,63108.975,598500.0,Sazlıca,Merkez,field
+2024,P10,primary,BUĞDAY (YEŞİLOT),14.0,6406.54,49000.0,Sazlıca,Merkez,field
+2024,P10,secondary,ARPA (YEŞİLOT),6.0,2657.22,25200.0,Sazlıca,Merkez,field
+2024,P11,primary,ARPA (YEŞİLOT),14.0,6200.18,58800.0,Sazlıca,Merkez,field
+2024,P11,secondary,FİĞ (YEŞİLOT),6.0,3644.22,27000.0,Sazlıca,Merkez,field
+2024,P12,primary,ÇAVDAR (YEŞİLOT),245.0,119349.3,955500.0,Sazlıca,Merkez,field
+2024,P12,secondary,ARPA (YEŞİLOT),105.0,46501.35,441000.0,Sazlıca,Merkez,field
+2024,P13,primary,TRİTİKALE (YEŞİLOT),49.0,23144.66,171500.0,Sazlıca,Merkez,field
+2024,P13,secondary,ARPA (YEŞİLOT),21.0,9300.27,88200.0,Sazlıca,Merkez,field
+2024,P14,primary,YULAF (YEŞİLOT),7.0,3203.27,26600.0,Sazlıca,Merkez,field
+2024,P14,secondary,ARPA (YEŞİLOT),3.0,1328.61,12600.0,Sazlıca,Merkez,field
+2024,P15,primary,FİĞ (YEŞİLOT),49.0,29761.13,220500.0,Sazlıca,Merkez,field
+2024,P15,secondary,ARPA (YEŞİLOT),21.0,9300.27,88200.0,Sazlıca,Merkez,field
+2024,P16,primary,YONCA (YEŞİLOT),1155.0,1287513.15,7507500.0,Sazlıca,Merkez,field
+2024,P16,secondary,ARPA (YEŞİLOT),495.0,219220.65,2079000.0,Sazlıca,Merkez,field
+2024,P17,primary,SİLAJLIK MISIR,455.0,380416.4,2821000.0,Sazlıca,Merkez,field
+2024,P17,secondary,ARPA (YEŞİLOT),195.0,86359.65,819000.0,Sazlıca,Merkez,field
+2024,P18,primary,SORGUM,14.0,11265.1,53200.0,Sazlıca,Merkez,field
+2024,P18,secondary,ARPA (YEŞİLOT),6.0,2657.22,25200.0,Sazlıca,Merkez,field
+2024,P19,primary,BARBUNYA FASULYE (TAZE),1.4,812.56,2520.0,Sazlıca,Merkez,vegetable
+2024,P19,secondary,ARPA (YEŞİLOT),0.6,265.722,2520.0,Sazlıca,Merkez,vegetable
+2024,P20,primary,SİVRİ BİBER,11.9,8307.747,83300.0,Sazlıca,Merkez,vegetable
+2024,P20,secondary,ARPA (YEŞİLOT),5.1,2258.637,21420.0,Sazlıca,Merkez,vegetable
+2024,P21,primary,SALÇALIK BİBER,42.0,29321.46,384547.842,Sazlıca,Merkez,vegetable
+2024,P21,secondary,ARPA (YEŞİLOT),18.0,7971.66,75600.0,Sazlıca,Merkez,vegetable
+2024,P22,primary,SOFRALIK DOMATES,873.6,688623.936,7582584.1728,Sazlıca,Merkez,vegetable
+2024,P22,secondary,ARPA (YEŞİLOT),374.4,165810.528,1572480.0,Sazlıca,Merkez,vegetable
+2024,P23,primary,SALÇALIK DOMATES,2627.8,2071389.628,42023039.1882,Sazlıca,Merkez,vegetable
+2024,P23,secondary,ARPA (YEŞİLOT),1126.2,498760.194,4730040.0,Sazlıca,Merkez,vegetable
+2024,P24,primary,FASULYE (TAZE),7.7,4469.08,4432.3895,Sazlıca,Merkez,vegetable
+2024,P24,secondary,ARPA (YEŞİLOT),3.3,1461.471,13860.0,Sazlıca,Merkez,vegetable
+2024,P25,primary,HIYAR (SOFRALIK),1.4,876.666,7280.0,Sazlıca,Merkez,vegetable
+2024,P25,secondary,ARPA (YEŞİLOT),0.6,265.722,2520.0,Sazlıca,Merkez,vegetable
+2024,P26,primary,KABAK (SAKIZ),7.7,4962.419,50050.0,Sazlıca,Merkez,vegetable
+2024,P26,secondary,ARPA (YEŞİLOT),3.3,1461.471,13860.0,Sazlıca,Merkez,vegetable
+2024,P27,primary,KABAK (BAL),0.7,460.306,4900.0,Sazlıca,Merkez,vegetable
+2024,P27,secondary,ARPA (YEŞİLOT),0.3,132.861,1260.0,Sazlıca,Merkez,vegetable
+2024,P28,primary,KABAK (ÇEREZLİK),6.3,3566.682,28350.0,Sazlıca,Merkez,vegetable
+2024,P28,secondary,ARPA (YEŞİLOT),2.7,1195.749,11340.0,Sazlıca,Merkez,vegetable
+2024,P29,primary,KARPUZ,74.2,47723.956,333900.0,Sazlıca,Merkez,vegetable
+2024,P29,secondary,ARPA (YEŞİLOT),31.8,14083.266,133560.0,Sazlıca,Merkez,vegetable
+2024,P30,primary,KAVUN,63.0,41428.17,296100.0,Sazlıca,Merkez,vegetable
+2024,P30,secondary,ARPA (YEŞİLOT),27.0,11957.49,113400.0,Sazlıca,Merkez,vegetable
+2024,P31,primary,LAHANA (BEYAZ),5110.0,2118043.9,25410742.28,Sazlıca,Merkez,vegetable
+2024,P31,secondary,ARPA (YEŞİLOT),2190.0,969885.3,9198000.0,Sazlıca,Merkez,vegetable
+2024,P32,primary,LAHANA (KIRMIZI),490.0,203100.1,2548000.0,Sazlıca,Merkez,vegetable
+2024,P32,secondary,ARPA (YEŞİLOT),210.0,93002.7,882000.0,Sazlıca,Merkez,vegetable
+2024,P33,primary,SOĞAN (KURU),46.9,47088.069,599371.9634,Sazlıca,Merkez,vegetable
+2024,P33,secondary,ARPA (YEŞİLOT),20.1,8901.687,84420.0,Sazlıca,Merkez,vegetable
+2024,P34,primary,SARIMSAK (KURU),0.7,640.192,7032.7656,Sazlıca,Merkez,vegetable
+2024,P34,secondary,ARPA (YEŞİLOT),0.3,132.861,1260.0,Sazlıca,Merkez,vegetable
+2024,P35,primary,SOĞAN (TAZE),0.7,431.34,4900.0,Sazlıca,Merkez,vegetable
+2024,P35,secondary,ARPA (YEŞİLOT),0.3,132.861,1260.0,Sazlıca,Merkez,vegetable
+2024,P36,primary,BAĞ,63.0,40478.76,504000.0,Sazlıca,Merkez,orchard
+2024,P37,primary,ARMUT,86.0,72922.84,860000.0,Sazlıca,Merkez,orchard
+2024,P38,primary,ELMA,3826.0,3110423.22,42086000.0,Sazlıca,Merkez,orchard
+2024,P39,primary,ERİK,126.0,98656.74,1134000.0,Sazlıca,Merkez,orchard
+2024,P40,primary,KAYSI,456.0,365050.8,4332000.0,Sazlıca,Merkez,orchard
+2024,P41,primary,KİRAZ,129.0,104560.95,1483500.0,Sazlıca,Merkez,orchard
+2024,P42,primary,NEKTAR,2525.0,2141048.5,25250000.0,Sazlıca,Merkez,orchard
+2024,P43,primary,ŞEFTALİ,596.0,505372.24,5840800.0,Sazlıca,Merkez,orchard
+2024,P44,primary,VİŞNE,2.0,1621.1,19000.0,Sazlıca,Merkez,orchard
+2024,P45,primary,BADEM,71.0,46737.17,639000.0,Sazlıca,Merkez,orchard
+2024,P46,primary,CEVİZ,251.0,204055.47,2510000.0,Sazlıca,Merkez,orchard
+2024,P47,primary,ÇİLEK,12.0,7890.96,180000.0,Sazlıca,Merkez,orchard
+2024,P48,primary,BUĞDAY (Dane),1533.0,939468.39,4119227.721,Bahçeli,Merkez,field
+2024,P48,secondary,FİĞ (YEŞİLOT),657.0,399042.09,2956500.0,Bahçeli,Merkez,field
+2024,P49,primary,ARPA (Dane),2366.0,1219318.1,6151600.0,Bahçeli,Merkez,field
+2024,P49,secondary,FİĞ (YEŞİLOT),1014.0,615873.18,4563000.0,Bahçeli,Merkez,field
+2024,P50,primary,ÇAVDAR (Dane),119.0,61158.86,297500.0,Bahçeli,Merkez,field
+2024,P50,secondary,FİĞ (YEŞİLOT),51.0,30975.87,229500.0,Bahçeli,Merkez,field
+2024,P51,primary,KURU FASULYE,35.0,29207.85,192500.0,Bahçeli,Merkez,field
+2024,P51,secondary,FİĞ (YEŞİLOT),15.0,9110.55,67500.0,Bahçeli,Merkez,field
+2024,P52,primary,NOHUT,252.0,167544.72,806400.0,Bahçeli,Merkez,field
+2024,P52,secondary,FİĞ (YEŞİLOT),108.0,65595.96,486000.0,Bahçeli,Merkez,field
+2024,P53,primary,PATATES,98.0,87172.96,227459.666,Bahçeli,Merkez,field
+2024,P53,secondary,FİĞ (YEŞİLOT),42.0,25509.54,189000.0,Bahçeli,Merkez,field
+2024,P54,primary,YULAF (YEŞİLOT),70.0,32032.7,266000.0,Bahçeli,Merkez,field
+2024,P54,secondary,FİĞ (YEŞİLOT),30.0,18221.1,135000.0,Bahçeli,Merkez,field
+2024,P55,primary,FİĞ (YEŞİLOT),14.0,8503.18,63000.0,Bahçeli,Merkez,field
+2024,P55,secondary,YONCA (YEŞİLOT),6.0,6688.38,39000.0,Bahçeli,Merkez,field
+2024,P56,primary,YONCA (YEŞİLOT),357.0,397958.61,2320500.0,Bahçeli,Merkez,field
+2024,P56,secondary,FİĞ (YEŞİLOT),153.0,92927.61,688500.0,Bahçeli,Merkez,field
+2024,P57,primary,SİLAJLIK MISIR,87.5,73157.0,542500.0,Bahçeli,Merkez,field
+2024,P57,secondary,FİĞ (YEŞİLOT),37.5,22776.375,168750.0,Bahçeli,Merkez,field
+2024,P58,primary,SİVRİ BİBER,1.4,977.382,9800.0,Bahçeli,Merkez,vegetable
+2024,P58,secondary,FİĞ (YEŞİLOT),0.6,364.422,2700.0,Bahçeli,Merkez,vegetable
+2024,P59,primary,SALÇALIK BİBER,28.0,19547.64,256365.228,Bahçeli,Merkez,vegetable
+2024,P59,secondary,FİĞ (YEŞİLOT),12.0,7288.44,54000.0,Bahçeli,Merkez,vegetable
+2024,P60,primary,SOFRALIK DOMATES,21.0,16553.46,182273.658,Bahçeli,Merkez,vegetable
+2024,P60,secondary,FİĞ (YEŞİLOT),9.0,5466.33,40500.0,Bahçeli,Merkez,vegetable
+2024,P61,primary,SALÇALIK DOMATES,609.0,480050.34,9738956.871,Bahçeli,Merkez,vegetable
+2024,P61,secondary,FİĞ (YEŞİLOT),261.0,158523.57,1174500.0,Bahçeli,Merkez,vegetable
+2024,P62,primary,FASULYE (TAZE),7.0,4062.8,4029.445,Bahçeli,Merkez,vegetable
+2024,P62,secondary,FİĞ (YEŞİLOT),3.0,1822.11,13500.0,Bahçeli,Merkez,vegetable
+2024,P63,primary,HIYAR (SOFRALIK),11.2,7013.328,58240.0,Bahçeli,Merkez,vegetable
+2024,P63,secondary,FİĞ (YEŞİLOT),4.8,2915.376,21600.0,Bahçeli,Merkez,vegetable
+2024,P64,primary,KARPUZ,7.0,4502.26,31500.0,Bahçeli,Merkez,vegetable
+2024,P64,secondary,FİĞ (YEŞİLOT),3.0,1822.11,13500.0,Bahçeli,Merkez,vegetable
+2024,P65,primary,KAVUN,84.0,55237.56,394800.0,Bahçeli,Merkez,vegetable
+2024,P65,secondary,FİĞ (YEŞİLOT),36.0,21865.32,162000.0,Bahçeli,Merkez,vegetable
+2024,P66,primary,LAHANA (BEYAZ),319.9,132595.351,1590782.0852,Bahçeli,Merkez,vegetable
+2024,P66,secondary,FİĞ (YEŞİLOT),137.1,83270.427,616950.0,Bahçeli,Merkez,vegetable
+2024,P67,primary,SOĞAN (KURU),7.0,7028.07,89458.502,Bahçeli,Merkez,vegetable
+2024,P67,secondary,FİĞ (YEŞİLOT),3.0,1822.11,13500.0,Bahçeli,Merkez,vegetable
+2024,P68,primary,BAĞ,1500.0,963780.0,12000000.0,Bahçeli,Merkez,orchard
+2024,P69,primary,ARMUT,222.0,188242.68,2220000.0,Bahçeli,Merkez,orchard
+2024,P70,primary,AYVA,53.0,44940.82,503500.0,Bahçeli,Merkez,orchard
+2024,P71,primary,ELMA,8438.0,6859840.86,92818000.0,Bahçeli,Merkez,orchard
+2024,P72,primary,ERİK,41.0,32102.59,369000.0,Bahçeli,Merkez,orchard
+2024,P73,primary,KAYSI,480.0,384264.0,4560000.0,Bahçeli,Merkez,orchard
+2024,P74,primary,KİRAZ,20.0,16211.0,230000.0,Bahçeli,Merkez,orchard
+2024,P75,primary,NEKTAR,98.0,83098.12,980000.0,Bahçeli,Merkez,orchard
+2024,P76,primary,ŞEFTALİ,25.0,21198.5,245000.0,Bahçeli,Merkez,orchard
+2024,P77,primary,BADEM,2.0,1316.54,18000.0,Bahçeli,Merkez,orchard
+2024,P78,primary,CEVİZ,203.0,165032.91,2030000.0,Bahçeli,Merkez,orchard
+2024,P79,primary,BUĞDAY (Dane),3108.7,1904918.099,8353191.9219,Bor İlçe Merkezi,Bor,field
+2024,P79,secondary,FİĞ (YEŞİLOT),1332.3,809199.051,5995350.0,Bor İlçe Merkezi,Bor,field
+2024,P80,primary,ARPA (Dane),1778.0,916292.3,4622800.0,Bor İlçe Merkezi,Bor,field
+2024,P80,secondary,FİĞ (YEŞİLOT),762.0,462815.94,3429000.0,Bor İlçe Merkezi,Bor,field
+2024,P81,primary,ÇAVDAR (Dane),59.5,30579.43,148750.0,Bor İlçe Merkezi,Bor,field
+2024,P81,secondary,FİĞ (YEŞİLOT),25.5,15487.935,114750.0,Bor İlçe Merkezi,Bor,field
+2024,P82,primary,MISIR (Dane),6.3,6294.771,25200.0,Bor İlçe Merkezi,Bor,field
+2024,P82,secondary,FİĞ (YEŞİLOT),2.7,1639.899,12150.0,Bor İlçe Merkezi,Bor,field
+2024,P83,primary,TRTİKALE (Dane),35.0,18973.5,94500.0,Bor İlçe Merkezi,Bor,field
+2024,P83,secondary,FİĞ (YEŞİLOT),15.0,9110.55,67500.0,Bor İlçe Merkezi,Bor,field
+2024,P84,primary,KURU FASULYE,112.0,93457.28,616000.0,Bor İlçe Merkezi,Bor,field
+2024,P84,secondary,FİĞ (YEŞİLOT),48.0,29153.76,216000.0,Bor İlçe Merkezi,Bor,field
+2024,P85,primary,NOHUT,98.0,65148.44,313600.0,Bor İlçe Merkezi,Bor,field
+2024,P85,secondary,FİĞ (YEŞİLOT),42.0,25509.54,189000.0,Bor İlçe Merkezi,Bor,field
+2024,P86,primary,PATATES,175.0,155662.5,406177.975,Bor İlçe Merkezi,Bor,field
+2024,P86,secondary,FİĞ (YEŞİLOT),75.0,45552.75,337500.0,Bor İlçe Merkezi,Bor,field
+2024,P87,primary,ŞEKER PANCARI,2072.0,3096003.12,13468000.0,Bor İlçe Merkezi,Bor,field
+2024,P87,secondary,FİĞ (YEŞİLOT),888.0,539344.56,3996000.0,Bor İlçe Merkezi,Bor,field
+2024,P88,primary,ÇAVDAR (YEŞİLOT),399.0,182586.39,1556100.0,Bor İlçe Merkezi,Bor,field
+2024,P88,secondary,FİĞ (YEŞİLOT),171.0,103860.27,769500.0,Bor İlçe Merkezi,Bor,field
+2024,P89,primary,TRİTİKALE (YEŞİLOT),28.0,17006.36,98000.0,Bor İlçe Merkezi,Bor,field
+2024,P89,secondary,FİĞ (YEŞİLOT),12.0,7288.44,54000.0,Bor İlçe Merkezi,Bor,field
+2024,P90,primary,FİĞ (YEŞİLOT),630.0,382643.1,2835000.0,Bor İlçe Merkezi,Bor,field
+2024,P90,secondary,YONCA (YEŞİLOT),270.0,300977.1,1755000.0,Bor İlçe Merkezi,Bor,field
+2024,P91,primary,YONCA (YEŞİLOT),2030.0,2262901.9,13195000.0,Bor İlçe Merkezi,Bor,field
+2024,P91,secondary,FİĞ (YEŞİLOT),870.0,528411.9,3915000.0,Bor İlçe Merkezi,Bor,field
+2024,P92,primary,SİLAJLIK MISIR,3738.0,3125005.38,23175600.0,Bor İlçe Merkezi,Bor,field
+2024,P92,secondary,FİĞ (YEŞİLOT),1602.0,973006.74,7209000.0,Bor İlçe Merkezi,Bor,field
+2024,P93,primary,SORGUM,128.1,124774.524,486780.0,Bor İlçe Merkezi,Bor,field
+2024,P93,secondary,FİĞ (YEŞİLOT),54.9,33344.613,247050.0,Bor İlçe Merkezi,Bor,field
+2024,P94,primary,SİVRİ BİBER,11.2,7818.608,78400.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P94,secondary,FİĞ (YEŞİLOT),4.8,2915.376,21600.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P95,primary,SALÇALIK BİBER,133.7,93334.633,1224143.9637,Bor İlçe Merkezi,Bor,vegetable
+2024,P95,secondary,FİĞ (YEŞİLOT),57.3,34802.301,257850.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P96,primary,SOFRALIK DOMATES,126.0,99323.28,1093641.948,Bor İlçe Merkezi,Bor,vegetable
+2024,P96,secondary,FİĞ (YEŞİLOT),54.0,32797.98,243000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P97,primary,SALÇALIK DOMATES,3472.0,2736908.16,55523248.368,Bor İlçe Merkezi,Bor,vegetable
+2024,P97,secondary,FİĞ (YEŞİLOT),1488.0,903766.56,6696000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P98,primary,FASULYE (TAZE),7.0,4062.94,4029.445,Bor İlçe Merkezi,Bor,vegetable
+2024,P98,secondary,FİĞ (YEŞİLOT),3.0,1822.11,13500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P99,primary,HIYAR (SOFRALIK),8.4,5259.996,43680.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P99,secondary,FİĞ (YEŞİLOT),3.6,2186.532,16200.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P100,primary,KABAK (SAKIZ),4.9,3068.331,31850.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P100,secondary,FİĞ (YEŞİLOT),2.1,1275.477,9450.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P101,primary,KABAK (ÇEREZLİK),35.0,20910.4,157500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P101,secondary,FİĞ (YEŞİLOT),15.0,9110.55,67500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P102,primary,ISPANAK,21.0,7757.19,63000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P102,secondary,FİĞ (YEŞİLOT),9.0,5466.33,40500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P103,primary,KARPUZ,525.0,337669.5,2362500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P103,secondary,FİĞ (YEŞİLOT),225.0,136658.25,1012500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P104,primary,KAVUN,364.0,239359.12,1710800.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P104,secondary,FİĞ (YEŞİLOT),156.0,94749.72,702000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P105,primary,LAHANA (BEYAZ),168.0,69634.32,835421.664,Bor İlçe Merkezi,Bor,vegetable
+2024,P105,secondary,FİĞ (YEŞİLOT),72.0,43730.64,324000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P106,primary,MARUL,24.5,8470.385,122500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P106,secondary,FİĞ (YEŞİLOT),10.5,6377.385,47250.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P107,primary,PIRASA,21.0,16570.68,94500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P107,secondary,FİĞ (YEŞİLOT),9.0,5466.33,40500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P108,primary,SOĞAN (KURU),833.0,836332.0,10645561.738,Bor İlçe Merkezi,Bor,vegetable
+2024,P108,secondary,FİĞ (YEŞİLOT),357.0,216831.09,1606500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P109,primary,SOĞAN (TAZE),21.0,17559.36,147000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P109,secondary,FİĞ (YEŞİLOT),9.0,5466.33,40500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P110,primary,TURP (KIRMIZI),21.0,6276.27,84000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P110,secondary,FİĞ (YEŞİLOT),9.0,5466.33,40500.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P111,primary,MAYDONOZ,28.0,12825.68,126000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P111,secondary,FİĞ (YEŞİLOT),12.0,7288.44,54000.0,Bor İlçe Merkezi,Bor,vegetable
+2024,P112,primary,BAĞ,700.0,449764.0,5600000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P113,primary,ARMUT,20.0,16959.8,200000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P114,primary,ELMA,4940.0,4016269.4,54340000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P115,primary,ERİK,13.0,10179.26,117000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P116,primary,KAYSI,170.0,136093.5,1615000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P117,primary,KİRAZ,24.0,19453.2,276000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P118,primary,NEKTAR,4.0,3391.96,40000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P119,primary,ŞEFTALİ,15.0,12719.85,147000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P120,primary,BADEM,3.0,1974.63,27000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P121,primary,CEVİZ,258.0,209756.58,2580000.0,Bor İlçe Merkezi,Bor,orchard
+2024,P122,primary,BUĞDAY (Dane),4977.0,3049756.29,13373383.149,Kemerhisar,Bor,field
+2024,P122,secondary,FİĞ (YEŞİLOT),2133.0,1295520.21,9598500.0,Kemerhisar,Bor,field
+2024,P123,primary,ARPA (Dane),3878.0,1998527.3,10082800.0,Kemerhisar,Bor,field
+2024,P123,secondary,FİĞ (YEŞİLOT),1662.0,1009448.94,7479000.0,Kemerhisar,Bor,field
+2024,P124,primary,ÇAVDAR (Dane),28.0,14390.32,70000.0,Kemerhisar,Bor,field
+2024,P124,secondary,FİĞ (YEŞİLOT),12.0,7288.44,54000.0,Kemerhisar,Bor,field
+2024,P125,primary,MISIR (Dane),7.7,7693.609,30800.0,Kemerhisar,Bor,field
+2024,P125,secondary,FİĞ (YEŞİLOT),3.3,2004.321,14850.0,Kemerhisar,Bor,field
+2024,P126,primary,KURU FASULYE,52.5,43808.1,288750.0,Kemerhisar,Bor,field
+2024,P126,secondary,FİĞ (YEŞİLOT),22.5,13665.825,101250.0,Kemerhisar,Bor,field
+2024,P127,primary,NOHUT,455.0,302474.9,1456000.0,Kemerhisar,Bor,field
+2024,P127,secondary,FİĞ (YEŞİLOT),195.0,118437.15,877500.0,Kemerhisar,Bor,field
+2024,P128,primary,AYÇİÇEĞİ,107.1,68173.434,449820.0,Kemerhisar,Bor,field
+2024,P128,secondary,FİĞ (YEŞİLOT),45.9,27878.283,206550.0,Kemerhisar,Bor,field
+2024,P129,primary,PATATES,441.0,392269.5,1023568.497,Kemerhisar,Bor,field
+2024,P129,secondary,FİĞ (YEŞİLOT),189.0,114792.93,850500.0,Kemerhisar,Bor,field
+2024,P130,primary,ŞEKER PANCARI,1960.0,2928651.6,12740000.0,Kemerhisar,Bor,field
+2024,P130,secondary,FİĞ (YEŞİLOT),840.0,510190.8,3780000.0,Kemerhisar,Bor,field
+2024,P131,primary,ÇAVDAR (YEŞİLOT),91.0,41642.51,354900.0,Kemerhisar,Bor,field
+2024,P131,secondary,FİĞ (YEŞİLOT),39.0,23687.43,175500.0,Kemerhisar,Bor,field
+2024,P132,primary,FİĞ (YEŞİLOT),245.0,148805.65,1102500.0,Kemerhisar,Bor,field
+2024,P132,secondary,YONCA (YEŞİLOT),105.0,117046.65,682500.0,Kemerhisar,Bor,field
+2024,P133,primary,YONCA (YEŞİLOT),1935.5,2157559.915,12580750.0,Kemerhisar,Bor,field
+2024,P133,secondary,FİĞ (YEŞİLOT),829.5,503813.415,3732750.0,Kemerhisar,Bor,field
+2024,P134,primary,SİLAJLIK MISIR,595.0,497425.95,3689000.0,Kemerhisar,Bor,field
+2024,P134,secondary,FİĞ (YEŞİLOT),255.0,154879.35,1147500.0,Kemerhisar,Bor,field
+2024,P135,primary,LAVANTA,4.9,1941.086,34300.0,Kemerhisar,Bor,field
+2024,P135,secondary,FİĞ (YEŞİLOT),2.1,1275.477,9450.0,Kemerhisar,Bor,field
+2024,P136,primary,SİVRİ BİBER,3.5,2443.315,24500.0,Kemerhisar,Bor,vegetable
+2024,P136,secondary,FİĞ (YEŞİLOT),1.5,911.055,6750.0,Kemerhisar,Bor,vegetable
+2024,P137,primary,SALÇALIK BİBER,413.0,288311.17,3781387.113,Kemerhisar,Bor,vegetable
+2024,P137,secondary,FİĞ (YEŞİLOT),177.0,107504.49,796500.0,Kemerhisar,Bor,vegetable
+2024,P138,primary,SOFRALIK DOMATES,84.0,66215.52,729094.632,Kemerhisar,Bor,vegetable
+2024,P138,secondary,FİĞ (YEŞİLOT),36.0,21865.32,162000.0,Kemerhisar,Bor,vegetable
+2024,P139,primary,SALÇALIK DOMATES,3780.0,2979698.4,60448697.82,Kemerhisar,Bor,vegetable
+2024,P139,secondary,FİĞ (YEŞİLOT),1620.0,983939.4,7290000.0,Kemerhisar,Bor,vegetable
+2024,P140,primary,FASULYE (TAZE),3.5,2031.47,2014.7225,Kemerhisar,Bor,vegetable
+2024,P140,secondary,FİĞ (YEŞİLOT),1.5,911.055,6750.0,Kemerhisar,Bor,vegetable
+2024,P141,primary,HIYAR (SOFRALIK),0.7,438.333,3640.0,Kemerhisar,Bor,vegetable
+2024,P141,secondary,FİĞ (YEŞİLOT),0.3,182.211,1350.0,Kemerhisar,Bor,vegetable
+2024,P142,primary,KABAK (ÇEREZLİK),2.8,1672.832,12600.0,Kemerhisar,Bor,vegetable
+2024,P142,secondary,FİĞ (YEŞİLOT),1.2,728.844,5400.0,Kemerhisar,Bor,vegetable
+2024,P143,primary,KARPUZ,70.0,45022.6,315000.0,Kemerhisar,Bor,vegetable
+2024,P143,secondary,FİĞ (YEŞİLOT),30.0,18221.1,135000.0,Kemerhisar,Bor,vegetable
+2024,P144,primary,KAVUN,140.0,92061.2,658000.0,Kemerhisar,Bor,vegetable
+2024,P144,secondary,FİĞ (YEŞİLOT),60.0,36442.2,270000.0,Kemerhisar,Bor,vegetable
+2024,P145,primary,LAHANA (BEYAZ),45.5,18859.295,226260.034,Kemerhisar,Bor,vegetable
+2024,P145,secondary,FİĞ (YEŞİLOT),19.5,11843.715,87750.0,Kemerhisar,Bor,vegetable
+2024,P146,primary,SOĞAN (KURU),28.0,28112.0,357834.008,Kemerhisar,Bor,vegetable
+2024,P146,secondary,FİĞ (YEŞİLOT),12.0,7288.44,54000.0,Kemerhisar,Bor,vegetable
+2024,P147,primary,BAĞ,2800.0,1799056.0,22400000.0,Kemerhisar,Bor,orchard
+2024,P148,primary,ARMUT,50.0,42399.5,500000.0,Kemerhisar,Bor,orchard
+2024,P149,primary,ELMA,9546.0,7760993.46,105006000.0,Kemerhisar,Bor,orchard
+2024,P150,primary,ERİK,30.0,23490.6,270000.0,Kemerhisar,Bor,orchard
+2024,P151,primary,KAYSI,356.0,284995.8,3382000.0,Kemerhisar,Bor,orchard
+2024,P152,primary,KİRAZ,15.0,12158.25,172500.0,Kemerhisar,Bor,orchard
+2024,P153,primary,NEKTAR,16.0,13567.84,160000.0,Kemerhisar,Bor,orchard
+2024,P154,primary,ŞEFTALİ,8.0,6783.92,78400.0,Kemerhisar,Bor,orchard
+2024,P155,primary,BADEM,43.0,28303.03,387000.0,Kemerhisar,Bor,orchard
+2024,P156,primary,CEVİZ,597.0,485366.97,5970000.0,Kemerhisar,Bor,orchard
+2024,P157,primary,ARPA (Dane),507.5,261540.125,1319500.0,Kaynarca,Bor,field
+2024,P157,secondary,YONCA (YEŞİLOT),217.5,242453.775,1413750.0,Kaynarca,Bor,field
+2024,P158,primary,BUĞDAY (Dane),614.6,376608.442,1651452.9402,Kaynarca,Bor,field
+2024,P158,secondary,YONCA (YEŞİLOT),263.4,293619.882,1712100.0,Kaynarca,Bor,field
+2024,P159,primary,PATATES,17.5,15566.25,40617.7975,Kaynarca,Bor,field
+2024,P159,secondary,YONCA (YEŞİLOT),7.5,8360.475,48750.0,Kaynarca,Bor,field
+2024,P160,primary,SORGUM,10.5,10227.42,39900.0,Kaynarca,Bor,field
+2024,P160,secondary,YONCA (YEŞİLOT),4.5,5016.285,29250.0,Kaynarca,Bor,field
+2024,P161,primary,SİLAJLIK MISIR,21.0,17556.21,130200.0,Kaynarca,Bor,field
+2024,P161,secondary,YONCA (YEŞİLOT),9.0,10032.57,58500.0,Kaynarca,Bor,field
+2024,P162,primary,YONCA (YEŞİLOT),101.5,113145.095,659750.0,Kaynarca,Bor,field
+2024,P162,secondary,SİLAJLIK MISIR,43.5,36366.435,269700.0,Kaynarca,Bor,field
+2024,P163,primary,ÇAVDAR (YEŞİLOT),21.0,9609.81,81900.0,Kaynarca,Bor,field
+2024,P163,secondary,YONCA (YEŞİLOT),9.0,10032.57,58500.0,Kaynarca,Bor,field
+2024,P164,primary,KARPUZ,49.0,31515.82,220500.0,Kaynarca,Bor,vegetable
+2024,P164,secondary,YONCA (YEŞİLOT),21.0,23409.33,136500.0,Kaynarca,Bor,vegetable
+2024,P165,primary,KAVUN,175.0,115076.5,822500.0,Kaynarca,Bor,vegetable
+2024,P165,secondary,YONCA (YEŞİLOT),75.0,83604.75,487500.0,Kaynarca,Bor,vegetable
+2024,P166,primary,LAHANA (BEYAZ),3605.0,1494236.45,17926756.54,Kaynarca,Bor,vegetable
+2024,P166,secondary,YONCA (YEŞİLOT),1545.0,1722257.85,10042500.0,Kaynarca,Bor,vegetable
+2024,P167,primary,SALÇALIK BİBER,7.0,4886.63,64091.307,Kaynarca,Bor,vegetable
+2024,P167,secondary,YONCA (YEŞİLOT),3.0,3344.19,19500.0,Kaynarca,Bor,vegetable
+2024,P168,primary,SALÇALIK DOMATES,1503.6,1185257.808,24045148.6884,Kaynarca,Bor,vegetable
+2024,P168,secondary,YONCA (YEŞİLOT),644.4,718332.012,4188600.0,Kaynarca,Bor,vegetable
+2024,P169,primary,SOFRALIK DOMATES,42.0,33107.76,364547.316,Kaynarca,Bor,vegetable
+2024,P169,secondary,YONCA (YEŞİLOT),18.0,20065.14,117000.0,Kaynarca,Bor,vegetable
+2024,P170,primary,SİVRİ BİBER,1.4,977.326,9800.0,Kaynarca,Bor,vegetable
+2024,P170,secondary,YONCA (YEŞİLOT),0.6,668.838,3900.0,Kaynarca,Bor,vegetable
+2024,P171,primary,ARMUT,11.0,9327.89,110000.0,Kaynarca,Bor,orchard
+2024,P172,primary,BADEM,2.0,1316.42,18000.0,Kaynarca,Bor,orchard
+2024,P173,primary,BAĞ,350.0,224882.0,2800000.0,Kaynarca,Bor,orchard
+2024,P174,primary,CEVİZ,79.0,64227.79,790000.0,Kaynarca,Bor,orchard
+2024,P175,primary,ELMA,130.0,105691.3,1430000.0,Kaynarca,Bor,orchard
+2024,P176,primary,KAYSI,40.0,32022.0,380000.0,Kaynarca,Bor,orchard
+2024,P177,primary,KİRAZ,3.0,2431.65,34500.0,Kaynarca,Bor,orchard
+2024,P178,primary,NEKTAR,6.0,5087.94,60000.0,Kaynarca,Bor,orchard
+2024,P179,primary,ŞEFTALİ,32.0,27135.68,313600.0,Kaynarca,Bor,orchard

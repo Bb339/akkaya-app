@@ -1,0 +1,892 @@
+{
+  "Elma": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Nektarin": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Şeftali": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Kayısı": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Ceviz": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Kiraz": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Erik": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Armut": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Badem": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Bağ": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Çilek": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Vişne": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Damla (basınçlı)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Ayva": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "drip",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Dut": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "drip",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Zerdali": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "drip",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "İğde": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "drip",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "orchard",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Domates (Salçalık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [
+      "Ispanak"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Domates (Sofralık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [
+      "Marul"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Karpuz": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Kavun": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Biber (Salçalık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [
+      "Marul",
+      "Ispanak"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Biber (Sivri)": {
+    "season1": "",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Barbunya fasulye (Taze)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Bamya": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Bezelye (Taze)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Fasulye (Taze)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [
+      "Ispanak"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Hıyar (Sofralık)": {
+    "season1": "",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Ispanak": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Kabak": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Lahana (Beyaz)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [
+      "Fasulye (Taze)"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Lahana (Kırmızı)": {
+    "season1": "",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Patlıcan": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Pırasa": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Sarımsak (Kuru)": {
+    "season1": "",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Soğan (Kuru)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Damla / Yağmurlama",
+    "secondary_options": [
+      "Arpa (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Turp": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "vegetable",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Lahana (Beyaz) (BEYAZ)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Buğday (Dane)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [
+      "Silajlık Mısır"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "YONCA (YEŞİLOT)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Arpa (Dane)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [
+      "Ayçiçeği"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Lahana (Beyaz) (KIRMIZI)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "SİLAJLIK Mısır": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Patates": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Çavdar (Yeşilot)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Kuru fasulye": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Nohut": {
+    "season1": "",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "FİĞ (YEŞİLOT)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Tritikale (Dane)": {
+    "season1": "",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Tritikale (Yeşilot)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "SOĞAN (KURU)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Yulaf (Dane)": {
+    "season1": "",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Çavdar (Dane)": {
+    "season1": "Kışlık",
+    "irrigation1_current": "Yağışa bağlı (kuru)",
+    "secondary_options": [
+      "Kabak (Çerezlik)"
+    ],
+    "season2": "Yazlık",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Arpa (Yeşilot)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Ayçiçeği": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Buğday (Yeşilot)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "SORGUM": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "FASULYE (TAZE)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Kabak (SAKIZ)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Yulaf (Yeşilot)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Kabak (ÇEREZLİK)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "HIYAR (SOFRALIK)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Kabak (BAL)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "SARIMSAK (KURU)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "SOĞAN (TAZE)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Aspir": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "BURÇAK (YEŞİLOT)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Diğer Alan": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Fiğ (Yeşilot)": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "HIYAR (TURŞULUK)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "KORUNGA (YEŞİLOT)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "KİMYON": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "LAVANTA": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "MARUL": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "MAYDONOZ": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Maydanoz": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Mercimek (Kırmızı)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Mısır (Dane)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Mısır (Silajlık)": {
+    "season1": "Yazlık",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [
+      "Fiğ (Yeşilot)",
+      "Yem Bezelyesi"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "RYEGRAS (SÜT OTU)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "SARIMSAK (TAZE)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Sorgum": {
+    "season1": "",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Turp (KIRMIZI)": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "YEM BEZELYESİ": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Yeşil mercimek": {
+    "season1": "",
+    "irrigation1_current": "sprinkler",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  },
+  "Yonca (Yeşilot)": {
+    "season1": "Çok yıllık",
+    "irrigation1_current": "Yağmurlama / Karık",
+    "secondary_options": [],
+    "season2": "",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": true,
+    "source": "Sazlıca ürün master"
+  },
+  "Şeker pancarı": {
+    "season1": "Yazlık",
+    "irrigation1_current": "surface",
+    "secondary_options": [
+      "Buğday (Dane)"
+    ],
+    "season2": "Kışlık",
+    "irrigation2_current": "",
+    "parcel_type": "field",
+    "is_perennial": false,
+    "source": "Sazlıca ürün master"
+  }
+}

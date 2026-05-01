@@ -1,0 +1,73 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P172",
+    "name": "P172",
+    "display_name": "P172",
+    "area_da": 119.6,
+    "area_m2": 119600,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "BADEM",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Derya Koç",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "kaynarca_sulu_badem_2 da_P172.geojson",
+    "owner_username": "C172",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:29:02.941Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 2,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C172",
+    "farmer_name": "Derya Koç",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "BADEM",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 1316.42,
+    "profit_tl_current": 18000,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 1316.42,
+    "assigned_profit_tl": 18000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:29:04.867Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_badem_2 da_P172.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.63693860856844,
+          37.83133451628152
+        ],
+        [
+          34.644790168533476,
+          37.83204654049912
+        ],
+        [
+          34.643031075863696,
+          37.82877456292894
+        ],
+        [
+          34.63693860856844,
+          37.83133451628152
+        ]
+      ]
+    ]
+  }
+}

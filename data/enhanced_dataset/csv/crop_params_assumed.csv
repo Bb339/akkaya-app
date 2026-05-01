@@ -1,0 +1,70 @@
+crop,kc_ini,kc_mid,kc_end,p_ini,p_dev,p_mid,p_late,gdd_base_c,source_status,source_note
+Armut,0.55,0.97,0.71,30,45,120,45,,yuksek,bitki_su_tuketimi_ocr_nigde | cok_yillik_proxy | faz_proxy_2026-04-12
+Ayva,0.55,0.97,0.71,30,45,120,45,,turetilmis,armut_pome_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Badem,0.55,0.97,0.71,30,45,120,45,,turetilmis,armut_badem_agac_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Bağ,0.39,0.88,0.47,30,45,120,45,,yuksek,bitki_su_tuketimi_ocr_nigde_uzum_sofralik | cok_yillik_proxy | faz_proxy_2026-04-12
+Ceviz,0.55,0.97,0.71,30,45,120,45,,turetilmis,armut_ceviz_agac_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Çilek,0.4,0.85,0.75,30,45,120,45,,orta,fao56_genel_cilek_kc_ve_nigde_eto_turetim | cok_yillik_proxy | faz_proxy_2026-04-12
+Dut,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_dut_agac_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Elma,0.58,0.97,0.74,30,45,120,45,,yuksek,bitki_su_tuketimi_ocr_nigde | cok_yillik_proxy | faz_proxy_2026-04-12
+Erik,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+İğde,0.55,0.97,0.74,30,45,120,45,,proxy_tamamlandi,badem_armut_agac_grubu_proxy | kc_proxy_2026-04-12 | cok_yillik_proxy | faz_proxy_2026-04-12
+Kayısı,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Kiraz,0.51,0.97,0.74,30,45,120,45,,yuksek,bitki_su_tuketimi_ocr_nigde | cok_yillik_proxy | faz_proxy_2026-04-12
+Nektarin,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Şeftali,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Vişne,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Zerdali̇,0.51,0.97,0.74,30,45,120,45,,turetilmis,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+Bamya,0.56,1.07,0.97,15,25,40,20,,turetilmis,havuc_bamya_yakin_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Barbunya fasulye (Taze),0.46,1.07,0.92,15,25,40,20,,turetilmis,fasulye_taze_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Bezelye (Taze),0.68,1.14,1.12,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_ulukisla | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Biber (Salçalık),0.47,1.08,0.92,15,25,40,20,,turetilmis,biber_sivri_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Biber (Sivri),0.47,1.08,0.92,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Domates (Salçalık),0.52,1.18,0.82,15,25,40,20,,turetilmis,domates_yer_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Domates (Sofralık),0.52,1.18,0.82,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Fasulye (Taze),0.46,1.07,0.92,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_nevsehir | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Hıyar (Sofralık),0.46,1.02,0.77,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Hiyar (Turşuluk),0.46,1.02,0.77,20,30,60,30,,turetilmis,hiyar_sofralik_turetimi | genel_proxy | faz_proxy_2026-04-12
+Ispanak,0.5,1.1,0.95,20,25,45,20,,turetilmis,fao_genel_ispanak_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Kabak,0.45,1.01,0.81,15,25,40,20,,turetilmis,bal_kabagi_cerezlik_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Karpuz,0.42,1.03,0.77,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Kavun,0.45,1.07,0.77,15,25,40,20,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Lahana (Beyaz),0.4,1.04,0.93,20,30,50,25,,yuksek,bitki_su_tuketimi_ocr_ulukisla | kislik_sebze_proxy | faz_proxy_2026-04-12
+Lahana (Kırmızı),0.4,1.04,0.93,15,25,40,20,,turetilmis,lahana_beyaz_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Marul,0.7,1.0,0.95,20,25,45,20,,turetilmis,fao_genel_marul_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Maydonoz,0.7,1.07,0.97,20,25,45,20,,yuksek,bitki_su_tuketimi_ocr_nigde | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Patlican,0.48,1.09,0.93,15,25,40,20,,turetilmis,bitki_su_tuketimi_ocr_patican | yazlik_sebze_proxy | faz_proxy_2026-04-12
+Pirasa,0.7,1.05,0.95,20,25,45,20,,turetilmis,fao_genel_pirasa_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Sarımsak (Kuru),0.59,1.0,0.7,20,25,45,20,,yuksek,bitki_su_tuketimi_ocr_tomarza_sarimsak | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Sarimsak (Taze),0.59,1.0,0.7,20,25,45,20,,turetilmis,sarimsak_kuru_turetimi | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Soğan (Kuru),0.6,1.07,0.77,20,25,45,20,,yuksek,bitki_su_tuketimi_ocr_nigde | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Turp (Kirmizi),0.5,1.1,0.95,20,25,45,20,,turetilmis,fao_genel_turp_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+Arpa (Dane),0.53,1.16,0.25,30,60,120,60,,yuksek,bitki_su_tuketimi_ocr_nigde | kislik_tarla_proxy | faz_proxy_2026-04-12
+Arpa (Yeşilot),0.53,1.16,0.25,20,30,120,30,,turetilmis,arpa_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Aspi̇r,0.42,1.17,0.36,20,35,60,35,,proxy_tamamlandi,aycicegi_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Ayçiçeği,0.42,1.17,0.36,20,35,60,35,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Buğday (Dane),0.53,1.16,0.27,30,60,120,60,,yuksek,bitki_su_tuketimi_ocr_nigde | kislik_tarla_proxy | faz_proxy_2026-04-12
+Buğday (Yeşilot),0.53,1.16,0.27,20,30,120,30,,turetilmis,bugday_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Burçak  (Yeşi̇lot),0.68,1.14,1.12,20,30,120,30,,turetilmis,bezelye_yem_grubu_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Çavdar (Dane),0.58,1.14,0.24,30,60,120,60,,yuksek,bitki_su_tuketimi_ocr_ulukisla | kislik_tarla_proxy | faz_proxy_2026-04-12
+Çavdar (Yeşilot),0.58,1.14,0.24,20,30,120,30,,turetilmis,cavdar_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Fiğ (Yeşilot),0.48,1.0,0.7,20,30,120,30,,yuksek,bitki_su_tuketimi_ocr_nigde | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Ki̇myon,0.41,1.02,0.37,20,35,60,35,,proxy_tamamlandi,nohut_kimyon_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Korunga  (Yeşi̇lot),0.76,1.16,0.56,20,30,120,30,,yuksek,bitki_su_tuketimi_ocr_ulukisla | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Kuru fasulye,0.46,1.07,0.92,20,35,60,35,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Lavanta,0.35,0.8,0.6,20,35,60,35,,proxy_tamamlandi,resmi_veri_yok | lavanta_dusuk_su_aromatik_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Misir (Dane),0.3,1.2,0.6,20,35,60,35,,proxy_tamamlandi,fao56_misir_dane_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Nohut,0.41,1.02,0.37,20,35,60,35,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Patates,0.43,1.18,0.77,20,35,60,35,,yuksek,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Ryegras (Süt Otu),0.77,1.06,0.99,20,30,120,30,,turetilmis,gayir_mera_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Şeker Pancari,0.35,1.2,0.7,20,35,60,35,,proxy_tamamlandi,fao56_seker_pancari_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Mısır (Silajlık),0.31,1.26,0.95,20,35,60,35,,yuksek,bitki_su_tuketimi_ocr_ulukisla | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Sorgum,0.34,1.15,0.55,20,35,60,35,,yuksek,bitki_su_tuketimi_ocr_ulukisla | yazlik_tarla_proxy | faz_proxy_2026-04-12
+Tritikale (Dane),0.53,1.16,0.25,30,60,120,60,,turetilmis,bugday_arpa_grup_turetimi | kislik_tarla_proxy | faz_proxy_2026-04-12
+Tritikale (Yeşilot),0.53,1.16,0.25,20,30,120,30,,turetilmis,tritikale_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Yem Bezelyesi̇,0.68,1.14,1.12,20,30,60,30,,turetilmis,bezelye_yem_grubu_turetimi | genel_proxy | faz_proxy_2026-04-12
+Yeşi̇l Merci̇mek,0.42,1.13,0.33,20,30,60,30,,yuksek,bitki_su_tuketimi_ocr_nigde | genel_proxy | faz_proxy_2026-04-12
+Yonca (Yeşilot),0.4,1.23,1.17,20,30,120,30,,yuksek,bitki_su_tuketimi_ocr_nigde | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Yulaf (Dane),0.4,1.16,1.13,30,60,120,60,,yuksek,bitki_su_tuketimi_ocr_nigde_ot | kislik_tarla_proxy | faz_proxy_2026-04-12
+Yulaf (Yeşilot),0.4,1.16,1.13,20,30,120,30,,turetilmis,yulaf_ot_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+Diğer Alan,0.0,0.0,0.0,20,30,60,30,,turetilmis,analitik_blok | genel_proxy | faz_proxy_2026-04-12

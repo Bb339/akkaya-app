@@ -1,0 +1,5 @@
+pattern_id,parcel_type,crop_1,crop_2,season_order,area_ratio_1,area_ratio_2,allowed
+S2_FIELD_01,field,Buğday (Dane),Nohut,winter+summer,0.7,0.3,1
+S2_FIELD_02,field,Arpa (Dane),Mercimek,winter+spring,0.7,0.3,1
+S2_ORCH_01,orchard,Kiraz,Fiğ (Yeşilot),perennial+interrow,1.0,0.35,1
+S2_ORCH_02,orchard,Kayısı,Mercimek,perennial+interrow,1.0,0.3,1

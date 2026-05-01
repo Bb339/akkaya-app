@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65143215061362,
+            37.88728062267461
+          ],
+          [
+            34.645216350460075,
+            37.89094421033748
+          ],
+          [
+            34.64942353714325,
+            37.89741387650574
+          ],
+          [
+            34.65120759674043,
+            37.89701479027097
+          ],
+          [
+            34.65269875299543,
+            37.89569148858685
+          ],
+          [
+            34.65144724659164,
+            37.88735204065772
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_sogan_kuru_67 da_P33.geojson",
+        "source_label": "sazlica_sulu_sogan_kuru_67 da_P33.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P33",
+        "name": "P33",
+        "parcel_id": "P33",
+        "district": "Merkez",
+        "current_crop": "SOĞAN (KURU)",
+        "crop": "SOĞAN (KURU)",
+        "assigned_pattern": "SOĞAN (KURU)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 67,
+        "area_official_da": 67,
+        "farmer_id": "C033",
+        "farmer_name": "Serkan Kaplan"
+      },
+      "id": 1773615217190
+    }
+  ]
+}

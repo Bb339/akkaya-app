@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64935039141189,
+            37.89756594679871
+          ],
+          [
+            34.64541570632678,
+            37.89067982582348
+          ],
+          [
+            34.641428906408855,
+            37.8938865768952
+          ],
+          [
+            34.63890132717712,
+            37.89682597665126
+          ],
+          [
+            34.638614694702085,
+            37.89783315645188
+          ],
+          [
+            34.64942856455571,
+            37.89731929079181
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_salcalik_biber_60 da_P21.geojson",
+        "source_label": "sazlica_sulu_salcalik_biber_60 da_P21.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P21",
+        "name": "P21",
+        "parcel_id": "P21",
+        "district": "Merkez",
+        "current_crop": "SALÇALIK BİBER",
+        "crop": "SALÇALIK BİBER",
+        "assigned_pattern": "SALÇALIK BİBER",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 60,
+        "area_official_da": 60,
+        "farmer_id": "C021",
+        "farmer_name": "Ramazan Bilgin"
+      },
+      "id": 1773615272125
+    }
+  ]
+}

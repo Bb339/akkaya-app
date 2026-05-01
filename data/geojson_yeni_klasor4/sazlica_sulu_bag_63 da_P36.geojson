@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.63236473141456,
+            37.90071112374183
+          ],
+          [
+            34.63327648535501,
+            37.901817972770885
+          ],
+          [
+            34.63369674635613,
+            37.90167189220452
+          ],
+          [
+            34.63423810038056,
+            37.90139658538858
+          ],
+          [
+            34.63319813110336,
+            37.90023916282185
+          ],
+          [
+            34.632307746548726,
+            37.900733598106086
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_bag_63 da_P36.geojson",
+        "source_label": "sazlica_sulu_bag_63 da_P36.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P36",
+        "name": "P36",
+        "parcel_id": "P36",
+        "district": "Merkez",
+        "current_crop": "BAĞ",
+        "crop": "BAĞ",
+        "assigned_pattern": "BAĞ",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 63,
+        "area_official_da": 63,
+        "farmer_id": "C036",
+        "farmer_name": "Ferhat Çakır"
+      },
+      "id": 1773612980440
+    }
+  ]
+}

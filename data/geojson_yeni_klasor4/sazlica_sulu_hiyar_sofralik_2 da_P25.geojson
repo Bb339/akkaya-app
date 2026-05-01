@@ -1,0 +1,58 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.645776362674845,
+            37.8992718544675
+          ],
+          [
+            34.64809728587496,
+            37.897489479816585
+          ],
+          [
+            34.64489706999937,
+            37.897618521997146
+          ],
+          [
+            34.6457661380312,
+            37.899352503834635
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_hiyar_sofralik_2 da_P25.geojson",
+        "source_label": "sazlica_sulu_hiyar_sofralik_2 da_P25.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P25",
+        "name": "P25",
+        "parcel_id": "P25",
+        "district": "Merkez",
+        "current_crop": "HIYAR (SOFRALIK)",
+        "crop": "HIYAR (SOFRALIK)",
+        "assigned_pattern": "HIYAR (SOFRALIK)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 2,
+        "area_official_da": 2,
+        "farmer_id": "C025",
+        "farmer_name": "Kemal Güneş"
+      },
+      "id": 1773615894533
+    }
+  ]
+}

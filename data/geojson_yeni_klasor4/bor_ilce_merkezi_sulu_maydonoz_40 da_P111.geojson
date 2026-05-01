@@ -1,0 +1,105 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P111",
+    "name": "P111",
+    "display_name": "P111",
+    "area_da": 267.2,
+    "area_m2": 267200,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "MAYDONOZ",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Fatma Taş",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_maydonoz_40 da_P111.geojson",
+    "owner_username": "C111",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:27:28.946Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 40,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C111",
+    "farmer_name": "Fatma Taş",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "MAYDONOZ",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 18322.4,
+    "profit_tl_current": 180000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 18322.4,
+    "assigned_profit_tl": 180000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:27:30.847Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_maydonoz_40 da_P111.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.579262562809774,
+          37.88604726770998
+        ],
+        [
+          34.577138780196286,
+          37.884607314517325
+        ],
+        [
+          34.57389771365849,
+          37.88355761916609
+        ],
+        [
+          34.58239284411242,
+          37.880965595518035
+        ],
+        [
+          34.583615628041414,
+          37.88242256121444
+        ],
+        [
+          34.582328487063535,
+          37.88335432649065
+        ],
+        [
+          34.583873056236975,
+          37.884319961700875
+        ],
+        [
+          34.58250010586059,
+          37.88598014702462
+        ],
+        [
+          34.58168491657459,
+          37.88620037287818
+        ],
+        [
+          34.58149184542792,
+          37.88623425372028
+        ],
+        [
+          34.58084827493898,
+          37.88559051505488
+        ],
+        [
+          34.579262562809774,
+          37.88604726770998
+        ]
+      ]
+    ]
+  }
+}

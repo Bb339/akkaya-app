@@ -1,0 +1,153 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P136",
+    "name": "P136",
+    "display_name": "P136",
+    "area_da": 71.8,
+    "area_m2": 71800,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "SİVRİ BİBER",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Ferhat Köse",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_sivri_biber_5 da_P136.geojson",
+    "owner_username": "C136",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T11:08:13.010Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 5,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C136",
+    "farmer_name": "Ferhat Köse",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "SİVRİ BİBER",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 3490.45,
+    "profit_tl_current": 35000,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 3490.45,
+    "assigned_profit_tl": 35000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T11:08:15.266Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_sivri_biber_5 da_P136.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.55912035213185,
+          37.81843308953312
+        ],
+        [
+          34.56052548103273,
+          37.818331353443064
+        ],
+        [
+          34.56130849179423,
+          37.81839069951263
+        ],
+        [
+          34.56139430119278,
+          37.818763730857455
+        ],
+        [
+          34.562370383101,
+          37.81881459862205
+        ],
+        [
+          34.562531275723224,
+          37.81928088483076
+        ],
+        [
+          34.563882773749995,
+          37.81922153947689
+        ],
+        [
+          34.56352880998106,
+          37.81853482548296
+        ],
+        [
+          34.56387204757517,
+          37.81838222150564
+        ],
+        [
+          34.563550262330715,
+          37.817831148960806
+        ],
+        [
+          34.56264926364618,
+          37.817517459674825
+        ],
+        [
+          34.56229529987728,
+          37.81677986069611
+        ],
+        [
+          34.56104033742385,
+          37.8164322540247
+        ],
+        [
+          34.56100998841182,
+          37.81661628835638
+        ],
+        [
+          34.559964186367296,
+          37.81671802681016
+        ],
+        [
+          34.56007681120283,
+          37.81731785692686
+        ],
+        [
+          34.55991047232932,
+          37.81763991150554
+        ],
+        [
+          34.559299080364866,
+          37.81743007841149
+        ],
+        [
+          34.55923204177226,
+          37.817557250054854
+        ],
+        [
+          34.55933930352039,
+          37.81774800710912
+        ],
+        [
+          34.55919410230442,
+          37.817932422507816
+        ],
+        [
+          34.559336224120734,
+          37.81808714692543
+        ],
+        [
+          34.55908952209996,
+          37.818385997279655
+        ],
+        [
+          34.55912035213185,
+          37.81843308953312
+        ]
+      ]
+    ]
+  }
+}

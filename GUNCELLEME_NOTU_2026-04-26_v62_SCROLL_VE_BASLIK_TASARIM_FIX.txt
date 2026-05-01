@@ -1,0 +1,10 @@
+v62 - Zoom scroll ve giriş başlık tasarımı iyileştirmesi
+
+Yapılan düzeltmeler:
+1) Zoom yapıldığında giriş ekranında dikey kaydırma çubuğu görünmesi sağlandı.
+2) Login ekranı yine ana panelden yalıtılmış tutuldu; alttaki sistem panelleri görünmez durumda kaldı.
+3) Tez başlığı profesyonel görünüm için 3 dengeli satıra bölündü.
+4) Başlık rengi daha koyu ve okunabilir hale getirildi.
+5) Açıklama metinleri ve bazı kart içerikleri iki yana yaslı hale getirildi.
+6) Sol ve sağ panellerin oranı, boşlukları ve kart düzeni daha dengeli yapıldı.
+7) Cache yenileme için CSS/JS sürümleri v62 yapıldı.

@@ -1,0 +1,113 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P106",
+    "name": "P106",
+    "display_name": "P106",
+    "area_da": 28.1,
+    "area_m2": 28100,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "MARUL",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Hüseyin Keskin",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_marul_35 da_P106.geojson",
+    "owner_username": "C106",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:20:27.515Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 35,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C106",
+    "farmer_name": "Hüseyin Keskin",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "MARUL",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 12100.55,
+    "profit_tl_current": 175000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 12100.55,
+    "assigned_profit_tl": 175000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:20:29.558Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_marul_35 da_P106.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.575461904709854,
+          37.907921223084976
+        ],
+        [
+          34.575542351020985,
+          37.90704904343953
+        ],
+        [
+          34.576067933586934,
+          37.906909324380266
+        ],
+        [
+          34.57642189735587,
+          37.906464761972096
+        ],
+        [
+          34.57656670071586,
+          37.9064139546687
+        ],
+        [
+          34.577650044372234,
+          37.90722263341631
+        ],
+        [
+          34.578390150434515,
+          37.90771799768363
+        ],
+        [
+          34.57913025649679,
+          37.90820065709531
+        ],
+        [
+          34.57800400814117,
+          37.90795086007577
+        ],
+        [
+          34.57738725308926,
+          37.907883118364964
+        ],
+        [
+          34.57719418194259,
+          37.90793815850976
+        ],
+        [
+          34.57626636782102,
+          37.90793815850976
+        ],
+        [
+          34.575799779216545,
+          37.90793815850976
+        ],
+        [
+          34.575461904709854,
+          37.907921223084976
+        ]
+      ]
+    ]
+  }
+}

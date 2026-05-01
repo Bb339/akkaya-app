@@ -1,0 +1,6 @@
+v25 GEOJSON BUNDLE FIX
+- Bahçeli GeoJSON dosyaları keşfedildiği halde haritada yalnız Sazlıca parsellerinin çizilmesine neden olan istemci tarafı index/cache/fetch kırılganlığı giderildi.
+- Yeni /api/geojson_bundle endpoint'i eklendi: sunucu data/geojson_yeni_klasor4 içindeki tüm gerçek parsel GeoJSON'larını tek FeatureCollection olarak döndürür.
+- Frontend önce bu bundle endpoint'ini kullanır; köy filtresi Sazlıca/Bahçeli ayrımını bellekte yapar.
+- Bahçeli P48-P78 parselleri Sazlıca parselleriyle aynı popup, etiket, tıklama ve mavi seçili vurgusu davranışını kullanır.
+- script.js sürümü v=250 yapıldı.

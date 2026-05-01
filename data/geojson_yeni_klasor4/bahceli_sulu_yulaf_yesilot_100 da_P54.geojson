@@ -1,0 +1,91 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P54",
+    "name": "P54",
+    "display_name": "P54",
+    "area_da": 100,
+    "area_m2": 100000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "YULAF (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "Ali Taş",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_yulaf_yesilot_100 da_P54.geojson",
+    "owner_username": "C054",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:16:45.791Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 100,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C054",
+    "farmer_name": "Ali Taş",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "YULAF (YEŞİLOT)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 45761,
+    "profit_tl_current": 380000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 45761,
+    "assigned_profit_tl": 380000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:16:59.392Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 100000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Tarla",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "YULAF (YEŞİLOT)",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_yulaf_yesilot_100 da_P54.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.61641030360989,
+          37.80865809786592
+        ],
+        [
+          34.6256575672452,
+          37.81104920125971
+        ],
+        [
+          34.62485506832816,
+          37.81258619354829
+        ],
+        [
+          34.6196199585207,
+          37.81377321268201
+        ],
+        [
+          34.61725986803374,
+          37.81434975794665
+        ],
+        [
+          34.61507142049132,
+          37.81502804072893
+        ],
+        [
+          34.61641030360989,
+          37.80865809786592
+        ]
+      ]
+    ]
+  }
+}

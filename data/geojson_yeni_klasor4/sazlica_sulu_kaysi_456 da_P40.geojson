@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.616021512893724,
+            37.89014092214893
+          ],
+          [
+            34.61788442656263,
+            37.8920413035834
+          ],
+          [
+            34.618591049140875,
+            37.892564955496965
+          ],
+          [
+            34.62010065188825,
+            37.89155987821293
+          ],
+          [
+            34.62079656700562,
+            37.89199062730053
+          ],
+          [
+            34.62131047440208,
+            37.891754138002696
+          ],
+          [
+            34.619758046222124,
+            37.890681480175104
+          ],
+          [
+            34.61967239535695,
+            37.89013247622451
+          ],
+          [
+            34.61841974667539,
+            37.888983777979504
+          ],
+          [
+            34.617242042868426,
+            37.88942298785582
+          ],
+          [
+            34.616021512893724,
+            37.89010713728551
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kaysi_456 da_P40.geojson",
+        "source_label": "sazlica_sulu_kaysi_456 da_P40.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P40",
+        "name": "P40",
+        "parcel_id": "P40",
+        "district": "Merkez",
+        "current_crop": "KAYSI",
+        "crop": "KAYSI",
+        "assigned_pattern": "KAYSI",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 456,
+        "area_official_da": 456,
+        "farmer_id": "C040",
+        "farmer_name": "Orhan Erdem"
+      },
+      "id": 1773612306132
+    }
+  ]
+}

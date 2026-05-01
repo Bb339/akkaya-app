@@ -1,0 +1,24 @@
+{
+  "version": "v38",
+  "source_archive": "geojson_yeni_klasor4.rar",
+  "total_geojson_files": 181,
+  "parcel_geojson_count": 180,
+  "counts_by_village": {
+    "Bahçeli": 31,
+    "Bor İlçe Merkezi": 43,
+    "Kaynarca": 23,
+    "Kemerhisar": 34,
+    "Sazlıca": 49
+  },
+  "expected_records_by_village": {
+    "Sazlıca": 47,
+    "Bahçeli": 31,
+    "Bor İlçe Merkezi": 43,
+    "Kemerhisar": 35,
+    "Kaynarca": 23
+  },
+  "missing_record_ids_with_no_geojson": [
+    "P138"
+  ],
+  "note": "Köy sınırı/baraj dosyaları parsel katmanından ayrı tutulur. Kızılca çalışma dışıdır."
+}

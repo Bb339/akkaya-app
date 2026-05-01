@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.61786784226991,
+            37.89419182093509
+          ],
+          [
+            34.61863081213592,
+            37.89368070632382
+          ],
+          [
+            34.61834015688947,
+            37.89347530403025
+          ],
+          [
+            34.61858842488649,
+            37.89311704296259
+          ],
+          [
+            34.61829776964004,
+            37.89290686243848
+          ],
+          [
+            34.61860053546978,
+            37.89251993736343
+          ],
+          [
+            34.62071384077846,
+            37.89391476875346
+          ],
+          [
+            34.6195451647089,
+            37.89485101062003
+          ],
+          [
+            34.61840676530549,
+            37.89437333759908
+          ],
+          [
+            34.61781334443718,
+            37.89427780250814
+          ],
+          [
+            34.61787389776944,
+            37.89419659783756
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kiraz_129 da_P41.geojson",
+        "source_label": "sazlica_sulu_kiraz_129 da_P41.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P41",
+        "name": "P41",
+        "parcel_id": "P41",
+        "district": "Merkez",
+        "current_crop": "KİRAZ",
+        "crop": "KİRAZ",
+        "assigned_pattern": "KİRAZ",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 129,
+        "area_official_da": 129,
+        "farmer_id": "C041",
+        "farmer_name": "Nuri Tekin"
+      },
+      "id": 1773612501794
+    }
+  ]
+}

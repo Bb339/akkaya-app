@@ -1,0 +1,91 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P74",
+    "name": "P74",
+    "display_name": "P74",
+    "area_da": 20,
+    "area_m2": 20000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "KİRAZ",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Ömer Aslan",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "bahceli_sulu_kiraz_20 da_P74.geojson",
+    "owner_username": "C074",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:33:47.600Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 20,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C074",
+    "farmer_name": "Ömer Aslan",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "KİRAZ",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 16211,
+    "profit_tl_current": 230000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 16211,
+    "assigned_profit_tl": 230000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:33:49.962Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 20000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Bahçe / çok yıllık",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "KİRAZ",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_kiraz_20 da_P74.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.56533456869637,
+          37.852257729197305
+        ],
+        [
+          34.56687935519693,
+          37.847613711272594
+        ],
+        [
+          34.57928055793752,
+          37.85425761760993
+        ],
+        [
+          34.57481784138039,
+          37.85402034554997
+        ],
+        [
+          34.56893907053102,
+          37.85374917654633
+        ],
+        [
+          34.568853249058776,
+          37.85395255339256
+        ],
+        [
+          34.56533456869637,
+          37.852257729197305
+        ]
+      ]
+    ]
+  }
+}

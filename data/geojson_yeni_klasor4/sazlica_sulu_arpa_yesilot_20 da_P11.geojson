@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.63891367821927,
+            37.89666332926642
+          ],
+          [
+            34.638273514275404,
+            37.89739210201424
+          ],
+          [
+            34.6387027151752,
+            37.898172511850916
+          ],
+          [
+            34.636905891145474,
+            37.89895291311774
+          ],
+          [
+            34.63580015374212,
+            37.89898734246579
+          ],
+          [
+            34.63406880126892,
+            37.89887257787679
+          ],
+          [
+            34.6339233095316,
+            37.897994624776175
+          ],
+          [
+            34.63548007177018,
+            37.89663463759943
+          ],
+          [
+            34.63665128073006,
+            37.89734619548099
+          ],
+          [
+            34.63825169033998,
+            37.89736341043432
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_arpa_yesilot_20 da_P11.geojson",
+        "source_label": "sazlica_sulu_arpa_yesilot_20 da_P11.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P11",
+        "name": "P11",
+        "parcel_id": "P11",
+        "district": "Merkez",
+        "current_crop": "ARPA (YEŞİLOT)",
+        "crop": "ARPA (YEŞİLOT)",
+        "assigned_pattern": "ARPA (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 20,
+        "area_official_da": 20,
+        "farmer_id": "C011",
+        "farmer_name": "Fatma Bozkurt"
+      },
+      "id": 1773615544163
+    }
+  ]
+}

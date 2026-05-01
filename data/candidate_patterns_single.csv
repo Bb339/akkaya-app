@@ -1,0 +1,6 @@
+pattern_id,parcel_type,main_crop,secondary_crop,main_area_ratio,secondary_area_ratio,scenario_type,allowed
+S1_FIELD_01,field,Buğday (Dane),,1.0,0.0,single,1
+S1_FIELD_02,field,Nohut,,1.0,0.0,single,1
+S1_FIELD_03,field,Mercimek,,1.0,0.0,single,1
+S1_ORCH_01,orchard,Kiraz,—,1.0,0.0,single,1
+S1_ORCH_02,orchard,Kayısı,—,1.0,0.0,single,1

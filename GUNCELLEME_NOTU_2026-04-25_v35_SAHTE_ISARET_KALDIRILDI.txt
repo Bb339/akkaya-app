@@ -1,0 +1,7 @@
+v35 düzeltmesi:
+
+- Kemerhisar için gerçek GeoJSON olmadığı halde harita üzerinde üretilen sahte/yer tutucu parsel işaretleri kaldırıldı.
+- Harita artık yalnızca gerçek çizilmiş/kaydedilmiş parsel GeoJSON dosyalarını gösterir.
+- Kemerhisar seçildiğinde gerçek parsel GeoJSON dosyası yoksa yalnız köy sınırı görünür ve durum mesajı bunu açıklar.
+- Çizim bekleyen P122-P156 kayıtları bilgi kütüğünde korunur; sol çizim/atama panelinden seçilip gerçek sınır çizildiğinde kalıcı GeoJSON olarak kaydedilir.
+- Sazlıca, Bahçeli ve Kaynarca'daki gerçek parsellerin popup/ikon/seçim davranışı korunmuştur.

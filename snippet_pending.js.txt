@@ -1,0 +1,121 @@
+const pendingParcelRecordsForVillageV33 = (village='')=>{
+  try{
+    const existing = new Set(((geojson && geojson.features) ? geojson.features : []).map(f=>String(f?.properties?.id || f?.properties?.name || '').trim()).filter(Boolean));
+    const vKey = villageKeyV22(village || '');
+    return (parcelData || [])
+      .filter(p=>p && p.id)
+      .filter(p=>{
+        const pid = String(p.id).trim();
+        if(!pid || existing.has(pid)) return false;
+        const pv = String(p.village || '').trim();
+        if(vKey && villageKeyV22(pv) !== vKey) return false;
+        const geomStatus = String(p.geometry_status || p.geometrySource || p.geometry_source || '').toLocaleLowerCase('tr-TR');
+        const src = String(p.geometry_source || '').toLocaleLowerCase('tr-TR');
+        const waiting = !!p.drawing_required || p.has_real_geojson === false || /çizim|cizim|bekliyor|pending/.test(geomStatus) || /pending/.test(src);
+        return waiting;
+      })
+      .sort((a,b)=>{
+        const na = Number(String(a.id).replace(/\D+/g,''));
+        const nb = Number(String(b.id).replace(/\D+/g,''));
+        if(Number.isFinite(na) && Number.isFinite(nb) && na !== nb) return na-nb;
+        return String(a.id).localeCompare(String(b.id), 'tr');
+      });
+  }catch(_e){ return []; }
+};
+
+const pendingPointForRecordV33 = (()=>{
+  const cache = new Map();
+  return (rec, idx, all)=>{
+    const key = String(rec?.id || '') + '|' + String(rec?.village || '');
+    if(cache.has(key)) return cache.get(key);
+    let bounds = null;
+    try{
+      const uploaded = getUploadedVillageBoundary(rec?.village || '');
+      if(uploaded) bounds = L.geoJSON(uploaded).getBounds();
+    }catch(_e){}
+    if(!bounds || !bounds.isValid()){
+      try{ bounds = map.getBounds(); }catch(_e){}
+    }
+    let latlng = map.getCenter();
+    try{
+      const sameVillage = (all || []).filter(x=>villageKeyV22(x?.village || '') === villageKeyV22(rec?.village || ''));
+      const localIndex = Math.max(0, sameVillage.findIndex(x=>String(x.id) === String(rec.id)));
+      const n = Math.max(1, sameVillage.length || (all || []).length || 1);
+      const cols = Math.max(4, Math.ceil(Math.sqrt(n)));
+      const rows = Math.max(3, Math.ceil(n / cols));
+      const row = Math.floor(localIndex / cols);
+      const col = localIndex % cols;
+      const sw = bounds.getSouthWest();
+      const ne = bounds.getNorthEast();
+      const lat = sw.lat + ((row + 1.0) / (rows + 1.0)) * (ne.lat - sw.lat);
+      const lng = sw.lng + ((col + 1.0) / (cols + 1.0)) * (ne.lng - sw.lng);
+      latlng = L.latLng(lat, lng);
+    }catch(_e){}
+    cache.set(key, latlng);
+    return latlng;
+  };
+})();
+
+const pendingPopupHtmlV33 = (p)=>{
+  const fmt = (v)=> (v===undefined || v===null || v==='') ? '—' : String(v);
+  const area = Number(p?.area_da);
+  const tag = (String(p?.parcel_type || '').toLowerCase()==='orchard' || p?.is_orchard) ? 'Bahçe / çok yıllık' : 'Tarla';
+  const irr = fmt(p?.irrigation_current || p?.irrigation_key || p?.irrigation || '');
+  const pattern = fmt(p?.selected_pattern || p?.main_crop_current || p?.current_crop || '');
+  const farmer = fmt(p?.farmer_name || p?.farmer || p?.farmer_id || '');
+  const alt = fmt(p?.selected_alternative_label || p?.selected_alternative_id || 'Mevcut desen / Excel referansı');
+  return `
+    <div class="parcel-pop pending-pop">
+      <div class="t"><span>${escapeHtml(fmt(p?.id))}</span><span class="tag ${tag.includes('Bahçe')?'orchard':''}">${escapeHtml(tag)}</span></div>
+      <div class="s"><span class="k">Alan</span><span class="v">${Number.isFinite(area) ? escapeHtml(area.toLocaleString('tr-TR')) : '—'} da</span></div>
+      <div class="s"><span class="k">Alan (m²)</span><span class="v">${Number.isFinite(area) ? Math.round(area*1000).toLocaleString('tr-TR') : '—'} m²</span></div>
+      <div class="s"><span class="k">İlçe</span><span class="v">${escapeHtml(fmt(p?.district || 'Merkez'))}</span></div>
+      <div class="s"><span class="k">Yer</span><span class="v">${escapeHtml(fmt(p?.village))}</span></div>
+      <div class="s"><span class="k">Kaynak</span><span class="v right source-file">Çizim bekleyen kayıt - ${escapeHtml(fmt(p?.id))}</span></div>
+      <div class="s"><span class="k">Ürün</span><span class="v">${escapeHtml(fmt(p?.main_crop_current || p?.current_crop))}</span></div>
+      <div class="s"><span class="k">Sulama</span><span class="v">${escapeHtml(irr)}</span></div>
+      <div class="s"><span class="k">Çiftçi</span><span class="v">${escapeHtml(farmer)}</span></div>
+      <div class="s"><span class="k">Atanan desen</span><span class="v">${escapeHtml(pattern)}</span></div>
+      <div class="s"><span class="k">Alternatif</span><span class="v">${escapeHtml(alt)}</span></div>
+      <div class="s"><span class="k">Geometri</span><span class="v">Çizim bekliyor</span></div>
+    </div>`;
+};
+
+const renderPendingDrawingMarkersV33 = (village='')=>{
+  try{
+    if(!pendingDrawingLayer) return 0;
+    pendingDrawingLayer.clearLayers();
+    window.__PENDING_MARKERS_BY_ID = {};
+    if(!showAllParcelsLayer) return 0;
+    const records = pendingParcelRecordsForVillageV33(village);
+    records.forEach((p, idx)=>{
+      const latlng = pendingPointForRecordV33(p, idx, records);
+      const isSel = String(p.id) === String(selectedParcelId);
+      const orchard = String(p?.parcel_type || '').toLowerCase()==='orchard' || !!p?.is_orchard;
+      const html = `<span class="parcel-badge pending ${orchard?'orchard':''} ${isSel?'selected':''}"><span class="dot"></span><span>${escapeHtml(String(p.id))}</span><span class="hint">✎</span></span>`;
+      const marker = L.marker(latlng, {
+        interactive:true,
+        icon: L.divIcon({ className:'pending-parcel-marker', html, iconSize:[74,24], iconAnchor:[37,12], popupAnchor:[0,-10] })
+      });
+      marker.__parcelId = String(p.id);
+      marker.bindPopup(pendingPopupHtmlV33(p), {closeButton:false, autoClose:false, closeOnClick:false, autoPan:false, className:'parcel-popup'});
+      marker.on('click', (e)=>{
+        if(customDrawMode) return;
+        selectedParcelId = String(p.id);
+        try{ const sel=document.getElementById('parcelSelect'); if(sel) sel.value=selectedParcelId; }catch(_e){}
+        try{ syncUserParcelForm(); }catch(_e){}
+        try{ if(window._updateParcelStyles) window._updateParcelStyles(); }catch(_e){}
+        try{ marker.openPopup(e?.latlng); }catch(_e){ try{ marker.openPopup(); }catch(__){} }
+        STATE.selectionDirty = true;
+        refreshUI();
+      });
+      marker.on('mouseover', (e)=>{ try{ marker.openPopup(e?.latlng); }catch(_e){ try{ marker.openPopup(); }catch(__){} } });
+      marker.on('mouseout', ()=>{ try{ marker.closePopup(); }catch(_e){} });
+      pendingDrawingLayer.addLayer(marker);
+      window.__PENDING_MARKERS_BY_ID[String(p.id)] = marker;
+    });
+    if(showAllParcelsLayer && !map.hasLayer(pendingDrawingLayer)) pendingDrawingLayer.addTo(map);
+    return records.length;
+  }catch(e){ console.warn('Çizim bekleyen parsel işaretleri üretilemedi:', e); return 0; }
+};
+

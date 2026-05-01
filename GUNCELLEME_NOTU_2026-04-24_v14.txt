@@ -1,0 +1,34 @@
+V14 GÜNCELLEME NOTU - PARSEL ÇİZİMİ, ATAMA VE ARAYÜZ DÜZELTMELERİ
+
+1) Planet bağımlılığı kaldırılacak şekilde panel içi çizim akışı güçlendirildi.
+   - Mevcut haritada çizim yapma, GeoJSON/KML yükleme ve GeoJSON dışa aktarma akışı korunmuştur.
+   - Haritaya "Çizim zemini" butonu eklendi. Altlık harita kapatılarak boş/grid zemin üzerinde parsel çizilebilir.
+
+2) Parsel Özeti ekranı yeniden tasarlandı.
+   - Kimlik, alan, veri güveni ve atama durumu üstte net gösterilir.
+   - Su, kâr, yağış ve ETo dört ayrı KPI kartına ayrıldı.
+   - Toprak eksikliği artık pasif metin yerine uyarı/eylem formatında gösterilir.
+   - Atanan çiftçi, seçilen alternatif, atanan desen, su/kâr bilgisi parsel özetine eklendi.
+
+3) Parsel atama paneli eklendi.
+   - Kayıtlı çiftçi listesinden çiftçi seçilebilir.
+   - Alternatif 1 (su verimliliği), Alternatif 2 (kâr odaklı), Alternatif 3 (dengeli) ve mevcut desen listelenir.
+   - Çiftçinin seçtiği alternatif parsele atanabilir.
+   - Atama durumu: Taslak, Çiftçi tercih etti, Teknik onay bekliyor, Onaylandı, Uygulamada.
+   - Atama notu tutulur.
+   - Atanan parsel GeoJSON olarak indirilebilir.
+
+4) Aylık su kapasitesi ve kritik aylar bölümü düzeltildi.
+   - Gerçek kapasite yoksa sonuç "Uygun" diye kesin gösterilmez; "Tahmini uygun / izlenmeli / kritik tahmin" dili kullanılır.
+   - Kullanım oranı (%) eklendi.
+   - Pik talep ayı, en dar marj ve kritik/izlenecek ay sayısı KPI olarak verildi.
+   - Tablo artık ölçülü kapasite ile tahmini kapasiteyi ayırır.
+
+5) Eski 15 parsel ifadeleri temizlendi.
+   - Başlıklar seçili kapsam / 6 köy parselleri mantığına uygun hale getirildi.
+
+6) Önbellek temizliği güçlendirildi.
+   - Hesap önbelleği yanında eski resmi parsel override, custom parsel ve oturum kalıntıları da temizlenir.
+
+7) Kod kalitesi kontrolü.
+   - script.js için sözdizimi kontrolü yapıldı: node --check script.js başarılı.

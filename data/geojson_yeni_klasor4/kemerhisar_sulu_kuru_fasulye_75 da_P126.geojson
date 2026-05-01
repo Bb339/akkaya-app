@@ -1,0 +1,89 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P126",
+    "name": "P126",
+    "display_name": "P126",
+    "area_da": 50,
+    "area_m2": 50000,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "KURU FASULYE",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Halil Uçar",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_kuru_fasulye_75 da_P126.geojson",
+    "owner_username": "C126",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:49:10.501Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 75,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C126",
+    "farmer_name": "Halil Uçar",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "KURU FASULYE",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 62583,
+    "profit_tl_current": 412500,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 62583,
+    "assigned_profit_tl": 412500,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:49:12.648Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_kuru_fasulye_75 da_P126.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.56135111174041,
+          37.82311138361268
+        ],
+        [
+          34.561930325180455,
+          37.82252643625661
+        ],
+        [
+          34.5630672997109,
+          37.82267055415154
+        ],
+        [
+          34.56319601380868,
+          37.821475214863305
+        ],
+        [
+          34.559742185518076,
+          37.82117001875118
+        ],
+        [
+          34.55946330497286,
+          37.82214494635279
+        ],
+        [
+          34.56004251841291,
+          37.822780761763674
+        ],
+        [
+          34.56135111174041,
+          37.82311138361268
+        ]
+      ]
+    ]
+  }
+}

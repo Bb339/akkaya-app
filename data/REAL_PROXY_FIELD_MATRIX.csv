@@ -1,0 +1,11 @@
+﻿dataset,status,why,action_for_defense
+parsel_su_kar_ozet.csv,excel_real_current_pattern,2024 Excel kaynaklarından üretilen mevcut parsel/su/kâr özeti,Mevcut desen referansı olarak anlatılabilir
+parcel_assumptions.csv,excel_real_plus_geometry_proxy,Parsel alanı/ürün bilgisi Excel kaynaklı; toprak/koordinat/çizim durumu bazı parsellerde proxy olabilir,"Alan gerçek referans, toprak/geometry proxy ayrımı belirtilmeli"
+monthly_climate_all_parcels.csv,cropwat_fao56_reference_replicated_regional,ETo/iklim serisi hocanın CROPWAT/FAO-56 PM veya Excel senkron referansı olarak alınmış; 179 parsele bölgesel seri olarak çoğaltılmıştır,"ETo'yu sıfırdan hesapladık demeden, CROPWAT/FAO referanslı veri kullandık denmeli"
+crop_params_assumed.csv,mixed_fao56_kc_proxy,Kc evreleri FAO-56 mantığıyla uyumlu; ürün bazında eksikler varsayım/proxy ile tamamlanmış,Kc tablosu açık varsayım olarak savunulmalı
+crop_suitability_assumed.csv,proxy_open_label,Resmi ürün-toprak uygunluk matrisi yok; heuristic/proxy skorlarla dolduruldu,"Toprak uygunluğu gerçek harita değil, karar destek proxy katmanı denmeli"
+water_quality_monthly_assumed.csv,proxy_open_label,EC/su kalitesi aylık ölçüm yoksa varsayım olarak kullanılır,Ölçüm verisi gelirse değiştirilecek katman
+irrigation_methods_assumed.csv,method_assumption,Sulama yöntemi randımanları literatür/varsayım temelli,"Bitkinin net ihtiyacı değil, brüt çekiş ve kayıp değişir diye anlatılmalı"
+delivery_capacity_monthly_assumed.csv,scenario_assumption,Aylık iletim kapasitesi yoksa senaryo kapasitesi kullanılır,Gerçek işletme verisi olmadığı açıkça belirtilmeli
+water_allocation_decision_summary_v47.csv,derived_scenario,"2024 mevcut talebinden türetilen dekar bazlı, eşit köy ve hibrit kota senaryoları","Gerçek baraj arzı değil, planlama/adalet senaryosu"
+candidate/profit fields,proxy_for_missing_economics,Ürün fiyatları ve maliyetler bazı Excel dosyalarında eksik olduğu için proxy değerler korunmuştur,Ekonomi kısmı su hesabına göre daha varsayımsal anlatılmalı

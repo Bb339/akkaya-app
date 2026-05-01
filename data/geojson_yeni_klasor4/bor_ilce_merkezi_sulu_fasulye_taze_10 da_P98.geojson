@@ -1,0 +1,77 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P98",
+    "name": "P98",
+    "display_name": "P98",
+    "area_da": 36.2,
+    "area_m2": 36200,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "FASULYE (TAZE)",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Seda Tekin",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_fasulye_taze_10 da_P98.geojson",
+    "owner_username": "C098",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:09:03.876Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 10,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C098",
+    "farmer_name": "Seda Tekin",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "FASULYE (TAZE)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 5804.2,
+    "profit_tl_current": 5756.35,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 5804.2,
+    "assigned_profit_tl": 5756.35,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:09:17.608Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_fasulye_taze_10 da_P98.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.58821297164318,
+          37.919116402555886
+        ],
+        [
+          34.588041352846126,
+          37.91999690546618
+        ],
+        [
+          34.58730124678385,
+          37.920885864056785
+        ],
+        [
+          34.584319370185135,
+          37.91910793613056
+        ],
+        [
+          34.58821297164318,
+          37.919116402555886
+        ]
+      ]
+    ]
+  }
+}

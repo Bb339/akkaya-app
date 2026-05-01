@@ -1,0 +1,11 @@
+v36 BOR İLÇE MERKEZİ FORMAT GÜNCELLEMESİ
+
+- Bor İlçe Merkezi P79-P121 arasındaki 43 parsel bilgi kaydı çizim/GeoJSON yükleme akışına hazırlandı.
+- Çizim panelinde varsayılan filtre Bor İlçe Merkezi olarak ayarlandı.
+- Bor İlçe Merkezi çizimine geç butonu eklendi.
+- Bor dosya adları için Türkçe/ASCII varyantları tanınır hale getirildi: borilce, bor_ilce, bor_ilçe, bor_ilce_merkezi, bor_merkez vb.
+- Yeni Bor polygonları eklendiğinde Sazlıca, Bahçeli ve Kaynarca ile aynı formatta görünür: beyaz rozet, bilgi ikonu, hover popup, tıklayınca seçilme, mavi vurgu, ürün/alan/çiftçi/sulama/desen bilgileri.
+- Köy sınırı ve baraj alanı parsel katmanına karıştırılmaz.
+- Gerçek Bor parsel polygonu bulunmuyorsa sahte/geçici parsel sınırı üretilmez.
+
+Not: Bu pakette Bor İlçe Merkezi için bilgi kayıtları mevcuttur; gerçek parsel polygon GeoJSON dosyaları eklendiği anda otomatik eşleşir.

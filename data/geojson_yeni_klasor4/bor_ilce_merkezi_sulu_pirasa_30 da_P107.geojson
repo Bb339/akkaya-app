@@ -1,0 +1,109 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P107",
+    "name": "P107",
+    "display_name": "P107",
+    "area_da": 115.3,
+    "area_m2": 115300,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "PIRASA",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "İbrahim Işık",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_pirasa_30 da_P107.geojson",
+    "owner_username": "C107",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:22:00.504Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 30,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C107",
+    "farmer_name": "İbrahim Işık",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "PIRASA",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 23672.4,
+    "profit_tl_current": 135000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 23672.4,
+    "assigned_profit_tl": 135000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:22:02.672Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_pirasa_30 da_P107.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.60342617280201,
+          37.89808045793891
+        ],
+        [
+          34.602846959361955,
+          37.89745799514434
+        ],
+        [
+          34.60194596067745,
+          37.89791531526153
+        ],
+        [
+          34.60046038546549,
+          37.896378200259825
+        ],
+        [
+          34.595290369204385,
+          37.895793834069536
+        ],
+        [
+          34.59541372021475,
+          37.89555246407196
+        ],
+        [
+          34.598261519628316,
+          37.89542542691322
+        ],
+        [
+          34.59917860757502,
+          37.89490033766457
+        ],
+        [
+          34.59964519617953,
+          37.89520099406368
+        ],
+        [
+          34.60129166401372,
+          37.89474789169726
+        ],
+        [
+          34.60322237548051,
+          37.89479447244301
+        ],
+        [
+          34.60347444058869,
+          37.894769064767175
+        ],
+        [
+          34.60342617280201,
+          37.89808045793891
+        ]
+      ]
+    ]
+  }
+}

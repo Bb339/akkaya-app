@@ -1,0 +1,118 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.61928826376187,
+            37.89621288324027
+          ],
+          [
+            34.62153181452117,
+            37.89825242423569
+          ],
+          [
+            34.62203798200777,
+            37.899169660090394
+          ],
+          [
+            34.623200798038866,
+            37.89882434909278
+          ],
+          [
+            34.6249381827206,
+            37.89812293137295
+          ],
+          [
+            34.625991557640724,
+            37.89754021011569
+          ],
+          [
+            34.626935491449885,
+            37.897464672125295
+          ],
+          [
+            34.628358230589214,
+            37.898532992002586
+          ],
+          [
+            34.630382898656904,
+            37.898845931355424
+          ],
+          [
+            34.63165515579898,
+            37.89883514003965
+          ],
+          [
+            34.63155939529655,
+            37.89832796215856
+          ],
+          [
+            34.631696197624606,
+            37.89765891325632
+          ],
+          [
+            34.6310942677569,
+            37.89674165913074
+          ],
+          [
+            34.630930106090446,
+            37.89620209227945
+          ],
+          [
+            34.62779734254714,
+            37.895533024054004
+          ],
+          [
+            34.626374602468466,
+            37.895435900747586
+          ],
+          [
+            34.6240900103532,
+            37.89501503135874
+          ],
+          [
+            34.62121717085746,
+            37.895533024054004
+          ],
+          [
+            34.619192502320104,
+            37.8962236749405
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_nektar_2525 da_P42.geojson",
+        "source_label": "sazlica_sulu_nektar_2525 da_P42.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P42",
+        "name": "P42",
+        "parcel_id": "P42",
+        "district": "Merkez",
+        "current_crop": "NEKTAR",
+        "crop": "NEKTAR",
+        "assigned_pattern": "NEKTAR",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 2525,
+        "area_official_da": 2525,
+        "farmer_id": "C042",
+        "farmer_name": "Sevgi Keskin"
+      },
+      "id": 1773611479690
+    }
+  ]
+}

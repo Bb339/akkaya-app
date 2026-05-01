@@ -1,0 +1,9 @@
+rule_id,type,description,applies_to,window_seasons,penalty_weight,notes,window_years,from_family,to_family,same_crop_forbidden,applies_to_parcel_type,bonus_weight,priority
+R1,hard,Aynı familya art arda iki sezonda aynı parselde tekrarlanamaz.,parcel_id,2.0,1.0,Temel münavebe sert kuralı,,*,same_family,False,all,0.0,1
+R1B,hard,Aynı ürün art arda iki sezonda aynı parselde tekrarlanamaz.,parcel_id,2.0,1.2,Özellikle tek yıllıklarda aynı tür tekrarını engeller,,*,same_crop,True,all,0.0,2
+R2,soft,Ağır besin tüketen üründen sonra baklagil tercih edilir.,parcel_id,2.0,0.0,Toprak dinlendirme / azot dengesi,1.0,heavy_feeder,fabaceae,False,field,1.0,3
+R3,hard,Solanaceae sonrası tekrar Solanaceae önerilmez.,parcel_id,2.0,0.9,Hastalık riski ve toprak yorgunluğu,1.0,solanaceae,solanaceae,False,field,0.0,4
+R4,hard,Brassicaceae sonrası tekrar Brassicaceae önerilmez.,parcel_id,2.0,0.85,Lahana grubu toprak ve hastalık baskısı,1.0,brassicaceae,brassicaceae,False,field,0.0,5
+R5,hard,Cucurbitaceae sonrası tekrar Cucurbitaceae önerilmez.,parcel_id,2.0,0.85,Kabak-karpuz-kavun ardışıklığını sınırlar,1.0,cucurbitaceae,cucurbitaceae,False,field,0.0,6
+R6,soft,Çok yıllık bahçe parsellerinde mevcut perennial ürün korunur.,parcel_id,,0.0,Bahçe söküm maliyeti ve tesis yaşı nedeniyle,5.0,perennial_lock,current_crop,False,orchard,1.0,7
+R7,soft,İki yıl içinde en az bir kez baklagil teşviki.,parcel_id,,0.3,Toprak yapısı ve azot döngüsü,2.0,*,fabaceae,False,field,0.5,8

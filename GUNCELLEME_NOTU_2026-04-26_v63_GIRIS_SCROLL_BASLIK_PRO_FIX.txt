@@ -1,0 +1,9 @@
+v63 - Giriş ekranı scroll ve profesyonel başlık düzeltmesi
+
+1) Yakınlaştırma/zoom durumunda kaydırma çubuğu auth-screen üzerinde kesin çalışacak şekilde düzenlendi.
+2) Login ekranı sabit katman olarak tutuldu; ana panel ve alt içerikler giriş öncesinde görünmez kaldı.
+3) Tez başlığı üç dengeli satır halinde yapılandırıldı; kelimelerin tek tek alt satıra düşmesi engellendi.
+4) Başlık rengi koyu lacivert/füme tonuna çekildi; daha okunabilir ve akademik görünüm sağlandı.
+5) Açıklama metinleri ve kart açıklamaları iki yana yaslı yapıldı.
+6) Sol/sağ panel oranları, logo kartları, bilgi kartları ve giriş kartı daha profesyonel biçimde yeniden dengelendi.
+7) CSS/JS cache sürümleri v63 yapıldı.

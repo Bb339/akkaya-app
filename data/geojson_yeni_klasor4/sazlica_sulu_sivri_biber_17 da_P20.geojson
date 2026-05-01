@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.642051318683315,
+            37.89786291232039
+          ],
+          [
+            34.64062642158464,
+            37.89954388834268
+          ],
+          [
+            34.644674138152226,
+            37.90177186833941
+          ],
+          [
+            34.64580901179438,
+            37.900817027759786
+          ],
+          [
+            34.646515155297735,
+            37.90045895962608
+          ],
+          [
+            34.64664125188807,
+            37.89977265705939
+          ],
+          [
+            34.64580901179438,
+            37.89936485131119
+          ],
+          [
+            34.645140696835206,
+            37.89835030002037
+          ],
+          [
+            34.64492633219872,
+            37.89771371130311
+          ],
+          [
+            34.64188739268297,
+            37.89788280601694
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_sivri_biber_17 da_P20.geojson",
+        "source_label": "sazlica_sulu_sivri_biber_17 da_P20.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P20",
+        "name": "P20",
+        "parcel_id": "P20",
+        "district": "Merkez",
+        "current_crop": "SİVRİ BİBER",
+        "crop": "SİVRİ BİBER",
+        "assigned_pattern": "SİVRİ BİBER",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 17,
+        "area_official_da": 17,
+        "farmer_id": "C020",
+        "farmer_name": "Kezban Kara"
+      },
+      "id": 1773615606537
+    }
+  ]
+}

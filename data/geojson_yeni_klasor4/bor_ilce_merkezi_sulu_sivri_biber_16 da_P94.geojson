@@ -1,0 +1,81 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P94",
+    "name": "P94",
+    "display_name": "P94",
+    "area_da": 29.4,
+    "area_m2": 29400,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "SİVRİ BİBER",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Gül Yılmaz",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_sivri_biber_16 da_P94.geojson",
+    "owner_username": "C094",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:03:51.839Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 16,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C094",
+    "farmer_name": "Gül Yılmaz",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "SİVRİ BİBER",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 11169.44,
+    "profit_tl_current": 112000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 11169.44,
+    "assigned_profit_tl": 112000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:04:20.145Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_sivri_biber_16 da_P94.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.58833269735848,
+          37.919059767911925
+        ],
+        [
+          34.587142091953936,
+          37.918297785144624
+        ],
+        [
+          34.586208914744994,
+          37.91796759016056
+        ],
+        [
+          34.58566187982938,
+          37.91771359301027
+        ],
+        [
+          34.584235298578896,
+          37.91910210005643
+        ],
+        [
+          34.58833269735848,
+          37.919059767911925
+        ]
+      ]
+    ]
+  }
+}

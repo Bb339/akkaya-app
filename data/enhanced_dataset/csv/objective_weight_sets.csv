@@ -1,0 +1,4 @@
+weight_set,alpha_water,beta_profit,gamma_risk,notes
+WE1_water_efficiency,0.45,0.55,0.15,Use available water effectively; maximize TL/m3 under water and delivery constraints.
+WE2_balanced,0.5,0.5,0.1,Balanced interpretation between total profit and water productivity.
+WE3_profit_priority,0.3,0.7,0.1,Profit priority under water constraint; still checks reservoir and monthly peaks.

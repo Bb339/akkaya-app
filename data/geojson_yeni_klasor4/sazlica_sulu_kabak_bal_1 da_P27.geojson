@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64305227478912,
+            37.88753209099919
+          ],
+          [
+            34.644417017479356,
+            37.887008702664346
+          ],
+          [
+            34.646407266802115,
+            37.890163927338364
+          ],
+          [
+            34.64506148075144,
+            37.89101626322474
+          ],
+          [
+            34.642900637290886,
+            37.88745732080474
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kabak_bal_1 da_P27.geojson",
+        "source_label": "sazlica_sulu_kabak_bal_1 da_P27.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P27",
+        "name": "P27",
+        "parcel_id": "P27",
+        "district": "Merkez",
+        "current_crop": "KABAK (BAL)",
+        "crop": "KABAK (BAL)",
+        "assigned_pattern": "KABAK (BAL)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1,
+        "area_official_da": 1,
+        "farmer_id": "C027",
+        "farmer_name": "Emin Çetin"
+      },
+      "id": 1773616627449
+    }
+  ]
+}

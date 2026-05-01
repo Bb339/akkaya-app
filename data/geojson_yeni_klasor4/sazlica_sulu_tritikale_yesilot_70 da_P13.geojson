@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65291780379921,
+            37.872056343394306
+          ],
+          [
+            34.662003343464285,
+            37.87673476437644
+          ],
+          [
+            34.65112628679058,
+            37.886359931078616
+          ],
+          [
+            34.650145221299816,
+            37.87969648908728
+          ],
+          [
+            34.65300311664344,
+            37.87198902841007
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_tritikale_yesilot_70 da_P13.geojson",
+        "source_label": "sazlica_sulu_tritikale_yesilot_70 da_P13.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P13",
+        "name": "P13",
+        "parcel_id": "P13",
+        "district": "Merkez",
+        "current_crop": "TRİTİKALE (YEŞİLOT)",
+        "crop": "TRİTİKALE (YEŞİLOT)",
+        "assigned_pattern": "TRİTİKALE (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 70,
+        "area_official_da": 70,
+        "farmer_id": "C013",
+        "farmer_name": "Emine Aydoğan"
+      },
+      "id": 1773615086559
+    }
+  ]
+}

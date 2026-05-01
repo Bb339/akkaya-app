@@ -1,0 +1,91 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P49",
+    "name": "P49",
+    "display_name": "P49",
+    "area_da": 3380,
+    "area_m2": 3380000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "ARPA (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "Rabia Güler",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bahceli_kuru_arpa_dane_3380 da_P49.geojson",
+    "owner_username": "C049",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T13:47:02.583Z",
+    "water_mode": "kuru",
+    "is_user_parcel": false,
+    "area_official_da": 3380,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C049",
+    "farmer_name": "Rabia Güler",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "ARPA (Dane)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 1741883,
+    "profit_tl_current": 8788000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 1741883,
+    "assigned_profit_tl": 8788000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T13:47:13.280Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 3380000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Tarla",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "ARPA (Dane)",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_kuru_arpa_dane_3380 da_P49.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.623180033550476,
+          37.769844986274016
+        ],
+        [
+          34.633006592123486,
+          37.78830317441632
+        ],
+        [
+          34.61502699368644,
+          37.791424324101214
+        ],
+        [
+          34.61013516976798,
+          37.790440497668314
+        ],
+        [
+          34.604814238488316,
+          37.782603343516016
+        ],
+        [
+          34.608676204739666,
+          37.77731024978409
+        ],
+        [
+          34.623180033550476,
+          37.769844986274016
+        ]
+      ]
+    ]
+  }
+}

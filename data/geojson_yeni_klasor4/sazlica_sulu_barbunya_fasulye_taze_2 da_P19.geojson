@@ -1,0 +1,70 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64575873396086,
+            37.89927633146391
+          ],
+          [
+            34.647454194070264,
+            37.8979350818139
+          ],
+          [
+            34.64759677716381,
+            37.897995066434746
+          ],
+          [
+            34.64771084403028,
+            37.89868488811997
+          ],
+          [
+            34.6466652338073,
+            37.899974538962496
+          ],
+          [
+            34.646075888439384,
+            37.89953965950525
+          ],
+          [
+            34.645857261203325,
+            37.89923974117659
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_barbunya_fasulye_taze_2 da_P19.geojson",
+        "source_label": "sazlica_sulu_barbunya_fasulye_taze_2 da_P19.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P19",
+        "name": "P19",
+        "parcel_id": "P19",
+        "district": "Merkez",
+        "current_crop": "BARBUNYA FASULYE (TAZE)",
+        "crop": "BARBUNYA FASULYE (TAZE)",
+        "assigned_pattern": "BARBUNYA FASULYE (TAZE)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 2,
+        "area_official_da": 2,
+        "farmer_id": "C019",
+        "farmer_name": "Sultan Özer"
+      },
+      "id": 1773616454354
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.61862316637743,
+            37.89253961739516
+          ],
+          [
+            34.62073232812158,
+            37.89392474353674
+          ],
+          [
+            34.62223122340808,
+            37.89371359815836
+          ],
+          [
+            34.62184579304453,
+            37.89205819557327
+          ],
+          [
+            34.62141753651323,
+            37.891711906976425
+          ],
+          [
+            34.620796566270464,
+            37.89199062730056
+          ],
+          [
+            34.62014347511537,
+            37.89161900083714
+          ],
+          [
+            34.61863387310316,
+            37.8925058333425
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_ceviz_251 da_P46.geojson",
+        "source_label": "sazlica_sulu_ceviz_251 da_P46.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P46",
+        "name": "P46",
+        "parcel_id": "P46",
+        "district": "Merkez",
+        "current_crop": "CEVİZ",
+        "crop": "CEVİZ",
+        "assigned_pattern": "CEVİZ",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 251,
+        "area_official_da": 251,
+        "farmer_id": "C046",
+        "farmer_name": "Büşra Özdemir"
+      },
+      "id": 1773612417083
+    }
+  ]
+}

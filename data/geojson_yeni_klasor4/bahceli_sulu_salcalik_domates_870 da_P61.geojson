@@ -1,0 +1,83 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P61",
+    "name": "P61",
+    "display_name": "P61",
+    "area_da": 870,
+    "area_m2": 870000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "SALÇALIK DOMATES",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Fatma Avcı",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_salcalik_domates_870 da_P61.geojson",
+    "owner_username": "C061",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T13:54:46.624Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 870,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C061",
+    "farmer_name": "Fatma Avcı",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "SALÇALIK DOMATES",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 685786.2,
+    "profit_tl_current": 13912795.53,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 685786.2,
+    "assigned_profit_tl": 13912795.53,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:43:50.944Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 870000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Sebze",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "SALÇALIK DOMATES",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_salcalik_domates_870 da_P61.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.60455381566381,
+          37.78234605560895
+        ],
+        [
+          34.60914526442936,
+          37.79045463969349
+        ],
+        [
+          34.60468254787222,
+          37.79744291456089
+        ],
+        [
+          34.59180932703423,
+          37.79347392692458
+        ],
+        [
+          34.60455381566381,
+          37.78234605560895
+        ]
+      ]
+    ]
+  }
+}

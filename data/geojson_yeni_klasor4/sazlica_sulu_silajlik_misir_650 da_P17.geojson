@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.627477247593795,
+            37.89544845685106
+          ],
+          [
+            34.627175881020754,
+            37.89503242765362
+          ],
+          [
+            34.631814779618566,
+            37.89308809599653
+          ],
+          [
+            34.6326543016837,
+            37.89399658918906
+          ],
+          [
+            34.63227759328266,
+            37.89475224321539
+          ],
+          [
+            34.631588754134505,
+            37.89516827414204
+          ],
+          [
+            34.63098602024941,
+            37.896195605795256
+          ],
+          [
+            34.62752029985579,
+            37.89542298568675
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_silajlik_misir_650 da_P17.geojson",
+        "source_label": "sazlica_sulu_silajlik_misir_650 da_P17.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P17",
+        "name": "P17",
+        "parcel_id": "P17",
+        "district": "Merkez",
+        "current_crop": "SİLAJLIK MISIR",
+        "crop": "SİLAJLIK MISIR",
+        "assigned_pattern": "SİLAJLIK MISIR",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 650,
+        "area_official_da": 650,
+        "farmer_id": "C017",
+        "farmer_name": "Meryem Aslan"
+      },
+      "id": 1773614277885
+    }
+  ]
+}

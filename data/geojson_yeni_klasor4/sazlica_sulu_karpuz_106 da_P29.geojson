@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.636363029825645,
+            37.88178043858824
+          ],
+          [
+            34.6382631955453,
+            37.88679484754418
+          ],
+          [
+            34.638525286230994,
+            37.88901762078605
+          ],
+          [
+            34.635227299021864,
+            37.89072342495707
+          ],
+          [
+            34.63337081508317,
+            37.889293309661284
+          ],
+          [
+            34.632213244138754,
+            37.889724070464055
+          ],
+          [
+            34.62987625985976,
+            37.88701885133722
+          ],
+          [
+            34.63230060770066,
+            37.885657588871794
+          ],
+          [
+            34.630029146842936,
+            37.88358980067105
+          ],
+          [
+            34.636110615899455,
+            37.88174566566941
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_karpuz_106 da_P29.geojson",
+        "source_label": "sazlica_sulu_karpuz_106 da_P29.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P29",
+        "name": "P29",
+        "parcel_id": "P29",
+        "district": "Merkez",
+        "current_crop": "KARPUZ",
+        "crop": "KARPUZ",
+        "assigned_pattern": "KARPUZ",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 106,
+        "area_official_da": 106,
+        "farmer_id": "C029",
+        "farmer_name": "Adem Uzun"
+      },
+      "id": 1773614816630
+    }
+  ]
+}

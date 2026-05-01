@@ -1,0 +1,47 @@
+[
+  {
+    "label": "Bahceli 2024 dogruluk odakli",
+    "source": "C:\\Users\\LENOVO\\OneDrive - mail.ohu.edu.tr\\Masaüstü\\bahceli_2024_dogruluk_odakli_son_guncel_v6.xlsx",
+    "file": "data/presentation_excel_previews/bahceli_2024_dogruluk_odakli.csv",
+    "sheet": "0_Yontem_Kaynak",
+    "rows": 37,
+    "columns": 7,
+    "status": "ok"
+  },
+  {
+    "label": "Sazlica 2024 profesyonel",
+    "source": "C:\\Users\\LENOVO\\OneDrive - mail.ohu.edu.tr\\Masaüstü\\sazlica_2024_profesyonel_guncel_v12_profesyonel_duzenli (1).xlsx",
+    "file": "data/presentation_excel_previews/sazlica_2024_profesyonel.csv",
+    "sheet": "0_Yontem_Kaynak",
+    "rows": 37,
+    "columns": 7,
+    "status": "ok"
+  },
+  {
+    "label": "Kaynarca 2024 duzeltilmis",
+    "source": "C:\\Users\\LENOVO\\OneDrive - mail.ohu.edu.tr\\Masaüstü\\kaynarca_2024_duzeltilmis_v5.xlsx",
+    "file": "data/presentation_excel_previews/kaynarca_2024_duzeltilmis.csv",
+    "sheet": "0_Yontem_Kaynak",
+    "rows": 29,
+    "columns": 7,
+    "status": "ok"
+  },
+  {
+    "label": "Bor ilce merkezi 2024",
+    "source": "C:\\Users\\LENOVO\\OneDrive - mail.ohu.edu.tr\\Masaüstü\\bor_ilce_merkezi_2024_duzeltilmis_v4.xlsx",
+    "file": "data/presentation_excel_previews/bor_ilce_merkezi_2024.csv",
+    "sheet": "0_Yontem_Kaynak",
+    "rows": 31,
+    "columns": 7,
+    "status": "ok"
+  },
+  {
+    "label": "Kemerhisar 2024 duzeltilmis",
+    "source": "C:\\Users\\LENOVO\\OneDrive - mail.ohu.edu.tr\\Masaüstü\\kemerhisar_2024_duzeltilmis_v5.xlsx",
+    "file": "data/presentation_excel_previews/kemerhisar_2024_duzeltilmis.csv",
+    "sheet": "0_Yontem_Kaynak",
+    "rows": 37,
+    "columns": 7,
+    "status": "ok"
+  }
+]

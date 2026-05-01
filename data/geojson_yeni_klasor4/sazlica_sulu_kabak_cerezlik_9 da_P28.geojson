@@ -1,0 +1,102 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.648693422824834,
+            37.904448946231014
+          ],
+          [
+            34.64988990288547,
+            37.90425713354381
+          ],
+          [
+            34.65106692738841,
+            37.902783996858645
+          ],
+          [
+            34.651096110057,
+            37.90162541549667
+          ],
+          [
+            34.65164084897354,
+            37.90062794690061
+          ],
+          [
+            34.65109366412667,
+            37.899791844814246
+          ],
+          [
+            34.64914981546754,
+            37.90092761093268
+          ],
+          [
+            34.64869985036282,
+            37.90077144333864
+          ],
+          [
+            34.64835787891006,
+            37.90045911008096
+          ],
+          [
+            34.64765023717235,
+            37.90116472638226
+          ],
+          [
+            34.64704700145066,
+            37.90075342384115
+          ],
+          [
+            34.646433541787374,
+            37.90047115618083
+          ],
+          [
+            34.644695405021665,
+            37.90188248504121
+          ],
+          [
+            34.646719822682755,
+            37.90345507666835
+          ],
+          [
+            34.64871356781701,
+            37.90447925906973
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kabak_cerezlik_9 da_P28.geojson",
+        "source_label": "sazlica_sulu_kabak_cerezlik_9 da_P28.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P28",
+        "name": "P28",
+        "parcel_id": "P28",
+        "district": "Merkez",
+        "current_crop": "KABAK (ÇEREZLİK)",
+        "crop": "KABAK (ÇEREZLİK)",
+        "assigned_pattern": "KABAK (ÇEREZLİK)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 9,
+        "area_official_da": 9,
+        "farmer_id": "C028",
+        "farmer_name": "Şaban Acar"
+      },
+      "id": 1773615857851
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": "v29",
+  "message": "Yeni eklenen GeoJSON dosyaları için otomatik index, bundle ve meta eşleştirme güncellendi.",
+  "geojson_folder": "data/geojson_yeni_klasor4",
+  "total_geojson_files": 104,
+  "parcel_geojson_count": 103,
+  "counts_by_village": {
+    "Baraj alanı": 1,
+    "Bahçeli": 31,
+    "Kaynarca": 23,
+    "Sazlıca": 49
+  },
+  "note": "Bu yükte Bor İlçe Merkezi ve Kemerhisar parsel GeoJSON dosyaları fiziksel olarak bulunmadıysa haritada görünmez; eklendikleri anda aynı klasörden otomatik okunacaktır."
+}

@@ -1,0 +1,70 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65528542084611,
+            37.883679821037475
+          ],
+          [
+            34.655726174989574,
+            37.884685088038324
+          ],
+          [
+            34.657146381290644,
+            37.88584499376812
+          ],
+          [
+            34.65712189644387,
+            37.88613496734588
+          ],
+          [
+            34.651881818657685,
+            37.88822274339711
+          ],
+          [
+            34.65124517341017,
+            37.88673424304467
+          ],
+          [
+            34.65518747473364,
+            37.88369915380322
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_kuru_cavdar_dane_40 da_P3.geojson",
+        "source_label": "sazlica_kuru_cavdar_dane_40 da_P3.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P3",
+        "name": "P3",
+        "parcel_id": "P3",
+        "district": "Merkez",
+        "current_crop": "ÇAVDAR (Dane)",
+        "crop": "ÇAVDAR (Dane)",
+        "assigned_pattern": "ÇAVDAR (Dane)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "kuru",
+        "irrigation_key": "rainfed",
+        "irrigation_current": "Yağışa bağlı (kuru)",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 40,
+        "area_official_da": 40,
+        "farmer_id": "C003",
+        "farmer_name": "Mustafa Kurt"
+      },
+      "id": 1773607531656
+    }
+  ]
+}

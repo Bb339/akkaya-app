@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.61462626627256,
+            37.872061648627636
+          ],
+          [
+            34.63110584165525,
+            37.86955775489052
+          ],
+          [
+            34.63881231504096,
+            37.8810724699367
+          ],
+          [
+            34.629588004562365,
+            37.88356486946215
+          ],
+          [
+            34.62960141317152,
+            37.88323072400668
+          ],
+          [
+            34.62796263209053,
+            37.883943500905715
+          ],
+          [
+            34.62710122094895,
+            37.88329702891376
+          ],
+          [
+            34.62168063626363,
+            37.886794541789314
+          ],
+          [
+            34.6176467122988,
+            37.87810846901894
+          ],
+          [
+            34.614682700855845,
+            37.87190275502111
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_cavdar_yesilot_350 da_P12.geojson",
+        "source_label": "sazlica_sulu_cavdar_yesilot_350 da_P12.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P12",
+        "name": "P12",
+        "parcel_id": "P12",
+        "district": "Merkez",
+        "current_crop": "ÇAVDAR (YEŞİLOT)",
+        "crop": "ÇAVDAR (YEŞİLOT)",
+        "assigned_pattern": "ÇAVDAR (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 350,
+        "area_official_da": 350,
+        "farmer_id": "C012",
+        "farmer_name": "Ayşe Uçar"
+      },
+      "id": 1773614752554
+    }
+  ]
+}

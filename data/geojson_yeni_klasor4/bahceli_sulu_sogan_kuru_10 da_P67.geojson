@@ -1,0 +1,95 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P67",
+    "name": "P67",
+    "display_name": "P67",
+    "area_da": 10,
+    "area_m2": 10000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "SOĞAN (KURU)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "Meryem Polat",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_sogan_kuru_10 da_P67.geojson",
+    "owner_username": "C067",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:39:37.824Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 10,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C067",
+    "farmer_name": "Meryem Polat",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "SOĞAN (KURU)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 10040.1,
+    "profit_tl_current": 127797.86,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 10040.1,
+    "assigned_profit_tl": 127797.86,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:39:40.139Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 10000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Sebze",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "SOĞAN (KURU)",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_sogan_kuru_10 da_P67.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.61683826355134,
+          37.817818420029404
+        ],
+        [
+          34.61812558563515,
+          37.818276240078994
+        ],
+        [
+          34.61812558563515,
+          37.819242739747956
+        ],
+        [
+          34.62080750664306,
+          37.819870109952646
+        ],
+        [
+          34.61752483532936,
+          37.822176073532226
+        ],
+        [
+          34.61608732566914,
+          37.82148090092111
+        ],
+        [
+          34.61606587030106,
+          37.82148090092111
+        ],
+        [
+          34.61683826355134,
+          37.817818420029404
+        ]
+      ]
+    ]
+  }
+}

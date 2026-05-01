@@ -1,0 +1,70 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.616662828534395,
+            37.89351656603091
+          ],
+          [
+            34.615000936202996,
+            37.89402721652171
+          ],
+          [
+            34.61426646677447,
+            37.89324159873331
+          ],
+          [
+            34.61472706629368,
+            37.89293716958227
+          ],
+          [
+            34.615162768218156,
+            37.89336435209701
+          ],
+          [
+            34.61599682652977,
+            37.893109025079625
+          ],
+          [
+            34.61671884737462,
+            37.89349692545942
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_armut_86 da_P37.geojson",
+        "source_label": "sazlica_sulu_armut_86 da_P37.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P37",
+        "name": "P37",
+        "parcel_id": "P37",
+        "district": "Merkez",
+        "current_crop": "ARMUT",
+        "crop": "ARMUT",
+        "assigned_pattern": "ARMUT",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 86,
+        "area_official_da": 86,
+        "farmer_id": "C037",
+        "farmer_name": "Erdal Yılmaz"
+      },
+      "id": 1773612700355
+    }
+  ]
+}

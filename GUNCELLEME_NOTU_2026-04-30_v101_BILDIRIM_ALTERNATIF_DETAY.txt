@@ -1,0 +1,14 @@
+v101 - Bildirim, alternatif desen ve arayuz duzeltmeleri
+
+- Ciftci mesajlari artik kurum.nigde ve uzman.nigde kullanicilarina coklu hedefli bildirim olarak yazilir.
+- Kurum ve uzman girislerinde bildirim zili ile "Kurum gelen talepler / yazisma" kutusu ayni bildirimi gosterir.
+- Su verimliligi modunda alternatiflerde arpa, bugday, nohut, mercimek, fig ve cavdar tabanli yuzdeli Senaryo-2 karisimlari gorunur.
+- Resmi karsilastirma alternatiflerinde "Detay" dugmesi eklendi; dugme alternatifteki urunlerin yetistirme/hastalik/bakim kartini acar.
+- Giris ve alt bant logolari buyutuldu; ciftci iletisim karti, benchmark ve alternatif tablolarinda bosluklar dengelendi.
+- Cache kirmak icin index.html script/style surumu v101 yapildi.
+
+Kontrol:
+- node --check script.js: basarili
+- python -m py_compile app.py: basarili
+- Playwright: Betul Demir mesaj gonderdi; hem kurum.nigde hem uzman.nigde bildirim sayaci ve gelen kutusunda bildirim gorundu.
+- Playwright: Su verimliligi + Senaryo-2 resmi tabloda %60 ARPA + %40 NOHUT, %70 BUGDAY + %30 NOHUT, %65 BUGDAY + %35 MERCIMEK gibi alternatifler gorundu.

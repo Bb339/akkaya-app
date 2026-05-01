@@ -1,0 +1,1143 @@
+﻿<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<link href="/favicon.ico" rel="icon"/>
+<meta charset="utf-8"/>
+<title>Tarımsal Karar Destek Sistemi</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="style.css?v=140" rel="stylesheet">
+<link href="ui_v10_patch.css?v=72" rel="stylesheet">
+<link href="ui_v12_patch.css?v=133" rel="stylesheet">
+<!-- Leaflet -->
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+<script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Esri Leaflet for uydu görüntüsü -->
+<script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="auth-pending"><div class="app-bg-orb app-bg-orb--one"></div><div class="app-bg-orb app-bg-orb--two"></div><div class="app-bg-grid"></div><div class="app-bg-noise"></div><div class="app-bg-particles" aria-hidden="true"></div>
+<section class="auth-screen" id="authScreen">
+  <div class="auth-media" aria-hidden="true">
+    <img class="auth-bg-gif auth-bg-gif--only" src="images/login-irrigation-sprinkler.gif" alt="" />
+    <div class="auth-bg-sheen"></div>
+    <div class="auth-bg-vignette"></div>
+  </div>
+  <div class="auth-ambient auth-ambient--one" aria-hidden="true"></div>
+  <div class="auth-ambient auth-ambient--two" aria-hidden="true"></div>
+  <div class="auth-ambient auth-ambient--three" aria-hidden="true"></div>
+  <div class="auth-shell auth-shell--institutional">
+    <div class="auth-copy auth-copy--institutional">
+      <div class="auth-logo-row">
+        <div class="auth-logo-card">
+          <img src="images/ohmu_logo_1992.png" alt="Niğde Ömer Halisdemir Üniversitesi logosu" class="auth-logo auth-logo--university" />
+          <div>
+            <strong>Niğde Ömer Halisdemir Üniversitesi</strong>
+            
+          </div>
+        </div>
+        <div class="auth-logo-card">
+          <img src="images/ahmet_sahenk_logo.png" alt="Ahmet Şahenk Tarım Bilimleri ve Teknolojileri Fakültesi logosu" class="auth-logo auth-logo--faculty" />
+          <div>
+            <strong>Tarım Bilimleri ve Teknolojileri Fakültesi</strong>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-study-strip">
+        <span class="auth-badge">ÖNAP</span>
+        <span class="auth-badge">Lisansüstü tez prototipi</span>
+        <span class="auth-badge">Disiplinlerarası Dijital Tarım Anabilim Dalı</span>
+      </div>
+
+      <div class="auth-title-block">
+        <h1>
+          <span>Yapay Zekâ Destekli</span>
+          <span>Optimum Bitki Deseni Sistemi</span>
+        </h1>
+        <p class="auth-thesis-full">Bir havzada yıllık su miktarına göre optimum bitki deseni sisteminin geliştirilmesi</p>
+      </div>
+      <p class="auth-lead">Bu giriş paneli, tez kapsamında geliştirilen karar destek sistemini akademik, kurumsal ve anlaşılır bir arayüzle sunar. Sistem; çiftçi kullanıcıları için parsel bazlı öneri ekranlarına, kurum kullanıcıları için ise havza ölçeğinde analiz, karşılaştırma ve izleme panellerine dönüşür.</p>
+
+      <div class="auth-project-meta">
+        <div class="auth-meta-item">
+          <span>Hazırlayan</span>
+          <strong>Betül Demir</strong>
+        </div>
+        <div class="auth-meta-item">
+          <span>Danışman</span>
+          <strong>Doç. Dr. Yeşim Dokuz</strong>
+        </div>
+        <div class="auth-meta-item">
+          <span>Eş danışman</span>
+          <strong>Doç. Dr. Burak Şen</strong>
+        </div>
+      </div>
+
+      <div class="auth-benefits auth-benefits--institutional">
+        <div class="auth-benefit">
+          <strong>Çiftçi paneli</strong>
+          <span>Kendi parselleri, mevcut ürün bilgisi, önerilen desen, su tasarrufu ve gelir etkisi.</span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Kurum paneli</strong>
+          <span>Havza geneli harita, senaryo karşılaştırması, su bütçesi ve uzun vadeli etki analizleri.</span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Karar çıktıları</strong>
+          <span>Su kısıtı altında optimum bitki deseni, ekonomik etki ve uygulanabilir önerilerin birlikte sunulması.</span>
+        </div>
+      </div>
+    </div>
+
+        <div class="auth-card auth-card--institutional">
+      <div class="auth-card-head">
+        <p class="auth-kicker">Sisteme erişim</p>
+        <h2>Yönetim tarafından açılan hesabınızla giriş yapın</h2>
+        <p>Bu prototipte açık kayıt yerine <strong>kurumsal ön kayıt</strong> akışı kullanılır. Çiftçi hesapları yönetim panelinde açılır; kullanıcı ilk girişte bilgi tamamlama adımını tamamlayarak kendi paneline geçer.</p>
+      </div>
+
+      <div class="auth-tabbar" role="tablist" aria-label="Giriş ve bilgilendirme sekmeleri">
+        <button class="auth-tab-btn is-active" type="button" data-auth-tab="login">Giriş yap</button>
+        <button class="auth-tab-btn" type="button" data-auth-tab="register">Erişim akışı</button>
+      </div>
+
+      <div class="auth-panel is-active" data-auth-panel="login">
+        <div class="auth-demo-grid auth-demo-grid--four">
+          <button class="auth-demo-btn" type="button" data-demo-user="betul.demir">
+            <strong>Çiftçi demo (aktif)</strong>
+            <span>betul.demir / demo123</span>
+          </button>
+          <button class="auth-demo-btn" type="button" data-demo-user="ciftci.ayse">
+            <strong>Çiftçi demo (ilk kurulum)</strong>
+            <span>ciftci.ayse / demo123</span><small>Her girişte doğrulama ekranı yeniden açılır</small>
+          </button>
+          <button class="auth-demo-btn" type="button" data-demo-user="kurum.nigde">
+            <strong>Kurum demo (yönetici)</strong>
+            <span>kurum.nigde / demo123</span>
+          </button>
+          <button class="auth-demo-btn" type="button" data-demo-user="uzman.nigde">
+            <strong>Kurum demo (uzman)</strong>
+            <span>uzman.nigde / demo123</span>
+          </button>
+        </div>
+
+        <form class="auth-form" id="loginForm">
+          <label class="auth-label">Kullanıcı adı
+            <input id="loginUsername" class="text-input auth-input" type="text" autocomplete="username" placeholder="Örn. betul.demir" />
+          </label>
+          <label class="auth-label">Şifre
+            <input id="loginPassword" class="text-input auth-input" type="password" autocomplete="current-password" placeholder="demo123" />
+          </label>
+          <button class="btn-primary auth-submit" type="submit">Panele giriş yap</button>
+          <div class="auth-error" id="loginError" role="alert"></div>
+        </form>
+      </div>
+
+      <div class="auth-panel" data-auth-panel="register">
+        <div class="auth-note-box auth-note-box--soft">
+          <strong>Bu sürümde açık kayıt yok</strong>
+          <span>Çiftçi hesapları yönetim tarafından tek tek açılır. Böylece her kullanıcı için önceden kullanıcı adı, geçici şifre, varsa resmi parseller ve yetkiler tanımlanabilir.</span>
+        </div>
+        <div class="auth-flow-list">
+          <div class="auth-flow-item"><strong>1. Yönetim ön kayıt açar</strong><span>Çiftçi bilgileri, kullanıcı adı, geçici şifre ve varsa çizili arazi kaydı tanımlanır.</span></div>
+          <div class="auth-flow-item"><strong>2. Çiftçi ilk giriş yapar</strong><span>Kullanıcı kendisine verilen bilgilerle giriş yapar ve ana panele geçmeden önce bilgi tamamlama ekranını görür.</span></div>
+          <div class="auth-flow-item"><strong>3. Bilgi tamamlama yapılır</strong><span>Çiftçi iletişim bilgilerini doğrular; eksikse parsel yükler, haritada çizer veya mevcut kayıtlarını kontrol eder.</span></div>
+          <div class="auth-flow-item"><strong>4. Çiftçi paneli aktif olur</strong><span>Kurulum tamamlanınca kullanıcı kendi bitki deseni planı, su ve kâr karşılaştırmalarını görür.</span></div>
+        </div>
+      </div>
+
+      <div class="auth-note-box">
+        <strong>Bilgilendirme</strong>
+        <span>Bu ekran tez sunumu için hazırlanmış prototip girişidir. Açık kayıt yerine yönetim ön kayıt + çiftçi ilk kurulum + rol bazlı parsel yetkilendirme mantığı gösterilmektedir.</span>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="app-shell" id="panel">
+<header class="app-header">
+  <div class="header-brand">
+    <div class="header-brand-row header-brand-row--text-only">
+      <div class="header-brand-text">
+        <h1>Tarımsal Karar Destek Sistemi</h1>
+        <p id="sessionSubtitle">Rol bazlı prototip paneli</p>
+      </div>
+    </div>
+  </div>
+  <div class="session-chip-row">
+    <div class="session-chip"><span class="k">Panel</span><strong id="sessionRoleLabel">Giriş bekleniyor</strong></div>
+    <div class="session-chip"><span class="k">Kullanıcı</span><strong id="sessionUserLabel">-</strong></div>
+    <button class="header-bell-btn hidden" id="notificationBellBtn" type="button" aria-label="Bildirimler">
+      <span class="header-bell-icon bell-icon-v132" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></span>
+      <span class="header-bell-count hidden" id="notificationBellCount">0</span>
+    </button>
+    <button class="btn-secondary header-switch-btn hidden" id="switchUserBtn" type="button">Kullanıcı değiştir</button>
+  </div>
+  <div class="header-notification-pop hidden" id="notificationCenter"></div>
+</header>
+<section class="onboarding-shell" id="onboardingSection">
+  <div class="card onboarding-card">
+    <div class="onboarding-head">
+      <p class="auth-kicker">İlk giriş / bilgi tamamlama</p>
+      <h2>Hesabınız yönetim tarafından açıldı</h2>
+      <p>Bu adımda iletişim ve işletme bilgilerinizi doğrulayın. Parseliniz eksikse soldaki <strong>Kullanıcı parsel girişi</strong> kartından GeoJSON/KML yükleyebilir veya haritada çizim yapabilirsiniz. Kurulum tamamlanmadan optimizasyon ve karşılaştırma çalıştırılamaz.</p>
+      <div class="small muted">Kullanıcı adı: <strong id="onboardingUsernameLabel">-</strong></div>
+      <div class="small muted">Demo notu: Ayşe hesabında bu adım her girişte tekrar açılır; böylece ön kayıt → doğrulama → kurum teyidi akışı sunumda yeniden gösterilebilir.</div>
+    </div>
+    <div class="auth-form-grid">
+      <label class="auth-label">Ad soyad
+        <input id="onboardingDisplayName" class="text-input auth-input" type="text" placeholder="Örn. Ayşe Kaya" />
+      </label>
+      <label class="auth-label">Telefon
+        <input id="onboardingPhone" class="text-input auth-input" type="text" placeholder="Örn. 05xx xxx xx xx" />
+      </label>
+    </div>
+    <div class="auth-form-grid">
+      <label class="auth-label">Köy / mevki
+        <input id="onboardingVillage" class="text-input auth-input" type="text" placeholder="Sazlıca / Bahçeli / Kemerhisar / Bor / Kaynarca" />
+      </label>
+      <label class="auth-label">İlçe
+        <input id="onboardingDistrict" class="text-input auth-input" type="text" placeholder="Merkez" />
+      </label>
+    </div>
+    <div class="auth-form-grid">
+      <label class="auth-label">Yeni şifre
+        <input id="onboardingPassword" class="text-input auth-input" type="password" placeholder="En az 4 karakter" />
+      </label>
+      <label class="auth-label">Yeni şifre tekrar
+        <input id="onboardingPassword2" class="text-input auth-input" type="password" placeholder="Şifreyi tekrar girin" />
+      </label>
+    </div>
+    <label class="auth-label">Not / işletme bilgisi
+      <textarea id="onboardingNotes" class="text-input auth-input onboarding-textarea" placeholder="İsterseniz sulama kaynağı, işletme notu veya yönetim için ek bilgi yazabilirsiniz."></textarea>
+    </label>
+    <div id="onboardingParcelSummary"></div>
+    <div class="algo-actions onboarding-actions">
+      <button class="btn-secondary" id="openOnboardingParcelToolsBtn" type="button">Parsel çizim / yükleme alanına git</button>
+      <button class="btn-primary" id="completeOnboardingBtn" type="button">Bilgileri kaydet ve paneli aç</button>
+    </div>
+    <div class="auth-error" id="onboardingError" role="alert"></div>
+    <div class="auth-success" id="onboardingSuccess" role="status"></div>
+  </div>
+</section>
+<div class="onboarding-compact-banner" id="onboardingCompactBanner">
+  <strong>İlk kurulum tamamlanmalı.</strong>
+  <span>İletişim ve parsel bilgilerinizi doğrulamadan karar destek ekranı aktif olmaz.</span>
+  <button class="btn-secondary" id="openOnboardingPanelBtn" type="button">Kurulum kartını aç</button>
+</div>
+
+<main class="app-main">
+<section class="layout">
+<!-- Sol kolon -->
+<div class="left-col">
+<!-- 1) Parsel + veri kaynağı -->
+
+
+<!-- 2) Optimizasyon algoritması (aktif dosyalar ile senaryo arasına) -->
+
+<!-- Algoritma karşılaştırması (benchmark) sekme olarak sağ tarafta gösterilir -->
+<!-- 3) Senaryo -->
+
+<!-- Gelişmiş / opsiyonel ayarlar: katlanabilir -->
+
+
+<div class="sidebar-panel">
+<details class="sidebar-group" id="setupGroup" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">1</span><span class="sidebar-group-text"><strong>Analiz kurulumu</strong><small>Veri kaynağı, algoritma ve senaryo ayarları</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card">
+<h2 class="card-title">Parsel seç</h2>
+<select class="select-input" id="parcelSelect"></select>
+<div class="algo-actions">
+<button class="btn-primary" id="runOptBtn">Optimizasyonu Çalıştır</button>
+<span class="algo-status" id="algoStatus">Hazır</span>
+</div>
+<div class="data-loader" data-role="institution">
+<div class="data-status">
+                Veri kaynağı: <strong id="dataSourceLabel">Backend/CSV</strong>
+<span class="badge badge-warn" id="dataLoadBadge">CSV bağlanmadı</span>
+</div>
+<div class="data-actions data-actions--backend">
+<button class="btn-secondary" id="loadDefaultCsvBtn">Projeden CSV yükle</button>
+<button class="btn-secondary" id="clearDataCacheBtn" title="Yerel önbelleği temizle ve sayfayı yenile">Önbelleği temizle</button>
+</div>
+<div class="active-files" id="activeFilesBox">
+<div class="active-files-title">Aktif analiz verileri</div>
+<div class="active-files-badges" id="activeFilesBadges"></div>
+<div class="build-meta" id="buildMetaBox"></div>
+<p class="active-files-note" id="activeFilesNote">Bu dosyalar Python backend tarafından aktif olarak kullanılmaktadır.</p>
+</div>
+<div class="manual-upload-panel">
+<div class="active-files-title">Test amaçlı manuel veri yükleme</div>
+<p class="card-help small">Manuel yüklenen CSV/GeoJSON dosyaları bu oturumda aktif analize alınır ve optimizasyon yerel hesap motoruyla yeniden çalışır. Kalıcı kurumsal kullanım ve Python backend çıktısı için aynı dosyalar backend/data klasörüne aktarılmalıdır.</p>
+<input accept=".csv,.json,.geojson" class="file-input" id="dataFileInput" multiple="" type="file"/>
+<div class="manual-file-summary" id="manualCsvFilesSummary">Henüz manuel dosya seçilmedi.</div>
+</div>
+<div class="manual-validation-panel">
+<div class="active-files-title">Veri doğrulama sonucu</div>
+<div id="manualCsvValidationBox">
+<div class="manual-validation-empty">Dosya seçildiğinde satır, kolon, parsel eşleşmesi ve aktif analize katılım durumu burada gösterilir.</div>
+</div>
+</div>
+<p class="card-help small">
+                Bu bölüm, sistemde kullanılan parsel, ürün, su bütçesi, sulama yöntemi ve harita verilerinin aktif durumunu gösterir. Manuel yüklenen dosyalar bu tarayıcı oturumunda veri kontrolü ve senaryo testi için hesaba katılır; kalıcı ve raporlanabilir Python backend çalışması için dosyalar backend/data altında güncellenmelidir.
+              </p>
+</div>
+</div><div class="card" id="algoCard" data-role="institution">
+<h2 class="card-title">Optimizasyon algoritması</h2>
+<select class="select-input" id="algoSelect">
+<option selected="" value="ga">Genetik Algoritma (GA)</option>
+<option value="abc">Yapay Arı Kolonisi Algoritması (ABC)</option>
+<option value="aco">Karınca Koloni Optimizasyonu (ACO)</option>
+</select>
+</div><div class="card" id="scenarioCard">
+<h2 class="card-title">Hedef ve plan modu</h2>
+<div class="radio-group">
+<label><input checked="" name="scenario" type="radio" value="mevcut"/> Mevcut görünüm (referans)</label>
+<label><input name="scenario" type="radio" value="su_tasarruf"/> Su tasarrufu hedefi</label>
+<label><input name="scenario" type="radio" value="maks_kar"/> Kâr odaklı hedef</label>
+<label><input name="scenario" type="radio" value="balanced"/> Su etkin kullanım hedefi</label>
+</div>
+<div class="water-controls" style="padding-top:6px;">
+<div class="field-row" id="seasonSourceRow">
+<label class="field-label">Senaryo tipi</label>
+<select class="select-input" id="seasonSourceSel">
+<option value="s1">Senaryo 1 - Tek ürünlü parsel (en iyi 1-2 ürün + alternatifler)</option>
+<option value="s2">Senaryo 2 - Çift ürünlü / desen bazlı parsel (1+1 ürün / bahçede sıra arası)</option>
+</select>
+</div>
+<p class="card-help small" style="margin-top:6px;">
+                Not: Senaryo 1, her parseli esasen tek ürünlü kabul eder; sistem en iyi ana öneriyi ve diğer güçlü alternatifleri sıralar. Senaryo 2, parselde 1+1 ürün / desen yaklaşımını dener; bahçe-çok yıllık parsellerde ana ürün korunur, fark sıra arası ve sulama yönetiminden gelir.
+              </p>
+</div>
+<div class="water-controls">
+<div class="field-row">
+<label class="field-label">Plan yılı</label>
+<select class="select-input" id="waterYear"></select>
+</div>
+<div class="data-status">
+                Kullanılabilir su: <strong id="availableWaterLabel">-</strong> m³
+                <span class="badge badge-info" id="waterIndexBadge">doluluk: -</span>
+</div>
+<p class="card-help small">
+                Not: Bu sürümde mevcut toplam su talebi önce toplam alana bölünerek genel m³/da değeri hesaplanır. Varsayılan planlama dekar bazlı adil kotadır; eşit köy payı karşılaştırma senaryosu olarak ayrıca gösterilir.
+              </p>
+<div class="water-allocation-explain" id="waterAllocationExplain">
+                Su dağıtım mantığı yükleniyor...
+              </div>
+</div>
+<p class="card-help">Seçilen hedef modu (su verimliliği / kâr) ile plan modu (S1 / S2) birlikte çalışır. Su hedefi en az suyu değil, mevcut suyu daha verimli kullanmayı; kâr hedefi ise su bütçesi altında geliri büyütmeyi öne çıkarır.</p>
+</div></div></details><details class="sidebar-group" id="parcelGroup" data-role="institution"><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Parsel çizim ve bilgi atama</strong><small>Yalnızca kurum/uzman veri giriş ekranı</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card" id="userParcelCard">
+<h2 class="card-title">Parsel çizim ve bilgi atama paneli</h2>
+<p class="card-help small">Bu panel yalnızca yönetici veri giriş/çizim modu için sadeleştirildi. 180 parselin ürün, alan, çiftçi, sulama ve atama bilgileri sisteme hazır girildi. Bu sürümde Bor İlçe Merkezi P79-P121 kayıtları çizim/düzenleme için öne alınmıştır; diğer köyler de aynı mantıkla seçilebilir.</p>
+<div class="user-parcel-actions">
+<input accept=".geojson,.json,.kml,.jpg,.jpeg,.png" class="file-input" id="customParcelFileInput" type="file"/>
+<div class="inline-actions compact-wrap">
+<button class="btn-secondary" id="startDrawParcelBtn" type="button">Haritada çiz</button>
+<button class="btn-secondary" id="finishDrawParcelBtn" type="button">Çizimi bitir</button>
+<button class="btn-secondary" id="clearDrawParcelBtn" type="button">Çizimi temizle</button>
+<button class="btn-secondary danger-soft" id="clearSavedCustomParcelsBtn" type="button">Çizimle eklenenleri sil</button>
+</div>
+</div>
+<div class="small muted" id="customParcelUploadInfo">Haritada yalnızca yüklenmiş gerçek GeoJSON sınırları görünür. Excel kayıtları sayısal analizde kullanılır; gerçek sınır yoksa temsili dikdörtgen üretilmez. Yeni sınır için GeoJSON/KML yükleyebilir veya panelde çizim yapabilirsiniz.</div>
+<div class="drawing-registry-box" id="drawingRegistryBox">
+  <div class="drawing-registry-head">
+    <div>
+      <strong>Çizim yapılacak hazır parsel kaydı</strong>
+      <small>Parseli seçin; bilgiler otomatik dolsun. Siz yalnızca polygon sınırını çizin veya GeoJSON/KML içe aktarın.</small>
+    </div>
+    <span class="pill-soft" id="drawingRegistryCount">180 kayıt</span>
+  </div>
+  <div class="drawing-village-toolbar" style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-top:10px;">
+    <div class="form-row" style="min-width:190px;flex:1;">
+      <label class="label">Çizim köy filtresi</label>
+      <select class="select-input" id="drawingVillageFilter">
+        <option value="">Tüm köyler</option>
+        <option value="Sazlıca">Sazlıca</option>
+        <option value="Bahçeli">Bahçeli</option>
+        <option value="Bor İlçe Merkezi" selected>Bor İlçe Merkezi</option>
+        <option value="Kemerhisar">Kemerhisar</option>
+        <option value="Kaynarca">Kaynarca</option>
+      </select>
+    </div>
+    <button class="btn-secondary" id="focusBorDrawingBtn" type="button">Bor İlçe Merkezi çizimine geç</button>
+    <button class="btn-secondary" id="focusKemerhisarDrawingBtn" type="button">Kemerhisar çizimine geç</button>
+  </div>
+  <div class="grid-2" style="margin-top:10px;">
+    <div class="form-row">
+      <label class="label">Parsel kaydı</label>
+      <select class="select-input" id="drawingParcelSelect">
+        <option value="">Kayıtlar yükleniyor...</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="label">Durum</label>
+      <div class="drawing-registry-status" id="drawingRegistryStatus">Kayıt seçilmedi</div>
+    </div>
+  </div>
+  <div class="drawing-record-preview" id="drawingRecordPreview">Kayıt seçtiğinizde parselin ürün, çiftçi, alan, kota ve atama bilgileri burada görünecek.</div>
+</div>
+<div class="image-preview-box" id="customParcelImagePreview" style="display:none;"></div>
+<div class="grid-2" style="margin-top:10px;">
+<div class="form-row">
+<label class="label">Parsel adı</label>
+<input class="text-input" id="manualParcelName" placeholder="Örn. Çiftçi Parseli 1" type="text"/>
+</div>
+<div class="form-row">
+<label class="label">Alan (da)</label>
+<input class="text-input" id="manualParcelArea" placeholder="Harita veya dosyadan otomatik gelir" readonly="" step="0.1" type="number"/>
+<label class="small muted" style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+<input id="manualAreaOverrideToggle" type="checkbox"/>
+                  Alanı elle düzenle
+                </label>
+</div>
+</div>
+<div class="grid-2">
+<div class="form-row">
+<label class="label">Köy / mevki</label>
+<input class="text-input" id="manualParcelVillage" placeholder="Sazlıca / Bahçeli / Kemerhisar / Bor / Kaynarca" type="text"/>
+</div>
+<div class="form-row">
+<label class="label">İlçe</label>
+<input class="text-input" id="manualParcelDistrict" placeholder="Merkez" type="text"/>
+</div>
+</div>
+<div class="grid-2">
+<div class="form-row">
+<label class="label">Çiftçi / işletme</label>
+<input class="text-input" id="manualParcelFarmer" placeholder="Örn. Mehmet Demir" type="text"/>
+<div class="small muted" style="margin-top:6px;">Kayıtlı çiftçi listesinden atama yapmak için aşağıdaki atama panelini kullanın.</div>
+</div>
+<div class="form-row">
+<label class="label">Arazi tipi</label>
+<select class="select-input" id="manualParcelType">
+<option selected="" value="auto">Otomatik algıla</option>
+<option value="field">Tarla / Yem</option>
+<option value="vegetable">Sebze</option>
+<option value="orchard">Meyve / Bağ / çok yıllık</option>
+</select>
+</div>
+</div>
+<div class="grid-2">
+<div class="form-row">
+<label class="label">Mevcut ürün</label>
+<input class="text-input" id="manualCurrentCrop" list="cropSuggestions" placeholder="Örn. Patates" type="text"/>
+<datalist id="cropSuggestions"></datalist>
+</div>
+<div class="form-row">
+<label class="label">Mevcut sulama</label>
+<select class="select-input" id="manualIrrigation">
+<option value="surface">Yüzey / Karık / Salma</option>
+<option selected="" value="sprinkler">Yağmurlama</option>
+<option value="drip">Damla</option>
+<option value="pivot">Pivot / Lineer</option>
+<option value="rainfed">Yağışa bağlı / Kuru</option>
+</select>
+</div>
+</div>
+<div class="parcel-assignment-box" id="parcelAssignmentBox" style="margin-top:12px;">
+  <div class="parcel-assignment-head">
+    <div>
+      <strong>Parsel atama ve çiftçi tercihi</strong>
+      <small>Çizilen/yüklenen parseli çiftçiye ve seçilen alternatif desene bağlar.</small>
+    </div>
+    <span class="pill-soft" id="assignmentStatusPill">Atama yok</span>
+  </div>
+  <div class="grid-2" style="margin-top:10px;">
+    <div class="form-row">
+      <label class="label">Kayıtlı çiftçi</label>
+      <select class="select-input" id="assignmentFarmerSelect"></select>
+    </div>
+    <div class="form-row">
+      <label class="label">Çiftçinin seçtiği alternatif</label>
+      <select class="select-input" id="assignmentAlternativeSelect"></select>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="form-row">
+      <label class="label">Onay durumu</label>
+      <select class="select-input" id="assignmentApprovalStatus">
+        <option value="draft">Taslak</option>
+        <option value="farmer_selected">Çiftçi tercih etti</option>
+        <option value="technical_review">Teknik onay bekliyor</option>
+        <option value="approved">Onaylandı</option>
+        <option value="in_progress">Uygulamada</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="label">Atama notu</label>
+      <input class="text-input" id="assignmentNoteInput" placeholder="Örn. Çiftçi ikinci ürünü tercih etti" type="text"/>
+    </div>
+  </div>
+  <div class="parcel-assignment-preview" id="assignmentPreviewBox">Seçili parsel için alternatifler hazırlanıyor.</div>
+  <div class="inline-actions compact-wrap" style="margin-top:10px;">
+    <button class="btn-primary" id="applyParcelAssignmentBtn" type="button">Alternatifi parsele ata</button>
+    <button class="btn-secondary" id="exportAssignedGeojsonBtn" type="button">Atanan GeoJSON indir</button>
+  </div>
+</div>
+<div class="algo-actions" style="margin-top:8px;">
+<button class="btn-primary" id="saveUserParcelBtn" type="button">Parsel bilgisini kaydet</button>
+<span class="algo-status" id="userParcelStatus">Hazır</span>
+</div>
+<p class="card-help small" style="margin-top:8px;">Akış: 1) Hazır parsel kaydını seçin. 2) Haritada doğru sınırı çizin veya GeoJSON/KML yükleyin. 3) Sistem seçili kaydın çiftçi, ürün, sulama, kota ve atama bilgilerini otomatik bağlar. 4) Popup ve seçim davranışı kaydedilen geometri üzerinden çalışır.</p>
+<div class="request-thread-box" id="userRequestThread"></div>
+<div class="request-thread-box" id="institutionRequestInbox"></div>
+</div></div></details><details class="sidebar-group farmer-decision-group" id="farmerDecisionGroup" data-role="farmer-only" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Uzman önerisi ve kendi parselim</strong><small>Yalnızca size atanmış karar bilgileri</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card farmer-decision-card" id="farmerDecisionCard">
+<h2 class="card-title">Kendi parsel karar özeti</h2>
+<p class="card-help small">Bu çiftçi görünümünde çizim, veri kaynağı, algoritma, kullanıcı yönetimi ve parsel atama işlemleri gösterilmez. Kurum/uzman tarafından atanan desen varsa burada sade özet olarak görünür.</p>
+<div class="farmer-assignment-summary" id="farmerAssignmentSummary">
+  <div class="small muted">Parsel seçildiğinde uzman önerisi burada görünecek.</div>
+</div>
+<div class="farmer-decision-actions">
+  <button class="btn-primary" id="farmerRefreshRecommendationBtn" type="button">Öneriyi güncelle</button>
+</div>
+</div></div></details><details class="sidebar-group" id="userManagementGroup" data-role="institution" data-institution-role="admin-only"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Kullanıcı Yönetimi</strong><small>Korundu; çizim modunda ayrı sekmeden açılır</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card managed-user-sidebar-card" data-role="institution">
+<h2 class="card-title">Kullanıcı yönetimi paneli</h2>
+<p class="card-help small">Bu modül sol sütunda sıkışmasın diye ayrı bir çalışma alanına taşındı. Çiftçi listesi, arama, düzenleme, pasif yapma, şifre yenileme ve parsel atama işlemlerini sağdaki geniş panelde yönetin.</p>
+<div class="managed-user-sidebar-preview" id="managedUserSidebarPreview"></div>
+<div class="algo-actions managed-user-sidebar-actions" style="margin-top:10px;">
+<button class="btn-primary" id="openUserManagementTabBtn" type="button">Yönetim panelini aç</button>
+<span class="algo-status">Geniş görünüm</span>
+</div>
+</div></div></details><details class="sidebar-group" id="summaryGroup"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Parsel özeti</strong><small>Seçili parsel için hızlı durum görünümü</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card" id="parcelSummary">
+<h2 class="card-title">Parsel Özeti</h2>
+<div class="parcel-summary-body">
+<!-- JS ile dolduruluyor -->
+</div>
+</div></div></details></div></div>
+<!-- Sağ ana kolon -->
+<div class="right-col">
+
+<!-- v72: Kullanıcı seçim yaptı ama yeni optimizasyon çalıştırmadıysa uyarı -->
+<div class="stale-banner" id="staleBanner" style="display:none;">
+<div class="stale-banner-title">Uyarı: Seçim değişti</div>
+<div class="stale-banner-body">Ekrandaki sonuçlar <b>önceki çalıştırmaya</b> aittir. Yeni sonuçlar için <b>Optimizasyonu Çalıştır</b> butonuna basın.</div>
+</div>
+<div class="role-info-banner" id="roleInfoBanner"></div>
+<div class="right-top" id="overviewSection">
+<div class="card map-card">
+<div class="card-header-row">
+<h2 class="card-title">
+Parsel Haritası</h2>
+<span class="card-subtitle">Harita üzerindeki parseller tıklanarak da seçilebilir.</span>
+</div>
+<div class="map-container" id="map"></div>
+</div>
+<div class="card metrics-card">
+<div class="metrics-title-row"><h2 class="card-title" id="metricsTitle">Senaryo Özeti (seçili kapsam)</h2><span class="badge badge-info" id="activeObjectiveBadge">Aktif hedef: Mevcut desen</span></div>
+<div class="metrics-topnote">
+<span class="badge badge-info" id="globalBudgetBadge">Küresel su bütçesi: -</span>
+<span class="badge badge-warn" id="globalBudgetStatus">bütçe durumu: -</span>
+</div>
+<!-- v72: Karar gerekçesi + koşul şeffaflığı -->
+<div class="runmeta-box" id="runMetaBox" style="display:none;"></div>
+
+<div class="summary-block summary-block-basin" id="basinSummaryBlock">
+<div class="summary-block-head">
+<div>
+<div class="summary-block-kicker">Genel görünüm</div>
+<h3 class="summary-block-title">Genel Baraj ve Havza Özeti</h3>
+</div>
+<div class="summary-block-note" id="basinSummaryNote">Akkaya Sulama Alanı toplamı</div>
+</div>
+<div class="summary-mini-grid">
+<div class="summary-mini-card">
+<div class="summary-mini-label">Mevcut toplam su</div>
+<div class="summary-mini-value"><span id="bWaterCurrent">-</span> m³</div>
+<div class="summary-mini-note">Havza genel referansı</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Seçili senaryo su</div>
+<div class="summary-mini-value"><span id="bWaterScenario">-</span> m³</div>
+<div class="metric-pill pill-water" id="bWaterDiff">-</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Mevcut toplam net kâr</div>
+<div class="summary-mini-value"><span id="bProfitCurrent">-</span> TL</div>
+<div class="summary-mini-note">Havza genel referansı</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Seçili senaryo net kâr</div>
+<div class="summary-mini-value"><span id="bProfitScenario">-</span> TL</div>
+<div class="metric-pill pill-profit" id="bProfitDiff">-</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Mevcut su verimliliği</div>
+<div class="summary-mini-value"><span id="bEffCurrent">-</span></div>
+<div class="summary-mini-note">TL/m³</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Seçili senaryo su verimliliği</div>
+<div class="summary-mini-value"><span id="bEffScenario">-</span></div>
+<div class="metric-pill pill-eff" id="bEffDiff">-</div>
+</div>
+</div>
+</div>
+
+<div class="summary-block summary-block-parcel" id="parcelSummaryBlock">
+<div class="summary-block-head">
+<div>
+<div class="summary-block-kicker">Seçili detay</div>
+<h3 class="summary-block-title" id="parcelSummaryTitle">Parsel Bazlı Özet</h3>
+</div>
+<div class="summary-block-note" id="parcelSummaryNote">Seçili parselin özeti</div>
+</div>
+</div>
+
+<div class="metrics-grid">
+<div class="metric">
+<div class="metric-label">Su Kullanımı (Mevcut)</div>
+<div class="metric-value"><span id="mWaterCurrent">-</span> m³</div>
+<div class="metric-note">Referans durum</div>
+</div>
+<div class="metric">
+<div class="metric-label">Su Kullanımı (Seçili senaryo)</div>
+<div class="metric-value"><span id="mWaterScenario">-</span> m³</div>
+<div class="metric-pill pill-water" id="mWaterDiff">-</div>
+</div>
+<div class="metric">
+<div class="metric-label">Toplam Net Kâr (Mevcut)</div>
+<div class="metric-value"><span id="mProfitCurrent">-</span> TL</div>
+<div class="metric-note">Referans kâr</div>
+</div>
+<div class="metric">
+<div class="metric-label">Toplam Net Kâr (Seçili senaryo)</div>
+<div class="metric-value"><span id="mProfitScenario">-</span> TL</div>
+<div class="metric-pill pill-profit" id="mProfitDiff">-</div>
+</div>
+<div class="metric">
+<div class="metric-label">Su Verimliliği (TL/m³ - Mevcut)</div>
+<div class="metric-value"><span id="mEffCurrent">-</span></div>
+<div class="metric-note">Mevcut desen</div>
+</div>
+<div class="metric">
+<div class="metric-label">Su Verimliliği (TL/m³ - Seçili senaryo)</div>
+<div class="metric-value"><span id="mEffScenario">-</span></div>
+<div class="metric-pill pill-eff" id="mEffDiff">-</div>
+</div>
+</div>
+<!-- Karar gerekçesi: Sayısal kartların hemen altında, kuraklık önerisinin üstünde -->
+<div class="rationale-box" id="decisionRationale" style="display:none;"></div>
+<div class="drought-impact-box" id="droughtImpactBox">
+<details class="drought-impact-details">
+<summary class="drought-impact-title">Kuraklık notu (yardımcı kontrol)</summary>
+<div class="drought-impact-body">
+<div class="drought-impact-col">
+<div class="drought-impact-sub">Kaçın / azalt</div>
+<ul class="drought-impact-list" id="droughtAvoidList"></ul>
+</div>
+<div class="drought-impact-col">
+<div class="drought-impact-sub">Tercih et</div>
+<ul class="drought-impact-list" id="droughtPreferList"></ul>
+</div>
+</div>
+<div class="drought-impact-note" id="droughtImpactNote">-</div>
+</details>
+</div>
+</div>
+</div>
+<div class="card drought-details-card" id="waterRiskSection">
+<details class="drought-details">
+<summary class="drought-details__summary"><span class="drought-details__title">Kuraklık göstergeleri (2000-2025) - Detay</span><span class="drought-summary-badge" id="droughtSummaryBadge">KRİTİK</span></summary>
+<div class="drought-details__body">
+<div class="card drought-main-container">
+<h2 class="card-title">Akkaya Sulama Alanı Kuraklık ve Su Bütçesi Göstergeleri (2000-2025)</h2>
+<p class="card-help small">Grafik üzerinde gezerek yıllık değerleri görebilirsiniz. Seçili "Su yılı" vurgulanır; kritik yıllarda panel dikkat çekici biçimde öne çıkar.</p>
+<div class="drought-card" id="droughtAlarmCard">
+<div class="drought-card__head">
+<span class="drought-card__title">Kuraklık Alarmı</span>
+<span class="badge badge-warn" id="droughtAlarmLevel">-</span>
+</div>
+<div class="drought-layout">
+<div class="drought-chart-wrap drought-chart-wrap--main">
+<canvas height="260" id="droughtSeriesChart"></canvas>
+</div>
+<div class="drought-side">
+<div class="drought-grid drought-grid--side">
+<div class="drought-metric">
+<div class="drought-metric__label">Min doluluk</div>
+<div class="drought-metric__value drought-metric__value--big"><span id="droughtMinPct">-</span><span class="unit">%</span></div>
+</div>
+<div class="drought-metric">
+<div class="drought-metric__label">Ortalama</div>
+<div class="drought-metric__value drought-metric__value--big"><span id="droughtAvgPct">-</span><span class="unit">%</span></div>
+</div>
+<div class="drought-metric">
+<div class="drought-metric__label">Stres endeksi</div>
+<div class="drought-metric__value drought-metric__value--big"><span id="droughtStressIdx">-</span></div>
+</div>
+</div>
+<div class="drought-note small" id="droughtAlarmText">-</div>
+<div class="small muted" style="margin-top:8px;">İpucu: Grafikteki noktalara gelerek yıllık değerleri görebilirsiniz.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="right-middle">
+<div class="card small-chart-card">
+<h3 class="card-subtitle">Senaryolara Göre Toplam Su Kullanımı</h3>
+<canvas height="150" id="waterChart"></canvas>
+</div>
+<div class="card small-chart-card">
+<h3 class="card-subtitle">Senaryolara Göre Toplam Net Kâr</h3>
+<canvas height="150" id="profitChart"></canvas>
+</div>
+<div class="card small-chart-card">
+<h3 class="card-subtitle">Seçili Parsel - Önerilen Ürünler (Rotasyon)</h3>
+<div aria-label="Önerilen ürünler" class="product-cards" id="productCards"></div>
+</div>
+</div>
+<div class="tabs" id="analysisTables">
+<button class="tab" data-tab="users" data-role="institution" data-institution-role="admin-only">Kullanıcı yönetimi</button>
+<button class="tab active" data-tab="parcel">Parsel düzeyi desen</button>
+<button class="tab" data-tab="drawing" data-role="institution">Parsel çizim / bilgi atama</button>
+<button class="tab" data-tab="district" data-role="institution">İlçe / il düzeyi özet</button>
+<button class="tab" data-tab="official" data-role="institution">Resmî tablolar (özet)</button>
+<button class="tab" data-tab="benchmark" data-role="institution">Algoritma karşılaştırması</button>
+</div>
+<div class="tab-panels">
+<div class="tab-panel" id="tab-users" data-role="institution" data-institution-role="admin-only">
+<div class="management-workspace-shell">
+  <div class="management-workspace-head management-workspace-head--hero">
+    <div>
+      <div class="small muted">Kurumsal çalışma alanı</div>
+      <h2 class="card-title" style="margin-top:4px;">Çiftçi kullanıcı yönetim modülü</h2>
+      <p class="card-help small" style="margin-top:6px;">Bu sürümde görünüm tablo + sağ detay paneli mantığıyla yeniden düzenlendi. Böylece çok sayıda hesabı daha rahat tarayabilir, satır seçip sağdaki detay çekmecesinde kayıt işlemlerini yapabilirsiniz. Ayrıca çiftçi tarafından bildirilen yeni parseller burada incelenip onaylanır.</p>
+    </div>
+    <div class="management-workspace-actions">
+      <span class="badge badge-info">Kurumsal modül</span>
+      <button class="btn-secondary" id="managedUserWorkspaceNewBtn" type="button">Yeni kayıt başlat</button>
+    </div>
+  </div>
+  <div class="card managed-user-card-v15" id="managedUserCard" data-role="institution" data-institution-role="admin-only">
+    <div class="managed-user-overview managed-user-overview--top" id="managedUsersOverview"></div>
+    <div class="managed-user-hub">
+      <div class="managed-user-main-panel">
+        <div class="managed-user-toolbar managed-user-toolbar--table">
+          <div class="form-row managed-user-toolbar-field">
+            <label class="label">Çiftçi ara</label>
+            <input class="text-input" id="managedUserSearch" placeholder="Ad, kullanıcı adı, telefon, köy veya parsel ile ara" type="text"/>
+          </div>
+          <div class="form-row managed-user-toolbar-field">
+            <label class="label">Durum filtresi</label>
+            <select class="select-input" id="managedUserStatusFilter">
+              <option value="all">Tümü</option>
+              <option value="pending_setup">İlk kurulum bekleyenler</option>
+              <option value="active">Aktif hesaplar</option>
+              <option value="passive">Pasif hesaplar</option>
+            </select>
+          </div>
+          <div class="managed-user-toolbar-actions">
+            <button class="btn-secondary" id="managedUserNewBtn" type="button">Yeni kayıt</button>
+          </div>
+        </div>
+        <div class="managed-user-table-shell">
+          <div class="managed-user-table-headline">
+            <div>
+              <h3 class="card-subtitle" style="margin:0;">Çiftçi hesap listesi</h3>
+              <div class="small muted managed-user-list-meta" id="managedUsersListMeta">Liste hazırlanıyor...</div>
+            </div>
+            <div class="mini-tag">Satıra tıklayın • detay sağda açılır</div>
+          </div>
+          <div class="managed-user-table-wrap">
+            <table class="managed-user-table">
+              <thead>
+                <tr>
+                  <th>Çiftçi</th>
+                  <th>Durum</th>
+                  <th>Parsel atama</th>
+                  <th>İlk kurulum</th>
+                  <th>Not / son işlem</th>
+                  <th class="ta-right">Hızlı işlemler</th>
+                </tr>
+              </thead>
+              <tbody id="managedUsersList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <aside class="managed-user-detail-panel">
+        <div class="managed-user-detail-card">
+          <div class="managed-user-drawer-hero">
+            <div>
+              <div class="small muted">Seçili kayıt / form</div>
+              <h3 id="managedUserDrawerTitle">Yeni çiftçi hesabı</h3>
+              <p class="card-help small" id="managedUserDrawerSubtitle">Sol taraftan satır seçebilir veya doğrudan yeni kayıt oluşturabilirsiniz.</p>
+            </div>
+            <span class="mini-tag">Detay paneli</span>
+          </div>
+          <div class="managed-user-drawer-summary" id="managedUserDrawerSummary"></div>
+          <div class="managed-user-drawer-actions" id="managedUserDrawerQuickActions"></div>
+          <div class="managed-user-notify-box" id="managedUserNotifications"></div>
+          <div class="managed-user-form-panel managed-user-form-panel--drawer">
+            <div class="managed-user-form-head">
+              <div>
+                <div class="small muted">Yönetim formu</div>
+                <h3 id="managedUserFormTitle">Yeni çiftçi hesabı</h3>
+              </div>
+              <div class="managed-user-form-badges">
+                <span class="managed-user-status pending" id="managedUserAccountStatusBadge">İlk kurulum bekliyor</span>
+                <span class="mini-tag" id="managedUserSetupBadge">İlk kurulum: Bekliyor</span>
+              </div>
+            </div>
+            <input id="managedUserEditUsername" type="hidden"/>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">Çiftçi adı</label>
+                <input class="text-input" id="managedUserDisplayName" placeholder="Örn. Mehmet Yılmaz" type="text"/>
+              </div>
+              <div class="form-row">
+                <label class="label">Kullanıcı adı</label>
+                <input class="text-input" id="managedUserUsername" placeholder="Örn. mehmet.yilmaz" type="text"/>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">Geçici / yeni şifre</label>
+                <input class="text-input" id="managedUserPassword" placeholder="Boş bırakılırsa yeni kayıtta demo123 atanır" type="text"/>
+              </div>
+              <div class="form-row">
+                <label class="label">Telefon</label>
+                <input class="text-input" id="managedUserPhone" placeholder="Örn. 05xx xxx xx xx" type="text"/>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">Köy / mevki</label>
+                <input class="text-input" id="managedUserVillage" placeholder="Sazlıca / Bahçeli / Kemerhisar / Bor / Kaynarca" type="text"/>
+              </div>
+              <div class="form-row">
+                <label class="label">İlçe</label>
+                <input class="text-input" id="managedUserDistrict" placeholder="Merkez" type="text"/>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">Hesap durumu</label>
+                <select class="select-input" id="managedUserAccountStatus">
+                  <option value="pending_setup">İlk kurulum bekliyor</option>
+                  <option value="active">Aktif</option>
+                  <option value="passive">Pasif</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label class="label">İlk kurulum durumu</label>
+                <div class="managed-user-readonly" id="managedUserSetupState">Bekliyor</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="label">Parsel atama</label>
+              <div class="auth-parcel-picker" id="adminParcelPicker"></div>
+              <div class="small muted">Resmi parsel ataması yapılmamışsa kullanıcı ilk girişte kendi parselini ekleyebilir.</div>
+            </div>
+            <div class="form-row">
+              <label class="label">Yönetim notu</label>
+              <textarea class="text-input onboarding-textarea" id="managedUserNotes" placeholder="Örn. İlk girişte çizim yapması bekleniyor."></textarea>
+            </div>
+            <div class="algo-actions managed-user-form-actions" style="margin-top:8px;">
+              <button class="btn-primary" id="saveManagedFarmerBtn" type="button">Kaydet</button>
+              <button class="btn-secondary" id="cancelManagedFarmerBtn" type="button">Temizle</button>
+              <span class="algo-status" id="managedUserCreateStatus">Hazır</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-drawing" data-role="institution">
+<div class="drawing-tab-shell">
+<h2 class="card-title">Parsel çizim ve bilgi atama</h2>
+<p class="card-help small">Resmî parsel kaydını seçip sınır çizimi, GeoJSON/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu çalışma alanından yönetin. Sol panel yalnız analiz kurulumu ve hızlı özet için sade bırakıldı.</p>
+<div id="drawingTabMount"></div>
+</div>
+</div>
+
+<div class="tab-panel active" id="tab-parcel">
+<div class="tables-row">
+<div class="card table-card">
+<h3 class="card-subtitle">Mevcut Ürün Deseni</h3>
+<p class="card-help small">
+                      Seçili parselde mevcut durumdaki desen ve referans değerler.
+                    </p>
+<table class="data-table" id="tblCurrent">
+<thead>
+<tr>
+<th>Ürün</th>
+<th>Mevsim</th>
+<th>Sulama (Mevcut)</th>
+<th>Ekim Alanı (da - sezon)</th>
+<th>Su (m³/da)</th>
+<th>Toplam Su</th>
+<th>Kâr (TL/da)</th>
+<th>Toplam Kâr</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" id="tblCurrentFooter"></div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Önerilen Ürün Deseni (Senaryo + Algoritma)</h3>
+<p class="card-help small">
+                      Seçili senaryo ve algoritmaya göre eşit su kotası altında önerilen desen.
+                    </p>
+<table class="data-table" id="tblRecommended">
+<thead>
+<tr>
+<th>Ürün</th>
+<th>Mevsim</th>
+<th>Sulama (Öneri)</th>
+<th>Ekim Alanı (da - sezon)</th>
+<th>Su (m³/da)</th>
+<th>Toplam Su</th>
+<th>Kâr (TL/da)</th>
+<th>Toplam Kâr</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" id="tblRecommendedFooter"></div>
+</div>
+</div>
+<div class="tables-row" style="margin-top:14px;">
+<div class="card table-card">
+<h3 class="card-subtitle">Karar açıklaması ve nedenleri</h3>
+<div class="explain-box" id="explainBox">-</div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Rotasyon / 2. Ürün Önerisi (basit kurallar)</h3>
+<div class="explain-box" id="rotationBox">-</div>
+</div>
+</div>
+<div class="tables-row" style="margin-top:14px;">
+<div class="card table-card">
+<h3 class="card-subtitle">Sulama yöntemi karşılaştırması</h3>
+<p class="card-help small">Mevcut kayıtlı yöntem, optimizasyonun önerdiği yöntem ve diğer sulama seçenekleri aynı tabloda otomatik karşılaştırılır. Ayrı manuel seçim kaldırılmıştır.</p>
+<div class="explain-box" id="irrigationCompareBox">-</div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Ekonomik dayanak (2024 fiyat / verim / gider)</h3>
+<p class="card-help small">2024 ürün fiyatı, verim, toplam üretim, toplam su, sulama işletme gideri ve toplam gider kalemleri aynı yerde gösterilir. Böylece kâr değeri yalnız tek bir sayı olarak değil, dayanağıyla birlikte okunur.</p>
+<div class="explain-box" id="businessMetricsBox">-</div>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">Aylık su kapasitesi ve kritik aylar</h3>
+<p class="card-help small">İletim kapasitesi varsa, seçili desenin aylık su talebi ile karşılaştırılır. CROPWAT/FAO-56 referanslı aylık ETc/ETo verisi mevcutsa onunla; yoksa ay-ağırlık yaklaşımıyla hesaplanır.</p>
+<div class="explain-box" id="deliveryBox">-</div>
+</div>
+<div class="card" style="margin-top:14px;">
+<h3 class="card-subtitle">Seçili parsel için sulama planı (aylık / haftalık / günlük rehber)</h3>
+<p class="card-help small">Not: Bu plan, seçili parselin iklim serisi ve ürün takvimi üzerinden yaklaşık ETc hesabıyla üretilir. Günlük meteoroloji açılırsa daha hassas, kapalıyken aylık iklim ortalamalarıyla çalışır.</p>
+<div class="explain-box" id="irrigPlanBox">-</div>
+</div>
+</div>
+<div class="tab-panel" id="tab-district" data-role="institution">
+<div class="card">
+<h3 class="card-subtitle">İlçe / köy düzeyi karar özeti</h3>
+<p class="card-help">
+                    Bu bölüm artık temsili sabit grafik yerine seçili kapsamdan hesaplanan gerçek özetleri gösterir.
+                    Amaç; hangi köyde ne kadar alan, mevcut ve önerilen su/kâr farkı ve su tahsis baskısı olduğunu ilk bakışta anlaşılır biçimde sunmaktır.
+                  </p>
+<div class="district-kpi-grid" id="districtKpiGrid"></div>
+<div class="district-note" id="districtNarrative">-</div>
+<div class="district-row district-row-pro">
+<div class="chart-card chart-card-tall"><div class="chart-title">Köy bazında toplam alan ve parsel sayısı</div><canvas height="200" id="districtAreaChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">Köy bazında mevcut ve önerilen toplam su</div><canvas height="200" id="districtIrrigChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">Köy bazında mevcut ve önerilen net kâr</div><canvas height="200" id="provinceShareChart"></canvas></div>
+</div>
+<div class="district-summary-table" id="districtSummaryTable"></div>
+</div>
+</div>
+<div class="tab-panel" id="tab-official" data-role="institution">
+<div class="tables-row">
+<div class="card table-card">
+<h3 class="card-subtitle">Havza Su Bütçesi - Resmî Özet</h3>
+<p class="card-help small">Seçili su yılı/senaryosu üzerinden hesaplanan toplam kullanılabilir su ve mevcut talep.</p>
+<table class="data-table" id="tblOfficialWater">
+<thead>
+<tr><th>Gösterge</th><th>Değer</th><th>Birim</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+<button class="btn" id="btnExportWaterCsv">CSV indir</button>
+<span class="small muted" id="officialWaterNote">-</span>
+</div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Seçili Senaryoya Göre Optimum Bitki Deseni - Resmî</h3>
+<p class="card-help small">Seçili kapsam / 5 köy parselleri için ürün bazında ekim alanı (sezon/dönem bazında), su ve kâr toplulaştırması. Rotasyon/2. ürün varsa aynı parsel alanı yıl içinde birden fazla ürünle değerlendirilebilir.</p>
+<table class="data-table" id="tblOfficialScenario">
+<thead>
+<tr>
+<th>Ürün</th><th>Ekim Alanı (da - sezon)</th><th>Toplam Su (m³)</th><th>Toplam Kâr (TL)</th><th>Su Verimliliği (TL/m³)</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" id="tblOfficialScenarioFooter" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+<button class="btn" id="btnExportScenarioCsv">CSV indir</button>
+<span class="small muted" id="officialScenarioNote">-</span>
+</div>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">Parsel Bazlı Özet - Resmî</h3>
+<p class="card-help small">Her parsel için seçili senaryo+algoritma sonucunun su/kâr özeti (küresel su bütçesi sonrası).</p>
+<table class="data-table" id="tblOfficialParcels">
+<thead>
+<tr>
+<th>Parsel</th><th>Alan (da)</th><th>Toplam Su (m³)</th><th>Toplam Kâr (TL)</th><th>Su Verimliliği (TL/m³)</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+<button class="btn" id="btnExportParcelsCsv">CSV indir</button>
+<span class="small muted">Not: Bu tablolar, rapora doğrudan eklenebilir/Excel'e aktarılabilir formatta üretilir.</span>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">Tüm Parseller - Mevcut vs Önerilen (Şeffaf Karşılaştırma)</h3>
+<p class="card-help small">
+                    Çiftçi için: Her parselde mevcut ekim deseni ile seçili senaryo+algoritma sonucu önerilen desen yan yana.
+                    Her parsel satırında "Kıyasla" ile alternatif ürünlerin su/kâr karşılaştırması görülebilir.
+                  </p>
+<div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+<button class="btn" id="btnExportAllParcelCompareCsv">CSV indir</button>
+<span class="small muted" id="allParcelCompareNote">Not: Öneriler, son "Optimizasyonu Çalıştır" sonucuyla senkron tutulur.</span>
+</div>
+<div style="overflow:auto;">
+<table class="data-table" id="tblOfficialAllParcelCompare">
+<thead>
+<tr>
+<th>Parsel</th>
+<th>Alan (da)</th>
+<th>Mevcut Desen (mevsim)</th>
+<th>Mevcut Su (m³)</th>
+<th>Mevcut Kâr (TL)</th>
+<th>Önerilen Desen (mevsim)</th>
+<th>Öneri Su (m³)</th>
+<th>Öneri Kâr (TL)</th>
+<th>Δ Su</th>
+<th>Δ Kâr</th>
+<th>Neden?</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">Köy / İlçe bazlı resmî ekim desenleri (paketten özet)</h3>
+<p class="card-help small">Bu bölüm, veri paketindeki Excel tablolarından türetilen özetleri gösterir (kullanılan bonuslar buradan gelir).</p>
+<div class="small" id="officialSummary"></div>
+</div>
+</div>
+<div class="tab-panel" id="tab-drought">
+<div class="card">
+<h2 class="card-title">Kuraklık göstergeleri</h2>
+<p class="card-help small">Kuraklık grafikleri üst bölümde "Kuraklık göstergeleri (2000-2025) - Detay" alanında yer almaktadır.</p>
+</div>
+</div>
+<!-- Algoritma Karşılaştırma Sekmesi -->
+<div class="tab-panel" id="tab-benchmark" data-role="institution">
+<div class="card" id="benchmarkSection">
+<h2 class="card-title">Algoritma karşılaştırması (Benchmark)</h2>
+<div class="badge badge-info" id="benchmarkLoadedBadge" style="display:inline-block; margin-top:6px;">Benchmark sekmesi yüklendi.</div>
+<p class="card-help small" style="margin-top:-6px;">
+                    Bu bölüm yalnızca <strong>backend benchmark</strong> sonucunu kullanır. Aynı veri, aynı su bütçesi ve aynı tekrar sayısı altında
+                    GA/ABC/ACO algoritmalarının ortalama-medyan-min/max-oynaklık-uygulanabilir çözüm oranı ve süre metrikleri birlikte raporlanır.
+                    <br/><span class="muted">Not: "Mevcut desen" seçiliyken algoritma kıyası anlamlı değildir; kıyas için Su Tasarrufu / Kâr / Dengeli hedeflerinden birini seçin.</span>
+</p>
+<div class="water-controls" style="padding-top:6px;">
+<div class="field-row">
+<label class="field-label">Karşılaştırma senaryosu</label>
+<select class="select-input" id="benchmarkSeasonSourceSel">
+<option selected="" value="use_selected">Seçili (soldaki Sezon veri seti)</option>
+<option value="s1">Senaryo-1 (tek ürün)</option>
+<option value="s2">Senaryo-2 (çift ürün / desen)</option>
+<option value="all">Üçünü de çalıştır (karşılaştır)</option>
+</select>
+</div>
+<div class="field-row">
+<label class="field-label">Tekrar sayısı</label>
+<input class="text-input" id="benchmarkRepeats" max="120" min="10" type="number" value="50"/>
+</div>
+<div class="field-row">
+<label class="field-label">Seed (opsiyonel)</label>
+<input class="text-input" id="benchmarkSeed" placeholder="boş = rastgele" type="number"/>
+</div>
+<div class="algo-actions" style="margin-top:8px;">
+<button class="btn-secondary" id="runBenchmarkBtn">Karşılaştırmayı Çalıştır</button>
+<button class="btn-secondary" id="runBenchmarkSweepBtn">30/50/100 tekrar taramasi</button>
+<span class="algo-status" id="benchmarkStatus">Hazır</span>
+</div>
+</div>
+<div class="benchmark-kpi-grid" id="benchmarkKpiGrid"></div><div class="small" id="benchmarkResults" style="margin-top:10px;"></div>
+<div class="small" id="benchmarkSweepResults" style="margin-top:10px;"></div>
+<div class="card-help small" id="objectiveCompareMatrix" style="margin-top:8px;">Kurum görünümünde hedef modu Ã— algoritma karşılaştırma özeti burada gösterilir.</div>
+<div class="chart-grid chart-grid-benchmark" style="margin-top:10px;">
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Net kâr dağılımı (ort / min / max)</div>
+<canvas id="benchmarkProfitChart"></canvas>
+</div>
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Toplam su dağılımı (ort / min / max)</div>
+<canvas id="benchmarkWaterChart"></canvas>
+</div>
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Algoritma kalite profili (TL/m3 - uygulanabilirlik - plan farki)</div>
+<canvas id="benchmarkEffChart"></canvas>
+</div>
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Sure - oynaklik - desen cesitliligi profili</div>
+<canvas id="benchmarkRuntimeChart"></canvas>
+</div>
+</div>
+<div id="benchmarkPatterns" style="margin-top:14px;"></div>
+</div>
+</div>
+</div>
+</div>
+</section></main></div>
+
+
+<section class="app-quote-band" aria-label="Tez ve kurumsal bilgi alanı">
+  <div class="quote-wrap">
+    <img src="images/ohmu_logo_1992.png" alt="Niğde Ömer Halisdemir Üniversitesi logosu" class="quote-logo" />
+    <div class="quote-center">
+      <p class="quote-text">"Suyunu koruyamayan bir tarım, toprağını; toprağını koruyamayan bir millet, geleceğini kaybeder."</p>
+      <p class="quote-meta">Hazırlayan: Betül Demir • Yüksek Lisans Tezi<br>Niğde Ömer Halisdemir Üniversitesi</p>
+      <div class="quote-audio">
+        <span class="quote-audio-label"><span class="music-emoji">ğŸµ</span> Ziraat Marşı</span>
+        <audio controls preload="none">
+          <source src="audio/ziraat_marsi.mp4" type="audio/mp4">
+          Tarayıcınız ses oynatmayı desteklemiyor.
+        </audio>
+      </div>
+    </div>
+    <img src="images/ahmet_sahenk_logo.png" alt="Tarım Bilimleri ve Teknolojileri logosu" class="quote-logo" />
+  </div>
+</section>
+
+<footer class="app-footer">
+      Tarımsal Karar Destek Sistemi • Çiftçi ve kurum için rol bazlı tez prototipi
+    </footer>
+
+<script src="script.js?v=140"></script>
+</body>
+</html>
+
+
+
+
+
+
+

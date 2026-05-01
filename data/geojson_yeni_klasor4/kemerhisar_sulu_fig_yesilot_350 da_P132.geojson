@@ -1,0 +1,113 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P132",
+    "name": "P132",
+    "display_name": "P132",
+    "area_da": 33.3,
+    "area_m2": 33300,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "FİĞ (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "İsmail Bulut",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_fig_yesilot_350 da_P132.geojson",
+    "owner_username": "C132",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:39:25.120Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 350,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C132",
+    "farmer_name": "İsmail Bulut",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "FİĞ (YEŞİLOT)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 212579.5,
+    "profit_tl_current": 1575000,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 212579.5,
+    "assigned_profit_tl": 1575000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:39:28.462Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_fig_yesilot_350 da_P132.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.55132455661592,
+          37.820810815781115
+        ],
+        [
+          34.55203248415375,
+          37.82048866139254
+        ],
+        [
+          34.55322186851147,
+          37.8202959100409
+        ],
+        [
+          34.5533827611337,
+          37.82030862672136
+        ],
+        [
+          34.554305212167854,
+          37.82057991538271
+        ],
+        [
+          34.55471816989823,
+          37.82005429269574
+        ],
+        [
+          34.55584441825388,
+          37.820630781895716
+        ],
+        [
+          34.5555923531457,
+          37.82086815849288
+        ],
+        [
+          34.55530274642569,
+          37.82126661035046
+        ],
+        [
+          34.55505604440492,
+          37.8213513870639
+        ],
+        [
+          34.55446074170267,
+          37.82138105889062
+        ],
+        [
+          34.55413895645821,
+          37.82145735781879
+        ],
+        [
+          34.5540638732345,
+          37.82145735781879
+        ],
+        [
+          34.55132455661592,
+          37.820810815781115
+        ]
+      ]
+    ]
+  }
+}

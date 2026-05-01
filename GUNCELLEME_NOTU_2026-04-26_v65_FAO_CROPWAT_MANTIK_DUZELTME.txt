@@ -1,0 +1,43 @@
+AKKAYA 5 KÖY VERİ SENKRON VE FAO/CROPWAT UYUM NOTU - v65
+
+Bu paket, kullanıcı tarafından yüklenen 2024 Excel dosyaları ve hocanın CROPWAT/FAO-56 Penman–Monteith temelli verdiği/verdirmiş olduğu bitki su tüketimi referansları esas alınarak yeniden düzenlendi.
+
+Aktif kapsam:
+- Aktif köy sayısı: 5
+- Aktif temsilî parsel sayısı: 179
+- Toplam aktif alan: 134,919.0 da
+- Toplam mevcut brüt sulama suyu / ürün deseni talebi: 100,700,080.81 m³ (100.700 hm³)
+- Genel mevcut su yoğunluğu: 746.374 m³/da
+- Karşılaştırma amaçlı eşit köy payı: 20,140,016.16 m³/köy
+
+Ana kaynaklar:
+- sazlica_2024_profesyonel_guncel_v12_profesyonel_duzenli (1).xlsx
+- bahceli_2024_dogruluk_odakli_son_guncel_v6.xlsx
+- bor_ilce_merkezi_2024_duzeltilmis_v4.xlsx
+- kemerhisar_2024_duzeltilmis_v5.xlsx
+- kaynarca_2024_duzeltilmis_v5.xlsx
+
+Önemli düzeltmeler:
+1) Önceki notlarda kalan "6 köy / 202 parsel / 188.269 da / 141,709 hm³" ifadeleri bu aktif paket için güncel değildir. Bu sürümde aktif kapsam 5 köy, 179 temsilî parsel ve 134.919 da'dır.
+2) ETo/ETc mantığı "sıfırdan tüm verileri biz hesapladık" şeklinde sunulmamalıdır. Doğru ifade: hocanın CROPWAT/FAO-56 Penman–Monteith çalışmasından gelen veya Excel üzerinden senkronize edilen değerler ana referans alınmış; eksik ürün/yerlerde kontrollü proxy/türetilmiş değerler kullanılmıştır.
+3) monthly_climate_all_parcels.csv tüm aktif 179 parsel için 12 aylık bölgesel seriyle tamamlandı. Böylece FAO-56 aylık su hesabı P50 ve sonrası parsellerde sıfıra düşmez.
+4) Efektif yağış hesabı kod tarafında düzeltildi: USDA-SCS eşitliği günlük küçük değerlere uygulanıp toplanmak yerine aylık yağış toplamına uygulanır ve günlük hesap içine aylık efektif yağış dağıtılır.
+5) Kc evre süresi yorumu düzeltildi: crop_params_assumed.csv içindeki p_ini/p_dev/p_mid/p_late değerleri çoğunlukla gün cinsinden olduğundan, app.py artık bu alanları oran sanmadan gün veya oran olarak otomatik ayırt eder.
+6) Eşit köy payı yalnızca idari/karşılaştırma senaryosudur. Ana karar modeli dekar bazlı adil kota olarak korunmuştur.
+7) water_context.csv eski ve küçük ölçekli demo değerlerden arındırılarak 2024 mevcut talep referansı ile uyumlu hale getirildi.
+
+Veri türü açıklaması:
+- Doğrudan/Excel kaynaklı: parsel alanı, mevcut ürün deseni, mevcut ürün su ve kâr özetleri.
+- CROPWAT/FAO-56 referanslı: ETo/ETc/su tüketimi zincirinde kullanılan ana iklim ve bitki su tüketimi referansları.
+- Türetilmiş/proxy: fiyat-kâr alanları, toprak uygunluğu, eksik ürün su/kâr değerleri, çizim bekleyen parsel geometrileri.
+- Senaryo: eşit köy kotası, hibrit kota, gelecek yıl projeksiyonları ve kapasite kısıtları.
+
+Savunmada güvenli ifade:
+"Bu çalışma CROPWAT/FAO-56 mantığına dayalı su tüketimi referanslarını ana veri olarak kullanır. Doğrudan veri bulunan ürünlerde hocanın/Excel'in verdiği değerler korunmuş; doğrudan veri olmayan durumlarda benzer ürün, ürün grubu ve gelişim dönemi dikkate alınarak açıkça proxy/türetilmiş değerler kullanılmıştır. Mevcut su kısıtı gerçek baraj işletme ölçümü değil, 2024 mevcut ürün deseninden hesaplanan planlama referansıdır."
+
+Köy özeti:
+- Bahçeli: 31 parsel, 19,692.0 da, mevcut brüt su 14,107,300.25 m³
+- Bor İlçe Merkezi: 43 parsel, 35,036.0 da, mevcut brüt su 29,027,116.39 m³
+- Kaynarca: 23 parsel, 10,191.0 da, mevcut brüt su 5,713,996.45 m³
+- Kemerhisar: 35 parsel, 41,102.0 da, mevcut brüt su 32,139,952.94 m³
+- Sazlıca: 47 parsel, 28,898.0 da, mevcut brüt su 19,711,714.78 m³

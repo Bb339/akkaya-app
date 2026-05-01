@@ -1,0 +1,129 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P86",
+    "name": "P86",
+    "display_name": "P86",
+    "area_da": 81.1,
+    "area_m2": 81100,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "PATATES",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Ferhat Uzun",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_patates_250 da_P86.geojson",
+    "owner_username": "C086",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T12:50:58.240Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 250,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C086",
+    "farmer_name": "Ferhat Uzun",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "PATATES",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 222375,
+    "profit_tl_current": 580254.25,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 222375,
+    "assigned_profit_tl": 580254.25,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T12:51:02.707Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_patates_250 da_P86.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.57433878761721,
+          37.90830169127947
+        ],
+        [
+          34.574242252043874,
+          37.90902990725927
+        ],
+        [
+          34.57537922657432,
+          37.90911458306823
+        ],
+        [
+          34.57531486952542,
+          37.91018148991151
+        ],
+        [
+          34.57579754739214,
+          37.91035930621457
+        ],
+        [
+          34.57566883329436,
+          37.91090968728595
+        ],
+        [
+          34.57620514203514,
+          37.911036697717726
+        ],
+        [
+          34.576537653454416,
+          37.91123991395246
+        ],
+        [
+          34.57771753268414,
+          37.91139232576013
+        ],
+        [
+          34.57795350853008,
+          37.91139232576013
+        ],
+        [
+          34.57724558099225,
+          37.90875047639829
+        ],
+        [
+          34.57843618639676,
+          37.908250885244485
+        ],
+        [
+          34.57810367497748,
+          37.90796298371685
+        ],
+        [
+          34.5770096051463,
+          37.907946048297795
+        ],
+        [
+          34.57607642793736,
+          37.90797145142493
+        ],
+        [
+          34.575175429252816,
+          37.90797145142493
+        ],
+        [
+          34.57476783460982,
+          37.90802225765287
+        ],
+        [
+          34.57433878761721,
+          37.90830169127947
+        ]
+      ]
+    ]
+  }
+}

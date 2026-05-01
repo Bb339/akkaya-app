@@ -1,0 +1,1 @@
+v45: Sol panel daha geniş ve tamamen okunabilir olacak şekilde yeniden düzenlendi. Yatay taşma engellendi. Tüm yazılar satır kırarak görünür hale getirildi. Sol panel içindeki tablo yapıları kaldırıldı/gizlendi; bunun yerine kompakt kartlar kullanıldı. Aktif dosyalar, senaryo alanları ve su adaleti bölümü ekran dışına taşmadan okunacak şekilde yeniden stillendirildi.

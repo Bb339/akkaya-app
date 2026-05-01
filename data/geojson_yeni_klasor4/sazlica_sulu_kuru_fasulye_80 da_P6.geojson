@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.655999266041036,
+            37.86407106171839
+          ],
+          [
+            34.662616360083135,
+            37.86219293400592
+          ],
+          [
+            34.667550159391176,
+            37.87318618564245
+          ],
+          [
+            34.66221004701138,
+            37.87685023890154
+          ],
+          [
+            34.653097036077355,
+            37.87199532897593
+          ],
+          [
+            34.6559412275796,
+            37.86384202646403
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kuru_fasulye_80 da_P6.geojson",
+        "source_label": "sazlica_sulu_kuru_fasulye_80 da_P6.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P6",
+        "name": "P6",
+        "parcel_id": "P6",
+        "district": "Merkez",
+        "current_crop": "KURU FASULYE",
+        "crop": "KURU FASULYE",
+        "assigned_pattern": "KURU FASULYE",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 80,
+        "area_official_da": 80,
+        "farmer_id": "C006",
+        "farmer_name": "Hüseyin Duran"
+      },
+      "id": 1773615036831
+    }
+  ]
+}

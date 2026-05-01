@@ -1,0 +1,114 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65599552399665,
+            37.89110300422098
+          ],
+          [
+            34.656485250075455,
+            37.890426442785895
+          ],
+          [
+            34.65528542084611,
+            37.88909263261401
+          ],
+          [
+            34.655971036908085,
+            37.88640560861654
+          ],
+          [
+            34.65702395033139,
+            37.886212294030386
+          ],
+          [
+            34.660084742247044,
+            37.88696621919681
+          ],
+          [
+            34.66160289690238,
+            37.88646360298188
+          ],
+          [
+            34.66270478226104,
+            37.886888893304004
+          ],
+          [
+            34.66395358566751,
+            37.88650226616173
+          ],
+          [
+            34.66561865612887,
+            37.88698555021486
+          ],
+          [
+            34.66674502857608,
+            37.88690822522729
+          ],
+          [
+            34.66698989049459,
+            37.88731418205471
+          ],
+          [
+            34.668263180989634,
+            37.88714020083131
+          ],
+          [
+            34.6670633495185,
+            37.88878334014262
+          ],
+          [
+            34.66334142638765,
+            37.89050376496364
+          ],
+          [
+            34.65790545861831,
+            37.89241744838597
+          ],
+          [
+            34.657538163498764,
+            37.89230146898851
+          ],
+          [
+            34.65602001108522,
+            37.8911803248033
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_kuru_arpa_dane_1000 da_P2.geojson",
+        "source_label": "sazlica_kuru_arpa_dane_1000 da_P2.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P2",
+        "name": "P2",
+        "parcel_id": "P2",
+        "district": "Merkez",
+        "current_crop": "ARPA (Dane)",
+        "crop": "ARPA (Dane)",
+        "assigned_pattern": "ARPA (Dane)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "kuru",
+        "irrigation_key": "rainfed",
+        "irrigation_current": "Yağışa bağlı (kuru)",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1000,
+        "area_official_da": 1000,
+        "farmer_id": "C002",
+        "farmer_name": "Mehmet Yıldız"
+      },
+      "id": 1773607409945
+    }
+  ]
+}

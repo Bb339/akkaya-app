@@ -1,0 +1,7 @@
+V10 düzeltmeleri
+- UI'da sprinkler etiketi Yağmurlama olarak normalize edildi.
+- Benchmark artık tek parsel seçiliyken mümkünse aynı köydeki tüm resmi parseller üzerinde çalışır; böylece algoritma kıyası anlamsız biçimde tek parselde kilitlenmez.
+- Benchmark sonuçlarında kapsam etiketi gösterilir.
+- Backend benchmark seed politikası algoritma-ofsetli hale getirildi; GA/ABC/ACO aynı pseudo-random akışa düşmez.
+- Benchmark std hesabı sample std olarak güncellendi.
+- Backend benchmark testinde Sazlıca 49 parsel için GA/ABC/ACO farklı ortalama ve std değerleri üretti.

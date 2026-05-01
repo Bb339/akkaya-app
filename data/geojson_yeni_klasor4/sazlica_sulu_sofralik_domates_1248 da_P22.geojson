@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64311924184563,
+            37.90483187352034
+          ],
+          [
+            34.64697397913179,
+            37.90645855763019
+          ],
+          [
+            34.643647119911165,
+            37.9093535788154
+          ],
+          [
+            34.642652745126945,
+            37.90960531436511
+          ],
+          [
+            34.63905580899175,
+            37.90825948719922
+          ],
+          [
+            34.63904353322814,
+            37.908085205613645
+          ],
+          [
+            34.6386015888796,
+            37.90759140560141
+          ],
+          [
+            34.638368340098786,
+            37.90655538288782
+          ],
+          [
+            34.63987831718494,
+            37.90541283633027
+          ],
+          [
+            34.642002105210665,
+            37.905480615086944
+          ],
+          [
+            34.64297192762474,
+            37.90477377721979
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_sofralik_domates_1248 da_P22.geojson",
+        "source_label": "sazlica_sulu_sofralik_domates_1248 da_P22.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P22",
+        "name": "P22",
+        "parcel_id": "P22",
+        "district": "Merkez",
+        "current_crop": "SOFRALIK DOMATES",
+        "crop": "SOFRALIK DOMATES",
+        "assigned_pattern": "SOFRALIK DOMATES",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1248,
+        "area_official_da": 1248,
+        "farmer_id": "C022",
+        "farmer_name": "Recep Köse"
+      },
+      "id": 1773613995762
+    }
+  ]
+}

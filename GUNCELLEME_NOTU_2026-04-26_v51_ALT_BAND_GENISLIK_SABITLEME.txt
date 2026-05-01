@@ -1,0 +1,6 @@
+v51 - Alt bant ve footer genişlik sabitleme
+
+- Sayfa sonunda yer alan tez sözü / logo / Ziraat Marşı bandı ekranın tamamına yakın sabit genişlikte düzenlendi.
+- Footer aynı genişlik mantığına bağlandı; zoom veya pencere boyutu değişiminde daralıp ortada kalma problemi giderildi.
+- Alt bantta dış kenar boşlukları 6 px seviyesine sabitlendi ve kutu genişliği viewport ile senkron hale getirildi.
+- Login ekranındayken alt bant/footer görünmesin; panel açıldığında sayfa sonunda görünsün diye görünürlük kuralı eklendi.

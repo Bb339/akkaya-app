@@ -1,0 +1,39 @@
+{
+  "project": "sazlica_optimum_bitki_deseni_v37_excel_sync",
+  "date": "2026-04-12",
+  "focus": "excel revizyon senkronizasyonu + FAO56 ET0 backend uyumu + crop phase doldurma",
+  "real_core_files": [
+    "data/parsel_su_kar_ozet.csv",
+    "data/enhanced_dataset/csv/parcel_assumptions.csv",
+    "data/enhanced_dataset/csv/monthly_climate_all_parcels.csv",
+    "data/geojson_yeni_klasor4/*"
+  ],
+  "openly_labeled_proxy_or_derived_files": [
+    "data/enhanced_dataset/csv/crop_suitability_assumed.csv",
+    "data/enhanced_dataset/csv/senaryo2_backend_seasons.csv",
+    "data/enhanced_dataset/csv/delivery_capacity_monthly_assumed.csv",
+    "data/enhanced_dataset/csv/water_quality_monthly_assumed.csv",
+    "data/enhanced_dataset/csv/market_overrides_demo.csv",
+    "data/urun_parametreleri_demo.csv (economics fields)"
+  ],
+  "thesis_closure_actions_v18": [
+    "Scenario-2 now differs numerically and semantically from Scenario-1.",
+    "Suitability matrix is no longer blank; every score is openly labeled as heuristic/proxy.",
+    "Economics blanks were replaced by observed-or-implied values with source tags.",
+    "Rotation rules expanded beyond a single same-family rule.",
+    "Validation and data-quality reports added at API/test level."
+  ],
+  "thesis_closure_actions_v20": [
+    "Çiftçi resmi parseli doğrudan değiştirmez; düzeltme talebi oluşturur.",
+    "Yönetici onayı ile talep resmi parsel override kaydına işlenebilir.",
+    "Kuraklık detayı varsayılan kapalı açılır; çiftçi görünümünde gereksiz veri seti seçicileri gizlenir.",
+    "Aylık iklim özeti 5 yıl varsayımı yerine veri içindeki gerçek yıl sayısına göre hesaplanır.",
+    "2025-2050 su görünümü üç senaryolu trend tabanlı planlama serisi olarak açıkça paketlenmiştir."
+  ],
+  "thesis_closure_actions_v37": [
+    "crop_params_assumed.csv excelde doldurulan p_ini/p_dev/p_mid/p_late ve eksik Kc revizyonlarıyla senkronize edildi.",
+    "monthly_climate_all_parcels.csv et0_mm alanı FAO-56 PM aylık seriyle eşitlendi; ham seri et0_mm_raw_input alanında korundu.",
+    "senaryo1_backend_seasons.csv ve senaryo2_backend_seasons.csv içinde et0_mm_sum alanı FAO-56 senkron toplamına güncellendi.",
+    "Eski derlenmiş __pycache__ klasörü teslim zipinden çıkarıldı."
+  ]
+}

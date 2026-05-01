@@ -1,0 +1,7 @@
+v29 Güncelleme Notu
+
+- data/geojson_yeni_klasor4 klasöründeki yeni parsel GeoJSON dosyaları otomatik indexlenir.
+- P kodu dosya adından yakalanıp parcel_meta_map.json / parsel çizim kütüğüyle eşleştirilir.
+- Tüm parseller / köy bazlı filtre / üzerine gelince popup / tıklayınca mavi seçim davranışı korunur.
+- Mevcut pakette görünür gerçek parseller: Sazlıca 49, Bahçeli 31, Kaynarca 23.
+- Bor İlçe Merkezi veya Kemerhisar parsel GeoJSON dosyaları klasöre eklendiğinde aynı formatta otomatik okunacak şekilde altyapı hazırlandı.

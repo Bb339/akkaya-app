@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P87",
+    "name": "P87",
+    "display_name": "P87",
+    "area_da": 1079.8,
+    "area_m2": 1079800,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "ŞEKER PANCARI",
+    "irrigation_key": "surface",
+    "irrigation_label": "Yüzey / Karık / Salma",
+    "farmer": "Erdal Şahin",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_seker_pancari_2960 da_P87.geojson",
+    "owner_username": "C087",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T12:52:34.176Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 2960,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C087",
+    "farmer_name": "Erdal Şahin",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "ŞEKER PANCARI",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 4422861.6,
+    "profit_tl_current": 19240000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 4422861.6,
+    "assigned_profit_tl": 19240000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T12:52:35.975Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_seker_pancari_2960 da_P87.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.5618984207641,
+          37.86366573487497
+        ],
+        [
+          34.56296031207087,
+          37.85977661526112
+        ],
+        [
+          34.56913858876464,
+          37.86126789235671
+        ],
+        [
+          34.57200247744041,
+          37.863462387300224
+        ],
+        [
+          34.57419433677919,
+          37.86497989357017
+        ],
+        [
+          34.56904577286771,
+          37.8680299854664
+        ],
+        [
+          34.56632132446455,
+          37.869300819828695
+        ],
+        [
+          34.56439061299777,
+          37.872740434883326
+        ],
+        [
+          34.55711826647279,
+          37.87245239446314
+        ],
+        [
+          34.5618984207641,
+          37.86366573487497
+        ]
+      ]
+    ]
+  }
+}

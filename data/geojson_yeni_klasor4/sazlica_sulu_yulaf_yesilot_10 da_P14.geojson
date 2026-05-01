@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.645859947863755,
+            37.902749496063635
+          ],
+          [
+            34.6470108418072,
+            37.903922272174285
+          ],
+          [
+            34.647175254806974,
+            37.90436205827629
+          ],
+          [
+            34.646860725077836,
+            37.90486950066159
+          ],
+          [
+            34.64553826950858,
+            37.905692677393176
+          ],
+          [
+            34.64514510685632,
+            37.905726506447195
+          ],
+          [
+            34.64338659859647,
+            37.90493152111459
+          ],
+          [
+            34.64587424511584,
+            37.90269875052067
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_yulaf_yesilot_10 da_P14.geojson",
+        "source_label": "sazlica_sulu_yulaf_yesilot_10 da_P14.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P14",
+        "name": "P14",
+        "parcel_id": "P14",
+        "district": "Merkez",
+        "current_crop": "YULAF (YEŞİLOT)",
+        "crop": "YULAF (YEŞİLOT)",
+        "assigned_pattern": "YULAF (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 10,
+        "area_official_da": 10,
+        "farmer_id": "C014",
+        "farmer_name": "Hatice Şimşek"
+      },
+      "id": 1773615745029
+    }
+  ]
+}

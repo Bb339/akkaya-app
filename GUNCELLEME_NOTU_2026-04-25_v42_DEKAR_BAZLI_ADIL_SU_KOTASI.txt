@@ -1,0 +1,43 @@
+V42 - DEKAR BAZLI ADIL SU KOTASI VE KARAR MODELI
+
+Bu sürümde su tahsis mantığı daha adil ve ziraat açısından daha savunulabilir hale getirildi.
+
+1) Varsayılan kota modeli değiştirildi:
+   Eski ana model: 5 köy mevcut toplam su -> her köye eşit pay -> köy içi her parsele eşit kota.
+   Yeni ana model: 5 köy mevcut toplam su -> toplam alana bölünerek genel m3/da -> her parsel alanı kadar su hakkı.
+
+2) Toplam referans değerler:
+   - Mevcut toplam su talebi: yaklaşık 100.700.081 m3
+   - Toplam alan: 134.919 da
+   - Genel adil yoğunluk: yaklaşık 746,37 m3/da
+   - Toplam parsel: 179
+
+3) Karşılaştırma ekranı güçlendirildi:
+   Arayüzde artık şu değerler birlikte gösterilir:
+   - Köyün mevcut toplam su tüketimi
+   - Mevcut parsel başı ortalama
+   - Mevcut m3/da
+   - Eşit köy payı ve bunun yarattığı artış/azalış
+   - Dekar bazlı adil pay ve bunun yarattığı artış/azalış
+   - Karma geçiş payı (%70 alan + %30 mevcut talep)
+
+4) Optimizasyona kota modeli seçimi eklendi:
+   - Dekar bazlı adil kota (varsayılan/önerilen)
+   - Eşit köy + eşit parsel kotası
+   - Mevcut talep referansı
+   - Karma: %70 alan + %30 mevcut talep
+
+5) Neden daha adil?
+   Eşit köy modeli idari açıdan basit olsa da alanı ve parsel büyüklüğünü dikkate almadığı için bazı köyleri aşırı avantajlı, bazılarını aşırı kısıtlı gösterebilir. Dekar bazlı modelde her parsel alanı kadar su hakkı aldığı için 10 da ve 7000 da parsel aynı suya zorlanmaz.
+
+6) Backend güncellemeleri:
+   - combined_parcel_candidate_matrix_2024.csv dosyasına kota modeli kolonları eklendi.
+   - current_quota_m3 varsayılanı dekar bazlı adil kota olacak şekilde güncellendi.
+   - /api/water_allocation_logic v42 çıktısı eklendi.
+   - /api/optimize seçenekleri allocationModel parametresini destekler hale getirildi.
+
+7) Frontend güncellemeleri:
+   - Su tahsis kartı v42 olarak yenilendi.
+   - Kota modeli seçme kutusu eklendi.
+   - Optimizasyon cache anahtarı kota modelini de dikkate alır.
+   - Öneriler varsayılan olarak dekar bazlı kota üzerinden üretilir.

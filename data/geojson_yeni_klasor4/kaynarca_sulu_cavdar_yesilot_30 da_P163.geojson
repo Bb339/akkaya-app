@@ -1,0 +1,89 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P163",
+    "name": "P163",
+    "display_name": "P163",
+    "area_da": 1432.7,
+    "area_m2": 1432700,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "ÇAVDAR (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Ferhat Ergin",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kaynarca_sulu_cavdar_yesilot_30 da_P163.geojson",
+    "owner_username": "C163",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:23:17.568Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 30,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C163",
+    "farmer_name": "Ferhat Ergin",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "ÇAVDAR (YEŞİLOT)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 13728.3,
+    "profit_tl_current": 117000,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 13728.3,
+    "assigned_profit_tl": 117000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:23:20.882Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_cavdar_yesilot_30 da_P163.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.64026263697372,
+          37.838805776270064
+        ],
+        [
+          34.63884385793364,
+          37.83698144556053
+        ],
+        [
+          34.63645003849096,
+          37.83162495188475
+        ],
+        [
+          34.62258551580184,
+          37.836783333122995
+        ],
+        [
+          34.62601789174283,
+          37.84627572317571
+        ],
+        [
+          34.632582488228756,
+          37.84360118184974
+        ],
+        [
+          34.63397689095476,
+          37.843380828654865
+        ],
+        [
+          34.64026263697372,
+          37.838805776270064
+        ]
+      ]
+    ]
+  }
+}

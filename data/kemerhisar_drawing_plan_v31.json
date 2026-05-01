@@ -1,0 +1,329 @@
+{
+  "status": "OK",
+  "version": "v31",
+  "scope": "Kemerhisar parsel çizim/düzenleme hazırlığı",
+  "kemerhisar_count": 35,
+  "parcel_range": "P122–P156",
+  "ready_geojson": 0,
+  "drawing_pending": 35,
+  "records": [
+    {
+      "parcel_id": "P122",
+      "crop": "BUĞDAY (Dane)",
+      "area_da": 7110,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C122",
+      "farmer_name": "Recep Sarı",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P123",
+      "crop": "ARPA (Dane)",
+      "area_da": 5540,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C123",
+      "farmer_name": "Bekir Doğan",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P124",
+      "crop": "ÇAVDAR (Dane)",
+      "area_da": 40,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C124",
+      "farmer_name": "Ömer Polat",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P125",
+      "crop": "MISIR (Dane)",
+      "area_da": 11,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C125",
+      "farmer_name": "Kemal Bozkurt",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P126",
+      "crop": "KURU FASULYE",
+      "area_da": 75,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C126",
+      "farmer_name": "Halil Uçar",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P127",
+      "crop": "NOHUT",
+      "area_da": 650,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C127",
+      "farmer_name": "Emin Aydoğan",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P128",
+      "crop": "AYÇİÇEĞİ",
+      "area_da": 153,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C128",
+      "farmer_name": "Şaban Şimşek",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P129",
+      "crop": "PATATES",
+      "area_da": 630,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C129",
+      "farmer_name": "Adem Ergin",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P130",
+      "crop": "ŞEKER PANCARI",
+      "area_da": 2800,
+      "irrigation": "Karık",
+      "farmer_id": "C130",
+      "farmer_name": "Yakup Arslan",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P131",
+      "crop": "ÇAVDAR (YEŞİLOT)",
+      "area_da": 130,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C131",
+      "farmer_name": "Veli Aslan",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P132",
+      "crop": "FİĞ (YEŞİLOT)",
+      "area_da": 350,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C132",
+      "farmer_name": "İsmail Bulut",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P133",
+      "crop": "YONCA (YEŞİLOT)",
+      "area_da": 2765,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C133",
+      "farmer_name": "Serkan Özer",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P134",
+      "crop": "SİLAJLIK MISIR",
+      "area_da": 850,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C134",
+      "farmer_name": "Selim Kara",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P135",
+      "crop": "LAVANTA",
+      "area_da": 7,
+      "irrigation": "Damla",
+      "farmer_id": "C135",
+      "farmer_name": "Mahmut Bilgin",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P136",
+      "crop": "SİVRİ BİBER",
+      "area_da": 5,
+      "irrigation": "Damla",
+      "farmer_id": "C136",
+      "farmer_name": "Ferhat Köse",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P137",
+      "crop": "SALÇALIK BİBER",
+      "area_da": 590,
+      "irrigation": "Damla",
+      "farmer_id": "C137",
+      "farmer_name": "Erdal Çelik",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P138",
+      "crop": "SOFRALIK DOMATES",
+      "area_da": 120,
+      "irrigation": "Damla",
+      "farmer_id": "C138",
+      "farmer_name": "Cemal Koç",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P139",
+      "crop": "SALÇALIK DOMATES",
+      "area_da": 5400,
+      "irrigation": "Damla",
+      "farmer_id": "C139",
+      "farmer_name": "Metin Güneş",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P140",
+      "crop": "FASULYE (TAZE)",
+      "area_da": 5,
+      "irrigation": "Damla",
+      "farmer_id": "C140",
+      "farmer_name": "Orhan Karaca",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P141",
+      "crop": "HIYAR (SOFRALIK)",
+      "area_da": 1,
+      "irrigation": "Damla",
+      "farmer_id": "C141",
+      "farmer_name": "Nuri Çetin",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P142",
+      "crop": "KABAK (ÇEREZLİK)",
+      "area_da": 4,
+      "irrigation": "Damla",
+      "farmer_id": "C142",
+      "farmer_name": "Sevgi Acar",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P143",
+      "crop": "KARPUZ",
+      "area_da": 100,
+      "irrigation": "Damla",
+      "farmer_id": "C143",
+      "farmer_name": "Nermin Uzun",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P144",
+      "crop": "KAVUN",
+      "area_da": 200,
+      "irrigation": "Damla",
+      "farmer_id": "C144",
+      "farmer_name": "Gül Şahin",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P145",
+      "crop": "LAHANA (BEYAZ)",
+      "area_da": 65,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C145",
+      "farmer_name": "Derya Korkmaz",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P146",
+      "crop": "SOĞAN (KURU)",
+      "area_da": 40,
+      "irrigation": "Yagmurlama",
+      "farmer_id": "C146",
+      "farmer_name": "Büşra Yalçın",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P147",
+      "crop": "BAĞ",
+      "area_da": 2800,
+      "irrigation": "Damla",
+      "farmer_id": "C147",
+      "farmer_name": "Esra Kaplan",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P148",
+      "crop": "ARMUT",
+      "area_da": 50,
+      "irrigation": "Damla",
+      "farmer_id": "C148",
+      "farmer_name": "Seda Bayram",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P149",
+      "crop": "ELMA",
+      "area_da": 9546,
+      "irrigation": "Damla",
+      "farmer_id": "C-BETUL",
+      "farmer_name": "Betül Demir",
+      "status": "Çizim bekliyor",
+      "owner_username": "betul.demir",
+      "assigned_farmer_username": "betul.demir",
+      "assigned_farmer_name": "Betül Demir"
+    },
+    {
+      "parcel_id": "P150",
+      "crop": "ERİK",
+      "area_da": 30,
+      "irrigation": "Damla",
+      "farmer_id": "C150",
+      "farmer_name": "Neslihan Çakır",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P151",
+      "crop": "KAYSI",
+      "area_da": 356,
+      "irrigation": "Damla",
+      "farmer_id": "C151",
+      "farmer_name": "Ahmet Şahin",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P152",
+      "crop": "KİRAZ",
+      "area_da": 15,
+      "irrigation": "Damla",
+      "farmer_id": "C152",
+      "farmer_name": "Mehmet Korkmaz",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P153",
+      "crop": "NEKTAR",
+      "area_da": 16,
+      "irrigation": "Damla",
+      "farmer_id": "C153",
+      "farmer_name": "Mustafa Yalçın",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P154",
+      "crop": "ŞEFTALİ",
+      "area_da": 8,
+      "irrigation": "Damla",
+      "farmer_id": "C154",
+      "farmer_name": "Ali Kaplan",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P155",
+      "crop": "BADEM",
+      "area_da": 43,
+      "irrigation": "Damla",
+      "farmer_id": "C155",
+      "farmer_name": "Hasan Bayram",
+      "status": "Çizim bekliyor"
+    },
+    {
+      "parcel_id": "P156",
+      "crop": "CEVİZ",
+      "area_da": 597,
+      "irrigation": "Damla",
+      "farmer_id": "C156",
+      "farmer_name": "Hüseyin Sezer",
+      "status": "Çizim bekliyor"
+    }
+  ]
+}

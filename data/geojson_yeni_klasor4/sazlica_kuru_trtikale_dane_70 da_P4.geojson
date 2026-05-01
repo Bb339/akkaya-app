@@ -1,0 +1,78 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65419442300364,
+            37.88948118683584
+          ],
+          [
+            34.654569656417024,
+            37.89062658748202
+          ],
+          [
+            34.65639579312563,
+            37.891416508486515
+          ],
+          [
+            34.65752149336582,
+            37.89236440331817
+          ],
+          [
+            34.65284358500565,
+            37.89549727754802
+          ],
+          [
+            34.652043085530245,
+            37.89022468457382
+          ],
+          [
+            34.652543398274936,
+            37.889888963318526
+          ],
+          [
+            34.65279355235704,
+            37.89052090767373
+          ],
+          [
+            34.654269471976555,
+            37.88949399613308
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_kuru_trtikale_dane_70 da_P4.geojson",
+        "source_label": "sazlica_kuru_trtikale_dane_70 da_P4.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P4",
+        "name": "P4",
+        "parcel_id": "P4",
+        "district": "Merkez",
+        "current_crop": "TRTİKALE (Dane)",
+        "crop": "TRTİKALE (Dane)",
+        "assigned_pattern": "TRTİKALE (Dane)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "kuru",
+        "irrigation_key": "rainfed",
+        "irrigation_current": "Yağışa bağlı (kuru)",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 70,
+        "area_official_da": 70,
+        "farmer_id": "C004",
+        "farmer_name": "Ali Avcı"
+      },
+      "id": 1773607265367
+    }
+  ]
+}

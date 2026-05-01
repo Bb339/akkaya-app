@@ -1,0 +1,85 @@
+{
+  "objective_modes": {
+    "water_efficiency": {
+      "label": "Su verimliliği / etkin kullanım",
+      "core_logic": "Mevcut suyu en etkin kullanarak TL/m3 değerini yükseltmek; yalnız en düşük suyu seçmek değildir. Aylık kapasite, rezerv kısıtı ve ticari çıktı birlikte değerlendirilir.",
+      "selection_basis": [
+        "alan",
+        "su_tuketimi_m3_da",
+        "beklenen_verim_kg_da",
+        "fiyat_tl_kg",
+        "maliyet_tl_da",
+        "net_kar_tl_da",
+        "aylik_kapasite",
+        "rezerv_butcesi"
+      ]
+    },
+    "max_profit": {
+      "label": "Kâr odaklı",
+      "core_logic": "Su bütçesi ve aylık iletim kısıtları altında toplam net kârı büyütmek.",
+      "selection_basis": [
+        "alan",
+        "verim",
+        "fiyat",
+        "maliyet",
+        "net_kar",
+        "su_butcesi",
+        "pik_ay_kapasitesi"
+      ]
+    }
+  },
+  "perennial_orchard_rule": {
+    "label": "Çok yıllık bahçe koruma kuralı",
+    "core_logic": "Kayısı, elma, armut, bağ, ceviz, badem gibi kurulmuş bahçelerde ana ürün S1/S2 veya su/kâr modu fark etmeksizin korunur; mercimek/nohut gibi tek yıllık ürünler ana ürün yerine yazılmaz.",
+    "allowed_actions": [
+      "aynı üründe kalma",
+      "sulama yöntemi iyileştirme",
+      "kısıntılı sulama planı",
+      "örtü bitkisi/sıra arası yönetimi",
+      "budama ve verim yönetimi"
+    ],
+    "disallowed_actions": [
+      "kurulu bahçeyi söküp yıllık tarla ürününe dönmek"
+    ],
+    "priority": [
+      "kullanıcı_beyani_mevcut_urun",
+      "parsel_tipi_orchard",
+      "cok_yillik_kilit",
+      "mevcut_veri_seti"
+    ],
+    "interrow_alternatives": [
+      {
+        "name": "Mercimek",
+        "role": "sıra arası / baklagil",
+        "note": "Düşük su, baklagil etkisi, ana ürün yerine geçmez."
+      },
+      {
+        "name": "Nohut",
+        "role": "sıra arası / baklagil",
+        "note": "Düşük-orta su, sınırlı alan ve uygun sıra aralığında."
+      },
+      {
+        "name": "Fiğ (Yeşilot)",
+        "role": "örtü bitkisi / yeşil gübre",
+        "note": "Toprak örtüsü ve organik madde desteği için."
+      },
+      {
+        "name": "Arpa (Yeşilot)",
+        "role": "örtü bitkisi / yem",
+        "note": "Erozyon kontrolü ve sıra arası örtü amacıyla."
+      }
+    ]
+  },
+  "commercial_metrics_rule": {
+    "label": "Alan-verim-fiyat-maliyet-su birlikte puanlanır",
+    "core_logic": "Tercih yalnız hazır liste değildir; parsel alanı, birim yoğunluk, tahmini verim, fiyat, maliyet, net kar, toplam su ve TL/m3 birlikte değerlendirilir.",
+    "formula_summary": [
+      "bitki/adet ≈ alan_da × birim_sayisi_da_est",
+      "toplam_verim ≈ alan_da × beklenen_verim_kg_da",
+      "brüt_hasılat ≈ toplam_verim × fiyat_tl_kg",
+      "net_kar ≈ alan_da × net_kar_tl_da",
+      "su ≈ alan_da × su_tuketimi_m3_da",
+      "su_verimliligi ≈ net_kar / su"
+    ]
+  }
+}

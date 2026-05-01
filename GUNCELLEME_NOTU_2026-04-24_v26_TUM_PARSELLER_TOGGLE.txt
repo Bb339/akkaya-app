@@ -1,0 +1,8 @@
+v26 güncellemesi
+
+- Harita köy filtresine varsayılan olarak "Tüm köyler" seçeneği eklendi.
+- Tüm gerçek parsel GeoJSONları aynı anda görüntülenebilir hale getirildi.
+- Katman panelindeki "Tüm parseller" kutusu kapatıldığında bütün parsel katmanı gizlenir.
+- Köy sınırı filtresi boş/Tüm köyler olduğunda yüklenen tüm köy sınırları birlikte gösterilir.
+- Parsel seçimi, harita "Tüm köyler" görünümündeyken bu görünümü bozmaz; sadece parsele odaklanır.
+- Özel köy filtresi açıksa seçilen parselin köyüne geçiş davranışı korunmuştur.

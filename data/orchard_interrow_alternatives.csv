@@ -1,0 +1,5 @@
+﻿name,kind,water_level,note,share_water,share_profit,water_mult_water,water_mult_profit,profit_mult_water,profit_mult_profit
+Mercimek,Sıra arası / baklagil,Düşük su,"{MAIN} ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz.",0.30,0.35,0.72,0.82,0.90,0.98
+Nohut,Sıra arası / baklagil,Düşük-orta su,{MAIN} bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez.,0.24,0.30,0.76,0.86,0.86,0.94
+Fiğ (Yeşilot),Örtü bitkisi / yeşil gübre,Düşük-orta su,"{MAIN} bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır.",0.35,0.22,0.58,0.68,0.42,0.30
+Arpa (Yeşilot),Örtü bitkisi / yem,Düşük-orta su,{MAIN} bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir.,0.28,0.18,0.60,0.70,0.40,0.28

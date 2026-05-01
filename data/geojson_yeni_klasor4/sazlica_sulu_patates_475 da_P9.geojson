@@ -1,0 +1,102 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.624377505946356,
+            37.89227016152516
+          ],
+          [
+            34.62627091100604,
+            37.89247455686706
+          ],
+          [
+            34.626729314566774,
+            37.893921028788355
+          ],
+          [
+            34.62957938638008,
+            37.891311069668504
+          ],
+          [
+            34.63211056881934,
+            37.88966014468831
+          ],
+          [
+            34.62999792894012,
+            37.8870972058169
+          ],
+          [
+            34.632248478562154,
+            37.885773492663745
+          ],
+          [
+            34.62972619620406,
+            37.88326997718454
+          ],
+          [
+            34.628310366106845,
+            37.88377944288604
+          ],
+          [
+            34.62775677045157,
+            37.88398326805847
+          ],
+          [
+            34.627166267236674,
+            37.88337179084873
+          ],
+          [
+            34.62188864839638,
+            37.88680763966306
+          ],
+          [
+            34.62329109258145,
+            37.889981290689505
+          ],
+          [
+            34.623993154198416,
+            37.891046717456064
+          ],
+          [
+            34.62433757303344,
+            37.892243921340636
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_patates_475 da_P9.geojson",
+        "source_label": "sazlica_sulu_patates_475 da_P9.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P9",
+        "name": "P9",
+        "parcel_id": "P9",
+        "district": "Merkez",
+        "current_crop": "PATATES",
+        "crop": "PATATES",
+        "assigned_pattern": "PATATES",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 475,
+        "area_official_da": 475,
+        "farmer_id": "C009",
+        "farmer_name": "Osman Doğan"
+      },
+      "id": 1773614365537
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P133",
+    "name": "P133",
+    "display_name": "P133",
+    "area_da": 920.5,
+    "area_m2": 920500,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "YONCA (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Serkan Özer",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_yonca_yesilot_2765 da_P133.geojson",
+    "owner_username": "C133",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:26:02.963Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 2765,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C133",
+    "farmer_name": "Serkan Özer",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "YONCA (YEŞİLOT)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 3082228.45,
+    "profit_tl_current": 17972500,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 3082228.45,
+    "assigned_profit_tl": 17972500,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:26:04.826Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_yonca_yesilot_2765 da_P133.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.53729794389952,
+          37.80779641001994
+        ],
+        [
+          34.54600759784977,
+          37.79982551010152
+        ],
+        [
+          34.55892191232774,
+          37.809593983452274
+        ],
+        [
+          34.53729794389952,
+          37.80779641001994
+        ]
+      ]
+    ]
+  }
+}

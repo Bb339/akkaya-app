@@ -1,0 +1,1 @@
+v43: Sol panel daha geniş hale getirildi. Kullanıcı artık paneli + / - butonlarıyla veya sağ kenarından sürükleyerek yeniden boyutlandırabilir. Ayrıca panel daralt / aç özelliği eklendi. Mobil görünüm korunur.

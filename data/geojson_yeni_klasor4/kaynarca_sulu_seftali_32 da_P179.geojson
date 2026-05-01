@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P179",
+    "name": "P179",
+    "display_name": "P179",
+    "area_da": 907.1,
+    "area_m2": 907100,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "ŞEFTALİ",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Mehmet Koç",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "kaynarca_sulu_seftali_32 da_P179.geojson",
+    "owner_username": "C179",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:20:54.909Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 32,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C179",
+    "farmer_name": "Mehmet Koç",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "ŞEFTALİ",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 27135.68,
+    "profit_tl_current": 313600,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 27135.68,
+    "assigned_profit_tl": 313600,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:20:59.975Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_seftali_32 da_P179.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.62294493153134,
+          37.85578794171811
+        ],
+        [
+          34.611875519121654,
+          37.85707593431763
+        ],
+        [
+          34.61453561047592,
+          37.86402392725854
+        ],
+        [
+          34.6146643245737,
+          37.864193382318604
+        ],
+        [
+          34.61497600965457,
+          37.86442931955439
+        ],
+        [
+          34.616472311041356,
+          37.86395484592342
+        ],
+        [
+          34.62069910519716,
+          37.865492500131715
+        ],
+        [
+          34.62461458635111,
+          37.86220561614695
+        ],
+        [
+          34.62663110721643,
+          37.861697236086115
+        ],
+        [
+          34.62294493153134,
+          37.85578794171811
+        ]
+      ]
+    ]
+  }
+}

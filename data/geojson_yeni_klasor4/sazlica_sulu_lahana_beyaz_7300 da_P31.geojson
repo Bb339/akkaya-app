@@ -1,0 +1,98 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.60442574196002,
+            37.90158392832035
+          ],
+          [
+            34.617005328204606,
+            37.91163582604386
+          ],
+          [
+            34.623274497011586,
+            37.906431129779264
+          ],
+          [
+            34.62467681168305,
+            37.906203417956746
+          ],
+          [
+            34.62854804813492,
+            37.90223838809035
+          ],
+          [
+            34.63045630777075,
+            37.90657668874556
+          ],
+          [
+            34.63820157693178,
+            37.90825881833079
+          ],
+          [
+            34.64325284110367,
+            37.90980811467013
+          ],
+          [
+            34.643533467747396,
+            37.91613775586774
+          ],
+          [
+            34.64633972647707,
+            37.92397159464012
+          ],
+          [
+            34.64190583475529,
+            37.92844137781327
+          ],
+          [
+            34.612307532376825,
+            37.91499443938133
+          ],
+          [
+            34.60451297643955,
+            37.91491247651861
+          ],
+          [
+            34.60451297643955,
+            37.90163369230751
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_lahana_beyaz_7300 da_P31.geojson",
+        "source_label": "sazlica_sulu_lahana_beyaz_7300 da_P31.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P31",
+        "name": "P31",
+        "parcel_id": "P31",
+        "district": "Merkez",
+        "current_crop": "LAHANA (BEYAZ)",
+        "crop": "LAHANA (BEYAZ)",
+        "assigned_pattern": "LAHANA (BEYAZ)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 7300,
+        "area_official_da": 7300,
+        "farmer_id": "C031",
+        "farmer_name": "Veli Korkmaz"
+      },
+      "id": 1773613687013
+    }
+  ]
+}

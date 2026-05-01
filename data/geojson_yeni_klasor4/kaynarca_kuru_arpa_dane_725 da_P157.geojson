@@ -1,0 +1,77 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P157",
+    "name": "P157",
+    "display_name": "P157",
+    "area_da": 447.9,
+    "area_m2": 447900,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "ARPA (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yağışa bağlı / Kuru",
+    "farmer": "Yakup Doğan",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kaynarca_kuru_arpa_dane_725 da_P157.geojson",
+    "owner_username": "C157",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:01:41.039Z",
+    "water_mode": "kuru",
+    "is_user_parcel": true,
+    "area_official_da": 725,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C157",
+    "farmer_name": "Yakup Doğan",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "ARPA (Dane)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 373628.75,
+    "profit_tl_current": 1885000,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 373628.75,
+    "assigned_profit_tl": 1885000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:01:43.463Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_kuru_arpa_dane_725 da_P157.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.62634183296624,
+          37.846718374025784
+        ],
+        [
+          34.61822825682106,
+          37.845972036083204
+        ],
+        [
+          34.61960120719745,
+          37.8519719771054
+        ],
+        [
+          34.628868622238095,
+          37.851260145222426
+        ],
+        [
+          34.62634183296624,
+          37.846718374025784
+        ]
+      ]
+    ]
+  }
+}

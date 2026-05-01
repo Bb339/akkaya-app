@@ -1,0 +1,89 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P117",
+    "name": "P117",
+    "display_name": "P117",
+    "area_da": 380.4,
+    "area_m2": 380400,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "KİRAZ",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Meryem Kurt",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "bor_ilce_merkezi_sulu_kiraz_24 da_P117.geojson",
+    "owner_username": "C117",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:35:35.927Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 24,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C117",
+    "farmer_name": "Meryem Kurt",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "KİRAZ",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 19453.2,
+    "profit_tl_current": 276000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 19453.2,
+    "assigned_profit_tl": 276000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:35:38.358Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_kiraz_24 da_P117.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.59412878562478,
+          37.893393919486215
+        ],
+        [
+          34.59764697096428,
+          37.89061590881078
+        ],
+        [
+          34.60279553487577,
+          37.88777003308705
+        ],
+        [
+          34.60326748656765,
+          37.89457962382982
+        ],
+        [
+          34.600543038164496,
+          37.89476594706178
+        ],
+        [
+          34.60004963412299,
+          37.89507083860589
+        ],
+        [
+          34.59822618440433,
+          37.89527409893372
+        ],
+        [
+          34.59412878562478,
+          37.893393919486215
+        ]
+      ]
+    ]
+  }
+}

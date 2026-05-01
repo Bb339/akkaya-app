@@ -1,0 +1,32 @@
+{
+  "status": "OK",
+  "base": "data/village_boundaries",
+  "villages": [
+    {
+      "name": "Bor İlçe Merkezi",
+      "file": "borilce_merkez.geojson",
+      "label": "Bor İlçe Merkezi sınırı"
+    },
+    {
+      "name": "Kemerhisar",
+      "file": "kemerhisar_siniri.geojson",
+      "label": "Kemerhisar sınırı"
+    },
+    {
+      "name": "Bahçeli",
+      "file": "bahceli_siniri.geojson",
+      "label": "Bahçeli sınırı"
+    },
+    {
+      "name": "Kaynarca",
+      "file": "kaynarca_siniri.geojson",
+      "label": "Kaynarca sınırı"
+    }
+  ],
+  "reservoir_area": {
+    "name": "Baraj alanı",
+    "file": "barajalani.geojson",
+    "label": "Baraj alanı"
+  },
+  "note": "Kızılca kapsam dışıdır; bu sınırlar panelde parsel çizimini kolaylaştırmak için aç/kapat katmanı olarak kullanılır."
+}

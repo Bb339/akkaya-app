@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64428222914863,
+            37.88960040198147
+          ],
+          [
+            34.64508758148744,
+            37.89102991456565
+          ],
+          [
+            34.642256262983736,
+            37.893144350981544
+          ],
+          [
+            34.64062818442592,
+            37.892301267212886
+          ],
+          [
+            34.641071409330664,
+            37.891917581222174
+          ],
+          [
+            34.64096158358568,
+            37.8916050612729
+          ],
+          [
+            34.64206084504209,
+            37.890648840448264
+          ],
+          [
+            34.642801933925895,
+            37.891285676521136
+          ],
+          [
+            34.644231176967956,
+            37.88963615539582
+          ],
+          [
+            34.64436351469053,
+            37.88978231713294
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_aycicegi_20 da_P8.geojson",
+        "source_label": "sazlica_sulu_aycicegi_20 da_P8.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P8",
+        "name": "P8",
+        "parcel_id": "P8",
+        "district": "Merkez",
+        "current_crop": "AYÇİÇEĞİ",
+        "crop": "AYÇİÇEĞİ",
+        "assigned_pattern": "AYÇİÇEĞİ",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 20,
+        "area_official_da": 20,
+        "farmer_id": "C008",
+        "farmer_name": "Murat Sarı"
+      },
+      "id": 1773615487409
+    }
+  ]
+}

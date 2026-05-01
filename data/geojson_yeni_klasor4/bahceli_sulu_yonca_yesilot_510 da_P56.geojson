@@ -1,0 +1,91 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P56",
+    "name": "P56",
+    "display_name": "P56",
+    "area_da": 510,
+    "area_m2": 510000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "YONCA (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "Hüseyin Güler",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_yonca_yesilot_510 da_P56.geojson",
+    "owner_username": "C056",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T13:57:08.431Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 510,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C056",
+    "farmer_name": "Hüseyin Güler",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "YONCA (YEŞİLOT)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 568512.3,
+    "profit_tl_current": 3315000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 568512.3,
+    "assigned_profit_tl": 3315000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T13:57:15.889Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 510000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Tarla",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "YONCA (YEŞİLOT)",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_yonca_yesilot_510 da_P56.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.59270847561298,
+          37.802906919851914
+        ],
+        [
+          34.604466017311665,
+          37.797581358394105
+        ],
+        [
+          34.60772723325728,
+          37.798768618728296
+        ],
+        [
+          34.605882071603844,
+          37.80460287791863
+        ],
+        [
+          34.602406301977574,
+          37.80840168266352
+        ],
+        [
+          34.59970292560162,
+          37.81064017252314
+        ],
+        [
+          34.59270847561298,
+          37.802906919851914
+        ]
+      ]
+    ]
+  }
+}

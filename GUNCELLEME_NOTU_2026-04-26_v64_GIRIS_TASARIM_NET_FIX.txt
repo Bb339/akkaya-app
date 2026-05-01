@@ -1,0 +1,9 @@
+v64 - Giriş ekranı tasarım ve scroll düzeltmesi
+
+1) Scroll artık body/browser seviyesinde çalışacak şekilde düzenlendi. Zoom/yakınlaştırma sırasında dikey kaydırma çubuğu görünür.
+2) Login öncesinde ana panel, footer ve alt sistem içerikleri tamamen gizli kalır.
+3) Çok uzun tez başlığı doğrudan dev puntolu bloktan çıkarıldı; profesyonel ana başlık + tez başlığı açıklama bandı kurgusuna geçildi.
+4) Başlık rengi koyu lacivert, açıklama bandı akademik/kurumsal tona uygun hale getirildi.
+5) Açıklama metinleri iki yana yaslandı.
+6) Sol ve sağ kart oranları, boşluklar, logo alanları ve demo butonları yeniden dengelendi.
+7) Cache sürümleri v64 yapıldı.

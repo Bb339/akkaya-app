@@ -1,0 +1,89 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P118",
+    "name": "P118",
+    "display_name": "P118",
+    "area_da": 138.2,
+    "area_m2": 138200,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "NEKTAR",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Hacer Avcı",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "bor_ilce_merkezi_sulu_nektar_4 da_P118.geojson",
+    "owner_username": "C118",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T13:36:37.384Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 4,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C118",
+    "farmer_name": "Hacer Avcı",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "NEKTAR",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 3391.96,
+    "profit_tl_current": 40000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 3391.96,
+    "assigned_profit_tl": 40000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T13:36:39.530Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_nektar_4 da_P118.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.586945580375804,
+          37.88210687562013
+        ],
+        [
+          34.58939114823375,
+          37.88439392460264
+        ],
+        [
+          34.58670960452986,
+          37.88603716779839
+        ],
+        [
+          34.58535810650309,
+          37.886494558864996
+        ],
+        [
+          34.58443565546894,
+          37.8864776185058
+        ],
+        [
+          34.583620466182936,
+          37.88491908878607
+        ],
+        [
+          34.58417822727338,
+          37.88403816609246
+        ],
+        [
+          34.586945580375804,
+          37.88210687562013
+        ]
+      ]
+    ]
+  }
+}

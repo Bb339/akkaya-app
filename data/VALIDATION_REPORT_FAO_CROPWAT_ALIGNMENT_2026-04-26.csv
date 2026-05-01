@@ -1,0 +1,10 @@
+﻿check,status,evidence,action
+Aktif kapsam,OK,"5 köy, 179 parsel, 134919.0 da",DATA_SOURCE_NOTE v65 güncellendi
+Mevcut toplam su,OK,100700080.81 m3; 746.374 m3/da,water_allocation dosyalarıyla uyumlu
+Eşit köy payı,OK,20140016.16 m3/köy = toplam mevcut talep / aktif köy sayısı (5),Hard-coded 5 yerine aktif köy sayısı kullanıldı
+monthly_climate kapsamı,FIXED,179 parsel × 12 ay = 2148 satır,P50+ parsellerde FAO56 sıfır talep riski giderildi
+ETo kaynağı,CLARIFIED,cropwat_fao56_pm_from_advisor_or_excel_replicated_regional,CROPWAT/FAO-56 referanslı/Excel senkron veri olarak etiketlendi
+Efektif yağış,FIXED,SCS eşitliği aylık yağış toplamına uygulanacak şekilde app.py düzeltildi,Günlük uygulama kaynaklı Peff aşırı yüksekliği azaltıldı
+water_context.csv,FIXED,380100 m3 gibi eski demo değerler kaldırıldı,2024 mevcut talep referansı ve kota senaryoları yazıldı
+Veri/proxy ayrımı,ADDED,FAO_CROPWAT_DATA_PROVENANCE_2024.csv eklendi,Savunmada doğrudan/türetilmiş/proxy ayrımı kullanılacak
+Kc evre süresi yorumu,FIXED,crop_params_assumed.csv p_ini/p_dev/p_mid/p_late değerleri çoğunlukla gün cinsinden (30/45/120/45); app.py artık gün veya oran girdisini otomatik ayırt ediyor,Kc eğrisi artık tüm sezonu başlangıç Kc'siyle geçirmiyor; ini/dev/mid/late evrelerine ölçekleniyor

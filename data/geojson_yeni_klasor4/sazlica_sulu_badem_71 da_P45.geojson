@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.61635805961557,
+            37.89588038150612
+          ],
+          [
+            34.61721144676433,
+            37.89705619613777
+          ],
+          [
+            34.615527430144994,
+            37.897684486883364
+          ],
+          [
+            34.61490161274631,
+            37.8966163899796
+          ],
+          [
+            34.61433268798047,
+            37.89690361095252
+          ],
+          [
+            34.613820655847476,
+            37.89605092068358
+          ],
+          [
+            34.61595981274826,
+            37.89542261630254
+          ],
+          [
+            34.61646046604217,
+            37.8959342361394
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_badem_71 da_P45.geojson",
+        "source_label": "sazlica_sulu_badem_71 da_P45.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P45",
+        "name": "P45",
+        "parcel_id": "P45",
+        "district": "Merkez",
+        "current_crop": "BADEM",
+        "crop": "BADEM",
+        "assigned_pattern": "BADEM",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 71,
+        "area_official_da": 71,
+        "farmer_id": "C045",
+        "farmer_name": "Derya Aydın"
+      },
+      "id": 1773612779194
+    }
+  ]
+}

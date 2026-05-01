@@ -1,0 +1,26 @@
+Bu sürümde yapılan güncellemeler:
+
+1) Gereksiz arayüz sadeleştirmesi
+- Sol paneldeki 'Gelişmiş ayarlar / Canlı veri ayarları' bölümü arayüzden kaldırıldı/gizlendi.
+- Sulama yöntemi karşılaştırmasındaki 'İncelenen desen' ve 'Manuel yöntem seçimi' kutuları kaldırıldı.
+- Karşılaştırma artık otomatik hesaplanır ve tablo üzerinden okunur.
+
+2) Ekonomik dayanak bölümü düzeltmeleri
+- Küçük ekranda harflerin alt alta binmesini önlemek için ekonomik tablolar yatay kaydırmalı, sabit okunurlu bir düzene alındı.
+- Ekonomik tablolar tek sütun düzenine çekildi; dar ekranda sıkışıp bozulmuyor.
+- Katalogda gider bilgisi olan ürünlerde toplam gider hesabı artık katalog maliyetinin altına düşmüyor.
+- Bu nedenle Kabak (ÇEREZLİK) gibi ürünlerde 0 gider görünmesi engellendi.
+
+3) Benchmark / algoritma karşılaştırması düzeltmeleri
+- Backend benchmark'ın boş dönmesine yol açan eksikler düzeltildi.
+- Eksik sezon kolonları için geriye dönük uyumluluk eklendi.
+- Benchmark çağrısında GA/ABC/ACO artık backend tarafında gerçek sonuç üretebiliyor.
+- Tek sezon benchmark yolunda ABC/ACO sulama yöntemi uygulama hatası düzeltildi.
+
+4) Kod stabilitesi
+- app.py sözdizimi kontrolünden geçti.
+- script.js sözdizimi kontrolünden geçti.
+
+Not:
+- Bu ortamda tam tarayıcı-Flask uçtan uca canlı test yapılmadı.
+- Ancak backend benchmark endpoint'i Flask test client ile doğrulandı; artık boş/hatalı koşu yerine gerçek çıktı üretmektedir.

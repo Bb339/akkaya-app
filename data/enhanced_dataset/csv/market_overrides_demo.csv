@@ -1,0 +1,49 @@
+crop,year,price_tl_kg,cost_tl_da,support_tl_da,note,ekonomi_kaynak_durumu
+Armut,2024,10.2363,13809.524,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Arpa (Dane),2024,15.2556,4622.222,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Arpa (Yeşilot),2024,6.6667,7466.667,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Ayçiçeği,2024,25.0,2050.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Badem,2024,60.811,12428.571,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Barbunya fasulye (Taze),2024,4.1667,3200.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Bağ,2024,70.0,6000.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Biber (Salçalık),2024,6.3583,16277.157,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Biber (Sivri),2024,11.1111,12444.444,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Buğday (Dane),2024,14.4254,4776.955,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Buğday (Yeşilot),2024,6.0,8500.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Ceviz,2024,45.3515,13809.524,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Diğer Alan,2024,,,0.0,v18:missing_yield,missing_yield
+Domates (Salçalık),2024,5.5527,28429.723,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Domates (Sofralık),2024,6.0276,15430.574,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Elma,2024,7.9476,15190.476,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Erik,2024,5.0,18300.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Fasulye (Taze),2024,4.0,4424.365,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Fiğ (Yeşilot),2024,6.25,8000.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Hıyar (Sofralık),2024,5.2525,9244.444,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kabak,2024,19.6141,37659.134,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kabak,2024,19.6141,37659.134,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kabak,2024,19.6141,37659.134,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Karpuz,2024,4.0,13500.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kavun,2024,4.0,9300.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kayısı,2024,18.1579,13119.048,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kiraz,2024,16.7328,15880.952,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Kuru fasulye,2024,42.0,3300.0,0.0,v18:season_observed_or_derived,season_observed_or_derived
+Lahana (Beyaz),2024,4.0,23027.252,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Lahana (Kırmızı),2024,4.0,18800.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Mısır (Silajlık),2024,6.0,32800.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Nektarin,2024,21.6238,13809.524,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Nohut,2024,35.0,2500.0,0.0,v18:season_observed_or_derived,season_observed_or_derived
+Patates,2024,7.0,14000.0,0.0,v18:season_observed_or_derived,season_observed_or_derived
+Sarımsak (Kuru),2024,25.0,14953.192,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Sorgum,2024,6.0,32200.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Soğan (Kuru),2024,20.2854,22719.62,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Soğan (Kuru),2024,20.2854,22719.62,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Tritikale (Dane),2024,18.75,4800.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Tritikale (Yeşilot),2024,6.0,8500.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Vişne,2024,7.7001,13119.048,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Yonca (Yeşilot),2024,6.0,26500.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Yulaf (Dane),2024,23.1481,4444.444,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Yulaf (Yeşilot),2024,7.037,6755.556,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Çavdar (Dane),2024,21.3675,4444.444,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Çavdar (Yeşilot),2024,6.0,8100.0,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Çilek,2024,15.0376,20714.286,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18
+Şeftali,2024,10.5202,13533.333,0.0,v18:implied_from_net_profit_and_yield_v18,implied_from_net_profit_and_yield_v18

@@ -1,0 +1,29 @@
+AKKAYA 6 KÖY EŞİT SU KOTASI – V3 GÜNCELLEME NOTU
+
+Bu sürümde yapılan ana düzeltmeler:
+1) İleriye dönük projeksiyon mantığı kaldırıldı.
+   - Su bütçesi (2000–2050) sekmesi kaldırıldı.
+   - 5 yıllık plan sekmesi kaldırıldı.
+   - 15 yıllık etki sekmesi kaldırıldı.
+   - 2025–2050 projeksiyon CSV dosyaları projeden silindi.
+
+2) Optimizasyon motoru düzeltildi.
+   - Önceki sürümde Excel tabanlı eşit kota seçiminde GA / ABC / ACO fiilen aynı sonucu üretebiliyordu.
+   - Bu sürümde Excel türevi parsel×aday ürün matrisi üzerinde gerçek algoritmik arama uygulanmaktadır.
+   - Her algoritma aynı veri ve aynı kota altında farklı çözüm yolları izleyerek ürün desenini belirler.
+
+3) Planlama mantığı korunmuştur.
+   - 6 köyün mevcut toplam suyu esas alınır.
+   - Toplam su 6 köye eşit dağıtılır.
+   - Her köydeki su ilgili köyün parsellerine eşit kota olarak dağıtılır.
+   - Her parsel için bu kota altında yetiştirilebilecek ürün ve yetiştirilebilir alan hesaplanır.
+
+4) Sazlıca parselleri korunmuştur.
+   - Sazlıca’nın 49 resmi parseli veri ve harita tarafında korunmuştur.
+   - Diğer köyler veri setinde yer almakta, gerçek GeoJSON dosyaları geldikçe harita tarafına eklenebilir.
+
+Test özeti:
+- app.py Python sözdizimi doğrulandı.
+- script.js sözdizimi doğrulandı.
+- GA / ABC / ACO çıktıları aynı olmaktan çıkarıldı.
+- Benchmark mantığı çoklu tekrar için anlamlı hale getirildi.

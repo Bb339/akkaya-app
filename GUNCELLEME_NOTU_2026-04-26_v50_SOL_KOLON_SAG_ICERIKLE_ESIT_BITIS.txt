@@ -1,0 +1,1 @@
+v50: Sol kolon sağ ana içerik yüksekliğiyle senkronlandı. Sol içerik sağ içerikten uzun olduğunda sayfa yüksekliğini büyütmez; sağ içerik bittiği noktada sol kolon da biter ve sol kolon içindeki fazla içerik kendi dikey kaydırma çubuğuyla görüntülenir. Böylece sağ tarafta büyük boşluk oluşması engellendi.

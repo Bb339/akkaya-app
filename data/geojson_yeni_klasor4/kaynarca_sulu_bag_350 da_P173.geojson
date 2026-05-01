@@ -1,0 +1,101 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P173",
+    "name": "P173",
+    "display_name": "P173",
+    "area_da": 273.6,
+    "area_m2": 273600,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "BAĞ",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Büşra Güneş",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "kaynarca_sulu_bag_350 da_P173.geojson",
+    "owner_username": "C173",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:04:13.288Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 350,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C173",
+    "farmer_name": "Büşra Güneş",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "BAĞ",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 224882,
+    "profit_tl_current": 2800000,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 224882,
+    "assigned_profit_tl": 2800000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:04:15.947Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_bag_350 da_P173.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.630607285961254,
+          37.86772897433301
+        ],
+        [
+          34.6264240777832,
+          37.86186588406058
+        ],
+        [
+          34.625115484455705,
+          37.861984506117004
+        ],
+        [
+          34.623763986428926,
+          37.86284874676523
+        ],
+        [
+          34.62533000795199,
+          37.86400105186457
+        ],
+        [
+          34.62352801058298,
+          37.86513639367887
+        ],
+        [
+          34.62449336631637,
+          37.86584809156876
+        ],
+        [
+          34.62352801058298,
+          37.86628866300842
+        ],
+        [
+          34.624364652218595,
+          37.86711896356173
+        ],
+        [
+          34.625051127406806,
+          37.868881203122605
+        ],
+        [
+          34.630607285961254,
+          37.86772897433301
+        ]
+      ]
+    ]
+  }
+}

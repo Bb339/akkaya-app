@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.632026822707054,
+            37.869567750887256
+          ],
+          [
+            34.6559412275796,
+            37.86384202646403
+          ],
+          [
+            34.65007871324836,
+            37.87978134840334
+          ],
+          [
+            34.64572536232442,
+            37.886421718006744
+          ],
+          [
+            34.64276508592808,
+            37.887474960986836
+          ],
+          [
+            34.63115615212371,
+            37.86975096931407
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_diger_alan_472 da_P180.geojson",
+        "source_label": "sazlica_sulu_diger_alan_472 da_P180.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P180",
+        "name": "P180",
+        "parcel_id": "P180",
+        "district": "Merkez",
+        "current_crop": "Diğer Alan",
+        "crop": "Diğer Alan",
+        "assigned_pattern": "Diğer Alan",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 472,
+        "area_official_da": 472,
+        "farmer_id": "C180",
+        "farmer_name": "Sınıflandırılmamış alan",
+        "local_parcel_id": "P180"
+      },
+      "id": 1773614969633
+    }
+  ]
+}

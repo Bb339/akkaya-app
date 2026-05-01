@@ -1,0 +1,98 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.63847381906239,
+            37.88910114096389
+          ],
+          [
+            34.63871283510654,
+            37.89130099418064
+          ],
+          [
+            34.63746464132368,
+            37.89276752695484
+          ],
+          [
+            34.63406530131988,
+            37.895564333109675
+          ],
+          [
+            34.631688419952695,
+            37.89756497948743
+          ],
+          [
+            34.630971371364346,
+            37.8964023068327
+          ],
+          [
+            34.631011207675634,
+            37.89618233960434
+          ],
+          [
+            34.63163530547883,
+            37.89512439298748
+          ],
+          [
+            34.6323921890108,
+            37.89466350060118
+          ],
+          [
+            34.63268431952882,
+            37.89391978218606
+          ],
+          [
+            34.63175481350091,
+            37.89307130515816
+          ],
+          [
+            34.63360054830593,
+            37.892149491432065
+          ],
+          [
+            34.635233824303725,
+            37.89068294706581
+          ],
+          [
+            34.638292749905176,
+            37.888888546707506
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kavun_90 da_P30.geojson",
+        "source_label": "sazlica_sulu_kavun_90 da_P30.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P30",
+        "name": "P30",
+        "parcel_id": "P30",
+        "district": "Merkez",
+        "current_crop": "KAVUN",
+        "crop": "KAVUN",
+        "assigned_pattern": "KAVUN",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 90,
+        "area_official_da": 90,
+        "farmer_id": "C030",
+        "farmer_name": "Yakup Şahin"
+      },
+      "id": 1773614921926
+    }
+  ]
+}

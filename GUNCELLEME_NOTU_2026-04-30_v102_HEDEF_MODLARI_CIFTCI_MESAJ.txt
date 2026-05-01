@@ -1,0 +1,15 @@
+v102 - Hedef modlari, ciftci talep akisi ve alternatif desenler
+
+- Karar hedefleri ayrildi:
+  - Su tasarrufu: en dusuk su tuketimi onceliklidir; kar yalnizca baglayici/alt esik olarak kullanilir.
+  - Kar odakli: parsel su kotasi asilmadan net kar onceliklidir.
+  - Su etkin kullanim: su, kar ve TL/m3 dengesi birlikte puanlanir.
+- Python benchmark tarafinda su_tasarruf artik water_saving olarak ayrildi; water_efficiency/balanced su etkin kullanim olarak kaldi.
+- Ciftci paneline hedef + algoritma + Senaryo 1 / Senaryo 2 secimi eklendi.
+- Alternatif kartlarina Sec ve Detay aksiyonlari eklendi.
+- Secilen alternatif, ciftci-uzman mesaj alanina otomatik dusurulur; talep gonderildiginde kurum ve uzman bildirimleri olusur.
+- Kurum/uzman gelen kutusu, sadece cizim taleplerini degil ciftci mesaj ve alternatif taleplerini de gosterir.
+- Ciftci kendi mesajini geri alabilir/silebilir; kurum/uzman mesaj satirlarini silebilir, yanit/onay/iptal bildirimi gonderebilir.
+- Su tasarrufu alternatiflerine arpa, bugday, nohut, mercimek ve fig gibi dusuk su tuketimli oranli desenler eklendi.
+- Tum parsel karsilastirma siralamasi P1, P2... duzeninde ele alinir.
+- Giris ve footer logo olcegi buyutuldu; giristeki yapay zeka rozeti Disiplinlerarasi Dijital Tarim Anabilim Dali metniyle degistirildi.

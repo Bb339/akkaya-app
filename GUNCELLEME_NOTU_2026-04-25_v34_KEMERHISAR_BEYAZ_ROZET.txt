@@ -1,0 +1,1 @@
+v34: Kemerhisar çizim bekleyen parsel işaretleri turuncu uyarı görünümünden çıkarıldı; Sazlıca/Bahçeli/Kaynarca parsel rozetleriyle aynı beyaz ikon formatına alındı. Gerçek geometri çizilene kadar rozetler bilgi/çizim seçimi için kullanılır; tıklama, hover popup ve mavi seçili vurgu korunur.

@@ -1,0 +1,27 @@
+{
+  "status": "PARTIAL",
+  "version": "v37",
+  "message": "Kaynarca GeoJSONları kalıcı olarak mevcut. Bu yüklenen pakette Bor İlçe Merkezi parsel polygon GeoJSONları bulunmuyor; Bor dosyaları data/geojson_yeni_klasor4 içine eklendiğinde sistem otomatik okuyacak.",
+  "counts_by_filename": {
+    "Sazlıca": 49,
+    "Bahçeli": 31,
+    "Kaynarca": 23,
+    "Bor İlçe Merkezi": 0,
+    "Kemerhisar": 0,
+    "Diğer": 1
+  },
+  "total_geojson_files": 104,
+  "expected": {
+    "Sazlıca": 49,
+    "Bahçeli": 31,
+    "Kaynarca": 23,
+    "Bor İlçe Merkezi": 43,
+    "Kemerhisar": 35
+  },
+  "missing": {
+    "Bor İlçe Merkezi": 43,
+    "Kemerhisar": 35
+  },
+  "bor_file_status": "NOT_IN_UPLOADED_ZIP",
+  "kaynarca_file_status": "OK"
+}

@@ -1,0 +1,93 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P122",
+    "name": "P122",
+    "display_name": "P122",
+    "area_da": 4768.4,
+    "area_m2": 4768400,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "BUĞDAY (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yağışa bağlı / Kuru",
+    "farmer": "Recep Sarı",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_kuru_bugday_dane_7110 da_P122.geojson",
+    "owner_username": "C122",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:04:43.911Z",
+    "water_mode": "kuru",
+    "is_user_parcel": true,
+    "area_official_da": 7110,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C122",
+    "farmer_name": "Recep Sarı",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "BUĞDAY (Dane)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 4356794.7,
+    "profit_tl_current": 19104833.07,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 4356794.7,
+    "assigned_profit_tl": 19104833.07,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:04:46.176Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_kuru_bugday_dane_7110 da_P122.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.58679051191697,
+          37.79597033153276
+        ],
+        [
+          34.57066037632804,
+          37.776618885800055
+        ],
+        [
+          34.545861460154384,
+          37.79962066476747
+        ],
+        [
+          34.559247726324244,
+          37.80972832604338
+        ],
+        [
+          34.561822008280004,
+          37.803012651628265
+        ],
+        [
+          34.56576924061211,
+          37.79812814120072
+        ],
+        [
+          34.5708319951251,
+          37.795143003597964
+        ],
+        [
+          34.575914367586016,
+          37.792643375920505
+        ],
+        [
+          34.58679051191697,
+          37.79597033153276
+        ]
+      ]
+    ]
+  }
+}

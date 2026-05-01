@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.616299879308244,
+            37.893198400278706
+          ],
+          [
+            34.61789513255321,
+            37.89204974928883
+          ],
+          [
+            34.61604292597759,
+            37.890149368652345
+          ],
+          [
+            34.61447979143949,
+            37.890867296152464
+          ],
+          [
+            34.613344913432684,
+            37.891298049292246
+          ],
+          [
+            34.61379458194512,
+            37.892100425530984
+          ],
+          [
+            34.614982992477806,
+            37.89274232051565
+          ],
+          [
+            34.616299879308244,
+            37.89327441329786
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_seftali_596 da_P43.geojson",
+        "source_label": "sazlica_sulu_seftali_596 da_P43.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P43",
+        "name": "P43",
+        "parcel_id": "P43",
+        "district": "Merkez",
+        "current_crop": "ŞEFTALİ",
+        "crop": "ŞEFTALİ",
+        "assigned_pattern": "ŞEFTALİ",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 596,
+        "area_official_da": 596,
+        "farmer_id": "C043",
+        "farmer_name": "Nermin Işık"
+      },
+      "id": 1773612194666
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+AKKAYA 6 KÖY VERİ SENKRON NOTU - v15
+
+Bu paket, kullanıcı tarafından yüklenen 2024 Excel dosyaları esas alınarak yeniden senkronize edildi.
+Ana kaynaklar:
+- sazlica_2024_profesyonel_guncel_v12_profesyonel_duzenli (1).xlsx
+- bahceli_2024_dogruluk_odakli_son_guncel_v6.xlsx
+- bor_ilce_merkezi_2024_duzeltilmis_v4.xlsx
+- kemerhisar_2024_duzeltilmis_v5.xlsx
+- kizilca_2024_duzeltilmis_v3.xlsx
+- kaynarca_2024_duzeltilmis_v5.xlsx
+
+Güncellenen ana tablolar:
+parcel_master.csv, parcel_assumptions.csv, parsel_su_kar_ozet.csv,
+senaryo1_backend_seasons.csv, senaryo2_backend_seasons.csv,
+combined_parcel_candidate_matrix_2024.csv, equal_water_allocation_summary.csv,
+village_crop_patterns.json ve parcel_meta_map.json.
+
+Önemli karar:
+- Kaynarca verisi 23 temsilî parsel ve 10.191 da olarak Excel ile eşitlendi.
+- Sazlıca aktif ürün alanı 28.898 da olarak Excel ile eşitlendi; eski 472 da 'Diğer Alan' veri tablolarından çıkarıldı.
+- Toplam aktif temsilî parsel sayısı: 202
+- Toplam aktif alan: 188269.0 da
+- Toplam mevcut brüt su ihtiyacı: 141709014.746 m3
+- 6 köy eşit su payı: 23618169.124 m3/köy
+
+Not:
+Excel dosyalarında ürün fiyatları büyük ölçüde boş olduğundan kâr/maliyet alanları çalışabilirlik için proxy olarak korunmuştur. Alan, ürün, temsilî parsel sayısı ve su ihtiyacı değerleri yüklenen Excel kaynaklarıyla senkronize edilmiştir.

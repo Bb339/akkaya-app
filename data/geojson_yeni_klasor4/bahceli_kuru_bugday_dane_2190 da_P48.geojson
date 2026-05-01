@@ -1,0 +1,95 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P48",
+    "name": "P48",
+    "display_name": "P48",
+    "area_da": 2190,
+    "area_m2": 2190000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "BUĞDAY (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "Seda Kılıç",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bahceli_kuru_bugday_dane_2190 da_P48.geojson",
+    "owner_username": "C048",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T13:49:33.733Z",
+    "water_mode": "kuru",
+    "is_user_parcel": false,
+    "area_official_da": 2190,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C048",
+    "farmer_name": "Seda Kılıç",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "BUĞDAY (Dane)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 1342097.7,
+    "profit_tl_current": 5884611.03,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 1342097.7,
+    "assigned_profit_tl": 5884611.03,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T13:49:56.597Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 2190000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Tarla",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "BUĞDAY (Dane)",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_kuru_bugday_dane_2190 da_P48.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.60970656929903,
+          37.79037934865214
+        ],
+        [
+          34.60751812175656,
+          37.79193989612619
+        ],
+        [
+          34.60468601317219,
+          37.79740155272763
+        ],
+        [
+          34.61318233892526,
+          37.80011526920079
+        ],
+        [
+          34.61850327020497,
+          37.7981817564245
+        ],
+        [
+          34.62717123890253,
+          37.79275408172429
+        ],
+        [
+          34.632988139498174,
+          37.78840352961855
+        ],
+        [
+          34.60970656929903,
+          37.79037934865214
+        ]
+      ]
+    ]
+  }
+}

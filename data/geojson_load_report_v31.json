@@ -1,0 +1,14 @@
+{
+  "status": "OK",
+  "version": "v31",
+  "total_geojson_files": 104,
+  "parcel_counts_by_filename": {
+    "Sazlıca": 49,
+    "Bahçeli": 31,
+    "Kaynarca": 23
+  },
+  "kemerhisar_expected": 35,
+  "kemerhisar_visible_now": 0,
+  "kemerhisar_pending": 35,
+  "note": "Kemerhisar kayıtları panelden çizim için filtrelenebilir. Çizim bitirildiğinde Flask /api/save_panel_geojson endpointi dosyayı kalıcı klasöre kaydeder ve registry/meta dosyalarını günceller."
+}

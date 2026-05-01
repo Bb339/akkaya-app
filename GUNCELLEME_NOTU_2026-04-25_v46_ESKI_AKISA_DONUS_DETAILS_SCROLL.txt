@@ -1,0 +1,1 @@
+v46: Sol panel yeniden doğal akışa alındı. Bölümler tekrar normal details/summary yapısında açılır-kapanır çalışır. Sol kolon sticky/iç scroll mantığından çıkarıldı; sayfa artık aşağı doğru normal kayar. Okunabilirlik iyileştirmeleri korunurken eski kullanım hissi geri getirildi.

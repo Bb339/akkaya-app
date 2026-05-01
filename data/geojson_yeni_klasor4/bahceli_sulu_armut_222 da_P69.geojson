@@ -1,0 +1,83 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P69",
+    "name": "P69",
+    "display_name": "P69",
+    "area_da": 222,
+    "area_m2": 222000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "ARMUT",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Sultan Uçar",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "bahceli_sulu_armut_222 da_P69.geojson",
+    "owner_username": "C069",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:05:39.624Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 222,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C069",
+    "farmer_name": "Sultan Uçar",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "ARMUT",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 188242.68,
+    "profit_tl_current": 2220000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 188242.68,
+    "assigned_profit_tl": 2220000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:05:52.213Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 222000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Bahçe / çok yıllık",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "ARMUT",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_armut_222 da_P69.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.58345158880945,
+          37.83697871196335
+        ],
+        [
+          34.590982422999666,
+          37.83246935583217
+        ],
+        [
+          34.57486201934719,
+          37.82562573043597
+        ],
+        [
+          34.570853863614275,
+          37.82772783625284
+        ],
+        [
+          34.58345158880945,
+          37.83697871196335
+        ]
+      ]
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+v17 düzeltmesi
+
+- v16’daki Excel alanlarından üretilen temsili dikdörtgen/spiral GeoJSON katmanı kaldırıldı.
+- Harita varsayılan olarak sadece data/geojson_yeni_klasor4 içindeki yüklü gerçek GeoJSON dosyalarını kullanır.
+- Yaklaşık 50 adet eski/yüklü Sazlıca GeoJSON sınırı korunmuştur.
+- Excel’deki 202 kayıt sayısal analizde kalır; gerçek sınırı olmayan kayıt için haritada otomatik sahte poligon üretilmez.
+- Yeni parsel gerektiğinde panelden çizilebilir veya GeoJSON/KML import edilebilir.

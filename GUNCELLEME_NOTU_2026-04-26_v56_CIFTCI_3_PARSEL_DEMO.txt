@@ -1,0 +1,8 @@
+v56 çiftçi paneli – 3 örnek parsel kurgusu
+- Betül Demir demo çiftçi hesabı yalnızca 3 parsele sınırlandı.
+- Seçilen parseller farklı köylerden seçildi:
+  * P23  — Sazlıca      — Sebze (Salçalık Domates)
+  * P149 — Kemerhisar   — Meyve (Elma)
+  * P158 — Kaynarca     — Tarla ürünü (Buğday)
+- Çiftçi görünümünde dropdown etiketlerinden diğer çiftçi isimleri kaldırıldı.
+- Çiftçi tarafında parseller ürün tipi + ürün adı ile gösterilir.

@@ -1,0 +1,85 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P82",
+    "name": "P82",
+    "display_name": "P82",
+    "area_da": 81.5,
+    "area_m2": 81500,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "MISIR (Dane)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "İsmail Güneş",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_misir_dane_9 da_P82.geojson",
+    "owner_username": "C082",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T12:43:33.141Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 9,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C082",
+    "farmer_name": "İsmail Güneş",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "MISIR (Dane)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 8992.53,
+    "profit_tl_current": 36000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 8992.53,
+    "assigned_profit_tl": 36000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T12:43:35.130Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_misir_dane_9 da_P82.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.58240663319338,
+          37.88143950663824
+        ],
+        [
+          34.58386539296831,
+          37.88245599083229
+        ],
+        [
+          34.58240663319338,
+          37.8833708146116
+        ],
+        [
+          34.58373667887054,
+          37.88425174528823
+        ],
+        [
+          34.58669710311963,
+          37.8819138676747
+        ],
+        [
+          34.58446605875798,
+          37.880389124899004
+        ],
+        [
+          34.58240663319338,
+          37.88143950663824
+        ]
+      ]
+    ]
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P90",
+    "name": "P90",
+    "display_name": "P90",
+    "area_da": 878.6,
+    "area_m2": 878600,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "FİĞ (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Orhan Kaplan",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_sulu_fig_yesilot_900 da_P90.geojson",
+    "owner_username": "C090",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T12:57:30.487Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 900,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C090",
+    "farmer_name": "Orhan Kaplan",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "FİĞ (YEŞİLOT)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 546633,
+    "profit_tl_current": 4050000,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 546633,
+    "assigned_profit_tl": 4050000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T12:57:49.962Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_sulu_fig_yesilot_900 da_P90.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.60335098068391,
+          37.90321713612151
+        ],
+        [
+          34.60232126790163,
+          37.902353369073296
+        ],
+        [
+          34.60182786386009,
+          37.903115516995
+        ],
+        [
+          34.60013312823925,
+          37.90321713612151
+        ],
+        [
+          34.59878163021248,
+          37.90189607653163
+        ],
+        [
+          34.59485585022995,
+          37.901726708202496
+        ],
+        [
+          34.59088716554818,
+          37.90208238124347
+        ],
+        [
+          34.58636071977602,
+          37.90289534173946
+        ],
+        [
+          34.58230622569574,
+          37.901337159566346
+        ],
+        [
+          34.58168410755642,
+          37.89966038320258
+        ],
+        [
+          34.58204879750014,
+          37.89837313502377
+        ],
+        [
+          34.58385079486918,
+          37.89910144925876
+        ],
+        [
+          34.584301294211414,
+          37.89910144925876
+        ],
+        [
+          34.58520229289595,
+          37.89955875916486
+        ],
+        [
+          34.5867468620694,
+          37.89966038320258
+        ],
+        [
+          34.58829143124284,
+          37.89976200709997
+        ],
+        [
+          34.58938550107401,
+          37.8996434458727
+        ],
+        [
+          34.589728738668114,
+          37.898898199499556
+        ],
+        [
+          34.591273307841554,
+          37.89884738697204
+        ],
+        [
+          34.59404066094399,
+          37.89776337802876
+        ],
+        [
+          34.59614299120782,
+          37.89717055388524
+        ],
+        [
+          34.59513473077516,
+          37.89583244755322
+        ],
+        [
+          34.59764465568203,
+          37.89605264393815
+        ],
+        [
+          34.60041200878443,
+          37.896391406321065
+        ],
+        [
+          34.60193512560825,
+          37.8979666309217
+        ],
+        [
+          34.60279124495047,
+          37.89745870064773
+        ],
+        [
+          34.60330610134163,
+          37.89811927323196
+        ],
+        [
+          34.603499172488306,
+          37.89811927323196
+        ],
+        [
+          34.60335098068391,
+          37.90321713612151
+        ]
+      ]
+    ]
+  }
+}

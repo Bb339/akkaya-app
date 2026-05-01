@@ -1,0 +1,85 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P124",
+    "name": "P124",
+    "display_name": "P124",
+    "area_da": 53.3,
+    "area_m2": 53300,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "ÇAVDAR (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yağışa bağlı / Kuru",
+    "farmer": "Ömer Polat",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_kuru_cavdar_dane_40 da_P124.geojson",
+    "owner_username": "C124",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:55:58.944Z",
+    "water_mode": "kuru",
+    "is_user_parcel": true,
+    "area_official_da": 40,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C124",
+    "farmer_name": "Ömer Polat",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "ÇAVDAR (Dane)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 20557.6,
+    "profit_tl_current": 100000,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 20557.6,
+    "assigned_profit_tl": 100000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:56:01.919Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_kuru_cavdar_dane_40 da_P124.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.57206403486065,
+          37.82563964078617
+        ],
+        [
+          34.56872819449299,
+          37.824724100325575
+        ],
+        [
+          34.568556575695936,
+          37.82396114126536
+        ],
+        [
+          34.568438587772945,
+          37.82254540744598
+        ],
+        [
+          34.569307407933046,
+          37.822562362502666
+        ],
+        [
+          34.569790085799724,
+          37.82269800281616
+        ],
+        [
+          34.57206403486065,
+          37.82563964078617
+        ]
+      ]
+    ]
+  }
+}

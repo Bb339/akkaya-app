@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.643054325141954,
+            37.88778340141502
+          ],
+          [
+            34.64416842674551,
+            37.88960187862931
+          ],
+          [
+            34.642919862943536,
+            37.89128392860978
+          ],
+          [
+            34.6420362632553,
+            37.89058686750084
+          ],
+          [
+            34.64101820400655,
+            37.891617303125315
+          ],
+          [
+            34.64112071547122,
+            37.89195835948365
+          ],
+          [
+            34.64074949806028,
+            37.892295875057215
+          ],
+          [
+            34.63864475845676,
+            37.89123838237744
+          ],
+          [
+            34.641476076960465,
+            37.889193382754016
+          ],
+          [
+            34.642872861907684,
+            37.887644704011805
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_bugday_yesilot_20 da_P10.geojson",
+        "source_label": "sazlica_sulu_bugday_yesilot_20 da_P10.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P10",
+        "name": "P10",
+        "parcel_id": "P10",
+        "district": "Merkez",
+        "current_crop": "BUĞDAY (YEŞİLOT)",
+        "crop": "BUĞDAY (YEŞİLOT)",
+        "assigned_pattern": "BUĞDAY (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 20,
+        "area_official_da": 20,
+        "farmer_id": "C010",
+        "farmer_name": "Yusuf Polat"
+      },
+      "id": 1773615436826
+    }
+  ]
+}

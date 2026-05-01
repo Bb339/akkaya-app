@@ -1,0 +1,10 @@
+﻿field_or_model_piece,current_status,correct_interpretation,risk_if_misstated,recommended_label
+ETo,CROPWAT/FAO-56 PM reference or Excel-synced value,Hocanın CROPWAT çalışmasından/Excel'den gelen referans kabul edilir,Sıfırdan PM hesabı yaptık denirse sorgulanır,CROPWAT/FAO-56 referanslı ETo
+ETc / crop water consumption,Given values + derived/proxy for missing crops,Doğrudan olanlar korunur; eksikler benzer ürünlerle tamamlanır,Tüm ürünlerde ölçülü veri var gibi görünür,Doğrudan / Türetilmiş
+Effective rainfall,USDA-SCS monthly relation in code,Aylık yağış toplamından efektif yağış hesaplanır,Günlük uygulanırsa Peff fazla çıkar,Aylık Peff
+Net irrigation,ETc - Peff,Bitkinin kök bölgesine gereken net sulama ihtiyacı,Brüt çekişle karışır,Net sulama ihtiyacı
+Gross irrigation / reservoir withdrawal,Net irrigation / total efficiency,Randıman ve kayıplar dahil sistemden çekilmesi gereken su,Sulama yöntemi değişince bitkinin ihtiyacı değişiyor sanılır,Brüt baraj/şebeke çekişi
+Equal village quota,Derived from 2024 current total demand / active village count,Karşılaştırma senaryosu,Gerçek baraj işletme arzı sanılır,İdari eşitlik senaryosu
+Area-fair quota,Current total demand allocated by area,Ana karar modeli için daha savunulabilir dekar adaleti,Köy/parsel eşitliği ile karışır,Dekar bazlı adil kota
+Soil suitability,Proxy/heursitic,Resmi toprak analizi gelene kadar filtreleme/skorlama amaçlıdır,Gerçek toprak haritası var sanılır,Proxy toprak uygunluğu
+Future projections,Scenario placeholder unless annual ETo/rain/reservoir data entered,Gelecek verileri girilirse yeniden hesaplanır,Kesin iklim projeksiyonu iddiası oluşur,Senaryo/projeksiyon altyapısı

@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64782491024403,
+            37.89872987716153
+          ],
+          [
+            34.64801502190569,
+            37.899389700493685
+          ],
+          [
+            34.64710248893211,
+            37.90075431670178
+          ],
+          [
+            34.64655116628815,
+            37.9004993902531
+          ],
+          [
+            34.646617705891884,
+            37.899959543215175
+          ],
+          [
+            34.647682327150484,
+            37.89866989210985
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_sogan_taze_1 da_P35.geojson",
+        "source_label": "sazlica_sulu_sogan_taze_1 da_P35.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P35",
+        "name": "P35",
+        "parcel_id": "P35",
+        "district": "Merkez",
+        "current_crop": "SOĞAN (TAZE)",
+        "crop": "SOĞAN (TAZE)",
+        "assigned_pattern": "SOĞAN (TAZE)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1,
+        "area_official_da": 1,
+        "farmer_id": "C035",
+        "farmer_name": "Mahmut Sezer"
+      },
+      "id": 1773616475253
+    }
+  ]
+}

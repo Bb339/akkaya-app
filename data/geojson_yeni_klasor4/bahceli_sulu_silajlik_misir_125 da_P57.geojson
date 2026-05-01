@@ -1,0 +1,87 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P57",
+    "name": "P57",
+    "display_name": "P57",
+    "area_da": 125,
+    "area_m2": 125000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "SİLAJLIK MISIR",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yagmurlama",
+    "farmer": "İbrahim Özkan",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_silajlik_misir_125 da_P57.geojson",
+    "owner_username": "C057",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:13:14.963Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 125,
+    "area_drawn_da": 0,
+    "irrigation_current": "Yagmurlama",
+    "farmer_id": "C057",
+    "farmer_name": "İbrahim Özkan",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "SİLAJLIK MISIR",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 104510,
+    "profit_tl_current": 775000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 104510,
+    "assigned_profit_tl": 775000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:13:17.715Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 125000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Tarla",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "SİLAJLIK MISIR",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_silajlik_misir_125 da_P57.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.60501553550461,
+          37.80609350129762
+        ],
+        [
+          34.61649415741847,
+          37.80863731402883
+        ],
+        [
+          34.61882641689981,
+          37.798612785920504
+        ],
+        [
+          34.61288045231176,
+          37.80026526571949
+        ],
+        [
+          34.60785989618492,
+          37.799010186790966
+        ],
+        [
+          34.60501553550461,
+          37.80609350129762
+        ]
+      ]
+    ]
+  }
+}

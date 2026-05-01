@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P146",
+    "name": "P146",
+    "display_name": "P146",
+    "area_da": 10.5,
+    "area_m2": 10500,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "SOĞAN (KURU)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Büşra Yalçın",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_sogan_kuru_40 da_P146.geojson",
+    "owner_username": "C146",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:57:38.255Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 40,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C146",
+    "farmer_name": "Büşra Yalçın",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "SOĞAN (KURU)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 40160,
+    "profit_tl_current": 511191.44,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 40160,
+    "assigned_profit_tl": 511191.44,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:57:40.396Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_sogan_kuru_40 da_P146.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.56008790843553,
+          37.81519322587995
+        ],
+        [
+          34.561230246053384,
+          37.815689209078585
+        ],
+        [
+          34.56161102525935,
+          37.81585453607097
+        ],
+        [
+          34.56177728096899,
+          37.81543909830946
+        ],
+        [
+          34.56163247760897,
+          37.815286487932354
+        ],
+        [
+          34.56111225813043,
+          37.81505333258042
+        ],
+        [
+          34.561289240014865,
+          37.81471419620858
+        ],
+        [
+          34.560742205099295,
+          37.81449375673143
+        ],
+        [
+          34.56071002657485,
+          37.81449375673143
+        ],
+        [
+          34.56008790843553,
+          37.81519322587995
+        ]
+      ]
+    ]
+  }
+}

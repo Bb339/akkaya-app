@@ -1,0 +1,61 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P153",
+    "name": "P153",
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "area_da": 16,
+    "farmer": "Mustafa Yalçın",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "NEKTAR",
+    "assigned_water_m3": 13567.84,
+    "assigned_profit_tl": 160000,
+    "assignment_status": "approved",
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:59:43.219Z",
+    "area_official_da": 16,
+    "area_drawn_da": "",
+    "current_crop": "NEKTAR",
+    "irrigation_current": "",
+    "irrigation_key": "drip",
+    "farmer_id": "C153",
+    "farmer_name": "Mustafa Yalçın",
+    "source_label": "kemerhisar_sulu_nektar_16 da_P153.geojson",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "display_name": "P153",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_nektar_16 da_P153.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.5842,
+          37.827200000000005
+        ],
+        [
+          34.5858,
+          37.827200000000005
+        ],
+        [
+          34.5858,
+          37.8288
+        ],
+        [
+          34.5842,
+          37.8288
+        ],
+        [
+          34.5842,
+          37.827200000000005
+        ]
+      ]
+    ]
+  }
+}

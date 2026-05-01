@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.648062549168415,
+            37.8994796758858
+          ],
+          [
+            34.64843326599489,
+            37.90052188396538
+          ],
+          [
+            34.64765381092339,
+            37.901256669079515
+          ],
+          [
+            34.64701693829275,
+            37.90072432552189
+          ],
+          [
+            34.64805304462965,
+            37.89941969247491
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_sarimsak_kuru_1 da_P34.geojson",
+        "source_label": "sazlica_sulu_sarimsak_kuru_1 da_P34.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P34",
+        "name": "P34",
+        "parcel_id": "P34",
+        "district": "Merkez",
+        "current_crop": "SARIMSAK (KURU)",
+        "crop": "SARIMSAK (KURU)",
+        "assigned_pattern": "SARIMSAK (KURU)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1,
+        "area_official_da": 1,
+        "farmer_id": "C034",
+        "farmer_name": "Selim Bayram"
+      },
+      "id": 1773616512692
+    }
+  ]
+}

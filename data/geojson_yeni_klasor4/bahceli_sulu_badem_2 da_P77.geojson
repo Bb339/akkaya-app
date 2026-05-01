@@ -1,0 +1,79 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P77",
+    "name": "P77",
+    "display_name": "P77",
+    "area_da": 2,
+    "area_m2": 2000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "BADEM",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Emin Kara",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "bahceli_sulu_badem_2 da_P77.geojson",
+    "owner_username": "C077",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:34:44.640Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 2,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C077",
+    "farmer_name": "Emin Kara",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "BADEM",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 1316.54,
+    "profit_tl_current": 18000,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 1316.54,
+    "assigned_profit_tl": 18000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:34:47.562Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 2000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Bahçe / çok yıllık",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "BADEM",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_badem_2 da_P77.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.568667165165245,
+          37.853899308702715
+        ],
+        [
+          34.576391097667994,
+          37.85722105350254
+        ],
+        [
+          34.58029597465551,
+          37.85425521709063
+        ],
+        [
+          34.568667165165245,
+          37.853899308702715
+        ]
+      ]
+    ]
+  }
+}

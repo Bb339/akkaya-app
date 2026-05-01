@@ -1,0 +1,1136 @@
+﻿<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<link href="/favicon.ico" rel="icon"/>
+<meta charset="utf-8"/>
+<title>Tarımsal Karar Destek Sistemi</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="style.css?v=117" rel="stylesheet">
+<link href="ui_v10_patch.css?v=72" rel="stylesheet">
+<link href="ui_v12_patch.css?v=117" rel="stylesheet">
+<!-- Leaflet -->
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+<script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Esri Leaflet for uydu görüntüsü -->
+<script src="https://unpkg.com/esri-leaflet@3.0.11/dist/esri-leaflet.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="auth-pending"><div class="app-bg-orb app-bg-orb--one"></div><div class="app-bg-orb app-bg-orb--two"></div><div class="app-bg-grid"></div><div class="app-bg-noise"></div><div class="app-bg-particles" aria-hidden="true"></div>
+<section class="auth-screen" id="authScreen">
+  <div class="auth-media" aria-hidden="true">
+    <img class="auth-bg-gif auth-bg-gif--only" src="images/login-irrigation-sprinkler.gif" alt="" />
+    <div class="auth-bg-sheen"></div>
+    <div class="auth-bg-vignette"></div>
+  </div>
+  <div class="auth-ambient auth-ambient--one" aria-hidden="true"></div>
+  <div class="auth-ambient auth-ambient--two" aria-hidden="true"></div>
+  <div class="auth-ambient auth-ambient--three" aria-hidden="true"></div>
+  <div class="auth-shell auth-shell--institutional">
+    <div class="auth-copy auth-copy--institutional">
+      <div class="auth-logo-row">
+        <div class="auth-logo-card">
+          <img src="images/ohmu_logo_1992.png" alt="NiÄŸde Ã–mer Halisdemir Ãœniversitesi logosu" class="auth-logo auth-logo--university" />
+          <div>
+            <strong>NiÄŸde Ã–mer Halisdemir Ãœniversitesi</strong>
+            
+          </div>
+        </div>
+        <div class="auth-logo-card">
+          <img src="images/ahmet_sahenk_logo.png" alt="Ahmet Åahenk TarÄ±m Bilimleri ve Teknolojileri FakÃ¼ltesi logosu" class="auth-logo auth-logo--faculty" />
+          <div>
+            <strong>TarÄ±m Bilimleri ve Teknolojileri FakÃ¼ltesi</strong>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-study-strip">
+        <span class="auth-badge">Ã–NAP</span>
+        <span class="auth-badge">LisansÃ¼stÃ¼ tez prototipi</span>
+        <span class="auth-badge">DisiplinlerarasÄ± Dijital TarÄ±m Anabilim DalÄ±</span>
+      </div>
+
+      <div class="auth-title-block">
+        <h1>
+          <span>Yapay ZekÃ¢ Destekli</span>
+          <span>Optimum Bitki Deseni Sistemi</span>
+        </h1>
+        <p class="auth-thesis-full">Bir havzada yÄ±llÄ±k su miktarÄ±na gÃ¶re optimum bitki deseni sisteminin geliÅŸtirilmesi</p>
+      </div>
+      <p class="auth-lead">Bu giriÅŸ paneli, tez kapsamÄ±nda geliÅŸtirilen karar destek sistemini akademik, kurumsal ve anlaÅŸÄ±lÄ±r bir arayÃ¼zle sunar. Sistem; Ã§iftÃ§i kullanÄ±cÄ±larÄ± iÃ§in parsel bazlÄ± Ã¶neri ekranlarÄ±na, kurum kullanÄ±cÄ±larÄ± iÃ§in ise havza Ã¶lÃ§eÄŸinde analiz, karÅŸÄ±laÅŸtÄ±rma ve izleme panellerine dÃ¶nÃ¼ÅŸÃ¼r.</p>
+
+      <div class="auth-project-meta">
+        <div class="auth-meta-item">
+          <span>HazÄ±rlayan</span>
+          <strong>BetÃ¼l Demir</strong>
+        </div>
+        <div class="auth-meta-item">
+          <span>DanÄ±ÅŸman</span>
+          <strong>DoÃ§. Dr. YeÅŸim Dokuz</strong>
+        </div>
+        <div class="auth-meta-item">
+          <span>EÅŸ danÄ±ÅŸman</span>
+          <strong>DoÃ§. Dr. Burak Åen</strong>
+        </div>
+      </div>
+
+      <div class="auth-benefits auth-benefits--institutional">
+        <div class="auth-benefit">
+          <strong>Ã‡iftÃ§i paneli</strong>
+          <span>Kendi parselleri, mevcut Ã¼rÃ¼n bilgisi, Ã¶nerilen desen, su tasarrufu ve gelir etkisi.</span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Kurum paneli</strong>
+          <span>Havza geneli harita, senaryo karÅŸÄ±laÅŸtÄ±rmasÄ±, su bÃ¼tÃ§esi ve uzun vadeli etki analizleri.</span>
+        </div>
+        <div class="auth-benefit">
+          <strong>Karar Ã§Ä±ktÄ±larÄ±</strong>
+          <span>Su kÄ±sÄ±tÄ± altÄ±nda optimum bitki deseni, ekonomik etki ve uygulanabilir Ã¶nerilerin birlikte sunulmasÄ±.</span>
+        </div>
+      </div>
+    </div>
+
+        <div class="auth-card auth-card--institutional">
+      <div class="auth-card-head">
+        <p class="auth-kicker">Sisteme eriÅŸim</p>
+        <h2>YÃ¶netim tarafÄ±ndan aÃ§Ä±lan hesabÄ±nÄ±zla giriÅŸ yapÄ±n</h2>
+        <p>Bu prototipte aÃ§Ä±k kayÄ±t yerine <strong>kurumsal Ã¶n kayÄ±t</strong> akÄ±ÅŸÄ± kullanÄ±lÄ±r. Ã‡iftÃ§i hesaplarÄ± yÃ¶netim panelinde aÃ§Ä±lÄ±r; kullanÄ±cÄ± ilk giriÅŸte bilgi tamamlama adÄ±mÄ±nÄ± tamamlayarak kendi paneline geÃ§er.</p>
+      </div>
+
+      <div class="auth-tabbar" role="tablist" aria-label="GiriÅŸ ve bilgilendirme sekmeleri">
+        <button class="auth-tab-btn is-active" type="button" data-auth-tab="login">GiriÅŸ yap</button>
+        <button class="auth-tab-btn" type="button" data-auth-tab="register">EriÅŸim akÄ±ÅŸÄ±</button>
+      </div>
+
+      <div class="auth-panel is-active" data-auth-panel="login">
+        <div class="auth-demo-grid auth-demo-grid--four">
+          <button class="auth-demo-btn" type="button" data-demo-user="betul.demir">
+            <strong>Ã‡iftÃ§i demo (aktif)</strong>
+            <span>betul.demir / demo123</span>
+          </button>
+          <button class="auth-demo-btn" type="button" data-demo-user="ciftci.ayse">
+            <strong>Ã‡iftÃ§i demo (ilk kurulum)</strong>
+            <span>ciftci.ayse / demo123</span><small>Her giriÅŸte doÄŸrulama ekranÄ± yeniden aÃ§Ä±lÄ±r</small>
+          </button>
+          <button class="auth-demo-btn" type="button" data-demo-user="kurum.nigde">
+            <strong>Kurum demo (yÃ¶netici)</strong>
+            <span>kurum.nigde / demo123</span>
+          </button>
+          <button class="auth-demo-btn" type="button" data-demo-user="uzman.nigde">
+            <strong>Kurum demo (uzman)</strong>
+            <span>uzman.nigde / demo123</span>
+          </button>
+        </div>
+
+        <form class="auth-form" id="loginForm">
+          <label class="auth-label">KullanÄ±cÄ± adÄ±
+            <input id="loginUsername" class="text-input auth-input" type="text" autocomplete="username" placeholder="Ã–rn. betul.demir" />
+          </label>
+          <label class="auth-label">Åifre
+            <input id="loginPassword" class="text-input auth-input" type="password" autocomplete="current-password" placeholder="demo123" />
+          </label>
+          <button class="btn-primary auth-submit" type="submit">Panele giriÅŸ yap</button>
+          <div class="auth-error" id="loginError" role="alert"></div>
+        </form>
+      </div>
+
+      <div class="auth-panel" data-auth-panel="register">
+        <div class="auth-note-box auth-note-box--soft">
+          <strong>Bu sÃ¼rÃ¼mde aÃ§Ä±k kayÄ±t yok</strong>
+          <span>Ã‡iftÃ§i hesaplarÄ± yÃ¶netim tarafÄ±ndan tek tek aÃ§Ä±lÄ±r. BÃ¶ylece her kullanÄ±cÄ± iÃ§in Ã¶nceden kullanÄ±cÄ± adÄ±, geÃ§ici ÅŸifre, varsa resmi parseller ve yetkiler tanÄ±mlanabilir.</span>
+        </div>
+        <div class="auth-flow-list">
+          <div class="auth-flow-item"><strong>1. YÃ¶netim Ã¶n kayÄ±t aÃ§ar</strong><span>Ã‡iftÃ§i bilgileri, kullanÄ±cÄ± adÄ±, geÃ§ici ÅŸifre ve varsa Ã§izili arazi kaydÄ± tanÄ±mlanÄ±r.</span></div>
+          <div class="auth-flow-item"><strong>2. Ã‡iftÃ§i ilk giriÅŸ yapar</strong><span>KullanÄ±cÄ± kendisine verilen bilgilerle giriÅŸ yapar ve ana panele geÃ§meden Ã¶nce bilgi tamamlama ekranÄ±nÄ± gÃ¶rÃ¼r.</span></div>
+          <div class="auth-flow-item"><strong>3. Bilgi tamamlama yapÄ±lÄ±r</strong><span>Ã‡iftÃ§i iletiÅŸim bilgilerini doÄŸrular; eksikse parsel yÃ¼kler, haritada Ã§izer veya mevcut kayÄ±tlarÄ±nÄ± kontrol eder.</span></div>
+          <div class="auth-flow-item"><strong>4. Ã‡iftÃ§i paneli aktif olur</strong><span>Kurulum tamamlanÄ±nca kullanÄ±cÄ± kendi bitki deseni planÄ±, su ve kÃ¢r karÅŸÄ±laÅŸtÄ±rmalarÄ±nÄ± gÃ¶rÃ¼r.</span></div>
+        </div>
+      </div>
+
+      <div class="auth-note-box">
+        <strong>Bilgilendirme</strong>
+        <span>Bu ekran tez sunumu iÃ§in hazÄ±rlanmÄ±ÅŸ prototip giriÅŸidir. AÃ§Ä±k kayÄ±t yerine yÃ¶netim Ã¶n kayÄ±t + Ã§iftÃ§i ilk kurulum + rol bazlÄ± parsel yetkilendirme mantÄ±ÄŸÄ± gÃ¶sterilmektedir.</span>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="app-shell" id="panel">
+<header class="app-header">
+  <div class="header-brand">
+    <div class="header-brand-row header-brand-row--text-only">
+      <div class="header-brand-text">
+        <h1>TarÄ±msal Karar Destek Sistemi</h1>
+        <p id="sessionSubtitle">Rol bazlÄ± prototip paneli</p>
+      </div>
+    </div>
+  </div>
+  <div class="session-chip-row">
+    <div class="session-chip"><span class="k">Panel</span><strong id="sessionRoleLabel">GiriÅŸ bekleniyor</strong></div>
+    <div class="session-chip"><span class="k">KullanÄ±cÄ±</span><strong id="sessionUserLabel">â€”</strong></div>
+    <button class="header-bell-btn hidden" id="notificationBellBtn" type="button" aria-label="Bildirimler">
+      <span class="header-bell-icon">ğŸ””</span>
+      <span class="header-bell-count hidden" id="notificationBellCount">0</span>
+    </button>
+    <button class="btn-secondary header-switch-btn hidden" id="switchUserBtn" type="button">KullanÄ±cÄ± deÄŸiÅŸtir</button>
+  </div>
+  <div class="header-notification-pop hidden" id="notificationCenter"></div>
+</header>
+<section class="onboarding-shell" id="onboardingSection">
+  <div class="card onboarding-card">
+    <div class="onboarding-head">
+      <p class="auth-kicker">Ä°lk giriÅŸ / bilgi tamamlama</p>
+      <h2>HesabÄ±nÄ±z yÃ¶netim tarafÄ±ndan aÃ§Ä±ldÄ±</h2>
+      <p>Bu adÄ±mda iletiÅŸim ve iÅŸletme bilgilerinizi doÄŸrulayÄ±n. Parseliniz eksikse soldaki <strong>KullanÄ±cÄ± parsel giriÅŸi</strong> kartÄ±ndan GeoJSON/KML yÃ¼kleyebilir veya haritada Ã§izim yapabilirsiniz. Kurulum tamamlanmadan optimizasyon ve karÅŸÄ±laÅŸtÄ±rma Ã§alÄ±ÅŸtÄ±rÄ±lamaz.</p>
+      <div class="small muted">KullanÄ±cÄ± adÄ±: <strong id="onboardingUsernameLabel">â€”</strong></div>
+      <div class="small muted">Demo notu: AyÅŸe hesabÄ±nda bu adÄ±m her giriÅŸte tekrar aÃ§Ä±lÄ±r; bÃ¶ylece Ã¶n kayÄ±t â†’ doÄŸrulama â†’ kurum teyidi akÄ±ÅŸÄ± sunumda yeniden gÃ¶sterilebilir.</div>
+    </div>
+    <div class="auth-form-grid">
+      <label class="auth-label">Ad soyad
+        <input id="onboardingDisplayName" class="text-input auth-input" type="text" placeholder="Ã–rn. AyÅŸe Kaya" />
+      </label>
+      <label class="auth-label">Telefon
+        <input id="onboardingPhone" class="text-input auth-input" type="text" placeholder="Ã–rn. 05xx xxx xx xx" />
+      </label>
+    </div>
+    <div class="auth-form-grid">
+      <label class="auth-label">KÃ¶y / mevki
+        <input id="onboardingVillage" class="text-input auth-input" type="text" placeholder="SazlÄ±ca / BahÃ§eli / Kemerhisar / Bor / Kaynarca" />
+      </label>
+      <label class="auth-label">Ä°lÃ§e
+        <input id="onboardingDistrict" class="text-input auth-input" type="text" placeholder="Merkez" />
+      </label>
+    </div>
+    <div class="auth-form-grid">
+      <label class="auth-label">Yeni ÅŸifre
+        <input id="onboardingPassword" class="text-input auth-input" type="password" placeholder="En az 4 karakter" />
+      </label>
+      <label class="auth-label">Yeni ÅŸifre tekrar
+        <input id="onboardingPassword2" class="text-input auth-input" type="password" placeholder="Åifreyi tekrar girin" />
+      </label>
+    </div>
+    <label class="auth-label">Not / iÅŸletme bilgisi
+      <textarea id="onboardingNotes" class="text-input auth-input onboarding-textarea" placeholder="Ä°sterseniz sulama kaynaÄŸÄ±, iÅŸletme notu veya yÃ¶netim iÃ§in ek bilgi yazabilirsiniz."></textarea>
+    </label>
+    <div id="onboardingParcelSummary"></div>
+    <div class="algo-actions onboarding-actions">
+      <button class="btn-secondary" id="openOnboardingParcelToolsBtn" type="button">Parsel Ã§izim / yÃ¼kleme alanÄ±na git</button>
+      <button class="btn-primary" id="completeOnboardingBtn" type="button">Bilgileri kaydet ve paneli aÃ§</button>
+    </div>
+    <div class="auth-error" id="onboardingError" role="alert"></div>
+    <div class="auth-success" id="onboardingSuccess" role="status"></div>
+  </div>
+</section>
+<div class="onboarding-compact-banner" id="onboardingCompactBanner">
+  <strong>Ä°lk kurulum tamamlanmalÄ±.</strong>
+  <span>Ä°letiÅŸim ve parsel bilgilerinizi doÄŸrulamadan karar destek ekranÄ± aktif olmaz.</span>
+  <button class="btn-secondary" id="openOnboardingPanelBtn" type="button">Kurulum kartÄ±nÄ± aÃ§</button>
+</div>
+
+<main class="app-main">
+<section class="layout">
+<!-- Sol kolon -->
+<div class="left-col">
+<!-- 1) Parsel + veri kaynaÄŸÄ± -->
+
+
+<!-- 2) Optimizasyon algoritmasÄ± (aktif dosyalar ile senaryo arasÄ±na) -->
+
+<!-- Algoritma karÅŸÄ±laÅŸtÄ±rmasÄ± (benchmark) sekme olarak saÄŸ tarafta gÃ¶sterilir -->
+<!-- 3) Senaryo -->
+
+<!-- GeliÅŸmiÅŸ / opsiyonel ayarlar: katlanabilir -->
+
+
+<div class="sidebar-panel">
+<details class="sidebar-group" id="setupGroup" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">1</span><span class="sidebar-group-text"><strong>Analiz kurulumu</strong><small>Veri kaynaÄŸÄ±, algoritma ve senaryo ayarlarÄ±</small></span><span class="sidebar-group-caret">AÃ§ / kapa</span></summary><div class="sidebar-group-body"><div class="card">
+<h2 class="card-title">Parsel seÃ§</h2>
+<select class="select-input" id="parcelSelect"></select>
+<div class="algo-actions">
+<button class="btn-primary" id="runOptBtn">Optimizasyonu Ã‡alÄ±ÅŸtÄ±r</button>
+<span class="algo-status" id="algoStatus">HazÄ±r</span>
+</div>
+<div class="data-loader" data-role="institution">
+<div class="data-status">
+                Veri kaynaÄŸÄ±: <strong id="dataSourceLabel">Backend/CSV</strong>
+<span class="badge badge-warn" id="dataLoadBadge">CSV baÄŸlanmadÄ±</span>
+</div>
+<div class="data-actions data-actions--backend">
+<button class="btn-secondary" id="loadDefaultCsvBtn">Projeden CSV yÃ¼kle</button>
+<button class="btn-secondary" id="clearDataCacheBtn" title="Yerel Ã¶nbelleÄŸi temizle ve sayfayÄ± yenile">Ã–nbelleÄŸi temizle</button>
+</div>
+<div class="active-files" id="activeFilesBox">
+<div class="active-files-title">Aktif analiz verileri</div>
+<div class="active-files-badges" id="activeFilesBadges"></div>
+<div class="build-meta" id="buildMetaBox"></div>
+<p class="active-files-note" id="activeFilesNote">Bu dosyalar Python backend tarafÄ±ndan aktif olarak kullanÄ±lmaktadÄ±r.</p>
+</div>
+<div class="manual-upload-panel">
+<div class="active-files-title">Test amaÃ§lÄ± manuel veri yÃ¼kleme</div>
+<p class="card-help small">Manuel yÃ¼klenen CSV/GeoJSON dosyalarÄ± bu oturumda aktif analize alÄ±nÄ±r ve optimizasyon yerel hesap motoruyla yeniden Ã§alÄ±ÅŸÄ±r. KalÄ±cÄ± kurumsal kullanÄ±m ve Python backend Ã§Ä±ktÄ±sÄ± iÃ§in aynÄ± dosyalar backend/data klasÃ¶rÃ¼ne aktarÄ±lmalÄ±dÄ±r.</p>
+<input accept=".csv,.json,.geojson" class="file-input" id="dataFileInput" multiple="" type="file"/>
+<div class="manual-file-summary" id="manualCsvFilesSummary">HenÃ¼z manuel dosya seÃ§ilmedi.</div>
+</div>
+<div class="manual-validation-panel">
+<div class="active-files-title">Veri doÄŸrulama sonucu</div>
+<div id="manualCsvValidationBox">
+<div class="manual-validation-empty">Dosya seÃ§ildiÄŸinde satÄ±r, kolon, parsel eÅŸleÅŸmesi ve aktif analize katÄ±lÄ±m durumu burada gÃ¶sterilir.</div>
+</div>
+</div>
+<p class="card-help small">
+                Bu bÃ¶lÃ¼m, sistemde kullanÄ±lan parsel, Ã¼rÃ¼n, su bÃ¼tÃ§esi, sulama yÃ¶ntemi ve harita verilerinin aktif durumunu gÃ¶sterir. Manuel yÃ¼klenen dosyalar bu tarayÄ±cÄ± oturumunda veri kontrolÃ¼ ve senaryo testi iÃ§in hesaba katÄ±lÄ±r; kalÄ±cÄ± ve raporlanabilir Python backend Ã§alÄ±ÅŸmasÄ± iÃ§in dosyalar backend/data altÄ±nda gÃ¼ncellenmelidir.
+              </p>
+</div>
+</div><div class="card" id="algoCard" data-role="institution">
+<h2 class="card-title">Optimizasyon algoritmasÄ±</h2>
+<select class="select-input" id="algoSelect">
+<option selected="" value="ga">Genetik Algoritma (GA)</option>
+<option value="abc">Yapay ArÄ± Kolonisi AlgoritmasÄ± (ABC)</option>
+<option value="aco">KarÄ±nca Koloni Optimizasyonu (ACO)</option>
+</select>
+</div><div class="card" id="scenarioCard">
+<h2 class="card-title">Hedef ve plan modu</h2>
+<div class="radio-group">
+<label><input checked="" name="scenario" type="radio" value="mevcut"/> Mevcut gÃ¶rÃ¼nÃ¼m (referans)</label>
+<label><input name="scenario" type="radio" value="su_tasarruf"/> Su tasarrufu hedefi</label>
+<label><input name="scenario" type="radio" value="maks_kar"/> KÃ¢r odaklÄ± hedef</label>
+<label><input name="scenario" type="radio" value="balanced"/> Su etkin kullanÄ±m hedefi</label>
+</div>
+<div class="water-controls" style="padding-top:6px;">
+<div class="field-row" id="seasonSourceRow">
+<label class="field-label">Senaryo tipi</label>
+<select class="select-input" id="seasonSourceSel">
+<option value="s1">Senaryo 1 â€“ Tek Ã¼rÃ¼nlÃ¼ parsel (en iyi 1â€“2 Ã¼rÃ¼n + alternatifler)</option>
+<option value="s2">Senaryo 2 â€“ Ã‡ift Ã¼rÃ¼nlÃ¼ / desen bazlÄ± parsel (1+1 Ã¼rÃ¼n / bahÃ§ede sÄ±ra arasÄ±)</option>
+</select>
+</div>
+<p class="card-help small" style="margin-top:6px;">
+                Not: Senaryo 1, her parseli esasen tek Ã¼rÃ¼nlÃ¼ kabul eder; sistem en iyi ana Ã¶neriyi ve diÄŸer gÃ¼Ã§lÃ¼ alternatifleri sÄ±ralar. Senaryo 2, parselde 1+1 Ã¼rÃ¼n / desen yaklaÅŸÄ±mÄ±nÄ± dener; bahÃ§e-Ã§ok yÄ±llÄ±k parsellerde ana Ã¼rÃ¼n korunur, fark sÄ±ra arasÄ± ve sulama yÃ¶netiminden gelir.
+              </p>
+</div>
+<div class="water-controls">
+<div class="field-row">
+<label class="field-label">Plan yÄ±lÄ±</label>
+<select class="select-input" id="waterYear"></select>
+</div>
+<div class="data-status">
+                KullanÄ±labilir su: <strong id="availableWaterLabel">â€“</strong> mÂ³
+                <span class="badge badge-info" id="waterIndexBadge">doluluk: â€“</span>
+</div>
+<p class="card-help small">
+                Not: Bu sÃ¼rÃ¼mde mevcut toplam su talebi Ã¶nce toplam alana bÃ¶lÃ¼nerek genel mÂ³/da deÄŸeri hesaplanÄ±r. VarsayÄ±lan planlama dekar bazlÄ± adil kotadÄ±r; eÅŸit kÃ¶y payÄ± karÅŸÄ±laÅŸtÄ±rma senaryosu olarak ayrÄ±ca gÃ¶sterilir.
+              </p>
+<div class="water-allocation-explain" id="waterAllocationExplain">
+                Su daÄŸÄ±tÄ±m mantÄ±ÄŸÄ± yÃ¼kleniyorâ€¦
+              </div>
+</div>
+<p class="card-help">SeÃ§ilen hedef modu (su verimliliÄŸi / kÃ¢r) ile plan modu (S1 / S2) birlikte Ã§alÄ±ÅŸÄ±r. Su hedefi en az suyu deÄŸil, mevcut suyu daha verimli kullanmayÄ±; kÃ¢r hedefi ise su bÃ¼tÃ§esi altÄ±nda geliri bÃ¼yÃ¼tmeyi Ã¶ne Ã§Ä±karÄ±r.</p>
+</div></div></details><details class="sidebar-group" id="parcelGroup" data-role="institution"><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Parsel Ã§izim ve bilgi atama</strong><small>YalnÄ±zca kurum/uzman veri giriÅŸ ekranÄ±</small></span><span class="sidebar-group-caret">AÃ§ / kapa</span></summary><div class="sidebar-group-body"><div class="card" id="userParcelCard">
+<h2 class="card-title">Parsel Ã§izim ve bilgi atama paneli</h2>
+<p class="card-help small">Bu panel yalnÄ±zca yÃ¶netici veri giriÅŸ/Ã§izim modu iÃ§in sadeleÅŸtirildi. 180 parselin Ã¼rÃ¼n, alan, Ã§iftÃ§i, sulama ve atama bilgileri sisteme hazÄ±r girildi. Bu sÃ¼rÃ¼mde Bor Ä°lÃ§e Merkezi P79â€“P121 kayÄ±tlarÄ± Ã§izim/dÃ¼zenleme iÃ§in Ã¶ne alÄ±nmÄ±ÅŸtÄ±r; diÄŸer kÃ¶yler de aynÄ± mantÄ±kla seÃ§ilebilir.</p>
+<div class="user-parcel-actions">
+<input accept=".geojson,.json,.kml,.jpg,.jpeg,.png" class="file-input" id="customParcelFileInput" type="file"/>
+<div class="inline-actions compact-wrap">
+<button class="btn-secondary" id="startDrawParcelBtn" type="button">Haritada Ã§iz</button>
+<button class="btn-secondary" id="finishDrawParcelBtn" type="button">Ã‡izimi bitir</button>
+<button class="btn-secondary" id="clearDrawParcelBtn" type="button">Ã‡izimi temizle</button>
+<button class="btn-secondary danger-soft" id="clearSavedCustomParcelsBtn" type="button">Ã‡izimle eklenenleri sil</button>
+</div>
+</div>
+<div class="small muted" id="customParcelUploadInfo">Haritada yalnÄ±zca yÃ¼klenmiÅŸ gerÃ§ek GeoJSON sÄ±nÄ±rlarÄ± gÃ¶rÃ¼nÃ¼r. Excel kayÄ±tlarÄ± sayÄ±sal analizde kullanÄ±lÄ±r; gerÃ§ek sÄ±nÄ±r yoksa temsili dikdÃ¶rtgen Ã¼retilmez. Yeni sÄ±nÄ±r iÃ§in GeoJSON/KML yÃ¼kleyebilir veya panelde Ã§izim yapabilirsiniz.</div>
+<div class="drawing-registry-box" id="drawingRegistryBox">
+  <div class="drawing-registry-head">
+    <div>
+      <strong>Ã‡izim yapÄ±lacak hazÄ±r parsel kaydÄ±</strong>
+      <small>Parseli seÃ§in; bilgiler otomatik dolsun. Siz yalnÄ±zca polygon sÄ±nÄ±rÄ±nÄ± Ã§izin veya GeoJSON/KML iÃ§e aktarÄ±n.</small>
+    </div>
+    <span class="pill-soft" id="drawingRegistryCount">180 kayÄ±t</span>
+  </div>
+  <div class="drawing-village-toolbar" style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-top:10px;">
+    <div class="form-row" style="min-width:190px;flex:1;">
+      <label class="label">Ã‡izim kÃ¶y filtresi</label>
+      <select class="select-input" id="drawingVillageFilter">
+        <option value="">TÃ¼m kÃ¶yler</option>
+        <option value="SazlÄ±ca">SazlÄ±ca</option>
+        <option value="BahÃ§eli">BahÃ§eli</option>
+        <option value="Bor Ä°lÃ§e Merkezi" selected>Bor Ä°lÃ§e Merkezi</option>
+        <option value="Kemerhisar">Kemerhisar</option>
+        <option value="Kaynarca">Kaynarca</option>
+      </select>
+    </div>
+    <button class="btn-secondary" id="focusBorDrawingBtn" type="button">Bor Ä°lÃ§e Merkezi Ã§izimine geÃ§</button>
+    <button class="btn-secondary" id="focusKemerhisarDrawingBtn" type="button">Kemerhisar Ã§izimine geÃ§</button>
+  </div>
+  <div class="grid-2" style="margin-top:10px;">
+    <div class="form-row">
+      <label class="label">Parsel kaydÄ±</label>
+      <select class="select-input" id="drawingParcelSelect">
+        <option value="">KayÄ±tlar yÃ¼kleniyor...</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="label">Durum</label>
+      <div class="drawing-registry-status" id="drawingRegistryStatus">KayÄ±t seÃ§ilmedi</div>
+    </div>
+  </div>
+  <div class="drawing-record-preview" id="drawingRecordPreview">KayÄ±t seÃ§tiÄŸinizde parselin Ã¼rÃ¼n, Ã§iftÃ§i, alan, kota ve atama bilgileri burada gÃ¶rÃ¼necek.</div>
+</div>
+<div class="image-preview-box" id="customParcelImagePreview" style="display:none;"></div>
+<div class="grid-2" style="margin-top:10px;">
+<div class="form-row">
+<label class="label">Parsel adÄ±</label>
+<input class="text-input" id="manualParcelName" placeholder="Ã–rn. Ã‡iftÃ§i Parseli 1" type="text"/>
+</div>
+<div class="form-row">
+<label class="label">Alan (da)</label>
+<input class="text-input" id="manualParcelArea" placeholder="Harita veya dosyadan otomatik gelir" readonly="" step="0.1" type="number"/>
+<label class="small muted" style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+<input id="manualAreaOverrideToggle" type="checkbox"/>
+                  AlanÄ± elle dÃ¼zenle
+                </label>
+</div>
+</div>
+<div class="grid-2">
+<div class="form-row">
+<label class="label">KÃ¶y / mevki</label>
+<input class="text-input" id="manualParcelVillage" placeholder="SazlÄ±ca / BahÃ§eli / Kemerhisar / Bor / Kaynarca" type="text"/>
+</div>
+<div class="form-row">
+<label class="label">Ä°lÃ§e</label>
+<input class="text-input" id="manualParcelDistrict" placeholder="Merkez" type="text"/>
+</div>
+</div>
+<div class="grid-2">
+<div class="form-row">
+<label class="label">Ã‡iftÃ§i / iÅŸletme</label>
+<input class="text-input" id="manualParcelFarmer" placeholder="Ã–rn. Mehmet Demir" type="text"/>
+<div class="small muted" style="margin-top:6px;">KayÄ±tlÄ± Ã§iftÃ§i listesinden atama yapmak iÃ§in aÅŸaÄŸÄ±daki atama panelini kullanÄ±n.</div>
+</div>
+<div class="form-row">
+<label class="label">Arazi tipi</label>
+<select class="select-input" id="manualParcelType">
+<option selected="" value="auto">Otomatik algÄ±la</option>
+<option value="field">Tarla / Yem</option>
+<option value="vegetable">Sebze</option>
+<option value="orchard">Meyve / BaÄŸ / Ã§ok yÄ±llÄ±k</option>
+</select>
+</div>
+</div>
+<div class="grid-2">
+<div class="form-row">
+<label class="label">Mevcut Ã¼rÃ¼n</label>
+<input class="text-input" id="manualCurrentCrop" list="cropSuggestions" placeholder="Ã–rn. Patates" type="text"/>
+<datalist id="cropSuggestions"></datalist>
+</div>
+<div class="form-row">
+<label class="label">Mevcut sulama</label>
+<select class="select-input" id="manualIrrigation">
+<option value="surface">YÃ¼zey / KarÄ±k / Salma</option>
+<option selected="" value="sprinkler">YaÄŸmurlama</option>
+<option value="drip">Damla</option>
+<option value="pivot">Pivot / Lineer</option>
+<option value="rainfed">YaÄŸÄ±ÅŸa baÄŸlÄ± / Kuru</option>
+</select>
+</div>
+</div>
+<div class="parcel-assignment-box" id="parcelAssignmentBox" style="margin-top:12px;">
+  <div class="parcel-assignment-head">
+    <div>
+      <strong>Parsel atama ve Ã§iftÃ§i tercihi</strong>
+      <small>Ã‡izilen/yÃ¼klenen parseli Ã§iftÃ§iye ve seÃ§ilen alternatif desene baÄŸlar.</small>
+    </div>
+    <span class="pill-soft" id="assignmentStatusPill">Atama yok</span>
+  </div>
+  <div class="grid-2" style="margin-top:10px;">
+    <div class="form-row">
+      <label class="label">KayÄ±tlÄ± Ã§iftÃ§i</label>
+      <select class="select-input" id="assignmentFarmerSelect"></select>
+    </div>
+    <div class="form-row">
+      <label class="label">Ã‡iftÃ§inin seÃ§tiÄŸi alternatif</label>
+      <select class="select-input" id="assignmentAlternativeSelect"></select>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="form-row">
+      <label class="label">Onay durumu</label>
+      <select class="select-input" id="assignmentApprovalStatus">
+        <option value="draft">Taslak</option>
+        <option value="farmer_selected">Ã‡iftÃ§i tercih etti</option>
+        <option value="technical_review">Teknik onay bekliyor</option>
+        <option value="approved">OnaylandÄ±</option>
+        <option value="in_progress">Uygulamada</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="label">Atama notu</label>
+      <input class="text-input" id="assignmentNoteInput" placeholder="Ã–rn. Ã‡iftÃ§i ikinci Ã¼rÃ¼nÃ¼ tercih etti" type="text"/>
+    </div>
+  </div>
+  <div class="parcel-assignment-preview" id="assignmentPreviewBox">SeÃ§ili parsel iÃ§in alternatifler hazÄ±rlanÄ±yor.</div>
+  <div class="inline-actions compact-wrap" style="margin-top:10px;">
+    <button class="btn-primary" id="applyParcelAssignmentBtn" type="button">Alternatifi parsele ata</button>
+    <button class="btn-secondary" id="exportAssignedGeojsonBtn" type="button">Atanan GeoJSON indir</button>
+  </div>
+</div>
+<div class="algo-actions" style="margin-top:8px;">
+<button class="btn-primary" id="saveUserParcelBtn" type="button">Parsel bilgisini kaydet</button>
+<span class="algo-status" id="userParcelStatus">HazÄ±r</span>
+</div>
+<p class="card-help small" style="margin-top:8px;">AkÄ±ÅŸ: 1) HazÄ±r parsel kaydÄ±nÄ± seÃ§in. 2) Haritada doÄŸru sÄ±nÄ±rÄ± Ã§izin veya GeoJSON/KML yÃ¼kleyin. 3) Sistem seÃ§ili kaydÄ±n Ã§iftÃ§i, Ã¼rÃ¼n, sulama, kota ve atama bilgilerini otomatik baÄŸlar. 4) Popup ve seÃ§im davranÄ±ÅŸÄ± kaydedilen geometri Ã¼zerinden Ã§alÄ±ÅŸÄ±r.</p>
+<div class="request-thread-box" id="userRequestThread"></div>
+<div class="request-thread-box" id="institutionRequestInbox"></div>
+</div></div></details><details class="sidebar-group farmer-decision-group" id="farmerDecisionGroup" data-role="farmer-only" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Uzman Ã¶nerisi ve kendi parselim</strong><small>YalnÄ±zca size atanmÄ±ÅŸ karar bilgileri</small></span><span class="sidebar-group-caret">AÃ§ / kapa</span></summary><div class="sidebar-group-body"><div class="card farmer-decision-card" id="farmerDecisionCard">
+<h2 class="card-title">Kendi parsel karar Ã¶zeti</h2>
+<p class="card-help small">Bu Ã§iftÃ§i gÃ¶rÃ¼nÃ¼mÃ¼nde Ã§izim, veri kaynaÄŸÄ±, algoritma, kullanÄ±cÄ± yÃ¶netimi ve parsel atama iÅŸlemleri gÃ¶sterilmez. Kurum/uzman tarafÄ±ndan atanan desen varsa burada sade Ã¶zet olarak gÃ¶rÃ¼nÃ¼r.</p>
+<div class="farmer-assignment-summary" id="farmerAssignmentSummary">
+  <div class="small muted">Parsel seÃ§ildiÄŸinde uzman Ã¶nerisi burada gÃ¶rÃ¼necek.</div>
+</div>
+<div class="farmer-decision-actions">
+  <button class="btn-primary" id="farmerRefreshRecommendationBtn" type="button">Ã–neriyi gÃ¼ncelle</button>
+</div>
+</div></div></details><details class="sidebar-group" id="userManagementGroup" data-role="institution" data-institution-role="admin-only"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>KullanÄ±cÄ± YÃ¶netimi</strong><small>Korundu; Ã§izim modunda ayrÄ± sekmeden aÃ§Ä±lÄ±r</small></span><span class="sidebar-group-caret">AÃ§ / kapa</span></summary><div class="sidebar-group-body"><div class="card managed-user-sidebar-card" data-role="institution">
+<h2 class="card-title">KullanÄ±cÄ± yÃ¶netimi paneli</h2>
+<p class="card-help small">Bu modÃ¼l sol sÃ¼tunda sÄ±kÄ±ÅŸmasÄ±n diye ayrÄ± bir Ã§alÄ±ÅŸma alanÄ±na taÅŸÄ±ndÄ±. Ã‡iftÃ§i listesi, arama, dÃ¼zenleme, pasif yapma, ÅŸifre yenileme ve parsel atama iÅŸlemlerini saÄŸdaki geniÅŸ panelde yÃ¶netin.</p>
+<div class="managed-user-sidebar-preview" id="managedUserSidebarPreview"></div>
+<div class="algo-actions managed-user-sidebar-actions" style="margin-top:10px;">
+<button class="btn-primary" id="openUserManagementTabBtn" type="button">YÃ¶netim panelini aÃ§</button>
+<span class="algo-status">GeniÅŸ gÃ¶rÃ¼nÃ¼m</span>
+</div>
+</div></div></details><details class="sidebar-group" id="summaryGroup"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Parsel Ã¶zeti</strong><small>SeÃ§ili parsel iÃ§in hÄ±zlÄ± durum gÃ¶rÃ¼nÃ¼mÃ¼</small></span><span class="sidebar-group-caret">AÃ§ / kapa</span></summary><div class="sidebar-group-body"><div class="card" id="parcelSummary">
+<h2 class="card-title">Parsel Ã–zeti</h2>
+<div class="parcel-summary-body">
+<!-- JS ile dolduruluyor -->
+</div>
+</div></div></details></div></div>
+<!-- SaÄŸ ana kolon -->
+<div class="right-col">
+
+<!-- v72: KullanÄ±cÄ± seÃ§im yaptÄ± ama yeni optimizasyon Ã§alÄ±ÅŸtÄ±rmadÄ±ysa uyarÄ± -->
+<div class="stale-banner" id="staleBanner" style="display:none;">
+<div class="stale-banner-title">âš ï¸ SeÃ§im deÄŸiÅŸti</div>
+<div class="stale-banner-body">Ekrandaki sonuÃ§lar <b>Ã¶nceki Ã§alÄ±ÅŸtÄ±rmaya</b> aittir. Yeni sonuÃ§lar iÃ§in <b>Optimizasyonu Ã‡alÄ±ÅŸtÄ±r</b> butonuna basÄ±n.</div>
+</div>
+<div class="role-info-banner" id="roleInfoBanner"></div>
+<div class="right-top" id="overviewSection">
+<div class="card map-card">
+<div class="card-header-row">
+<h2 class="card-title">
+Parsel HaritasÄ±</h2>
+<span class="card-subtitle">Harita Ã¼zerindeki parseller tÄ±klanarak da seÃ§ilebilir.</span>
+</div>
+<div class="map-container" id="map"></div>
+</div>
+<div class="card metrics-card">
+<div class="metrics-title-row"><h2 class="card-title" id="metricsTitle">Senaryo Ã–zeti (seÃ§ili kapsam)</h2><span class="badge badge-info" id="activeObjectiveBadge">Aktif hedef: Mevcut desen</span></div>
+<div class="metrics-topnote">
+<span class="badge badge-info" id="globalBudgetBadge">KÃ¼resel su bÃ¼tÃ§esi: â€“</span>
+<span class="badge badge-warn" id="globalBudgetStatus">bÃ¼tÃ§e durumu: â€“</span>
+</div>
+<!-- v72: Karar gerekÃ§esi + koÅŸul ÅŸeffaflÄ±ÄŸÄ± -->
+<div class="runmeta-box" id="runMetaBox" style="display:none;"></div>
+
+<div class="summary-block summary-block-basin" id="basinSummaryBlock">
+<div class="summary-block-head">
+<div>
+<div class="summary-block-kicker">Genel gÃ¶rÃ¼nÃ¼m</div>
+<h3 class="summary-block-title">Genel Baraj ve Havza Ã–zeti</h3>
+</div>
+<div class="summary-block-note" id="basinSummaryNote">Akkaya Sulama AlanÄ± toplamÄ±</div>
+</div>
+<div class="summary-mini-grid">
+<div class="summary-mini-card">
+<div class="summary-mini-label">Mevcut toplam su</div>
+<div class="summary-mini-value"><span id="bWaterCurrent">â€“</span> mÂ³</div>
+<div class="summary-mini-note">Havza genel referansÄ±</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">SeÃ§ili senaryo su</div>
+<div class="summary-mini-value"><span id="bWaterScenario">â€“</span> mÂ³</div>
+<div class="metric-pill pill-water" id="bWaterDiff">â€“</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Mevcut toplam net kÃ¢r</div>
+<div class="summary-mini-value"><span id="bProfitCurrent">â€“</span> TL</div>
+<div class="summary-mini-note">Havza genel referansÄ±</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">SeÃ§ili senaryo net kÃ¢r</div>
+<div class="summary-mini-value"><span id="bProfitScenario">â€“</span> TL</div>
+<div class="metric-pill pill-profit" id="bProfitDiff">â€“</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">Mevcut su verimliliÄŸi</div>
+<div class="summary-mini-value"><span id="bEffCurrent">â€“</span></div>
+<div class="summary-mini-note">TL/mÂ³</div>
+</div>
+<div class="summary-mini-card">
+<div class="summary-mini-label">SeÃ§ili senaryo su verimliliÄŸi</div>
+<div class="summary-mini-value"><span id="bEffScenario">â€“</span></div>
+<div class="metric-pill pill-eff" id="bEffDiff">â€“</div>
+</div>
+</div>
+</div>
+
+<div class="summary-block summary-block-parcel" id="parcelSummaryBlock">
+<div class="summary-block-head">
+<div>
+<div class="summary-block-kicker">SeÃ§ili detay</div>
+<h3 class="summary-block-title" id="parcelSummaryTitle">Parsel BazlÄ± Ã–zet</h3>
+</div>
+<div class="summary-block-note" id="parcelSummaryNote">SeÃ§ili parselin Ã¶zeti</div>
+</div>
+</div>
+
+<div class="metrics-grid">
+<div class="metric">
+<div class="metric-label">Su KullanÄ±mÄ± (Mevcut)</div>
+<div class="metric-value"><span id="mWaterCurrent">â€“</span> mÂ³</div>
+<div class="metric-note">Referans durum</div>
+</div>
+<div class="metric">
+<div class="metric-label">Su KullanÄ±mÄ± (SeÃ§ili senaryo)</div>
+<div class="metric-value"><span id="mWaterScenario">â€“</span> mÂ³</div>
+<div class="metric-pill pill-water" id="mWaterDiff">â€“</div>
+</div>
+<div class="metric">
+<div class="metric-label">Toplam Net KÃ¢r (Mevcut)</div>
+<div class="metric-value"><span id="mProfitCurrent">â€“</span> TL</div>
+<div class="metric-note">Referans kÃ¢r</div>
+</div>
+<div class="metric">
+<div class="metric-label">Toplam Net KÃ¢r (SeÃ§ili senaryo)</div>
+<div class="metric-value"><span id="mProfitScenario">â€“</span> TL</div>
+<div class="metric-pill pill-profit" id="mProfitDiff">â€“</div>
+</div>
+<div class="metric">
+<div class="metric-label">Su VerimliliÄŸi (TL/mÂ³ â€“ Mevcut)</div>
+<div class="metric-value"><span id="mEffCurrent">â€“</span></div>
+<div class="metric-note">Mevcut desen</div>
+</div>
+<div class="metric">
+<div class="metric-label">Su VerimliliÄŸi (TL/mÂ³ â€“ SeÃ§ili senaryo)</div>
+<div class="metric-value"><span id="mEffScenario">â€“</span></div>
+<div class="metric-pill pill-eff" id="mEffDiff">â€“</div>
+</div>
+</div>
+<!-- Karar gerekÃ§esi: SayÄ±sal kartlarÄ±n hemen altÄ±nda, kuraklÄ±k Ã¶nerisinin Ã¼stÃ¼nde -->
+<div class="rationale-box" id="decisionRationale" style="display:none;"></div>
+<div class="drought-impact-box" id="droughtImpactBox">
+<details class="drought-impact-details">
+<summary class="drought-impact-title">KuraklÄ±k notu (yardÄ±mcÄ± kontrol)</summary>
+<div class="drought-impact-body">
+<div class="drought-impact-col">
+<div class="drought-impact-sub">KaÃ§Ä±n / azalt</div>
+<ul class="drought-impact-list" id="droughtAvoidList"></ul>
+</div>
+<div class="drought-impact-col">
+<div class="drought-impact-sub">Tercih et</div>
+<ul class="drought-impact-list" id="droughtPreferList"></ul>
+</div>
+</div>
+<div class="drought-impact-note" id="droughtImpactNote">â€”</div>
+</details>
+</div>
+</div>
+</div>
+<div class="card drought-details-card" id="waterRiskSection">
+<details class="drought-details">
+<summary class="drought-details__summary"><span class="drought-details__title">KuraklÄ±k gÃ¶stergeleri (2000â€“2025) â€“ Detay</span><span class="drought-summary-badge" id="droughtSummaryBadge">KRÄ°TÄ°K</span></summary>
+<div class="drought-details__body">
+<div class="card drought-main-container">
+<h2 class="card-title">Akkaya Sulama AlanÄ± KuraklÄ±k ve Su BÃ¼tÃ§esi GÃ¶stergeleri (2000â€“2025)</h2>
+<p class="card-help small">Grafik Ã¼zerinde gezerek yÄ±llÄ±k deÄŸerleri gÃ¶rebilirsiniz. SeÃ§ili â€œSu yÄ±lÄ±â€ vurgulanÄ±r; kritik yÄ±llarda panel dikkat Ã§ekici biÃ§imde Ã¶ne Ã§Ä±kar.</p>
+<div class="drought-card" id="droughtAlarmCard">
+<div class="drought-card__head">
+<span class="drought-card__title">KuraklÄ±k AlarmÄ±</span>
+<span class="badge badge-warn" id="droughtAlarmLevel">â€“</span>
+</div>
+<div class="drought-layout">
+<div class="drought-chart-wrap drought-chart-wrap--main">
+<canvas height="260" id="droughtSeriesChart"></canvas>
+</div>
+<div class="drought-side">
+<div class="drought-grid drought-grid--side">
+<div class="drought-metric">
+<div class="drought-metric__label">Min doluluk</div>
+<div class="drought-metric__value drought-metric__value--big"><span id="droughtMinPct">â€“</span><span class="unit">%</span></div>
+</div>
+<div class="drought-metric">
+<div class="drought-metric__label">Ortalama</div>
+<div class="drought-metric__value drought-metric__value--big"><span id="droughtAvgPct">â€“</span><span class="unit">%</span></div>
+</div>
+<div class="drought-metric">
+<div class="drought-metric__label">Stres endeksi</div>
+<div class="drought-metric__value drought-metric__value--big"><span id="droughtStressIdx">â€“</span></div>
+</div>
+</div>
+<div class="drought-note small" id="droughtAlarmText">â€“</div>
+<div class="small muted" style="margin-top:8px;">Ä°pucu: Grafikteki noktalara gelerek yÄ±llÄ±k deÄŸerleri gÃ¶rebilirsiniz.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="right-middle">
+<div class="card small-chart-card">
+<h3 class="card-subtitle">Senaryolara GÃ¶re Toplam Su KullanÄ±mÄ±</h3>
+<canvas height="150" id="waterChart"></canvas>
+</div>
+<div class="card small-chart-card">
+<h3 class="card-subtitle">Senaryolara GÃ¶re Toplam Net KÃ¢r</h3>
+<canvas height="150" id="profitChart"></canvas>
+</div>
+<div class="card small-chart-card">
+<h3 class="card-subtitle">SeÃ§ili Parsel â€“ Ã–nerilen ÃœrÃ¼nler (Rotasyon)</h3>
+<div aria-label="Ã–nerilen Ã¼rÃ¼nler" class="product-cards" id="productCards"></div>
+</div>
+</div>
+<div class="tabs" id="analysisTables">
+<button class="tab" data-tab="users" data-role="institution" data-institution-role="admin-only">KullanÄ±cÄ± yÃ¶netimi</button>
+<button class="tab active" data-tab="parcel">Parsel dÃ¼zeyi desen</button>
+<button class="tab" data-tab="drawing" data-role="institution">Parsel Ã§izim / bilgi atama</button>
+<button class="tab" data-tab="district" data-role="institution">Ä°lÃ§e / il dÃ¼zeyi Ã¶zet</button>
+<button class="tab" data-tab="official" data-role="institution">ResmÃ® tablolar (Ã¶zet)</button>
+<button class="tab" data-tab="benchmark" data-role="institution">Algoritma karÅŸÄ±laÅŸtÄ±rmasÄ±</button>
+</div>
+<div class="tab-panels">
+<div class="tab-panel" id="tab-users" data-role="institution" data-institution-role="admin-only">
+<div class="management-workspace-shell">
+  <div class="management-workspace-head management-workspace-head--hero">
+    <div>
+      <div class="small muted">Kurumsal Ã§alÄ±ÅŸma alanÄ±</div>
+      <h2 class="card-title" style="margin-top:4px;">Ã‡iftÃ§i kullanÄ±cÄ± yÃ¶netim modÃ¼lÃ¼</h2>
+      <p class="card-help small" style="margin-top:6px;">Bu sÃ¼rÃ¼mde gÃ¶rÃ¼nÃ¼m tablo + saÄŸ detay paneli mantÄ±ÄŸÄ±yla yeniden dÃ¼zenlendi. BÃ¶ylece Ã§ok sayÄ±da hesabÄ± daha rahat tarayabilir, satÄ±r seÃ§ip saÄŸdaki detay Ã§ekmecesinde kayÄ±t iÅŸlemlerini yapabilirsiniz. AyrÄ±ca Ã§iftÃ§i tarafÄ±ndan bildirilen yeni parseller burada incelenip onaylanÄ±r.</p>
+    </div>
+    <div class="management-workspace-actions">
+      <span class="badge badge-info">Kurumsal modÃ¼l</span>
+      <button class="btn-secondary" id="managedUserWorkspaceNewBtn" type="button">Yeni kayÄ±t baÅŸlat</button>
+    </div>
+  </div>
+  <div class="card managed-user-card-v15" id="managedUserCard" data-role="institution" data-institution-role="admin-only">
+    <div class="managed-user-overview managed-user-overview--top" id="managedUsersOverview"></div>
+    <div class="managed-user-hub">
+      <div class="managed-user-main-panel">
+        <div class="managed-user-toolbar managed-user-toolbar--table">
+          <div class="form-row managed-user-toolbar-field">
+            <label class="label">Ã‡iftÃ§i ara</label>
+            <input class="text-input" id="managedUserSearch" placeholder="Ad, kullanÄ±cÄ± adÄ±, telefon, kÃ¶y veya parsel ile ara" type="text"/>
+          </div>
+          <div class="form-row managed-user-toolbar-field">
+            <label class="label">Durum filtresi</label>
+            <select class="select-input" id="managedUserStatusFilter">
+              <option value="all">TÃ¼mÃ¼</option>
+              <option value="pending_setup">Ä°lk kurulum bekleyenler</option>
+              <option value="active">Aktif hesaplar</option>
+              <option value="passive">Pasif hesaplar</option>
+            </select>
+          </div>
+          <div class="managed-user-toolbar-actions">
+            <button class="btn-secondary" id="managedUserNewBtn" type="button">Yeni kayÄ±t</button>
+          </div>
+        </div>
+        <div class="managed-user-table-shell">
+          <div class="managed-user-table-headline">
+            <div>
+              <h3 class="card-subtitle" style="margin:0;">Ã‡iftÃ§i hesap listesi</h3>
+              <div class="small muted managed-user-list-meta" id="managedUsersListMeta">Liste hazÄ±rlanÄ±yorâ€¦</div>
+            </div>
+            <div class="mini-tag">SatÄ±ra tÄ±klayÄ±n â€¢ detay saÄŸda aÃ§Ä±lÄ±r</div>
+          </div>
+          <div class="managed-user-table-wrap">
+            <table class="managed-user-table">
+              <thead>
+                <tr>
+                  <th>Ã‡iftÃ§i</th>
+                  <th>Durum</th>
+                  <th>Parsel atama</th>
+                  <th>Ä°lk kurulum</th>
+                  <th>Not / son iÅŸlem</th>
+                  <th class="ta-right">HÄ±zlÄ± iÅŸlemler</th>
+                </tr>
+              </thead>
+              <tbody id="managedUsersList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <aside class="managed-user-detail-panel">
+        <div class="managed-user-detail-card">
+          <div class="managed-user-drawer-hero">
+            <div>
+              <div class="small muted">SeÃ§ili kayÄ±t / form</div>
+              <h3 id="managedUserDrawerTitle">Yeni Ã§iftÃ§i hesabÄ±</h3>
+              <p class="card-help small" id="managedUserDrawerSubtitle">Sol taraftan satÄ±r seÃ§ebilir veya doÄŸrudan yeni kayÄ±t oluÅŸturabilirsiniz.</p>
+            </div>
+            <span class="mini-tag">Detay paneli</span>
+          </div>
+          <div class="managed-user-drawer-summary" id="managedUserDrawerSummary"></div>
+          <div class="managed-user-drawer-actions" id="managedUserDrawerQuickActions"></div>
+          <div class="managed-user-notify-box" id="managedUserNotifications"></div>
+          <div class="managed-user-form-panel managed-user-form-panel--drawer">
+            <div class="managed-user-form-head">
+              <div>
+                <div class="small muted">YÃ¶netim formu</div>
+                <h3 id="managedUserFormTitle">Yeni Ã§iftÃ§i hesabÄ±</h3>
+              </div>
+              <div class="managed-user-form-badges">
+                <span class="managed-user-status pending" id="managedUserAccountStatusBadge">Ä°lk kurulum bekliyor</span>
+                <span class="mini-tag" id="managedUserSetupBadge">Ä°lk kurulum: Bekliyor</span>
+              </div>
+            </div>
+            <input id="managedUserEditUsername" type="hidden"/>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">Ã‡iftÃ§i adÄ±</label>
+                <input class="text-input" id="managedUserDisplayName" placeholder="Ã–rn. Mehmet YÄ±lmaz" type="text"/>
+              </div>
+              <div class="form-row">
+                <label class="label">KullanÄ±cÄ± adÄ±</label>
+                <input class="text-input" id="managedUserUsername" placeholder="Ã–rn. mehmet.yilmaz" type="text"/>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">GeÃ§ici / yeni ÅŸifre</label>
+                <input class="text-input" id="managedUserPassword" placeholder="BoÅŸ bÄ±rakÄ±lÄ±rsa yeni kayÄ±tta demo123 atanÄ±r" type="text"/>
+              </div>
+              <div class="form-row">
+                <label class="label">Telefon</label>
+                <input class="text-input" id="managedUserPhone" placeholder="Ã–rn. 05xx xxx xx xx" type="text"/>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">KÃ¶y / mevki</label>
+                <input class="text-input" id="managedUserVillage" placeholder="SazlÄ±ca / BahÃ§eli / Kemerhisar / Bor / Kaynarca" type="text"/>
+              </div>
+              <div class="form-row">
+                <label class="label">Ä°lÃ§e</label>
+                <input class="text-input" id="managedUserDistrict" placeholder="Merkez" type="text"/>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-row">
+                <label class="label">Hesap durumu</label>
+                <select class="select-input" id="managedUserAccountStatus">
+                  <option value="pending_setup">Ä°lk kurulum bekliyor</option>
+                  <option value="active">Aktif</option>
+                  <option value="passive">Pasif</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label class="label">Ä°lk kurulum durumu</label>
+                <div class="managed-user-readonly" id="managedUserSetupState">Bekliyor</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="label">Parsel atama</label>
+              <div class="auth-parcel-picker" id="adminParcelPicker"></div>
+              <div class="small muted">Resmi parsel atamasÄ± yapÄ±lmamÄ±ÅŸsa kullanÄ±cÄ± ilk giriÅŸte kendi parselini ekleyebilir.</div>
+            </div>
+            <div class="form-row">
+              <label class="label">YÃ¶netim notu</label>
+              <textarea class="text-input onboarding-textarea" id="managedUserNotes" placeholder="Ã–rn. Ä°lk giriÅŸte Ã§izim yapmasÄ± bekleniyor."></textarea>
+            </div>
+            <div class="algo-actions managed-user-form-actions" style="margin-top:8px;">
+              <button class="btn-primary" id="saveManagedFarmerBtn" type="button">Kaydet</button>
+              <button class="btn-secondary" id="cancelManagedFarmerBtn" type="button">Temizle</button>
+              <span class="algo-status" id="managedUserCreateStatus">HazÄ±r</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-drawing" data-role="institution">
+<div class="drawing-tab-shell">
+<h2 class="card-title">Parsel Ã§izim ve bilgi atama</h2>
+<p class="card-help small">ResmÃ® parsel kaydÄ±nÄ± seÃ§ip sÄ±nÄ±r Ã§izimi, GeoJSON/KML yÃ¼kleme, Ã§iftÃ§i atamasÄ± ve seÃ§ilen alternatif desen kaydÄ±nÄ± bu Ã§alÄ±ÅŸma alanÄ±ndan yÃ¶netin. Sol panel yalnÄ±z analiz kurulumu ve hÄ±zlÄ± Ã¶zet iÃ§in sade bÄ±rakÄ±ldÄ±.</p>
+<div id="drawingTabMount"></div>
+</div>
+</div>
+
+<div class="tab-panel active" id="tab-parcel">
+<div class="tables-row">
+<div class="card table-card">
+<h3 class="card-subtitle">Mevcut ÃœrÃ¼n Deseni</h3>
+<p class="card-help small">
+                      SeÃ§ili parselde mevcut durumdaki desen ve referans deÄŸerler.
+                    </p>
+<table class="data-table" id="tblCurrent">
+<thead>
+<tr>
+<th>ÃœrÃ¼n</th>
+<th>Mevsim</th>
+<th>Sulama (Mevcut)</th>
+<th>Ekim AlanÄ± (da â€“ sezon)</th>
+<th>Su (mÂ³/da)</th>
+<th>Toplam Su</th>
+<th>KÃ¢r (TL/da)</th>
+<th>Toplam KÃ¢r</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" id="tblCurrentFooter"></div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Ã–nerilen ÃœrÃ¼n Deseni (Senaryo + Algoritma)</h3>
+<p class="card-help small">
+                      SeÃ§ili senaryo ve algoritmaya gÃ¶re eÅŸit su kotasÄ± altÄ±nda Ã¶nerilen desen.
+                    </p>
+<table class="data-table" id="tblRecommended">
+<thead>
+<tr>
+<th>ÃœrÃ¼n</th>
+<th>Mevsim</th>
+<th>Sulama (Ã–neri)</th>
+<th>Ekim AlanÄ± (da â€“ sezon)</th>
+<th>Su (mÂ³/da)</th>
+<th>Toplam Su</th>
+<th>KÃ¢r (TL/da)</th>
+<th>Toplam KÃ¢r</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" id="tblRecommendedFooter"></div>
+</div>
+</div>
+<div class="tables-row" style="margin-top:14px;">
+<div class="card table-card">
+<h3 class="card-subtitle">Karar aÃ§Ä±klamasÄ± ve nedenleri</h3>
+<div class="explain-box" id="explainBox">â€”</div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Rotasyon / 2. ÃœrÃ¼n Ã–nerisi (basit kurallar)</h3>
+<div class="explain-box" id="rotationBox">â€”</div>
+</div>
+</div>
+<div class="tables-row" style="margin-top:14px;">
+<div class="card table-card">
+<h3 class="card-subtitle">Sulama yÃ¶ntemi karÅŸÄ±laÅŸtÄ±rmasÄ±</h3>
+<p class="card-help small">Mevcut kayÄ±tlÄ± yÃ¶ntem, optimizasyonun Ã¶nerdiÄŸi yÃ¶ntem ve diÄŸer sulama seÃ§enekleri aynÄ± tabloda otomatik karÅŸÄ±laÅŸtÄ±rÄ±lÄ±r. AyrÄ± manuel seÃ§im kaldÄ±rÄ±lmÄ±ÅŸtÄ±r.</p>
+<div class="explain-box" id="irrigationCompareBox">â€”</div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">Ekonomik dayanak (2024 fiyat / verim / gider)</h3>
+<p class="card-help small">2024 Ã¼rÃ¼n fiyatÄ±, verim, toplam Ã¼retim, toplam su, sulama iÅŸletme gideri ve toplam gider kalemleri aynÄ± yerde gÃ¶sterilir. BÃ¶ylece kÃ¢r deÄŸeri yalnÄ±z tek bir sayÄ± olarak deÄŸil, dayanaÄŸÄ±yla birlikte okunur.</p>
+<div class="explain-box" id="businessMetricsBox">â€”</div>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">AylÄ±k su kapasitesi ve kritik aylar</h3>
+<p class="card-help small">Ä°letim kapasitesi varsa, seÃ§ili desenin aylÄ±k su talebi ile karÅŸÄ±laÅŸtÄ±rÄ±lÄ±r. CROPWAT/FAO-56 referanslÄ± aylÄ±k ETc/ETo verisi mevcutsa onunla; yoksa ay-aÄŸÄ±rlÄ±k yaklaÅŸÄ±mÄ±yla hesaplanÄ±r.</p>
+<div class="explain-box" id="deliveryBox">â€”</div>
+</div>
+<div class="card" style="margin-top:14px;">
+<h3 class="card-subtitle">SeÃ§ili parsel iÃ§in sulama planÄ± (aylÄ±k / haftalÄ±k / gÃ¼nlÃ¼k rehber)</h3>
+<p class="card-help small">Not: Bu plan, seÃ§ili parselin iklim serisi ve Ã¼rÃ¼n takvimi Ã¼zerinden yaklaÅŸÄ±k ETc hesabÄ±yla Ã¼retilir. GÃ¼nlÃ¼k meteoroloji aÃ§Ä±lÄ±rsa daha hassas, kapalÄ±yken aylÄ±k iklim ortalamalarÄ±yla Ã§alÄ±ÅŸÄ±r.</p>
+<div class="explain-box" id="irrigPlanBox">â€”</div>
+</div>
+</div>
+<div class="tab-panel" id="tab-district" data-role="institution">
+<div class="card">
+<h3 class="card-subtitle">Ä°lÃ§e / kÃ¶y dÃ¼zeyi karar Ã¶zeti</h3>
+<p class="card-help">
+                    Bu bÃ¶lÃ¼m artÄ±k temsili sabit grafik yerine seÃ§ili kapsamdan hesaplanan gerÃ§ek Ã¶zetleri gÃ¶sterir.
+                    AmaÃ§; hangi kÃ¶yde ne kadar alan, mevcut ve Ã¶nerilen su/kÃ¢r farkÄ± ve su tahsis baskÄ±sÄ± olduÄŸunu ilk bakÄ±ÅŸta anlaÅŸÄ±lÄ±r biÃ§imde sunmaktÄ±r.
+                  </p>
+<div class="district-kpi-grid" id="districtKpiGrid"></div>
+<div class="district-note" id="districtNarrative">â€”</div>
+<div class="district-row district-row-pro">
+<div class="chart-card chart-card-tall"><div class="chart-title">KÃ¶y bazÄ±nda toplam alan ve parsel sayÄ±sÄ±</div><canvas height="200" id="districtAreaChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">KÃ¶y bazÄ±nda mevcut ve Ã¶nerilen toplam su</div><canvas height="200" id="districtIrrigChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">KÃ¶y bazÄ±nda mevcut ve Ã¶nerilen net kÃ¢r</div><canvas height="200" id="provinceShareChart"></canvas></div>
+</div>
+<div class="district-summary-table" id="districtSummaryTable"></div>
+</div>
+</div>
+<div class="tab-panel" id="tab-official" data-role="institution">
+<div class="tables-row">
+<div class="card table-card">
+<h3 class="card-subtitle">Havza Su BÃ¼tÃ§esi â€“ ResmÃ® Ã–zet</h3>
+<p class="card-help small">SeÃ§ili su yÄ±lÄ±/senaryosu Ã¼zerinden hesaplanan toplam kullanÄ±labilir su ve mevcut talep.</p>
+<table class="data-table" id="tblOfficialWater">
+<thead>
+<tr><th>GÃ¶sterge</th><th>DeÄŸer</th><th>Birim</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+<button class="btn" id="btnExportWaterCsv">CSV indir</button>
+<span class="small muted" id="officialWaterNote">â€”</span>
+</div>
+</div>
+<div class="card table-card">
+<h3 class="card-subtitle">SeÃ§ili Senaryoya GÃ¶re Optimum Bitki Deseni â€“ ResmÃ®</h3>
+<p class="card-help small">SeÃ§ili kapsam / 5 kÃ¶y parselleri iÃ§in Ã¼rÃ¼n bazÄ±nda ekim alanÄ± (sezon/dÃ¶nem bazÄ±nda), su ve kÃ¢r toplulaÅŸtÄ±rmasÄ±. Rotasyon/2. Ã¼rÃ¼n varsa aynÄ± parsel alanÄ± yÄ±l iÃ§inde birden fazla Ã¼rÃ¼nle deÄŸerlendirilebilir.</p>
+<table class="data-table" id="tblOfficialScenario">
+<thead>
+<tr>
+<th>ÃœrÃ¼n</th><th>Ekim AlanÄ± (da â€“ sezon)</th><th>Toplam Su (mÂ³)</th><th>Toplam KÃ¢r (TL)</th><th>Su VerimliliÄŸi (TL/mÂ³)</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" id="tblOfficialScenarioFooter" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+<button class="btn" id="btnExportScenarioCsv">CSV indir</button>
+<span class="small muted" id="officialScenarioNote">â€”</span>
+</div>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">Parsel BazlÄ± Ã–zet â€“ ResmÃ®</h3>
+<p class="card-help small">Her parsel iÃ§in seÃ§ili senaryo+algoritma sonucunun su/kÃ¢r Ã¶zeti (kÃ¼resel su bÃ¼tÃ§esi sonrasÄ±).</p>
+<table class="data-table" id="tblOfficialParcels">
+<thead>
+<tr>
+<th>Parsel</th><th>Alan (da)</th><th>Toplam Su (mÂ³)</th><th>Toplam KÃ¢r (TL)</th><th>Su VerimliliÄŸi (TL/mÂ³)</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+<button class="btn" id="btnExportParcelsCsv">CSV indir</button>
+<span class="small muted">Not: Bu tablolar, rapora doÄŸrudan eklenebilir/Excelâ€™e aktarÄ±labilir formatta Ã¼retilir.</span>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">TÃ¼m Parseller â€“ Mevcut vs Ã–nerilen (Åeffaf KarÅŸÄ±laÅŸtÄ±rma)</h3>
+<p class="card-help small">
+                    Ã‡iftÃ§i iÃ§in: Her parselde mevcut ekim deseni ile seÃ§ili senaryo+algoritma sonucu Ã¶nerilen desen yan yana.
+                    Her parsel satÄ±rÄ±nda "KÄ±yasla" ile alternatif Ã¼rÃ¼nlerin su/kÃ¢r karÅŸÄ±laÅŸtÄ±rmasÄ± gÃ¶rÃ¼lebilir.
+                  </p>
+<div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+<button class="btn" id="btnExportAllParcelCompareCsv">CSV indir</button>
+<span class="small muted" id="allParcelCompareNote">Not: Ã–neriler, son "Optimizasyonu Ã‡alÄ±ÅŸtÄ±r" sonucuyla senkron tutulur.</span>
+</div>
+<div style="overflow:auto;">
+<table class="data-table" id="tblOfficialAllParcelCompare">
+<thead>
+<tr>
+<th>Parsel</th>
+<th>Alan (da)</th>
+<th>Mevcut Desen (mevsim)</th>
+<th>Mevcut Su (mÂ³)</th>
+<th>Mevcut KÃ¢r (TL)</th>
+<th>Ã–nerilen Desen (mevsim)</th>
+<th>Ã–neri Su (mÂ³)</th>
+<th>Ã–neri KÃ¢r (TL)</th>
+<th>Î” Su</th>
+<th>Î” KÃ¢r</th>
+<th>Neden?</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+<div class="card table-card" style="margin-top:14px;">
+<h3 class="card-subtitle">KÃ¶y / Ä°lÃ§e bazlÄ± resmÃ® ekim desenleri (paketten Ã¶zet)</h3>
+<p class="card-help small">Bu bÃ¶lÃ¼m, veri paketindeki Excel tablolarÄ±ndan tÃ¼retilen Ã¶zetleri gÃ¶sterir (kullanÄ±lan bonuslar buradan gelir).</p>
+<div class="small" id="officialSummary"></div>
+</div>
+</div>
+<div class="tab-panel" id="tab-drought">
+<div class="card">
+<h2 class="card-title">KuraklÄ±k gÃ¶stergeleri</h2>
+<p class="card-help small">KuraklÄ±k grafikleri Ã¼st bÃ¶lÃ¼mde â€œKuraklÄ±k gÃ¶stergeleri (2000â€“2025) â€“ Detayâ€ alanÄ±nda yer almaktadÄ±r.</p>
+</div>
+</div>
+<!-- Algoritma KarÅŸÄ±laÅŸtÄ±rma Sekmesi -->
+<div class="tab-panel" id="tab-benchmark" data-role="institution">
+<div class="card" id="benchmarkSection">
+<h2 class="card-title">Algoritma karÅŸÄ±laÅŸtÄ±rmasÄ± (Benchmark)</h2>
+<div class="badge badge-info" id="benchmarkLoadedBadge" style="display:inline-block; margin-top:6px;">Benchmark sekmesi yÃ¼klendi.</div>
+<p class="card-help small" style="margin-top:-6px;">
+                    Bu bÃ¶lÃ¼m yalnÄ±zca <strong>backend benchmark</strong> sonucunu kullanÄ±r. AynÄ± veri, aynÄ± su bÃ¼tÃ§esi ve aynÄ± tekrar sayÄ±sÄ± altÄ±nda
+                    GA/ABC/ACO algoritmalarÄ±nÄ±n ortalamaâ€“medyanâ€“min/maxâ€“oynaklÄ±kâ€“uygulanabilir Ã§Ã¶zÃ¼m oranÄ± ve sÃ¼re metrikleri birlikte raporlanÄ±r.
+                    <br/><span class="muted">Not: â€œMevcut desenâ€ seÃ§iliyken algoritma kÄ±yasÄ± anlamlÄ± deÄŸildir; kÄ±yas iÃ§in Su Tasarrufu / KÃ¢r / Dengeli hedeflerinden birini seÃ§in.</span>
+</p>
+<div class="water-controls" style="padding-top:6px;">
+<div class="field-row">
+<label class="field-label">KarÅŸÄ±laÅŸtÄ±rma senaryosu</label>
+<select class="select-input" id="benchmarkSeasonSourceSel">
+<option selected="" value="use_selected">SeÃ§ili (soldaki Sezon veri seti)</option>
+<option value="s1">Senaryo-1 (tek Ã¼rÃ¼n)</option>
+<option value="s2">Senaryo-2 (Ã§ift Ã¼rÃ¼n / desen)</option>
+<option value="all">ÃœÃ§Ã¼nÃ¼ de Ã§alÄ±ÅŸtÄ±r (karÅŸÄ±laÅŸtÄ±r)</option>
+</select>
+</div>
+<div class="field-row">
+<label class="field-label">Tekrar sayÄ±sÄ±</label>
+<input class="text-input" id="benchmarkRepeats" max="120" min="10" type="number" value="50"/>
+</div>
+<div class="field-row">
+<label class="field-label">Seed (opsiyonel)</label>
+<input class="text-input" id="benchmarkSeed" placeholder="boÅŸ = rastgele" type="number"/>
+</div>
+<div class="algo-actions" style="margin-top:8px;">
+<button class="btn-secondary" id="runBenchmarkBtn">KarÅŸÄ±laÅŸtÄ±rmayÄ± Ã‡alÄ±ÅŸtÄ±r</button>
+<button class="btn-secondary" id="runBenchmarkSweepBtn">30/50/100 tekrar taramasi</button>
+<span class="algo-status" id="benchmarkStatus">HazÄ±r</span>
+</div>
+</div>
+<div class="benchmark-kpi-grid" id="benchmarkKpiGrid"></div><div class="small" id="benchmarkResults" style="margin-top:10px;"></div>
+<div class="small" id="benchmarkSweepResults" style="margin-top:10px;"></div>
+<div class="card-help small" id="objectiveCompareMatrix" style="margin-top:8px;">Kurum gÃ¶rÃ¼nÃ¼mÃ¼nde hedef modu Ã— algoritma karÅŸÄ±laÅŸtÄ±rma Ã¶zeti burada gÃ¶sterilir.</div>
+<div class="chart-grid chart-grid-benchmark" style="margin-top:10px;">
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Net kÃ¢r daÄŸÄ±lÄ±mÄ± (ort / min / max)</div>
+<canvas id="benchmarkProfitChart"></canvas>
+</div>
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Toplam su daÄŸÄ±lÄ±mÄ± (ort / min / max)</div>
+<canvas id="benchmarkWaterChart"></canvas>
+</div>
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Algoritma kalite profili (TL/m3 - uygulanabilirlik - plan farki)</div>
+<canvas id="benchmarkEffChart"></canvas>
+</div>
+<div class="chart-card chart-card-tall">
+<div class="chart-title">Sure - oynaklik - desen cesitliligi profili</div>
+<canvas id="benchmarkRuntimeChart"></canvas>
+</div>
+</div>
+<div id="benchmarkPatterns" style="margin-top:14px;"></div>
+</div>
+</div>
+</div>
+</div>
+</section></main></div>
+
+
+<section class="app-quote-band" aria-label="Tez ve kurumsal bilgi alanÄ±">
+  <div class="quote-wrap">
+    <img src="images/ohmu_logo_1992.png" alt="NiÄŸde Ã–mer Halisdemir Ãœniversitesi logosu" class="quote-logo" />
+    <div class="quote-center">
+      <p class="quote-text">â€œSuyunu koruyamayan bir tarÄ±m, topraÄŸÄ±nÄ±; topraÄŸÄ±nÄ± koruyamayan bir millet, geleceÄŸini kaybeder.â€</p>
+      <p class="quote-meta">HazÄ±rlayan: BetÃ¼l Demir â€¢ YÃ¼ksek Lisans Tezi<br>NiÄŸde Ã–mer Halisdemir Ãœniversitesi</p>
+      <div class="quote-audio">
+        <span class="quote-audio-label"><span class="music-emoji">ğŸµ</span> Ziraat MarÅŸÄ±</span>
+        <audio controls preload="none">
+          <source src="audio/ziraat_marsi.mp4" type="audio/mp4">
+          TarayÄ±cÄ±nÄ±z ses oynatmayÄ± desteklemiyor.
+        </audio>
+      </div>
+    </div>
+    <img src="images/ahmet_sahenk_logo.png" alt="TarÄ±m Bilimleri ve Teknolojileri logosu" class="quote-logo" />
+  </div>
+</section>
+
+<footer class="app-footer">
+      TarÄ±msal Karar Destek Sistemi â€¢ Ã‡iftÃ§i ve kurum iÃ§in rol bazlÄ± tez prototipi
+    </footer>
+
+<script src="script.js?v=117"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.616278936293874,
+            37.89321761576936
+          ],
+          [
+            34.61679363805891,
+            37.89348511717036
+          ],
+          [
+            34.61759899496645,
+            37.89429239251952
+          ],
+          [
+            34.61783515217228,
+            37.89425895505926
+          ],
+          [
+            34.618616287913234,
+            37.89366185880404
+          ],
+          [
+            34.61833774325009,
+            37.893470786651505
+          ],
+          [
+            34.61854362399769,
+            37.893083864540344
+          ],
+          [
+            34.61830746658395,
+            37.892907121847
+          ],
+          [
+            34.61855573458098,
+            37.8925440810049
+          ],
+          [
+            34.61788359471336,
+            37.892042508710304
+          ],
+          [
+            34.61630315756441,
+            37.89322239257105
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_erik_126 da_P39.geojson",
+        "source_label": "sazlica_sulu_erik_126 da_P39.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P39",
+        "name": "P39",
+        "parcel_id": "P39",
+        "district": "Merkez",
+        "current_crop": "ERİK",
+        "crop": "ERİK",
+        "assigned_pattern": "ERİK",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 126,
+        "area_official_da": 126,
+        "farmer_id": "C039",
+        "farmer_name": "Metin Aktaş"
+      },
+      "id": 1773612582790
+    }
+  ]
+}

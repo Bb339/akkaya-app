@@ -1,0 +1,7 @@
+V23 düzeltmesi:
+- Bahçeli GeoJSON dosyalarının kendisinde sorun yoktur; sorun eski index/cache veya eski klasörün çalıştırılması durumunda Bahçeli dosyalarının hiç fetch edilmemesiydi.
+- app.py artık JS/JSON/GeoJSON için no-cache header döndürür.
+- index.html script versiyonu v=230 yapıldı.
+- Frontend GeoJSON isteklerine cache-bust query ekler.
+- Meta eşleşme filtresi dosya listesini daraltmaz; yüklenmiş tüm parsel GeoJSON dosyaları kullanılır.
+- Bahçeli dosyaları data/geojson_yeni_klasor4 içinde kalıcıdır ve P48-P78 arası 31 dosya korunmuştur.

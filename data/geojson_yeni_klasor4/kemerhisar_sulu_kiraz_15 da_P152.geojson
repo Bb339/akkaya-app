@@ -1,0 +1,109 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P152",
+    "name": "P152",
+    "display_name": "P152",
+    "area_da": 27.8,
+    "area_m2": 27800,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "KİRAZ",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Mehmet Korkmaz",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "kemerhisar_sulu_kiraz_15 da_P152.geojson",
+    "owner_username": "C152",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T11:01:39.502Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 15,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C152",
+    "farmer_name": "Mehmet Korkmaz",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "KİRAZ",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 12158.25,
+    "profit_tl_current": 172500,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 12158.25,
+    "assigned_profit_tl": 172500,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T11:01:41.461Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_kiraz_15 da_P152.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.55589470445484,
+          37.81257132148721
+        ],
+        [
+          34.55591079371709,
+          37.81242294452807
+        ],
+        [
+          34.55656777192453,
+          37.812138907803146
+        ],
+        [
+          34.557632513098675,
+          37.81209226544356
+        ],
+        [
+          34.558107146334265,
+          37.81214949684802
+        ],
+        [
+          34.55867052732213,
+          37.813016494700655
+        ],
+        [
+          34.55901088687367,
+          37.81354335079903
+        ],
+        [
+          34.557691567371386,
+          37.813670529137966
+        ],
+        [
+          34.55758161233599,
+          37.81367771942656
+        ],
+        [
+          34.55703189587672,
+          37.81321351747513
+        ],
+        [
+          34.556672569020364,
+          37.812895569248866
+        ],
+        [
+          34.556404414649975,
+          37.81260941467456
+        ],
+        [
+          34.55589470445484,
+          37.81257132148721
+        ]
+      ]
+    ]
+  }
+}

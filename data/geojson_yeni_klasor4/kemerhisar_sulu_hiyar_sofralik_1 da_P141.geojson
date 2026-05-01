@@ -1,0 +1,113 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P141",
+    "name": "P141",
+    "display_name": "P141",
+    "area_da": 29.3,
+    "area_m2": 29300,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "HIYAR (SOFRALIK)",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Nuri Çetin",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_hiyar_sofralik_1 da_P141.geojson",
+    "owner_username": "C141",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T11:12:24.441Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 1,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C141",
+    "farmer_name": "Nuri Çetin",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "HIYAR (SOFRALIK)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 626.19,
+    "profit_tl_current": 5200,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 626.19,
+    "assigned_profit_tl": 5200,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T11:12:26.817Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_hiyar_sofralik_1 da_P141.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.55672544841795,
+          37.82204414225487
+        ],
+        [
+          34.55866420451585,
+          37.82249557237708
+        ],
+        [
+          34.55868833840921,
+          37.82245742345944
+        ],
+        [
+          34.5582083420862,
+          37.822169186555804
+        ],
+        [
+          34.55769884878246,
+          37.82207593319894
+        ],
+        [
+          34.55765862562689,
+          37.82191697834173
+        ],
+        [
+          34.55817348201805,
+          37.821669008080946
+        ],
+        [
+          34.558310240746955,
+          37.82186611271513
+        ],
+        [
+          34.559468667627016,
+          37.82205685863415
+        ],
+        [
+          34.559734140453735,
+          37.82117306506005
+        ],
+        [
+          34.56017927271671,
+          37.82108408204935
+        ],
+        [
+          34.557387785720955,
+          37.82077040658718
+        ],
+        [
+          34.557216166923894,
+          37.82123456102087
+        ],
+        [
+          34.55672544841795,
+          37.82204414225487
+        ]
+      ]
+    ]
+  }
+}

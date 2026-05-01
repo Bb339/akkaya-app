@@ -1,0 +1,77 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P177",
+    "name": "P177",
+    "display_name": "P177",
+    "area_da": 467.7,
+    "area_m2": 467700,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "KİRAZ",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Neslihan Uzun",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "kaynarca_sulu_kiraz_3 da_P177.geojson",
+    "owner_username": "C177",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:28:28.463Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 3,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C177",
+    "farmer_name": "Neslihan Uzun",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "KİRAZ",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 2431.65,
+    "profit_tl_current": 34500,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 2431.65,
+    "assigned_profit_tl": 34500,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:28:30.667Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_kiraz_3 da_P177.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.59823708962518,
+          37.847226372342206
+        ],
+        [
+          34.60519837708049,
+          37.850048391309954
+        ],
+        [
+          34.610376068802466,
+          37.851831098369466
+        ],
+        [
+          34.607997549439396,
+          37.84323556576613
+        ],
+        [
+          34.59823708962518,
+          37.847226372342206
+        ]
+      ]
+    ]
+  }
+}

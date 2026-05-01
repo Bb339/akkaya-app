@@ -1,0 +1,85 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P170",
+    "name": "P170",
+    "display_name": "P170",
+    "area_da": 312.5,
+    "area_m2": 312500,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "SİVRİ BİBER",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Nermin Köse",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "kaynarca_sulu_sivri_biber_2 da_P170.geojson",
+    "owner_username": "C170",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:29:44.402Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 2,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C170",
+    "farmer_name": "Nermin Köse",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "SİVRİ BİBER",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 1396.18,
+    "profit_tl_current": 14000,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 1396.18,
+    "assigned_profit_tl": 14000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:29:46.574Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_sivri_biber_2 da_P170.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.58803649508561,
+          37.87233239976211
+        ],
+        [
+          34.59279891670376,
+          37.87853350179485
+        ],
+        [
+          34.59495821971428,
+          37.871786140667126
+        ],
+        [
+          34.59528000495877,
+          37.87073985726331
+        ],
+        [
+          34.59466861299427,
+          37.86983758474501
+        ],
+        [
+          34.59334374563373,
+          37.86976348821007
+        ],
+        [
+          34.58803649508561,
+          37.87233239976211
+        ]
+      ]
+    ]
+  }
+}

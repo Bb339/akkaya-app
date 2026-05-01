@@ -1,0 +1,118 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.62958510253555,
+            37.90412732431122
+          ],
+          [
+            34.63058666675507,
+            37.90673421608382
+          ],
+          [
+            34.63362474649231,
+            37.90769531904442
+          ],
+          [
+            34.63430914922478,
+            37.90703703105906
+          ],
+          [
+            34.63556110421263,
+            37.90786647361584
+          ],
+          [
+            34.63913335256519,
+            37.90815611812434
+          ],
+          [
+            34.63848233519209,
+            37.907629491143695
+          ],
+          [
+            34.63848233519209,
+            37.90657622542271
+          ],
+          [
+            34.639684212713995,
+            37.90558877486224
+          ],
+          [
+            34.64076924090503,
+            37.905338618743144
+          ],
+          [
+            34.64202119589289,
+            37.90558877486224
+          ],
+          [
+            34.64295598939368,
+            37.9047593064042
+          ],
+          [
+            34.638716032707634,
+            37.902534178068464
+          ],
+          [
+            34.635594489571986,
+            37.90278434326902
+          ],
+          [
+            34.63552771885326,
+            37.902995009468995
+          ],
+          [
+            34.633457819122384,
+            37.90300817552139
+          ],
+          [
+            34.63195547222,
+            37.90324517310303
+          ],
+          [
+            34.63055328196881,
+            37.9034821699214
+          ],
+          [
+            34.629668565933954,
+            37.9041799895046
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_yonca_yesilot_1650 da_P16.geojson",
+        "source_label": "sazlica_sulu_yonca_yesilot_1650 da_P16.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P16",
+        "name": "P16",
+        "parcel_id": "P16",
+        "district": "Merkez",
+        "current_crop": "YONCA (YEŞİLOT)",
+        "crop": "YONCA (YEŞİLOT)",
+        "assigned_pattern": "YONCA (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1650,
+        "area_official_da": 1650,
+        "farmer_id": "C016",
+        "farmer_name": "Elif Arslan"
+      },
+      "id": 1773613932087
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P63",
+    "name": "P63",
+    "display_name": "P63",
+    "area_da": 16,
+    "area_m2": 16000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "HIYAR (SOFRALIK)",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Emine Duran",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_hiyar_sofralik_16 da_P63.geojson",
+    "owner_username": "C063",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:36:37.468Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 16,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C063",
+    "farmer_name": "Emine Duran",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "HIYAR (SOFRALIK)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 10019.04,
+    "profit_tl_current": 83200,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 10019.04,
+    "assigned_profit_tl": 83200,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:36:42.130Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 16000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Sebze",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "HIYAR (SOFRALIK)",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_hiyar_sofralik_16 da_P63.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.61469395941492,
+          37.81558265844927
+        ],
+        [
+          34.61501578993584,
+          37.81782093060019
+        ],
+        [
+          34.61647475496414,
+          37.817634410513016
+        ],
+        [
+          34.61819118440924,
+          37.81824483813643
+        ],
+        [
+          34.61829846124953,
+          37.81912655801414
+        ],
+        [
+          34.620787283944864,
+          37.8197878410107
+        ],
+        [
+          34.62529291123816,
+          37.8164644101253
+        ],
+        [
+          34.622739722438624,
+          37.8152265634408
+        ],
+        [
+          34.62445615188372,
+          37.81271689276754
+        ],
+        [
+          34.61965014943751,
+          37.81381912350196
+        ],
+        [
+          34.61656057643639,
+          37.8147178533063
+        ],
+        [
+          34.61469395941492,
+          37.81558265844927
+        ]
+      ]
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.637688359774074,
+            37.89881779071308
+          ],
+          [
+            34.63888628214431,
+            37.89881779071308
+          ],
+          [
+            34.643110534371274,
+            37.9009761685744
+          ],
+          [
+            34.64178651454486,
+            37.90245815226341
+          ],
+          [
+            34.64130734576994,
+            37.90222939121122
+          ],
+          [
+            34.64072729972275,
+            37.9028559946976
+          ],
+          [
+            34.64106776181539,
+            37.90318421329586
+          ],
+          [
+            34.64119385840572,
+            37.90345275508453
+          ],
+          [
+            34.64096688367729,
+            37.90368151165106
+          ],
+          [
+            34.638760185553984,
+            37.90252777446479
+          ],
+          [
+            34.63744877538661,
+            37.89982238948802
+          ],
+          [
+            34.637713579525055,
+            37.89881779071308
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_kabak_sakiz_11 da_P26.geojson",
+        "source_label": "sazlica_sulu_kabak_sakiz_11 da_P26.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P26",
+        "name": "P26",
+        "parcel_id": "P26",
+        "district": "Merkez",
+        "current_crop": "KABAK (SAKIZ)",
+        "crop": "KABAK (SAKIZ)",
+        "assigned_pattern": "KABAK (SAKIZ)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 11,
+        "area_official_da": 11,
+        "farmer_id": "C026",
+        "farmer_name": "Halil Karaca"
+      },
+      "id": 1773615650906
+    }
+  ]
+}

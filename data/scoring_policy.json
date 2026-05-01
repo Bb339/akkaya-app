@@ -1,0 +1,16 @@
+{
+  "water_efficiency": {
+    "water_weight": 0.4,
+    "profit_weight": 0.2,
+    "tl_per_m3_weight": 0.25,
+    "peak_penalty_weight": 0.1,
+    "risk_penalty_weight": 0.05
+  },
+  "profit_goal": {
+    "water_weight": 0.15,
+    "profit_weight": 0.45,
+    "tl_per_m3_weight": 0.2,
+    "peak_penalty_weight": 0.1,
+    "risk_penalty_weight": 0.1
+  }
+}

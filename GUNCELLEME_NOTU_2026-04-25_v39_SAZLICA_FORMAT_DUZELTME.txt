@@ -1,0 +1,7 @@
+v39 düzeltmesi
+
+- Sazlıca GeoJSON dosyaları diğer köylerle aynı parsel rozet formatına getirildi.
+- Dosya adlarına P kodu eklendi; artık haritada uzun dosya adı yerine P1, P2... etiketi görünür.
+- Sazlıca popup içerikleri parcel_master/parcel_meta_map üzerinden alan, ürün, sulama, çiftçi, atanan desen ve durum bilgisiyle doldurulur.
+- Bor İlçe Merkezi, Kemerhisar, Kaynarca, Bahçeli ve Sazlıca dosyaları aynı bundle yapısından okunur.
+- Köy sınırı ve baraj katmanları parsel katmanına karışmaz.

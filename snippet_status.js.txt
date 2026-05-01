@@ -1,0 +1,26 @@
+const updateMapLayerStatusV30 = (count, village, pendingCount=0)=>{
+  try{
+    const box = document.querySelector('.map-tools #mt_layer_status');
+    if(!box) return;
+    const v = String(village || '').trim();
+    const realTotal = Number(count || 0);
+    const pendingTotal = Number(pendingCount || 0);
+    const total = realTotal + pendingTotal;
+    let msg = '';
+    let cls = 'ok';
+    if(v && total === 0){
+      msg = `${v}: parsel çizimi/GeoJSON yok. Yalnız köy sınırı varsa gösterilir.`;
+      cls = 'warn';
+    }else if(v && realTotal === 0 && pendingTotal > 0){
+      msg = `${v}: ${pendingTotal} parsel kaydı çizim bekliyor. İşarete tıklayıp sınırı çizebilirsiniz.`;
+      cls = 'warn';
+    }else if(!v){
+      msg = `Tüm parseller: ${realTotal} GeoJSON${pendingTotal ? ` + ${pendingTotal} çizim bekleyen kayıt` : ''}`;
+    }else{
+      msg = `${v}: ${realTotal} parsel GeoJSON${pendingTotal ? ` + ${pendingTotal} çizim bekleyen kayıt` : ''}`;
+    }
+    box.className = `map-tools-status ${cls}`;
+    box.textContent = msg;
+  }catch(_e){}
+};
+

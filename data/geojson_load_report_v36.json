@@ -1,0 +1,26 @@
+{
+  "version": "v36",
+  "actual_geojson_by_village": {
+    "Baraj alanı": 1,
+    "Bahçeli": 31,
+    "Kaynarca": 23,
+    "Sazlıca": 49
+  },
+  "expected_parcels_by_village": {
+    "Bahçeli": 31,
+    "Bor İlçe Merkezi": 43,
+    "Kaynarca": 23,
+    "Kemerhisar": 35,
+    "Sazlıca": 47
+  },
+  "missing_geojson_by_village": {
+    "Bahçeli": 0,
+    "Bor İlçe Merkezi": 43,
+    "Kaynarca": 0,
+    "Kemerhisar": 35,
+    "Sazlıca": 0
+  },
+  "bor_ilce_merkezi_note": "Bu pakette Bor İlçe Merkezi bilgi kayıtları hazırdır. Eğer P79-P121 gerçek polygon GeoJSON dosyaları eklenirse otomatik olarak aynı formatta görünür. Bu zip içinde fiziksel Bor parsel polygonu bulunmuyorsa sahte parsel sınırı üretilmez.",
+  "bor_expected_count": 43,
+  "bor_actual_geojson_count": 0
+}

@@ -1,0 +1,58 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.63880920478595,
+            37.89669350547008
+          ],
+          [
+            34.63859790949506,
+            37.89123846795323
+          ],
+          [
+            34.64224755854618,
+            37.893193236789486
+          ],
+          [
+            34.63880920478595,
+            37.89667835320793
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_sorgum_20 da_P18.geojson",
+        "source_label": "sazlica_sulu_sorgum_20 da_P18.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P18",
+        "name": "P18",
+        "parcel_id": "P18",
+        "district": "Merkez",
+        "current_crop": "SORGUM",
+        "crop": "SORGUM",
+        "assigned_pattern": "SORGUM",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 20,
+        "area_official_da": 20,
+        "farmer_id": "C018",
+        "farmer_name": "Hacer Bulut"
+      },
+      "id": 1773615385464
+    }
+  ]
+}

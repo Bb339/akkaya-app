@@ -1,0 +1,109 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P125",
+    "name": "P125",
+    "display_name": "P125",
+    "area_da": 31.4,
+    "area_m2": 31400,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "MISIR (Dane)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Kemal Bozkurt",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_misir_dane_11 da_P125.geojson",
+    "owner_username": "C125",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T11:03:27.711Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 11,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C125",
+    "farmer_name": "Kemal Bozkurt",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "MISIR (Dane)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 10990.87,
+    "profit_tl_current": 44000,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 10990.87,
+    "assigned_profit_tl": 44000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T11:03:30.311Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_misir_dane_11 da_P125.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.55761903286126,
+          37.814294337322295
+        ],
+        [
+          34.558385954360574,
+          37.8145380931333
+        ],
+        [
+          34.55833500503018,
+          37.81479032655999
+        ],
+        [
+          34.5593808070747,
+          37.81519305041282
+        ],
+        [
+          34.5595175658036,
+          37.81506587469662
+        ],
+        [
+          34.56005153031337,
+          37.815186615418185
+        ],
+        [
+          34.56071119006452,
+          37.814478667751715
+        ],
+        [
+          34.56015705470244,
+          37.81411961005504
+        ],
+        [
+          34.55970020683886,
+          37.81387046975161
+        ],
+        [
+          34.559474957167744,
+          37.813756009566426
+        ],
+        [
+          34.559008368563276,
+          37.81356100291624
+        ],
+        [
+          34.55756010210431,
+          37.813696622331655
+        ],
+        [
+          34.55761903286126,
+          37.814294337322295
+        ]
+      ]
+    ]
+  }
+}

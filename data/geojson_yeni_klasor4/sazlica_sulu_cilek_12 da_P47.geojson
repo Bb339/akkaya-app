@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.63613641088282,
+            37.90094896890598
+          ],
+          [
+            34.63680015774592,
+            37.90165407043226
+          ],
+          [
+            34.63638263970605,
+            37.90191162086397
+          ],
+          [
+            34.63583665429425,
+            37.90109674512253
+          ],
+          [
+            34.63613641088282,
+            37.900910969226345
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_cilek_12 da_P47.geojson",
+        "source_label": "sazlica_sulu_cilek_12 da_P47.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P47",
+        "name": "P47",
+        "parcel_id": "P47",
+        "district": "Merkez",
+        "current_crop": "ÇİLEK",
+        "crop": "ÇİLEK",
+        "assigned_pattern": "ÇİLEK",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 12,
+        "area_official_da": 12,
+        "farmer_id": "C047",
+        "farmer_name": "Esra Taş"
+      },
+      "id": 1773613059632
+    }
+  ]
+}

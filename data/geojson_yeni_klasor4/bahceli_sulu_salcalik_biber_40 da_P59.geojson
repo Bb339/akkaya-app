@@ -1,0 +1,95 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P59",
+    "name": "P59",
+    "display_name": "P59",
+    "area_da": 40,
+    "area_m2": 40000,
+    "village": "Bahçeli",
+    "district": "Merkez",
+    "current_crop": "SALÇALIK BİBER",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Osman Yıldız",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "bahceli_sulu_salcalik_biber_40 da_P59.geojson",
+    "owner_username": "C059",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-24T14:25:06.468Z",
+    "water_mode": "sulu",
+    "is_user_parcel": false,
+    "area_official_da": 40,
+    "area_drawn_da": 0,
+    "irrigation_current": "Damla",
+    "farmer_id": "C059",
+    "farmer_name": "Osman Yıldız",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "SALÇALIK BİBER",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 27925.2,
+    "profit_tl_current": 366236.04,
+    "equal_parcel_quota_m3": "649677.940710",
+    "assigned_water_m3": 27925.2,
+    "assigned_profit_tl": 366236.04,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-24T14:25:09.397Z",
+    "data_source": "2024 Excel kaynakları + panel çizimi",
+    "area_official_m2": 40000,
+    "secondary_crop_current": "",
+    "parcel_type_label": "Sebze",
+    "selected_alternative_id": "current",
+    "selected_alternative_label": "Mevcut desen / Excel referansı",
+    "selected_pattern": "SALÇALIK BİBER",
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "source_file": "geojson_yeni_klasor4/bahceli_sulu_salcalik_biber_40 da_P59.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.63242179029204,
+          37.809615285568434
+        ],
+        [
+          34.632512975606296,
+          37.81151034399366
+        ],
+        [
+          34.63079118231919,
+          37.81252780495969
+        ],
+        [
+          34.63013142975126,
+          37.812349750302786
+        ],
+        [
+          34.62926785118672,
+          37.8116460062659
+        ],
+        [
+          34.62890847377165,
+          37.81151034399366
+        ],
+        [
+          34.628988931401885,
+          37.81029361184646
+        ],
+        [
+          34.63242179029204,
+          37.809615285568434
+        ]
+      ]
+    ]
+  }
+}

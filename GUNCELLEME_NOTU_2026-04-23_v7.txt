@@ -1,0 +1,10 @@
+Bu sürümde yapılan başlıca güncellemeler:
+- İlçe/köy düzeyi özet sekmesi temsili statik grafiklerden çıkarılıp seçili kapsamdan dinamik hesaplanan profesyonel özet yapısına geçirildi.
+- Köy bazında toplam alan, mevcut/öneri su ve mevcut/öneri net kâr grafikleri yeniden tasarlandı.
+- İlçe/köy özetine KPI kartları, karar anlatısı ve detay tablo eklendi.
+- Benchmark sekmesi yalnızca backend benchmark sonucunu kullanacak şekilde güncellendi; tarayıcı içi fallback kaldırıldı.
+- Benchmark API çıktısına medyan, min, max, CV, başarılı koşu, uygulanabilir koşu, success_rate ve feasible_rate metrikleri eklendi.
+- Benchmark tablosu ve grafikler profesyonel karşılaştırma mantığına göre yeniden düzenlendi.
+- Yeni benchmark görselleri: net kâr dağılımı, su dağılımı, su verimliliği+uygulanabilirlik, süre+desen çeşitliliği.
+- app.py Python sözdizimi kontrolünden geçti.
+- script.js Node sözdizimi kontrolünden geçti.

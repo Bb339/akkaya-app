@@ -1,0 +1,7 @@
+v22 düzeltmesi:
+- Bahçeli parselleri dosya içinde olduğu halde bazı çalışma biçimlerinde (önbellek/statik açılış/eski fallback) haritada görünmeme riski giderildi.
+- GEOJSON_FALLBACK_FILES listesi gerçek _index.json içeriğiyle güncellendi.
+- data/... ve /data/... kaynak yolları birlikte denenir hale getirildi.
+- Köy filtresi Türkçe karakter/normalize farklarına dayanıklı hale getirildi.
+- Bahçeli P48-P78 parselleri Sazlıca gibi hover popup, ikon/etiket, tıklayınca seçilme ve mavi vurgulama akışına bağlandı.
+- Yeni GeoJSON kaydında doğru dosya adı mantığı korunur.

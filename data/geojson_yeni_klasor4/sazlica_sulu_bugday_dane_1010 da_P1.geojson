@@ -1,0 +1,90 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.603437619283746,
+            37.898025704091296
+          ],
+          [
+            34.60350594252764,
+            37.89628310654901
+          ],
+          [
+            34.617922118841165,
+            37.89425301871631
+          ],
+          [
+            34.62111053115567,
+            37.89543873991178
+          ],
+          [
+            34.61764882742937,
+            37.89694781345041
+          ],
+          [
+            34.6158724254338,
+            37.89542077525449
+          ],
+          [
+            34.61393660422991,
+            37.896049559089235
+          ],
+          [
+            34.614346542911385,
+            37.89701967302972
+          ],
+          [
+            34.614870353796334,
+            37.896624443241805
+          ],
+          [
+            34.615667456093064,
+            37.89770233861809
+          ],
+          [
+            34.610452125437405,
+            37.89960658103058
+          ],
+          [
+            34.60348316824332,
+            37.898025704091296
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_bugday_dane_1010 da_P1.geojson",
+        "source_label": "sazlica_sulu_bugday_dane_1010 da_P1.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P1",
+        "name": "P1",
+        "parcel_id": "P1",
+        "district": "Merkez",
+        "current_crop": "BUĞDAY (Dane)",
+        "crop": "BUĞDAY (Dane)",
+        "assigned_pattern": "BUĞDAY (Dane)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 1010,
+        "area_official_da": 2700,
+        "farmer_id": "C001",
+        "farmer_name": "Ahmet Demir"
+      },
+      "id": 1773614128468
+    }
+  ]
+}

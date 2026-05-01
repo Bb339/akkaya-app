@@ -1,0 +1,73 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P167",
+    "name": "P167",
+    "display_name": "P167",
+    "area_da": 842.4,
+    "area_m2": 842400,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "SALÇALIK BİBER",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Orhan Özer",
+    "parcel_type": "vegetable",
+    "is_orchard": false,
+    "source_label": "kaynarca_sulu_salcalik_biber_10 da_P167.geojson",
+    "owner_username": "C167",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:27:07.217Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 10,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C167",
+    "farmer_name": "Orhan Özer",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "SALÇALIK BİBER",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 6980.9,
+    "profit_tl_current": 91559.01,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 6980.9,
+    "assigned_profit_tl": 91559.01,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:27:09.734Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_salcalik_biber_10 da_P167.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.597724089853955,
+          37.858164337328844
+        ],
+        [
+          34.61441401786702,
+          37.86416328614823
+        ],
+        [
+          34.610596202201094,
+          37.85247282272717
+        ],
+        [
+          34.597724089853955,
+          37.858164337328844
+        ]
+      ]
+    ]
+  }
+}

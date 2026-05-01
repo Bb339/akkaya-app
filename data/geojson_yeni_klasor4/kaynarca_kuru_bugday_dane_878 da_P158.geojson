@@ -1,0 +1,91 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P158",
+    "name": "P158",
+    "display_name": "P158",
+    "area_da": 619.8,
+    "area_m2": 619800,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "BUĞDAY (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yağışa bağlı / Kuru",
+    "farmer": "Betül Demir",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kaynarca_kuru_bugday_dane_878 da_P158.geojson",
+    "owner_username": "betul.demir",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T07:58:58.509Z",
+    "water_mode": "kuru",
+    "is_user_parcel": true,
+    "area_official_da": 878,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C-BETUL",
+    "farmer_name": "Betül Demir",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "BUĞDAY (Dane)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 538012.06,
+    "profit_tl_current": 2359218.486,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 538012.06,
+    "assigned_profit_tl": 2359218.486,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T07:59:01.113Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_kuru_bugday_dane_878 da_P158.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+    "assigned_farmer_username": "betul.demir",
+    "assigned_farmer_name": "Betül Demir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.63320490294205,
+          37.84339882680057
+        ],
+        [
+          34.62947219410622,
+          37.845331131917526
+        ],
+        [
+          34.62646886515785,
+          37.84644981173884
+        ],
+        [
+          34.630759335084065,
+          37.85339880622149
+        ],
+        [
+          34.63680889768009,
+          37.85156840291817
+        ],
+        [
+          34.63796732456015,
+          37.8512633312828
+        ],
+        [
+          34.63818095387851,
+          37.85123062111107
+        ],
+        [
+          34.63320490294205,
+          37.84339882680057
+        ]
+      ]
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.6244470417867,
+            37.89506293132621
+          ],
+          [
+            34.62565861019674,
+            37.89576585875491
+          ],
+          [
+            34.62539284726757,
+            37.896172813649684
+          ],
+          [
+            34.626909261579904,
+            37.897405996298744
+          ],
+          [
+            34.62329018943172,
+            37.898817964725566
+          ],
+          [
+            34.62182592805938,
+            37.89921301379489
+          ],
+          [
+            34.621553681223716,
+            37.898252293008994
+          ],
+          [
+            34.61949034009915,
+            37.89639863169812
+          ],
+          [
+            34.62085157230969,
+            37.895471784119394
+          ],
+          [
+            34.62397524189478,
+            37.895064871550574
+          ],
+          [
+            34.62447674798084,
+            37.895053568434676
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_lahana_kirmizi_700 da_P32.geojson",
+        "source_label": "sazlica_sulu_lahana_kirmizi_700 da_P32.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P32",
+        "name": "P32",
+        "parcel_id": "P32",
+        "district": "Merkez",
+        "current_crop": "LAHANA (KIRMIZI)",
+        "crop": "LAHANA (KIRMIZI)",
+        "assigned_pattern": "LAHANA (KIRMIZI)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 700,
+        "area_official_da": 700,
+        "farmer_id": "C032",
+        "farmer_name": "İsmail Yalçın"
+      },
+      "id": 1773614221797
+    }
+  ]
+}

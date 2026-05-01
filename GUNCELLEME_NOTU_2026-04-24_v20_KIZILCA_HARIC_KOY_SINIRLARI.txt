@@ -1,0 +1,9 @@
+v20 güncellemesi
+
+- Kızılca çalışma kapsamından çıkarıldı. Ana CSV/JSON veri tabloları 5 yerleşim üzerinden güncellendi.
+- Parsel bilgi/çizim kütüğü 179 kayda düşürüldü.
+- Eşit su kotası 5 yerleşim üzerinden yeniden hesaplandı. Yeni eşit köy payı: 20140016.16 m³.
+- Kullanıcının ilettiği köy sınırı GeoJSON'ları eklendi: Bahçeli, Bor İlçe Merkezi, Kemerhisar, Kaynarca.
+- Baraj alanı GeoJSON'u ayrı aç/kapat katmanı olarak eklendi.
+- Haritada parsel sınırları, köy sınırları ve baraj alanı bağımsız aç/kapatılabilir şekilde düzenlendi.
+- Sazlıca için yüklü gerçek parsel GeoJSON'ları korunmuştur; sınır katmanı yoksa sistem parsel kümesinden yaklaşık sınır üretmeye devam eder.

@@ -1,0 +1,70 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.65001725496239,
+            37.87996572626115
+          ],
+          [
+            34.651296906621255,
+            37.88686470964106
+          ],
+          [
+            34.64694608629488,
+            37.88935491600229
+          ],
+          [
+            34.64536784553902,
+            37.89083553891241
+          ],
+          [
+            34.643021814080726,
+            37.88743679260408
+          ],
+          [
+            34.6458797079599,
+            37.88635992876789
+          ],
+          [
+            34.650230528286265,
+            37.87983110837497
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_fig_yesilot_70 da_P15.geojson",
+        "source_label": "sazlica_sulu_fig_yesilot_70 da_P15.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P15",
+        "name": "P15",
+        "parcel_id": "P15",
+        "district": "Merkez",
+        "current_crop": "FİĞ (YEŞİLOT)",
+        "crop": "FİĞ (YEŞİLOT)",
+        "assigned_pattern": "FİĞ (YEŞİLOT)",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 70,
+        "area_official_da": 70,
+        "farmer_id": "C015",
+        "farmer_name": "Zeynep Ergin"
+      },
+      "id": 1773615128624
+    }
+  ]
+}

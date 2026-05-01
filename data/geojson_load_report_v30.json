@@ -1,0 +1,16 @@
+{
+  "version": "v30",
+  "message": "Köy sınırı ile parsel katmanı ayrıldı; köy sınırı varsayılan kapalıdır. Parsel olmayan büyük sınır polygonları parsel olarak yüklenmez.",
+  "geojson_folder": "data/geojson_yeni_klasor4",
+  "total_geojson_files": 104,
+  "parcel_geojson_count": 103,
+  "counts_by_village": {
+    "Bahçeli": 31,
+    "Kaynarca": 23,
+    "Sazlıca": 49
+  },
+  "skipped_nonparcel_files": [
+    "akkaya_baraj.geojson"
+  ],
+  "missing_expected_note": "Bor İlçe Merkezi ve Kemerhisar parselleri fiziksel GeoJSON olarak bu pakette yoksa yalnız köy sınırı açıldığında sınır görünür; parsel çizimleri eklenince otomatik parsel katmanına dahil olur."
+}

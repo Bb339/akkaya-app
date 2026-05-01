@@ -1,0 +1,12 @@
+{
+  "mevcut_toplam_su_m3": 100700080.81,
+  "mevcut_toplam_su_hm3": 100.70008081,
+  "toplam_alan_da": 134919,
+  "toplam_parsel": 179,
+  "genel_m3_da": 746.3743491279953,
+  "genel_parsel_basi_ortalama_m3": 562570.2838547486,
+  "esit_koy_payi_m3": 20140016.16199,
+  "ana_karar_modeli": "dekar_bazli_adil_kota",
+  "karsilastirma_modeli": "esit_koy_esit_parsel",
+  "tez_yorumu": "Dekar bazlı adil kota ana karar modelidir; eşit köy payı yalnızca idari eşitlik karşılaştırmasıdır."
+}

@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P131",
+    "name": "P131",
+    "display_name": "P131",
+    "area_da": 51.2,
+    "area_m2": 51200,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "ÇAVDAR (YEŞİLOT)",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Veli Aslan",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_cavdar_yesilot_130 da_P131.geojson",
+    "owner_username": "C131",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:45:12.770Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 130,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C131",
+    "farmer_name": "Veli Aslan",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "ÇAVDAR (YEŞİLOT)",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 59489.3,
+    "profit_tl_current": 507000,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 59489.3,
+    "assigned_profit_tl": 507000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:45:14.817Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_cavdar_yesilot_130 da_P131.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.55489411417605,
+          37.814734874101134
+        ],
+        [
+          34.55801543104739,
+          37.815523363545154
+        ],
+        [
+          34.55840157334076,
+          37.81457378382384
+        ],
+        [
+          34.557586384054765,
+          37.81431943003882
+        ],
+        [
+          34.55755420553032,
+          37.81364114899454
+        ],
+        [
+          34.55688918269177,
+          37.81312395551096
+        ],
+        [
+          34.55639577865022,
+          37.812615237074624
+        ],
+        [
+          34.555891648433885,
+          37.812598279733045
+        ],
+        [
+          34.55584874373466,
+          37.81336135624833
+        ],
+        [
+          34.55489411417605,
+          37.814734874101134
+        ]
+      ]
+    ]
+  }
+}

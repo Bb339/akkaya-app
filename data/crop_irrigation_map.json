@@ -1,0 +1,234 @@
+{
+  "ARMUT": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "ARPA (Dane)": {
+    "current": "rainfed",
+    "recommended": "sprinkler"
+  },
+  "ARPA (YEŞİLOT)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "AYVA": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "AYÇİÇEĞİ": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "BADEM": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "BARBUNYA FASULYE (TAZE)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "BAĞ": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "BUĞDAY (Dane)": {
+    "current": "rainfed",
+    "recommended": "sprinkler"
+  },
+  "BUĞDAY (YEŞİLOT)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "CEVİZ": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "DUT": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "ELMA": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "ERİK": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "FASULYE (TAZE)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "FİĞ (YEŞİLOT)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "HIYAR (SOFRALIK)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "ISPANAK": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "KABAK (BAL)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "KABAK (SAKIZ)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "KABAK (ÇEREZLİK)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "KARPUZ": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "KAVUN": {
+    "current": "surface",
+    "recommended": "drip"
+  },
+  "KAYSI": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "KURU FASULYE": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "KİMYON": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "KİRAZ": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "LAHANA (BEYAZ)": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "LAHANA (KIRMIZI)": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "LAVANTA": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "MARUL": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "MAYDONOZ": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "MISIR (Dane)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "NEKTAR": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "NOHUT": {
+    "current": "rainfed",
+    "recommended": "rainfed"
+  },
+  "PATATES": {
+    "current": "sprinkler",
+    "recommended": "drip"
+  },
+  "PIRASA": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "SALÇALIK BİBER": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "SALÇALIK DOMATES": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "SARIMSAK (KURU)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "SOFRALIK DOMATES": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "SORGUM": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "SOĞAN (KURU)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "SOĞAN (TAZE)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "SİLAJLIK MISIR": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "SİVRİ BİBER": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "TRTİKALE (Dane)": {
+    "current": "rainfed",
+    "recommended": "rainfed"
+  },
+  "TRİTİKALE  (YEŞİLOT)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "TURP (KIRMIZI)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "VİŞNE": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "YONCA  (YEŞİLOT)": {
+    "current": "surface",
+    "recommended": "sprinkler"
+  },
+  "YULAF (Dane)": {
+    "current": "rainfed",
+    "recommended": "rainfed"
+  },
+  "YULAF (YEŞİLOT)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "ÇAVDAR   (YEŞİLOT)": {
+    "current": "sprinkler",
+    "recommended": "sprinkler"
+  },
+  "ÇAVDAR (Dane)": {
+    "current": "rainfed",
+    "recommended": "sprinkler"
+  },
+  "ÇİLEK": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "ŞEFTALİ": {
+    "current": "drip",
+    "recommended": "drip"
+  },
+  "ŞEKER PANCARI": {
+    "current": "surface",
+    "recommended": "sprinkler"
+  }
+}

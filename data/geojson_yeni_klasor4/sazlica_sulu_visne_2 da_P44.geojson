@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.64166501271307,
+            37.9023787917792
+          ],
+          [
+            34.641191550651754,
+            37.9021719572242
+          ],
+          [
+            34.640652531797166,
+            37.90282693138663
+          ],
+          [
+            34.64100944978199,
+            37.90318314304233
+          ],
+          [
+            34.641716000996624,
+            37.90239028272421
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_visne_2 da_P44.geojson",
+        "source_label": "sazlica_sulu_visne_2 da_P44.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P44",
+        "name": "P44",
+        "parcel_id": "P44",
+        "district": "Merkez",
+        "current_crop": "VİŞNE",
+        "crop": "VİŞNE",
+        "assigned_pattern": "VİŞNE",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": true,
+        "parcel_type": "orchard",
+        "area_da": 2,
+        "area_official_da": 2,
+        "farmer_id": "C044",
+        "farmer_name": "Gül Kaya"
+      },
+      "id": 1773613130200
+    }
+  ]
+}

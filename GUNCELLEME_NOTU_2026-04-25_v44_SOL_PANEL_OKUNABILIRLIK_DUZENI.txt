@@ -1,0 +1,1 @@
+v44: Sol panelde eklenen üst araç çubuğu kaldırıldı. Sol panel daha temiz ve okunabilir hale getirildi. Yazı taşmaları engellendi, içerikler satır kırarak görünür oldu. Su adaleti alanındaki geniş tablo kaldırılıp köy bazında kompakt özet kartlara dönüştürüldü. Dar ekranlarda sol panel tek kolona düşer ve tam genişlik kullanır.

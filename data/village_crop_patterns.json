@@ -1,0 +1,1882 @@
+{
+  "Sazlıca": {
+    "source_workbook": "sazlica_2024_profesyonel_guncel_v12_profesyonel_duzenli (1).xlsx",
+    "parcel_count": 47,
+    "total_area_da": 28898,
+    "observed_current_total_water_m3": 19711714.78,
+    "top_crops": [
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "area_da": 7300,
+        "share": 0.252613
+      },
+      {
+        "crop": "ELMA",
+        "area_da": 3826,
+        "share": 0.132397
+      },
+      {
+        "crop": "SALÇALIK DOMATES",
+        "area_da": 3754,
+        "share": 0.129905
+      },
+      {
+        "crop": "BUĞDAY (Dane)",
+        "area_da": 2700,
+        "share": 0.093432
+      },
+      {
+        "crop": "NEKTAR",
+        "area_da": 2525,
+        "share": 0.087376
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "area_da": 1650,
+        "share": 0.057097
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "area_da": 1248,
+        "share": 0.043186
+      },
+      {
+        "crop": "ARPA (Dane)",
+        "area_da": 1000,
+        "share": 0.034604
+      },
+      {
+        "crop": "LAHANA (KIRMIZI)",
+        "area_da": 700,
+        "share": 0.024223
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "area_da": 650,
+        "share": 0.022493
+      },
+      {
+        "crop": "ŞEFTALİ",
+        "area_da": 596,
+        "share": 0.020624
+      },
+      {
+        "crop": "PATATES",
+        "area_da": 475,
+        "share": 0.016437
+      },
+      {
+        "crop": "KAYSI",
+        "area_da": 456,
+        "share": 0.01578
+      },
+      {
+        "crop": "ÇAVDAR (YEŞİLOT)",
+        "area_da": 350,
+        "share": 0.012112
+      },
+      {
+        "crop": "CEVİZ",
+        "area_da": 251,
+        "share": 0.008686
+      },
+      {
+        "crop": "KİRAZ",
+        "area_da": 129,
+        "share": 0.004464
+      },
+      {
+        "crop": "ERİK",
+        "area_da": 126,
+        "share": 0.00436
+      },
+      {
+        "crop": "KARPUZ",
+        "area_da": 106,
+        "share": 0.003668
+      },
+      {
+        "crop": "KAVUN",
+        "area_da": 90,
+        "share": 0.003114
+      },
+      {
+        "crop": "ARMUT",
+        "area_da": 86,
+        "share": 0.002976
+      },
+      {
+        "crop": "KURU FASULYE",
+        "area_da": 80,
+        "share": 0.002768
+      },
+      {
+        "crop": "NOHUT",
+        "area_da": 80,
+        "share": 0.002768
+      },
+      {
+        "crop": "BADEM",
+        "area_da": 71,
+        "share": 0.002457
+      },
+      {
+        "crop": "TRTİKALE (Dane)",
+        "area_da": 70,
+        "share": 0.002422
+      },
+      {
+        "crop": "TRİTİKALE (YEŞİLOT)",
+        "area_da": 70,
+        "share": 0.002422
+      },
+      {
+        "crop": "FİĞ (YEŞİLOT)",
+        "area_da": 70,
+        "share": 0.002422
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "area_da": 67,
+        "share": 0.002318
+      },
+      {
+        "crop": "BAĞ",
+        "area_da": 63,
+        "share": 0.00218
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "area_da": 60,
+        "share": 0.002076
+      },
+      {
+        "crop": "YULAF (Dane)",
+        "area_da": 50,
+        "share": 0.00173
+      },
+      {
+        "crop": "ÇAVDAR (Dane)",
+        "area_da": 40,
+        "share": 0.001384
+      },
+      {
+        "crop": "AYÇİÇEĞİ",
+        "area_da": 20,
+        "share": 0.000692
+      },
+      {
+        "crop": "BUĞDAY (YEŞİLOT)",
+        "area_da": 20,
+        "share": 0.000692
+      },
+      {
+        "crop": "ARPA (YEŞİLOT)",
+        "area_da": 20,
+        "share": 0.000692
+      },
+      {
+        "crop": "SORGUM",
+        "area_da": 20,
+        "share": 0.000692
+      },
+      {
+        "crop": "SİVRİ BİBER",
+        "area_da": 17,
+        "share": 0.000588
+      },
+      {
+        "crop": "ÇİLEK",
+        "area_da": 12,
+        "share": 0.000415
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "area_da": 11,
+        "share": 0.000381
+      },
+      {
+        "crop": "KABAK (SAKIZ)",
+        "area_da": 11,
+        "share": 0.000381
+      },
+      {
+        "crop": "YULAF (YEŞİLOT)",
+        "area_da": 10,
+        "share": 0.000346
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "area_da": 9,
+        "share": 0.000311
+      },
+      {
+        "crop": "BARBUNYA FASULYE (TAZE)",
+        "area_da": 2,
+        "share": 0.000069
+      },
+      {
+        "crop": "HIYAR (SOFRALIK)",
+        "area_da": 2,
+        "share": 0.000069
+      },
+      {
+        "crop": "VİŞNE",
+        "area_da": 2,
+        "share": 0.000069
+      },
+      {
+        "crop": "KABAK (BAL)",
+        "area_da": 1,
+        "share": 0.000035
+      },
+      {
+        "crop": "SARIMSAK (KURU)",
+        "area_da": 1,
+        "share": 0.000035
+      },
+      {
+        "crop": "SOĞAN (TAZE)",
+        "area_da": 1,
+        "share": 0.000035
+      }
+    ],
+    "top_crops_by_type": {
+      "Tarla/Yem": [
+        {
+          "crop": "BUĞDAY (Dane)",
+          "area_da": 2700,
+          "share": 0.366102
+        },
+        {
+          "crop": "YONCA (YEŞİLOT)",
+          "area_da": 1650,
+          "share": 0.223729
+        },
+        {
+          "crop": "ARPA (Dane)",
+          "area_da": 1000,
+          "share": 0.135593
+        },
+        {
+          "crop": "SİLAJLIK MISIR",
+          "area_da": 650,
+          "share": 0.088136
+        },
+        {
+          "crop": "PATATES",
+          "area_da": 475,
+          "share": 0.064407
+        },
+        {
+          "crop": "ÇAVDAR (YEŞİLOT)",
+          "area_da": 350,
+          "share": 0.047458
+        },
+        {
+          "crop": "KURU FASULYE",
+          "area_da": 80,
+          "share": 0.010847
+        },
+        {
+          "crop": "NOHUT",
+          "area_da": 80,
+          "share": 0.010847
+        },
+        {
+          "crop": "TRTİKALE (Dane)",
+          "area_da": 70,
+          "share": 0.009492
+        },
+        {
+          "crop": "TRİTİKALE (YEŞİLOT)",
+          "area_da": 70,
+          "share": 0.009492
+        },
+        {
+          "crop": "FİĞ (YEŞİLOT)",
+          "area_da": 70,
+          "share": 0.009492
+        },
+        {
+          "crop": "YULAF (Dane)",
+          "area_da": 50,
+          "share": 0.00678
+        },
+        {
+          "crop": "ÇAVDAR (Dane)",
+          "area_da": 40,
+          "share": 0.005424
+        },
+        {
+          "crop": "AYÇİÇEĞİ",
+          "area_da": 20,
+          "share": 0.002712
+        },
+        {
+          "crop": "BUĞDAY (YEŞİLOT)",
+          "area_da": 20,
+          "share": 0.002712
+        },
+        {
+          "crop": "ARPA (YEŞİLOT)",
+          "area_da": 20,
+          "share": 0.002712
+        },
+        {
+          "crop": "SORGUM",
+          "area_da": 20,
+          "share": 0.002712
+        },
+        {
+          "crop": "YULAF (YEŞİLOT)",
+          "area_da": 10,
+          "share": 0.001356
+        }
+      ],
+      "Sebze": [
+        {
+          "crop": "LAHANA (BEYAZ)",
+          "area_da": 7300,
+          "share": 0.54559
+        },
+        {
+          "crop": "SALÇALIK DOMATES",
+          "area_da": 3754,
+          "share": 0.280568
+        },
+        {
+          "crop": "SOFRALIK DOMATES",
+          "area_da": 1248,
+          "share": 0.093274
+        },
+        {
+          "crop": "LAHANA (KIRMIZI)",
+          "area_da": 700,
+          "share": 0.052317
+        },
+        {
+          "crop": "KARPUZ",
+          "area_da": 106,
+          "share": 0.007922
+        },
+        {
+          "crop": "KAVUN",
+          "area_da": 90,
+          "share": 0.006726
+        },
+        {
+          "crop": "SOĞAN (KURU)",
+          "area_da": 67,
+          "share": 0.005007
+        },
+        {
+          "crop": "SALÇALIK BİBER",
+          "area_da": 60,
+          "share": 0.004484
+        },
+        {
+          "crop": "SİVRİ BİBER",
+          "area_da": 17,
+          "share": 0.001271
+        },
+        {
+          "crop": "FASULYE (TAZE)",
+          "area_da": 11,
+          "share": 0.000822
+        },
+        {
+          "crop": "KABAK (SAKIZ)",
+          "area_da": 11,
+          "share": 0.000822
+        },
+        {
+          "crop": "KABAK (ÇEREZLİK)",
+          "area_da": 9,
+          "share": 0.000673
+        },
+        {
+          "crop": "BARBUNYA FASULYE (TAZE)",
+          "area_da": 2,
+          "share": 0.000149
+        },
+        {
+          "crop": "HIYAR (SOFRALIK)",
+          "area_da": 2,
+          "share": 0.000149
+        },
+        {
+          "crop": "KABAK (BAL)",
+          "area_da": 1,
+          "share": 0.000075
+        },
+        {
+          "crop": "SARIMSAK (KURU)",
+          "area_da": 1,
+          "share": 0.000075
+        },
+        {
+          "crop": "SOĞAN (TAZE)",
+          "area_da": 1,
+          "share": 0.000075
+        }
+      ],
+      "Meyve/Bağ": [
+        {
+          "crop": "ELMA",
+          "area_da": 3826,
+          "share": 0.469851
+        },
+        {
+          "crop": "NEKTAR",
+          "area_da": 2525,
+          "share": 0.310082
+        },
+        {
+          "crop": "ŞEFTALİ",
+          "area_da": 596,
+          "share": 0.073192
+        },
+        {
+          "crop": "KAYSI",
+          "area_da": 456,
+          "share": 0.055999
+        },
+        {
+          "crop": "CEVİZ",
+          "area_da": 251,
+          "share": 0.030824
+        },
+        {
+          "crop": "KİRAZ",
+          "area_da": 129,
+          "share": 0.015842
+        },
+        {
+          "crop": "ERİK",
+          "area_da": 126,
+          "share": 0.015473
+        },
+        {
+          "crop": "ARMUT",
+          "area_da": 86,
+          "share": 0.010561
+        },
+        {
+          "crop": "BADEM",
+          "area_da": 71,
+          "share": 0.008719
+        },
+        {
+          "crop": "BAĞ",
+          "area_da": 63,
+          "share": 0.007737
+        },
+        {
+          "crop": "ÇİLEK",
+          "area_da": 12,
+          "share": 0.001474
+        },
+        {
+          "crop": "VİŞNE",
+          "area_da": 2,
+          "share": 0.000246
+        }
+      ]
+    },
+    "equal_village_share_m3": 20140016.162,
+    "equal_parcel_quota_m3": 428510.98217
+  },
+  "Bahçeli": {
+    "source_workbook": "bahceli_2024_dogruluk_odakli_son_guncel_v6.xlsx",
+    "parcel_count": 31,
+    "total_area_da": 19692,
+    "observed_current_total_water_m3": 14107300.25,
+    "top_crops": [
+      {
+        "crop": "ELMA",
+        "area_da": 8438,
+        "share": 0.428499
+      },
+      {
+        "crop": "ARPA (Dane)",
+        "area_da": 3380,
+        "share": 0.171643
+      },
+      {
+        "crop": "BUĞDAY (Dane)",
+        "area_da": 2190,
+        "share": 0.111213
+      },
+      {
+        "crop": "BAĞ",
+        "area_da": 1500,
+        "share": 0.076173
+      },
+      {
+        "crop": "SALÇALIK DOMATES",
+        "area_da": 870,
+        "share": 0.04418
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "area_da": 510,
+        "share": 0.025899
+      },
+      {
+        "crop": "KAYSI",
+        "area_da": 480,
+        "share": 0.024375
+      },
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "area_da": 457,
+        "share": 0.023207
+      },
+      {
+        "crop": "NOHUT",
+        "area_da": 360,
+        "share": 0.018282
+      },
+      {
+        "crop": "ARMUT",
+        "area_da": 222,
+        "share": 0.011274
+      },
+      {
+        "crop": "CEVİZ",
+        "area_da": 203,
+        "share": 0.010309
+      },
+      {
+        "crop": "ÇAVDAR (Dane)",
+        "area_da": 170,
+        "share": 0.008633
+      },
+      {
+        "crop": "PATATES",
+        "area_da": 140,
+        "share": 0.007109
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "area_da": 125,
+        "share": 0.006348
+      },
+      {
+        "crop": "KAVUN",
+        "area_da": 120,
+        "share": 0.006094
+      },
+      {
+        "crop": "YULAF (YEŞİLOT)",
+        "area_da": 100,
+        "share": 0.005078
+      },
+      {
+        "crop": "NEKTAR",
+        "area_da": 98,
+        "share": 0.004977
+      },
+      {
+        "crop": "AYVA",
+        "area_da": 53,
+        "share": 0.002691
+      },
+      {
+        "crop": "KURU FASULYE",
+        "area_da": 50,
+        "share": 0.002539
+      },
+      {
+        "crop": "ERİK",
+        "area_da": 41,
+        "share": 0.002082
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "area_da": 40,
+        "share": 0.002031
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "area_da": 30,
+        "share": 0.001523
+      },
+      {
+        "crop": "ŞEFTALİ",
+        "area_da": 25,
+        "share": 0.00127
+      },
+      {
+        "crop": "FİĞ (YEŞİLOT)",
+        "area_da": 20,
+        "share": 0.001016
+      },
+      {
+        "crop": "KİRAZ",
+        "area_da": 20,
+        "share": 0.001016
+      },
+      {
+        "crop": "HIYAR (SOFRALIK)",
+        "area_da": 16,
+        "share": 0.000813
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "area_da": 10,
+        "share": 0.000508
+      },
+      {
+        "crop": "KARPUZ",
+        "area_da": 10,
+        "share": 0.000508
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "area_da": 10,
+        "share": 0.000508
+      },
+      {
+        "crop": "SİVRİ BİBER",
+        "area_da": 2,
+        "share": 0.000102
+      },
+      {
+        "crop": "BADEM",
+        "area_da": 2,
+        "share": 0.000102
+      }
+    ],
+    "top_crops_by_type": {
+      "Tarla/Yem": [
+        {
+          "crop": "ARPA (Dane)",
+          "area_da": 3380,
+          "share": 0.479773
+        },
+        {
+          "crop": "BUĞDAY (Dane)",
+          "area_da": 2190,
+          "share": 0.310859
+        },
+        {
+          "crop": "YONCA (YEŞİLOT)",
+          "area_da": 510,
+          "share": 0.072392
+        },
+        {
+          "crop": "NOHUT",
+          "area_da": 360,
+          "share": 0.0511
+        },
+        {
+          "crop": "ÇAVDAR (Dane)",
+          "area_da": 170,
+          "share": 0.024131
+        },
+        {
+          "crop": "PATATES",
+          "area_da": 140,
+          "share": 0.019872
+        },
+        {
+          "crop": "SİLAJLIK MISIR",
+          "area_da": 125,
+          "share": 0.017743
+        },
+        {
+          "crop": "YULAF (YEŞİLOT)",
+          "area_da": 100,
+          "share": 0.014194
+        },
+        {
+          "crop": "KURU FASULYE",
+          "area_da": 50,
+          "share": 0.007097
+        },
+        {
+          "crop": "FİĞ (YEŞİLOT)",
+          "area_da": 20,
+          "share": 0.002839
+        }
+      ],
+      "Sebze": [
+        {
+          "crop": "SALÇALIK DOMATES",
+          "area_da": 870,
+          "share": 0.555911
+        },
+        {
+          "crop": "LAHANA (BEYAZ)",
+          "area_da": 457,
+          "share": 0.292013
+        },
+        {
+          "crop": "KAVUN",
+          "area_da": 120,
+          "share": 0.076677
+        },
+        {
+          "crop": "SALÇALIK BİBER",
+          "area_da": 40,
+          "share": 0.025559
+        },
+        {
+          "crop": "SOFRALIK DOMATES",
+          "area_da": 30,
+          "share": 0.019169
+        },
+        {
+          "crop": "HIYAR (SOFRALIK)",
+          "area_da": 16,
+          "share": 0.010224
+        },
+        {
+          "crop": "FASULYE (TAZE)",
+          "area_da": 10,
+          "share": 0.00639
+        },
+        {
+          "crop": "KARPUZ",
+          "area_da": 10,
+          "share": 0.00639
+        },
+        {
+          "crop": "SOĞAN (KURU)",
+          "area_da": 10,
+          "share": 0.00639
+        },
+        {
+          "crop": "SİVRİ BİBER",
+          "area_da": 2,
+          "share": 0.001278
+        }
+      ],
+      "Meyve/Bağ": [
+        {
+          "crop": "ELMA",
+          "area_da": 8438,
+          "share": 0.761415
+        },
+        {
+          "crop": "BAĞ",
+          "area_da": 1500,
+          "share": 0.135355
+        },
+        {
+          "crop": "KAYSI",
+          "area_da": 480,
+          "share": 0.043313
+        },
+        {
+          "crop": "ARMUT",
+          "area_da": 222,
+          "share": 0.020032
+        },
+        {
+          "crop": "CEVİZ",
+          "area_da": 203,
+          "share": 0.018318
+        },
+        {
+          "crop": "NEKTAR",
+          "area_da": 98,
+          "share": 0.008843
+        },
+        {
+          "crop": "AYVA",
+          "area_da": 53,
+          "share": 0.004783
+        },
+        {
+          "crop": "ERİK",
+          "area_da": 41,
+          "share": 0.0037
+        },
+        {
+          "crop": "ŞEFTALİ",
+          "area_da": 25,
+          "share": 0.002256
+        },
+        {
+          "crop": "KİRAZ",
+          "area_da": 20,
+          "share": 0.001805
+        },
+        {
+          "crop": "BADEM",
+          "area_da": 2,
+          "share": 0.00018
+        }
+      ]
+    },
+    "equal_village_share_m3": 20140016.162,
+    "equal_parcel_quota_m3": 649677.94071
+  },
+  "Bor İlçe Merkezi": {
+    "source_workbook": "bor_ilce_merkezi_2024_duzeltilmis_v4.xlsx",
+    "parcel_count": 43,
+    "total_area_da": 35036,
+    "observed_current_total_water_m3": 29027116.39,
+    "top_crops": [
+      {
+        "crop": "SİLAJLIK MISIR",
+        "area_da": 5340,
+        "share": 0.152415
+      },
+      {
+        "crop": "SALÇALIK DOMATES",
+        "area_da": 4960,
+        "share": 0.141569
+      },
+      {
+        "crop": "ELMA",
+        "area_da": 4940,
+        "share": 0.140998
+      },
+      {
+        "crop": "BUĞDAY (Dane)",
+        "area_da": 4441,
+        "share": 0.126755
+      },
+      {
+        "crop": "ŞEKER PANCARI",
+        "area_da": 2960,
+        "share": 0.084485
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "area_da": 2900,
+        "share": 0.082772
+      },
+      {
+        "crop": "ARPA (Dane)",
+        "area_da": 2540,
+        "share": 0.072497
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "area_da": 1190,
+        "share": 0.033965
+      },
+      {
+        "crop": "FİĞ (YEŞİLOT)",
+        "area_da": 900,
+        "share": 0.025688
+      },
+      {
+        "crop": "KARPUZ",
+        "area_da": 750,
+        "share": 0.021407
+      },
+      {
+        "crop": "BAĞ",
+        "area_da": 700,
+        "share": 0.019979
+      },
+      {
+        "crop": "ÇAVDAR (YEŞİLOT)",
+        "area_da": 570,
+        "share": 0.016269
+      },
+      {
+        "crop": "KAVUN",
+        "area_da": 520,
+        "share": 0.014842
+      },
+      {
+        "crop": "CEVİZ",
+        "area_da": 258,
+        "share": 0.007364
+      },
+      {
+        "crop": "PATATES",
+        "area_da": 250,
+        "share": 0.007136
+      },
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "area_da": 240,
+        "share": 0.00685
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "area_da": 191,
+        "share": 0.005452
+      },
+      {
+        "crop": "SORGUM",
+        "area_da": 183,
+        "share": 0.005223
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "area_da": 180,
+        "share": 0.005138
+      },
+      {
+        "crop": "KAYSI",
+        "area_da": 170,
+        "share": 0.004852
+      },
+      {
+        "crop": "KURU FASULYE",
+        "area_da": 160,
+        "share": 0.004567
+      },
+      {
+        "crop": "NOHUT",
+        "area_da": 140,
+        "share": 0.003996
+      },
+      {
+        "crop": "ÇAVDAR (Dane)",
+        "area_da": 85,
+        "share": 0.002426
+      },
+      {
+        "crop": "TRTİKALE (Dane)",
+        "area_da": 50,
+        "share": 0.001427
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "area_da": 50,
+        "share": 0.001427
+      },
+      {
+        "crop": "TRİTİKALE (YEŞİLOT)",
+        "area_da": 40,
+        "share": 0.001142
+      },
+      {
+        "crop": "MAYDONOZ",
+        "area_da": 40,
+        "share": 0.001142
+      },
+      {
+        "crop": "MARUL",
+        "area_da": 35,
+        "share": 0.000999
+      },
+      {
+        "crop": "ISPANAK",
+        "area_da": 30,
+        "share": 0.000856
+      },
+      {
+        "crop": "PIRASA",
+        "area_da": 30,
+        "share": 0.000856
+      },
+      {
+        "crop": "SOĞAN (TAZE)",
+        "area_da": 30,
+        "share": 0.000856
+      },
+      {
+        "crop": "TURP (KIRMIZI)",
+        "area_da": 30,
+        "share": 0.000856
+      },
+      {
+        "crop": "KİRAZ",
+        "area_da": 24,
+        "share": 0.000685
+      },
+      {
+        "crop": "ARMUT",
+        "area_da": 20,
+        "share": 0.000571
+      },
+      {
+        "crop": "SİVRİ BİBER",
+        "area_da": 16,
+        "share": 0.000457
+      },
+      {
+        "crop": "ŞEFTALİ",
+        "area_da": 15,
+        "share": 0.000428
+      },
+      {
+        "crop": "ERİK",
+        "area_da": 13,
+        "share": 0.000371
+      },
+      {
+        "crop": "HIYAR (SOFRALIK)",
+        "area_da": 12,
+        "share": 0.000343
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "area_da": 10,
+        "share": 0.000285
+      },
+      {
+        "crop": "MISIR (Dane)",
+        "area_da": 9,
+        "share": 0.000257
+      },
+      {
+        "crop": "KABAK (SAKIZ)",
+        "area_da": 7,
+        "share": 0.0002
+      },
+      {
+        "crop": "NEKTAR",
+        "area_da": 4,
+        "share": 0.000114
+      },
+      {
+        "crop": "BADEM",
+        "area_da": 3,
+        "share": 0.000086
+      }
+    ],
+    "top_crops_by_type": {
+      "Tarla/Yem": [
+        {
+          "crop": "SİLAJLIK MISIR",
+          "area_da": 5340,
+          "share": 0.259627
+        },
+        {
+          "crop": "BUĞDAY (Dane)",
+          "area_da": 4441,
+          "share": 0.215918
+        },
+        {
+          "crop": "ŞEKER PANCARI",
+          "area_da": 2960,
+          "share": 0.143913
+        },
+        {
+          "crop": "YONCA (YEŞİLOT)",
+          "area_da": 2900,
+          "share": 0.140996
+        },
+        {
+          "crop": "ARPA (Dane)",
+          "area_da": 2540,
+          "share": 0.123493
+        },
+        {
+          "crop": "FİĞ (YEŞİLOT)",
+          "area_da": 900,
+          "share": 0.043757
+        },
+        {
+          "crop": "ÇAVDAR (YEŞİLOT)",
+          "area_da": 570,
+          "share": 0.027713
+        },
+        {
+          "crop": "PATATES",
+          "area_da": 250,
+          "share": 0.012155
+        },
+        {
+          "crop": "SORGUM",
+          "area_da": 183,
+          "share": 0.008897
+        },
+        {
+          "crop": "KURU FASULYE",
+          "area_da": 160,
+          "share": 0.007779
+        },
+        {
+          "crop": "NOHUT",
+          "area_da": 140,
+          "share": 0.006807
+        },
+        {
+          "crop": "ÇAVDAR (Dane)",
+          "area_da": 85,
+          "share": 0.004133
+        },
+        {
+          "crop": "TRTİKALE (Dane)",
+          "area_da": 50,
+          "share": 0.002431
+        },
+        {
+          "crop": "TRİTİKALE (YEŞİLOT)",
+          "area_da": 40,
+          "share": 0.001945
+        },
+        {
+          "crop": "MISIR (Dane)",
+          "area_da": 9,
+          "share": 0.000438
+        }
+      ],
+      "Sebze": [
+        {
+          "crop": "SALÇALIK DOMATES",
+          "area_da": 4960,
+          "share": 0.596082
+        },
+        {
+          "crop": "SOĞAN (KURU)",
+          "area_da": 1190,
+          "share": 0.143012
+        },
+        {
+          "crop": "KARPUZ",
+          "area_da": 750,
+          "share": 0.090133
+        },
+        {
+          "crop": "KAVUN",
+          "area_da": 520,
+          "share": 0.062492
+        },
+        {
+          "crop": "LAHANA (BEYAZ)",
+          "area_da": 240,
+          "share": 0.028843
+        },
+        {
+          "crop": "SALÇALIK BİBER",
+          "area_da": 191,
+          "share": 0.022954
+        },
+        {
+          "crop": "SOFRALIK DOMATES",
+          "area_da": 180,
+          "share": 0.021632
+        },
+        {
+          "crop": "KABAK (ÇEREZLİK)",
+          "area_da": 50,
+          "share": 0.006009
+        },
+        {
+          "crop": "MAYDONOZ",
+          "area_da": 40,
+          "share": 0.004807
+        },
+        {
+          "crop": "MARUL",
+          "area_da": 35,
+          "share": 0.004206
+        },
+        {
+          "crop": "ISPANAK",
+          "area_da": 30,
+          "share": 0.003605
+        },
+        {
+          "crop": "PIRASA",
+          "area_da": 30,
+          "share": 0.003605
+        },
+        {
+          "crop": "SOĞAN (TAZE)",
+          "area_da": 30,
+          "share": 0.003605
+        },
+        {
+          "crop": "TURP (KIRMIZI)",
+          "area_da": 30,
+          "share": 0.003605
+        },
+        {
+          "crop": "SİVRİ BİBER",
+          "area_da": 16,
+          "share": 0.001923
+        },
+        {
+          "crop": "HIYAR (SOFRALIK)",
+          "area_da": 12,
+          "share": 0.001442
+        },
+        {
+          "crop": "FASULYE (TAZE)",
+          "area_da": 10,
+          "share": 0.001202
+        },
+        {
+          "crop": "KABAK (SAKIZ)",
+          "area_da": 7,
+          "share": 0.000841
+        }
+      ],
+      "Meyve/Bağ": [
+        {
+          "crop": "ELMA",
+          "area_da": 4940,
+          "share": 0.803644
+        },
+        {
+          "crop": "BAĞ",
+          "area_da": 700,
+          "share": 0.113877
+        },
+        {
+          "crop": "CEVİZ",
+          "area_da": 258,
+          "share": 0.041972
+        },
+        {
+          "crop": "KAYSI",
+          "area_da": 170,
+          "share": 0.027656
+        },
+        {
+          "crop": "KİRAZ",
+          "area_da": 24,
+          "share": 0.003904
+        },
+        {
+          "crop": "ARMUT",
+          "area_da": 20,
+          "share": 0.003254
+        },
+        {
+          "crop": "ŞEFTALİ",
+          "area_da": 15,
+          "share": 0.00244
+        },
+        {
+          "crop": "ERİK",
+          "area_da": 13,
+          "share": 0.002115
+        },
+        {
+          "crop": "NEKTAR",
+          "area_da": 4,
+          "share": 0.000651
+        },
+        {
+          "crop": "BADEM",
+          "area_da": 3,
+          "share": 0.000488
+        }
+      ]
+    },
+    "equal_village_share_m3": 20140016.162,
+    "equal_parcel_quota_m3": 468372.468884
+  },
+  "Kemerhisar": {
+    "source_workbook": "kemerhisar_2024_duzeltilmis_v5.xlsx",
+    "parcel_count": 35,
+    "total_area_da": 41102,
+    "observed_current_total_water_m3": 32139952.94,
+    "top_crops": [
+      {
+        "crop": "ELMA",
+        "area_da": 9546,
+        "share": 0.232251
+      },
+      {
+        "crop": "BUĞDAY (Dane)",
+        "area_da": 7110,
+        "share": 0.172984
+      },
+      {
+        "crop": "ARPA (Dane)",
+        "area_da": 5540,
+        "share": 0.134787
+      },
+      {
+        "crop": "SALÇALIK DOMATES",
+        "area_da": 5400,
+        "share": 0.13138
+      },
+      {
+        "crop": "ŞEKER PANCARI",
+        "area_da": 2800,
+        "share": 0.068123
+      },
+      {
+        "crop": "BAĞ",
+        "area_da": 2800,
+        "share": 0.068123
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "area_da": 2765,
+        "share": 0.067272
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "area_da": 850,
+        "share": 0.02068
+      },
+      {
+        "crop": "NOHUT",
+        "area_da": 650,
+        "share": 0.015814
+      },
+      {
+        "crop": "PATATES",
+        "area_da": 630,
+        "share": 0.015328
+      },
+      {
+        "crop": "CEVİZ",
+        "area_da": 597,
+        "share": 0.014525
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "area_da": 590,
+        "share": 0.014355
+      },
+      {
+        "crop": "KAYSI",
+        "area_da": 356,
+        "share": 0.008661
+      },
+      {
+        "crop": "FİĞ (YEŞİLOT)",
+        "area_da": 350,
+        "share": 0.008515
+      },
+      {
+        "crop": "KAVUN",
+        "area_da": 200,
+        "share": 0.004866
+      },
+      {
+        "crop": "AYÇİÇEĞİ",
+        "area_da": 153,
+        "share": 0.003722
+      },
+      {
+        "crop": "ÇAVDAR (YEŞİLOT)",
+        "area_da": 130,
+        "share": 0.003163
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "area_da": 120,
+        "share": 0.00292
+      },
+      {
+        "crop": "KARPUZ",
+        "area_da": 100,
+        "share": 0.002433
+      },
+      {
+        "crop": "KURU FASULYE",
+        "area_da": 75,
+        "share": 0.001825
+      },
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "area_da": 65,
+        "share": 0.001581
+      },
+      {
+        "crop": "ARMUT",
+        "area_da": 50,
+        "share": 0.001216
+      },
+      {
+        "crop": "BADEM",
+        "area_da": 43,
+        "share": 0.001046
+      },
+      {
+        "crop": "ÇAVDAR (Dane)",
+        "area_da": 40,
+        "share": 0.000973
+      },
+      {
+        "crop": "SOĞAN (KURU)",
+        "area_da": 40,
+        "share": 0.000973
+      },
+      {
+        "crop": "ERİK",
+        "area_da": 30,
+        "share": 0.00073
+      },
+      {
+        "crop": "NEKTAR",
+        "area_da": 16,
+        "share": 0.000389
+      },
+      {
+        "crop": "KİRAZ",
+        "area_da": 15,
+        "share": 0.000365
+      },
+      {
+        "crop": "MISIR (Dane)",
+        "area_da": 11,
+        "share": 0.000268
+      },
+      {
+        "crop": "ŞEFTALİ",
+        "area_da": 8,
+        "share": 0.000195
+      },
+      {
+        "crop": "LAVANTA",
+        "area_da": 7,
+        "share": 0.00017
+      },
+      {
+        "crop": "SİVRİ BİBER",
+        "area_da": 5,
+        "share": 0.000122
+      },
+      {
+        "crop": "FASULYE (TAZE)",
+        "area_da": 5,
+        "share": 0.000122
+      },
+      {
+        "crop": "KABAK (ÇEREZLİK)",
+        "area_da": 4,
+        "share": 0.000097
+      },
+      {
+        "crop": "HIYAR (SOFRALIK)",
+        "area_da": 1,
+        "share": 0.000024
+      }
+    ],
+    "top_crops_by_type": {
+      "Tarla/Yem": [
+        {
+          "crop": "BUĞDAY (Dane)",
+          "area_da": 7110,
+          "share": 0.336791
+        },
+        {
+          "crop": "ARPA (Dane)",
+          "area_da": 5540,
+          "share": 0.262422
+        },
+        {
+          "crop": "ŞEKER PANCARI",
+          "area_da": 2800,
+          "share": 0.132632
+        },
+        {
+          "crop": "YONCA (YEŞİLOT)",
+          "area_da": 2765,
+          "share": 0.130974
+        },
+        {
+          "crop": "SİLAJLIK MISIR",
+          "area_da": 850,
+          "share": 0.040263
+        },
+        {
+          "crop": "NOHUT",
+          "area_da": 650,
+          "share": 0.03079
+        },
+        {
+          "crop": "PATATES",
+          "area_da": 630,
+          "share": 0.029842
+        },
+        {
+          "crop": "FİĞ (YEŞİLOT)",
+          "area_da": 350,
+          "share": 0.016579
+        },
+        {
+          "crop": "AYÇİÇEĞİ",
+          "area_da": 153,
+          "share": 0.007247
+        },
+        {
+          "crop": "ÇAVDAR (YEŞİLOT)",
+          "area_da": 130,
+          "share": 0.006158
+        },
+        {
+          "crop": "KURU FASULYE",
+          "area_da": 75,
+          "share": 0.003553
+        },
+        {
+          "crop": "ÇAVDAR (Dane)",
+          "area_da": 40,
+          "share": 0.001895
+        },
+        {
+          "crop": "MISIR (Dane)",
+          "area_da": 11,
+          "share": 0.000521
+        },
+        {
+          "crop": "LAVANTA",
+          "area_da": 7,
+          "share": 0.000332
+        }
+      ],
+      "Sebze": [
+        {
+          "crop": "SALÇALIK DOMATES",
+          "area_da": 5400,
+          "share": 0.826953
+        },
+        {
+          "crop": "SALÇALIK BİBER",
+          "area_da": 590,
+          "share": 0.090352
+        },
+        {
+          "crop": "KAVUN",
+          "area_da": 200,
+          "share": 0.030628
+        },
+        {
+          "crop": "SOFRALIK DOMATES",
+          "area_da": 120,
+          "share": 0.018377
+        },
+        {
+          "crop": "KARPUZ",
+          "area_da": 100,
+          "share": 0.015314
+        },
+        {
+          "crop": "LAHANA (BEYAZ)",
+          "area_da": 65,
+          "share": 0.009954
+        },
+        {
+          "crop": "SOĞAN (KURU)",
+          "area_da": 40,
+          "share": 0.006126
+        },
+        {
+          "crop": "SİVRİ BİBER",
+          "area_da": 5,
+          "share": 0.000766
+        },
+        {
+          "crop": "FASULYE (TAZE)",
+          "area_da": 5,
+          "share": 0.000766
+        },
+        {
+          "crop": "KABAK (ÇEREZLİK)",
+          "area_da": 4,
+          "share": 0.000613
+        },
+        {
+          "crop": "HIYAR (SOFRALIK)",
+          "area_da": 1,
+          "share": 0.000153
+        }
+      ],
+      "Meyve/Bağ": [
+        {
+          "crop": "ELMA",
+          "area_da": 9546,
+          "share": 0.70916
+        },
+        {
+          "crop": "BAĞ",
+          "area_da": 2800,
+          "share": 0.208008
+        },
+        {
+          "crop": "CEVİZ",
+          "area_da": 597,
+          "share": 0.04435
+        },
+        {
+          "crop": "KAYSI",
+          "area_da": 356,
+          "share": 0.026447
+        },
+        {
+          "crop": "ARMUT",
+          "area_da": 50,
+          "share": 0.003714
+        },
+        {
+          "crop": "BADEM",
+          "area_da": 43,
+          "share": 0.003194
+        },
+        {
+          "crop": "ERİK",
+          "area_da": 30,
+          "share": 0.002229
+        },
+        {
+          "crop": "NEKTAR",
+          "area_da": 16,
+          "share": 0.001189
+        },
+        {
+          "crop": "KİRAZ",
+          "area_da": 15,
+          "share": 0.001114
+        },
+        {
+          "crop": "ŞEFTALİ",
+          "area_da": 8,
+          "share": 0.000594
+        }
+      ]
+    },
+    "equal_village_share_m3": 20140016.162,
+    "equal_parcel_quota_m3": 575429.0332
+  },
+  "Kaynarca": {
+    "source_workbook": "kaynarca_2024_duzeltilmis_v5.xlsx",
+    "parcel_count": 23,
+    "total_area_da": 10191,
+    "observed_current_total_water_m3": 5713996.45,
+    "top_crops": [
+      {
+        "crop": "LAHANA (BEYAZ)",
+        "area_da": 5150,
+        "share": 0.505348
+      },
+      {
+        "crop": "SALÇALIK DOMATES",
+        "area_da": 2148,
+        "share": 0.210774
+      },
+      {
+        "crop": "BUĞDAY (Dane)",
+        "area_da": 878,
+        "share": 0.086154
+      },
+      {
+        "crop": "ARPA (Dane)",
+        "area_da": 725,
+        "share": 0.071141
+      },
+      {
+        "crop": "BAĞ",
+        "area_da": 350,
+        "share": 0.034344
+      },
+      {
+        "crop": "KAVUN",
+        "area_da": 250,
+        "share": 0.024531
+      },
+      {
+        "crop": "YONCA (YEŞİLOT)",
+        "area_da": 145,
+        "share": 0.014228
+      },
+      {
+        "crop": "ELMA",
+        "area_da": 130,
+        "share": 0.012756
+      },
+      {
+        "crop": "CEVİZ",
+        "area_da": 79,
+        "share": 0.007752
+      },
+      {
+        "crop": "KARPUZ",
+        "area_da": 70,
+        "share": 0.006869
+      },
+      {
+        "crop": "SOFRALIK DOMATES",
+        "area_da": 60,
+        "share": 0.005888
+      },
+      {
+        "crop": "KAYSI",
+        "area_da": 40,
+        "share": 0.003925
+      },
+      {
+        "crop": "ŞEFTALİ",
+        "area_da": 32,
+        "share": 0.00314
+      },
+      {
+        "crop": "SİLAJLIK MISIR",
+        "area_da": 30,
+        "share": 0.002944
+      },
+      {
+        "crop": "ÇAVDAR (YEŞİLOT)",
+        "area_da": 30,
+        "share": 0.002944
+      },
+      {
+        "crop": "PATATES",
+        "area_da": 25,
+        "share": 0.002453
+      },
+      {
+        "crop": "SORGUM",
+        "area_da": 15,
+        "share": 0.001472
+      },
+      {
+        "crop": "ARMUT",
+        "area_da": 11,
+        "share": 0.001079
+      },
+      {
+        "crop": "SALÇALIK BİBER",
+        "area_da": 10,
+        "share": 0.000981
+      },
+      {
+        "crop": "NEKTAR",
+        "area_da": 6,
+        "share": 0.000589
+      },
+      {
+        "crop": "KİRAZ",
+        "area_da": 3,
+        "share": 0.000294
+      },
+      {
+        "crop": "SİVRİ BİBER",
+        "area_da": 2,
+        "share": 0.000196
+      },
+      {
+        "crop": "BADEM",
+        "area_da": 2,
+        "share": 0.000196
+      }
+    ],
+    "top_crops_by_type": {
+      "Tarla/Yem": [
+        {
+          "crop": "BUĞDAY (Dane)",
+          "area_da": 878,
+          "share": 0.475108
+        },
+        {
+          "crop": "ARPA (Dane)",
+          "area_da": 725,
+          "share": 0.392316
+        },
+        {
+          "crop": "YONCA (YEŞİLOT)",
+          "area_da": 145,
+          "share": 0.078463
+        },
+        {
+          "crop": "SİLAJLIK MISIR",
+          "area_da": 30,
+          "share": 0.016234
+        },
+        {
+          "crop": "ÇAVDAR (YEŞİLOT)",
+          "area_da": 30,
+          "share": 0.016234
+        },
+        {
+          "crop": "PATATES",
+          "area_da": 25,
+          "share": 0.013528
+        },
+        {
+          "crop": "SORGUM",
+          "area_da": 15,
+          "share": 0.008117
+        }
+      ],
+      "Sebze": [
+        {
+          "crop": "LAHANA (BEYAZ)",
+          "area_da": 5150,
+          "share": 0.669701
+        },
+        {
+          "crop": "SALÇALIK DOMATES",
+          "area_da": 2148,
+          "share": 0.279324
+        },
+        {
+          "crop": "KAVUN",
+          "area_da": 250,
+          "share": 0.03251
+        },
+        {
+          "crop": "KARPUZ",
+          "area_da": 70,
+          "share": 0.009103
+        },
+        {
+          "crop": "SOFRALIK DOMATES",
+          "area_da": 60,
+          "share": 0.007802
+        },
+        {
+          "crop": "SALÇALIK BİBER",
+          "area_da": 10,
+          "share": 0.0013
+        },
+        {
+          "crop": "SİVRİ BİBER",
+          "area_da": 2,
+          "share": 0.00026
+        }
+      ],
+      "Meyve/Bağ": [
+        {
+          "crop": "BAĞ",
+          "area_da": 350,
+          "share": 0.535988
+        },
+        {
+          "crop": "ELMA",
+          "area_da": 130,
+          "share": 0.199081
+        },
+        {
+          "crop": "CEVİZ",
+          "area_da": 79,
+          "share": 0.12098
+        },
+        {
+          "crop": "KAYSI",
+          "area_da": 40,
+          "share": 0.061256
+        },
+        {
+          "crop": "ŞEFTALİ",
+          "area_da": 32,
+          "share": 0.049005
+        },
+        {
+          "crop": "ARMUT",
+          "area_da": 11,
+          "share": 0.016845
+        },
+        {
+          "crop": "NEKTAR",
+          "area_da": 6,
+          "share": 0.009188
+        },
+        {
+          "crop": "KİRAZ",
+          "area_da": 3,
+          "share": 0.004594
+        },
+        {
+          "crop": "BADEM",
+          "area_da": 2,
+          "share": 0.003063
+        }
+      ]
+    },
+    "equal_village_share_m3": 20140016.162,
+    "equal_parcel_quota_m3": 875652.876609
+  }
+}

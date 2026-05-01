@@ -1,0 +1,153 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            34.603552728054275,
+            37.89618607302593
+          ],
+          [
+            34.61778797147409,
+            37.89426824854256
+          ],
+          [
+            34.61671683748266,
+            37.893504293886735
+          ],
+          [
+            34.61495705530966,
+            37.89402228603997
+          ],
+          [
+            34.61431355309196,
+            37.893214216994764
+          ],
+          [
+            34.61471198815484,
+            37.89297161835054
+          ],
+          [
+            34.61521552359972,
+            37.89332408254553
+          ],
+          [
+            34.6158892683634,
+            37.89313386384451
+          ],
+          [
+            34.61378292904775,
+            37.89213800585155
+          ],
+          [
+            34.613357406116,
+            37.89123724613249
+          ],
+          [
+            34.615934851156226,
+            37.890161294283715
+          ],
+          [
+            34.6184574260812,
+            37.889001520133235
+          ],
+          [
+            34.619777183884175,
+            37.89014152541009
+          ],
+          [
+            34.619766146194785,
+            37.89063251516647
+          ],
+          [
+            34.62119843467738,
+            37.89176242732256
+          ],
+          [
+            34.62191958707426,
+            37.891928356923216
+          ],
+          [
+            34.622380323633486,
+            37.89386417576159
+          ],
+          [
+            34.62303136322762,
+            37.89395108881908
+          ],
+          [
+            34.62428336361099,
+            37.89242614375259
+          ],
+          [
+            34.623922787412546,
+            37.89080634880936
+          ],
+          [
+            34.62306141216115,
+            37.889344551711574
+          ],
+          [
+            34.620761353688216,
+            37.8849569518062
+          ],
+          [
+            34.6190184128812,
+            37.880795352297625
+          ],
+          [
+            34.61451822990023,
+            37.87220096945147
+          ],
+          [
+            34.60952501299871,
+            37.8727427296831
+          ],
+          [
+            34.60240968373547,
+            37.8762887007328
+          ],
+          [
+            34.603595574088864,
+            37.89642854831871
+          ]
+        ]
+      },
+      "properties": {
+        "source_file": "geojson_yeni_klasor4/sazlica_sulu_salcalik_domates_3754 da_P23.geojson",
+        "source_label": "sazlica_sulu_salcalik_domates_3754 da_P23.geojson",
+        "geometry_status": "Yüklü gerçek GeoJSON",
+        "geometry_source": "uploaded_real_geojson",
+        "has_real_geojson": true,
+        "drawing_required": false,
+        "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+        "assignment_status": "geometry_ready",
+        "village": "Sazlıca",
+        "id": "P23",
+        "name": "P23",
+        "parcel_id": "P23",
+        "district": "Merkez",
+        "current_crop": "SALÇALIK DOMATES",
+        "crop": "SALÇALIK DOMATES",
+        "assigned_pattern": "SALÇALIK DOMATES",
+        "assigned_alternative_label": "Mevcut desen / Excel referansı",
+        "water_mode": "sulu",
+        "irrigation_key": "irrigated",
+        "irrigation_current": "Sulama",
+        "is_orchard": false,
+        "parcel_type": "field",
+        "area_da": 3754,
+        "area_official_da": 3754,
+        "farmer_id": "C-BETUL",
+        "farmer_name": "Betül Demir",
+        "owner_username": "betul.demir",
+        "assigned_farmer_username": "betul.demir",
+        "assigned_farmer_name": "Betül Demir"
+      },
+      "id": 1773614663848
+    }
+  ]
+}

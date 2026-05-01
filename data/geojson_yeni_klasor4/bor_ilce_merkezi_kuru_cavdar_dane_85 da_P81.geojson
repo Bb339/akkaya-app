@@ -1,0 +1,77 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P81",
+    "name": "P81",
+    "display_name": "P81",
+    "area_da": 552.6,
+    "area_m2": 552600,
+    "village": "Bor İlçe Merkezi",
+    "district": "Bor",
+    "current_crop": "ÇAVDAR (Dane)",
+    "irrigation_key": "rainfed",
+    "irrigation_label": "Yağışa bağlı / Kuru",
+    "farmer": "Veli Koç",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "bor_ilce_merkezi_kuru_cavdar_dane_85 da_P81.geojson",
+    "owner_username": "C081",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T12:42:26.723Z",
+    "water_mode": "kuru",
+    "is_user_parcel": true,
+    "area_official_da": 85,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C081",
+    "farmer_name": "Veli Koç",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "ÇAVDAR (Dane)",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 43684.9,
+    "profit_tl_current": 212500,
+    "equal_parcel_quota_m3": "468372.468884",
+    "assigned_water_m3": 43684.9,
+    "assigned_profit_tl": 212500,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T12:42:28.397Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/bor_ilce_merkezi_kuru_cavdar_dane_85 da_P81.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.56305519804427,
+          37.859680784777204
+        ],
+        [
+          34.56923347473804,
+          37.86120595616638
+        ],
+        [
+          34.57554046552962,
+          37.857342127350364
+        ],
+        [
+          34.565629480000034,
+          37.85283407107465
+        ],
+        [
+          34.56305519804427,
+          37.859680784777204
+        ]
+      ]
+    ]
+  }
+}

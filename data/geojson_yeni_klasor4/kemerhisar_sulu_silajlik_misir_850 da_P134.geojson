@@ -1,0 +1,81 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P134",
+    "name": "P134",
+    "display_name": "P134",
+    "area_da": 280.8,
+    "area_m2": 280800,
+    "village": "Kemerhisar",
+    "district": "Bor",
+    "current_crop": "SİLAJLIK MISIR",
+    "irrigation_key": "sprinkler",
+    "irrigation_label": "Yağmurlama",
+    "farmer": "Selim Kara",
+    "parcel_type": "field",
+    "is_orchard": false,
+    "source_label": "kemerhisar_sulu_silajlik_misir_850 da_P134.geojson",
+    "owner_username": "C134",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T10:27:48.917Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 850,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C134",
+    "farmer_name": "Selim Kara",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen",
+    "assigned_pattern": "SİLAJLIK MISIR",
+    "assignment_status": "approved",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 710608.5,
+    "profit_tl_current": 5270000,
+    "equal_parcel_quota_m3": "575429.033200",
+    "assigned_water_m3": 710608.5,
+    "assigned_profit_tl": 5270000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T10:27:51.452Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kemerhisar_sulu_silajlik_misir_850 da_P134.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.54776867048505,
+          37.80878303148529
+        ],
+        [
+          34.549828096049616,
+          37.8150912197581
+        ],
+        [
+          34.55188752161422,
+          37.81631209717069
+        ],
+        [
+          34.553904042479545,
+          37.81607470592176
+        ],
+        [
+          34.555834753946364,
+          37.81336160886144
+        ],
+        [
+          34.54776867048505,
+          37.80878303148529
+        ]
+      ]
+    ]
+  }
+}

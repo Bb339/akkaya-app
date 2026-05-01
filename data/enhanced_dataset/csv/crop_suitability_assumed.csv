@@ -1,0 +1,385 @@
+land_capability_class,crop,suitability_score_assumed,rule,suitability_status,basis
+I,Armut,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Arpa (Dane),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Arpa (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Ayçiçeği,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Badem,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Barbunya fasulye (Taze),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Bağ,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Biber (Salçalık),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Biber (Sivri),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Buğday (Dane),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Buğday (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Ceviz,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Domates (Salçalık),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Domates (Sofralık),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Elma,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Erik,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Fasulye (Taze),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Fiğ (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Hıyar (Sofralık),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kabak,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kabak,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kabak,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Karpuz,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kavun,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kayısı,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kiraz,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Kuru fasulye,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Lahana (Beyaz),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Lahana (Kırmızı),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Mısır (Silajlık),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Nektarin,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Nohut,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Patates,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Sarımsak (Kuru),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Sorgum,0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Soğan (Kuru),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Soğan (Kuru),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Tritikale (Dane),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Tritikale (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Vişne,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Yonca (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Yulaf (Dane),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Yulaf (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Çavdar (Dane),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Çavdar (Yeşilot),0.95,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Çilek,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+I,Şeftali,0.93,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Armut,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Arpa (Dane),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Arpa (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Ayçiçeği,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Badem,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Barbunya fasulye (Taze),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Bağ,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Biber (Salçalık),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Biber (Sivri),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Buğday (Dane),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Buğday (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Ceviz,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Domates (Salçalık),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Domates (Sofralık),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Elma,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Erik,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Fasulye (Taze),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Fiğ (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Hıyar (Sofralık),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kabak,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kabak,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kabak,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Karpuz,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kavun,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kayısı,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kiraz,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Kuru fasulye,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Lahana (Beyaz),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Lahana (Kırmızı),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Mısır (Silajlık),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Nektarin,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Nohut,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Patates,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Sarımsak (Kuru),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Sorgum,0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Soğan (Kuru),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Soğan (Kuru),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Tritikale (Dane),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Tritikale (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Vişne,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Yonca (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Yulaf (Dane),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Yulaf (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Çavdar (Dane),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Çavdar (Yeşilot),0.92,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Çilek,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+II,Şeftali,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Armut,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Arpa (Dane),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Arpa (Yeşilot),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Ayçiçeği,0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Badem,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Barbunya fasulye (Taze),0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Bağ,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Biber (Salçalık),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Biber (Sivri),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Buğday (Dane),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Buğday (Yeşilot),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Ceviz,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Domates (Salçalık),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Domates (Sofralık),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Elma,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Erik,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Fasulye (Taze),0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Fiğ (Yeşilot),0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Hıyar (Sofralık),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kabak,0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kabak,0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kabak,0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Karpuz,0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kavun,0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kayısı,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kiraz,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Kuru fasulye,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Lahana (Beyaz),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Lahana (Kırmızı),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Mısır (Silajlık),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Nektarin,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Nohut,0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Patates,0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Sarımsak (Kuru),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Sorgum,0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Soğan (Kuru),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Soğan (Kuru),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Tritikale (Dane),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Tritikale (Yeşilot),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Vişne,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Yonca (Yeşilot),0.9,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Yulaf (Dane),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Yulaf (Yeşilot),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Çavdar (Dane),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Çavdar (Yeşilot),0.84,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Çilek,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+III,Şeftali,0.82,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Armut,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Arpa (Dane),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Arpa (Yeşilot),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Ayçiçeği,0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Badem,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Barbunya fasulye (Taze),0.66,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Bağ,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Biber (Salçalık),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Biber (Sivri),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Buğday (Dane),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Buğday (Yeşilot),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Ceviz,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Domates (Salçalık),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Domates (Sofralık),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Elma,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Erik,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Fasulye (Taze),0.66,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Fiğ (Yeşilot),0.78,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Hıyar (Sofralık),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kabak,0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kabak,0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kabak,0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Karpuz,0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kavun,0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kayısı,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kiraz,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Kuru fasulye,0.78,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Lahana (Beyaz),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Lahana (Kırmızı),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Mısır (Silajlık),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Nektarin,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Nohut,0.78,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Patates,0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Sarımsak (Kuru),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Sorgum,0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Soğan (Kuru),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Soğan (Kuru),0.6,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Tritikale (Dane),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Tritikale (Yeşilot),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Vişne,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Yonca (Yeşilot),0.78,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Yulaf (Dane),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Yulaf (Yeşilot),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Çavdar (Dane),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Çavdar (Yeşilot),0.76,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Çilek,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+IV,Şeftali,0.54,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Armut,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Arpa (Dane),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Arpa (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Ayçiçeği,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Badem,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Barbunya fasulye (Taze),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Bağ,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Biber (Salçalık),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Biber (Sivri),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Buğday (Dane),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Buğday (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Ceviz,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Domates (Salçalık),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Domates (Sofralık),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Elma,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Erik,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Fasulye (Taze),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Fiğ (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Hıyar (Sofralık),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kabak,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kabak,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kabak,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Karpuz,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kavun,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kayısı,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kiraz,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Kuru fasulye,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Lahana (Beyaz),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Lahana (Kırmızı),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Mısır (Silajlık),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Nektarin,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Nohut,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Patates,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Sarımsak (Kuru),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Sorgum,0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Soğan (Kuru),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Soğan (Kuru),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Tritikale (Dane),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Tritikale (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Vişne,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Yonca (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Yulaf (Dane),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Yulaf (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Çavdar (Dane),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Çavdar (Yeşilot),0.55,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Çilek,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+V,Şeftali,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Armut,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Arpa (Dane),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Arpa (Yeşilot),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Ayçiçeği,0.68,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Badem,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Barbunya fasulye (Taze),0.62,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Bağ,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Biber (Salçalık),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Biber (Sivri),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Buğday (Dane),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Buğday (Yeşilot),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Ceviz,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Domates (Salçalık),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Domates (Sofralık),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Elma,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Erik,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Fasulye (Taze),0.62,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Fiğ (Yeşilot),0.74,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Hıyar (Sofralık),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kabak,0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kabak,0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kabak,0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Karpuz,0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kavun,0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kayısı,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kiraz,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Kuru fasulye,0.74,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Lahana (Beyaz),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Lahana (Kırmızı),0.46,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Mısır (Silajlık),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Nektarin,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Nohut,0.74,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Patates,0.68,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Sarımsak (Kuru),0.56,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Sorgum,0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Soğan (Kuru),0.56,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Soğan (Kuru),0.56,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Tritikale (Dane),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Tritikale (Yeşilot),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Vişne,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Yonca (Yeşilot),0.74,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Yulaf (Dane),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Yulaf (Yeşilot),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Çavdar (Dane),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Çavdar (Yeşilot),0.72,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Çilek,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VI,Şeftali,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Armut,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Arpa (Dane),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Arpa (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Ayçiçeği,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Badem,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Barbunya fasulye (Taze),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Bağ,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Biber (Salçalık),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Biber (Sivri),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Buğday (Dane),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Buğday (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Ceviz,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Diğer Alan,0.35,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Domates (Salçalık),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Domates (Sofralık),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Elma,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Erik,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Fasulye (Taze),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Fiğ (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Hıyar (Sofralık),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kabak,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kabak,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kabak,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Karpuz,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kavun,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kayısı,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kiraz,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Kuru fasulye,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Lahana (Beyaz),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Lahana (Kırmızı),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Mısır (Silajlık),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Nektarin,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Nohut,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Patates,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Sarımsak (Kuru),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Sorgum,0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Soğan (Kuru),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Soğan (Kuru),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Tritikale (Dane),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Tritikale (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Vişne,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Yonca (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Yulaf (Dane),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Yulaf (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Çavdar (Dane),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Çavdar (Yeşilot),0.45,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Çilek,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VII,Şeftali,0.11,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Armut,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Arpa (Dane),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Arpa (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Ayçiçeği,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Badem,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Barbunya fasulye (Taze),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Bağ,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Biber (Salçalık),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Biber (Sivri),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Buğday (Dane),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Buğday (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Ceviz,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Diğer Alan,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Domates (Salçalık),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Domates (Sofralık),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Elma,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Erik,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Fasulye (Taze),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Fiğ (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Hıyar (Sofralık),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kabak,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kabak,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kabak,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Karpuz,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kavun,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kayısı,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kiraz,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Kuru fasulye,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Lahana (Beyaz),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Lahana (Kırmızı),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Mısır (Silajlık),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Nektarin,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Nohut,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Patates,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Sarımsak (Kuru),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Sorgum,0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Soğan (Kuru),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Soğan (Kuru),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Tritikale (Dane),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Tritikale (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Vişne,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Yonca (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Yulaf (Dane),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Yulaf (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Çavdar (Dane),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Çavdar (Yeşilot),0.2,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Çilek,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic
+VIII,Şeftali,0.05,heuristic_lcc_x_crop_type_v18,filled_proxy_openly_labeled,urun_parametreleri_demo parcel_type/crop_family + LCC generic agronomic heuristic

@@ -1,0 +1,73 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "P178",
+    "name": "P178",
+    "display_name": "P178",
+    "area_da": 635,
+    "area_m2": 635000,
+    "village": "Kaynarca",
+    "district": "Bor",
+    "current_crop": "NEKTAR",
+    "irrigation_key": "drip",
+    "irrigation_label": "Damla",
+    "farmer": "Ahmet Çelik",
+    "parcel_type": "orchard",
+    "is_orchard": true,
+    "source_label": "kaynarca_sulu_nektar_6 da_P178.geojson",
+    "owner_username": "C178",
+    "approval_status": "approved",
+    "approval_note": "Yönetici çizim modunda parsel bilgisine geometri bağlandı.",
+    "reviewed_by": "",
+    "reviewed_at": "",
+    "submitted_at": "2026-04-25T08:27:57.030Z",
+    "water_mode": "sulu",
+    "is_user_parcel": true,
+    "area_official_da": 6,
+    "area_drawn_da": "",
+    "irrigation_current": "",
+    "farmer_id": "C178",
+    "farmer_name": "Ahmet Çelik",
+    "assigned_alternative_id": "current",
+    "assigned_alternative_label": "Mevcut desen / Excel referansı",
+    "assigned_pattern": "NEKTAR",
+    "assignment_status": "geometry_ready",
+    "geometry_status": "Yüklü gerçek GeoJSON",
+    "geometry_source": "uploaded_real_geojson",
+    "water_m3_current": 5087.94,
+    "profit_tl_current": 60000,
+    "equal_parcel_quota_m3": "875652.876609",
+    "assigned_water_m3": 5087.94,
+    "assigned_profit_tl": 60000,
+    "assignment_note": "Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.",
+    "assigned_at": "2026-04-25T08:27:59.604Z",
+    "data_source": "parcel_drawing_registry_2024",
+    "source_file": "geojson_yeni_klasor4/kaynarca_sulu_nektar_6 da_P178.geojson",
+    "has_real_geojson": true,
+    "drawing_required": false,
+    "assignment_status_label": "GeoJSON yüklü, seçilebilir"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          34.59819607348078,
+          37.84759023776852
+        ],
+        [
+          34.61042391277057,
+          37.85213251121337
+        ],
+        [
+          34.59772412178889,
+          37.858030269582066
+        ],
+        [
+          34.59819607348078,
+          37.84759023776852
+        ]
+      ]
+    ]
+  }
+}

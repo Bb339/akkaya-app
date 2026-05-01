@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+server.log
+server.err.log
+*.png
+data/_unused_archive_v96/
+node_modules/
+.env
