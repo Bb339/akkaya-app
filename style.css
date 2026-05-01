@@ -1,4 +1,4 @@
-*,
+﻿*,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -62,7 +62,7 @@ body {
 
 .app-main {
   padding: 18px 24px 40px;
-  /* Daha akışkan (fluid) yerleşim: dar ekranda sıkışmasın, geniş ekranda da aşırı dar kalmasın */
+  /* Daha akÄ±ÅŸkan (fluid) yerleÅŸim: dar ekranda sÄ±kÄ±ÅŸmasÄ±n, geniÅŸ ekranda da aÅŸÄ±rÄ± dar kalmasÄ±n */
   width: calc(100% - 48px);
   max-width: 1920px;
   margin: 0 auto;
@@ -71,7 +71,7 @@ body {
 
 .layout {
   display: grid;
-  /* Sol paneli biraz genişlet, sağ tarafı nefes aldır */
+  /* Sol paneli biraz geniÅŸlet, saÄŸ tarafÄ± nefes aldÄ±r */
   grid-template-columns: 360px minmax(0, 1fr);
   gap: 18px;
 }
@@ -80,7 +80,7 @@ body {
   .layout{ grid-template-columns: 1fr; }
 }
 
-/* Sol kolon: sabit (sticky) ve kendi içinde kaydırılabilir */
+/* Sol kolon: sabit (sticky) ve kendi iÃ§inde kaydÄ±rÄ±labilir */
 .left-col{
   align-self: start;
   position: sticky;
@@ -90,7 +90,7 @@ body {
   padding-right: 4px;
 }
 
-/* Sol panelde en üst kontrol kartını panel içinde sabitle */
+/* Sol panelde en Ã¼st kontrol kartÄ±nÄ± panel iÃ§inde sabitle */
 .left-col > .card:first-child{
   position: sticky;
   top: 0;
@@ -122,11 +122,11 @@ body {
 }
 .details-card summary::-webkit-details-marker{ display:none; }
 .details-card summary::after{
-  content: "▾";
+  content: "â–¾";
   color: var(--muted);
   font-size: 14px;
 }
-.details-card[open] summary::after{ content: "▴"; }
+.details-card[open] summary::after{ content: "â–´"; }
 .details-card .details-body{ margin-top: 10px; }
 
 .card-title {
@@ -181,7 +181,7 @@ body {
   background: #fff;
 }
 
-/* Algoritma seçim kartları (dropdown yerine) */
+/* Algoritma seÃ§im kartlarÄ± (dropdown yerine) */
 .algo-choice{
   display:flex;
   flex-direction:column;
@@ -433,7 +433,7 @@ body {
   gap: 12px;
 }
 
-/* Benchmark charts layout (was missing -> elements looked "iç içe") */
+/* Benchmark charts layout (was missing -> elements looked "iÃ§ iÃ§e") */
 .chart-grid{
   display:grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -662,7 +662,7 @@ body {
     grid-template-columns: 1fr;
   }
 
-  /* Dar ekranda sol paneli sticky yapma: içerik üst üste gelsin */
+  /* Dar ekranda sol paneli sticky yapma: iÃ§erik Ã¼st Ã¼ste gelsin */
   .left-col{
     position: relative;
     top: auto;
@@ -672,7 +672,7 @@ body {
   }
 }
 
-/* Orta ekranlar: iki kolon kalsın ama sağ tarafı daha rahatlat */
+/* Orta ekranlar: iki kolon kalsÄ±n ama saÄŸ tarafÄ± daha rahatlat */
 @media (max-width: 1360px){
   .layout{ grid-template-columns: 320px minmax(0, 1fr); }
   .right-top{ grid-template-columns: 1fr; }
@@ -685,9 +685,9 @@ body {
 }
 
 
-/* Ek: grafik kartlarının ve canvas'ların görünümünü iyileştir */
+/* Ek: grafik kartlarÄ±nÄ±n ve canvas'larÄ±n gÃ¶rÃ¼nÃ¼mÃ¼nÃ¼ iyileÅŸtir */
 .small-chart-card {
-  /* üç senaryo grafiğinin bulunduğu kartlar */
+  /* Ã¼Ã§ senaryo grafiÄŸinin bulunduÄŸu kartlar */
   min-height: 230px;
   display: flex;
   flex-direction: column;
@@ -770,7 +770,7 @@ body {
   padding: 10px 2px;
 }
 
-/* İlçe / il özeti ve su bütçesi grafik satırları */
+/* Ä°lÃ§e / il Ã¶zeti ve su bÃ¼tÃ§esi grafik satÄ±rlarÄ± */
 .district-row {
   align-items: stretch;
 }
@@ -782,7 +782,7 @@ body {
 }
 
 
-/* --- Optimizasyon aksiyonları --- */
+/* --- Optimizasyon aksiyonlarÄ± --- */
 .algo-actions{
   display:flex;
   align-items:center;
@@ -804,12 +804,12 @@ body {
   color: var(--muted);
 }
 
-/* --- Grafiklerin yassılaşmasını azalt + sayfa uzamasını engelle --- */
+/* --- Grafiklerin yassÄ±laÅŸmasÄ±nÄ± azalt + sayfa uzamasÄ±nÄ± engelle --- */
 .small-chart-card{
   height: 250px;            /* daha dik */
 }
 .small-chart-card canvas{
-  height: 190px !important; /* chart alanı */
+  height: 190px !important; /* chart alanÄ± */
 }
 
 .donut-card{
@@ -819,7 +819,7 @@ body {
   height: 190px !important;
 }
 
-/* Alt sekmelerdeki grafik kartları */
+/* Alt sekmelerdeki grafik kartlarÄ± */
 .district-row .card{
   height: 280px;
 }
@@ -828,7 +828,7 @@ body {
 }
 
 
-/* --- Data loader (CSV bağlama) --- */
+/* --- Data loader (CSV baÄŸlama) --- */
 .data-loader{ margin-top:10px; padding-top:10px; border-top:1px dashed rgba(0,0,0,.12); }
 .data-status{ font-size:13px; color: var(--muted); margin-bottom:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 .data-actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -857,7 +857,7 @@ body {
 }
 
 .explain-box{
-  /* Tek kart dili: koyu kutu yerine yumuşak vurgu */
+  /* Tek kart dili: koyu kutu yerine yumuÅŸak vurgu */
   background: #f8f9fa;
   color: var(--text);
   border: 1px solid var(--border);
@@ -877,7 +877,7 @@ body {
 .muted{ color: var(--muted); font-size:12px; }
 
 
-/* --- canlı veri ayarları --- */
+/* --- canlÄ± veri ayarlarÄ± --- */
 .grid-2{
   display:grid;
   grid-template-columns: 1fr 1fr;
@@ -914,7 +914,7 @@ body {
 
 
 
-/* Harita üzerindeki sabit parsel etiketleri */
+/* Harita Ã¼zerindeki sabit parsel etiketleri */
 .parcel-label{
   background: rgba(255,255,255,.85);
   border: 1px solid rgba(0,0,0,.15);
@@ -924,7 +924,7 @@ body {
   font-weight: 600;
   color: #111;
   box-shadow: 0 1px 2px rgba(0,0,0,.15);
-  pointer-events: none; /* tıklamayı engellemesin */
+  pointer-events: none; /* tÄ±klamayÄ± engellemesin */
 }
 
 /* v84: Daha modern ve kompakt P etiketi (badge) */
@@ -954,14 +954,14 @@ body {
   width:8px; height:8px; border-radius:50%;
   background:#2b7cff; /* tarla */
 }
-.parcel-badge.orchard .dot{ background:#23a559; } /* bahçe */
+.parcel-badge.orchard .dot{ background:#23a559; } /* bahÃ§e */
 .parcel-badge .hint{
   font-weight:900;
   opacity:.55;
   margin-left:2px;
 }
 
-/* Hover bilgi kutusu biraz daha “kart” gibi dursun */
+/* Hover bilgi kutusu biraz daha â€œkartâ€ gibi dursun */
 .parcel-pop .t{
   display:flex;
   align-items:center;
@@ -992,7 +992,7 @@ body {
 .parcel-pop .v.source-file{ max-width:220px; line-height:1.28; word-break:break-word; }
 
 
-/* Harita hover bilgi kutusu (parsel alanı) */
+/* Harita hover bilgi kutusu (parsel alanÄ±) */
 .leaflet-popup.parcel-popup .leaflet-popup-content-wrapper{
   border-radius: 10px;
   padding: 0;
@@ -1016,7 +1016,7 @@ body {
 }
 
 
-/* Aktif dosyalar (daha kompakt, rozetli görünüm) */
+/* Aktif dosyalar (daha kompakt, rozetli gÃ¶rÃ¼nÃ¼m) */
 .active-files{
   margin-top:10px;
   padding:10px 10px 8px 10px;
@@ -1058,7 +1058,7 @@ body {
 .file-badge .dot{
   width:8px;height:8px;border-radius:999px;display:inline-block;
 }
-.file-badge.backend .dot{ background:#10b981; }      /* yeşil */
+.file-badge.backend .dot{ background:#10b981; }      /* yeÅŸil */
 .file-badge.season .dot{ background:#3b82f6; }       /* mavi */
 .file-badge.reservoir .dot{ background:#a855f7; }    /* mor */
 .file-badge.manual .dot{ background:#f59e0b; }       /* turuncu */
@@ -1242,7 +1242,7 @@ body {
 
 
 
-/* ====== 5 Yıllık Plan KPI & Çağrı Kutusu ====== */
+/* ====== 5 YÄ±llÄ±k Plan KPI & Ã‡aÄŸrÄ± Kutusu ====== */
 .kpi-row{
   display:grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1299,7 +1299,7 @@ body {
 }
 
 
-/* --- Kuraklık Alarmı kartı --- */
+/* --- KuraklÄ±k AlarmÄ± kartÄ± --- */
 .drought-card{
   margin-top: 10px;
   padding: 10px 12px;
@@ -1351,7 +1351,7 @@ body {
 }
 
 
-/* Kuraklık kartı: Grafik + sağ panel yerleşimi */
+/* KuraklÄ±k kartÄ±: Grafik + saÄŸ panel yerleÅŸimi */
 .drought-layout{
   display: flex;
   gap: 12px;
@@ -1388,8 +1388,8 @@ body {
   .drought-side{ min-width: auto; }
 }
 
-/* Kuraklık Alarmı için dikkat çekici (ama rahatsız etmeyen) arka plan alarm efekti
-   Not: Efekt sadece "Kuraklık Alarmı" kartına uygulanır (pulse-attn sınıfı). */
+/* KuraklÄ±k AlarmÄ± iÃ§in dikkat Ã§ekici (ama rahatsÄ±z etmeyen) arka plan alarm efekti
+   Not: Efekt sadece "KuraklÄ±k AlarmÄ±" kartÄ±na uygulanÄ±r (pulse-attn sÄ±nÄ±fÄ±). */
 @keyframes droughtAlarmFlash {
   0%, 100% {
     background: rgba(255, 255, 255, 0.96);
@@ -1433,7 +1433,7 @@ body {
 }
 
 
-/* Kuraklık paneli ana sayfa yerleşimi */
+/* KuraklÄ±k paneli ana sayfa yerleÅŸimi */
 .drought-main-container{
   margin-top: 12px;
 }
@@ -1463,7 +1463,7 @@ body {
  100%{box-shadow:0 0 0 0 rgba(122,0,0,0);}
 }
 
-/* Kuraklık göstergelerini parsel haritasının üstünde göstermek için */
+/* KuraklÄ±k gÃ¶stergelerini parsel haritasÄ±nÄ±n Ã¼stÃ¼nde gÃ¶stermek iÃ§in */
 .drought-inline-above-map{
   margin-bottom: 12px;
 }
@@ -1476,7 +1476,7 @@ body {
   max-height: 260px;
 }
 
-/* Kuraklık alarm kartını sağ kolonda ilk satırda tam genişlikte göster */
+/* KuraklÄ±k alarm kartÄ±nÄ± saÄŸ kolonda ilk satÄ±rda tam geniÅŸlikte gÃ¶ster */
 .right-col > .drought-main-container{
   width: 100%;
   margin-bottom: 14px;
@@ -1489,7 +1489,7 @@ body {
   100%{ box-shadow:0 0 0 0 rgba(122,0,0,0), 0 8px 26px rgba(122,0,0,.35);}
 }
 
-/* Detay kuraklık kartı */
+/* Detay kuraklÄ±k kartÄ± */
 .drought-details-card{ margin-top: 12px; }
 .drought-details__summary{
   cursor:pointer;
@@ -1504,7 +1504,7 @@ body {
   100%{ box-shadow:0 0 0 0 rgba(122,0,0,0), 0 8px 26px rgba(122,0,0,.35);}
 }
 
-/* Kuraklık Detay başlığında sağda kritik uyarı */
+/* KuraklÄ±k Detay baÅŸlÄ±ÄŸÄ±nda saÄŸda kritik uyarÄ± */
 .drought-details__summary{
   display:flex;
   align-items:center;
@@ -1527,7 +1527,7 @@ body {
   animation:pulseAlarm 1.6s infinite;
 }
 
-/* Otomatik yorum satırı */
+/* Otomatik yorum satÄ±rÄ± */
 .drought-auto-comment{
   margin-top: 10px;
   padding: 10px 12px;
@@ -1540,7 +1540,7 @@ body {
 }
 .drought-auto-comment b{ color:#7a0000; }
 
-/* Senaryo özetinde kuraklık etkisi kutusu */
+/* Senaryo Ã¶zetinde kuraklÄ±k etkisi kutusu */
 .drought-impact-box{
   margin-top: 12px;
   padding: 0;
@@ -1601,7 +1601,7 @@ body {
   opacity: .85;
 }
 
-/* Su hesabı kutusu (bitki/yöntem bazlı) */
+/* Su hesabÄ± kutusu (bitki/yÃ¶ntem bazlÄ±) */
 .watercalc-title{
   font-weight: 900;
   margin-bottom: 6px;
@@ -1705,7 +1705,7 @@ body {
   min-height: 420px;
 }
 
-/* ---- Mini harita araçları: katman + köy filtresi ---- */
+/* ---- Mini harita araÃ§larÄ±: katman + kÃ¶y filtresi ---- */
 .map-tools{
   position: relative;
 }
@@ -1763,7 +1763,7 @@ body {
   color:#101828;
 }
 
-/* ---- Sulama plan tablosu (ETo×Kc) okunabilirlik ---- */
+/* ---- Sulama plan tablosu (EToÃ—Kc) okunabilirlik ---- */
 #irrigPlanBox .table-scroll{
   overflow-x: visible;
   padding-bottom: 0;
@@ -1805,7 +1805,7 @@ body {
   overflow: hidden;
 }
 
-/* Parsel düzeyi desen tabloları: küçük ekranlarda taşmayı kırmadan yatay kaydırma */
+/* Parsel dÃ¼zeyi desen tablolarÄ±: kÃ¼Ã§Ã¼k ekranlarda taÅŸmayÄ± kÄ±rmadan yatay kaydÄ±rma */
 .table-card{
   overflow-x: visible;
 }
@@ -1941,7 +1941,7 @@ body {
 .quote-wrap{
   display:flex;
   align-items:center;
-  justify-content:center;   /* ✅ */
+  justify-content:center;   /* âœ… */
   gap: 0;                   /* gap'i kapat */
 }
 
@@ -1953,10 +1953,10 @@ body {
 .quote-logo{
   width:120px;
   opacity:.9;
-  margin: 0 50px;           /* ✅ logoyu merkeze yaklaştırır/uzaklaştırır */
+  margin: 0 50px;           /* âœ… logoyu merkeze yaklaÅŸtÄ±rÄ±r/uzaklaÅŸtÄ±rÄ±r */
 }
 
-/* Quote audio (Ziraat Marşı) */
+/* Quote audio (Ziraat MarÅŸÄ±) */
 .quote-audio{
   margin-top: 14px;
   display: flex;
@@ -1989,7 +1989,7 @@ body {
   }
 }
 
-/* --- v57b: "Kıyasla" popover (Resmî tablolar) --- */
+/* --- v57b: "KÄ±yasla" popover (ResmÃ® tablolar) --- */
 .compare-details { position: relative; }
 .compare-details > summary {
   cursor: pointer;
@@ -1998,12 +1998,12 @@ body {
 }
 .compare-details > summary::-webkit-details-marker { display: none; }
 .compare-details > summary::after {
-  content: "▾";
+  content: "â–¾";
   margin-left: 6px;
   font-size: 12px;
   opacity: .7;
 }
-.compare-details[open] > summary::after { content: "▴"; }
+.compare-details[open] > summary::after { content: "â–´"; }
 
 .compare-popover {
   position: absolute;
@@ -2037,7 +2037,7 @@ body {
 }
 
 
-/* --- Rotasyon ürün şeridi (grafik yerine) --- */
+/* --- Rotasyon Ã¼rÃ¼n ÅŸeridi (grafik yerine) --- */
 .crop-strip{
   display:flex;
   flex-wrap:wrap;
@@ -2115,7 +2115,7 @@ body.stale-results .leaflet-container{
   filter: none !important;
 }
 
-/* Uyarı bandı kaplamanın üstünde kalsın */
+/* UyarÄ± bandÄ± kaplamanÄ±n Ã¼stÃ¼nde kalsÄ±n */
 .stale-banner{ position: relative; z-index: 3; }
 
 /* v72: Explanation / meta boxes */
@@ -2131,7 +2131,7 @@ body.stale-results .leaflet-container{
 }
 .runmeta-box b{font-weight:900}
 
-/* v74: koşullar kutusunu "etiket" şeklinde okunabilir yap */
+/* v74: koÅŸullar kutusunu "etiket" ÅŸeklinde okunabilir yap */
 .runmeta-title{font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .runmeta-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 .runmeta-tag{
@@ -2146,12 +2146,12 @@ body.stale-results .leaflet-container{
 .runmeta-details{margin-top:6px}
 .runmeta-details summary{cursor:pointer;font-weight:800}
 
-/* Parsel özeti içindeki küçük detay (toprak kodu çözümü) */
+/* Parsel Ã¶zeti iÃ§indeki kÃ¼Ã§Ã¼k detay (toprak kodu Ã§Ã¶zÃ¼mÃ¼) */
 .mini-details{margin-top:8px}
 .mini-details > summary{cursor:pointer;font-weight:700;list-style:none;}
 .mini-details > summary::-webkit-details-marker{display:none;}
-.mini-details > summary::after{content:"▾";float:right;opacity:.7}
-.mini-details[open] > summary::after{content:"▴";}
+.mini-details > summary::after{content:"â–¾";float:right;opacity:.7}
+.mini-details[open] > summary::after{content:"â–´";}
 .runmeta-kv{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
 .runmeta-kv .k{display:inline-block;min-width:120px;color:#475569;font-weight:800}
 .runmeta-kv .v{font-weight:800;color:#0f172a}
@@ -2172,7 +2172,7 @@ body.stale-results .leaflet-container{
 
 
 /* ----------------------------
-   Akkaya Barajı (özel katman) ikon/stil
+   Akkaya BarajÄ± (Ã¶zel katman) ikon/stil
    ---------------------------- */
 .dam-icon{ background: transparent; border: none; }
 .dam-icon .dam-pin{
@@ -2212,7 +2212,7 @@ body.stale-results .leaflet-container{
 }
 
 
-/* --- Kullanıcı parsel girişi --- */
+/* --- KullanÄ±cÄ± parsel giriÅŸi --- */
 .user-parcel-actions{display:flex;flex-direction:column;gap:10px;}
 .inline-actions{display:flex;gap:8px;align-items:center;}
 .compact-wrap{flex-wrap:wrap;}
@@ -4542,7 +4542,7 @@ body.role-institution [data-role="farmer-only"]{display:none !important;}
 }
 
 
-/* === UI refresh v9: kurumsal tez giriş ekranı === */
+/* === UI refresh v9: kurumsal tez giriÅŸ ekranÄ± === */
 .auth-screen{
   min-height:100vh;
   display:grid;
@@ -5939,7 +5939,7 @@ body[data-institution-role="analyst"] [data-institution-role="admin-only"]{displ
 }
 
 /* ============================================================
-   v14 saha uygulama tasarım güncellemesi
+   v14 saha uygulama tasarÄ±m gÃ¼ncellemesi
    ============================================================ */
 .parcel-assignment-box{
   border:1px solid rgba(37,99,235,.16);
@@ -6032,7 +6032,7 @@ body[data-institution-role="analyst"] [data-institution-role="admin-only"]{displ
 .parcel-badge .hint{font-weight:600;opacity:.78;}
 
 
-/* v18: 179 hazır parsel kaydı + yalnız çizim modülü */
+/* v18: 179 hazÄ±r parsel kaydÄ± + yalnÄ±z Ã§izim modÃ¼lÃ¼ */
 .drawing-registry-box{
   margin:12px 0 14px;
   padding:12px;
@@ -6082,8 +6082,8 @@ body[data-institution-role="analyst"] [data-institution-role="admin-only"]{displ
 .drawing-record-grid .kv span{display:block;color:#64748b;font-size:11px}
 .drawing-record-grid .kv strong{display:block;color:#0f172a;font-size:12px;margin-top:2px}
 .drawing-record-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
-/* v19: Kullanıcı yönetimi artık çizim modunda silinmez/gizlenmez.
-   Parsel çizim paneli aktif kalır; kullanıcı yönetimi ayrı sekmede korunur. */
+/* v19: KullanÄ±cÄ± yÃ¶netimi artÄ±k Ã§izim modunda silinmez/gizlenmez.
+   Parsel Ã§izim paneli aktif kalÄ±r; kullanÄ±cÄ± yÃ¶netimi ayrÄ± sekmede korunur. */
 body.v19-drawing-registry-active #userManagementGroup{
   display:block !important;
 }
@@ -6124,7 +6124,7 @@ body.v19-drawing-registry-active button.tab[data-tab="users"]{
 }
 
 
-/* v33: Çizim bekleyen resmi parsel işaretleri */
+/* v33: Ã‡izim bekleyen resmi parsel iÅŸaretleri */
 .pending-parcel-marker{ background: transparent !important; border:0 !important; }
 .pending-parcel-marker .parcel-badge{ border-color: rgba(245,158,11,.55); background: rgba(255,251,235,.96); color:#7c2d12; }
 .pending-parcel-marker .parcel-badge .dot{ background:#f59e0b; }
@@ -6132,7 +6132,7 @@ body.v19-drawing-registry-active button.tab[data-tab="users"]{
 .pending-parcel-marker .parcel-badge.selected{ background:rgba(219,234,254,.98); border-color:#2563eb; color:#1e3a8a; box-shadow:0 0 0 3px rgba(37,99,235,.18),0 4px 12px rgba(30,64,175,.26); }
 .pending-pop .source-file{font-size:10px; line-height:1.2;}
 
-/* v34: Kemerhisar çizim bekleyen parsel rozetleri gerçek parsellerle aynı beyaz ikon formatındadır. */
+/* v34: Kemerhisar Ã§izim bekleyen parsel rozetleri gerÃ§ek parsellerle aynÄ± beyaz ikon formatÄ±ndadÄ±r. */
 .pending-parcel-marker{ background: transparent !important; border:0 !important; }
 .pending-parcel-marker .parcel-badge{
   display:inline-flex !important;
@@ -6158,7 +6158,7 @@ body.v19-drawing-registry-active button.tab[data-tab="users"]{
 .pending-pop .source-file{font-size:10px; line-height:1.2;}
 
 
-/* v40: su tahsis mantığı ve çiftçi atama görünümü */
+/* v40: su tahsis mantÄ±ÄŸÄ± ve Ã§iftÃ§i atama gÃ¶rÃ¼nÃ¼mÃ¼ */
 .water-allocation-explain{margin-top:10px;}
 .allocation-v40-card{
   border:1px solid rgba(37,99,235,.16);
@@ -6186,7 +6186,7 @@ body.v19-drawing-registry-active button.tab[data-tab="users"]{
 @media (max-width: 980px){.allocation-v40-grid{grid-template-columns:1fr;}}
 
 
-/* v41: mevcut su - eşit kota - dekar/parsel farklarını çarpıcı gösterim */
+/* v41: mevcut su - eÅŸit kota - dekar/parsel farklarÄ±nÄ± Ã§arpÄ±cÄ± gÃ¶sterim */
 .allocation-v41-card{
   border-color:rgba(14,116,144,.22);
   background:linear-gradient(180deg,rgba(236,254,255,.92),rgba(255,255,255,.98));
@@ -6240,7 +6240,7 @@ body.v19-drawing-registry-active button.tab[data-tab="users"]{
   .allocation-v41-grid{grid-template-columns:1fr;}
 }
 
-/* v42: dekar bazlı adil kota modeli */
+/* v42: dekar bazlÄ± adil kota modeli */
 .allocation-v42-card{
   border-color:rgba(22,101,52,.22);
   background:linear-gradient(180deg,rgba(240,253,244,.95),rgba(255,255,255,.98));
@@ -6264,7 +6264,7 @@ body.v19-drawing-registry-active button.tab[data-tab="users"]{
 @media (max-width: 760px){.allocation-v42-grid,.allocation-v42-model-row{grid-template-columns:1fr;}}
 
 
-/* ===== v43: Sol panel genişletme / daraltma / sürükleyerek yeniden boyutlandırma ===== */
+/* ===== v43: Sol panel geniÅŸletme / daraltma / sÃ¼rÃ¼kleyerek yeniden boyutlandÄ±rma ===== */
 :root{
   --sidebar-width: 460px;
   --sidebar-min-width: 360px;
@@ -6432,19 +6432,19 @@ body.sidebar-collapsed .sidebar-resize-handle{
 }
 
 
-/* ===== v44: Sol panel sadeleştirme ve okunabilirlik iyileştirmesi ===== */
+/* ===== v44: Sol panel sadeleÅŸtirme ve okunabilirlik iyileÅŸtirmesi ===== */
 :root{
   --sidebar-width: 500px;
 }
 
-/* v43 araç çubuğu kaldırıldı */
+/* v43 araÃ§ Ã§ubuÄŸu kaldÄ±rÄ±ldÄ± */
 .sidebar-toolbar,
 .sidebar-resize-handle{
   display:none !important;
 }
 
 body.sidebar-collapsed{
-  /* Önceki yerel ayarlardan gelen daraltma etkisini iptal et */
+  /* Ã–nceki yerel ayarlardan gelen daraltma etkisini iptal et */
 }
 body.sidebar-collapsed .layout,
 .layout{
@@ -6569,7 +6569,7 @@ select{
   word-break: break-word !important;
 }
 
-/* Su adaleti kartı yeniden düzen */
+/* Su adaleti kartÄ± yeniden dÃ¼zen */
 .allocation-v40-card,
 .allocation-v41-card,
 .allocation-v42-card{
@@ -6714,7 +6714,7 @@ select{
   display:none !important;
 }
 
-/* Genel tablo/kart taşmalarını önle */
+/* Genel tablo/kart taÅŸmalarÄ±nÄ± Ã¶nle */
 .table-wrap,
 .data-table,
 .metric,
@@ -6725,7 +6725,7 @@ select{
   max-width: 100%;
 }
 
-/* Daha küçük ekranlarda tam genişlik kullan */
+/* Daha kÃ¼Ã§Ã¼k ekranlarda tam geniÅŸlik kullan */
 @media (max-width: 1360px){
   body.sidebar-collapsed .layout,
   .layout{
@@ -6760,7 +6760,7 @@ select{
 }
 
 
-/* ===== v45: Sol panel tam okunabilir tasarım düzeni ===== */
+/* ===== v45: Sol panel tam okunabilir tasarÄ±m dÃ¼zeni ===== */
 :root{
   --sidebar-width: 540px;
 }
@@ -6942,7 +6942,7 @@ select{
   overflow-wrap: anywhere !important;
 }
 
-/* Su adaleti kutusu: sadece kart görünümü */
+/* Su adaleti kutusu: sadece kart gÃ¶rÃ¼nÃ¼mÃ¼ */
 .left-col .allocation-v40-card,
 .left-col .allocation-v41-card,
 .left-col .allocation-v42-card{
@@ -7062,7 +7062,7 @@ select{
   overflow-wrap: anywhere !important;
 }
 
-/* Üst açıklama kutuları daha net olsun */
+/* Ãœst aÃ§Ä±klama kutularÄ± daha net olsun */
 .left-col .water-allocation-explain,
 .left-col #waterAllocationExplain{
   background: #f8fafc !important;
@@ -7071,7 +7071,7 @@ select{
   padding: 12px !important;
 }
 
-/* Ekran küçülürse tek sütun */
+/* Ekran kÃ¼Ã§Ã¼lÃ¼rse tek sÃ¼tun */
 @media (max-width: 1500px){
   .layout{
     grid-template-columns: minmax(460px, 520px) minmax(0,1fr) !important;
@@ -7105,9 +7105,9 @@ select{
 }
 
 
-/* ===== v46: Eski akışa dönüş — normal sayfa kaydırma + açılır/kapanır bölümler ===== */
+/* ===== v46: Eski akÄ±ÅŸa dÃ¶nÃ¼ÅŸ â€” normal sayfa kaydÄ±rma + aÃ§Ä±lÄ±r/kapanÄ±r bÃ¶lÃ¼mler ===== */
 
-/* Sol kolon artık sayfa içinde normal aksın; kendi içinde kilitlenmesin */
+/* Sol kolon artÄ±k sayfa iÃ§inde normal aksÄ±n; kendi iÃ§inde kilitlenmesin */
 .left-col,
 body.sidebar-collapsed .left-col{
   position: static !important;
@@ -7119,14 +7119,14 @@ body.sidebar-collapsed .left-col{
   padding-right: 0 !important;
 }
 
-/* Ana sayfa normal aşağı kayabilsin */
+/* Ana sayfa normal aÅŸaÄŸÄ± kayabilsin */
 .app-main,
 .app-shell,
 body{
   overflow-y: auto !important;
 }
 
-/* Details bileşenleri standart gibi davransın */
+/* Details bileÅŸenleri standart gibi davransÄ±n */
 .left-col details.sidebar-group > .sidebar-group-body{
   display: block !important;
 }
@@ -7144,14 +7144,14 @@ body{
   border-bottom: none !important;
 }
 
-/* Sol panel geniş ama doğal kalsın */
+/* Sol panel geniÅŸ ama doÄŸal kalsÄ±n */
 .layout,
 body.sidebar-collapsed .layout{
   grid-template-columns: minmax(470px, 520px) minmax(0, 1fr) !important;
   gap: 20px !important;
 }
 
-/* İçerik rahat okunsun ama herhangi bir alan gömülmesin */
+/* Ä°Ã§erik rahat okunsun ama herhangi bir alan gÃ¶mÃ¼lmesin */
 .left-col .sidebar-panel,
 .left-col .sidebar-group,
 .left-col .sidebar-group-body,
@@ -7159,12 +7159,12 @@ body.sidebar-collapsed .layout{
   overflow: visible !important;
 }
 
-/* Sol panelde sadece yatay taşmayı engelle */
+/* Sol panelde sadece yatay taÅŸmayÄ± engelle */
 .left-col *{
   max-width: 100%;
 }
 
-/* Küçük ekranlarda zaten tek kolon */
+/* KÃ¼Ã§Ã¼k ekranlarda zaten tek kolon */
 @media (max-width: 1260px){
   .layout,
   body.sidebar-collapsed .layout{
@@ -7179,7 +7179,7 @@ body.sidebar-collapsed .layout{
 }
 
 
-/* ===== v47: Su adaleti kartı - ana model / karşılaştırma netliği ===== */
+/* ===== v47: Su adaleti kartÄ± - ana model / karÅŸÄ±laÅŸtÄ±rma netliÄŸi ===== */
 .allocation-v42-card{
   border-left: 5px solid #0b7285 !important;
 }
@@ -7214,7 +7214,7 @@ body.sidebar-collapsed .layout{
   border-color: #b2f2bb !important;
 }
 
-/* ===== v48: Footer'a kadar doğal akış + tam sayfa kaydırma düzeltmesi ===== */
+/* ===== v48: Footer'a kadar doÄŸal akÄ±ÅŸ + tam sayfa kaydÄ±rma dÃ¼zeltmesi ===== */
 html,
 body{
   min-height: 100% !important;
@@ -7296,7 +7296,7 @@ body.sidebar-collapsed .left-col{
   margin-right: auto !important;
 }
 
-/* Orta ve dar ekranlarda iki kolon yüzünden sağda boşluk kalmasın; içerik footer'a kadar tek akışta insin. */
+/* Orta ve dar ekranlarda iki kolon yÃ¼zÃ¼nden saÄŸda boÅŸluk kalmasÄ±n; iÃ§erik footer'a kadar tek akÄ±ÅŸta insin. */
 @media (max-width: 1700px){
   .layout,
   body.sidebar-collapsed .layout{
@@ -7321,7 +7321,7 @@ body.sidebar-collapsed .left-col{
 }
 
 
-/* ===== v49: Ekran sonuna kadar uzayan iki kolonlu akış tasarımı ===== */
+/* ===== v49: Ekran sonuna kadar uzayan iki kolonlu akÄ±ÅŸ tasarÄ±mÄ± ===== */
 html, body{
   min-height: 100% !important;
   height: auto !important;
@@ -7342,7 +7342,7 @@ html, body{
   overflow: visible !important;
 }
 
-/* Ana istek: sol blok sağdaki içerik yüksekliği kadar aşağı insin, footer'a kadar kopukluk bırakmasın. */
+/* Ana istek: sol blok saÄŸdaki iÃ§erik yÃ¼ksekliÄŸi kadar aÅŸaÄŸÄ± insin, footer'a kadar kopukluk bÄ±rakmasÄ±n. */
 .layout,
 body.sidebar-collapsed .layout{
   display: grid !important;
@@ -7386,7 +7386,7 @@ body.sidebar-collapsed .left-col{
   overflow: visible !important;
 }
 
-/* Sol tarafta tüm bölümler doğal açılır-kapanır çalışsın; içerik iç scroll'a sıkışmasın. */
+/* Sol tarafta tÃ¼m bÃ¶lÃ¼mler doÄŸal aÃ§Ä±lÄ±r-kapanÄ±r Ã§alÄ±ÅŸsÄ±n; iÃ§erik iÃ§ scroll'a sÄ±kÄ±ÅŸmasÄ±n. */
 .left-col details.sidebar-group{
   background: #ffffff !important;
   border: 1px solid #e4ecf5 !important;
@@ -7453,7 +7453,7 @@ body.sidebar-collapsed .left-col{
   line-height: 1.25 !important;
 }
 
-/* Sol paneldeki çok yoğun metinler taşmasın, ama okunur kalsın. */
+/* Sol paneldeki Ã§ok yoÄŸun metinler taÅŸmasÄ±n, ama okunur kalsÄ±n. */
 .left-col .card-help,
 .left-col .small,
 .left-col .tiny,
@@ -7465,7 +7465,7 @@ body.sidebar-collapsed .left-col{
   line-height: 1.45 !important;
 }
 
-/* Su adaleti kartları solda görünür, ama geniş tablo tekrar sol paneli bozmasın. */
+/* Su adaleti kartlarÄ± solda gÃ¶rÃ¼nÃ¼r, ama geniÅŸ tablo tekrar sol paneli bozmasÄ±n. */
 .left-col .allocation-v40-table-wrap,
 .left-col .allocation-v41-table-wrap,
 .left-col .allocation-v42-table-wrap,
@@ -7480,7 +7480,7 @@ body.sidebar-collapsed .left-col{
   overflow: visible !important;
 }
 
-/* Footer ve alttaki logo bandı iki kolon bittikten sonra gelsin; sol blok bitince boşluk kopukluğu oluşmasın. */
+/* Footer ve alttaki logo bandÄ± iki kolon bittikten sonra gelsin; sol blok bitince boÅŸluk kopukluÄŸu oluÅŸmasÄ±n. */
 .app-quote-band,
 .app-footer{
   width: min(98vw, 1920px) !important;
@@ -7501,7 +7501,7 @@ body.sidebar-collapsed .left-col{
   border-radius: 14px !important;
 }
 
-/* Önceki sürümlerdeki 1700px tek kolona düşme kuralını iptal ediyoruz; iki kolon, ekranda yer varsa korunacak. */
+/* Ã–nceki sÃ¼rÃ¼mlerdeki 1700px tek kolona dÃ¼ÅŸme kuralÄ±nÄ± iptal ediyoruz; iki kolon, ekranda yer varsa korunacak. */
 @media (max-width: 1700px){
   .layout,
   body.sidebar-collapsed .layout{
@@ -7543,8 +7543,8 @@ body.sidebar-collapsed .left-col{
 }
 
 
-/* ===== v50: Sol kolon ana içerik sonunda bitsin, fazla içerik kendi içinde kaydırılsın ===== */
-/* Amaç: Sol taraf sağ içerikten daha uzun olduğunda sağda büyük boşluk oluşturmasın. */
+/* ===== v50: Sol kolon ana iÃ§erik sonunda bitsin, fazla iÃ§erik kendi iÃ§inde kaydÄ±rÄ±lsÄ±n ===== */
+/* AmaÃ§: Sol taraf saÄŸ iÃ§erikten daha uzun olduÄŸunda saÄŸda bÃ¼yÃ¼k boÅŸluk oluÅŸturmasÄ±n. */
 .layout,
 body.sidebar-collapsed .layout{
   align-items: start !important;
@@ -7583,14 +7583,14 @@ body.sidebar-collapsed .left-col{
   overflow: visible !important;
 }
 
-/* İçerik solda kendi akışında kalsın; kaydırma sadece kolonun dış kabında olsun. */
+/* Ä°Ã§erik solda kendi akÄ±ÅŸÄ±nda kalsÄ±n; kaydÄ±rma sadece kolonun dÄ±ÅŸ kabÄ±nda olsun. */
 .left-col details.sidebar-group,
 .left-col details.sidebar-group > .sidebar-group-body,
 .left-col .card{
   overflow: visible !important;
 }
 
-/* Footer iki kolonun doğal bitişinden sonra gelir; sol kolon uzunluğu sayfa yüksekliğini büyütmez. */
+/* Footer iki kolonun doÄŸal bitiÅŸinden sonra gelir; sol kolon uzunluÄŸu sayfa yÃ¼ksekliÄŸini bÃ¼yÃ¼tmez. */
 .app-quote-band,
 .app-footer{
   clear: both !important;
@@ -7608,9 +7608,9 @@ body.sidebar-collapsed .left-col{
 }
 
 
-/* ===== v51: Alt tez bandı + footer genişlik sabitleme ===== */
-/* Kullanıcının istediği gibi alttaki logo/söz bandı ve footer,
-   ekran büyütülüp küçültülse de aynı dış genişlik mantığıyla davranır. */
+/* ===== v51: Alt tez bandÄ± + footer geniÅŸlik sabitleme ===== */
+/* KullanÄ±cÄ±nÄ±n istediÄŸi gibi alttaki logo/sÃ¶z bandÄ± ve footer,
+   ekran bÃ¼yÃ¼tÃ¼lÃ¼p kÃ¼Ã§Ã¼ltÃ¼lse de aynÄ± dÄ±ÅŸ geniÅŸlik mantÄ±ÄŸÄ±yla davranÄ±r. */
 :root{
   --v51-edge-gap: 12px;
   --v51-edge-half: 6px;
@@ -7623,7 +7623,7 @@ body{
   overflow-x: hidden !important;
 }
 
-/* Alt bölüm ana içerikten bağımsız tam ekran genişliğinde kalır. */
+/* Alt bÃ¶lÃ¼m ana iÃ§erikten baÄŸÄ±msÄ±z tam ekran geniÅŸliÄŸinde kalÄ±r. */
 .app-quote-band,
 .app-footer{
   width: calc(100vw - var(--v51-edge-gap)) !important;
@@ -7686,7 +7686,7 @@ body{
   box-sizing: border-box !important;
 }
 
-/* Login ekranındayken alttaki tez bandı görünmesin; panel açılınca normal altta görünsün. */
+/* Login ekranÄ±ndayken alttaki tez bandÄ± gÃ¶rÃ¼nmesin; panel aÃ§Ä±lÄ±nca normal altta gÃ¶rÃ¼nsÃ¼n. */
 body.auth-pending .app-quote-band,
 body.auth-pending .app-footer{
   display: none !important;
@@ -7710,9 +7710,9 @@ body.auth-pending .app-footer{
 
 
 
-/* v55: Çiftçi paneli sadeleştirme
-   Çiftçi yalnızca kendisine atanmış parseli, uzman önerisini ve uygulama özetini görür.
-   Çizim, veri kaynağı, algoritma, kullanıcı yönetimi, resmi tablolar ve atama kontrolleri kurum tarafında kalır. */
+/* v55: Ã‡iftÃ§i paneli sadeleÅŸtirme
+   Ã‡iftÃ§i yalnÄ±zca kendisine atanmÄ±ÅŸ parseli, uzman Ã¶nerisini ve uygulama Ã¶zetini gÃ¶rÃ¼r.
+   Ã‡izim, veri kaynaÄŸÄ±, algoritma, kullanÄ±cÄ± yÃ¶netimi, resmi tablolar ve atama kontrolleri kurum tarafÄ±nda kalÄ±r. */
 body.role-farmer #parcelGroup,
 body.role-farmer #scenarioCard,
 body.role-farmer #waterRiskSection,
@@ -7731,11 +7731,11 @@ body.role-farmer #setupGroup .sidebar-group-text small{
   font-size:0;
 }
 body.role-farmer #setupGroup .sidebar-group-text small::after{
-  content:"Kendi parselinizi seçin ve öneriyi görüntüleyin";
+  content:"Kendi parselinizi seÃ§in ve Ã¶neriyi gÃ¶rÃ¼ntÃ¼leyin";
   font-size:11px;
 }
 
-/* v58: uzman çizim/atama paneli geniş sekmede çalışır */
+/* v58: uzman Ã§izim/atama paneli geniÅŸ sekmede Ã§alÄ±ÅŸÄ±r */
 .drawing-tab-shell{
   display:block;
   width:100%;
@@ -7886,9 +7886,9 @@ body.role-farmer #tab-parcel .card-help.small{
   .farmer-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
-/* ===== v58: Girişte panel sızıntısını kapatma + otomasyon geçiş güvenliği =====
-   Login ekranında alttaki ana panel/quote/footer kesinlikle görünmez.
-   Kullanıcı ancak giriş yaptıktan sonra rolüne ait panele geçer. */
+/* ===== v58: GiriÅŸte panel sÄ±zÄ±ntÄ±sÄ±nÄ± kapatma + otomasyon geÃ§iÅŸ gÃ¼venliÄŸi =====
+   Login ekranÄ±nda alttaki ana panel/quote/footer kesinlikle gÃ¶rÃ¼nmez.
+   KullanÄ±cÄ± ancak giriÅŸ yaptÄ±ktan sonra rolÃ¼ne ait panele geÃ§er. */
 body.auth-pending{
   height: 100vh !important;
   min-height: 100vh !important;
@@ -8121,8 +8121,8 @@ body:not(.auth-pending) .auth-screen{
 
 
 /* === v61 login scroll + balanced thesis hero ===
-   Giriş açıkken ana panel yine gizli kalır; ancak ekran büyütme/zoom durumunda
-   giriş ekranının kendi içinde aşağı kaydırma yapılabilir. */
+   GiriÅŸ aÃ§Ä±kken ana panel yine gizli kalÄ±r; ancak ekran bÃ¼yÃ¼tme/zoom durumunda
+   giriÅŸ ekranÄ±nÄ±n kendi iÃ§inde aÅŸaÄŸÄ± kaydÄ±rma yapÄ±labilir. */
 html.auth-pending,
 body.auth-pending{
   height: auto !important;
@@ -8458,8 +8458,8 @@ body.auth-pending .auth-shell.auth-shell--institutional{
 
 
 /* === v63: final login scroll isolation + clean professional title ===
-   Giriş açıkken scrollbar, doğrudan auth-screen üzerinde çalışır.
-   Ana panel/alt bölümler görünmez; zoom yapılınca giriş ekranı kendi içinde aşağı iner. */
+   GiriÅŸ aÃ§Ä±kken scrollbar, doÄŸrudan auth-screen Ã¼zerinde Ã§alÄ±ÅŸÄ±r.
+   Ana panel/alt bÃ¶lÃ¼mler gÃ¶rÃ¼nmez; zoom yapÄ±lÄ±nca giriÅŸ ekranÄ± kendi iÃ§inde aÅŸaÄŸÄ± iner. */
 html.auth-pending,
 body.auth-pending{
   width:100% !important;
@@ -8668,7 +8668,7 @@ body.auth-pending .auth-shell.auth-shell--institutional{
 }
 
 
-/* === v64: gerçek browser scrollbar + sade profesyonel login tasarımı === */
+/* === v64: gerÃ§ek browser scrollbar + sade profesyonel login tasarÄ±mÄ± === */
 html.auth-pending,
 body.auth-pending{
   position:static !important;
@@ -8878,7 +8878,7 @@ body.auth-pending #panel{
 }
 
 
-/* v66 - Aktif dosyalar tıklanabilir veri tablosu */
+/* v66 - Aktif dosyalar tÄ±klanabilir veri tablosu */
 .file-badge-click{
   cursor: pointer !important;
   text-align: left !important;
@@ -9061,7 +9061,7 @@ body.auth-pending #panel{
 }
 
 
-/* v68: Senaryo özetinde hem genel havza/baraj özeti hem parsel özeti */
+/* v68: Senaryo Ã¶zetinde hem genel havza/baraj Ã¶zeti hem parsel Ã¶zeti */
 .summary-block{
   margin: 14px 0 16px;
   padding: 14px 16px;
@@ -9155,7 +9155,7 @@ body.auth-pending #panel{
   .summary-mini-value{font-size:26px;}
 }
 
-/* v69 - Senaryo özeti görsel iyileştirme (baraj/havza + parsel) */
+/* v69 - Senaryo Ã¶zeti gÃ¶rsel iyileÅŸtirme (baraj/havza + parsel) */
 .metrics-card{
   padding:22px !important;
   border-radius:24px !important;
@@ -9391,7 +9391,7 @@ body.auth-pending #panel{
   .metrics-card .metrics-title-row{align-items:flex-start !important;}
 }
 
-/* v70: zoom/nearlaştırma dayanıklılığı - senaryo özeti kartlarında taşma ve satır kaymasını düzelt */
+/* v70: zoom/nearlaÅŸtÄ±rma dayanÄ±klÄ±lÄ±ÄŸÄ± - senaryo Ã¶zeti kartlarÄ±nda taÅŸma ve satÄ±r kaymasÄ±nÄ± dÃ¼zelt */
 .summary-block-basin .summary-mini-grid{
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important;
   align-items: stretch !important;
@@ -9462,7 +9462,7 @@ body.auth-pending #panel{
   }
 }
 
-/* v71: Düzen sabitleme - yakınlaştırmada masaüstü düzeni değişmesin */
+/* v71: DÃ¼zen sabitleme - yakÄ±nlaÅŸtÄ±rmada masaÃ¼stÃ¼ dÃ¼zeni deÄŸiÅŸmesin */
 .summary-block-basin .summary-mini-grid{
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
 }
@@ -9490,7 +9490,7 @@ body.auth-pending #panel{
   }
 }
 
-/* v72: Profesyonel giriş başlığı - iki satır, ortalı ve metin hizası dengeli */
+/* v72: Profesyonel giriÅŸ baÅŸlÄ±ÄŸÄ± - iki satÄ±r, ortalÄ± ve metin hizasÄ± dengeli */
 body.auth-pending .auth-title-block{
   width: 100% !important;
   max-width: 100% !important;
@@ -9562,7 +9562,7 @@ body.auth-pending .auth-lead{
   }
 }
 
-/* v73: Login ekranı taşma düzeltmesi - 1070px ve dar ekranlarda metin kırpılmasın */
+/* v73: Login ekranÄ± taÅŸma dÃ¼zeltmesi - 1070px ve dar ekranlarda metin kÄ±rpÄ±lmasÄ±n */
 body.auth-pending .auth-shell.auth-shell--institutional{
   width: min(1120px, 100%) !important;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 360px) !important;
@@ -9647,7 +9647,7 @@ body.auth-pending .auth-card--institutional{
   }
 }
 
-/* v74: Login iki kolon eş hizalama + başlık tek satır koruması */
+/* v74: Login iki kolon eÅŸ hizalama + baÅŸlÄ±k tek satÄ±r korumasÄ± */
 body.auth-pending .auth-shell.auth-shell--institutional{
   align-items: stretch !important;
 }
@@ -9690,7 +9690,7 @@ body.auth-pending .auth-copy--institutional h1 span{
   }
 }
 
-/* v75: Eş yükseklikte sol panel boşluğunu alta yığma; bölümler arasına dağıt */
+/* v75: EÅŸ yÃ¼kseklikte sol panel boÅŸluÄŸunu alta yÄ±ÄŸma; bÃ¶lÃ¼mler arasÄ±na daÄŸÄ±t */
 body.auth-pending .auth-copy--institutional{
   align-content: space-between !important;
   row-gap: clamp(16px, 2.1vh, 26px) !important;
@@ -9717,7 +9717,7 @@ body.auth-pending .auth-lead{
   }
 }
 
-/* v76: Boşluk dağılımını işaretli başlık bölgelerine al, erişim akışını sıkıştır */
+/* v76: BoÅŸluk daÄŸÄ±lÄ±mÄ±nÄ± iÅŸaretli baÅŸlÄ±k bÃ¶lgelerine al, eriÅŸim akÄ±ÅŸÄ±nÄ± sÄ±kÄ±ÅŸtÄ±r */
 body.auth-pending .auth-copy--institutional{
   align-content: start !important;
   row-gap: 20px !important;
@@ -10977,7 +10977,7 @@ body.role-farmer .pattern-card-grid-v94{
   padding:0 !important;
 }
 .data-viewer-close::before{
-  content:"×";
+  content:"Ã—";
   display:block;
   color:#0f172a;
   font-size:24px;
@@ -11071,131 +11071,48 @@ body.role-farmer #farmerTargetControlsV128{
   animation:none !important;
 }
 
-/* v139 - no duplicate alternative panels or ghost icon boxes */
-body.role-farmer .pattern-panel-v94 ~ .pattern-panel-v94,
-body.role-farmer .pattern-panel-v102 ~ .pattern-panel-v102{
+/* v119-final - must stay after all legacy v138/v141 rules */
+.leaflet-control-zoom-in::before,
+.leaflet-control-zoom-out::before{
+  content:"" !important;
   display:none !important;
 }
-.pattern-crop-icon-v137,
-.pattern-crop-icon-v138,
-.crop-pill .crop-emoji{
-  display:none !important;
-}
-.crop-emoji-v139,
-.pattern-crop-icon-v139,
-.crop-emoji-v140,
-.pattern-crop-icon-v140{
-  width:28px !important;
-  height:28px !important;
-  min-width:28px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  border-radius:10px !important;
-  background:#eef8f1 !important;
-  border:1px solid rgba(34,139,114,.22) !important;
-  font-size:18px !important;
-  line-height:1 !important;
-}
-.crop-emoji-v139:empty,
-.pattern-crop-icon-v139:empty,
-.crop-emoji-v140:empty,
-.pattern-crop-icon-v140:empty{
-  display:none !important;
-}
-body.role-farmer .pattern-card-top{
-  gap:8px !important;
-}
-.leaflet-container .leaflet-tile{
-  transition:opacity .12s linear !important;
-}
-
-/* v138 - final UI polish after legacy overrides */
-.header-bell-icon.bell-icon-v138{
-  width:22px !important;
-  height:22px !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  color:#facc15 !important;
-  filter:drop-shadow(0 2px 5px rgba(161,98,7,.38));
-}
-.header-bell-icon.bell-icon-v138 svg{
-  width:22px !important;
-  height:22px !important;
-  fill:#facc15 !important;
-  stroke:#fff7ad !important;
-  stroke-width:1.7 !important;
-}
-.header-bell-icon.bell-icon-v140,
-.header-bell-icon.bell-icon-v140 svg{
-  width:22px !important;
-  height:22px !important;
-  color:#facc15 !important;
-  fill:#facc15 !important;
-  stroke:#fff7ad !important;
-  stroke-width:1.7 !important;
-}
-.bell-label-v131,
-.bell-label-v132,
-.bell-safe-v127,
-.bell-safe-v128{
-  display:none !important;
-}
-.notification-count[hidden]{
-  display:none !important;
-}
-body.role-farmer .farmer-decision-controls-v98,
-body.role-farmer #farmerObjectiveCompareV98,
-body.role-farmer .farmer-objective-compare-v98{
-  display:none !important;
-}
-body.role-farmer #farmerDecisionCard #farmerTargetControlsV128{
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out{
+  width:30px !important;
+  height:30px !important;
+  min-width:30px !important;
+  min-height:30px !important;
   display:block !important;
-  width:100% !important;
-  margin:14px 0 0 !important;
+  color:#0f172a !important;
+  background:#fff !important;
+  font-size:22px !important;
+  font-weight:800 !important;
+  line-height:28px !important;
+  text-align:center !important;
+  text-indent:0 !important;
+  opacity:1 !important;
 }
-body.role-farmer .farmer-target-card-v128 .target-form-v100,
-body.role-farmer .farmer-target-card-v128 .target-grid-v100,
-body.role-farmer .farmer-target-card-v128 .decision-controls-v102{
-  grid-template-columns:1fr !important;
-}
-body.role-farmer .farmer-target-card-v128 select,
-body.role-farmer .farmer-target-card-v128 button{
-  width:100% !important;
-  min-width:0 !important;
-}
-.pattern-crop-icon-v138{
-  width:28px !important;
-  height:28px !important;
-  min-width:28px !important;
+.map-tools-btn{
+  width:36px !important;
+  height:36px !important;
   display:inline-flex !important;
   align-items:center !important;
   justify-content:center !important;
-  border-radius:10px !important;
-  background:#eef8f1 !important;
-  border:1px solid rgba(34,139,114,.2) !important;
-  font-size:18px !important;
+  font-size:0 !important;
   line-height:1 !important;
 }
-body.role-farmer .pattern-card-grid-v94{
-  grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)) !important;
+.map-tools-btn::before{
+  content:"\2699" !important;
+  display:block !important;
+  font-size:18px !important;
+  line-height:1 !important;
+  color:#0f172a !important;
 }
-body.role-farmer .pattern-card-v94,
-body.role-farmer .pattern-card-v102{
-  min-width:0 !important;
-  overflow:hidden !important;
+.drawing-inbox-bottom-v118{
+  margin-top:18px !important;
 }
-body.role-farmer .pattern-card-v94 *,
-body.role-farmer .pattern-card-v102 *{
-  max-width:100% !important;
-  overflow-wrap:anywhere !important;
-}
-.leaflet-marker-icon,
-.leaflet-marker-shadow,
-.parcel-badge-wrap,
-.leaflet-tooltip,
-.leaflet-interactive{
-  transition:none !important;
-  animation:none !important;
+.drawing-inbox-bottom-v118 #institutionRequestInbox{
+  max-height:420px !important;
+  overflow:auto !important;
 }
