@@ -122,11 +122,11 @@ body {
 }
 .details-card summary::-webkit-details-marker{ display:none; }
 .details-card summary::after{
-  content: "â–¾";
+  content: "▾";
   color: var(--muted);
   font-size: 14px;
 }
-.details-card[open] summary::after{ content: "â–´"; }
+.details-card[open] summary::after{ content: "▴"; }
 .details-card .details-body{ margin-top: 10px; }
 
 .card-title {
@@ -1998,12 +1998,12 @@ body {
 }
 .compare-details > summary::-webkit-details-marker { display: none; }
 .compare-details > summary::after {
-  content: "â–¾";
+  content: "▾";
   margin-left: 6px;
   font-size: 12px;
   opacity: .7;
 }
-.compare-details[open] > summary::after { content: "â–´"; }
+.compare-details[open] > summary::after { content: "▴"; }
 
 .compare-popover {
   position: absolute;
@@ -2150,8 +2150,8 @@ body.stale-results .leaflet-container{
 .mini-details{margin-top:8px}
 .mini-details > summary{cursor:pointer;font-weight:700;list-style:none;}
 .mini-details > summary::-webkit-details-marker{display:none;}
-.mini-details > summary::after{content:"â–¾";float:right;opacity:.7}
-.mini-details[open] > summary::after{content:"â–´";}
+.mini-details > summary::after{content:"▾";float:right;opacity:.7}
+.mini-details[open] > summary::after{content:"▴";}
 .runmeta-kv{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
 .runmeta-kv .k{display:inline-block;min-width:120px;color:#475569;font-weight:800}
 .runmeta-kv .v{font-weight:800;color:#0f172a}
@@ -12616,9 +12616,349 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
   .benchmark-analysis-head-v145{display:block;}
   .benchmark-analysis-head-v145 strong{display:inline-block;margin-top:8px;}
 }
+
+/* v146 benchmark: one clear report, no duplicated legacy tables */
+.benchmark-report-v146{
+  border:1px solid #bfd7f5;
+  background:#f8fbff;
+  border-radius:8px;
+  padding:12px;
+  margin:10px 0 12px;
+}
+.benchmark-report-head-v146{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:10px;
+}
+.benchmark-report-head-v146 span{
+  display:block;
+  color:#64748b;
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+.benchmark-report-head-v146 h3{
+  margin:2px 0 0;
+  color:#10233d;
+  font-size:16px;
+}
+.benchmark-report-head-v146 strong{
+  border:1px solid #bfdbfe;
+  background:#eff6ff;
+  color:#1d4ed8;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:12px;
+}
+.benchmark-decision-v146{
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:10px;
+  margin-bottom:10px;
+}
+.benchmark-decision-v146 b,
+.benchmark-decision-v146 span{
+  display:block;
+}
+.benchmark-decision-v146 b{
+  color:#0f2a43;
+  margin-bottom:3px;
+}
+.benchmark-decision-v146 span{
+  color:#475569;
+  line-height:1.45;
+}
+.benchmark-report-table-v146 table{
+  min-width:1160px;
+}
+.benchmark-report-table-v146 th,
+.benchmark-report-table-v146 td{
+  font-size:11px;
+  vertical-align:top;
+}
+.benchmark-rules-v146{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.benchmark-rules-v146 div{
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:10px;
+}
+.benchmark-rules-v146 b,
+.benchmark-rules-v146 span{
+  display:block;
+}
+.benchmark-rules-v146 b{
+  color:#0f2a43;
+  margin-bottom:4px;
+}
+.benchmark-rules-v146 span{
+  color:#475569;
+  font-size:12px;
+  line-height:1.45;
+}
+.benchmark-sweep-v146{
+  border:1px solid #cbdcf4;
+  background:#f8fbff;
+  border-radius:8px;
+  padding:12px;
+  margin-top:10px;
+}
+.benchmark-sweep-v146 table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  border-radius:8px;
+  overflow:hidden;
+}
+.benchmark-sweep-v146 th,
+.benchmark-sweep-v146 td{
+  border-bottom:1px solid #e2e8f0;
+  padding:8px;
+  text-align:left;
+  font-size:12px;
+}
+.benchmark-sweep-v146 p{
+  margin:8px 0 0;
+  color:#64748b;
+  font-size:12px;
+}
+@media (max-width: 980px){
+  .benchmark-report-head-v146{display:block;}
+  .benchmark-report-head-v146 strong{display:inline-block;margin-top:8px;}
+  .benchmark-rules-v146{grid-template-columns:1fr;}
+}
 .approved-plan-only-v144 .approved-tabs-clean-v142{display:none !important;}
 .approved-kpi-grid-only-v144{grid-template-columns:repeat(3,minmax(0,1fr));}
 .approved-selected-reason-v144{border:1px solid #dbeafe;background:#f8fbff;border-radius:14px;padding:14px;}
 .approved-selected-reason-v144 p{margin:6px 0 0;color:#334155;line-height:1.55;}
 @media (max-width: 900px){.approved-kpi-grid-only-v144{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media (max-width: 620px){.approved-kpi-grid-only-v144{grid-template-columns:1fr;}}
+
+/* v148 approved farmer plan: detailed, actionable crop guide */
+.approved-deep-v148{
+  border:1px solid #bfdbfe;
+  background:#f8fbff;
+  border-radius:8px;
+  padding:14px;
+}
+.approved-deep-hero-v148{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:14px;
+  margin-bottom:12px;
+}
+.approved-deep-hero-v148 span{
+  display:block;
+  color:#1d4ed8;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.approved-deep-hero-v148 h3{
+  margin:4px 0 6px;
+  font-size:20px;
+  color:#0f172a;
+}
+.approved-deep-hero-v148 p{
+  margin:0;
+  color:#475569;
+  line-height:1.5;
+}
+.approved-deep-hero-v148 > div:last-child{
+  min-width:150px;
+  text-align:right;
+}
+.approved-deep-hero-v148 b,
+.approved-deep-hero-v148 small{
+  display:block;
+}
+.approved-block-v148{
+  margin-top:14px;
+}
+.approved-block-v148 h4{
+  margin:0 0 10px;
+  color:#0f172a;
+  font-size:15px;
+}
+.approved-block-v148 > p{
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:12px;
+  margin:0;
+  color:#475569;
+  line-height:1.5;
+}
+.approved-month-grid-v148{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:10px;
+}
+.approved-month-grid-v148 article,
+.approved-irrigation-v148 article,
+.approved-soil-v148 article,
+.approved-disease-grid-v148 article,
+.approved-harvest-v148 article{
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:12px;
+}
+.month-head-v148{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:center;
+  margin-bottom:8px;
+}
+.month-head-v148 span{
+  background:#eff6ff;
+  color:#1d4ed8;
+  border:1px solid #bfdbfe;
+  border-radius:999px;
+  padding:3px 8px;
+  font-weight:900;
+  font-size:11px;
+}
+.month-head-v148 b,
+.approved-irrigation-v148 h5,
+.approved-soil-v148 h5,
+.approved-disease-grid-v148 h5,
+.approved-harvest-v148 h5{
+  color:#10233d;
+  margin:0;
+}
+.approved-month-grid-v148 ul,
+.approved-soil-v148 ul,
+.approved-harvest-v148 ul{
+  margin:0;
+  padding-left:18px;
+  color:#475569;
+  line-height:1.5;
+}
+.approved-irrigation-v148,
+.approved-soil-v148,
+.approved-harvest-v148{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:10px;
+}
+.irrigation-summary-v148{
+  grid-column:1/-1;
+  border:1px solid #bfdbfe;
+  background:#eff6ff;
+  border-radius:8px;
+  padding:12px;
+}
+.irrigation-summary-v148 b,
+.irrigation-summary-v148 span{
+  display:block;
+}
+.irrigation-summary-v148 span,
+.approved-irrigation-v148 p,
+.approved-disease-grid-v148 p,
+.approved-soil-v148 p{
+  color:#475569;
+  line-height:1.45;
+  margin:4px 0 8px;
+}
+.approved-disease-grid-v148{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:10px;
+}
+.approved-disease-grid-v148 article > span{
+  display:inline-block;
+  margin:4px 0 8px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:999px;
+  padding:3px 8px;
+  color:#64748b;
+  font-size:11px;
+  font-weight:800;
+}
+.approved-disease-grid-v148 div{
+  border-top:1px solid #edf2f7;
+  padding-top:7px;
+  margin-top:7px;
+}
+.approved-disease-grid-v148 b{
+  display:block;
+  color:#0f172a;
+}
+.approved-economy-v148{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+}
+.approved-economy-v148 div{
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:12px;
+}
+.approved-economy-v148 span,
+.approved-economy-v148 b,
+.approved-economy-v148 small{
+  display:block;
+}
+.approved-economy-v148 span{
+  color:#64748b;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.approved-economy-v148 b{
+  color:#0f172a;
+  font-size:16px;
+  margin:4px 0;
+}
+.approved-economy-v148 small{
+  color:#64748b;
+  line-height:1.35;
+}
+.approved-checklist-v148{
+  display:grid;
+  gap:8px;
+}
+.approved-checklist-v148 label{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:10px;
+  color:#334155;
+  line-height:1.4;
+}
+.approved-checklist-v148 input{
+  margin-top:2px;
+}
+.approved-deep-foot-v148{
+  margin-top:14px;
+  border:1px dashed #bfdbfe;
+  background:#fff;
+  border-radius:8px;
+  padding:10px;
+  color:#64748b;
+  font-size:12px;
+  line-height:1.45;
+}
+@media (max-width: 760px){
+  .approved-deep-hero-v148{display:block;}
+  .approved-deep-hero-v148 > div:last-child{text-align:left;margin-top:10px;}
+}

@@ -1,4 +1,4 @@
-// Demo veri seti
+﻿// Demo veri seti
 
 // --- v51 CLEAN: Fixed crop pools (Senaryo-1) ---
 let S1_PRIMARY_CROPS = [];
@@ -14897,7 +14897,7 @@ function getScenarioDisplayMeta(scenarioKey){
   if(s === 'mevcut' || s === 'current') return { key:'mevcut', label:'Mevcut desen', shortLabel:'Mevcut', icon:'\u011f\u0178“Œ' };
   if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'water_efficiency' || s === 'tasarruf') return { key:'su_tasarruf', label:'Su verimliliği odaklı', shortLabel:'Su verimliliği', icon:'\u011f\u0178’§' };
   if(s === 'maks_kar' || s === 'maks kar' || s === 'max_profit') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'\u011f\u0178’°' };
-  if(s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'balanced', label:'Dengeli öneri', shortLabel:'Dengeli', icon:'âš–ï¸' };
+  if(s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'balanced', label:'Dengeli �neri', shortLabel:'Dengeli', icon:'⚖️' };
   return { key:s || 'balanced', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u011f\u0178¯' };
 }
 
@@ -15248,7 +15248,7 @@ function renderAllScenarioSummaries(){
             <span class="runmeta-tag"><span class="runmeta-ic">\u011f\u0178¤–</span><b>${algoName2}</b></span>
             <span class="runmeta-tag"><span class="runmeta-ic">${objectiveMeta.icon}</span><b>${objectiveMeta.label}</b></span>
             <span class="runmeta-tag"><span class="runmeta-ic">\u011f\u0178“…</span><b>${year}</b></span>
-            <span class="runmeta-tag"><span class="runmeta-ic">âš–ï¸</span><b>${reproducible}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">⚖️</span><b>${reproducible}</b></span>
           </div>
 
           <details class="runmeta-details">
@@ -18750,8 +18750,10 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
 
 	        const box = document.getElementById('benchmarkResults');
 	        const patBox = document.getElementById('benchmarkPatterns');
+	        const sweepBox = document.getElementById('benchmarkSweepResults');
 	        if(box) box.innerHTML = objectiveNote ? `<div class="benchmark-note">${objectiveNote}</div>` : '';
 	        if(patBox) patBox.innerHTML = '';
+	        if(sweepBox) sweepBox.innerHTML = '';
 
 	        // Tek kaynak seçiliyse (en yaygın kullanım): sonuçları yalnızca 1 kez göster (tekrarlı başlık oluşmasın)
 	        if(sources.length === 1){
@@ -20601,6 +20603,254 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   }else{
     loadWaterAllocationExplainV42();
   }
+})();
+
+/* v147 final benchmark override: v146 report must be the final rendered benchmark surface */
+(function(){
+  if(window.__benchmarkFinalOverrideV147Last) return;
+  window.__benchmarkFinalOverrideV147Last = true;
+  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v147LastWrapped){
+    const prev = renderBenchmarkResultsTo;
+    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
+      const res = prev.apply(this, arguments);
+      try{
+        if(j && j.status === 'OK' && typeof window.__renderBenchmarkReportV146 === 'function'){
+          window.__renderBenchmarkReportV146(j, box || document.getElementById('benchmarkResults'));
+        }
+      }catch(e){ console.warn('[benchmark v147-tail]', e); }
+      return res;
+    };
+    renderBenchmarkResultsTo.__v147LastWrapped = true;
+  }
+})();
+
+/* v147 final benchmark override: v146 report must be the final rendered benchmark surface */
+(function(){
+  if(window.__benchmarkFinalOverrideV147) return;
+  window.__benchmarkFinalOverrideV147 = true;
+  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v147Wrapped){
+    const prev = renderBenchmarkResultsTo;
+    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
+      const res = prev.apply(this, arguments);
+      try{
+        if(j && j.status === 'OK' && typeof window.__renderBenchmarkReportV146 === 'function'){
+          window.__renderBenchmarkReportV146(j, box || document.getElementById('benchmarkResults'));
+        }
+      }catch(e){ console.warn('[benchmark v147]', e); }
+      return res;
+    };
+    renderBenchmarkResultsTo.__v147Wrapped = true;
+  }
+})();
+
+/* v146 benchmark report: remove duplicated legacy tables and keep one clear computer-science report */
+(function(){
+  if(window.__benchmarkReportV146) return;
+  window.__benchmarkReportV146 = true;
+  const esc = value => (typeof escapeHtml === 'function') ? escapeHtml(String(value ?? '')) : String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const n = value => Number.isFinite(Number(value)) ? Number(value) : 0;
+  const fmt = (value, digits=1) => {
+    try{ return n(value).toLocaleString('tr-TR', {maximumFractionDigits:digits, minimumFractionDigits:0}); }
+    catch(_e){ return String(Math.round(n(value))); }
+  };
+  const METHOD = {
+    GA:'Popülasyon tabanlı arama; seçim-çaprazlama-mutasyon ile desenleri nesiller halinde iyileştirir.',
+    ABC:'Besin kaynağı araması; işçi/gözcü/kaşif arılarla iyi desen çevresinde arama yapar.',
+    ACO:'Feromon tabanlı arama; iyi parsel-ürün eşleşmelerini güçlendirir, buharlaşma ile erken kilitlenmeyi sınırlar.'
+  };
+  const COLORS = {GA:'#2563eb', ABC:'#16a34a', ACO:'#f97316'};
+  function names(j){
+    const algos = j?.algorithms || {};
+    const out = ['GA','ABC','ACO'].filter(a => algos[a]);
+    Object.keys(algos).forEach(a => { if(!out.includes(a)) out.push(a); });
+    return out;
+  }
+  function range(vals){
+    const xs = vals.map(n).filter(Number.isFinite);
+    if(!xs.length) return {min:0,max:0,span:0};
+    const min = Math.min(...xs), max = Math.max(...xs);
+    return {min,max,span:max-min};
+  }
+  const high = (v,r) => r.span <= 1e-9 ? 50 : 100 * (n(v)-r.min)/r.span;
+  const low = (v,r) => r.span <= 1e-9 ? 50 : 100 * (r.max-n(v))/r.span;
+  const clamp = v => Math.max(0, Math.min(100, n(v)));
+  function stats(j){
+    const algos = j?.algorithms || {};
+    const ns = names(j);
+    const profitR = range(ns.map(a => algos[a]?.profit?.mean));
+    const waterR = range(ns.map(a => algos[a]?.water?.mean));
+    const effR = range(ns.map(a => algos[a]?.efficiency?.mean));
+    const runtimeR = range(ns.map(a => algos[a]?.runtime_s?.mean));
+    const obj = String(j?.objective || j?.scenario || '').toLowerCase();
+    const isWater = obj.includes('water') || obj.includes('su');
+    const isProfit = obj.includes('profit') || obj.includes('kar');
+    const objective = isWater && !isProfit ? 'Su verimliliği' : (isProfit && !isWater ? 'Net kâr' : 'Dengeli hedef');
+    const w = isWater && !isProfit ? {p:.14, su:.34, e:.22, feas:.12, stab:.12, speed:.06} : (isProfit && !isWater ? {p:.34, su:.14, e:.22, feas:.12, stab:.12, speed:.06} : {p:.24, su:.24, e:.22, feas:.12, stab:.12, speed:.06});
+    const rows = ns.map(a => {
+      const r = algos[a] || {};
+      const pScore = high(r.profit?.mean, profitR);
+      const suScore = low(r.water?.mean, waterR);
+      const eScore = high(r.efficiency?.mean, effR);
+      const feasible = clamp(n(r.feasible_rate || r.success_rate) * 100);
+      const avgCv = (n(r.profit?.cv) + n(r.water?.cv) + n(r.efficiency?.cv)) / 3;
+      const plan = n(r.plan_distance_pct?.mean);
+      const stability = clamp(100 - avgCv * 320 - plan * .9);
+      const speed = low(r.runtime_s?.mean, runtimeR);
+      const score = w.p*pScore + w.su*suScore + w.e*eScore + w.feas*feasible + w.stab*stability + w.speed*speed;
+      const runs = n(r.successful_runs || r.runs || 0);
+      return {a,r,pScore,suScore,eScore,feasible,avgCv,plan,stability,speed,score,runs};
+    }).sort((a,b) => b.score - a.score);
+    const spread = rows.length > 1 ? Math.abs(rows[0].score - rows[1].score) : 100;
+    const allSame = rows.length > 1 && rows.every(row => Math.abs(n(row.r?.profit?.mean) - n(rows[0].r?.profit?.mean)) < 1e-6 && Math.abs(n(row.r?.water?.mean) - n(rows[0].r?.water?.mean)) < 1e-6);
+    return {rows, objective, spread, isTie: spread < 2.5 || allSame, allSame};
+  }
+  function decisionText(s){
+    if(s.allSame) return 'Algoritmalar aynı optimuma yakınsadı; bu durumda tek kazanan göstermek doğru değildir.';
+    if(s.isTie) return 'Skor farkı 2.5 puanın altında; karar eşdeğer bantta raporlanır.';
+    return `${s.rows[0]?.a || '-'} hedef fonksiyonunda daha yüksek birleşik skor üretmiştir.`;
+  }
+  function reportHtml(j){
+    const s = stats(j);
+    const best = s.rows[0] || null;
+    const requested = Math.max(1, n(j?.repeats));
+    const totalRuns = s.rows.reduce((sum,row)=>sum+row.runs,0);
+    const totalTarget = requested * Math.max(1, s.rows.length);
+    const summary = decisionText(s);
+    const kpiRoot = document.getElementById('benchmarkKpiGrid');
+    if(kpiRoot){
+      kpiRoot.innerHTML = [
+        {label:'Net karar', value:s.isTie ? 'Eşdeğer bant' : best?.a || '-', sub:summary},
+        {label:'Koşu sayısı', value:`${fmt(totalRuns,0)}/${fmt(totalTarget,0)}`, sub:'Başarılı backend koşusu / hedef koşu'},
+        {label:'Grafik', value:'3 çizgi', sub:'GA, ABC, ACO ayrı çizgi; üst üste binme yakınsama demektir.'},
+        {label:'Güven kontrolü', value:s.allSame ? 'Yakınsama' : `${fmt(s.spread,1)} puan fark`, sub:'CV, plan farkı ve uygulanabilirlik birlikte okunur.'}
+      ].map(k => `<div class="pro-kpi"><div class="kpi-label">${esc(k.label)}</div><div class="kpi-value">${esc(k.value)}</div><div class="kpi-sub">${esc(k.sub)}</div></div>`).join('');
+    }
+    const rows = s.rows.map(row => {
+      const r = row.r || {};
+      const note = row.plan > 18 || row.avgCv > .08
+        ? 'Dikkat: plan farkı/CV yüksek; yüksek tekrar over-tuning riski doğurabilir.'
+        : (s.isTie ? 'Eşdeğer bant: karar tek algoritmaya bağlanmaz.' : (row === best ? 'Lider: birleşik skor en yüksek.' : 'Alternatif: tablo metrikleriyle karşılaştırılır.'));
+      return `<tr>
+        <td><b>${esc(row.a)}</b></td>
+        <td>${esc(METHOD[row.a] || '-')}</td>
+        <td>${fmt(r.profit?.mean,0)} ± ${fmt(r.profit?.std,0)} TL</td>
+        <td>${fmt(r.water?.mean,0)} ± ${fmt(r.water?.std,0)} m³</td>
+        <td>${fmt(r.efficiency?.mean,2)}</td>
+        <td>${fmt(row.score,1)}</td>
+        <td>${fmt(row.avgCv*100,2)}%</td>
+        <td>${fmt(row.plan,1)}%</td>
+        <td>${fmt(row.feasible,1)}%</td>
+        <td>${fmt(r.runtime_s?.mean,2)} sn</td>
+        <td>${esc(note)}</td>
+      </tr>`;
+    }).join('');
+    return `<section class="benchmark-report-v146" id="benchmarkReportV146">
+      <div class="benchmark-report-head-v146">
+        <div><span>Backend benchmark raporu</span><h3>Algoritma karşılaştırmaları analizi</h3></div>
+        <strong>${esc(s.objective)}</strong>
+      </div>
+      <div class="benchmark-decision-v146">
+        <b>${esc(s.isTie ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-'))}</b>
+        <span>${esc(summary)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
+      </div>
+      <div class="benchmark-table-wrap benchmark-report-table-v146">
+        <table class="mini-table pro">
+          <thead><tr><th>Alg.</th><th>Optimizasyon yaklaşımı</th><th>Net kâr</th><th>Su</th><th>TL/m³</th><th>Skor</th><th>CV</th><th>Plan farkı</th><th>Uygunluk</th><th>Süre</th><th>Net yorum</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="benchmark-rules-v146">
+        <div><b>Doğruluk kuralı</b><span>Karar yalnızca kârla verilmez; su tüketimi, TL/m³, uygulanabilirlik, CV, plan farkı ve süre birlikte puanlanır.</span></div>
+        <div><b>Overfitting kuralı</b><span>50-100 tekrar sadece stres testidir. 100 tekrarda skor artarken CV veya plan farkı büyüyorsa sonuç overfitting/over-tuning riski taşır.</span></div>
+        <div><b>Yakınsama kuralı</b><span>Üç algoritma aynı desene gelirse çiftçiye farklı öneri varmış gibi gösterilmez; veri ve kısıtlar aynı optimuma zorluyor denir.</span></div>
+      </div>
+    </section>`;
+  }
+  function line(label, data, color, dash=[]){
+    return {type:'line', label, data, borderColor:color, backgroundColor:color+'18', pointBackgroundColor:color, pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, borderWidth:2.6, borderDash:dash, tension:.2, fill:false};
+  }
+  function applyCharts(j){
+    if(typeof Chart === 'undefined') return;
+    const s = stats(j);
+    const rows = s.rows.slice().sort((a,b) => ['GA','ABC','ACO'].indexOf(a.a) - ['GA','ABC','ACO'].indexOf(b.a));
+    const charts = [
+      {id:'benchmarkProfitChart', labels:['Min','Ortalama','Maks'], title:'Net kâr (TL)', getter:row => [n(row.r?.profit?.min), n(row.r?.profit?.mean), n(row.r?.profit?.max)]},
+      {id:'benchmarkWaterChart', labels:['Min','Ortalama','Maks'], title:'Su tüketimi (m³)', getter:row => [n(row.r?.water?.min), n(row.r?.water?.mean), n(row.r?.water?.max)]},
+      {id:'benchmarkEffChart', labels:['Kâr','Su','TL/m³','Kararlılık','Uygunluk','Karar'], title:'0-100 skor', getter:row => [row.pScore,row.suScore,row.eScore,row.stability,row.feasible,row.score]},
+      {id:'benchmarkRuntimeChart', labels:['Hız','CV güveni','Plan güveni','Koşu tamamı','Overfit direnci'], title:'0-100 güven', getter:row => [row.speed, clamp(100-row.avgCv*350), clamp(100-row.plan), clamp(row.runs/Math.max(1,n(j?.repeats))*100), clamp(100-row.plan-row.avgCv*260)]}
+    ];
+    const dash = {GA:[], ABC:[6,4], ACO:[2,4]};
+    charts.forEach(cfg => {
+      const canvas = document.getElementById(cfg.id);
+      if(!canvas) return;
+      let chart = Chart.getChart(canvas);
+      if(!chart){
+        chart = new Chart(canvas.getContext('2d'), {type:'line', data:{labels:[], datasets:[]}, options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true, position:'bottom'}}, scales:{y:{beginAtZero:true, title:{display:true,text:cfg.title}}}}});
+      }
+      chart.data.labels = cfg.labels;
+      chart.data.datasets = rows.map(row => line(row.a, cfg.getter(row), COLORS[row.a] || '#64748b', dash[row.a] || []));
+      chart.update();
+    });
+    try{
+      const titles = document.querySelectorAll('#tab-benchmark .chart-title');
+      if(titles[0]) titles[0].textContent = 'Net kâr istatistiği - GA / ABC / ACO';
+      if(titles[1]) titles[1].textContent = 'Su tüketimi istatistiği - GA / ABC / ACO';
+      if(titles[2]) titles[2].textContent = 'Karar skoru bileşenleri';
+      if(titles[3]) titles[3].textContent = 'Kararlılık ve overfitting kontrolü';
+    }catch(_e){}
+  }
+  function sweepHtml(j){
+    if(!j) return '<div class="benchmark-note">Önce ana karşılaştırmayı çalıştırın; 30/50/100 yorumu gerçek benchmark çıktısına göre üretilir.</div>';
+    const s = stats(j);
+    const rows = [30,50,100].map(count => {
+      const risk = s.rows.some(row => row.avgCv > .08 || row.plan > 18)
+        ? (count >= 100 ? 'Yüksek tekrar over-tuning riskini büyütebilir.' : 'Önce CV/plan farkı düşürülmeli.')
+        : (count === 30 ? 'Ön kararlılık okuması için yeterli.' : (count === 50 ? 'Tez raporu için dengeli stres testi.' : 'Yalnızca stres testi; tek başına daha doğru demek değildir.'));
+      return `<tr><td><b>${count}</b></td><td>${esc(s.isTie ? 'Eşdeğer bant' : s.rows[0]?.a || '-')}</td><td>${esc(risk)}</td></tr>`;
+    }).join('');
+    return `<div class="benchmark-sweep-v146"><div class="matrix-title">30/50/100 kararlılık ve overfitting analizi</div><table><thead><tr><th>Tekrar</th><th>Karar okuması</th><th>Bilgisayarcı yorumu</th></tr></thead><tbody>${rows}</tbody></table><p>Bu bölüm yeni uzun backend koşusu başlatmaz; ana benchmarkın gerçek CV, plan farkı ve uygulanabilirlik değerlerinden karar riskini açıklar. Ağ/timeout hatası üretip ana grafikleri bozmaz.</p></div>`;
+  }
+  function bindSweepButton(){
+    const old = document.getElementById('runBenchmarkSweepBtn');
+    if(!old || old.__v146Bound) return;
+    const btn = old.cloneNode(true);
+    btn.id = old.id;
+    btn.textContent = '30/50/100 kararlılık analizi';
+    btn.__v146Bound = true;
+    old.replaceWith(btn);
+    btn.addEventListener('click', () => {
+      const box = document.getElementById('benchmarkSweepResults');
+      if(box) box.innerHTML = sweepHtml(window.__lastBenchmarkRawV146 || null);
+      const st = document.getElementById('benchmarkStatus');
+      if(st) st.textContent = 'Kararlılık analizi hazır';
+    });
+  }
+  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v146Wrapped){
+    const prev = renderBenchmarkResultsTo;
+    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
+      const res = prev.apply(this, arguments);
+      try{
+        if(j && j.status === 'OK'){
+          window.__lastBenchmarkRawV146 = j;
+          const host = box || document.getElementById('benchmarkResults');
+          if(host) host.innerHTML = reportHtml(j);
+          applyCharts(j);
+          bindSweepButton();
+        }
+      }catch(e){ console.warn('[benchmark v146]', e); }
+      return res;
+    };
+    renderBenchmarkResultsTo.__v146Wrapped = true;
+  }
+  window.__renderBenchmarkReportV146 = function(j, box){
+    if(!j || j.status !== 'OK') return;
+    window.__lastBenchmarkRawV146 = j;
+    const host = box || document.getElementById('benchmarkResults');
+    if(host) host.innerHTML = reportHtml(j);
+    applyCharts(j);
+    bindSweepButton();
+  };
+  [0,500,1500,3500].forEach(ms => setTimeout(bindSweepButton, ms));
 })();
 
 
@@ -24079,3 +24329,299 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     renderBenchmarkResultsTo.__v145Wrapped = true;
   }
 })();
+
+/* v147 final benchmark override: v146 report must be the final rendered benchmark surface */
+(function(){
+  if(window.__benchmarkFinalOverrideV147TailFinal) return;
+  window.__benchmarkFinalOverrideV147TailFinal = true;
+  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v147TailFinalWrapped){
+    const prev = renderBenchmarkResultsTo;
+    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
+      const res = prev.apply(this, arguments);
+      try{
+        if(j && j.status === 'OK' && typeof window.__renderBenchmarkReportV146 === 'function'){
+          window.__renderBenchmarkReportV146(j, box || document.getElementById('benchmarkResults'));
+        }
+      }catch(e){ console.warn('[benchmark v147-tail]', e); }
+      return res;
+    };
+    renderBenchmarkResultsTo.__v147TailFinalWrapped = true;
+  }
+})();
+
+/* v148 deep approved farmer plan: monthly practice calendar, Niğde disease/pest guidance, no uncertain price table */
+(function(){
+  if(window.__approvedPlanDeepV148) return;
+  window.__approvedPlanDeepV148 = true;
+
+  const APPROVED_KEY = 'sazlica_approved_recommendations_v103';
+  const esc = value => (typeof escapeHtml === 'function')
+    ? escapeHtml(String(value ?? ''))
+    : String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const num = (value, fallback=0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+  const fmt = (value, d=0) => {
+    try{ return num(value,0).toLocaleString('tr-TR', {maximumFractionDigits:d, minimumFractionDigits:0}); }
+    catch(_e){ return String(Math.round(num(value,0))); }
+  };
+  const money = value => fmt(value,0) + ' TL';
+  const norm = value => String(value || '').toLocaleUpperCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/İ/g,'I');
+  const pretty = value => (typeof prettyCropName === 'function') ? prettyCropName(value) : String(value || '').trim();
+
+  const GUIDES = {
+    NOHUT: {
+      label:'Nohut',
+      niğde:'Niğde koşullarında nohut; düşük su ihtiyacı, kireçli-tınlı topraklara uyum ve kuru hasat avantajı nedeniyle su kısıtı olan parsellerde güçlü bir seçenektir. Bor, Altunhisar, Çiftlik ve merkeze bağlı kuru-yarı kuru alanlarda ilkbahar yağışı izlenerek destek sulama planlanmalıdır.',
+      target:'Sertifikalı, antraknoza dayanıklı tohum; 3-4 yıl baklagil dışı münavebe; yabancı ot baskısı düşük, drenajı iyi tarla.',
+      gdd:'Yaklaşık 850-1.150 GDD. Çıkış-serpme döneminde serinlik, çiçeklenme ve bakla dolumunda ani sıcak-kurak stresin azaltılması önemlidir.',
+      soil:[
+        'Toprak analizi yapılır; pH 6,5-8,0 aralığı ve iyi drenaj hedeflenir. Ağır, taban suyu yüksek ve kaymak bağlayan alanlarda kök hastalığı riski artar.',
+        'Sonbahar derin sürüm, ilkbaharda tavı kaçırmadan ikileme ve merdane önerilir. Tohum yatağı keseksiz ama fazla ufalanmamış olmalıdır.',
+        'Başlangıç azotu düşük tutulur; fosfor ana besindir. Taban gübresi toprak analizine göre verilir, Rhizobium aşılaması kök nodülünü ve azot bağlamayı destekler.'
+      ],
+      irrigation:[
+        {stage:'Ekim-çıkış', rule:'Toprak tavı yeterliyse sulama yapılmaz; kuru ekimde çimlenmeyi garanti etmek için düşük debili can suyu verilir.'},
+        {stage:'Dallanma-çiçeklenme öncesi', rule:'İlkbahar yağışı zayıfsa 25-35 mm destek sulama yapılır. Amaç bitkiyi aşırı vegetatif büyütmek değil, çiçeklenmeye sağlıklı sokmaktır.'},
+        {stage:'Bakla bağlama-dane dolumu', rule:'Kurak ve sıcak rüzgarlı haftada 30-40 mm destek sulama verilebilir. Yaprak ıslaklığı oluşturacak geç saat yağmurlamadan kaçınılır.'},
+        {stage:'Sararma-hasat', rule:'Daneler sararmaya başladığında sulama kesilir; geç sulama hasadı geciktirir, tane rengini ve depolama kalitesini bozar.'}
+      ],
+      months:[
+        {m:'Ocak', stage:'Planlama', jobs:['Parsel geçmişi kontrol edilir; son 3 yılda nohut/mercimek/bezelye yoğunluğu varsa kök hastalığı riski nedeniyle başka parsel seçilir.','Toprak analizi için örnek alınır; pH, organik madde, fosfor, potasyum, kireç ve tuzluluk kayıt altına alınır.','Sertifikalı, antraknoz dayanımı bilinen çeşit ve tohum ilaçlama/aşılama planı hazırlanır.']},
+        {m:'Şubat', stage:'Tohum ve tarla hazırlığı', jobs:['Tohum çimlenme gücü kontrol edilir; kırık, buruşuk ve lekeli taneler ayrılır.','Sonbahar sürümü yoksa tarla tavındayken derin olmayan işleme yapılır; erozyon riski olan eğimli alanlarda fazla işleme yapılmaz.','Taban gübresi dozu toprak analizine göre netleştirilir; gereksiz azottan kaçınılır.']},
+        {m:'Mart', stage:'Ekim dönemi', jobs:['Niğde’de tarla tavı ve don riski izlenerek Mart sonu-Nisan başı ekim hedeflenir.','Tohum Rhizobium ile aşılanır; aşılama sonrası güneşte bekletilmeden ekilir.','Sıra arası mekanik çapa yapılacak şekilde ayarlanır; ekim sonrası merdane ile tohum-toprak teması artırılır.']},
+        {m:'Nisan', stage:'Çıkış ve ilk bakım', jobs:['Çıkış homojenliği kontrol edilir; boşluk varsa neden kaymak tabakası, kuş zararı, tohum çürümesi veya derin ekim olarak ayrılır.','Yabancı ot çıkışı erken dönemde bastırılır; mekanik çapa için toprak tavı beklenir.','Kök boğazı kararması, solgunluk ve antraknoz lekesi için haftalık tarla yürüyüşü yapılır.']},
+        {m:'Mayıs', stage:'Dallanma ve çiçeklenme başlangıcı', jobs:['Yağış azsa çiçeklenme öncesi destek sulama planlanır; aşırı sulama kök çürüklüğünü artıracağı için toprak nemi kontrol edilmeden sulama yapılmaz.','Antraknoz için alt yaprak, sap ve ilk bakla lekeleri izlenir; yağışlı-serin hafta sonrası risk yükselir.','Yaprak biti kolonileri ve yeşil kurt yumurta/larva başlangıcı kontrol edilir.']},
+        {m:'Haziran', stage:'Bakla bağlama ve dane dolumu', jobs:['En kritik dönemdir; bitki öğle saatinde kalıcı solgunluk gösteriyorsa destek sulama uygulanır.','Yeşil kurt baklada delik ve dışkı bırakır; rastgele bitki kontrolüyle yoğunluk takip edilir.','Yaprak sararması ile kök hastalığı karıştırılmaz; kök sökülüp damar kararması ve kök çürümesi kontrol edilir.']},
+        {m:'Temmuz', stage:'Olgunlaşma', jobs:['Baklaların çoğu sararıp tane sertleştiğinde sulama tamamen kesilir.','Hasat gecikirse bakla çatlaması ve tane dökümü artar; sabah serinliği hasat kaybını azaltır.','Biçerdöver ayarı tane kırığını azaltacak şekilde yapılır; yabancı otlu parseller ayrı harmanlanır.']},
+        {m:'Ağustos', stage:'Hasat sonrası', jobs:['Ürün nemi depolama için güvenli seviyeye düşürülür; çuvallar zeminden yükseltilir ve havalandırılır.','Bruchus/tohum böceği delikleri kontrol edilir; bulaşık parti ayrı depolanır.','Anız ve bitki artıkları hastalık kaynağı olmaması için yönetilir; sonraki yıl için münavebe kaydı tutulur.']},
+        {m:'Eylül-Ekim', stage:'Münavebe ve toprak sağlığı', jobs:['Nohut sonrası tahıl veya yem bitkisi planlanır; aynı parselde üst üste baklagil yapılmaz.','Toprak organik maddesini artıracak yanmış çiftlik gübresi/örtü bitkisi seçenekleri değerlendirilir.','Verim, su, masraf ve hastalık kayıtları gelecek yıl kararına esas olacak şekilde dosyalanır.']}
+      ],
+      diseases:[
+        {name:'Antraknoz / Ascochyta yanıklığı', symptoms:'Yaprak, sap ve baklada kahverengi-siyah, çökük ve halkalı lekeler; yağışlı-serin havada hızlı yayılım; şiddetli durumda dal kırılması ve bakla kararması.', prevention:'Sertifikalı tohum, 3-4 yıl münavebe, hastalıklı artıkların tarlada bırakılmaması, sık ekimden kaçınma ve yaprak ıslaklığını azaltan sulama.', bio:'Dayanıklı çeşit, sağlıklı tohum, Trichoderma/Bacillus içerikli ruhsatlı biyolojik ürünler ve iyi havalanan bitki sıklığı.', chem:'İlk belirtiler veya yüksek riskli yağış döneminde yalnızca nohut için ruhsatlı fungisitler, etiket dozu ve il/ilçe tarım önerisiyle uygulanır; aynı etki grubunun sürekli tekrarı direnç oluşturabilir.'},
+        {name:'Fusarium solgunluğu ve kök çürüklüğü', symptoms:'Alt yapraklarda sararma, tek taraflı solgunluk, kök boğazında kahverengileşme, kökte çürüme ve sıcak-kurak günlerde ani çökme.', prevention:'Drenajı iyi parsel, aşırı sulamadan kaçınma, münavebe, temiz tohum ve ekim öncesi toprak sıkışıklığının giderilmesi.', bio:'Rhizobium aşılamasını doğru yapmak, organik maddeyi artırmak ve faydalı mikrobiyal preparatları tohum/toprak uygulamasında kullanmak.', chem:'Tohum kaynaklı riskte ruhsatlı tohum ilaçları kullanılır; tarlada yaygın solgunluk başladıktan sonra kimyasal başarı sınırlıdır, odak parseller gelecek yıl baklagilden çıkarılır.'},
+        {name:'Yeşil kurt', symptoms:'Çiçek ve baklada delik, bakla içinde beslenen larva, dışkı kalıntısı ve tane kaybı. Haziran ayında sıcak ve kuru koşullarda risk artar.', prevention:'Düzenli sürvey, erken ekimle kritik dönemi yoğun uçuş öncesine çekme, hasadı geciktirmeme.', bio:'Feromon tuzakları ile uçuş takibi, Bacillus thuringiensis içerikli ruhsatlı biyolojik ürünler ve faydalı böcekleri koruyan seçici uygulamalar.', chem:'Ekonomik zarar eşiği aşılırsa ruhsatlı insektisit kullanılır; çiçeklenmede arı aktivitesi ve hasat aralığı mutlaka dikkate alınır.'},
+        {name:'Yaprak biti', symptoms:'Sürgün uçlarında koloni, yaprak kıvrılması, yapışkan salgı, zayıf gelişme ve virüs taşıma riski.', prevention:'Aşırı azottan kaçınma, tarla kenarı yabancı ot kontrolü, haftalık yaprak altı kontrolü.', bio:'Doğal düşmanları koruyan seçici mücadele; yoğun olmayan odaklarda mekanik uzaklaştırma ve biyolojik preparatlar.', chem:'Koloni hızlı artıyor ve faydalı yoğunluğu yetersizse ruhsatlı afisitler etiketine göre uygulanır; aynı etki grubu ardışık kullanılmaz.'},
+        {name:'Bruchus / tohum böceği', symptoms:'Depoda veya tarlada tanede yuvarlak çıkış deliği, kalite ve çimlenme kaybı.', prevention:'Zamanında hasat, temiz depo, düşük nem, bulaşık partinin ayrılması ve depoda düzenli kontrol.', bio:'Depo hijyeni, elek-temizleme ve fiziksel ayırma.', chem:'Depo bulaşmasında yalnızca yetkili kişilerce ruhsatlı fumigasyon/depo uygulaması yapılır; gıda güvenliği kuralları önceliklidir.'}
+      ],
+      harvest:['Daneler sertleşip bitki sarardığında hasat edilir; fazla gecikme bakla çatlaması ve tane dökümü yapar.','Biçerdöver batör/devri tane kırığını azaltacak şekilde ayarlanır; kırık tane depoda böcek ve küf riskini artırır.','Parti bazında nem, yabancı madde ve tane iriliği kaydı tutulur; alıcıya temiz ve sınıflanmış parti sunulur.']
+    },
+    MERCIMEK: {
+      label:'Mercimek',
+      niğde:'Niğde’de mercimek kısa sezon ve çok düşük su isteğiyle kurak yıl tamponudur; erken ilkbahar tavı ve yabancı ot yönetimi başarıyı belirler.',
+      target:'Erken ekim, temiz tohum, hızlı çıkış ve hasadı geciktirmeden dane kaybını azaltma.',
+      gdd:'Yaklaşık 800-1.100 GDD.',
+      soil:['Tavlı, iyi drene ve keseksiz tohum yatağı hazırlanır.','Fosfor ve mikro elementler toprak analizine göre düzenlenir.','Aşırı azot yatma ve hastalık riskini artırır.'],
+      irrigation:[{stage:'Çıkış', rule:'Genelde yağış yeterlidir; kuru çıkışta düşük destek sulama yapılır.'},{stage:'Çiçeklenme', rule:'Şiddetli kuraklıkta tek destek sulama verilebilir.'},{stage:'Olgunlaşma', rule:'Sulama kesilir; hasat kaybını azaltmak için zamanlama izlenir.'}],
+      months:[
+        {m:'Şubat', stage:'Hazırlık', jobs:['Tohum ve tarla seçimi yapılır, yabancı ot geçmişi kontrol edilir.','Toprak analizi ve taban gübresi planı hazırlanır.']},
+        {m:'Mart', stage:'Ekim', jobs:['Tarla tavındayken ekim yapılır, ekim derinliği homojen tutulur.','Çıkış sonrası kaymak tabakası ve boşluklar kontrol edilir.']},
+        {m:'Nisan', stage:'Bakım', jobs:['Yabancı ot erken dönemde bastırılır.','Pas/antraknoz ve yaprak biti haftalık izlenir.']},
+        {m:'Mayıs', stage:'Çiçeklenme', jobs:['Kuraklık varsa tek destek sulama değerlendirilir.','Hastalık belirtisi yağışlı haftalarda artar; sık tarla kontrolü yapılır.']},
+        {m:'Haziran-Temmuz', stage:'Hasat', jobs:['Bitki sararınca hasat geciktirilmez.','Dane nemi ve yabancı madde ayrımı yapılır.']}
+      ],
+      diseases:[
+        {name:'Antraknoz', symptoms:'Yaprak ve sapta kahverengi lekeler, kurumalar ve zayıf dane dolumu.', prevention:'Temiz tohum, münavebe, sık ekimden kaçınma.', bio:'Dayanıklı çeşit ve biyolojik tohum uygulamaları.', chem:'Risk ve belirti durumunda mercimeğe ruhsatlı fungisitler etiketine göre kullanılır.'},
+        {name:'Pas', symptoms:'Yaprakta pas rengi püstüller ve erken yaprak dökümü.', prevention:'Dayanıklı çeşit, iyi havalanma.', bio:'Dengeli besleme ve tarla artık yönetimi.', chem:'Eşik aşılırsa ruhsatlı fungisit uygulanır.'},
+        {name:'Yaprak biti', symptoms:'Sürgünde koloni ve kıvrılma.', prevention:'Yabancı ot kontrolü ve haftalık gözlem.', bio:'Faydalıları koruyan uygulamalar.', chem:'Yoğunluk artarsa ruhsatlı seçici ürünler.'}
+      ],
+      harvest:['Hasat gecikirse bakla çatlar; sabah serinliği kaybı azaltır.','Temizleme ve sınıflama satış değerini yükseltir.']
+    }
+  };
+
+  function genericGuide(crop){
+    return {
+      label: pretty(crop) || 'Onaylı ürün',
+      niğde:'Niğde koşullarında ürün yönetimi; su kısıtı, ilkbahar geç donu, yaz kuraklığı ve kireçli toprak yapısı dikkate alınarak planlanmalıdır.',
+      target:'Toprak analizi, uygun çeşit, doğru ekim zamanı, kontrollü sulama ve düzenli hastalık-zararlı takibi.',
+      gdd:'Ürün çeşidine göre sıcaklık toplamı il/ilçe tarım ve çeşit kataloglarıyla netleştirilir.',
+      soil:['Toprak analizi yapılır ve gübreleme buna göre düzenlenir.','Drenaj, kaymak tabakası ve tuzluluk riski kontrol edilir.','Münavebe kaydı tutulur; aynı familya üst üste getirilmez.'],
+      irrigation:[{stage:'Çıkış/tutma', rule:'Toprak tavı korunur, gereksiz sulamadan kaçınılır.'},{stage:'Vejetatif gelişme', rule:'Bitkinin kritik dönemine göre düşük debili, kontrollü sulama yapılır.'},{stage:'Hasat öncesi', rule:'Kaliteyi bozmayacak zamanda sulama azaltılır veya kesilir.'}],
+      months:[
+        {m:'Ekim öncesi', stage:'Hazırlık', jobs:['Toprak analizi, tohum/fide ve pazar planı tamamlanır.','Tarla geçmişi ve hastalık riski kontrol edilir.']},
+        {m:'Ekim/dikim', stage:'Kuruluş', jobs:['Ekim derinliği, sıra arası ve can suyu planı uygulanır.','Çıkış/tutma başarısı kayıt altına alınır.']},
+        {m:'Gelişme', stage:'Bakım', jobs:['Sulama, gübreleme ve yabancı ot mücadelesi düzenli yapılır.','Hastalık ve zararlılar haftalık izlenir.']},
+        {m:'Hasat', stage:'Kalite', jobs:['Hasat zamanı kaliteye göre belirlenir.','Ürün temizlenir, sınıflanır ve kayıt tutulur.']}
+      ],
+      diseases:[
+        {name:'Kök ve yaprak hastalıkları', symptoms:'Sararma, leke, solgunluk, kök kararması veya verim düşüşü.', prevention:'Münavebe, sağlıklı tohum/fide, dengeli sulama ve tarla hijyeni.', bio:'Biyolojik preparatlar ve kültürel önlemler.', chem:'Yalnızca ürüne ruhsatlı preparatlar etiket ve uzman önerisiyle uygulanır.'},
+        {name:'Yaprak emici ve meyve/dane zararlıları', symptoms:'Yaprak kıvrılması, delik, salgı, tane/meyve zararı.', prevention:'Haftalık sürvey, yabancı ot kontrolü, hasadı geciktirmeme.', bio:'Faydalıları koruyan seçici uygulamalar.', chem:'Ekonomik zarar eşiği aşılırsa ruhsatlı ürünler kullanılır.'}
+      ],
+      harvest:['Hasat kalite döneminde yapılır.','Nem, kırık, yabancı madde ve depo koşulları kayıt altına alınır.']
+    };
+  }
+
+  function guideForCrop(crop){
+    const k = norm(crop);
+    if(k.includes('NOHUT')) return GUIDES.NOHUT;
+    if(k.includes('MERCIMEK')) return GUIDES.MERCIMEK;
+    return genericGuide(crop);
+  }
+  function approvedRows(){ try{ return JSON.parse(localStorage.getItem(APPROVED_KEY) || '[]') || []; }catch(_e){ return []; } }
+  function currentParcel(){
+    const pid = String((typeof selectedParcelId !== 'undefined' ? selectedParcelId : window.selectedParcelId) || '');
+    const rows = (typeof parcelData !== 'undefined' ? parcelData : window.parcelData) || [];
+    return rows.find(p => String(p.id || p.parsel_id || '') === pid) || rows[0] || null;
+  }
+  function currentRecord(){
+    const appState = (typeof STATE !== 'undefined' ? STATE : window.STATE) || {};
+    const user = String(appState.currentUser?.username || '');
+    const parcel = currentParcel();
+    if(!user || !parcel || appState.currentUser?.role !== 'farmer') return null;
+    return approvedRows().find(r => String(r.farmer_username || '') === user && String(r.parcel_id || '') === String(parcel.id || parcel.parsel_id || '')) || null;
+  }
+  function cropNames(pattern){
+    const out = [];
+    ['mainCrop','secondaryCrop','crop','name'].forEach(k => { const v = pretty(pattern?.[k] || ''); if(v && v !== '-') out.push(v); });
+    if(!out.length){
+      String(pattern?.patternName || '').split(/\s+\+\s+|\s*\/\s*|\s+sonra\s+/i).map(x => pretty(x.replace(/%\d+/g,'').replace(/tek ürün|tek urun/ig,'').trim())).filter(Boolean).forEach(x => out.push(x));
+    }
+    return Array.from(new Set(out)).slice(0,2);
+  }
+  function totalsFor(record, parcel){
+    const pat = record?.pattern || {};
+    const area = num(parcel?.area_da || parcel?.area || 0);
+    const water = num(pat.totalWater || pat.water || 0);
+    const profit = num(pat.totalProfit || pat.profit || 0);
+    const incentive = num(pat.incentiveTotal || 0);
+    return {
+      area,
+      water,
+      profit,
+      incentive,
+      waterPerDa: area ? water / area : 0,
+      profitPerDa: area ? profit / area : 0,
+      incentivePerDa: area ? incentive / area : num(pat.incentivePerDa || 0),
+      tlPerM3: num(pat.tlPerM3 || (profit / Math.max(1, water)), 0)
+    };
+  }
+  function monthlyHtml(guides){
+    const items = [];
+    guides.forEach(g => g.months.forEach(m => items.push({...m, crop:g.label})));
+    return `<div class="approved-month-grid-v148">${items.map(item => `<article>
+      <div class="month-head-v148"><span>${esc(item.m)}</span><b>${esc(item.crop)} • ${esc(item.stage)}</b></div>
+      <ul>${item.jobs.map(j => `<li>${esc(j)}</li>`).join('')}</ul>
+    </article>`).join('')}</div>`;
+  }
+  function irrigationHtml(guides, totals){
+    return `<div class="approved-irrigation-v148">
+      <div class="irrigation-summary-v148">
+        <b>Planlanan toplam su: ${fmt(totals.water,0)} m³</b>
+        <span>Dekara yaklaşık ${fmt(totals.waterPerDa,1)} m³. Sulama kararı yağış, toprak tavı ve bitki stres gözlemine göre güncellenir; gereksiz sulama hastalık riskini artırır.</span>
+      </div>
+      ${guides.map(g => `<article><h5>${esc(g.label)} sulama eşikleri</h5>${g.irrigation.map(x => `<div><b>${esc(x.stage)}</b><p>${esc(x.rule)}</p></div>`).join('')}</article>`).join('')}
+    </div>`;
+  }
+  function soilHtml(guides){
+    return `<div class="approved-soil-v148">${guides.map(g => `<article><h5>${esc(g.label)} toprak ve besleme</h5><p>${esc(g.gdd)}</p><ul>${g.soil.map(x => `<li>${esc(x)}</li>`).join('')}</ul></article>`).join('')}</div>`;
+  }
+  function diseaseHtml(guides){
+    const diseases = [];
+    guides.forEach(g => g.diseases.forEach(d => diseases.push({...d, crop:g.label})));
+    return `<div class="approved-disease-grid-v148">${diseases.map(d => `<article>
+      <h5>${esc(d.name)}</h5>
+      <span>${esc(d.crop)}</span>
+      <div><b>Belirti</b><p>${esc(d.symptoms)}</p></div>
+      <div><b>Kültürel önlem</b><p>${esc(d.prevention)}</p></div>
+      <div><b>Biyolojik mücadele</b><p>${esc(d.bio)}</p></div>
+      <div><b>Kimyasal mücadele</b><p>${esc(d.chem)}</p></div>
+    </article>`).join('')}</div>`;
+  }
+  function harvestHtml(guides){
+    return `<div class="approved-harvest-v148">${guides.map(g => `<article><h5>${esc(g.label)} hasat ve kalite</h5><ul>${g.harvest.map(x => `<li>${esc(x)}</li>`).join('')}</ul></article>`).join('')}</div>`;
+  }
+  function economyHtml(totals, crops){
+    const cropLabel = crops.join(' + ');
+    return `<div class="approved-economy-v148">
+      <div><span>Onaylı ürün/desen</span><b>${esc(cropLabel)}</b><small>Uzman onaylı planın hedef ekonomik değerleri gösterilir.</small></div>
+      <div><span>Net kâr hedefi</span><b>${money(totals.profit)}</b><small>Dekara ${money(totals.profitPerDa)}</small></div>
+      <div><span>Su verimliliği</span><b>${fmt(totals.tlPerM3,2)} TL/m³</b><small>Her m³ suyun ekonomik karşılığı.</small></div>
+      <div><span>Teşvik etkisi</span><b>${totals.incentive ? money(totals.incentive) : 'Teşvik uygunluğu uzman kontrolünde'}</b><small>${totals.incentivePerDa ? fmt(totals.incentivePerDa,0) + ' TL/da' : 'Başvuru kalemleri belgeye göre netleşir'}</small></div>
+      <div><span>Çiftçi kayıt görevi</span><b>Su • gübre • ilaç • hasat defteri</b><small>Her uygulama tarih, miktar ve parsel notuyla kaydedilir.</small></div>
+    </div>`;
+  }
+  function checklistHtml(crops){
+    return `<div class="approved-checklist-v148">
+      <label><input type="checkbox"> Haftalık tarla yürüyüşü yapıldı; yaprak, sap, kök ve bakla belirtileri kontrol edildi.</label>
+      <label><input type="checkbox"> Sulama öncesi toprak tavı kontrol edildi; gereksiz sulama yapılmadı.</label>
+      <label><input type="checkbox"> Yabancı ot, hastalık ve zararlı yoğunluğu not edildi.</label>
+      <label><input type="checkbox"> Uygulanan gübre/ilaç/biolojik ürün tarih ve miktarı kayıt edildi.</label>
+      <label><input type="checkbox"> Hasat öncesi nem, tane rengi ve dökülme riski kontrol edildi.</label>
+    </div>`;
+  }
+  function build(record, parcel){
+    const pat = record?.pattern || {};
+    const crops = cropNames(pat);
+    if(!crops.length) crops.push(pretty(pat.patternName || 'Onaylı ürün'));
+    const guides = crops.map(guideForCrop);
+    const totals = totalsFor(record, parcel);
+    const planTitle = pretty(pat.patternName || crops.join(' + '));
+    return `<section class="approved-deep-v148" id="approvedDeepV148">
+      <div class="approved-deep-hero-v148">
+        <div><span>Uzman onaylı uygulama rehberi</span><h3>${esc(planTitle)}</h3><p>${esc(guides[0].niğde)}</p></div>
+        <div><b>${esc(record?.approved_by || 'Uzman')}</b><small>${esc((record?.approved_at || '').slice(0,10) || 'Onay tarihi')}</small></div>
+      </div>
+      <div class="approved-kpi-grid-v142 approved-kpi-grid-only-v144">
+        <div><span>Uygulama alanı</span><strong>${fmt(totals.area,1)} da</strong></div>
+        <div><span>Ürün/desen</span><strong>${esc(crops.join(' + '))}</strong></div>
+        <div><span>Plan suyu</span><strong>${fmt(totals.water,0)} m³</strong></div>
+        <div><span>Net kâr hedefi</span><strong>${money(totals.profit)}</strong></div>
+        <div><span>Su verimi</span><strong>${fmt(totals.tlPerM3,2)} TL/m³</strong></div>
+        <div><span>Teşvik/başvuru etkisi</span><strong>${totals.incentive ? money(totals.incentive) : 'Uygunluk kontrolü'}</strong><small>${totals.incentivePerDa ? fmt(totals.incentivePerDa,0) + ' TL/da' : 'Belge ve başvuru koşulu aranır'}</small></div>
+      </div>
+      <section class="approved-block-v148"><h4>Niğde için ürün gerekçesi</h4><p>${esc(guides[0].target)}</p></section>
+      <section class="approved-block-v148"><h4>Ay ay üretim, bakım ve sulama takvimi</h4>${monthlyHtml(guides)}</section>
+      <section class="approved-block-v148"><h4>Sulama yönetimi</h4>${irrigationHtml(guides, totals)}</section>
+      <section class="approved-block-v148"><h4>Toprak hazırlığı, gübreleme ve sıcaklık toplamı</h4>${soilHtml(guides)}</section>
+      <section class="approved-block-v148"><h4>Hastalık ve zararlı yönetimi</h4>${diseaseHtml(guides)}</section>
+      <section class="approved-block-v148"><h4>Hasat, kalite ve depolama</h4>${harvestHtml(guides)}</section>
+      <section class="approved-block-v148"><h4>Ekonomi, su verimi ve çiftçi kayıt planı</h4>${economyHtml(totals, crops)}</section>
+      <section class="approved-block-v148"><h4>Haftalık kontrol listesi</h4>${checklistHtml(crops)}</section>
+      <div class="approved-deep-foot-v148">Bu sekme sadece onaylanan ürün/desen için hazırlanmıştır; uygulama takvimi, sulama, hastalık-zararlı yönetimi, hasat ve kayıt adımlarını çiftçi uygulamasına dönük biçimde özetler. Kimyasal uygulamalarda ruhsat, etiket, hasat aralığı ve il/ilçe tarım önerisi esas alınır.</div>
+    </section>`;
+  }
+  function render(){
+    try{
+      const appState = (typeof STATE !== 'undefined' ? STATE : window.STATE) || {};
+      if(appState.currentUser?.role !== 'farmer') return;
+      const panel = document.getElementById('approvedPlanPanelV142');
+      if(!panel) return;
+      const record = currentRecord();
+      const parcel = currentParcel();
+      if(!record || !parcel) return;
+      const key = String(record.id || record.approved_at || '') + '|' + String(parcel.id || parcel.parsel_id || '');
+      if(panel.dataset.deepV148 === key && panel.querySelector('#approvedDeepV148')) return;
+      panel.innerHTML = build(record, parcel);
+      panel.dataset.deepV148 = key;
+    }catch(e){ console.warn('[approved plan v148]', e); }
+  }
+  const schedule = () => [0,120,500,1200,2500,5000,8000,13000].forEach(ms => setTimeout(render, ms));
+  window.__forceApprovedDeepV148 = render;
+  setInterval(() => {
+    try{
+      const panel = document.getElementById('approvedPlanPanelV142');
+      if(panel?.classList.contains('active') && !panel.querySelector('#approvedDeepV148')) render();
+    }catch(_e){}
+  }, 1000);
+  if(typeof refreshUI === 'function' && !refreshUI.__approvedPlanDeepV148){
+    const prev = refreshUI;
+    refreshUI = function(){
+      const res = prev.apply(this, arguments);
+      schedule();
+      return res;
+    };
+    refreshUI.__approvedPlanDeepV148 = true;
+  }
+  document.addEventListener('click', ev => {
+    if(ev.target?.closest?.('#approvedPlanTabBtnV142,.tab[data-tab="approved-plan"]')) schedule();
+  }, true);
+  try{
+    const obs = new MutationObserver(() => {
+      const panel = document.getElementById('approvedPlanPanelV142');
+      if(panel && !panel.querySelector('#approvedDeepV148')) schedule();
+    });
+    obs.observe(document.body, {childList:true, subtree:true});
+  }catch(_e){}
+  window.addEventListener('load', schedule);
+  if(document.readyState !== 'loading') schedule();
+  else document.addEventListener('DOMContentLoaded', schedule);
+})();
+
