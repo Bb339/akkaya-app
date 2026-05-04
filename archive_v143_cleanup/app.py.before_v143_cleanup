@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import csv
@@ -281,7 +281,7 @@ def load_area_overrides() -> Dict[str, Dict[str, float]]:
 def normalize_crop_key(name: str) -> str:
     s = (name or "").strip().upper()
     # Turkish -> ASCII-like
-    tr_map = str.maketrans({"Ç":"C","Ğ":"G","İ":"I","Ö":"O","Ş":"S","Ü":"U","\u00c2":"A","Û":"U","Î":"I",
+    tr_map = str.maketrans({"Ç":"C","Ğ":"G","İ":"I","Ö":"O","Ş":"S","Ü":"U","Â":"A","Û":"U","Î":"I",
                             "ç":"C","ğ":"G","ı":"I","ö":"O","ş":"S","ü":"U"})
     s = s.translate(tr_map)
     for ch in ["-", ".", ",", "(", ")", "[", "]", "{", "}", "/"]:

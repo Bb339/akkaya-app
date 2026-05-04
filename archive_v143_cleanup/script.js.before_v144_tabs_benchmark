@@ -1,4 +1,4 @@
-// Demo veri seti
+﻿// Demo veri seti
 
 // --- v51 CLEAN: Fixed crop pools (Senaryo-1) ---
 let S1_PRIMARY_CROPS = [];
@@ -9634,13 +9634,9 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
 
   const repeatsEl = document.getElementById('benchmarkRepeats');
   const seedEl = document.getElementById('benchmarkSeed');
-  const repeats = Math.max(10, Math.min(120, parseInt(repeatsEl?.value || '10', 10) || 10));
+  const repeats = Math.max(10, Math.min(120, parseInt(repeatsEl?.value || '50', 10) || 50));
   const seedRaw = (seedEl?.value ?? '').toString().trim();
   const baseSeed = seedRaw === '' ? null : (parseInt(seedRaw, 10));
-  const benchmarkDepth = repeats >= 50
-    ? {generations:12, popSize:14, cycles:14, foodSources:14, ants:12, iterations:14}
-    : {generations:10, popSize:12, cycles:12, foodSources:12, ants:10, iterations:12};
-  const benchmarkMaxSeconds = Math.max(75, Math.min(180, repeats * 9));
 
   const benchmarkScopeIds = getBenchmarkParcelIdsForRun();
   window.__lastBenchmarkScopeLabel = getBenchmarkScopeLabel(benchmarkScopeIds);
@@ -9653,21 +9649,21 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
     baseSeed,
     algorithms: ['GA','ABC','ACO'],
     includeBaseline: true,
-    // Ana benchmark kullanıcıyı dakikalarca bekletmeden gerçek backend koşuları üretir.
-    // 30/50/100 kararlılık taraması ayrı butonda okunur; burada süre bütçesi kaçış sınırıdır.
-    maxSeconds: benchmarkMaxSeconds,
+    // 50-120 tekrarli tez benchmark'i icin yeterli sure ver; backend yine kacis siniri uygular.
+    maxSeconds: 900,
     options: {
       // Benchmark, UI'daki "Sezon veri seti" seçimine göre farklı aday havuzu üretir.
       // seasonSourceOverride verilirse onu kullan.
       seasonSource: (seasonSourceOverride || STATE.seasonSource || 's1'),
       scenarioType: (((seasonSourceOverride || STATE.seasonSource || 's1')==='s2') ? 'double' : 'single'),
       twoSeason: ((seasonSourceOverride || STATE.seasonSource || 's1')==='s2'),
-      generations: benchmarkDepth.generations,
-      popSize: benchmarkDepth.popSize,
-      cycles: benchmarkDepth.cycles,
-      foodSources: benchmarkDepth.foodSources,
-      ants: benchmarkDepth.ants,
-      iterations: benchmarkDepth.iterations,
+      // leave hyper-parameters empty so backend uses lightweight benchmark defaults
+      generations: null,
+      popSize: null,
+      cycles: null,
+      foodSources: null,
+      ants: null,
+      iterations: null,
       envFlowRatio: 0.10,
       enforceDeliveryCaps: true,
       waterQualityFilter: true,
@@ -20952,7 +20948,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const parcelTab = document.querySelector('.tab[data-tab="parcel"]');
     if(parcelTab){
       if(!parcelTab.dataset.institutionLabel) parcelTab.dataset.institutionLabel = parcelTab.textContent || 'Parsel düzeyi desen';
-      parcelTab.textContent = isFarmerV55() ? 'Parsel düzeyi desen' : parcelTab.dataset.institutionLabel;
+      parcelTab.textContent = isFarmerV55() ? 'Kendi parsel önerim' : parcelTab.dataset.institutionLabel;
     }
     document.querySelectorAll('#tab-parcel h3.card-subtitle').forEach(h=>{
       if(!h.dataset.institutionLabel) h.dataset.institutionLabel = h.textContent || '';
@@ -23475,108 +23471,89 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     return `<div class="incentive-grid-v142">${INCENTIVE_ROWS.map(row => `<article><strong>${esc(fixText(row.title))}</strong><span>${esc(fixText(row.rate))}</span><p>${esc(fixText(row.why))}</p><small>${esc(fixText(row.social))}</small></article>`).join('')}</div>`;
   }
   function approvedPlanHtml(record, parcel){
-  const pat = record?.pattern || {};
-  const crops = cropNamesFromPattern(pat);
-  if(!crops.length) crops.push(pretty(pat.patternName || pat.mainCrop || 'Onaylı ürün'));
-  const totals = patternTotals(record, parcel);
-  const incentive = num(pat.incentiveTotal || 0);
-  const incentivePerDa = totals.area ? incentive / Math.max(1, totals.area) : num(pat.incentivePerDa || 0);
-  const firstGuide = guideFor(crops[0]);
-  const planTitle = fixText(pat.patternName || crops.join(' + '));
-  const planNote = fixText(pat.areaSplit || pat.note || record?.text || 'Uzman tarafından onaylanan alternatif uygulama planıdır.');
-  return `<section class="approved-plan-clean-v142 approved-plan-only-v144">
-    <div class="approved-hero-v142">
-      <div>
-        <span class="approved-eyebrow-v142">Uzman onaylı öneri</span>
-        <h3>${esc(planTitle)}</h3>
-        <p>${esc(planNote)}</p>
+    const pat = record?.pattern || {};
+    const crops = cropNamesFromPattern(pat);
+    if(!crops.length) crops.push(pretty(parcel?.current_crop || parcel?.selected_pattern || 'Onaylı ürün'));
+    const current = currentWaterAndProfit(parcel);
+    const totals = patternTotals(record, parcel);
+    const saved = Math.max(0, current.water - totals.water);
+    const savePct = current.water > 0 ? (100 * saved / current.water) : 0;
+    const extraDa = totals.water > 0 && totals.area > 0 ? saved / (totals.water / totals.area) : 0;
+    const planWidth = current.water > 0 ? Math.max(4, Math.min(100, 100 * totals.water / current.water)) : 100;
+    const waterGain = saved * Math.max(0, totals.tlPerM3 || totals.profit / Math.max(1, totals.water));
+    const firstGuide = guideFor(crops[0]);
+    return `<section class="approved-plan-clean-v142">
+      <div class="approved-hero-v142">
+        <div><span class="approved-eyebrow-v142">Uzman onaylı güncel plan</span><h3>${esc(fixText(pat.patternName || crops.join(' + ')))}</h3><p>${esc(fixText(pat.areaSplit || pat.note || record?.text || 'Bu plan uzman onayından sonra çiftçi uygulama sekmesine alınmıştır.'))}</p></div>
+        <div class="approved-source-v142"><strong>${esc(fixText(record?.approved_by || 'Uzman'))}</strong><span>${esc((record?.approved_at || '').slice(0,10) || 'Onay tarihi yok')}</span></div>
       </div>
-      <div class="approved-source-v142">
-        <strong>${esc(fixText(record?.approved_by || 'Uzman'))}</strong>
-        <span>${esc((record?.approved_at || '').slice(0,10) || 'Onay tarihi yok')}</span>
+      <div class="approved-tabs-v103 approved-tabs-clean-v142"><span>Eski mevcut desen: ${esc(fixText(parcel?.current_crop || parcel?.selected_pattern || '-'))}</span><span class="active">Yeni onaylı plan: ${esc(fixText(crops.join(' + ')))}</span></div>
+      <div class="approved-kpi-grid-v142">
+        <div><span>Parsel alanı</span><strong>${num(totals.area).toFixed(1)} da</strong></div><div><span>Mevcut su</span><strong>${fmt(current.water)} m³</strong></div><div><span>Plan suyu</span><strong>${fmt(totals.water)} m³</strong></div><div><span>Su tasarrufu</span><strong>${fmt(saved)} m³</strong><small>%${savePct.toFixed(1)}</small></div><div><span>Net kâr</span><strong>${money(totals.profit)}</strong></div><div><span>TL/m³</span><strong>${num(totals.tlPerM3 || totals.profit / Math.max(1, totals.water)).toFixed(2)}</strong></div>
       </div>
-    </div>
-    <div class="approved-kpi-grid-v142 approved-kpi-grid-only-v144">
-      <div><span>Uygulama alanı</span><strong>${num(totals.area).toFixed(1)} da</strong></div>
-      <div><span>Onaylı ürün/desen</span><strong>${esc(fixText(crops.join(' + ')))}</strong></div>
-      <div><span>Plan suyu</span><strong>${fmt(totals.water)} m³</strong></div>
-      <div><span>Beklenen net kâr</span><strong>${money(totals.profit)}</strong></div>
-      <div><span>Su verimi</span><strong>${num(totals.tlPerM3 || totals.profit / Math.max(1, totals.water)).toFixed(2)} TL/m³</strong></div>
-      <div><span>Tahmini teşvik</span><strong>${incentive ? money(incentive) : 'Uygunluk bazlı'}</strong><small>${incentivePerDa ? fmt(incentivePerDa) + ' TL/da' : 'oran/kalem kontrol edilmeli'}</small></div>
-    </div>
-    <div class="approved-section-v142 approved-selected-reason-v144">
-      <h4>Bu öneri ne anlatıyor?</h4>
-      <p>Bu sekme yalnızca uzman tarafından onaylanan alternatifin uygulama bilgisini gösterir. Parsel düzeyi mevcut desen, diğer alternatifler ve genel karşılaştırmalar ayrı ana sekmede kalır.</p>
-      <p><strong>Ürün gerekçesi:</strong> ${esc(fixText(firstGuide.incentive))}</p>
-    </div>
-    <div class="approved-section-v142"><h4>Topraktan hasada uygulama takvimi</h4><div class="plan-timeline-v142">${timelineHtml(crops)}</div></div>
-    <div class="approved-section-v142"><h4>Ürün yönetimi, sulama ve riskler</h4><div class="crop-guide-grid">${cropGuideHtml(crops)}</div></div>
-    <div class="approved-section-v142"><h4>Kâr, gider ve satış fiyatı duyarlılığı</h4>${economyHtml(crops, totals)}</div>
-    <div class="approved-footnote-v142">Bu ekran seçilen/onaylanan alternatif içindir; mevcut parsel özeti ve tüm alternatiflerin kıyaslaması “Parsel düzeyi desen” sekmesinde bırakılmıştır.</div>
-  </section>`;
-}
+      <div class="water-impact-v142"><div class="water-bars-v142"><div><span>Mevcut desen</span><b style="width:100%"></b><strong>${fmt(current.water)} m³</strong></div><div><span>Onaylı plan</span><b style="width:${planWidth}%"></b><strong>${fmt(totals.water)} m³</strong></div></div><div class="water-social-v142"><strong>Toplumsal fayda</strong><p>${saved > 0 ? `Bu tercih yaklaşık ${fmt(saved)} m³ suyu havzada bırakır; aynı su verimliliğiyle yaklaşık ${num(extraDa).toFixed(1)} da ek alanın pik dönemde nefes payı oluşur.` : 'Bu plan su tasarrufundan çok gelir/uygunluk hedefiyle onaylanmış görünüyor; sulama yöntemi yine verimli kullanılmalıdır.'}</p><small>Su tasarrufunun ekonomik karşılığı: yaklaşık ${money(waterGain)} TL/m³ verim etkisi.</small></div></div>
+      <div class="approved-section-v142"><h4>Topraktan hasada uygulama takvimi</h4><div class="plan-timeline-v142">${timelineHtml(crops)}</div></div>
+      <div class="approved-section-v142"><h4>Ürün yönetimi, sulama ve riskler</h4><div class="crop-guide-grid">${cropGuideHtml(crops)}</div></div>
+      <div class="approved-section-v142"><h4>Kâr, gider ve satış fiyatı duyarlılığı</h4>${economyHtml(crops, totals)}</div>
+      <div class="approved-section-v142"><h4>Niğde ölçeğinde teşvik edilebilir alternatifler</h4><p class="approved-note-v142">Model, Niğde'nin patates/elma gücünü korurken su kısıtı olan alanlarda baklagil, düşük su tahılı, kimyon ve damla modernizasyonunu öne çıkarır. Teşvik oranları doğrudan ödeme kararı değil, çiftçiyi ikna edecek karar destek aralığıdır.</p>${incentiveHtml()}</div>
+      <div class="approved-footnote-v142">Dayanak: Niğde 2025 Tarımsal Yatırım Rehberi, Niğde İl Tarım duyuruları ve FAO CROPWAT/patates su yönetimi notları; parsel hesabı uygulamadaki su-kâr veri setinden türetilir. ${esc(fixText(firstGuide.incentive))}</div>
+    </section>`;
+  }
 
   function ensureApprovedPlanTab(open=false){
-  const cleanup = () => {
-    document.querySelectorAll('#farmerApprovedNavV142,#approvedPlanTabBtnV113,#approvedPlanTabBtnV111,#approvedPlanTabBtnV109').forEach(el => el.remove());
-    document.querySelectorAll('#approvedPlanPanelV113,#approvedPlanPanelV111,#approvedPlanPanelV109,.approved-plan-v103,.approved-plan-v109').forEach(el => el.remove());
-    document.querySelectorAll('#tab-parcel > #approvedPlanPanelV142,#tab-parcel .approved-plan-panel-v142').forEach(el => el.remove());
-  };
-  cleanup();
-  const tabs = document.getElementById('analysisTables');
-  const panels = document.querySelector('.tab-panels');
-  const parcelBtn = tabs?.querySelector('.tab[data-tab="parcel"]');
-  let btn = document.getElementById('approvedPlanTabBtnV142');
-  let panel = document.getElementById('approvedPlanPanelV142');
-  const removeApproved = () => { btn?.remove(); panel?.remove(); };
-  if(STATE?.currentUser?.role !== 'farmer'){ removeApproved(); return; }
-  const record = currentApprovedRecord();
-  const parcel = currentParcel();
-  if(!tabs || !panels || !parcelBtn || !parcel || !record){ removeApproved(); return; }
-  if(!btn){
-    btn = document.createElement('button');
-    btn.type = 'button';
-    btn.id = 'approvedPlanTabBtnV142';
-    parcelBtn.insertAdjacentElement('afterend', btn);
+    if(STATE?.currentUser?.role !== 'farmer') return;
+    const record = currentApprovedRecord();
+    const parcel = currentParcel();
+    const host = document.getElementById('tab-parcel') || document.querySelector('.tab-panel.active');
+    if(!host || !parcel) return;
+    document.querySelectorAll('#approvedPlanPanelV113,#approvedPlanPanelV111,#approvedPlanPanelV109,.approved-plan-v103,.approved-plan-v109').forEach(el => { if(el.id !== 'approvedPlanPanelV142') el.remove(); });
+    document.querySelectorAll('#approvedPlanTabBtnV113,#approvedPlanTabBtnV111,#approvedPlanTabBtnV109').forEach(el => { if(el.id !== 'approvedPlanTabBtnV142') el.remove(); });
+    let nav = document.getElementById('farmerApprovedNavV142');
+    if(!nav){
+      nav = document.createElement('div');
+      nav.id = 'farmerApprovedNavV142';
+      nav.className = 'farmer-approved-nav-v142';
+      const own = document.createElement('button');
+      own.type = 'button';
+      own.className = 'tab active';
+      own.textContent = 'Kendi parsel önerim';
+      nav.appendChild(own);
+    }else if(!nav.id){
+      nav.id = 'farmerApprovedNavV142';
+    }
+    nav.className = 'farmer-approved-nav-v142';
+    if(nav.parentElement !== host) host.insertBefore(nav, host.firstElementChild || null);
+    let btn = document.getElementById('approvedPlanTabBtnV142');
+    if(!btn){
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = 'approvedPlanTabBtnV142';
+      btn.className = 'tab approved-plan-tab-v142';
+      btn.textContent = 'Onaylı güncel plan';
+      const own = Array.from(nav.querySelectorAll('button,.tab')).find(x => /Kendi parsel/i.test(x.textContent || ''));
+      if(own && own.nextSibling) nav.insertBefore(btn, own.nextSibling); else nav.appendChild(btn);
+    }
+    btn.style.display = record ? '' : 'none';
+    let panel = document.getElementById('approvedPlanPanelV142');
+    if(!panel){
+      panel = document.createElement('section');
+      panel.id = 'approvedPlanPanelV142';
+      panel.className = 'approved-plan-panel-v142 hidden';
+      nav.insertAdjacentElement('afterend', panel);
+    }
+    if(!record){ panel.classList.add('hidden'); panel.innerHTML = ''; return; }
+    if(open) localStorage.setItem(PLAN_OPEN_KEY, '1');
+    const shouldOpen = open || localStorage.getItem(PLAN_OPEN_KEY) === '1';
+    panel.classList.toggle('hidden', !shouldOpen);
+    panel.innerHTML = approvedPlanHtml(record, parcel);
+    btn.onclick = () => {
+      nav.querySelectorAll('button,.tab').forEach(x => x.classList.remove('active'));
+      btn.classList.add('active');
+      localStorage.setItem(PLAN_OPEN_KEY, '1');
+      panel.classList.remove('hidden');
+      try{ panel.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){}
+    };
   }
-  btn.className = 'tab approved-plan-tab-v142';
-  btn.dataset.tab = 'approved-plan';
-  btn.textContent = 'Onaylı güncel plan';
-  if(btn.parentElement !== tabs) parcelBtn.insertAdjacentElement('afterend', btn);
-  if(!panel){
-    panel = document.createElement('div');
-    panel.id = 'approvedPlanPanelV142';
-    panel.className = 'tab-panel approved-plan-panel-v142 hidden';
-    const parcelPanel = document.getElementById('tab-parcel');
-    if(parcelPanel?.nextSibling) panels.insertBefore(panel, parcelPanel.nextSibling);
-    else panels.appendChild(panel);
-  }
-  if(panel.parentElement !== panels) panels.appendChild(panel);
-  const wasApprovedActive = btn.classList.contains('active') || panel.classList.contains('active');
-  panel.innerHTML = approvedPlanHtml(record, parcel);
-  const openApproved = () => {
-    tabs.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-panels > .tab-panel').forEach(el => el.classList.remove('active'));
-    btn.classList.add('active');
-    panel.classList.add('active');
-    panel.classList.remove('hidden');
-    localStorage.setItem(PLAN_OPEN_KEY, '1');
-  };
-  btn.onclick = openApproved;
-  tabs.querySelectorAll('.tab:not(#approvedPlanTabBtnV142)').forEach(other => {
-    if(other.__approvedPlanV144Bound) return;
-    other.__approvedPlanV144Bound = true;
-    other.addEventListener('click', () => {
-      btn?.classList.remove('active');
-      panel?.classList.remove('active');
-      panel?.classList.add('hidden');
-      try{ localStorage.removeItem(PLAN_OPEN_KEY); }catch(_e){}
-    });
-  });
-  const shouldOpen = !!open || wasApprovedActive;
-  if(shouldOpen) openApproved();
-  else { btn.classList.remove('active'); panel.classList.remove('active'); panel.classList.add('hidden'); try{ localStorage.removeItem(PLAN_OPEN_KEY); }catch(_e){} }
-}
 
   function ensureBellIcon(){
     const btn = document.getElementById('notificationBellBtn');
@@ -23746,336 +23723,4 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   window.addEventListener('load', () => schedule(false));
   if(document.readyState !== 'loading') schedule(false);
   else document.addEventListener('DOMContentLoaded', () => schedule(false));
-})();
-
-
-/* v144 consolidated benchmark correction: normalized decision score and three-line algorithm charts */
-(function(){
-  if(window.__benchmarkCorrectionV144) return;
-  window.__benchmarkCorrectionV144 = true;
-  const colors = ['#2563eb','#16a34a','#f97316','#7c3aed','#0f766e'];
-  const n = v => Number.isFinite(Number(v)) ? Number(v) : 0;
-  const f = (v, d=1) => { try{ return Number(v||0).toLocaleString('tr-TR', {maximumFractionDigits:d, minimumFractionDigits:0}); }catch(_e){ return String(Math.round(Number(v)||0)); } };
-  const escLocal = value => (typeof escapeHtml === 'function') ? escapeHtml(String(value ?? '')) : String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  const metric = (algos, key, nested='mean') => Object.keys(algos||{}).map(a => n(algos[a]?.[key]?.[nested]));
-  const minMax = arr => { const vals = arr.map(n).filter(Number.isFinite); const min = vals.length ? Math.min(...vals) : 0; const max = vals.length ? Math.max(...vals) : 0; return {min,max,span:Math.max(1e-9, max-min)}; };
-  const high = (value, range) => 100 * (n(value) - range.min) / range.span;
-  const low = (value, range) => 100 * (range.max - n(value)) / range.span;
-  function scoreBenchmarkV144(j){
-    const algos = j?.algorithms || {};
-    const rows = Object.keys(algos);
-    const profitR = minMax(metric(algos,'profit'));
-    const waterR = minMax(metric(algos,'water'));
-    const effR = minMax(metric(algos,'efficiency'));
-    const runtimeR = minMax(metric(algos,'runtime_s'));
-    const objective = String(j?.objective || j?.scenario || j?.target || '').toLowerCase();
-    const isWater = objective.includes('water') || objective.includes('su');
-    const isProfit = objective.includes('profit') || objective.includes('kar');
-    const weights = isWater && !isProfit ? {profit:.12, water:.38, eff:.25, feasible:.15, stable:.07, speed:.03} : (isProfit && !isWater ? {profit:.38, water:.15, eff:.22, feasible:.13, stable:.07, speed:.05} : {profit:.25, water:.25, eff:.25, feasible:.13, stable:.07, speed:.05});
-    const scored = rows.map((a, i) => {
-      const r = algos[a] || {};
-      const profitScore = high(r.profit?.mean, profitR);
-      const waterScore = low(r.water?.mean, waterR);
-      const effScore = high(r.efficiency?.mean, effR);
-      const feasibleScore = Math.max(0, Math.min(100, n(r.feasible_rate) * 100));
-      const cv = Math.max(0, n(r.profit?.cv));
-      const plan = Math.max(0, n(r.plan_distance_pct?.mean));
-      const stableScore = Math.max(0, Math.min(100, 100 - (cv * 120) - Math.min(35, plan * .4)));
-      const speedScore = low(r.runtime_s?.mean, runtimeR);
-      const score = weights.profit*profitScore + weights.water*waterScore + weights.eff*effScore + weights.feasible*feasibleScore + weights.stable*stableScore + weights.speed*speedScore;
-      return {a, color: colors[i % colors.length], score, profitScore, waterScore, effScore, feasibleScore, stableScore, speedScore};
-    }).sort((x,y) => y.score - x.score);
-    const spread = scored.length > 1 ? Math.abs(scored[0].score - scored[1].score) : 100;
-    return {rows, algos, scored, isTie: spread < 2.5, objectiveLabel: isWater && !isProfit ? 'Su verimliliği' : (isProfit && !isWater ? 'Net kâr' : 'Dengeli hedef')};
-  }
-  function lineDataset(label, data, color){ return {type:'line', label, data, borderColor:color, backgroundColor:color + '22', pointBackgroundColor:color, pointRadius:4, pointHoverRadius:6, borderWidth:2.4, tension:.22, fill:false}; }
-  function lineOptions(title){ return {responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:true, position:'bottom', labels:{usePointStyle:true, boxWidth:8, font:{size:11, weight:'700'}}}, tooltip:{enabled:true}}, scales:{x:{grid:{display:false}}, y:{beginAtZero:true, title:{display:true,text:title}, grid:{color:'rgba(210,223,246,.75)'}}}}; }
-  function rebuildLineChartsV144(){
-    if(typeof Chart === 'undefined') return;
-    const make = (id, oldChart, title) => {
-      const canvas = document.getElementById(id);
-      if(!canvas) return oldChart;
-      if(oldChart && oldChart.__lineV144) return oldChart;
-      try{ oldChart?.destroy?.(); }catch(_e){}
-      const chart = new Chart(canvas.getContext('2d'), {type:'line', data:{labels:[], datasets:[]}, options:lineOptions(title)});
-      chart.__lineV144 = true;
-      return chart;
-    };
-    try{ benchmarkProfitChart = make('benchmarkProfitChart', benchmarkProfitChart, 'TL'); }catch(_e){}
-    try{ benchmarkWaterChart = make('benchmarkWaterChart', benchmarkWaterChart, 'm³'); }catch(_e){}
-    try{ benchmarkEffChart = make('benchmarkEffChart', benchmarkEffChart, '0-100 skor'); }catch(_e){}
-    try{ benchmarkRuntimeChart = make('benchmarkRuntimeChart', benchmarkRuntimeChart, '0-100 skor'); }catch(_e){}
-  }
-  function applyChartsV144(j){
-    const s = scoreBenchmarkV144(j);
-    rebuildLineChartsV144();
-    const scored = s.scored, algos = s.algos;
-    const datasetsFor = getter => scored.map(row => lineDataset(row.a, getter(row, algos[row.a] || {}), row.color));
-    try{ benchmarkProfitChart.data.labels = ['Min', 'Ortalama', 'Maks']; benchmarkProfitChart.data.datasets = datasetsFor((_row, r) => [n(r.profit?.min), n(r.profit?.mean), n(r.profit?.max)]); benchmarkProfitChart.update(); }catch(_e){}
-    try{ benchmarkWaterChart.data.labels = ['Min', 'Ortalama', 'Maks']; benchmarkWaterChart.data.datasets = datasetsFor((_row, r) => [n(r.water?.min), n(r.water?.mean), n(r.water?.max)]); benchmarkWaterChart.update(); }catch(_e){}
-    try{ benchmarkEffChart.data.labels = ['Kâr skoru', 'Su skoru', 'TL/m³ skoru', 'Uygulanabilirlik', 'Stabilite']; benchmarkEffChart.data.datasets = scored.map(row => lineDataset(row.a, [row.profitScore, row.waterScore, row.effScore, row.feasibleScore, row.stableScore], row.color)); benchmarkEffChart.update(); }catch(_e){}
-    try{ benchmarkRuntimeChart.data.labels = ['Hız skoru', 'Başarı oranı', 'Desen çeşitliliği']; benchmarkRuntimeChart.data.datasets = datasetsFor((row, r) => [row.speedScore, n(r.success_rate || r.feasible_rate) * 100, Math.min(100, n(r.unique_patterns) * 12)]); benchmarkRuntimeChart.update(); }catch(_e){}
-  }
-  function paintDecisionV144(j){
-    const root = document.getElementById('benchmarkKpiGrid');
-    const box = document.getElementById('benchmarkResults');
-    if(!root || !j || j.status !== 'OK') return;
-    const s = scoreBenchmarkV144(j);
-    const best = s.scored[0];
-    const second = s.scored[1];
-    const title = s.isTie ? 'Algoritmalar eşdeğer' : best?.a;
-    const note = s.isTie ? 'Skor farkı çok düşük. Bu durumda ekranda tek bir algoritma kesin üstün gibi sunulmaz; kısıtlar aynı karara yakınsatıyor olabilir.' : String(best?.a || '-') + ' ' + s.objectiveLabel + ' hedefinde normalize karar skoruyla öne çıktı.';
-    root.innerHTML = [
-      {label:'Karar', value:title || '-', sub:note},
-      {label:'Skor farkı', value: second ? f((best.score - second.score), 1) : '-', sub:'2.5 puan altı eşdeğer kabul edilir'},
-      {label:'Grafik okuması', value:'3 çizgi', sub:'Her çizgi bir algoritmayı gösterir; min/ortalama/maks veya skor ekseninde kıyaslanır'},
-      {label:'Sonuç güveni', value:s.isTie ? 'Yakınsama' : 'Ayrışma var', sub:'Hedef: ' + s.objectiveLabel}
-    ].map(k => '<div class="pro-kpi"><div class="kpi-label">' + escLocal(k.label) + '</div><div class="kpi-value">' + escLocal(String(k.value)) + '</div><div class="kpi-sub">' + escLocal(k.sub) + '</div></div>').join('');
-    if(box){
-      let noteEl = document.getElementById('benchmarkDecisionV144');
-      if(!noteEl){
-        box.insertAdjacentHTML('afterbegin', '<div class="benchmark-note" id="benchmarkDecisionV144"></div>');
-        noteEl = document.getElementById('benchmarkDecisionV144');
-      }
-      if(noteEl) noteEl.innerHTML = '<b>Temiz karar notu:</b> ' + escLocal(note) + ' Karşılaştırma aynı veri, aynı su bütçesi ve aynı aday havuzu üzerinden normalize edilmiştir.';
-      box.querySelectorAll('.benchmark-note').forEach(el => {
-        const txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
-        if(/Aktif algoritma karari|Aktif algoritma kararı/i.test(txt)){
-          el.innerHTML = '<b>Karar yorumu:</b> ' + escLocal(note) + ' Eşdeğerlik durumunda çiftçiye tek bir algoritma kesin üstünmüş gibi gösterilmez.';
-        }
-      });
-    }
-  }
-  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v144Wrapped){
-    const prev = renderBenchmarkResultsTo;
-    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
-      const res = prev.apply(this, arguments);
-      try{ if(j && j.status === 'OK'){ paintDecisionV144(j); applyChartsV144(j); } }catch(e){ console.warn('[benchmark v144]', e); }
-      return res;
-    };
-    renderBenchmarkResultsTo.__v144Wrapped = true;
-  }
-})();
-
-/* v144 main tab guard: keep the single top tab row authoritative after async refreshes */
-(function(){
-  if(window.__mainTabGuardV144) return;
-  window.__mainTabGuardV144 = true;
-  function canOpenTopTabV144(btn){
-    if(!btn) return false;
-    const role = STATE?.currentUser?.role || '';
-    const dataRole = btn.getAttribute('data-role') || '';
-    if(role === 'farmer' && dataRole === 'institution') return false;
-    if(role === 'institution' && dataRole === 'farmer-only') return false;
-    if(role === 'institution' && btn.dataset.institutionRole === 'admin-only' && typeof canManageUsers === 'function' && !canManageUsers()) return false;
-    return true;
-  }
-  function activateTopTabV144(key){
-    const tabs = document.getElementById('analysisTables');
-    const panels = document.querySelector('.tab-panels');
-    if(!tabs || !panels || !key) return;
-    const btn = tabs.querySelector('.tab[data-tab="' + key + '"]');
-    const panel = document.getElementById('tab-' + key);
-    if(!btn || !panel || !canOpenTopTabV144(btn)) return;
-    tabs.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-    btn.classList.add('active');
-    panels.querySelectorAll(':scope > .tab-panel').forEach(el => el.classList.remove('active'));
-    panel.classList.add('active');
-    if(key === 'benchmark'){
-      setTimeout(() => {
-        try{ benchmarkProfitChart?.resize(); }catch(_e){}
-        try{ benchmarkWaterChart?.resize(); }catch(_e){}
-        try{ benchmarkEffChart?.resize(); }catch(_e){}
-        try{ benchmarkRuntimeChart?.resize(); }catch(_e){}
-      }, 80);
-    }
-  }
-  document.addEventListener('click', ev => {
-    const btn = ev.target?.closest?.('#analysisTables .tab[data-tab]');
-    if(!btn || !canOpenTopTabV144(btn)) return;
-    const key = btn.dataset.tab || '';
-    setTimeout(() => activateTopTabV144(key), 0);
-    setTimeout(() => activateTopTabV144(key), 140);
-  }, true);
-  window.__activateTopTabV144 = activateTopTabV144;
-})();
-
-/* v145 professional benchmark layer: statistical table, optimization notes and stable three-line charts */
-(function(){
-  if(window.__benchmarkProfessionalV145) return;
-  window.__benchmarkProfessionalV145 = true;
-  const ALG_COLORS_V145 = {GA:'#2563eb', ABC:'#16a34a', ACO:'#f97316'};
-  const ALG_METHODS_V145 = {
-    GA:'Genetik algoritma: aday desen popülasyonu kurar; seçim, çaprazlama ve mutasyonla su-kâr uygunluğunu nesiller boyunca iyileştirir.',
-    ABC:'Yapay arı kolonisi: ürün/desen adaylarını besin kaynağı gibi tarar; işçi-gözcü-kaşif adımlarıyla yerel iyi çözümlerden çıkmaya çalışır.',
-    ACO:'Karınca kolonisi: iyi ürün-parsel eşleşmelerine feromon ağırlığı verir; buharlaşma ile tek seçeneğe erken kilitlenmeyi azaltır.'
-  };
-  const escV145 = value => (typeof escapeHtml === 'function') ? escapeHtml(String(value ?? '')) : String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  const nV145 = value => Number.isFinite(Number(value)) ? Number(value) : 0;
-  const fmtV145 = (value, digits=1) => {
-    try{ return nV145(value).toLocaleString('tr-TR', {maximumFractionDigits:digits, minimumFractionDigits:0}); }
-    catch(_e){ return String(Math.round(nV145(value))); }
-  };
-  function algNamesV145(j){
-    const algos = j?.algorithms || {};
-    const preferred = ['GA','ABC','ACO'].filter(a => algos[a]);
-    Object.keys(algos).forEach(a => { if(!preferred.includes(a)) preferred.push(a); });
-    return preferred;
-  }
-  function rangeV145(values){
-    const xs = values.map(nV145).filter(Number.isFinite);
-    if(!xs.length) return {min:0,max:0,span:0};
-    const min = Math.min(...xs), max = Math.max(...xs);
-    return {min,max,span:max-min};
-  }
-  function highV145(value, r){ return r.span <= 1e-9 ? 50 : 100 * (nV145(value) - r.min) / r.span; }
-  function lowV145(value, r){ return r.span <= 1e-9 ? 50 : 100 * (r.max - nV145(value)) / r.span; }
-  function clampV145(value){ return Math.max(0, Math.min(100, nV145(value))); }
-  function benchmarkStatsV145(j){
-    const algos = j?.algorithms || {};
-    const names = algNamesV145(j);
-    const profitR = rangeV145(names.map(a => algos[a]?.profit?.mean));
-    const waterR = rangeV145(names.map(a => algos[a]?.water?.mean));
-    const effR = rangeV145(names.map(a => algos[a]?.efficiency?.mean));
-    const runtimeR = rangeV145(names.map(a => algos[a]?.runtime_s?.mean));
-    const objective = String(j?.objective || j?.scenario || '').toLowerCase();
-    const isWater = objective.includes('water') || objective.includes('su');
-    const isProfit = objective.includes('profit') || objective.includes('kar');
-    const weights = isWater && !isProfit
-      ? {profit:.14, water:.34, eff:.22, feasible:.12, stable:.12, speed:.06}
-      : (isProfit && !isWater ? {profit:.34, water:.14, eff:.22, feasible:.12, stable:.12, speed:.06}
-      : {profit:.24, water:.24, eff:.22, feasible:.12, stable:.12, speed:.06});
-    const rows = names.map((a, index) => {
-      const r = algos[a] || {};
-      const profitScore = highV145(r.profit?.mean, profitR);
-      const waterScore = lowV145(r.water?.mean, waterR);
-      const effScore = highV145(r.efficiency?.mean, effR);
-      const feasibleScore = clampV145(nV145(r.feasible_rate || r.success_rate) * 100);
-      const avgCv = (nV145(r.profit?.cv) + nV145(r.water?.cv) + nV145(r.efficiency?.cv)) / 3;
-      const planVolatility = nV145(r.plan_distance_pct?.mean);
-      const stabilityScore = clampV145(100 - avgCv * 320 - planVolatility * 0.9);
-      const speedScore = lowV145(r.runtime_s?.mean, runtimeR);
-      const score = weights.profit*profitScore + weights.water*waterScore + weights.eff*effScore + weights.feasible*feasibleScore + weights.stable*stabilityScore + weights.speed*speedScore;
-      const requested = Math.max(1, nV145(j?.repeats));
-      const actual = nV145(r.successful_runs || r.runs || 0);
-      const overfitRisk = (requested >= 100 && (avgCv > .08 || planVolatility > 18))
-        ? 'Yüksek tekrar duyarlılığı: 100 tekrarda plan oynaklığı/CV izlenmeli.'
-        : (requested >= 50 && score < 55
-          ? '50+ tekrar tek başına güven üretmez; skor ve kararlılık birlikte zayıf.'
-          : 'Kontrollü: CV, plan farkı ve uygulanabilirlik birlikte okunmalı.');
-      return {a, index, r, score, profitScore, waterScore, effScore, feasibleScore, stabilityScore, speedScore, avgCv, planVolatility, actual, requested, overfitRisk};
-    }).sort((x,y) => y.score - x.score);
-    const spread = rows.length > 1 ? Math.abs(rows[0].score - rows[1].score) : 100;
-    const objectiveLabel = isWater && !isProfit ? 'Su verimliliği' : (isProfit && !isWater ? 'Net kâr' : 'Dengeli hedef');
-    return {rows, algos, spread, isTie: spread < 2.5, objectiveLabel};
-  }
-  function datasetV145(label, data, color, dashIndex=0){
-    const dashes = [[], [6,4], [2,4], [10,4]];
-    return {type:'line', label, data, borderColor:color, backgroundColor:color + '1f', pointBackgroundColor:color, pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6, borderWidth:2.6, borderDash:dashes[dashIndex % dashes.length], tension:.2, fill:false};
-  }
-  function chartOptionsV145(title){
-    return {responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true, position:'bottom', labels:{usePointStyle:true, boxWidth:8, font:{size:11, weight:'700'}}}, tooltip:{enabled:true}}, scales:{x:{grid:{display:false}}, y:{beginAtZero:true, title:{display:true, text:title}, grid:{color:'rgba(203,213,225,.75)'}}}};
-  }
-  function ensureLineChartV145(id, oldChart, title){
-    if(typeof Chart === 'undefined') return oldChart;
-    const canvas = document.getElementById(id);
-    if(!canvas) return oldChart;
-    if(oldChart && oldChart.__lineV145) return oldChart;
-    try{ oldChart?.destroy?.(); }catch(_e){}
-    const chart = new Chart(canvas.getContext('2d'), {type:'line', data:{labels:[], datasets:[]}, options:chartOptionsV145(title)});
-    chart.__lineV145 = true;
-    return chart;
-  }
-  function applyChartsV145(j){
-    const s = benchmarkStatsV145(j);
-    try{ benchmarkProfitChart = ensureLineChartV145('benchmarkProfitChart', benchmarkProfitChart, 'TL'); }catch(_e){}
-    try{ benchmarkWaterChart = ensureLineChartV145('benchmarkWaterChart', benchmarkWaterChart, 'm³'); }catch(_e){}
-    try{ benchmarkEffChart = ensureLineChartV145('benchmarkEffChart', benchmarkEffChart, '0-100 istatistiksel skor'); }catch(_e){}
-    try{ benchmarkRuntimeChart = ensureLineChartV145('benchmarkRuntimeChart', benchmarkRuntimeChart, '0-100 güven skoru'); }catch(_e){}
-    const lineRows = s.rows.slice().sort((a,b) => ['GA','ABC','ACO'].indexOf(a.a) - ['GA','ABC','ACO'].indexOf(b.a));
-    const dsFor = getter => lineRows.map((row, idx) => datasetV145(row.a, getter(row, row.r || {}), ALG_COLORS_V145[row.a] || '#64748b', idx));
-    try{ benchmarkProfitChart.data.labels = ['Min', 'Ortalama', 'Maks']; benchmarkProfitChart.data.datasets = dsFor((_row, r) => [nV145(r.profit?.min), nV145(r.profit?.mean), nV145(r.profit?.max)]); benchmarkProfitChart.update(); }catch(_e){}
-    try{ benchmarkWaterChart.data.labels = ['Min', 'Ortalama', 'Maks']; benchmarkWaterChart.data.datasets = dsFor((_row, r) => [nV145(r.water?.min), nV145(r.water?.mean), nV145(r.water?.max)]); benchmarkWaterChart.update(); }catch(_e){}
-    try{ benchmarkEffChart.data.labels = ['Kâr skoru', 'Su skoru', 'TL/m³ skoru', 'Kararlılık', 'Uygulanabilirlik', 'Genel karar']; benchmarkEffChart.data.datasets = lineRows.map((row, idx) => datasetV145(row.a, [row.profitScore, row.waterScore, row.effScore, row.stabilityScore, row.feasibleScore, row.score], ALG_COLORS_V145[row.a] || '#64748b', idx)); benchmarkEffChart.update(); }catch(_e){}
-    try{ benchmarkRuntimeChart.data.labels = ['Hız', 'Plan kararlılığı', 'CV güveni', '30/50/100 uygunluk', 'Overfit direnci']; benchmarkRuntimeChart.data.datasets = lineRows.map((row, idx) => datasetV145(row.a, [row.speedScore, row.stabilityScore, clampV145(100 - row.avgCv * 350), clampV145(row.actual / Math.max(1, row.requested) * 100), clampV145(100 - row.planVolatility - row.avgCv * 260)], ALG_COLORS_V145[row.a] || '#64748b', idx)); benchmarkRuntimeChart.update(); }catch(_e){}
-    try{
-      const titles = document.querySelectorAll('#tab-benchmark .chart-title');
-      if(titles[0]) titles[0].textContent = 'Net kâr istatistiği (min / ortalama / maks) - 3 çizgi';
-      if(titles[1]) titles[1].textContent = 'Su tüketimi istatistiği (min / ortalama / maks) - 3 çizgi';
-      if(titles[2]) titles[2].textContent = 'Algoritma karar skoru ve istatistiksel güven';
-      if(titles[3]) titles[3].textContent = 'Optimizasyon hızı, kararlılık ve overfitting kontrolü';
-    }catch(_e){}
-  }
-  function renderAnalysisV145(j, targetBox){
-    if(!j || j.status !== 'OK') return;
-    const s = benchmarkStatsV145(j);
-    const best = s.rows[0] || null;
-    const root = document.getElementById('benchmarkKpiGrid');
-    if(root && best){
-      const totalActual = s.rows.reduce((sum, row) => sum + row.actual, 0);
-      const requestedTotal = s.rows.reduce((sum, row) => sum + row.requested, 0);
-      const decision = s.isTie ? 'Eşdeğer çözüm' : best.a;
-      const decisionText = s.isTie
-        ? 'Skor farkı 2.5 puanın altında; tek algoritma kesin üstün gösterilmez.'
-        : `${best.a} ${s.objectiveLabel} hedefinde daha dengeli skor üretti.`;
-      root.innerHTML = [
-        {label:'Karar', value:decision, sub:decisionText},
-        {label:'Koşu güveni', value:`${fmtV145(totalActual,0)}/${fmtV145(requestedTotal,0)}`, sub:'Fiili başarılı koşu / hedef koşu'},
-        {label:'Grafik okuması', value:'3 çizgi', sub:'GA, ABC ve ACO ayrı çizgi; aynı değerlerde çizgiler üst üste biner.'},
-        {label:'Overfitting kontrolü', value:s.rows.some(r => /Yüksek/.test(r.overfitRisk)) ? 'Dikkat' : 'Kontrollü', sub:'30/50/100 taraması CV ve plan oynaklığı ile yorumlanır.'}
-      ].map(k => `<div class="pro-kpi"><div class="kpi-label">${escV145(k.label)}</div><div class="kpi-value">${escV145(k.value)}</div><div class="kpi-sub">${escV145(k.sub)}</div></div>`).join('');
-    }
-    const host = targetBox || document.getElementById('benchmarkResults');
-    if(!host) return;
-    host.querySelector('#benchmarkAnalysisV145')?.remove();
-    const rowsHtml = s.rows.map(row => {
-      const r = row.r || {};
-      return `<tr>
-        <td><strong>${escV145(row.a)}</strong><small>${escV145((ALG_METHODS_V145[row.a] || '').split(':')[0])}</small></td>
-        <td>${fmtV145(r.profit?.mean,0)} ± ${fmtV145(r.profit?.std,0)} TL</td>
-        <td>${fmtV145(r.water?.mean,0)} ± ${fmtV145(r.water?.std,0)} m³</td>
-        <td>${fmtV145(r.efficiency?.mean,2)} TL/m³</td>
-        <td>${fmtV145(row.score,1)}</td>
-        <td>${fmtV145(row.avgCv * 100,2)}%</td>
-        <td>${fmtV145(row.planVolatility,1)}%</td>
-        <td>${fmtV145(row.feasibleScore,1)}%</td>
-        <td>${fmtV145(r.runtime_s?.mean,2)} sn</td>
-        <td>${escV145(row.overfitRisk)}</td>
-      </tr>`;
-    }).join('');
-    const methodHtml = ['GA','ABC','ACO'].filter(a => (j.algorithms || {})[a]).map(a => `<div><b>${escV145(a)}</b><span>${escV145(ALG_METHODS_V145[a])}</span></div>`).join('');
-    const bestText = best
-      ? (s.isTie ? 'Sonuçlar eşdeğer banda girdi; karar sunumunda tek algoritma kesin üstün gösterilmez.' : `${best.a} öne çıkıyor; yine de karar, kâr-su-verimlilik-kararlılık birlikte okunarak verilir.`)
-      : 'Sonuç yok.';
-    const html = `<section class="benchmark-analysis-v145" id="benchmarkAnalysisV145">
-      <div class="benchmark-analysis-head-v145">
-        <div><span>İstatistiksel benchmark</span><h3>Algoritma karşılaştırmaları analizi</h3></div>
-        <strong>${escV145(s.objectiveLabel)}</strong>
-      </div>
-      <div class="benchmark-method-grid-v145">${methodHtml}</div>
-      <div class="benchmark-note benchmark-note-v145"><b>Optimizasyon yorumu:</b> ${escV145(bestText)} 50-100 tekrar tek başına başarı değildir; 100 tekrarda skor artarken CV veya plan farkı büyüyorsa bu overfitting/over-tuning riski olarak işaretlenir.</div>
-      <div class="benchmark-table-wrap benchmark-analysis-table-v145">
-        <table class="mini-table pro">
-          <thead><tr><th>Alg.</th><th>Net kâr</th><th>Su</th><th>TL/m³</th><th>Karar skoru</th><th>CV</th><th>Plan farkı</th><th>Uygunluk</th><th>Süre</th><th>Yorum</th></tr></thead>
-          <tbody>${rowsHtml}</tbody>
-        </table>
-      </div>
-      <p class="benchmark-small-note-v145">Grafikler 3 çizgili okunur: GA, ABC ve ACO aynı eksende karşılaştırılır. Çizgiler üst üste biniyorsa bu grafik hatası değil, aynı/çok yakın çözüme yakınsama işaretidir; karar tablodaki CV, plan farkı ve fiili koşu sayısıyla verilir.</p>
-    </section>`;
-    host.insertAdjacentHTML('afterbegin', html);
-  }
-  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v145Wrapped){
-    const prev = renderBenchmarkResultsTo;
-    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
-      const res = prev.apply(this, arguments);
-      try{
-        if(j && j.status === 'OK'){
-          renderAnalysisV145(j, box || document.getElementById('benchmarkResults'));
-          applyChartsV145(j);
-        }
-      }catch(e){ console.warn('[benchmark v145]', e); }
-      return res;
-    };
-    renderBenchmarkResultsTo.__v145Wrapped = true;
-  }
 })();
