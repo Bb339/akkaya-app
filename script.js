@@ -3711,7 +3711,7 @@ function updateDroughtAlarmCard(){
     note = "Not: Kuraklık düşük olsa bile iklim belirsizliği için alternatif ürün/rotasyon planı hazır tutun; su verimliliği yatırımları uzun vadede avantaj sağlar.";
   }
 
-  if(commentEl) commentEl.innerHTML = "\u011f\u0178” Yorum: " + comment;
+  if(commentEl) commentEl.innerHTML = "Yorum: " + comment;
   setList(avoidEl, avoid);
   setList(preferEl, prefer);
   if(noteEl) noteEl.textContent = note;
@@ -7421,7 +7421,7 @@ function renderOfficialAllParcelCompare(basin){
         </tr>`).join('');
       altHtml = `
         <details class="compare-details">
-          <summary>âš–ï¸ Kıyasla</summary>
+          <summary><span aria-hidden="true">&#9878;&#65039;</span> Kıyasla</summary>
           <div class="compare-popover">
             <table class="data-table" style="width:100%;">
               <thead>
@@ -14894,11 +14894,11 @@ function totalsAllParcels(scenarioKey, algoKey){
 
 function getScenarioDisplayMeta(scenarioKey){
   const s = String(scenarioKey || '').toLowerCase().trim();
-  if(s === 'mevcut' || s === 'current') return { key:'mevcut', label:'Mevcut desen', shortLabel:'Mevcut', icon:'\u011f\u0178“Œ' };
-  if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'water_efficiency' || s === 'tasarruf') return { key:'su_tasarruf', label:'Su verimliliği odaklı', shortLabel:'Su verimliliği', icon:'\u011f\u0178’§' };
-  if(s === 'maks_kar' || s === 'maks kar' || s === 'max_profit') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'\u011f\u0178’°' };
-  if(s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'balanced', label:'Dengeli �neri', shortLabel:'Dengeli', icon:'⚖️' };
-  return { key:s || 'balanced', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u011f\u0178¯' };
+  if(s === 'mevcut' || s === 'current') return { key:'mevcut', label:'Mevcut desen', shortLabel:'Mevcut', icon:'\u{1F4CC}' };
+  if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'water_efficiency' || s === 'tasarruf') return { key:'su_tasarruf', label:'Su verimliliği odaklı', shortLabel:'Su verimliliği', icon:'\u{1F4A7}' };
+  if(s === 'maks_kar' || s === 'maks kar' || s === 'max_profit') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'\u{1F4B0}' };
+  if(s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'balanced', label:'Dengeli öneri', shortLabel:'Dengeli', icon:'\u2696\uFE0F' };
+  return { key:s || 'balanced', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u{1F3AF}' };
 }
 
 function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){ const curMain=Array.isArray(currentRows)&&currentRows.length?[...currentRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0]:null; const recMain=Array.isArray(recRows)&&recRows.length?[...recRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0]:null; if(!curMain||!recMain) return "Desen farkı, seçilen hedefe göre hesaplanan su-kâr puanından kaynaklanır."; const sameMain=normCropName(curMain.name)===normCropName(recMain.name); const orchardLike = !!(curMain && isPerennialCropName(curMain.name)); if((seasonSource||'s1')==='s1'){ if(sameMain || orchardLike) return `Bahçe/çok yıllık parsellerde ana ürün korunur. Sistem ${prettyCropName(curMain.name)} ürününü korudu; fark esas olarak sulama yöntemi, su kısıntısı ve zamanlama uyumundan gelir.`; return `S1 modunda tek ürün ana plan yapılır. Sistem, ${prettyCropName(curMain.name)} yerine ${prettyCropName(recMain.name)} ürününü seçti çünkü seçili hedef (${getScenarioDisplayMeta(objectiveKey).label}) altında su-kâr dengesi daha güçlü bulundu.`; } const recSecond=Array.isArray(recRows)?recRows.find(r=>normCropName(r.name)!==normCropName(recMain.name)):null; if(recSecond){ return `S2 modunda tarla parselleri için yazlık+kışlık / münavebe planı kurulur. Ana ürün ${prettyCropName(recMain.name)} yanında ${prettyCropName(recSecond.name)} ile toprak ve su dengesi iyileştirilmeye çalışılır.`; } return sameMain ? 'S2 modunda bahçe/çok yıllık parsellerde mevcut ana ürün korunur. Ürün söküp başka meyve veya tarla ürünü önerilmez; fark sulama yöntemi, su kısıntısı, zamanlama ve sıra arası/örtü bitkisi yönetiminden gelir.' : 'S2 modunda bahçe/çok yıllık parsellerde ana ürün korunur; tarla parsellerinde ise yazlık-kışlık kombinasyonları denenir. Bu nedenle desen değişimi, seçili hedefe göre farklı kombinasyonların öne çıkmasından kaynaklanır.'; }
@@ -15244,11 +15244,11 @@ function renderAllScenarioSummaries(){
         metaEl.innerHTML = `
           <div class="runmeta-title">Koşullar (Adil Karşılaştırma)</div>
           <div class="runmeta-tags">
-            <span class="runmeta-tag"><span class="runmeta-ic">\u011f\u0178“</span><b>${scope}</b></span>
-            <span class="runmeta-tag"><span class="runmeta-ic">\u011f\u0178¤–</span><b>${algoName2}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#128205;</span><b>${scope}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#129302;</span><b>${algoName2}</b></span>
             <span class="runmeta-tag"><span class="runmeta-ic">${objectiveMeta.icon}</span><b>${objectiveMeta.label}</b></span>
-            <span class="runmeta-tag"><span class="runmeta-ic">\u011f\u0178“…</span><b>${year}</b></span>
-            <span class="runmeta-tag"><span class="runmeta-ic">⚖️</span><b>${reproducible}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#128197;</span><b>${year}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#9878;&#65039;</span><b>${reproducible}</b></span>
           </div>
 
           <details class="runmeta-details">
@@ -16026,21 +16026,21 @@ function updateProductCards(){
 
   const emojiFor = (name)=>{
     const n = String(name||'').toLowerCase();
-    if(n.includes('bugday') || n.includes('arpa') || n.includes('cavdar')) return '\u011f\u0178Œ¾';
-    if(n.includes('misir')) return '\u011f\u0178Œ½';
-    if(n.includes('patates')) return '\u011f\u0178¥”';
-    if(n.includes('sogan')) return '\u011f\u0178§…';
-    if(n.includes('nohut') || n.includes('mercimek') || n.includes('fasulye') || n.includes('fiy')) return '\u011f\u0178«˜';
-    if(n.includes('aycicegi')) return '\u011f\u0178Œ»';
-    if(n.includes('kabak')) return '\u011f\u0178ƒ';
-    if(n.includes('pancar')) return '\u011f\u0178 ';
-    if(n.includes('marul') || n.includes('ispanak') || n.includes('lahana')) return '\u011f\u0178¥¬';
-    if(n.includes('biber')) return '\u011f\u0178Œ¶ï¸';
-    if(n.includes('turp')) return '\u011f\u0178¥•';
-    if(n.includes('bag') || n.includes('uzum')) return '\u011f\u0178‡';
-    if(n.includes('yonca') || n.includes('fig')) return '\u011f\u0178Œ¿';
-    if(n.includes('nadas')) return '\u011f\u0178Ÿ«';
-    return '\u011f\u0178Œ±';
+    if(n.includes('bugday') || n.includes('arpa') || n.includes('cavdar')) return '\u{1F33E}';
+    if(n.includes('misir')) return '\u{1F33D}';
+    if(n.includes('patates')) return '\u{1F954}';
+    if(n.includes('sogan')) return '\u{1F9C5}';
+    if(n.includes('nohut') || n.includes('mercimek') || n.includes('fasulye') || n.includes('fiy')) return '\u{1FAD8}';
+    if(n.includes('aycicegi')) return '\u{1F33B}';
+    if(n.includes('kabak')) return '\u{1F383}';
+    if(n.includes('pancar')) return '\u{1F360}';
+    if(n.includes('marul') || n.includes('ispanak') || n.includes('lahana')) return '\u{1F96C}';
+    if(n.includes('biber')) return '\u{1F336}\uFE0F';
+    if(n.includes('turp')) return '\u{1F955}';
+    if(n.includes('bag') || n.includes('uzum')) return '\u{1F347}';
+    if(n.includes('yonca') || n.includes('fig')) return '\u{1F33F}';
+    if(n.includes('nadas')) return '\u{1F7EB}';
+    return '\u{1F331}';
   };
 
   const pillRows = orchardLockedUi && current && current.length ? current.slice(0,1) : topRows;
