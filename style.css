@@ -4384,6 +4384,38 @@ body.auth-pending .app-shell,
 body.auth-pending .app-footer{display:none;}
 body:not(.auth-pending) .auth-screen{display:none;}
 
+body.app-booting{
+  min-height:100vh !important;
+  overflow:hidden !important;
+  background:#07131a !important;
+}
+body.app-booting .auth-screen,
+body.app-booting .app-shell,
+body.app-booting .app-main,
+body.app-booting .app-header,
+body.app-booting .app-quote-band,
+body.app-booting .app-footer,
+body.app-booting #panel{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+body.app-booting::before{
+  content:"Yükleniyor...";
+  position:fixed;
+  inset:0;
+  z-index:2147483000;
+  display:grid;
+  place-items:center;
+  color:#eaf6ff;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.04em;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(38,166,154,.24), transparent 28%),
+    linear-gradient(135deg,#07131a,#102a43);
+}
+
 .auth-screen{
   min-height:100vh;
   display:grid;
@@ -6000,16 +6032,21 @@ body[data-institution-role="analyst"] [data-institution-role="admin-only"]{displ
   border-color:rgba(148,163,184,.18) !important;
   box-shadow:0 8px 20px rgba(15,23,42,.045) !important;
   background:#fff !important;
+  min-height:320px !important;
+  overflow:visible !important;
 }
 #tab-benchmark .chart-title{
   color:#26364d !important;
   font-size:13px !important;
 }
 #tab-benchmark .chart-card canvas{
+  display:block !important;
+  width:100% !important;
   filter:none !important;
-  height:210px !important;
-  max-height:210px !important;
-  flex-basis:210px !important;
+  height:260px !important;
+  max-height:260px !important;
+  min-height:260px !important;
+  flex:0 0 260px !important;
 }
 #tab-benchmark .benchmark-kpi-grid .pro-kpi{
   box-shadow:none !important;
@@ -9899,11 +9936,17 @@ body.auth-pending .auth-note-box span{
   padding:9px;
   background:#fbfdff;
 }
+.pattern-card-selected-v149{
+  border-color:#60a5fa;
+  background:#f8fbff;
+  box-shadow:0 0 0 1px rgba(96,165,250,.18);
+}
 .pattern-card-top{
   display:flex;
   gap:8px;
   align-items:flex-start;
   color:#17233a;
+  flex-wrap:wrap;
 }
 .pattern-rank{
   flex:0 0 auto;
@@ -9943,6 +9986,53 @@ body.auth-pending .auth-note-box span{
   color:#0f172a;
   font-size:12px;
   margin-top:2px;
+}
+.pattern-selected-badge,
+.pattern-risk-badge{
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:10px;
+  font-weight:900;
+  line-height:1.2;
+}
+.pattern-selected-badge{
+  background:#dcfce7;
+  color:#166534;
+}
+.pattern-risk-badge{
+  background:#fff7ed;
+  color:#9a3412;
+}
+.pattern-target-order{
+  margin-top:6px;
+  color:#1d4ed8;
+  font-size:11px;
+  font-weight:800;
+}
+.pattern-card-deltas{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:6px;
+}
+.pattern-card-deltas span,
+.pattern-component-list span{
+  border:1px solid #e8eef8;
+  border-radius:8px;
+  background:#fff;
+  padding:6px;
+  color:#475569;
+  font-size:11px;
+}
+.pattern-card-deltas b,
+.pattern-component-list b{
+  color:#0f172a;
+}
+.pattern-component-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+  margin-top:6px;
 }
 .pattern-card-v94 p,
 .pattern-card-v94 small{
@@ -10449,6 +10539,19 @@ body.auth-pending .auth-logo--faculty{
 .pattern-actions-v102 .btn-secondary{
   min-height:34px;
   padding:8px 12px;
+}
+.pattern-card-actions-v102{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.pattern-card-actions-v102 .btn-link{
+  min-height:30px;
+  padding:6px 10px;
+  border:1px solid #bfdbfe;
+  border-radius:8px;
+  background:#eff6ff;
 }
 .selected-alt-v102{
   display:grid;
@@ -11109,15 +11212,6 @@ body.role-farmer #farmerTargetControlsV128{
   line-height:1 !important;
   color:#0f172a !important;
 }
-.drawing-inbox-bottom-v118{
-  margin-top:18px !important;
-}
-.drawing-inbox-bottom-v118 #institutionRequestInbox{
-  max-height:420px !important;
-  overflow:auto !important;
-}
-
-
 /* === v143 consolidated ui_v10 === */
 /* === UI refresh v6: header sade, tekrarlar kaldırıldı === */
 :root{
@@ -12294,9 +12388,7 @@ body.auth-pending .auth-study-strip{
 }
 
 
-/* === v143 consolidated clean_style_v142 === */
-/* v142 clean style: stable approved plan, bell and message layout */
-.header-bell-icon.bell-icon-clean-v118,
+/* Clean style: stable approved plan, bell and message layout */
 .header-bell-icon.bell-icon-clean-v142{
   width:22px !important;
   height:22px !important;
@@ -12307,7 +12399,6 @@ body.auth-pending .auth-study-strip{
   color:#facc15 !important;
   filter:drop-shadow(0 2px 5px rgba(161,98,7,.35));
 }
-.header-bell-icon.bell-icon-clean-v118 svg,
 .header-bell-icon.bell-icon-clean-v142 svg{
   width:22px !important;
   height:22px !important;
@@ -12339,17 +12430,15 @@ body.auth-pending .auth-study-strip{
   max-height:150px !important;
   resize:vertical;
 }
-.drawing-inbox-bottom-v142,
-#drawingInboxBottomV118,
-#drawingInboxBottomCleanV142{
+.drawing-inbox-bottom-v142{
   margin-top:18px !important;
   min-height:430px !important;
   overflow-anchor:none;
   contain:layout paint;
 }
 .drawing-inbox-bottom-v142 #institutionRequestInbox,
-#drawingInboxBottomV118 #institutionRequestInbox,
-#drawingInboxBottomCleanV142 #institutionRequestInbox{
+#tab-parcel #institutionRequestInbox,
+#tab-drawing #institutionRequestInbox{
   min-height:360px !important;
   max-height:460px !important;
   overflow:auto !important;
@@ -12516,7 +12605,7 @@ body.auth-pending .auth-study-strip{
 
 
 
-/* v144: approved plan is a main tab, not an inner tab */
+/* Approved plan is a main tab, not an inner tab */
 .farmer-approved-nav-v142{display:none !important;}
 body.role-institution #approvedPlanTabBtnV142,
 body.role-institution #approvedPlanPanelV142{display:none !important;}
@@ -12524,98 +12613,6 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
 #approvedPlanPanelV142.tab-panel{padding-top:14px;}
 #tab-parcel > #approvedPlanPanelV142,
 #tab-parcel .farmer-approved-nav-v142{display:none !important;}
-
-/* v145 benchmark professional analysis */
-.benchmark-analysis-v145{
-  border:1px solid #cbdcf4;
-  background:#f8fbff;
-  border-radius:8px;
-  padding:12px;
-  margin:10px 0 12px;
-  box-shadow:0 10px 26px rgba(15,23,42,.05);
-}
-.benchmark-analysis-head-v145{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:10px;
-}
-.benchmark-analysis-head-v145 span{
-  display:block;
-  color:#64748b;
-  font-size:11px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.02em;
-}
-.benchmark-analysis-head-v145 h3{
-  margin:2px 0 0;
-  font-size:16px;
-  color:#10233d;
-}
-.benchmark-analysis-head-v145 strong{
-  border:1px solid #bfdbfe;
-  background:#eff6ff;
-  color:#1d4ed8;
-  border-radius:999px;
-  padding:6px 10px;
-  font-size:12px;
-  white-space:nowrap;
-}
-.benchmark-method-grid-v145{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-  margin-bottom:10px;
-}
-.benchmark-method-grid-v145 div{
-  border:1px solid #dbeafe;
-  background:#fff;
-  border-radius:8px;
-  padding:10px;
-}
-.benchmark-method-grid-v145 b,
-.benchmark-method-grid-v145 span{
-  display:block;
-}
-.benchmark-method-grid-v145 b{
-  color:#0f2a43;
-  margin-bottom:4px;
-}
-.benchmark-method-grid-v145 span{
-  color:#475569;
-  font-size:12px;
-  line-height:1.45;
-}
-.benchmark-note-v145{
-  border-style:solid;
-  margin:8px 0 10px;
-}
-.benchmark-analysis-table-v145 table{
-  min-width:1060px;
-}
-.benchmark-analysis-table-v145 th,
-.benchmark-analysis-table-v145 td{
-  font-size:11px;
-  vertical-align:top;
-}
-.benchmark-analysis-table-v145 td:first-child small{
-  display:block;
-  color:#64748b;
-  margin-top:2px;
-}
-.benchmark-small-note-v145{
-  margin:8px 0 0;
-  color:#64748b;
-  font-size:12px;
-  line-height:1.45;
-}
-@media (max-width: 980px){
-  .benchmark-method-grid-v145{grid-template-columns:1fr;}
-  .benchmark-analysis-head-v145{display:block;}
-  .benchmark-analysis-head-v145 strong{display:inline-block;margin-top:8px;}
-}
 
 /* v146 benchmark: one clear report, no duplicated legacy tables */
 .benchmark-report-v146{
@@ -12784,8 +12781,48 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
 .approved-deep-hero-v148 small{
   display:block;
 }
+.approved-composition-v149{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+.approved-composition-v149 article{
+  border:1px solid #dbeafe;
+  background:#fff;
+  border-radius:8px;
+  padding:12px;
+}
+.approved-composition-v149 span,
+.approved-composition-v149 b,
+.approved-composition-v149 small{
+  display:block;
+}
+.approved-composition-v149 span{
+  color:#1d4ed8;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.approved-composition-v149 b{
+  color:#0f172a;
+  font-size:16px;
+  margin:4px 0;
+}
+.approved-composition-v149 small{
+  color:#64748b;
+  line-height:1.35;
+}
 .approved-block-v148{
   margin-top:14px;
+}
+.approved-section-grid-v149{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.approved-section-grid-v149 .approved-block-v148{
+  min-width:0;
 }
 .approved-block-v148 h4{
   margin:0 0 10px;
@@ -12961,4 +12998,5 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
 @media (max-width: 760px){
   .approved-deep-hero-v148{display:block;}
   .approved-deep-hero-v148 > div:last-child{text-align:left;margin-top:10px;}
+  .approved-section-grid-v149{grid-template-columns:1fr;}
 }

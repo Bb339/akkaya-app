@@ -6,7 +6,7 @@
 <meta charset="utf-8"/>
 <title>Tarımsal Karar Destek Sistemi</title>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css?v=149-charset" rel="stylesheet">
+<link href="style.css?v=clean-v6-final" rel="stylesheet">
 <!-- Leaflet -->
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
 <script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -15,7 +15,7 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
-<body class="auth-pending"><div class="app-bg-orb app-bg-orb--one"></div><div class="app-bg-orb app-bg-orb--two"></div><div class="app-bg-grid"></div><div class="app-bg-noise"></div><div class="app-bg-particles" aria-hidden="true"></div>
+<body class="auth-pending app-booting"><div class="app-bg-orb app-bg-orb--one"></div><div class="app-bg-orb app-bg-orb--two"></div><div class="app-bg-grid"></div><div class="app-bg-noise"></div><div class="app-bg-particles" aria-hidden="true"></div>
 <section class="auth-screen" id="authScreen">
   <div class="auth-media" aria-hidden="true">
     <img class="auth-bg-gif auth-bg-gif--only" src="images/login-irrigation-sprinkler.gif" alt="" />
@@ -478,7 +478,6 @@
 </div>
 <p class="card-help small" style="margin-top:8px;">Akış: 1) Hazır parsel kaydını seçin. 2) Haritada doğru sınırı çizin veya GeoJSON/KML yükleyin. 3) Sistem seçili kaydın çiftçi, ürün, sulama, kota ve atama bilgilerini otomatik bağlar. 4) Popup ve seçim davranışı kaydedilen geometri üzerinden çalışır.</p>
 <div class="request-thread-box" id="userRequestThread"></div>
-<div class="request-thread-box" id="institutionRequestInbox"></div>
 </div></div></details><details class="sidebar-group farmer-decision-group" id="farmerDecisionGroup" data-role="farmer-only" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Uzman önerisi ve kendi parselim</strong><small>Yalnızca size atanmış karar bilgileri</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card farmer-decision-card" id="farmerDecisionCard">
 <h2 class="card-title">Kendi parsel karar özeti</h2>
 <p class="card-help small">Bu çiftçi görünümünde çizim, veri kaynağı, algoritma, kullanıcı yönetimi ve parsel atama işlemleri gösterilmez. Kurum/uzman tarafından atanan desen varsa burada sade özet olarak görünür.</p>
@@ -690,6 +689,7 @@ Parsel Haritası</h2>
 <div class="tabs" id="analysisTables">
 <button class="tab" data-tab="users" data-role="institution" data-institution-role="admin-only">Kullanıcı yönetimi</button>
 <button class="tab active" data-tab="parcel">Parsel düzeyi desen</button>
+<button class="tab" data-tab="approved-plan" data-role="farmer-only" id="approvedPlanTabBtnV142">Onaylı güncel plan</button>
 <button class="tab" data-tab="drawing" data-role="institution">Parsel çizim / bilgi atama</button>
 <button class="tab" data-tab="district" data-role="institution">İlçe / il düzeyi özet</button>
 <button class="tab" data-tab="official" data-role="institution">Resmî tablolar (özet)</button>
@@ -852,6 +852,7 @@ Parsel Haritası</h2>
 <h2 class="card-title">Parsel çizim ve bilgi atama</h2>
 <p class="card-help small">Resmî parsel kaydını seçip sınır çizimi, GeoJSON/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu çalışma alanından yönetin. Sol panel yalnız analiz kurulumu ve hızlı özet için sade bırakıldı.</p>
 <div id="drawingTabMount"></div>
+<section class="card institution-request-inbox-v142" id="institutionRequestInbox"></section>
 </div>
 </div>
 
@@ -935,6 +936,7 @@ Parsel Haritası</h2>
 <div class="explain-box" id="irrigPlanBox">-</div>
 </div>
 </div>
+<div class="tab-panel approved-plan-panel-v142 hidden" id="approvedPlanPanelV142" data-role="farmer-only"></div>
 <div class="tab-panel" id="tab-district" data-role="institution">
 <div class="card">
 <h3 class="card-subtitle">İlçe / köy düzeyi karar özeti</h3>
@@ -1074,7 +1076,7 @@ Parsel Haritası</h2>
 </div>
 <div class="algo-actions" style="margin-top:8px;">
 <button class="btn-secondary" id="runBenchmarkBtn">Karşılaştırmayı Çalıştır</button>
-<button class="btn-secondary" id="runBenchmarkSweepBtn">30/50/100 tekrar taramasi</button>
+<button class="btn-secondary" id="runBenchmarkSweepBtn">30/50/100 tekrar taraması</button>
 <span class="algo-status" id="benchmarkStatus">Hazır</span>
 </div>
 </div>
@@ -1091,7 +1093,7 @@ Parsel Haritası</h2>
 <canvas id="benchmarkWaterChart"></canvas>
 </div>
 <div class="chart-card chart-card-tall">
-<div class="chart-title">Algoritma kalite profili (TL/m3 - uygulanabilirlik - plan farki)</div>
+<div class="chart-title">Algoritma kalite profili (TL/m³ - uygulanabilirlik - plan farkı)</div>
 <canvas id="benchmarkEffChart"></canvas>
 </div>
 <div class="chart-card chart-card-tall">
@@ -1129,7 +1131,7 @@ Parsel Haritası</h2>
       Tarımsal Karar Destek Sistemi • Çiftçi ve kurum için rol bazlı tez prototipi
     </footer>
 
-<script src="script.js?v=149-charset"></script>
+<script src="script.js?v=clean-v6-final"></script>
 </body>
 </html>
 

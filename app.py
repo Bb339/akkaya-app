@@ -2249,12 +2249,24 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
         cat = load_crop_catalog()
         if cat:
             catalog_keys = [normalize_crop_key(k) for k in cat.keys()]
-            crop_list = [FALLOW] + [ck for ck in crop_list if ck == FALLOW or normalize_crop_key(ck) in catalog_keys]
+            crop_list = [FALLOW] + [ck for ck in crop_list if ck != FALLOW and normalize_crop_key(ck) in catalog_keys]
             for ck in sorted(set(catalog_keys)):
                 if ck != FALLOW and ck not in crop_list:
                     crop_list.append(ck)
     except Exception:
         pass
+    try:
+        seen_crop_keys = set()
+        deduped_crop_list = []
+        for ck in crop_list:
+            nk = normalize_crop_key(ck)
+            if not nk or nk in seen_crop_keys:
+                continue
+            seen_crop_keys.add(nk)
+            deduped_crop_list.append(nk)
+        crop_list = [FALLOW] + sorted([ck for ck in deduped_crop_list if ck != FALLOW])
+    except Exception:
+        crop_list = [FALLOW] + sorted([ck for ck in crop_list if ck != FALLOW])
 
     parcel_ids = [str(p.get("id", "")).strip() for p in selected_parcels if str(p.get("id", "")).strip()]
     P = len(parcel_ids); C = len(crop_list)
@@ -2547,6 +2559,18 @@ def build_candidate_matrix_two_season(
         if ck not in crop_list:
             crop_list.append(ck)
     crop_list = [FALLOW] + sorted([c for c in crop_list if c != FALLOW])
+    try:
+        seen_crop_keys = set()
+        deduped_crop_list = []
+        for ck in crop_list:
+            nk = normalize_crop_key(ck)
+            if not nk or nk in seen_crop_keys:
+                continue
+            seen_crop_keys.add(nk)
+            deduped_crop_list.append(nk)
+        crop_list = [FALLOW] + sorted([ck for ck in deduped_crop_list if ck != FALLOW])
+    except Exception:
+        crop_list = [FALLOW] + sorted([ck for ck in crop_list if ck != FALLOW])
     
     parcel_ids = [str(p["id"]) for p in selected_parcels]
     P, C = len(parcel_ids), len(crop_list)
@@ -2773,7 +2797,7 @@ def _normalize_objective_key(objective: Optional[str]) -> str:
     obj = str(objective or "balanced").strip().lower()
     if obj in ("su_tasarruf", "su tasarruf", "water_saving", "tasarruf"):
         return "water_saving"
-    if obj in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin", "balanced", "denge", "dengeli"):
+    if obj in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin"):
         return "water_efficiency"
     if obj in ("maks_kar", "maks kar", "max_profit", "profit", "kar", "kâr"):
         return "max_profit"
@@ -2909,16 +2933,15 @@ def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, c
     if "year" in seasons.columns:
         seasons = seasons[seasons["year"].astype(int) == int(year)]
 
-    if seasons.empty:
-        return locks
-
-    seasons["parcel_id"] = seasons["parcel_id"].astype(str)
-    seasons["crop_key"] = seasons["crop"].astype(str).map(normalize_crop_key)
-    # dominant crop by area
-    dom = seasons.groupby(["parcel_id","crop_key"], dropna=False).agg(area=("area_da","sum")).reset_index()
-    dom = dom.sort_values(["parcel_id","area"], ascending=[True, False])
-    dom = dom.drop_duplicates(subset=["parcel_id"], keep="first")
-    dom_map = {str(r["parcel_id"]): str(r["crop_key"]) for _, r in dom.iterrows()}
+    dom_map = {}
+    if not seasons.empty:
+        seasons["parcel_id"] = seasons["parcel_id"].astype(str)
+        seasons["crop_key"] = seasons["crop"].astype(str).map(normalize_crop_key)
+        # dominant crop by area
+        dom = seasons.groupby(["parcel_id","crop_key"], dropna=False).agg(area=("area_da","sum")).reset_index()
+        dom = dom.sort_values(["parcel_id","area"], ascending=[True, False])
+        dom = dom.drop_duplicates(subset=["parcel_id"], keep="first")
+        dom_map = {str(r["parcel_id"]): str(r["crop_key"]) for _, r in dom.iterrows()}
 
     idx_crop = {c:i for i,c in enumerate(crop_list)}
     for i, p in enumerate(selected_parcels):
@@ -3201,7 +3224,7 @@ def _build_two_crop_recommendations(
     # In "water_saving" objective we do NOT recommend a second crop (double-cropping) for annual parcels,
     # because farmers explicitly want lower total water use; a second crop often increases seasonal water demand.
     # Scenario-2 orchard/perennial parcels (lock_mask) can still keep a cover crop if locked by rules.
-    if _normalize_objective_key(objective) == "water_efficiency":
+    if _normalize_objective_key(objective) == "water_saving":
         for i in range(P):
             if not bool(lock_mask[i]):
                 use_second[i] = False
@@ -5375,7 +5398,7 @@ def _matrix_objective_from_scenario(scenario: str) -> str:
         return "current"
     if s in ("su_tasarruf", "su tasarruf", "water_saving", "tasarruf"):
         return "water_saving"
-    if s in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "balanced", "dengeli"):
+    if s in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin"):
         return "water_efficiency"
     if s in ("maks_kar", "maks kar", "max_profit", "kar", "kâr"):
         return "max_profit"
@@ -6383,7 +6406,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
     obj_raw = str(scenario or objective or "balanced").lower()
     if obj_raw in ("su_tasarruf", "su tasarruf", "water_saving", "tasarruf"):
         objective = "water_saving"
-    elif obj_raw in ("water_efficiency", "su_verimliligi", "su verimliligi", "su_etkin", "su etkin", "balanced", "dengeli"):
+    elif obj_raw in ("water_efficiency", "su_verimliligi", "su verimliligi", "su_etkin", "su etkin"):
         objective = "water_efficiency"
     elif obj_raw in ("maks_kar", "maks kar", "max_profit", "kar", "kâr"):
         objective = "max_profit"
