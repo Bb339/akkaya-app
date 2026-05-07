@@ -10399,10 +10399,10 @@ body.auth-pending .auth-note-box span{
 .farmer-target-card-v100{display:flex;flex-direction:column;gap:10px;}
 .farmer-target-title-v100 strong{display:block;font-size:14px;color:#0f2a43;}
 .farmer-target-title-v100 span,.farmer-target-note-v100{display:block;font-size:12px;color:#64748b;line-height:1.45;}
-.farmer-target-controls-v100{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:end;}
+.farmer-target-controls-v100{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;align-items:end;}
 .farmer-target-controls-v100 label{display:flex;flex-direction:column;gap:4px;min-width:0;}
 .farmer-target-controls-v100 label span{font-size:11px;font-weight:800;color:#52617a;}
-.farmer-target-controls-v100 .btn-primary{grid-column:1 / -1;width:100%;}
+.farmer-target-controls-v100 .btn-primary{width:100%;white-space:nowrap;}
 .farmer-objective-compare-v100{margin-top:10px;border-top:1px dashed #cbd5e1;padding-top:10px;}
 .farmer-message-card-v100{
   margin-top:12px;
@@ -10415,6 +10415,17 @@ body.auth-pending .auth-note-box span{
 .farmer-message-card-v100 textarea{min-height:78px;margin-top:10px;resize:vertical;}
 .farmer-message-list-v100{margin-top:8px;display:grid;gap:7px;}
 .farmer-message-actions-v100{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.farmer-communication-panel-v7.hidden{display:none !important;}
+.farmer-communication-shell-v7{
+  margin-top:14px;
+  border:1px solid #cfe2ff;
+  background:linear-gradient(180deg,#ffffff,#f8fbff);
+}
+.farmer-communication-help-v7{margin:4px 0 10px;}
+.farmer-communication-shell-v7 #farmerUserRequestThreadV100{
+  margin-top:10px;
+  box-shadow:none;
+}
 .benchmark-data-v100{border:1px solid #cfe2ff;background:#f8fbff;border-radius:14px;padding:12px;margin:10px 0 16px;}
 .benchmark-data-head-v100{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;margin-bottom:10px;}
 .benchmark-data-head-v100 strong{color:#0f2a43;}
@@ -10520,7 +10531,7 @@ body.auth-pending .auth-logo--faculty{
   margin-top:20px !important;
 }
 .farmer-target-controls-v102{
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) !important;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr)) !important;
   gap:12px !important;
 }
 .farmer-target-controls-v102 .btn-primary{
@@ -10911,7 +10922,7 @@ body.auth-pending .auth-study-strip{
 }
 .farmer-decision-card .farmer-target-controls-v102{
   display:grid !important;
-  grid-template-columns:1fr !important;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr)) !important;
   gap:9px !important;
   align-items:stretch !important;
   width:100% !important;
@@ -10939,10 +10950,10 @@ body.auth-pending .auth-study-strip{
   box-sizing:border-box !important;
 }
 .farmer-decision-card .farmer-target-controls-v102 .btn-primary{
-  grid-column:1 !important;
+  grid-column:auto !important;
   width:100% !important;
   min-height:38px !important;
-  white-space:normal !important;
+  white-space:nowrap !important;
   line-height:1.2 !important;
   font-size:12px !important;
   padding:8px 10px !important;

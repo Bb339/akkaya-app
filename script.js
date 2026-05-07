@@ -870,10 +870,11 @@ function openNotificationTarget(notificationId=''){ const all=loadParcelNotifica
   if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); flashNotificationTarget(target); }
   return;
  }
- switchTabByKey('parcel');
+ const isFarmerApprovalTarget = item.kind === 'approval' || String(item.text || '').toLowerCase().includes('onay');
+ switchTabByKey(isFarmerApprovalTarget ? 'approved-plan' : 'farmer-communication');
  try{ renderUserRequestThread(); }catch(_e){}
 try{ renderInstitutionRequestInbox(); }catch(_e){}
- const target=document.getElementById('userRequestThread') || document.getElementById('farmerNotificationBox'); if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); flashNotificationTarget(target); }
+ const target=(isFarmerApprovalTarget ? document.getElementById('approvedPlanPanelV142') : document.getElementById('farmerUserRequestThreadV100')) || document.getElementById('userRequestThread') || document.getElementById('farmerNotificationBox'); if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); flashNotificationTarget(target); }
 }
 function renderNotificationCenter(){ const root=document.getElementById('notificationCenter'); const btn=document.getElementById('notificationBellBtn'); if(!root||!btn) return; const user=STATE.currentUser||null; if(!user){ root.classList.add('hidden'); root.innerHTML=''; btn.onclick=null; return; } const rows=notificationsForCurrentUser().slice(0,20); root.innerHTML = rows.length ? `<div class="notify-head"><strong>Bildirimler</strong><span class="pill-soft">${rows.length} kayıt</span></div><div class="request-thread-actions" style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="notifyMarkAllReadBtn" type="button">Tümünü okundu yap</button><button class="btn-secondary" id="notifyDeleteReadBtn" type="button">Okunanları sil</button><button class="btn-secondary" id="notifyDeleteAllBtn" type="button">Tümünü sil</button></div><div class="notify-list">${rows.map(n=>{ const kindLabel = n.kind==='parcel_request' ? 'Talep' : (n.kind==='message' ? 'Mesaj' : (n.kind==='approval' ? 'Onay' : (n.kind==='revision' ? 'Revizyon' : 'Bildirim'))); const targetUser=notificationTargetUsername(n); const unreadClass=!n.read ? ' is-unread' : ''; return `<div class="notify-item notify-item-action${unreadClass}"><button class="notify-open-btn" type="button" data-notification-open="${escapeHtml(n.id || '')}"><div class="notify-meta">${escapeHtml(n.actor_username || 'Sistem')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(n.text || '')}</div><div class="small muted" style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;"><span class="pill-soft">${escapeHtml(kindLabel)}</span>${targetUser ? `<span>Çiftçi: <b>${escapeHtml(targetUser)}</b></span>` : ''}${n.parcel_id ? `<span>Parsel: <b>${escapeHtml(n.parcel_id)}</b></span>` : ''}</div></button><div class="small muted" style="margin-top:6px;display:flex;gap:8px;justify-content:flex-end;"><button class="btn-link" type="button" data-notification-mark="${escapeHtml(n.id || '')}">${n.read ? 'Okunmadı yap' : 'Okundu yap'}</button><button class="btn-link" type="button" data-notification-delete="${escapeHtml(n.id || '')}">Sil</button></div></div>`; }).join('')}</div><div class="small muted">Bildirimleri açabilir, okundu sayabilir veya silebilirsiniz.</div>` : '<div class="notify-empty">Henüz yeni bildirim yok.</div>';
   root.querySelectorAll('[data-notification-open]').forEach(el=>{ el.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); const id=el.getAttribute('data-notification-open'); markNotificationsRead(id,true); openNotificationTarget(id); }); });
@@ -3816,12 +3817,12 @@ function updateDroughtAlarmCard(){
     const raw = String(v || '').trim().toLowerCase()
       .replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c')
       .replace(/\s+/g,'_').replace(/-+/g,'_');
-    if(!raw) return 'balanced';
+    if(!raw) return 'su_etkin';
     if(raw.includes('mevcut') || raw === 'current') return 'mevcut';
     if(raw.includes('tasarruf') || raw === 'water_saving') return 'su_tasarruf';
     if(raw.includes('maks') || raw.includes('kar') || raw.includes('profit') || raw === 'max_profit') return 'maks_kar';
     if(raw.includes('etkin') || raw.includes('verimlilik') || raw === 'water_efficiency' || raw === 'su_etkin') return 'su_etkin';
-    if(raw.includes('balanced') || raw.includes('denge') || raw === 'recommended') return 'balanced';
+    if(raw.includes('balanced') || raw.includes('denge') || raw === 'recommended') return 'su_etkin';
     return raw;
   }
   try{
@@ -3831,7 +3832,6 @@ function updateDroughtAlarmCard(){
       if(c === 'su_tasarruf') return 'water_saving';
       if(c === 'su_etkin') return 'water_efficiency';
       if(c === 'maks_kar') return 'max_profit';
-      if(c === 'balanced') return 'balanced';
       if(c === 'mevcut') return 'mevcut';
       return prevNormalizeScenarioKeyV102 ? prevNormalizeScenarioKeyV102(v) : c;
     };
@@ -3843,7 +3843,7 @@ function updateDroughtAlarmCard(){
       if(c === 'su_tasarruf') return { key:'su_tasarruf', label:'Su tasarrufu odaklı', shortLabel:'Su tasarrufu', icon:'~' };
       if(c === 'maks_kar') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'TL' };
       if(c === 'su_etkin') return { key:'su_etkin', label:'Su etkin kullanım', shortLabel:'Su etkin', icon:'=' };
-      return { key:'balanced', label:'Dengeli plan', shortLabel:'Dengeli', icon:'=' };
+      return { key:'su_etkin', label:'Su etkin kullanım', shortLabel:'Su etkin', icon:'=' };
     };
   }catch(_e){}
 
@@ -3910,7 +3910,7 @@ function updateDroughtAlarmCard(){
         if(water > wBudget) penalty += ((water-wBudget)/Math.max(1,wBudget))*110;
         return -(profit / profitDenom) + 0.10*(water / waterDenom) - 0.03*(eff/Math.max(1,curEff||1)) + penalty;
       }
-      if(c === 'balanced'){
+      if(c === 'su_etkin'){
         if(curP > 0 && profit < curP * 0.62) penalty += ((curP*0.62 - profit) / Math.max(1,curP)) * 6.0;
         return 0.48*(water/waterDenom) - 0.42*(profit/profitDenom) - 0.22*(eff/Math.max(1,curEff||1)) + penalty;
       }
@@ -4058,21 +4058,22 @@ function updateDroughtAlarmCard(){
       const algo = selectedAlgo || 'ga';
       const season = (document.getElementById('seasonSourceSel')?.value) || STATE.seasonSource || 's1';
       return `<div class="farmer-target-card-v100 farmer-target-card-v102">
-        <div class="farmer-target-title-v100"><strong>Karar hedefi</strong><span>Hedef, senaryo tipi ve algoritma seçilince öneriler yeniden hesaplanır.</span></div>
+        <div class="farmer-target-title-v100"><strong>Karar hedefi</strong><span>Hedef, senaryo ve algoritma değişince öneriler yeniden hesaplanır.</span></div>
         <div class="farmer-target-controls-v100 farmer-target-controls-v102">
           <label><span>Hedefim</span><select class="select-input" id="farmerObjectiveSelectV100">
             <option value="su_tasarruf">Su tasarrufu</option>
             <option value="maks_kar">Kâr odaklı</option>
-            <option value="balanced">Su etkin kullanım</option>
+            <option value="su_etkin">Su etkin kullanım</option>
           </select></label>
           <label><span>Senaryo</span><select class="select-input" id="farmerSeasonSourceSelectV102">
             <option value="s1">Senaryo 1 - tek ürün</option>
-            <option value="s2">Senaryo 2 - çift ürün/desen</option>
+            <option value="s2">Senaryo 2 - ürün kombinasyonu / desen</option>
           </select></label>
           <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV100">
+            <option value="auto">Otomatik en iyi algoritma</option>
             <option value="ga">GA</option>
-            <option value="abc">ABC</option>
             <option value="aco">ACO</option>
+            <option value="abc">ABC</option>
           </select></label>
         <button class="btn-primary" id="farmerRunDecisionV100" type="button">Bu hedefle öneriyi çalıştır</button>
         </div>
@@ -4090,11 +4091,15 @@ function updateDroughtAlarmCard(){
       const as = document.getElementById('farmerAlgoSelectV100');
       if(os) os.value = canonScenarioV102(selectedScenario) === 'mevcut' ? 'su_tasarruf' : canonScenarioV102(selectedScenario);
       if(ss) ss.value = (document.getElementById('seasonSourceSel')?.value) || STATE.seasonSource || 's1';
+      if(as) as.value = STATE.farmerAlgoModeV7 || selectedAlgo || 'auto';
       ss?.addEventListener('change', ()=>{ syncGlobalSeasonV102(); try{ refreshUI(); }catch(_e){} });
       document.getElementById('farmerRunDecisionV100')?.addEventListener('click', ()=>{
         if(os) selectedScenario = os.value;
         if(ss) syncGlobalSeasonV102();
-        if(as) selectedAlgo = as.value;
+        if(as){
+          STATE.farmerAlgoModeV7 = as.value || STATE.farmerAlgoModeV7 || 'auto';
+          selectedAlgo = STATE.farmerAlgoModeV7 === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : STATE.farmerAlgoModeV7;
+        }
       }, true);
       return res;
     };
@@ -4360,7 +4365,7 @@ function updateDroughtAlarmCard(){
       if(r.value === 'su_tasarruf') label.childNodes[label.childNodes.length-1].textContent = ' Su tasarrufu hedefi';
       if(r.value === 'maks_kar') label.childNodes[label.childNodes.length-1].textContent = ' Kâr odaklı hedef';
       if(r.value === 'su_etkin') label.childNodes[label.childNodes.length-1].textContent = ' Su etkin kullanım hedefi';
-      if(r.value === 'balanced') label.childNodes[label.childNodes.length-1].textContent = ' Dengeli plan hedefi';
+      if(r.value === 'balanced'){ r.checked = false; label.style.display = 'none'; }
     });
   }
   function applyV102(){
@@ -4568,26 +4573,26 @@ function updateDroughtAlarmCard(){
   }
 
   function farmerTargetsHtmlV100(){
-    const scen = selectedScenario === 'mevcut' ? 'su_tasarruf' : (selectedScenario || 'su_tasarruf');
+    const scen = selectedScenario === 'mevcut' ? 'su_tasarruf' : canonScenarioV102(selectedScenario || 'su_etkin');
     const algo = selectedAlgo || 'ga';
     const season = (document.getElementById('seasonSourceSel')?.value) || STATE.seasonSource || 's1';
     return `<div class="farmer-target-card-v100">
-      <div class="farmer-target-title-v100"><strong>Karar hedefi</strong><span>Senaryo, hedef ve algoritma değişince öneriler yeniden hesaplanır.</span></div>
+      <div class="farmer-target-title-v100"><strong>Karar hedefi</strong><span>Hedef, senaryo ve algoritma değişince öneriler yeniden hesaplanır.</span></div>
       <div class="farmer-target-controls-v100">
         <label><span>Hedefim</span><select class="select-input" id="farmerObjectiveSelectV100">
           <option value="su_tasarruf">Su tasarrufu</option>
           <option value="maks_kar">Kâr odaklı</option>
           <option value="su_etkin">Su etkin kullanım</option>
-          <option value="balanced">Dengeli plan</option>
         </select></label>
         <label><span>Senaryo</span><select class="select-input" id="farmerSeasonSourceSelectV102">
           <option value="s1">Senaryo 1 - tek ürün</option>
-          <option value="s2">Senaryo 2 - çift ürün/desen</option>
+          <option value="s2">Senaryo 2 - ürün kombinasyonu / desen</option>
         </select></label>
         <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV100">
+          <option value="auto">Otomatik en iyi algoritma</option>
           <option value="ga">GA</option>
-          <option value="abc">ABC</option>
           <option value="aco">ACO</option>
+          <option value="abc">ABC</option>
         </select></label>
         <button class="btn-primary" id="farmerRunDecisionV100" type="button">Öneriyi çalıştır</button>
       </div>
@@ -4609,9 +4614,9 @@ function updateDroughtAlarmCard(){
     const os = document.getElementById('farmerObjectiveSelectV100');
     const ss = document.getElementById('farmerSeasonSourceSelectV102');
     const as = document.getElementById('farmerAlgoSelectV100');
-    if(os) os.value = selectedScenario === 'mevcut' ? 'su_tasarruf' : (selectedScenario || 'su_tasarruf');
+    if(os) os.value = selectedScenario === 'mevcut' ? 'su_tasarruf' : canonScenarioV102(selectedScenario || 'su_etkin');
     if(ss) ss.value = (document.getElementById('seasonSourceSel')?.value) || STATE.seasonSource || 's1';
-    if(as) as.value = selectedAlgo || 'ga';
+    if(as) as.value = STATE.farmerAlgoModeV7 || selectedAlgo || 'auto';
     os?.addEventListener('change', ()=>{
       selectedScenario = os.value;
       document.querySelectorAll('input[name="scenario"]').forEach(r=>{ r.checked = String(r.value) === String(os.value); });
@@ -4627,9 +4632,10 @@ function updateDroughtAlarmCard(){
       try{ refreshUI(); }catch(_e){}
     });
     as?.addEventListener('change', ()=>{
-      selectedAlgo = as.value;
+      STATE.farmerAlgoModeV7 = as.value;
+      selectedAlgo = as.value === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : as.value;
       const globalSel = document.getElementById('algoSelect');
-      if(globalSel) globalSel.value = as.value;
+      if(globalSel) globalSel.value = selectedAlgo;
       try{ refreshUI(); }catch(_e){}
     });
     document.getElementById('farmerRunDecisionV100')?.addEventListener('click', ()=>{
@@ -4640,7 +4646,10 @@ function updateDroughtAlarmCard(){
         const globalSeason = document.getElementById('seasonSourceSel');
         if(globalSeason) globalSeason.value = ss.value;
       }
-      if(as) selectedAlgo = as.value;
+      if(as){
+        STATE.farmerAlgoModeV7 = as.value || STATE.farmerAlgoModeV7 || 'auto';
+        selectedAlgo = STATE.farmerAlgoModeV7 === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : STATE.farmerAlgoModeV7;
+      }
       const runBtn = document.getElementById('runOptBtn');
       if(runBtn) runBtn.click(); else try{ refreshUI(); }catch(_e){}
     });
@@ -4655,7 +4664,7 @@ function updateDroughtAlarmCard(){
 
   function renderFarmerCommunicationV100(){
     if(STATE?.currentUser?.role !== 'farmer') return;
-    const card = document.getElementById('farmerDecisionCard');
+    const card = document.getElementById('farmerCommunicationMountV7') || document.getElementById('farmerDecisionCard');
     if(!card) return;
     let root = document.getElementById('farmerUserRequestThreadV100');
     if(!root){
@@ -4948,8 +4957,7 @@ function updateDroughtAlarmCard(){
     const scenarios = [
       {key:'su_tasarruf', label:'Su tasarrufu'},
       {key:'maks_kar', label:'Kâr odaklı'},
-      {key:'su_etkin', label:'Su etkin kullanım'},
-      {key:'balanced', label:'Dengeli plan'}
+      {key:'su_etkin', label:'Su etkin kullanım'}
     ];
     box.innerHTML = `<div class="farmer-objective-title-v98"><strong>Hedeflere göre kendi parsel karşılaştırmam</strong><span>Algoritma: ${esc((algo||'ga').toUpperCase())}</span></div>
       <div class="business-table-wrap"><table class="data-table farmer-objective-table-v98"><thead><tr><th>Hedef</th><th>Önerilen desen</th><th>Su</th><th>Net kâr</th><th>TL/m³</th><th>Mevcuda göre</th><th>İşlem</th></tr></thead><tbody>
@@ -4994,22 +5002,22 @@ function updateDroughtAlarmCard(){
         <option value="su_tasarruf">Su tasarrufu</option>
         <option value="maks_kar">Kâr odaklı</option>
         <option value="su_etkin">Su etkin kullanım</option>
-        <option value="balanced">Dengeli plan</option>
       </select></label>
       <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV98">
-        <option value="ga">GA</option><option value="abc">ABC</option><option value="aco">ACO</option>
+        <option value="auto">Otomatik en iyi algoritma</option><option value="ga">GA</option><option value="aco">ACO</option><option value="abc">ABC</option>
       </select></label>
       <button class="btn-primary" id="farmerRunDecisionV98" type="button">Bu hedefle öneriyi çalıştır</button>
     </div><div id="farmerObjectiveCompareV98" class="farmer-objective-compare-v98"></div>`;
     const objSel = document.getElementById('farmerObjectiveSelectV98');
     const algoSel = document.getElementById('farmerAlgoSelectV98');
     if(objSel) objSel.value = selectedScenario === 'mevcut' ? 'su_tasarruf' : selectedScenario;
-    if(algoSel) algoSel.value = selectedAlgo || 'ga';
+    if(algoSel) algoSel.value = STATE.farmerAlgoModeV7 || selectedAlgo || 'auto';
     objSel?.addEventListener('change', ()=>{ setScenarioV98(objSel.value); try{ refreshUI(); }catch(_e){} });
-    algoSel?.addEventListener('change', ()=>{ setAlgoV98(algoSel.value); try{ refreshUI(); }catch(_e){} });
+    algoSel?.addEventListener('change', ()=>{ STATE.farmerAlgoModeV7 = algoSel.value; setAlgoV98(algoSel.value === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : algoSel.value); try{ refreshUI(); }catch(_e){} });
     document.getElementById('farmerRunDecisionV98')?.addEventListener('click', ()=>{
       setScenarioV98(objSel?.value || 'su_tasarruf');
-      setAlgoV98(algoSel?.value || 'ga');
+      STATE.farmerAlgoModeV7 = algoSel?.value || STATE.farmerAlgoModeV7 || 'auto';
+      setAlgoV98(STATE.farmerAlgoModeV7 === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : STATE.farmerAlgoModeV7);
       const runBtn = document.getElementById('runOptBtn');
       if(runBtn) runBtn.click(); else try{ refreshUI(); }catch(_e){}
     });
@@ -5072,7 +5080,7 @@ function updateDroughtAlarmCard(){
     const badge = document.getElementById('activeObjectiveBadge');
     if(badge && selectedScenario === 'mevcut') badge.textContent = 'Aktif hedef: Su etkin kullanım';
     const help = document.querySelector('#farmerDecisionCard .card-help.small');
-    if(help) help.textContent = 'Kurum tarafından atanan desen temel alınır; çiftçi su etkin kullanım, kâr veya dengeli hedefleri karşılaştırabilir ve istediği öneri için uzmana talep gönderebilir.';
+    if(help) help.textContent = 'Kurum tarafından atanan desen temel alınır; çiftçi su tasarrufu, kâr odaklı ve su etkin kullanım hedeflerini karşılaştırabilir ve istediği öneri için uzmana talep gönderebilir.';
     ensureFarmerControlsV98();
     try{ window.renderUserRequestThread(); }catch(_e){}
   }
@@ -5735,14 +5743,14 @@ function _scenarioObjectiveKey(){
   if(s.includes('tasarruf') || s==='water_saving') return 'water_saving';
   if(s.includes('maks') || s.includes('max') || s==='max_profit') return 'max_profit';
   if(s.includes('mevcut') || s==='current') return 'current';
-  return 'balanced';
+  return 'water_efficiency';
 }
 
 function _scoreCandidate(w, p){
   const obj = _scenarioObjectiveKey();
   if(obj==='water_saving') return w; // lower better
   if(obj==='max_profit') return -p;  // higher profit => lower score
-  // balanced: tradeoff
+  // Su etkin kullanım: water-profit tradeoff
   return (w/1000.0) - (p/10000.0);
 }
 
@@ -8698,7 +8706,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
   const objective = objectiveRaw.toLowerCase();
   const isWater = objective.includes('water') || objective.includes('su');
   const isProfit = objective.includes('profit') || objective.includes('kar');
-  const objectiveLabel = isWater && !isProfit ? 'Su verimliliği / tasarruf' : (isProfit && !isWater ? 'Net kâr' : 'Dengeli hedef');
+  const objectiveLabel = isWater && !isProfit ? 'Su verimliliği / tasarruf' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım');
 
   const rel = (m,s)=> (Math.abs(m) > 1e-9 ? Math.abs(s)/Math.abs(m) : 0);
   const scoreRows = rows.map(a=>{
@@ -13805,10 +13813,10 @@ function totalsAllParcels(scenarioKey, algoKey){
 function getScenarioDisplayMeta(scenarioKey){
   const s = String(scenarioKey || '').toLowerCase().trim();
   if(s === 'mevcut' || s === 'current') return { key:'mevcut', label:'Mevcut desen', shortLabel:'Mevcut', icon:'\u{1F4CC}' };
-  if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'water_efficiency' || s === 'tasarruf') return { key:'su_tasarruf', label:'Su verimliliği odaklı', shortLabel:'Su verimliliği', icon:'\u{1F4A7}' };
+  if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'tasarruf') return { key:'su_tasarruf', label:'Su tasarrufu', shortLabel:'Su tasarrufu', icon:'\u{1F4A7}' };
   if(s === 'maks_kar' || s === 'maks kar' || s === 'max_profit') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'\u{1F4B0}' };
-  if(s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'balanced', label:'Dengeli öneri', shortLabel:'Dengeli', icon:'\u2696\uFE0F' };
-  return { key:s || 'balanced', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u{1F3AF}' };
+  if(s === 'su_etkin' || s === 'water_efficiency' || s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'su_etkin', label:'Su etkin kullanım', shortLabel:'Su etkin', icon:'\u2696\uFE0F' };
+  return { key:s || 'su_etkin', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u{1F3AF}' };
 }
 
 function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){ const curMain=Array.isArray(currentRows)&&currentRows.length?[...currentRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0]:null; const recMain=Array.isArray(recRows)&&recRows.length?[...recRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0]:null; if(!curMain||!recMain) return "Desen farkı, seçilen hedefe göre hesaplanan su-kâr puanından kaynaklanır."; const sameMain=normCropName(curMain.name)===normCropName(recMain.name); const orchardLike = !!(curMain && isPerennialCropName(curMain.name)); if((seasonSource||'s1')==='s1'){ if(sameMain || orchardLike) return `Bahçe/çok yıllık parsellerde ana ürün korunur. Sistem ${prettyCropName(curMain.name)} ürününü korudu; fark esas olarak sulama yöntemi, su kısıntısı ve zamanlama uyumundan gelir.`; return `S1 modunda tek ürün ana plan yapılır. Sistem, ${prettyCropName(curMain.name)} yerine ${prettyCropName(recMain.name)} ürününü seçti çünkü seçili hedef (${getScenarioDisplayMeta(objectiveKey).label}) altında su-kâr dengesi daha güçlü bulundu.`; } const recSecond=Array.isArray(recRows)?recRows.find(r=>normCropName(r.name)!==normCropName(recMain.name)):null; if(recSecond){ return `S2 modunda tarla parselleri için yazlık+kışlık / münavebe planı kurulur. Ana ürün ${prettyCropName(recMain.name)} yanında ${prettyCropName(recSecond.name)} ile toprak ve su dengesi iyileştirilmeye çalışılır.`; } return sameMain ? 'S2 modunda bahçe/çok yıllık parsellerde mevcut ana ürün korunur. Ürün söküp başka meyve veya tarla ürünü önerilmez; fark sulama yöntemi, su kısıntısı, zamanlama ve sıra arası/örtü bitkisi yönetiminden gelir.' : 'S2 modunda bahçe/çok yıllık parsellerde ana ürün korunur; tarla parsellerinde ise yazlık-kışlık kombinasyonları denenir. Bu nedenle desen değişimi, seçili hedefe göre farklı kombinasyonların öne çıkmasından kaynaklanır.'; }
@@ -13881,7 +13889,7 @@ function renderIrrigationCompare(currentRows, recRows, parcel, objectiveKey){
     </div>`;
 }
 
-function buildDecisionRationaleByObjective(objectiveKey, dWater, dProfit, dEff){ const o=getScenarioDisplayMeta(objectiveKey).key; const betterWater=dWater<=0; const betterProfit=dProfit>=0; const waterTxt=`${dWater < 0 ? 'yaklaşık ' + Math.round(Math.abs(dWater)).toLocaleString('tr-TR') + ' m³ daha az' : 'yaklaşık ' + Math.round(Math.abs(dWater)).toLocaleString('tr-TR') + ' m³ daha fazla'} su`; const profitTxt=`${dProfit >= 0 ? '+' : '-'}${Math.round(Math.abs(dProfit)).toLocaleString('tr-TR')} TL net kâr etkisi`; const effTxt=`${dEff >= 0 ? '+' : ''}${dEff.toFixed(2)} TL/m³ su verimliliği farkı`; if(o==='mevcut') return {title:'Karar Gerekçesi (Referans görünüm)',msg:'Bu ekran optimizasyon sonucu değil, mevcut kayıtların referans görünümüdür. Aşağıdaki tüm öneriler bu başlangıç durumuna göre fark olarak hesaplanır.',note:'Yeni öneri üretmek için hedef modunu seçip optimizasyonu çalıştırın.'}; if(o==='su_tasarruf'){ if(betterWater && betterProfit) return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Öneri ${waterTxt} kullanırken ${profitTxt} da sağlıyor. Bu, su daralırken geliri koruyan güçlü bir sonuçtur.`,note:`${effTxt}. Sistem suyu fazla isteyen ürünü veya yöntemi geri çekip daha verimli kombinasyona yönelmiştir.`}; if(betterWater && !betterProfit) return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Öneri ${waterTxt} kullanıyor; bunun karşılığında ${profitTxt} görülüyor. Kurak yıllarda bu ödünleşme yönetilebilir olabilir; kritik karar su açığını önlemektir.`,note:`${effTxt}. Çiftçiye bu fark özellikle aylık sulama takvimiyle birlikte anlatılmalıdır.`}; if(!betterWater && betterProfit) return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Gelir tarafında ${profitTxt} görülse de öneri ${waterTxt} istiyor. Hedef su tasarrufu olduğu için bu sonuç güçlü kabul edilmez.`,note:`${effTxt}. Ürün havuzu veya sulama yöntemi yeniden değerlendirilmelidir.`}; return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Öneri hem ${waterTxt} istiyor hem de ${profitTxt} yaratıyor. Su kısıtı açısından savunulamaz bir kombinasyon oluşmuştur.`,note:`${effTxt}. Bu tip sonuçların elenmesi gerekir.`}; } if(o==='maks_kar'){ if(betterProfit && betterWater) return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri ${profitTxt} sağlarken aynı anda ${waterTxt} kullanıyor. Gelir artışı, daha yüksek su baskısı oluşturmadan elde edilmiş.`,note:`${effTxt}. Kurum açısından öncelikli, çiftçi açısından uygulanabilir bir sonuçtur.`}; if(betterProfit && !betterWater) return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri ${profitTxt} sağlıyor; ancak bunun karşılığında ${waterTxt} talep ediyor. Kâr hedefi açısından makul olabilir fakat su daralırsa risk artar.`,note:`${effTxt}. Bu nedenle yöntem önerisi ve kritik ay yönetimi birlikte değerlendirilmelidir.`}; if(!betterProfit && betterWater) return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri ${waterTxt} kullanıyor fakat ${profitTxt} oluşuyor. Kâr hedefi seçiliyken bu sonuç zayıf kalır; gelir tarafında daha güçlü alternatif aranmalıdır.`,note:`${effTxt}. Su tasarrufu iyi olsa da amaç çiftçi gelirini korumaktır.`}; return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri hem ${waterTxt} talep ediyor hem de ${profitTxt} oluşturuyor. Kâr hedefiyle bile savunulamayacak bir tablo var.`,note:`${effTxt}. Parametreler veya ürün havuzu tekrar gözden geçirilmelidir.`}; } return {title:'Karar Gerekçesi (Dengeli yorum)',msg:`Öneri için temel farklar: ${waterTxt}, ${profitTxt}.`,note:`${effTxt}. Nihai yorum su, kâr ve uygulanabilirlik birlikte değerlendirilerek yapılmalıdır.`}; }
+function buildDecisionRationaleByObjective(objectiveKey, dWater, dProfit, dEff){ const o=getScenarioDisplayMeta(objectiveKey).key; const betterWater=dWater<=0; const betterProfit=dProfit>=0; const waterTxt=`${dWater < 0 ? 'yaklaşık ' + Math.round(Math.abs(dWater)).toLocaleString('tr-TR') + ' m³ daha az' : 'yaklaşık ' + Math.round(Math.abs(dWater)).toLocaleString('tr-TR') + ' m³ daha fazla'} su`; const profitTxt=`${dProfit >= 0 ? '+' : '-'}${Math.round(Math.abs(dProfit)).toLocaleString('tr-TR')} TL net kâr etkisi`; const effTxt=`${dEff >= 0 ? '+' : ''}${dEff.toFixed(2)} TL/m³ su verimliliği farkı`; if(o==='mevcut') return {title:'Karar Gerekçesi (Referans görünüm)',msg:'Bu ekran optimizasyon sonucu değil, mevcut kayıtların referans görünümüdür. Aşağıdaki tüm öneriler bu başlangıç durumuna göre fark olarak hesaplanır.',note:'Yeni öneri üretmek için hedef modunu seçip optimizasyonu çalıştırın.'}; if(o==='su_tasarruf'){ if(betterWater && betterProfit) return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Öneri ${waterTxt} kullanırken ${profitTxt} da sağlıyor. Bu, su daralırken geliri koruyan güçlü bir sonuçtur.`,note:`${effTxt}. Sistem suyu fazla isteyen ürünü veya yöntemi geri çekip daha verimli kombinasyona yönelmiştir.`}; if(betterWater && !betterProfit) return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Öneri ${waterTxt} kullanıyor; bunun karşılığında ${profitTxt} görülüyor. Kurak yıllarda bu ödünleşme yönetilebilir olabilir; kritik karar su açığını önlemektir.`,note:`${effTxt}. Çiftçiye bu fark özellikle aylık sulama takvimiyle birlikte anlatılmalıdır.`}; if(!betterWater && betterProfit) return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Gelir tarafında ${profitTxt} görülse de öneri ${waterTxt} istiyor. Hedef su tasarrufu olduğu için bu sonuç güçlü kabul edilmez.`,note:`${effTxt}. Ürün havuzu veya sulama yöntemi yeniden değerlendirilmelidir.`}; return {title:'Karar Gerekçesi (Su verimliliği hedefi)',msg:`Öneri hem ${waterTxt} istiyor hem de ${profitTxt} yaratıyor. Su kısıtı açısından savunulamaz bir kombinasyon oluşmuştur.`,note:`${effTxt}. Bu tip sonuçların elenmesi gerekir.`}; } if(o==='maks_kar'){ if(betterProfit && betterWater) return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri ${profitTxt} sağlarken aynı anda ${waterTxt} kullanıyor. Gelir artışı, daha yüksek su baskısı oluşturmadan elde edilmiş.`,note:`${effTxt}. Kurum açısından öncelikli, çiftçi açısından uygulanabilir bir sonuçtur.`}; if(betterProfit && !betterWater) return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri ${profitTxt} sağlıyor; ancak bunun karşılığında ${waterTxt} talep ediyor. Kâr hedefi açısından makul olabilir fakat su daralırsa risk artar.`,note:`${effTxt}. Bu nedenle yöntem önerisi ve kritik ay yönetimi birlikte değerlendirilmelidir.`}; if(!betterProfit && betterWater) return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri ${waterTxt} kullanıyor fakat ${profitTxt} oluşuyor. Kâr hedefi seçiliyken bu sonuç zayıf kalır; gelir tarafında daha güçlü alternatif aranmalıdır.`,note:`${effTxt}. Su tasarrufu iyi olsa da amaç çiftçi gelirini korumaktır.`}; return {title:'Karar Gerekçesi (Kâr hedefi)',msg:`Öneri hem ${waterTxt} talep ediyor hem de ${profitTxt} oluşturuyor. Kâr hedefiyle bile savunulamayacak bir tablo var.`,note:`${effTxt}. Parametreler veya ürün havuzu tekrar gözden geçirilmelidir.`}; } return {title:'Karar Gerekçesi (Su etkin kullanım)',msg:`Öneri için temel farklar: ${waterTxt}, ${profitTxt}.`,note:`${effTxt}. Nihai yorum su, kâr ve uygulanabilirlik birlikte değerlendirilerek yapılmalıdır.`}; }
 
 function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){
   const curMain = Array.isArray(currentRows)&&currentRows.length ? [...currentRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0] : null;
@@ -14195,7 +14203,7 @@ function renderAllScenarioSummaries(){
   const scenLabel = normalizeScenarioKey(scenKey) === 'mevcut'
     ? 'Referans'
     : getScenarioDisplayMeta(scenKey).shortLabel;
-  const chartKeys = ['mevcut','su_tasarruf','maks_kar','balanced'];
+  const chartKeys = ['mevcut','su_tasarruf','maks_kar','su_etkin'];
   const chartLabels = chartKeys.map(k=> normalizeScenarioKey(k) === 'mevcut' ? 'Mevcut' : getScenarioDisplayMeta(k).shortLabel);
   const chartColors = ['rgba(73,126,230,.72)','rgba(40,191,170,.72)','rgba(255,175,91,.78)','rgba(126,92,245,.72)'];
 
@@ -16610,6 +16618,7 @@ function initTabs() {
     impact: document.getElementById("tab-impact"),
     plan5: document.getElementById("tab-plan5"),
     users: document.getElementById("tab-users"),
+    "farmer-communication": document.getElementById("tab-farmer-communication"),
     "approved-plan": document.getElementById("approvedPlanPanelV142"),
   };
 
@@ -16628,6 +16637,7 @@ function initTabs() {
       const key = btn.dataset.tab;
       if (panels[key]) {
         panels[key].classList.add("active");
+        panels[key].classList.remove("hidden");
       }
 
       // Hidden tab canvases may render with zero size. Force a resize after activation.
@@ -17313,7 +17323,7 @@ function renderObjectiveCompareMatrix(){
   const box = document.getElementById('objectiveCompareMatrix');
   if(!box) return;
   const algos = ['ga','abc','aco'];
-  const objectives = ['su_tasarruf','maks_kar','balanced'];
+  const objectives = ['su_tasarruf','maks_kar','su_etkin'];
   const labelAlgo = a=> a === 'ga' ? 'GA' : (a === 'abc' ? 'ABC' : 'ACO');
   const labelObj = o=> getScenarioDisplayMeta(o).shortLabel || getScenarioDisplayMeta(o).label || o;
   let html = '<div class="objective-matrix-v95"><div class="matrix-title">Hedef modu x algoritma ozeti</div><table><thead><tr><th>Hedef</th>'+algos.map(a=>`<th>${labelAlgo(a)}</th>`).join('')+'</tr></thead><tbody>';
@@ -18243,8 +18253,8 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
       {id:'current', scenario:'mevcut', label:'Mevcut desen', desc:'Referans kayıt'},
       {id:'water_saving', scenario:'su_tasarruf', label:'Alternatif 1 - Su verimliliği', desc:'Su kotası altında daha düşük/etkin su kullanımı'},
       {id:'profit', scenario:'maks_kar', label:'Alternatif 2 - Kâr odaklı', desc:'Parsele düşen su kotasını aşmadan etkin alanda en yüksek net kâr'},
-      {id:'balanced', scenario:'balanced', label:'Alternatif 3 - Dengeli desen', desc:'Su, kâr ve uygulanabilirliği birlikte dengeleme'},
-      {id:'low_risk', scenario:'balanced', label:'Alternatif 4 - Düşük risk / uygulanabilir', desc:'Toprak, sulama ve çiftçi uygulanabilirliği vurgulu güvenli öneri'},
+      {id:'balanced', scenario:'su_etkin', label:'Alternatif 3 - Su etkin kullanım', desc:'Su, kâr ve uygulanabilirliği birlikte değerlendirme'},
+      {id:'low_risk', scenario:'su_etkin', label:'Alternatif 4 - Düşük risk / uygulanabilir', desc:'Toprak, sulama ve çiftçi uygulanabilirliği vurgulu güvenli öneri'},
       {id:'water_profit_safe', scenario:'su_tasarruf', label:'Alternatif 5 - Su+kâr güvenli', desc:'Kota aşmadan suyu koruyan ve kârı mümkün olduğunca yüksek tutan seçenek'},
       {id:'farmer_choice', scenario:'maks_kar', label:'Alternatif 6 - Çiftçi tercihi için yüksek gelir', desc:'Kurum onayından önce çiftçinin tercih edebileceği gelir odaklı seçenek'}
     ];
@@ -18979,7 +18989,7 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
         ['current','Mevcut desen / Excel referansı', crop],
         ['water_saving','Alternatif 1 - Su verimliliği', crop],
         ['profit','Alternatif 2 - Kâr odaklı', crop],
-        ['balanced','Alternatif 3 - Dengeli desen', crop]
+        ['balanced','Alternatif 3 - Su etkin kullanım', crop]
       ];
       altSel.innerHTML = opts.map(o=>`<option value="${esc(o[0])}"${o[0]===String(rec.selected_alternative_id||'current')?' selected':''}>${esc(o[1])} • ${esc(o[2])}</option>`).join('');
     }
@@ -19560,7 +19570,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const obj = String(j?.objective || j?.scenario || '').toLowerCase();
     const isWater = obj.includes('water') || obj.includes('su');
     const isProfit = obj.includes('profit') || obj.includes('kar');
-    const objective = isWater && !isProfit ? 'Su verimliliği' : (isProfit && !isWater ? 'Net kâr' : 'Dengeli hedef');
+    const objective = isWater && !isProfit ? 'Su verimliliği' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım');
     const w = isWater && !isProfit ? {p:.14, su:.34, e:.22, feas:.12, stab:.12, speed:.06} : (isProfit && !isWater ? {p:.34, su:.14, e:.22, feas:.12, stab:.12, speed:.06} : {p:.24, su:.24, e:.22, feas:.12, stab:.12, speed:.06});
     const rows = ns.map(a => {
       const r = algos[a] || {};
@@ -20153,18 +20163,20 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const assignedDate = ass?.assigned_at ? new Date(ass.assigned_at).toLocaleDateString('tr-TR') : 'Henüz atama tarihi yok';
     const pattern = ass?.pattern || ass?.alternative_label || 'Uzman tarafından özel desen atanmadı';
     const note = ass?.note || (ass ? 'Uzman ataması panelinize aktarılmıştır. Uygulamadan önce kurum/uzman notunu dikkate alın.' : 'Bu parsel için henüz kurum/uzman tarafından özel atama yapılmamış. Aşağıdaki sonuçlar sistemin genel öneri ekranından izlenebilir.');
-    const hasAssignedEffect = ass && (numV55(ass.water_m3, 0) > 0 || numV55(ass.profit_tl, 0) !== 0);
-    const waterProfit = hasAssignedEffect
-      ? `${fmt0V55(ass.water_m3)} m³ su • ${fmt0V55(ass.profit_tl)} TL net kâr`
-      : `${fmt0V55(p.water_m3)} m³ mevcut su • ${fmt0V55(p.profit_tl)} TL mevcut kâr`;
-    const quotaM3 = (typeof parcelWaterBudget === 'function')
-      ? parcelWaterBudget(numV55(p.area_da, 0), p)
+    const activeTarget = (typeof getScenarioDisplayMeta === 'function')
+      ? getScenarioDisplayMeta(selectedScenario === 'mevcut' ? 'su_tasarruf' : (selectedScenario || 'su_etkin')).shortLabel
+      : 'Su tasarrufu';
+    const activeSeason = (STATE.farmerSeasonSourceV102 || STATE.seasonSource || document.getElementById('seasonSourceSel')?.value || 's1') === 's2'
+      ? 'Senaryo 2 - ürün kombinasyonu / desen'
+      : 'Senaryo 1 - tek ürün';
+    const activeAlgo = STATE.farmerAlgoModeV7 === 'auto'
+      ? 'Otomatik en iyi algoritma'
+      : String(selectedAlgo || 'GA').toUpperCase();
+    const threadId = (typeof parcelThreadKeyFor === 'function') ? parcelThreadKeyFor(p, user.username || '') : '';
+    const msgCount = threadId && typeof getParcelThread === 'function' ? getParcelThread(threadId).length : 0;
+    const noticeCount = typeof notificationsForCurrentUser === 'function'
+      ? notificationsForCurrentUser().filter(n=>String(n.parcel_id||'')===String(p.id||'')).length
       : 0;
-    const currentWaterM3 = numV55(p.water_m3, 0);
-    const quotaDelta = quotaM3 - currentWaterM3;
-    const quotaStatus = quotaM3 > 0
-      ? (quotaDelta >= 0 ? `${fmt0V55(quotaDelta)} m³ kota boşluğu` : `${fmt0V55(Math.abs(quotaDelta))} m³ kota aşımı`)
-      : 'Kota hesaplanamadı';
     box.innerHTML = `
       <div class="farmer-summary-hero">
         <div class="farmer-summary-top">
@@ -20175,17 +20187,36 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
           <span class="farmer-status-pill ${tone}">${escV55(status)}</span>
         </div>
         <div class="farmer-summary-grid">
-          <div class="farmer-kv"><span>Alan</span><strong>${fmt1V55(p.area_da)} da</strong></div>
+          <div class="farmer-kv"><span>Parsel kodu</span><strong>${escV55(p.id || '-')}</strong></div>
+          <div class="farmer-kv"><span>Çiftçi / hesap</span><strong>${escV55(user.displayName || user.username || '-')}</strong></div>
           <div class="farmer-kv"><span>Mevcut ürün</span><strong>${escV55(p.current_crop || 'Belirtilmedi')}</strong></div>
+          <div class="farmer-kv"><span>Aktif hedef</span><strong>${escV55(activeTarget)}</strong></div>
+          <div class="farmer-kv"><span>Aktif senaryo</span><strong>${escV55(activeSeason)}</strong></div>
+          <div class="farmer-kv"><span>Aktif algoritma</span><strong>${escV55(activeAlgo)}</strong></div>
+          <div class="farmer-kv"><span>Talep / mesaj</span><strong>${escV55(status)} • ${msgCount} mesaj • ${noticeCount} bildirim</strong></div>
           <div class="farmer-kv"><span>Uzman / sistem önerisi</span><strong>${escV55(pattern)}</strong></div>
-          <div class="farmer-kv"><span>Su ve gelir etkisi</span><strong>${escV55(waterProfit)}</strong></div>
-          <div class="farmer-kv"><span>Alan bazlı su hakkı</span><strong>${fmt0V55(quotaM3)} m³</strong></div>
-          <div class="farmer-kv"><span>Kota durumu</span><strong>${escV55(quotaStatus)}</strong></div>
-          <div class="farmer-kv"><span>Atayan / tarih</span><strong>${escV55(ass?.assigned_by || 'Kurum/uzman')} • ${escV55(assignedDate)}</strong></div>
-          <div class="farmer-kv"><span>Sulama</span><strong>${escV55((/^(sulu|sulama|irrigated)$/i.test(String(p.irrigation_label || p.irrigation_current || p.irrigation_key || '').trim()) && /DOMATES|BIBER|KABAK|HIYAR|KARPUZ|KAVUN|SOGAN|SARIMSAK|LAHANA|CILEK|PATATES/.test(normCropName(p.current_crop || ''))) ? 'Damla' : (p.irrigation_label || p.irrigation_current || p.irrigation_key || 'Belirtilmedi'))}</strong></div>
+        </div>
+        <div class="farmer-message-actions-v100" style="margin-top:10px;">
+          <button class="btn-secondary" type="button" data-farmer-summary-action-v7="run">Öneri üret</button>
+          <button class="btn-secondary" type="button" data-farmer-summary-action-v7="request">Uzmana gönder</button>
+          <button class="btn-secondary" type="button" data-farmer-summary-action-v7="messages">Mesajları gör</button>
         </div>
         <div class="farmer-summary-note" style="margin-top:10px;"><strong>Not:</strong> ${escV55(note)}</div>
       </div>`;
+    box.querySelectorAll('[data-farmer-summary-action-v7]').forEach(btn=>btn.addEventListener('click', ()=>{
+      const action = btn.getAttribute('data-farmer-summary-action-v7') || '';
+      if(action === 'run'){
+        const runBtn = document.getElementById('runOptBtn');
+        if(runBtn) runBtn.click();
+        else try{ refreshUI(); }catch(_e){}
+      }else{
+        try{ if(typeof openFarmerCommunicationTabV7 === 'function') openFarmerCommunicationTabV7(); else if(typeof switchTabByKey === 'function') switchTabByKey('farmer-communication'); }catch(_e){}
+        try{ if(typeof renderFarmerComms102 === 'function') renderFarmerComms102(); }catch(_e){}
+        const target = document.getElementById('farmerUserRequestThreadV100');
+        if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+        if(action === 'request') document.getElementById('farmerRequestSelectedV102')?.click();
+      }
+    }));
   }
   function bindFarmerRefreshButtonV55(){
     const btn = document.getElementById('farmerRefreshRecommendationBtn');
@@ -20456,7 +20487,8 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     if(raw.includes('tasarruf') || raw.includes('water_saving')) return 'su_tasarruf';
     if(raw.includes('kar') || raw.includes('profit') || raw.includes('maks')) return 'maks_kar';
     if(raw.includes('mevcut') || raw.includes('current')) return 'mevcut';
-    return 'balanced';
+    if(raw.includes('etkin') || raw.includes('verim') || raw.includes('water_efficiency') || raw.includes('balanced') || raw.includes('denge')) return 'su_etkin';
+    return 'su_etkin';
   }
   function scenarioLabel102(k){
     const s = scen102(k);
@@ -20472,21 +20504,22 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const target = scen102(selectedScenario === 'mevcut' ? 'su_tasarruf' : selectedScenario);
     const season = (document.getElementById('seasonSourceSel')?.value) || STATE.seasonSource || 's1';
     return `<div class="farmer-target-card-v100 farmer-target-card-v102">
-      <div class="farmer-target-title-v100"><strong>Karar hedefi</strong><span>Su tasarrufu, kâr odaklı ve su etkin kullanım ayrı hesaplanır.</span></div>
+      <div class="farmer-target-title-v100"><strong>Karar hedefi</strong><span>Hedef, senaryo ve algoritma değişince öneriler yeniden hesaplanır.</span></div>
       <div class="farmer-target-controls-v100 farmer-target-controls-v102">
         <label><span>Hedefim</span><select class="select-input" id="farmerObjectiveSelectV102">
           <option value="su_tasarruf">Su tasarrufu</option>
           <option value="maks_kar">Kâr odaklı</option>
-          <option value="balanced">Su etkin kullanım</option>
+          <option value="su_etkin">Su etkin kullanım</option>
         </select></label>
         <label><span>Senaryo</span><select class="select-input" id="farmerSeasonSourceSelectV102">
           <option value="s1">Senaryo 1 - tek ürün</option>
-          <option value="s2">Senaryo 2 - çift ürün/desen</option>
+          <option value="s2">Senaryo 2 - ürün kombinasyonu / desen</option>
         </select></label>
         <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV102">
+          <option value="auto">Otomatik en iyi algoritma</option>
           <option value="ga">GA</option>
-          <option value="abc">ABC</option>
           <option value="aco">ACO</option>
+          <option value="abc">ABC</option>
         </select></label>
         <button class="btn-primary" id="farmerRunDecisionV102" type="button">Bu hedefle öneriyi çalıştır</button>
       </div>
@@ -20512,12 +20545,15 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const as = document.getElementById('farmerAlgoSelectV102');
     if(os) os.value = scen102(selectedScenario === 'mevcut' ? 'su_tasarruf' : selectedScenario);
     if(ss) ss.value = (document.getElementById('seasonSourceSel')?.value) || STATE.seasonSource || 's1';
-    if(as) as.value = selectedAlgo || 'ga';
+    if(as) as.value = STATE.farmerAlgoModeV7 || selectedAlgo || 'auto';
     const sync = ()=>{
       if(os) selectedScenario = os.value;
-      if(as) selectedAlgo = as.value;
+      if(as){
+        STATE.farmerAlgoModeV7 = as.value || STATE.farmerAlgoModeV7 || 'auto';
+        selectedAlgo = STATE.farmerAlgoModeV7 === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : STATE.farmerAlgoModeV7;
+      }
       const globalAlgo = document.getElementById('algoSelect');
-      if(globalAlgo && as) globalAlgo.value = as.value;
+      if(globalAlgo && as) globalAlgo.value = selectedAlgo;
       const globalSeason = document.getElementById('seasonSourceSel');
       if(globalSeason && ss){ globalSeason.value = ss.value; STATE.seasonSource = ss.value; }
       document.querySelectorAll('input[name="scenario"]').forEach(r=>{ r.checked = String(r.value) === String(selectedScenario); });
@@ -20549,7 +20585,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   }
   function renderFarmerComms102(){
     if(STATE?.currentUser?.role !== 'farmer') return;
-    const card = document.getElementById('farmerDecisionCard');
+    const card = document.getElementById('farmerCommunicationMountV7') || document.getElementById('farmerDecisionCard');
     if(!card) return;
     let root = document.getElementById('farmerUserRequestThreadV100');
     if(!root){
@@ -20558,6 +20594,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       root.className = 'farmer-message-card-v100';
       card.appendChild(root);
     }
+    if(root.parentElement !== card) card.appendChild(root);
     const user = STATE.currentUser || {};
     const p = currentFarmerParcel102();
     if(!p){ root.innerHTML = '<div class="request-thread-head"><strong>Uzman / yönetici iletişim</strong></div><div class="small muted">Parsel seçilince mesaj alanı açılır.</div>'; return; }
@@ -20615,7 +20652,11 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(!label) return;
       if(r.value === 'su_tasarruf') label.childNodes[label.childNodes.length-1].textContent = ' Su tasarrufu hedefi';
       if(r.value === 'maks_kar') label.childNodes[label.childNodes.length-1].textContent = ' Kâr odaklı hedef';
-      if(r.value === 'balanced') label.childNodes[label.childNodes.length-1].textContent = ' Su etkin kullanım hedefi';
+      if(r.value === 'balanced'){
+        r.checked = false;
+        label.style.display = 'none';
+      }
+      if(r.value === 'su_etkin') label.childNodes[label.childNodes.length-1].textContent = ' Su etkin kullanım hedefi';
     });
   }
   document.addEventListener('click', (ev)=>{
@@ -20665,9 +20706,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       STATE.farmerSeasonSourceV102 = ss.value;
     }
     if(as){
-      selectedAlgo = as.value;
+      STATE.farmerAlgoModeV7 = as.value || STATE.farmerAlgoModeV7 || 'auto';
+      selectedAlgo = STATE.farmerAlgoModeV7 === 'auto' ? (STATE.benchmarkLeader?.algo || 'ga') : STATE.farmerAlgoModeV7;
       const ga = document.getElementById('algoSelect');
-      if(ga) ga.value = as.value;
+      if(ga) ga.value = selectedAlgo;
     }
   }
   document.addEventListener('change', (ev)=>{
@@ -20680,11 +20722,9 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     if(ev.target?.id === 'farmerRunDecisionV102'){
       ev.preventDefault();
       syncFarmerSelectorsV102c();
-      setTimeout(()=>{
-        const runBtn = document.getElementById('runOptBtn');
-        if(runBtn) runBtn.click();
-        else if(typeof refreshUI === 'function') refreshUI();
-      }, 0);
+      const runBtn = document.getElementById('runOptBtn');
+      if(runBtn) runBtn.click();
+      else if(typeof refreshUI === 'function') refreshUI();
     }
   }, true);
 })();
@@ -21056,10 +21096,31 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   </section>`;
 }
 
+  function openFarmerCommunicationTabV7(){
+  const btn = document.getElementById('farmerCommunicationTabBtnV7');
+  const panel = document.getElementById('tab-farmer-communication');
+  if(!btn || !panel) return false;
+  try{ if(typeof switchTabByKey === 'function') switchTabByKey('farmer-communication'); }catch(_e){}
+  document.querySelectorAll('.tab[data-tab]').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-panels > .tab-panel').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  panel.classList.add('active');
+  panel.classList.remove('hidden');
+  const approved = document.getElementById('approvedPlanPanelV142');
+  const approvedBtn = document.getElementById('approvedPlanTabBtnV142');
+  approved?.classList.add('hidden');
+  approved?.classList.remove('active');
+  approvedBtn?.classList.remove('active');
+  try{ localStorage.removeItem(PLAN_OPEN_KEY); }catch(_e){}
+  return true;
+}
+
   function ensureApprovedPlanTab(open=false){
   const tabs = document.getElementById('analysisTables');
   const panels = document.querySelector('.tab-panels');
   const parcelBtn = tabs?.querySelector('.tab[data-tab="parcel"]');
+  const communicationBtn = document.getElementById('farmerCommunicationTabBtnV7');
+  const communicationPanel = document.getElementById('tab-farmer-communication');
   let btn = document.getElementById('approvedPlanTabBtnV142');
   let panel = document.getElementById('approvedPlanPanelV142');
   const removeApproved = () => {
@@ -21075,20 +21136,23 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     btn = document.createElement('button');
     btn.type = 'button';
     btn.id = 'approvedPlanTabBtnV142';
-    parcelBtn.insertAdjacentElement('afterend', btn);
+    (communicationBtn || parcelBtn).insertAdjacentElement('afterend', btn);
   }
   btn.className = 'tab approved-plan-tab-v142';
   btn.classList.remove('hidden');
   btn.dataset.tab = 'approved-plan';
   btn.textContent = 'Onaylı güncel plan';
-  if(btn.parentElement !== tabs) parcelBtn.insertAdjacentElement('afterend', btn);
+  if(btn.parentElement !== tabs) (communicationBtn || parcelBtn).insertAdjacentElement('afterend', btn);
+  if(communicationBtn?.parentElement === tabs && btn.previousElementSibling !== communicationBtn){
+    communicationBtn.insertAdjacentElement('afterend', btn);
+  }
   if(!panel){
     panel = document.createElement('div');
     panel.id = 'approvedPlanPanelV142';
     panel.className = 'tab-panel approved-plan-panel-v142 hidden';
     panel.dataset.role = 'farmer-only';
-    const parcelPanel = document.getElementById('tab-parcel');
-    if(parcelPanel?.nextSibling) panels.insertBefore(panel, parcelPanel.nextSibling);
+    const afterPanel = communicationPanel || document.getElementById('tab-parcel');
+    if(afterPanel?.nextSibling) panels.insertBefore(panel, afterPanel.nextSibling);
     else panels.appendChild(panel);
   }
   if(panel.parentElement !== panels) panels.appendChild(panel);
@@ -21166,7 +21230,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   }
   function ensureFarmerMessageDock(){
     if(STATE?.currentUser?.role !== 'farmer') return;
-    const card = document.getElementById('farmerDecisionCard') || document.getElementById('tab-parcel');
+    const card = document.getElementById('farmerCommunicationMountV7') || document.getElementById('farmerDecisionCard') || document.getElementById('tab-parcel');
     if(!card) return;
     let root = document.getElementById('farmerUserRequestThreadV100') || document.getElementById('userRequestThread');
     if(!root){
@@ -21177,7 +21241,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     }
     root.id = 'farmerUserRequestThreadV100';
     root.classList.add('farmer-message-stable-v142');
-    if(root.parentElement !== card && card.contains(root) === false) card.appendChild(root);
+    if(root.parentElement !== card) card.appendChild(root);
     if(!root.innerHTML.trim()){
       root.innerHTML = '<div class="request-thread-head"><strong>Uzman / yönetici iletişim</strong><span class="pill-soft">0 mesaj</span></div><div class="small muted">Seçili öneriyi veya sorunuzu uzmana buradan iletebilirsiniz.</div><textarea class="text-input" id="farmerMessageInputV100" placeholder="Örn. Bu öneriyi uygulamak istiyorum, uzman onayı rica ederim."></textarea><div class="farmer-message-actions-v100"><button class="btn-secondary" id="farmerSendMessageV100" type="button">Mesaj gönder</button><button class="btn-secondary" id="farmerRequestSelectedV100" type="button">Seçili öneriyi talep et</button></div>';
     }
@@ -21195,7 +21259,13 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(target){ try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){} }
     }else if(role === 'farmer'){
       ensureFarmerMessageDock();
-      const target = document.getElementById('approvedPlanPanelV142') || document.getElementById('farmerUserRequestThreadV100');
+      const notices = (typeof notificationsForCurrentUser === 'function') ? notificationsForCurrentUser() : [];
+      const latest = notices.find(n => !n.read) || notices[0] || null;
+      const text = String(latest?.text || '').toLowerCase();
+      const isApproved = latest?.kind === 'approval' || text.includes('onay');
+      if(isApproved) ensureApprovedPlanTab(true);
+      else openFarmerCommunicationTabV7();
+      const target = isApproved ? (document.getElementById('approvedPlanPanelV142') || document.getElementById('farmerUserRequestThreadV100')) : document.getElementById('farmerUserRequestThreadV100');
       if(target){ try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){} }
     }
   }
@@ -21226,6 +21296,18 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         if(STATE?.currentUser?.role === 'institution'){
           forceDrawingTabV142();
           ensureDrawingInboxHost();
+          repairVisibleText();
+        }else if(STATE?.currentUser?.role === 'farmer'){
+          const id = arguments?.[0] || '';
+          const item = (typeof loadParcelNotifications === 'function' ? loadParcelNotifications() : []).find(n=>String(n.id||'')===String(id||''));
+          const text = String(item?.text || '').toLowerCase();
+          const isApproved = item?.kind === 'approval' || text.includes('onay');
+          if(isApproved) ensureApprovedPlanTab(true);
+          else {
+            ensureFarmerMessageDock();
+            openFarmerCommunicationTabV7();
+            document.getElementById('farmerUserRequestThreadV100')?.scrollIntoView({behavior:'smooth', block:'start'});
+          }
           repairVisibleText();
         }
         return res;

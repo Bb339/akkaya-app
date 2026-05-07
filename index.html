@@ -6,7 +6,7 @@
 <meta charset="utf-8"/>
 <title>Tarımsal Karar Destek Sistemi</title>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css?v=clean-v6-final" rel="stylesheet">
+<link href="style.css?v=clean-v7-phase1" rel="stylesheet">
 <!-- Leaflet -->
 <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
 <script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -293,7 +293,7 @@
 <label><input checked="" name="scenario" type="radio" value="mevcut"/> Mevcut görünüm (referans)</label>
 <label><input name="scenario" type="radio" value="su_tasarruf"/> Su tasarrufu hedefi</label>
 <label><input name="scenario" type="radio" value="maks_kar"/> Kâr odaklı hedef</label>
-<label><input name="scenario" type="radio" value="balanced"/> Su etkin kullanım hedefi</label>
+<label><input name="scenario" type="radio" value="su_etkin"/> Su etkin kullanım hedefi</label>
 </div>
 <div class="water-controls" style="padding-top:6px;">
 <div class="field-row" id="seasonSourceRow">
@@ -689,6 +689,7 @@ Parsel Haritası</h2>
 <div class="tabs" id="analysisTables">
 <button class="tab" data-tab="users" data-role="institution" data-institution-role="admin-only">Kullanıcı yönetimi</button>
 <button class="tab active" data-tab="parcel">Parsel düzeyi desen</button>
+<button class="tab" data-tab="farmer-communication" data-role="farmer-only" id="farmerCommunicationTabBtnV7">Uzman / yönetici iletişim</button>
 <button class="tab" data-tab="approved-plan" data-role="farmer-only" id="approvedPlanTabBtnV142">Onaylı güncel plan</button>
 <button class="tab" data-tab="drawing" data-role="institution">Parsel çizim / bilgi atama</button>
 <button class="tab" data-tab="district" data-role="institution">İlçe / il düzeyi özet</button>
@@ -936,6 +937,16 @@ Parsel Haritası</h2>
 <div class="explain-box" id="irrigPlanBox">-</div>
 </div>
 </div>
+<div class="tab-panel farmer-communication-panel-v7 hidden" id="tab-farmer-communication" data-role="farmer-only">
+<div class="card farmer-communication-shell-v7">
+<div class="request-thread-head">
+<strong>Uzman / yönetici iletişim</strong>
+<span class="pill-soft">Mesaj ve talep akışı</span>
+</div>
+<div class="small muted farmer-communication-help-v7">Seçili öneri talepleri, uzman yanıtları ve bildirim mesajları bu sekmede izlenir.</div>
+<div id="farmerCommunicationMountV7"></div>
+</div>
+</div>
 <div class="tab-panel approved-plan-panel-v142 hidden" id="approvedPlanPanelV142" data-role="farmer-only"></div>
 <div class="tab-panel" id="tab-district" data-role="institution">
 <div class="card">
@@ -1054,7 +1065,7 @@ Parsel Haritası</h2>
 <p class="card-help small" style="margin-top:-6px;">
                     Bu bölüm yalnızca <strong>backend benchmark</strong> sonucunu kullanır. Aynı veri, aynı su bütçesi ve aynı tekrar sayısı altında
                     GA/ABC/ACO algoritmalarının ortalama-medyan-min/max-oynaklık-uygulanabilir çözüm oranı ve süre metrikleri birlikte raporlanır.
-                    <br/><span class="muted">Not: "Mevcut desen" seçiliyken algoritma kıyası anlamlı değildir; kıyas için Su Tasarrufu / Kâr / Dengeli hedeflerinden birini seçin.</span>
+                    <br/><span class="muted">Not: "Mevcut desen" seçiliyken algoritma kıyası anlamlı değildir; kıyas için Su Tasarrufu / Kâr / Su Etkin Kullanım hedeflerinden birini seçin.</span>
 </p>
 <div class="water-controls" style="padding-top:6px;">
 <div class="field-row">
@@ -1131,7 +1142,7 @@ Parsel Haritası</h2>
       Tarımsal Karar Destek Sistemi • Çiftçi ve kurum için rol bazlı tez prototipi
     </footer>
 
-<script src="script.js?v=clean-v6-final"></script>
+<script src="script.js?v=clean-v7-phase1"></script>
 </body>
 </html>
 
