@@ -562,6 +562,16 @@ body {
   margin-bottom:10px;
 }
 
+.benchmark-progress{
+  border:1px solid #bfdbfe;
+  background:#eff6ff;
+  color:#1e3a8a;
+  border-radius:8px;
+  padding:10px 12px;
+  font-weight:700;
+  line-height:1.45;
+}
+
 .benchmark-tag{
   display:inline-flex;
   align-items:center;
@@ -12653,34 +12663,34 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
 #tab-parcel > #approvedPlanPanelV142,
 #tab-parcel .farmer-approved-nav-v142{display:none !important;}
 
-/* v146 benchmark: one clear report, no duplicated legacy tables */
-.benchmark-report-v146{
+/* Benchmark: one clear report, no duplicated legacy tables */
+.benchmark-report{
   border:1px solid #bfd7f5;
   background:#f8fbff;
   border-radius:8px;
   padding:12px;
   margin:10px 0 12px;
 }
-.benchmark-report-head-v146{
+.benchmark-report-head{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
   gap:12px;
   margin-bottom:10px;
 }
-.benchmark-report-head-v146 span{
+.benchmark-report-head span{
   display:block;
   color:#64748b;
   font-size:11px;
   font-weight:800;
   text-transform:uppercase;
 }
-.benchmark-report-head-v146 h3{
+.benchmark-report-head h3{
   margin:2px 0 0;
   color:#10233d;
   font-size:16px;
 }
-.benchmark-report-head-v146 strong{
+.benchmark-report-head strong{
   border:1px solid #bfdbfe;
   background:#eff6ff;
   color:#1d4ed8;
@@ -12688,88 +12698,88 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
   padding:6px 10px;
   font-size:12px;
 }
-.benchmark-decision-v146{
+.benchmark-decision{
   border:1px solid #dbeafe;
   background:#fff;
   border-radius:8px;
   padding:10px;
   margin-bottom:10px;
 }
-.benchmark-decision-v146 b,
-.benchmark-decision-v146 span{
+.benchmark-decision b,
+.benchmark-decision span{
   display:block;
 }
-.benchmark-decision-v146 b{
+.benchmark-decision b{
   color:#0f2a43;
   margin-bottom:3px;
 }
-.benchmark-decision-v146 span{
+.benchmark-decision span{
   color:#475569;
   line-height:1.45;
 }
-.benchmark-report-table-v146 table{
+.benchmark-report-table table{
   min-width:1160px;
 }
-.benchmark-report-table-v146 th,
-.benchmark-report-table-v146 td{
+.benchmark-report-table th,
+.benchmark-report-table td{
   font-size:11px;
   vertical-align:top;
 }
-.benchmark-rules-v146{
+.benchmark-rules{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px;
   margin-top:10px;
 }
-.benchmark-rules-v146 div{
+.benchmark-rules div{
   border:1px solid #dbeafe;
   background:#fff;
   border-radius:8px;
   padding:10px;
 }
-.benchmark-rules-v146 b,
-.benchmark-rules-v146 span{
+.benchmark-rules b,
+.benchmark-rules span{
   display:block;
 }
-.benchmark-rules-v146 b{
+.benchmark-rules b{
   color:#0f2a43;
   margin-bottom:4px;
 }
-.benchmark-rules-v146 span{
+.benchmark-rules span{
   color:#475569;
   font-size:12px;
   line-height:1.45;
 }
-.benchmark-sweep-v146{
+.benchmark-sweep{
   border:1px solid #cbdcf4;
   background:#f8fbff;
   border-radius:8px;
   padding:12px;
   margin-top:10px;
 }
-.benchmark-sweep-v146 table{
+.benchmark-sweep table{
   width:100%;
   border-collapse:collapse;
   background:#fff;
   border-radius:8px;
   overflow:hidden;
 }
-.benchmark-sweep-v146 th,
-.benchmark-sweep-v146 td{
+.benchmark-sweep th,
+.benchmark-sweep td{
   border-bottom:1px solid #e2e8f0;
   padding:8px;
   text-align:left;
   font-size:12px;
 }
-.benchmark-sweep-v146 p{
+.benchmark-sweep p{
   margin:8px 0 0;
   color:#64748b;
   font-size:12px;
 }
 @media (max-width: 980px){
-  .benchmark-report-head-v146{display:block;}
-  .benchmark-report-head-v146 strong{display:inline-block;margin-top:8px;}
-  .benchmark-rules-v146{grid-template-columns:1fr;}
+  .benchmark-report-head{display:block;}
+  .benchmark-report-head strong{display:inline-block;margin-top:8px;}
+  .benchmark-rules{grid-template-columns:1fr;}
 }
 .approved-plan-only-v144 .approved-tabs-clean-v142{display:none !important;}
 .approved-kpi-grid-only-v144{grid-template-columns:repeat(3,minmax(0,1fr));}

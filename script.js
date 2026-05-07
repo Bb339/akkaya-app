@@ -8246,8 +8246,7 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
   const algoMap = { ga: 'GA', abc: 'ABC', aco: 'ACO' };
   // Benchmark: "mevcut" deseni algoritmalar için anlamlı bir hedef değil (optimizasyon çalışmaz).
   // Bu yüzden "mevcut" seçiliyken kıyaslamayı su etkin kullanım hedefinde koşturuyoruz ve ayrıca baseline (current) ekliyoruz.
-  // v74: Proje hedefi her zaman su tasarrufu. "maks_kar" seçimi geriye dönük uyumluluk için
-  // su tasarruf hedefiyle eşlenir.
+  // Eski "balanced/dengeli" anahtarları görünür hedef olarak kullanılmaz; su etkin kullanıma yönlenir.
   const scenarioMap = {
     mevcut: 'water_efficiency',
     current: 'water_efficiency',
@@ -8265,23 +8264,47 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
 
   const repeatsEl = document.getElementById('benchmarkRepeats');
   const seedEl = document.getElementById('benchmarkSeed');
-  const repeats = Math.max(10, Math.min(120, parseInt(repeatsEl?.value || '10', 10) || 10));
+  const modeEl = document.getElementById('benchmarkModeSel');
+  const benchmarkMode = (modeEl?.value === 'detailed') ? 'detailed' : 'fast';
+  const defaultRepeats = benchmarkMode === 'detailed' ? 30 : 3;
+  const rawRepeats = parseInt(repeatsEl?.value || String(defaultRepeats), 10) || defaultRepeats;
+  const repeats = benchmarkMode === 'detailed'
+    ? Math.max(10, Math.min(120, rawRepeats))
+    : Math.max(3, Math.min(12, rawRepeats));
   const seedRaw = (seedEl?.value ?? '').toString().trim();
   const baseSeed = seedRaw === '' ? null : (parseInt(seedRaw, 10));
-  const benchmarkDepth = repeats >= 50
-    ? {generations:12, popSize:14, cycles:14, foodSources:14, ants:12, iterations:14}
-    : {generations:10, popSize:12, cycles:12, foodSources:12, ants:10, iterations:12};
-  const benchmarkMaxSeconds = Math.max(75, Math.min(180, repeats * 9));
+  const benchmarkDepth = benchmarkMode === 'detailed'
+    ? {generations:18, popSize:24, cycles:20, foodSources:20, ants:18, iterations:20}
+    : {generations:5, popSize:8, cycles:6, foodSources:6, ants:5, iterations:6};
+  const benchmarkMaxSeconds = benchmarkMode === 'detailed'
+    ? Math.max(90, Math.min(240, repeats * 7))
+    : Math.max(25, Math.min(60, repeats * 5));
 
   const benchmarkScopeIds = getBenchmarkParcelIdsForRun();
   window.__lastBenchmarkScopeLabel = getBenchmarkScopeLabel(benchmarkScopeIds);
+  const normalizedScenario = scenarioMap[scenarioKey] || 'water_efficiency';
+  const seasonSource = seasonSourceOverride || STATE.seasonSource || 's1';
+  const cacheKey = JSON.stringify({
+    scenario: normalizedScenario,
+    seasonSource,
+    repeats,
+    benchmarkMode,
+    baseSeed,
+    ids: benchmarkScopeIds
+  });
+  const cache = window.__benchmarkResultCacheV7 || (window.__benchmarkResultCacheV7 = new Map());
+  const cached = cache.get(cacheKey);
+  if(cached && (Date.now() - cached.time) < 180000){
+    return {...cached.data, cache_hit: true};
+  }
   const payload = attachCustomParcelsToPayload({
     selectedParcelIds: benchmarkScopeIds,
-    scenario: scenarioMap[scenarioKey] || 'water_efficiency',
+    scenario: normalizedScenario,
     year: STATE.selectedWaterYear || null,
     waterBudgetRatio: budgetRatioForScenarioKey(scenarioKey),
     repeats,
     baseSeed,
+    benchmarkMode,
     algorithms: ['GA','ABC','ACO'],
     includeBaseline: true,
     // Ana benchmark kullanıcıyı dakikalarca bekletmeden gerçek backend koşuları üretir.
@@ -8290,9 +8313,9 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
     options: {
       // Benchmark, UI'daki "Sezon veri seti" seçimine göre farklı aday havuzu üretir.
       // seasonSourceOverride verilirse onu kullan.
-      seasonSource: (seasonSourceOverride || STATE.seasonSource || 's1'),
-      scenarioType: (((seasonSourceOverride || STATE.seasonSource || 's1')==='s2') ? 'double' : 'single'),
-      twoSeason: ((seasonSourceOverride || STATE.seasonSource || 's1')==='s2'),
+      seasonSource,
+      scenarioType: (seasonSource === 's2' ? 'double' : 'single'),
+      twoSeason: (seasonSource === 's2'),
       generations: benchmarkDepth.generations,
       popSize: benchmarkDepth.popSize,
       cycles: benchmarkDepth.cycles,
@@ -8316,7 +8339,13 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
     const t = await res.text().catch(()=> '');
     throw new Error('Benchmark API failed: '+(t || ('HTTP '+res.status)));
   }
-  return await res.json();
+  const data = await res.json();
+  cache.set(cacheKey, {time: Date.now(), data});
+  if(cache.size > 8){
+    const firstKey = cache.keys().next().value;
+    if(firstKey) cache.delete(firstKey);
+  }
+  return data;
 }
 
 // Tarayıcı içi benchmark (yedek plan)
@@ -8705,9 +8734,10 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
 
   const objectiveRaw = (j.objective || j.scenario || j.target || '').toString();
   const objective = objectiveRaw.toLowerCase();
-  const isWater = objective.includes('water') || objective.includes('su');
+  const isEfficiency = objective.includes('efficiency') || objective.includes('etkin') || objective.includes('verim');
+  const isWater = !isEfficiency && (objective.includes('water') || objective.includes('su'));
   const isProfit = objective.includes('profit') || objective.includes('kar');
-  const objectiveLabel = isWater && !isProfit ? 'Su verimliliği / tasarruf' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım');
+  const objectiveLabel = isEfficiency ? 'Su etkin kullanım' : (isWater && !isProfit ? 'Su tasarrufu' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım'));
 
   const rel = (m,s)=> (Math.abs(m) > 1e-9 ? Math.abs(s)/Math.abs(m) : 0);
   const scoreRows = rows.map(a=>{
@@ -8756,7 +8786,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const avgFeasible = rows.reduce((s,a)=> s + Number(algos[a]?.feasible_rate || 0), 0) / Math.max(1, rows.length);
     const avgRuntime = rows.reduce((s,a)=> s + Number(algos[a]?.runtime_s?.mean || 0), 0) / Math.max(1, rows.length);
     kpiRoot.innerHTML = [
-      {label:'Önerilen algoritma', value:bestAlgo, sub:`${objectiveLabel} hedefinde en dengeli skor`},
+      {label:'Önerilen algoritma', value:bestAlgo, sub:`${objectiveLabel} hedefinde en yüksek hedef skoru`},
       {label:'Tekrar politikası', value:`${requestedRepeats} tekrar`, sub:`Her algoritma için hedef tekrar; seed: ${j.seed_policy?.includes('fixed') ? 'sabit kök + algoritma ofseti' : 'rastgele kök + algoritma ofseti'}`},
       {label:'Koşu kapsamı', value:`${totalSuccessful}/${requestedTotal}`, sub:`${totalAttempted} deneme başlatıldı; süre bütçesi dolarsa fiili sayı düşebilir`},
       {label:'Plan ayrışması', value:`${fmtNum(avgPlanDistance,1)}%`, sub:`Ortalama süre: ${fmtNum(avgRuntime,2)} sn • Uygulanabilirlik: ${fmtNum(avgFeasible*100,1)}%`} 
@@ -8953,6 +8983,10 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       benchmarkWaterChart.update();
     }
     updateBenchmarkDiagnosticChartsV96(j, rows, algos);
+  }
+  if(typeof window.__renderBenchmarkReport === 'function'){
+    try{ window.__renderBenchmarkReport(j, box, patBox, updateCharts); }
+    catch(e){ console.warn('[benchmark report]', e); }
   }
 }
 
@@ -17815,9 +17849,9 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         // "Mevcut desen" optimizasyon hedefi değildir. Benchmark sekmesi boş kalmasın diye
         // mevcut seçimde kıyası proje ana hedefi olan su verimliliği üzerinden çalıştırır,
         // mevcut desen yine baseline satırı olarak raporda görünür.
-        const objective = objectiveRaw === 'mevcut' ? 'su_tasarruf' : objectiveRaw;
+        const objective = objectiveRaw === 'mevcut' ? 'su_etkin' : objectiveRaw;
         const objectiveNote = objectiveRaw === 'mevcut'
-          ? 'Mevcut desen baseline olarak tutuldu; algoritmalar su verimliliği hedefinde kıyaslandı.'
+          ? 'Mevcut desen baseline olarak tutuldu; algoritmalar su etkin kullanım hedefinde kıyaslandı.'
           : '';
 
 
@@ -17826,24 +17860,34 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
           if(src === 's2') return 'Senaryo-2 (çift ürün / desen)';
                     return String(src);
         };
+        const targetLabelFor = (key)=>{
+          const k = String(key || '').toLowerCase();
+          if(k.includes('maks') || k.includes('profit') || k.includes('kar')) return 'Kâr odaklı';
+          if(k.includes('tasarruf') || k.includes('saving')) return 'Su tasarrufu';
+          return 'Su etkin kullanım';
+        };
+        const benchmarkModeLabel = document.getElementById('benchmarkModeSel')?.value === 'detailed'
+          ? 'detaylı karşılaştırma'
+          : 'hızlı karşılaştırma';
 
         const sources = (mode === 'all') ? ['s1','s2'] : [ (mode === 'use_selected') ? selectedSeasonSource : mode ];
 
 	        const box = document.getElementById('benchmarkResults');
 	        const patBox = document.getElementById('benchmarkPatterns');
 	        const sweepBox = document.getElementById('benchmarkSweepResults');
-	        if(box) box.innerHTML = objectiveNote ? `<div class="benchmark-note">${objectiveNote}</div>` : '';
+	        if(box) box.innerHTML = `${objectiveNote ? `<div class="benchmark-note">${objectiveNote}</div>` : ''}<div class="benchmark-progress">GA / ABC / ACO ${benchmarkModeLabel} çalışıyor. Sonuçlar geldiğinde tablo ve grafikler güncellenecek.</div>`;
 	        if(patBox) patBox.innerHTML = '';
 	        if(sweepBox) sweepBox.innerHTML = '';
 
 	        // Tek kaynak seçiliyse (en yaygın kullanım): sonuçları yalnızca 1 kez göster (tekrarlı başlık oluşmasın)
 	        if(sources.length === 1){
 	          const src = sources[0];
+	          if(st) st.textContent = `Çalışıyor... ${benchmarkModeLabel} • ${labelFor(src)} • ${targetLabelFor(objective)}`;
 	          const j = await fetchBenchmarkPython(objective, src);
 	          if(benchmarkResultLooksBroken(j)) throw new Error('Benchmark çıktısı boş veya tüm koşular hatalı görünüyor');
 	          // box'a küçük bir etiket basıp normal render fonksiyonunu kullan
 	          if(box){
-	            box.innerHTML = `${objectiveNote ? `<div class="benchmark-note">${objectiveNote}</div>` : ''}<div class="benchmark-tag">${labelFor(src)} • Hedef: ${objective.replace('_',' ')}</div><div id="_benchSingle"></div>`;
+	            box.innerHTML = `${objectiveNote ? `<div class="benchmark-note">${objectiveNote}</div>` : ''}<div class="benchmark-tag">${labelFor(src)} • Hedef: ${targetLabelFor(objective)} • ${benchmarkModeLabel}</div><div id="_benchSingle"></div>`;
 	            const single = document.getElementById('_benchSingle');
 	            renderBenchmarkResultsTo(j, single, patBox, true);
 	          }else{
@@ -17859,6 +17903,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 
 	          let lastOk = null;
 	          for(const src of sources){
+	            if(st) st.textContent = `Çalışıyor... ${benchmarkModeLabel} • ${labelFor(src)} • ${targetLabelFor(objective)}`;
 	            const j = await fetchBenchmarkPython(objective, src);
 	            if(benchmarkResultLooksBroken(j)) throw new Error('Benchmark çıktısı boş veya tüm koşular hatalı görünüyor');
 	            if(j && j.status === 'OK') lastOk = j;
@@ -17867,7 +17912,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 	            card.className = 'card';
 	            card.style.background = '#ffffff';
 	            card.style.padding = '10px';
-	            card.innerHTML = `<div class="benchmark-tag">${labelFor(src)} • Hedef: ${objective.replace('_',' ')}</div>`+
+	            card.innerHTML = `<div class="benchmark-tag">${labelFor(src)} • Hedef: ${targetLabelFor(objective)} • ${benchmarkModeLabel}</div>`+
 	                             `<div class="_benchRes"></div><div class="_benchPat" style="margin-top:10px;"></div>`;
 	            wrap.appendChild(card);
 	            const resEl = card.querySelector('div._benchRes');
@@ -19691,10 +19736,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   }
 })();
 
-/* v146 benchmark report: remove duplicated legacy tables and keep one clear computer-science report */
+/* Benchmark report helpers: one clear computer-science report without render wrappers */
 (function(){
-  if(window.__benchmarkReportV146) return;
-  window.__benchmarkReportV146 = true;
+  if(window.__benchmarkReportReady) return;
+  window.__benchmarkReportReady = true;
   const esc = value => (typeof escapeHtml === 'function') ? escapeHtml(String(value ?? '')) : String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const n = value => Number.isFinite(Number(value)) ? Number(value) : 0;
   const fmt = (value, digits=1) => {
@@ -19730,9 +19775,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const effR = range(ns.map(a => algos[a]?.efficiency?.mean));
     const runtimeR = range(ns.map(a => algos[a]?.runtime_s?.mean));
     const obj = String(j?.objective || j?.scenario || '').toLowerCase();
-    const isWater = obj.includes('water') || obj.includes('su');
+    const isEfficiency = obj.includes('efficiency') || obj.includes('etkin') || obj.includes('verim');
+    const isWater = !isEfficiency && (obj.includes('water') || obj.includes('su'));
     const isProfit = obj.includes('profit') || obj.includes('kar');
-    const objective = isWater && !isProfit ? 'Su verimliliği' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım');
+    const objective = isEfficiency ? 'Su etkin kullanım' : (isWater && !isProfit ? 'Su tasarrufu' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım'));
     const w = isWater && !isProfit ? {p:.14, su:.34, e:.22, feas:.12, stab:.12, speed:.06} : (isProfit && !isWater ? {p:.34, su:.14, e:.22, feas:.12, stab:.12, speed:.06} : {p:.24, su:.24, e:.22, feas:.12, stab:.12, speed:.06});
     const rows = ns.map(a => {
       const r = algos[a] || {};
@@ -19792,22 +19838,22 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         <td>${esc(note)}</td>
       </tr>`;
     }).join('');
-    return `<section class="benchmark-report-v146" id="benchmarkReportV146">
-      <div class="benchmark-report-head-v146">
+    return `<section class="benchmark-report" id="benchmarkReport">
+      <div class="benchmark-report-head">
         <div><span>Backend benchmark raporu</span><h3>Algoritma karşılaştırmaları analizi</h3></div>
         <strong>${esc(s.objective)}</strong>
       </div>
-      <div class="benchmark-decision-v146">
+      <div class="benchmark-decision">
         <b>${esc(s.isTie ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-'))}</b>
         <span>${esc(summary)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
       </div>
-      <div class="benchmark-table-wrap benchmark-report-table-v146">
+      <div class="benchmark-table-wrap benchmark-report-table">
         <table class="mini-table pro">
           <thead><tr><th>Alg.</th><th>Optimizasyon yaklaşımı</th><th>Net kâr</th><th>Su</th><th>TL/m³</th><th>Skor</th><th>CV</th><th>Plan farkı</th><th>Uygunluk</th><th>Süre</th><th>Net yorum</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <div class="benchmark-rules-v146">
+      <div class="benchmark-rules">
         <div><b>Doğruluk kuralı</b><span>Karar yalnızca kârla verilmez; su tüketimi, TL/m³, uygulanabilirlik, CV, plan farkı ve süre birlikte puanlanır.</span></div>
         <div><b>Overfitting kuralı</b><span>50-100 tekrar sadece stres testidir. 100 tekrarda skor artarken CV veya plan farkı büyüyorsa sonuç overfitting/over-tuning riski taşır.</span></div>
         <div><b>Yakınsama kuralı</b><span>Üç algoritma aynı desene gelirse çiftçiye farklı öneri varmış gibi gösterilmez; veri ve kısıtlar aynı optimuma zorluyor denir.</span></div>
@@ -19894,46 +19940,29 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         : (count === 30 ? 'Ön kararlılık okuması için yeterli.' : (count === 50 ? 'Tez raporu için dengeli stres testi.' : 'Yalnızca stres testi; tek başına daha doğru demek değildir.'));
       return `<tr><td><b>${count}</b></td><td>${esc(s.isTie ? 'Eşdeğer bant' : s.rows[0]?.a || '-')}</td><td>${esc(risk)}</td></tr>`;
     }).join('');
-    return `<div class="benchmark-sweep-v146"><div class="matrix-title">30/50/100 kararlılık ve overfitting analizi</div><table><thead><tr><th>Tekrar</th><th>Karar okuması</th><th>Bilgisayarcı yorumu</th></tr></thead><tbody>${rows}</tbody></table><p>Bu bölüm yeni uzun backend koşusu başlatmaz; ana benchmarkın gerçek CV, plan farkı ve uygulanabilirlik değerlerinden karar riskini açıklar. Ağ/timeout hatası üretip ana grafikleri bozmaz.</p></div>`;
+    return `<div class="benchmark-sweep"><div class="matrix-title">30/50/100 kararlılık ve overfitting analizi</div><table><thead><tr><th>Tekrar</th><th>Karar okuması</th><th>Bilgisayarcı yorumu</th></tr></thead><tbody>${rows}</tbody></table><p>Bu bölüm yeni uzun backend koşusu başlatmaz; ana benchmarkın gerçek CV, plan farkı ve uygulanabilirlik değerlerinden karar riskini açıklar. Ağ/timeout hatası üretip ana grafikleri bozmaz.</p></div>`;
   }
   function bindSweepButton(){
     const old = document.getElementById('runBenchmarkSweepBtn');
-    if(!old || old.__v146Bound) return;
+    if(!old || old.__benchmarkSweepBound) return;
     const btn = old.cloneNode(true);
     btn.id = old.id;
     btn.textContent = '30/50/100 kararlılık analizi';
-    btn.__v146Bound = true;
+    btn.__benchmarkSweepBound = true;
     old.replaceWith(btn);
     btn.addEventListener('click', () => {
       const box = document.getElementById('benchmarkSweepResults');
-      if(box) box.innerHTML = sweepHtml(window.__lastBenchmarkRawV146 || null);
+      if(box) box.innerHTML = sweepHtml(window.__lastBenchmarkRaw || null);
       const st = document.getElementById('benchmarkStatus');
       if(st) st.textContent = 'Kararlılık analizi hazır';
     });
   }
-  if(typeof renderBenchmarkResultsTo === 'function' && !renderBenchmarkResultsTo.__v146Wrapped){
-    const prev = renderBenchmarkResultsTo;
-    renderBenchmarkResultsTo = function(j, box, patBox, updateCharts=true){
-      const res = prev.apply(this, arguments);
-      try{
-        if(j && j.status === 'OK'){
-          window.__lastBenchmarkRawV146 = j;
-          const host = box || document.getElementById('benchmarkResults');
-          if(host) host.innerHTML = reportHtml(j);
-          applyCharts(j);
-          bindSweepButton();
-        }
-      }catch(e){ console.warn('[benchmark v146]', e); }
-      return res;
-    };
-    renderBenchmarkResultsTo.__v146Wrapped = true;
-  }
-  window.__renderBenchmarkReportV146 = function(j, box){
+  window.__renderBenchmarkReport = function(j, box, patBox, updateCharts=true){
     if(!j || j.status !== 'OK') return;
-    window.__lastBenchmarkRawV146 = j;
+    window.__lastBenchmarkRaw = j;
     const host = box || document.getElementById('benchmarkResults');
     if(host) host.innerHTML = reportHtml(j);
-    applyCharts(j);
+    if(updateCharts) applyCharts(j);
     bindSweepButton();
   };
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindSweepButton);

@@ -1074,12 +1074,19 @@ Parsel Haritası</h2>
 <option selected="" value="use_selected">Seçili (soldaki Sezon veri seti)</option>
 <option value="s1">Senaryo-1 (tek ürün)</option>
 <option value="s2">Senaryo-2 (çift ürün / desen)</option>
-<option value="all">Üçünü de çalıştır (karşılaştır)</option>
+<option value="all">İkisini de çalıştır (karşılaştır)</option>
+</select>
+</div>
+<div class="field-row">
+<label class="field-label">Benchmark modu</label>
+<select class="select-input" id="benchmarkModeSel">
+<option selected="" value="fast">Hızlı karşılaştırma</option>
+<option value="detailed">Detaylı karşılaştırma</option>
 </select>
 </div>
 <div class="field-row">
 <label class="field-label">Tekrar sayısı</label>
-<input class="text-input" id="benchmarkRepeats" max="120" min="10" type="number" value="10"/>
+<input class="text-input" id="benchmarkRepeats" max="120" min="3" type="number" value="3"/>
 </div>
 <div class="field-row">
 <label class="field-label">Seed (opsiyonel)</label>

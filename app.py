@@ -8550,8 +8550,13 @@ def api_benchmark():
         if year_val == 0:
             year_val = None
 
-        repeats = int(payload.get("repeats", 50) or 50)
-        repeats = max(10, min(120, repeats))  # thesis benchmark: enough runs for stable comparison
+        benchmark_mode = str(payload.get("benchmarkMode", payload.get("benchmark_mode", "fast")) or "fast").lower()
+        benchmark_mode = "detailed" if benchmark_mode in ("detailed", "detail", "tez", "academic") else "fast"
+        repeats = int(payload.get("repeats", 8 if benchmark_mode == "fast" else 30) or (8 if benchmark_mode == "fast" else 30))
+        if benchmark_mode == "detailed":
+            repeats = max(10, min(120, repeats))
+        else:
+            repeats = max(3, min(12, repeats))
 
         include_baseline = bool(payload.get("includeBaseline", True))
         base_seed = payload.get("baseSeed", None)
@@ -8576,26 +8581,31 @@ def api_benchmark():
             base_opts = {}
 
         seed_root = int(base_seed) if base_seed is not None else int(time.time() * 1000) % 1000000
-        results: Dict[str, Any] = {"status": "OK", "repeats": repeats, "algorithms": {}, "backend": True, "scenario": scenario, "objective": scenario, "seed_policy": ("fixed+algo_offset" if base_seed is not None else "time_randomized+algo_offset"), "seed_root": seed_root, "selected_count": len(selected) }
-        # Baseline (Mevcut): observed parcel totals, used as reference column in charts
-        if include_baseline:
-            try:
-                results["baseline"] = optimize(selected, "CURRENT", "mevcut", year=year_val, water_budget_ratio=water_budget_ratio, options=base_opts)
-            except Exception as _e:
-                results["baseline"] = {"status":"ERROR","message": str(_e)}
+        results: Dict[str, Any] = {"status": "OK", "repeats": repeats, "benchmark_mode": benchmark_mode, "algorithms": {}, "backend": True, "scenario": scenario, "objective": scenario, "seed_policy": ("fixed+algo_offset" if base_seed is not None else "time_randomized+algo_offset"), "seed_root": seed_root, "selected_count": len(selected) }
         started_at = time.perf_counter()
         # Total time budget for the whole benchmark request.
         # Default is intentionally generous so each algorithm gets at least one run.
-        max_seconds = payload.get("maxSeconds", 600)
+        max_seconds = payload.get("maxSeconds", 35 if benchmark_mode == "fast" else 180)
         try:
             max_seconds = float(max_seconds)
         except Exception:
-            max_seconds = 600.0
-        max_seconds = max(60.0, min(900.0, max_seconds))
+            max_seconds = 35.0 if benchmark_mode == "fast" else 180.0
+        if benchmark_mode == "detailed":
+            max_seconds = max(60.0, min(900.0, max_seconds))
+        else:
+            max_seconds = max(20.0, min(90.0, max_seconds))
 
-        # Thesis benchmark defaults: enough search depth for meaningful comparison,
-        # while the request-level time budget still prevents runaway runs.
-        speed_defaults = {"generations": 60, "popSize": 70, "cycles": 70, "foodSources": 60, "ants": 48, "iterations": 70}
+        # Fast mode keeps the UI responsive; detailed mode is for expert/academic review.
+        if benchmark_mode == "detailed":
+            speed_defaults = {"generations": 24, "popSize": 30, "cycles": 28, "foodSources": 28, "ants": 24, "iterations": 28}
+            min_depth = 8
+            max_depth = 80
+            max_population = 120
+        else:
+            speed_defaults = {"generations": 5, "popSize": 8, "cycles": 6, "foodSources": 6, "ants": 5, "iterations": 6}
+            min_depth = 3
+            max_depth = 18
+            max_population = 36
 
         # Optional baseline (current) – useful when UI scenario was "mevcut".
         if include_baseline:
@@ -8777,7 +8787,7 @@ def api_benchmark():
             elif s_low in ("max_profit", "maks_kar", "maks kar"):
                 score_mode = "max_profit"
             else:
-                score_mode = "balanced"
+                score_mode = "water_efficiency"
 
             # Use the same base seed policy but offset per algorithm so repeated
             # runs are comparable without collapsing into identical pseudo-random streams.
@@ -8803,13 +8813,13 @@ def api_benchmark():
                 for k, dv in speed_defaults.items():
                     if k not in opts or opts.get(k) in (None, "", 0):
                         opts[k] = dv
-                # clamp overly large hyper-parameters (keeps API responsive)
-                opts["generations"] = int(max(10, min(80, int(opts.get("generations", speed_defaults["generations"])))))
-                opts["popSize"] = int(max(10, min(120, int(opts.get("popSize", speed_defaults["popSize"])))))
-                opts["cycles"] = int(max(10, min(120, int(opts.get("cycles", speed_defaults["cycles"])))))
-                opts["foodSources"] = int(max(10, min(120, int(opts.get("foodSources", speed_defaults["foodSources"])))))
-                opts["iterations"] = int(max(10, min(120, int(opts.get("iterations", speed_defaults["iterations"])))))
-                opts["ants"] = int(max(10, min(120, int(opts.get("ants", speed_defaults["ants"])))))
+                # Clamp hyper-parameters per mode so the UI request stays responsive.
+                opts["generations"] = int(max(min_depth, min(max_depth, int(opts.get("generations", speed_defaults["generations"])))))
+                opts["popSize"] = int(max(min_depth, min(max_population, int(opts.get("popSize", speed_defaults["popSize"])))))
+                opts["cycles"] = int(max(min_depth, min(max_population, int(opts.get("cycles", speed_defaults["cycles"])))))
+                opts["foodSources"] = int(max(min_depth, min(max_population, int(opts.get("foodSources", speed_defaults["foodSources"])))))
+                opts["iterations"] = int(max(min_depth, min(max_population, int(opts.get("iterations", speed_defaults["iterations"])))))
+                opts["ants"] = int(max(min_depth, min(max_population, int(opts.get("ants", speed_defaults["ants"])))))
                 # keep risk off in benchmark unless user explicitly enables (it is expensive)
                 if "riskMode" not in opts:
                     opts["riskMode"] = "none"
@@ -8864,7 +8874,7 @@ def api_benchmark():
                     elif score_mode == "max_profit":
                         score = p_v - (0.02 * w_v)
                     else:
-                        score = e_v
+                        score = (e_v * 1000.0) + (0.00008 * p_v) - (0.015 * w_v)
                     if score > best_score:
                         best_score = float(score)
                         best_out = out
@@ -8972,6 +8982,7 @@ def api_benchmark():
                 "best": best_pack,
             }
 
+        results["elapsed_seconds"] = float(time.perf_counter() - started_at)
         return jsonify(results)
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e), "where": "api_benchmark"}), 500
