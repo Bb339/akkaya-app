@@ -910,17 +910,40 @@ function renderInstitutionRequestInbox(focusParcelId=''){
   const altRequests=notifications.filter(n=>String(n.kind||'')==='alternative_request');
   const customPick=(pending.find(p=>String(p.id||'')===String(focusParcelId||'')) || pending.find(p=>String(p.id||'')===String(selectedParcelId||'')) || null);
   const altPick=altRequests.find(n=>String(n.id||'')===String(focusParcelId||'') || String(n.parcel_id||'')===String(focusParcelId||'')) || (!customPick ? altRequests[0] : null);
+  const threadStore=(()=>{ try{ return loadParcelThreads(); }catch(_e){ return {}; } })();
+  const messageThreads=Object.entries(threadStore).map(([id,list])=>{
+    const rows=Array.isArray(list) ? list : [];
+    const last=rows[rows.length-1] || null;
+    const note=notifications.find(n=>String(n.thread_id||'')===String(id)) || null;
+    return {id, rows, last, note};
+  }).filter(x=>x.rows.length || x.note).sort((a,b)=>String(b.last?.created_at || b.note?.created_at || '').localeCompare(String(a.last?.created_at || a.note?.created_at || '')));
+  const messagePick=messageThreads.find(x=>String(x.id)===String(focusParcelId||'') || String(x.note?.id||'')===String(focusParcelId||'') || String(x.note?.parcel_id||'')===String(focusParcelId||'')) || messageThreads.find(x=>x.rows.some(m=>m.actor_role==='farmer' && !m.read_at)) || messageThreads[0] || null;
   const pick=customPick || altPick || null;
   const pickType=customPick ? 'custom' : (altPick ? 'alternative' : '');
-  const related=pickType==='custom'
-    ? notifications.filter(n=>String(n.parcel_id||'')===String(customPick.requested_for_parcel_id||customPick.id||''))
-    : (altPick ? notifications.filter(n=>String(n.thread_id||'')===String(altPick.thread_id||'') || String(n.id||'')===String(altPick.id||'')) : notifications.slice(0,5));
-  const threadId=pickType==='custom'
+  let threadId=pickType==='custom'
     ? parcelThreadKeyFor(customPick, customPick.owner_username || '')
     : String(altPick?.thread_id || '');
+  if(!threadId && messagePick) threadId=messagePick.id;
+  const related=pickType==='custom'
+    ? notifications.filter(n=>String(n.parcel_id||'')===String(customPick.requested_for_parcel_id||customPick.id||''))
+    : (altPick
+      ? notifications.filter(n=>String(n.thread_id||'')===String(altPick.thread_id||'') || String(n.id||'')===String(altPick.id||''))
+      : (messagePick ? notifications.filter(n=>String(n.thread_id||'')===String(messagePick.id) || String(n.id||'')===String(messagePick.note?.id||'')) : notifications.slice(0,5)));
   const thread=threadId ? getParcelThread(threadId) : [];
   const latestPattern=[...thread].reverse().find(m=>m?.selected_pattern)?.selected_pattern || altPick?.selected_pattern || null;
   const customMeta=customPick ? customParcelApprovalMeta(customPick) : null;
+  const selectedIsRequest=!!pick;
+  const selectedTitle=selectedIsRequest
+    ? (pickType==='custom' ? (customPick.name || customPick.id || '') : (latestPattern?.patternName || altPick.text || 'Alternatif talebi'))
+    : (messagePick?.last?.text || messagePick?.note?.text || 'Mesaj');
+  const selectedOwner=selectedIsRequest
+    ? (pickType==='custom' ? (customPick.owner_username || '-') : (altPick.actor_username || '-'))
+    : (messagePick?.note?.actor_username || messagePick?.last?.actor_username || '-');
+  const selectedParcel=selectedIsRequest
+    ? (pickType==='custom' ? (customPick.requested_for_parcel_id || customPick.id || '-') : (altPick.parcel_id || '-'))
+    : (messagePick?.note?.parcel_id || messagePick?.last?.parcel_id || '-');
+  const messageListHtml=messageThreads.length ? `<div class="notify-list institution-message-list-v7">${messageThreads.slice(0,10).map(x=>{ const last=x.last || {}; const note=x.note || {}; const isActive=String(x.id)===String(threadId); const unread=x.rows.some(m=>m.actor_role==='farmer' && !m.read_at) || !note.read; return `<button class="notify-item notify-item-action ${isActive?'is-active':''} ${unread?'is-unread':''}" type="button" data-open-message-thread="${escapeHtml(x.id)}"><div class="notify-meta">${escapeHtml(note.actor_username || last.actor_username || 'çiftçi')} • ${escapeHtml(formatManagedUserTimestamp(last.created_at || note.created_at))}</div><div class="notify-text">${escapeHtml(last.text || note.text || 'Mesaj')}</div><div class="small muted" style="margin-top:4px;">Parsel: ${escapeHtml(note.parcel_id || last.parcel_id || '-')} • ${x.rows.length} mesaj</div></button>`; }).join('')}</div>` : '<div class="small muted" style="margin-top:8px;">Gelen mesaj yok.</div>';
+  const decisionActions=selectedIsRequest ? `<div class="request-thread-actions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="instApproveReqBtn" type="button">Onayla</button><button class="btn-secondary" id="instRevisionReqBtn" type="button">Revizyon iste</button><button class="btn-secondary" id="instRejectReqBtn" type="button">İptal / reddet</button></div>` : '';
   const altSummary = latestPattern ? `<div class="selected-alt-v102 institution-selected-alt-v102">
     <b>Seçilen alternatif:</b> ${escapeHtml(latestPattern.patternName || '-')}
     <span>${escapeHtml(latestPattern.areaSplit || '-')} • ${Math.round(safeNum(latestPattern.totalWater,0)).toLocaleString('tr-TR')} m³ su • ${Math.round(safeNum(latestPattern.totalProfit,0)).toLocaleString('tr-TR')} TL net kâr • ${safeNum(latestPattern.tlPerM3,0).toFixed(2)} TL/m³</span>
@@ -931,15 +954,17 @@ function renderInstitutionRequestInbox(focusParcelId=''){
     ${pending.length ? `<div class="notify-list">${pending.slice(0,6).map(p=>`<button class="notify-item notify-item-action ${pickType==='custom'&&String(p.id||'')===String(customPick?.id||'')?'is-active':''}" type="button" data-open-request="${escapeHtml(p.id||'')}"><div class="notify-meta">${escapeHtml(p.owner_username || 'çiftçi')} • ${escapeHtml(p.requested_for_parcel_id || p.id || '')}</div><div class="notify-text">${escapeHtml(p.name || 'Parsel bildirimi')} • ${escapeHtml(customParcelApprovalMeta(p).label)}</div><div class="small muted" style="margin-top:4px;">Parsel düzeltme / çizim talebi</div></button>`).join('')}</div>` : ''}
     ${altRequests.length ? `<div class="notify-list">${altRequests.slice(0,8).map(n=>`<button class="notify-item notify-item-action ${pickType==='alternative'&&String(n.id||'')===String(altPick?.id||'')?'is-active':''}" type="button" data-open-alt-request="${escapeHtml(n.id||'')}"><div class="notify-meta">${escapeHtml(n.actor_username || 'çiftçi')} • ${escapeHtml(n.parcel_id || '')}</div><div class="notify-text">${escapeHtml(n.selected_pattern?.patternName || n.text || 'Alternatif talebi')}</div><div class="small muted" style="margin-top:4px;">Çiftçiden gelen alternatif onay talebi</div></button>`).join('')}</div>` : ''}
     ${(!pending.length && !altRequests.length) ? '<div class="small muted" style="margin-top:8px;">Bekleyen talep yok.</div>' : ''}
-    ${pick ? `<div class="small muted" style="margin-top:8px;">Seçili talep: <b>${escapeHtml(pickType==='custom' ? (customPick.name || customPick.id || '') : (latestPattern?.patternName || altPick.text || 'Alternatif talebi'))}</b> • Çiftçi: <b>${escapeHtml(pickType==='custom' ? (customPick.owner_username || '-') : (altPick.actor_username || '-'))}</b> • Parsel: <b>${escapeHtml(pickType==='custom' ? (customPick.requested_for_parcel_id || customPick.id || '-') : (altPick.parcel_id || '-'))}</b></div>${altSummary}<div class="request-thread-actions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="instApproveReqBtn" type="button">Onayla</button><button class="btn-secondary" id="instRevisionReqBtn" type="button">Revizyon iste</button><button class="btn-secondary" id="instRejectReqBtn" type="button">İptal / reddet</button></div>${related.length ? `<div class="notify-list" style="margin-top:8px;">${related.slice(0,6).map(n=>`<div class="notify-item"><div class="notify-meta">${escapeHtml(n.actor_username || 'Sistem')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(n.text || '')}</div><div class="small muted" style="margin-top:6px;display:flex;justify-content:flex-end;"><button class="btn-link" type="button" data-delete-notification="${escapeHtml(n.id||'')}">Sil</button></div></div>`).join('')}</div>` : ''}<div class="request-thread-list">${thread.length ? thread.slice(-6).map(m=>`<div class="request-msg-item ${m.actor_role==='institution'?'mine':''}"><div class="request-msg-meta">${escapeHtml(m.actor_name || m.actor_username || 'Kullanıcı')} • ${escapeHtml(formatManagedUserTimestamp(m.created_at))}</div><div class="request-msg-text">${escapeHtml(m.text || '')}</div></div>`).join('') : '<div class="small muted">Bu talep için mesaj geçmişi yok.</div>'}</div><div class="request-thread-actions"><textarea class="text-input" id="instThreadReply" placeholder="Çiftçiye yanıt / revizyon açıklaması yazın"></textarea><button class="btn-secondary" id="instThreadSendBtn" type="button">Mesaj gönder</button></div>` : '<div class="small muted" style="margin-top:8px;">Detayı görmek için bekleyen bir talep seçin.</div>'}`;
+    <div class="institution-message-section-v7"><div class="request-thread-head"><strong>Gelen mesajlar / yazışma</strong><span class="pill-soft">${messageThreads.length} konuşma</span></div>${messageListHtml}</div>
+    ${(pick || messagePick) ? `<div class="institution-thread-detail-v7"><div class="small muted" style="margin-top:8px;">Seçili ${selectedIsRequest ? 'talep' : 'konuşma'}: <b>${escapeHtml(selectedTitle)}</b> • Çiftçi: <b>${escapeHtml(selectedOwner)}</b> • Parsel: <b>${escapeHtml(selectedParcel)}</b></div>${altSummary}${decisionActions}${related.length ? `<div class="notify-list" style="margin-top:8px;">${related.slice(0,6).map(n=>`<div class="notify-item"><div class="notify-meta">${escapeHtml(n.actor_username || 'Sistem')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(n.text || '')}</div><div class="small muted" style="margin-top:6px;display:flex;justify-content:flex-end;"><button class="btn-link" type="button" data-delete-notification="${escapeHtml(n.id||'')}">Sil</button></div></div>`).join('')}</div>` : ''}<div class="request-thread-list">${thread.length ? thread.slice(-8).map(m=>`<div class="request-msg-item ${m.actor_role==='institution'?'mine':''}"><div class="request-msg-meta">${escapeHtml(m.actor_name || m.actor_username || 'Kullanıcı')} • ${escapeHtml(formatManagedUserTimestamp(m.created_at))}</div><div class="request-msg-text">${escapeHtml(m.text || '')}</div></div>`).join('') : '<div class="small muted">Bu konuşma için mesaj geçmişi yok.</div>'}</div><div class="request-thread-actions"><textarea class="text-input" id="instThreadReply" placeholder="Çiftçiye yanıt / revizyon açıklaması yazın"></textarea><button class="btn-secondary" id="instThreadSendBtn" type="button">Mesaj gönder</button></div></div>` : '<div class="small muted" style="margin-top:8px;">Detayı görmek için talep veya mesaj seçin.</div>'}`;
   root.querySelectorAll('[data-open-request]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); const pid=el.getAttribute('data-open-request')||''; selectParcelByIdAndRefresh(pid); renderInstitutionRequestInbox(pid); }; });
   root.querySelectorAll('[data-open-alt-request]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); renderInstitutionRequestInbox(el.getAttribute('data-open-alt-request')||''); }; });
+  root.querySelectorAll('[data-open-message-thread]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); renderInstitutionRequestInbox(el.getAttribute('data-open-message-thread')||''); }; });
   const markReadBtn=document.getElementById('instMarkReadBtn'); if(markReadBtn){ markReadBtn.onclick=()=>{ markAllNotificationsReadForCurrentUser(true); renderInstitutionRequestInbox(String(pick?.id||'')); }; }
   const clearReadBtn=document.getElementById('instClearReadBtn'); if(clearReadBtn){ clearReadBtn.onclick=()=>{ deleteAllNotificationsForCurrentUser({onlyRead:true}); renderInstitutionRequestInbox(String(pick?.id||'')); }; }
   const clearAllBtn=document.getElementById('instClearAllBtn'); if(clearAllBtn){ clearAllBtn.onclick=()=>{ if(confirm('Kurum bildirimlerinin tamamını silmek istiyor musunuz?')){ deleteAllNotificationsForCurrentUser({onlyRead:false}); renderInstitutionRequestInbox(String(pick?.id||'')); } }; }
   root.querySelectorAll('[data-delete-notification]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); ev.stopPropagation(); dismissNotificationForCurrentUser(el.getAttribute('data-delete-notification')||''); renderInstitutionRequestInbox(String(pick?.id||'')); }; });
   const sendBtn=document.getElementById('instThreadSendBtn'); const reply=document.getElementById('instThreadReply');
-  if(sendBtn && reply && threadId){ sendBtn.onclick=()=>{ const val=String(reply.value||'').trim(); if(!val) return; const owner=pickType==='custom' ? String(customPick.owner_username||'') : String(altPick.actor_username||''); const parcelId=pickType==='custom' ? String(customPick.requested_for_parcel_id || customPick.id || '') : String(altPick.parcel_id || ''); postParcelThreadMessage(threadId, val, {actor_role:'institution', actor_username:STATE.currentUser?.username||'institution', actor_name:STATE.currentUser?.displayName||'Yönetici', parcel_id:parcelId}); if(owner) pushParcelNotification({target_role:'farmer', target_username:owner, actor_username:STATE.currentUser?.username||'institution', text:'Uzman/kurum size bir mesaj gönderdi.', parcel_id:parcelId, thread_id:threadId, kind:'message'}); reply.value=''; renderInstitutionRequestInbox(String(pick?.id||'')); }; }
+  if(sendBtn && reply && threadId){ sendBtn.onclick=()=>{ const val=String(reply.value||'').trim(); if(!val) return; const owner=pickType==='custom' ? String(customPick.owner_username||'') : (altPick ? String(altPick.actor_username||'') : String(messagePick?.note?.actor_username || messagePick?.last?.actor_username || '')); const parcelId=pickType==='custom' ? String(customPick.requested_for_parcel_id || customPick.id || '') : (altPick ? String(altPick.parcel_id || '') : String(messagePick?.note?.parcel_id || messagePick?.last?.parcel_id || '')); postParcelThreadMessage(threadId, val, {actor_role:'institution', actor_username:STATE.currentUser?.username||'institution', actor_name:STATE.currentUser?.displayName||'Yönetici', parcel_id:parcelId}); if(owner) pushParcelNotification({target_role:'farmer', target_username:owner, actor_username:STATE.currentUser?.username||'institution', text:'Uzman/kurum size bir mesaj gönderdi.', parcel_id:parcelId, thread_id:threadId, kind:'message'}); reply.value=''; renderInstitutionRequestInbox(String(pick?.id||messagePick?.id||'')); }; }
   const approveAlternative=(status)=>{
     if(!altPick) return;
     const owner=String(altPick.actor_username||'');
@@ -14803,7 +14828,8 @@ function cropInfoCardHtmlV93(row, idx=0){
   const profitDa = safeNum(row?.profitPerDa, meta.profitPerDa || 0);
   const totalWater = safeNum(row?.totalWater, area * waterDa);
   const totalProfit = safeNum(row?.totalProfit, area * profitDa);
-  const season = row?.season || inferSeasonFromCropName(row?.name || '') || 'Dönem verisi yok';
+  const rawSeason = String(row?.season || '').trim();
+  const season = (!rawSeason || rawSeason === '-' || /desen|pay|oran/i.test(rawSeason) ? '' : rawSeason) || inferSeasonFromCropName(row?.name || '') || 'Dönem verisi yok';
   const days = cropGrowthDays(row?.name || '', season);
   const peak = cropPeakMonthLabel(row?.name || '', season);
   const price = safeNum(meta.price_tl_kg ?? meta.priceTlPerKg, NaN);
@@ -14988,9 +15014,17 @@ function cropInfoCardHtmlV93(row, idx=0){
   const name = prettyCropName(row?.name || '');
   const meta = cropMetaByName(row?.name || '') || (STATE.cropCatalog || {})[normCropName(row?.name || '')] || {};
   const area = safeNum(row?.area, 0);
+  const selectedParcel = (parcelData || []).find((x) => String(x.id) === String(selectedParcelId)) || {};
+  const parcelArea = safeNum(selectedParcel.area_da ?? selectedParcel.area ?? selectedParcel.alan_da ?? selectedParcel.areaDa, 0);
+  const sharePct = parcelArea > 0 && area > 0 ? Math.round((area / parcelArea) * 100) : 0;
   const waterDa = safeNum(row?.waterPerDa, meta.waterPerDa || 0);
-  const totalWater = safeNum(row?.totalWater, area * waterDa);
-  const totalProfit = safeNum(row?.totalProfit, area * safeNum(row?.profitPerDa, meta.profitPerDa || 0));
+  const fallbackWater = area * waterDa;
+  const profitDa = safeNum(row?.profitPerDa, meta.profitPerDa || 0);
+  const fallbackProfit = area * profitDa;
+  const totalWaterRaw = safeNum(row?.totalWater, 0);
+  const totalProfitRaw = safeNum(row?.totalProfit, 0);
+  const totalWater = totalWaterRaw > 0 ? totalWaterRaw : fallbackWater;
+  const totalProfit = totalProfitRaw !== 0 ? totalProfitRaw : fallbackProfit;
   const season = row?.season || inferSeasonFromCropName(row?.name || '') || 'Dönem verisi yok';
   const role = idx === 0 ? 'Ana ürün' : '2. ürün / tamamlayıcı';
   return `<article class="crop-detail-card crop-detail-card--compact">
@@ -15000,6 +15034,7 @@ function cropInfoCardHtmlV93(row, idx=0){
     </div>
     <div class="crop-detail-grid crop-detail-grid--compact">
       <div><span>Su</span><strong>${waterDa.toFixed(1)} m³/da</strong></div>
+      <div><span>Oran</span><strong>${sharePct ? `%${sharePct}` : '-'}</strong></div>
       <div><span>Toplam su</span><strong>${Math.round(totalWater).toLocaleString('tr-TR')} m³</strong></div>
       <div><span>Net kâr</span><strong>${Math.round(totalProfit).toLocaleString('tr-TR')} TL</strong></div>
       <div><span>Takvim</span><strong>${escapeHtml(cropProductionWindowLabel(row?.name || ''))}</strong></div>
@@ -15046,8 +15081,47 @@ function updateProductCards(){
 
   const orchardLockedUi = !!(p?.parcel_type === 'orchard' || p?.is_orchard || (current && current[0] && isPerennialCropName(current[0].name)));
   const orchardAlternativeUi = orchardLockedUi ? orchardAlternativeFallback(current, rec, STATE.lastRecMeta || null) : null;
-  const topRows = [...rows]
-    .filter(r => safeNum(r.area,0) > 0)
+  let displayRows = [...rows].filter(r => {
+    const hasName = String(r?.name || '').trim();
+    return hasName && (safeNum(r.area,0) > 0 || safeNum(r.totalWater,0) > 0 || safeNum(r.totalProfit,0) !== 0);
+  });
+  if(_seasonModeKey() === 's2' && displayRows.length < Math.min(2, rows.length)){
+    displayRows = [...rows].filter(r => String(r?.name || '').trim());
+  }
+  if(_seasonModeKey() === 's2' && displayRows.length < 2){
+    const pattern = Array.isArray(STATE.lastRecMeta?.alternativePatterns)
+      ? (STATE.lastRecMeta.alternativePatterns.find(x => x?.selectedRecommendation) || STATE.lastRecMeta.alternativePatterns[0])
+      : null;
+    if(Array.isArray(pattern?.components) && pattern.components.length > 1){
+      const parcelArea = safeNum(p?.area_da ?? p?.area ?? p?.alan_da ?? p?.areaDa, 0);
+      displayRows = pattern.components
+        .filter(c => String(c?.crop || c?.name || '').trim())
+        .map((c, idx) => {
+          const cropName = c.crop || c.name || '';
+          const share = safeNum(c.share, idx === 0 ? 0.7 : 0.3);
+          const meta = cropMetaByName(cropName) || (STATE.cropCatalog || {})[normCropName(cropName)] || {};
+          const areaRaw = safeNum(c.area, 0);
+          const area = areaRaw > 0 ? areaRaw : (parcelArea > 0 ? parcelArea * share : 0);
+          const waterPerDa = safeNum(c.waterPerDa, meta.waterPerDa || 0);
+          const profitPerDa = safeNum(c.profitPerDa, meta.profitPerDa || 0);
+          const totalWaterRaw = safeNum(c.totalWater, 0);
+          const totalProfitRaw = safeNum(c.totalProfit, 0);
+          return {
+            name: cropName,
+            area,
+            waterPerDa,
+            profitPerDa,
+            totalWater: totalWaterRaw > 0 ? totalWaterRaw : area * waterPerDa,
+            totalProfit: totalProfitRaw !== 0 ? totalProfitRaw : area * profitPerDa,
+            season: (() => {
+              const componentSeason = String(c.season || '').trim();
+              return (!componentSeason || componentSeason === '-' || /desen|pay|oran/i.test(componentSeason) ? '' : componentSeason) || inferSeasonFromCropName(cropName) || (idx === 0 ? 'Ana ürün' : 'Desen ortağı');
+            })()
+          };
+        });
+    }
+  }
+  const topRows = displayRows
     .sort((a,b)=> safeNum(b.area,0) - safeNum(a.area,0))
     .slice(0, 6);
   STATE.lastProductDetailRows = topRows;
@@ -15076,7 +15150,8 @@ function updateProductCards(){
     return '\u{1F331}';
   };
 
-  const pillRows = orchardLockedUi && current && current.length ? current.slice(0,1) : topRows;
+  const hasMultiProductRecommendation = topRows.length > 1;
+  const pillRows = orchardLockedUi && current && current.length && !hasMultiProductRecommendation ? current.slice(0,1) : topRows;
   const pills = pillRows.map((r, idx)=>{
     const name = escapeHtml(r.name);
     const season = escapeHtml(r.season || '');
@@ -21467,25 +21542,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(target){ try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){} }
     }
   }
-  function renderFarmerDroughtCardV7(){
-    if(STATE?.currentUser?.role !== 'farmer') return;
-    const card = document.getElementById('farmerDroughtMiniV7');
-    if(!card) return;
-    try{ if(typeof updateDroughtAnalytics === 'function') updateDroughtAnalytics(); }catch(_e){}
-    const minTxt = document.getElementById('droughtMinPct')?.textContent?.trim() || '-';
-    const avgTxt = document.getElementById('droughtAvgPct')?.textContent?.trim() || '-';
-    const stressTxt = document.getElementById('droughtStressIdx')?.textContent?.trim() || '-';
-    const levelTxt = document.getElementById('droughtAlarmLevel')?.textContent?.trim() || '';
-    const commentTxt = document.getElementById('droughtAutoComment')?.textContent?.trim()
-      || document.getElementById('droughtAlarmText')?.textContent?.trim()
-      || 'Kuraklık göstergeleri, seçili parselde su kotası ve ürün önerisinin riskini yorumlamak için yardımcı göstergedir.';
-    const setText = (id, value)=>{ const el = document.getElementById(id); if(el) el.textContent = value || '-'; };
-    setText('farmerDroughtMinV7', minTxt);
-    setText('farmerDroughtAvgV7', avgTxt);
-    setText('farmerDroughtStressV7', stressTxt);
-    const note = document.getElementById('farmerDroughtNoteV7');
-    if(note) note.textContent = `${levelTxt ? levelTxt + ': ' : ''}${commentTxt}`;
-  }
   function queueTextRepairV142(){
     repairVisibleText();
   }
@@ -21493,7 +21549,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     ensureBellIcon();
     ensureDrawingInboxHost();
     ensureFarmerMessageDock();
-    renderFarmerDroughtCardV7();
     ensureApprovedPlanTab(openApproved);
     repairVisibleText();
   }

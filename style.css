@@ -712,22 +712,19 @@ body {
 
 /* --- Product cards (donut yerine) --- */
 .product-cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  display:flex;
   gap:10px;
   align-items:stretch;
+  justify-content:flex-start;
+  flex-wrap:wrap;
   margin-top: 8px;
 }
 
 .product-card{
-  min-width:0;
-  max-width:none;
-  min-height:118px;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+  flex: 1 1 160px;
+  max-width: 280px;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 14px;
   padding: 10px 12px;
   background: #ffffff;
   box-shadow: 0 6px 18px rgba(0,0,0,0.06);
@@ -737,7 +734,6 @@ body {
   display:flex;
   gap:10px;
   align-items:center;
-  min-width:0;
 }
 
 .product-card .pc-emoji{
@@ -749,7 +745,6 @@ body {
   font-weight: 700;
   font-size: 13px;
   margin: 0;
-  overflow-wrap:anywhere;
 }
 
 .product-card .pc-sub{
@@ -763,6 +758,111 @@ body {
   gap:8px;
   flex-wrap:wrap;
   margin-top: 8px;
+}
+
+#productCards.product-cards{
+  display:block;
+  min-width:0;
+}
+
+#productCards .crop-strip{
+  justify-content:flex-start;
+  align-items:stretch;
+  gap:10px;
+  padding:12px;
+  border-radius:8px;
+}
+
+#productCards .crop-pill{
+  max-width:100%;
+  min-width:0;
+  border-radius:8px;
+}
+
+#productCards .pill-name{
+  min-width:0;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+
+#productCards .crop-note{
+  margin:9px 0 0;
+  padding:8px 10px;
+  border:1px solid #e5eef7;
+  border-radius:8px;
+  background:#fbfdff;
+}
+
+#productCards .crop-detail-list{
+  grid-template-columns:1fr;
+  max-height:440px;
+  overflow:auto;
+  padding-right:4px;
+}
+
+#productCards .crop-detail-card--compact{
+  border-radius:8px;
+  overflow:visible;
+}
+
+#productCards .crop-detail-summary{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  align-items:flex-start;
+}
+
+#productCards .crop-detail-summary > span{
+  min-width:0;
+}
+
+#productCards .crop-detail-summary strong{
+  display:block;
+  overflow-wrap:anywhere;
+}
+
+#productCards .crop-detail-grid--compact{
+  grid-template-columns:repeat(auto-fit,minmax(116px,1fr));
+}
+
+#productCards .crop-detail-grid strong{
+  overflow-wrap:anywhere;
+}
+
+#productCards .crop-detail-open{
+  align-self:start;
+  white-space:nowrap;
+}
+
+.institution-message-section-v7,
+.institution-thread-detail-v7{
+  margin-top:12px;
+  border:1px solid #dbeafe;
+  border-radius:8px;
+  background:#f8fbff;
+  padding:10px;
+  min-width:0;
+}
+
+.institution-message-list-v7,
+.institution-thread-detail-v7 .request-thread-list{
+  max-height:320px;
+  overflow:auto;
+  padding-right:4px;
+}
+
+.institution-thread-detail-v7 textarea{
+  min-height:84px;
+  resize:vertical;
+}
+
+.notify-item-action.is-active{
+  border-color:#60a5fa;
+  background:#eff6ff;
+}
+
+.notify-item-action.is-unread{
+  box-shadow:inset 3px 0 0 #2563eb;
 }
 
 .chip{
@@ -13209,66 +13309,6 @@ body.role-institution #approvedPlanPanelV142{display:none !important;}
   grid-column:1 / -1;
 }
 
-.farmer-drought-mini-v7{
-  margin-top:12px;
-  border:1px solid #dbeafe;
-  border-radius:8px;
-  background:#f8fbff;
-  padding:10px;
-}
-
-.farmer-drought-mini-v7 summary{
-  cursor:pointer;
-  color:#0f2a43;
-  font-weight:900;
-  list-style:none;
-}
-
-.farmer-drought-mini-v7 summary::-webkit-details-marker{
-  display:none;
-}
-
-.farmer-drought-grid-v7{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-  margin-top:9px;
-}
-
-.farmer-drought-grid-v7 div{
-  min-width:0;
-  border:1px solid #e5eef7;
-  border-radius:8px;
-  background:#fff;
-  padding:8px;
-}
-
-.farmer-drought-grid-v7 span,
-.farmer-drought-grid-v7 strong{
-  display:block;
-  min-width:0;
-}
-
-.farmer-drought-grid-v7 span{
-  color:#64748b;
-  font-size:10px;
-  font-weight:900;
-  text-transform:uppercase;
-}
-
-.farmer-drought-grid-v7 strong{
-  margin-top:3px;
-  color:#0f172a;
-  font-size:13px;
-}
-
-.farmer-drought-mini-v7 p{
-  margin:9px 0 0;
-  color:#475569;
-  font-size:11px;
-  line-height:1.45;
-}
-
 .institution-communication-panel-v7.hidden{
   display:none !important;
 }
@@ -13324,7 +13364,9 @@ body.role-institution #tab-drawing #institutionRequestInbox{
 }
 
 .approved-month-grid-v148{
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:stretch;
+  max-width:1180px;
 }
 
 .approved-section-grid-v149{
@@ -13344,6 +13386,31 @@ body.role-institution #tab-drawing #institutionRequestInbox{
 .approved-kpi-grid-v7 strong,
 .approved-economy-v148 b{
   overflow-wrap:anywhere;
+}
+
+.approved-month-grid-v148 article{
+  min-width:0;
+  min-height:168px;
+  display:flex;
+  flex-direction:column;
+}
+
+.approved-month-grid-v148 ul{
+  flex:1 1 auto;
+}
+
+body.role-farmer #waterRiskSection.drought-details-card{
+  display:block !important;
+  margin-top:12px;
+  margin-bottom:12px;
+}
+
+body.role-farmer #waterRiskSection .drought-details__body{
+  min-width:0;
+}
+
+body.role-farmer #waterRiskSection .drought-main-container{
+  margin:0;
 }
 
 .app-quote-band{
@@ -13393,13 +13460,11 @@ body.role-institution #tab-drawing #institutionRequestInbox{
 }
 
 @media (max-width: 900px){
-  .product-cards,
   .pattern-card-grid-v94{
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   }
 
-  .pattern-card-metrics,
-  .farmer-drought-grid-v7{
+  .pattern-card-metrics{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
@@ -13425,15 +13490,22 @@ body.role-institution #tab-drawing #institutionRequestInbox{
     white-space:normal !important;
     font-size:14px !important;
   }
+
+  .approved-month-grid-v148{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
 
 @media (max-width: 560px){
-  .product-cards,
   .pattern-card-grid-v94,
   .pattern-card-crops,
   .pattern-card-metrics,
-  .pattern-card-deltas,
-  .farmer-drought-grid-v7{
+  .pattern-card-deltas{
+    grid-template-columns:1fr;
+  }
+
+  #productCards .crop-detail-grid--compact,
+  .approved-month-grid-v148{
     grid-template-columns:1fr;
   }
 
