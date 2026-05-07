@@ -2794,16 +2794,16 @@ def build_candidate_matrix_two_season(
 # -----------------------------
 
 def _normalize_objective_key(objective: Optional[str]) -> str:
-    obj = str(objective or "balanced").strip().lower()
+    obj = str(objective or "water_efficiency").strip().lower()
     if obj in ("su_tasarruf", "su tasarruf", "water_saving", "tasarruf"):
         return "water_saving"
-    if obj in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin"):
+    if obj in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin", "balanced", "denge", "onerilen", "recommended"):
         return "water_efficiency"
     if obj in ("maks_kar", "maks kar", "max_profit", "profit", "kar", "kâr"):
         return "max_profit"
     if obj in ("mevcut", "current"):
         return "current"
-    return "balanced"
+    return "water_efficiency"
 
 
 def _objective_score_value(total_profit: float, total_water: float, objective: str) -> float:
@@ -5398,11 +5398,11 @@ def _matrix_objective_from_scenario(scenario: str) -> str:
         return "current"
     if s in ("su_tasarruf", "su tasarruf", "water_saving", "tasarruf"):
         return "water_saving"
-    if s in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin"):
+    if s in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin", "balanced", "denge", "onerilen", "recommended"):
         return "water_efficiency"
     if s in ("maks_kar", "maks kar", "max_profit", "kar", "kâr"):
         return "max_profit"
-    return "balanced"
+    return "water_efficiency"
 
 
 
@@ -6402,18 +6402,18 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
     # - current / mevcut: observed baseline only
     # - water_efficiency: use available water effectively (maximize TL/m³ under constraints)
     # - max_profit: prioritize profit, but still apply realism / feasibility guards
-    # - balanced: middle ground
-    obj_raw = str(scenario or objective or "balanced").lower()
+    # - old balanced/recommended aliases are treated as water_efficiency
+    obj_raw = str(scenario or objective or "water_efficiency").lower()
     if obj_raw in ("su_tasarruf", "su tasarruf", "water_saving", "tasarruf"):
         objective = "water_saving"
-    elif obj_raw in ("water_efficiency", "su_verimliligi", "su verimliligi", "su_etkin", "su etkin"):
+    elif obj_raw in ("water_efficiency", "su_verimliligi", "su verimliligi", "su_etkin", "su etkin", "balanced", "denge", "onerilen", "recommended"):
         objective = "water_efficiency"
     elif obj_raw in ("maks_kar", "maks kar", "max_profit", "kar", "kâr"):
         objective = "max_profit"
     elif obj_raw in ("mevcut", "current"):
         objective = "current"
     else:
-        objective = "balanced"
+        objective = "water_efficiency"
 
 
     # --- v51 CLEAN: Simple 2-crop optimizer (always on unless options.simpleMode==False) ---

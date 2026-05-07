@@ -8245,18 +8245,19 @@ function computeBasinPlan(scenarioKey, algoKey){
 async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
   const algoMap = { ga: 'GA', abc: 'ABC', aco: 'ACO' };
   // Benchmark: "mevcut" deseni algoritmalar için anlamlı bir hedef değil (optimizasyon çalışmaz).
-  // Bu yüzden "mevcut" seçiliyken kıyaslamayı "balanced" hedefinde koşturuyoruz ve ayrıca baseline (current) ekliyoruz.
+  // Bu yüzden "mevcut" seçiliyken kıyaslamayı su etkin kullanım hedefinde koşturuyoruz ve ayrıca baseline (current) ekliyoruz.
   // v74: Proje hedefi her zaman su tasarrufu. "maks_kar" seçimi geriye dönük uyumluluk için
   // su tasarruf hedefiyle eşlenir.
   const scenarioMap = {
-    mevcut: 'balanced',
-    current: 'balanced',
+    mevcut: 'water_efficiency',
+    current: 'water_efficiency',
     su_tasarruf: 'water_saving',
     maks_kar: 'max_profit',
     su_etkin: 'water_efficiency',
-    onerilen: 'balanced',
-    recommended: 'balanced',
-    balanced: 'balanced',
+    onerilen: 'water_efficiency',
+    recommended: 'water_efficiency',
+    balanced: 'water_efficiency',
+    denge: 'water_efficiency',
     water_efficiency: 'water_efficiency',
     water_saving: 'water_saving',
     max_profit: 'max_profit'
@@ -8276,7 +8277,7 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
   window.__lastBenchmarkScopeLabel = getBenchmarkScopeLabel(benchmarkScopeIds);
   const payload = attachCustomParcelsToPayload({
     selectedParcelIds: benchmarkScopeIds,
-    scenario: scenarioMap[scenarioKey] || 'balanced',
+    scenario: scenarioMap[scenarioKey] || 'water_efficiency',
     year: STATE.selectedWaterYear || null,
     waterBudgetRatio: budgetRatioForScenarioKey(scenarioKey),
     repeats,
@@ -9089,9 +9090,10 @@ async function fetchAndCacheBasinPlanPython(scenarioKey, algoKey){
     su_etkin: 'water_efficiency',
     'su etkin': 'water_efficiency',
     water_efficiency: 'water_efficiency',
-    onerilen: 'balanced',
-    recommended: 'balanced',
-    balanced: 'balanced'
+    onerilen: 'water_efficiency',
+    recommended: 'water_efficiency',
+    balanced: 'water_efficiency',
+    denge: 'water_efficiency'
   };
   const selectedIdsForPayload = getSelectedParcelIdsForRun();
   const isFocusedRun = (selectedIdsForPayload || []).length <= 3;
@@ -9104,7 +9106,7 @@ async function fetchAndCacheBasinPlanPython(scenarioKey, algoKey){
     // "__ALL__" -> basin totals, otherwise only the selected parcel.
     selectedParcelIds: selectedIdsForPayload,
     algorithm: algoMap[algoKey] || 'GA',
-    scenario: scenarioMap[scenarioKey] || normalizeScenarioKey(scenarioKey) || 'balanced',
+    scenario: scenarioMap[scenarioKey] || normalizeScenarioKey(scenarioKey) || 'water_efficiency',
     waterBudgetRatio: budgetRatioForScenarioKey(scenarioKey),
     year: STATE.selectedWaterYear || null,
     options: {
@@ -9339,14 +9341,15 @@ async function fetchAndCacheBasinPlanFromServer(scenarioKey, algoKey){
     max_profit: 'max_profit',
     su_etkin: 'water_efficiency',
     water_efficiency: 'water_efficiency',
-    onerilen: 'balanced',
-    recommended: 'balanced',
-    balanced: 'balanced'
+    onerilen: 'water_efficiency',
+    recommended: 'water_efficiency',
+    balanced: 'water_efficiency',
+    denge: 'water_efficiency'
   };
   const payload = attachCustomParcelsToPayload({
     selectedParcelIds: getSelectedParcelIdsForRun(),
     algorithm: algoMap[algoKey] || 'GA',
-    scenario: scenarioMap[scenarioKey] || 'balanced',
+    scenario: scenarioMap[scenarioKey] || 'water_efficiency',
     waterBudgetRatio: budgetRatioForScenarioKey(scenarioKey),
     options: {
       allocationModel: STATE.waterAllocationModel || 'area_fair_per_da',
@@ -12186,7 +12189,7 @@ function _fieldCandidatePool(parcel, currentRows){
       const waterPerDa = safeNum(c.waterPerDa, 0);
       const profitPerDa = safeNum(c.profitPerDa, 0);
       if(waterPerDa < 0 || !(profitPerDa > 0)) continue;
-      if(parcelType === 'orchard' && !isPerennialCropName(name)) continue;
+      if(parcelType === 'orchard' && seasonMode === 's2' && !isPerennialCropName(name)) continue;
       if(parcelType !== 'orchard' && isPerennialCropName(name)) continue;
       if(parcelType !== 'orchard' && !isAnnualFieldCandidateName(name)) continue;
       const keys = irrigationKeysForCrop(name);
@@ -12221,7 +12224,7 @@ function _fieldCandidatePool(parcel, currentRows){
     const waterPerDa = safeNum(c.waterPerDa, 0);
     const profitPerDa = safeNum(c.profitPerDa, 0);
     if(!(waterPerDa > 0) || !(profitPerDa > 0)) continue;
-    if(parcelType === 'orchard' && !isPerennialCropName(name)) continue;
+    if(parcelType === 'orchard' && seasonMode === 's2' && !isPerennialCropName(name)) continue;
     if(parcelType !== 'orchard' && isPerennialCropName(name)) continue;
     if(parcelType !== 'orchard' && !isAnnualFieldCandidateName(name)) continue;
     const suit = cropSuitabilityForParcel(parcel, name);
@@ -12236,7 +12239,7 @@ function _fieldCandidatePool(parcel, currentRows){
       suitability: suit,
     });
   }
-  if(out.length < 6 && parcelType !== 'orchard'){
+  if(out.length < 6 && (parcelType !== 'orchard' || seasonMode !== 's2')){
     const fallbackNames = [
       ...Object.keys(S1_PAIRING || {}),
       ...(Array.isArray(NIGDE_TARLA_CROP_POOL) ? NIGDE_TARLA_CROP_POOL.map(x=>x.name) : []),
@@ -12246,7 +12249,8 @@ function _fieldCandidatePool(parcel, currentRows){
       'Arpa (Dane)',
       'Patates',
       'Soğan (Kuru)',
-      'Kabak (Çerezlik)'
+      'Kabak (Çerezlik)',
+      'Kimyon'
     ];
     for(const nm of fallbackNames){
       const key = normCropName(nm);
@@ -12289,7 +12293,7 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
   const areaDa = n(parcel?.area_da, 0);
   const currentMain = Array.isArray(currentRows) && currentRows.length ? [...currentRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0] : null;
   const recMain = Array.isArray(recRows) && recRows.length ? recRows[0] : currentMain;
-  const isOrchard = !!(parcel?.parcel_type === 'orchard' || parcel?.is_orchard || (currentMain && isPerennialCropName(currentMain.name)) || recMeta?.orchardKeepMainCrop);
+  const isOrchard = scenarioType === 's2' && !!(parcel?.parcel_type === 'orchard' || parcel?.is_orchard || (currentMain && isPerennialCropName(currentMain.name)) || recMeta?.orchardKeepMainCrop);
   const patterns = [];
   const baselineTotals = sumMetrics(Array.isArray(currentRows) ? currentRows : []);
   const quota = (typeof parcelWaterBudget === 'function') ? n(parcelWaterBudget(areaDa, parcel), 0) : 0;
@@ -12456,7 +12460,9 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
           tlPerM3: totalWater > 0 ? (totalProfit/totalWater) : 0,
           peakMonth: cropPeakMonthLabel(c.name),
           seasonLabel: inferSeasonFromCropName(c.name) || 'Tek sezon',
-          note: 'Tek ürünlü parsel senaryosu',
+          note: (parcel?.parcel_type === 'orchard' || currentMain && isPerennialCropName(currentMain.name))
+            ? 'Senaryo 1 tek ürün dönüşüm alternatifidir; kurulu bahçede uygulanması uzman onayı ve tesis dönüşümü gerektirir.'
+            : 'Tek ürünlü parsel senaryosu',
           suitability: `${c.suitability?.label || 'Proxy'} (${Math.round(safeNum(c.suitability?.score,0)*100)}%)`,
           suitabilityBasis: c.suitability?.basis || '',
           growthDays: days,
@@ -12547,7 +12553,10 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
       score: _objectiveScorePattern(refWater, refProfit, scenarioKey) - 1
     }));
   }
-  const forceSelected = !!(selectedRecommendationPattern && !(scenarioType === 's2' && (!selectedRecommendationPattern.components || selectedRecommendationPattern.components.length <= 1)));
+  const isS1OrchardConversionView = scenarioType === 's1' && !!(parcel?.parcel_type === 'orchard' || parcel?.is_orchard || (currentMain && isPerennialCropName(currentMain.name)));
+  const forceSelected = !!(selectedRecommendationPattern
+    && !(scenarioType === 's2' && (!selectedRecommendationPattern.components || selectedRecommendationPattern.components.length <= 1))
+    && !(isS1OrchardConversionView && isPerennialCropName(selectedRecommendationPattern.mainCrop)));
   if(forceSelected){
     const selA = normCropName(selectedRecommendationPattern.mainCrop);
     const selB = normCropName(selectedRecommendationPattern.secondaryCrop);
@@ -12713,7 +12722,7 @@ function runOptimization(p, scenarioKey, algoKey){
     domName = dominantCropNameForParcel(p) || declaredCurrent || null;
   }
   const orchardLocked = !!(p?.parcel_type === 'orchard' || p?.is_orchard || p?.cok_yillik_kilit === 'Evet' || (domName && isPerennialCropName(domName)));
-  if(orchardLocked && domName && scenarioKey !== 'mevcut'){
+  if(seasonSource === 's2' && orchardLocked && domName && scenarioKey !== 'mevcut'){
     const adj = s2IrrigationAdjust(scenarioKey);
     const orchardAlternatives = orchardInterrowAlternativesForMain(domName);
     const currentMain = (currentRows || []).find(r=>normCropName(r.name) === normCropName(domName)) || bestCurrent || currentRows[0] || null;
@@ -12945,6 +12954,11 @@ function runOptimization(p, scenarioKey, algoKey){
     const strategicLowWater = ['NOHUT','MERCIMEK','KIMYON','ISPANAK','MARUL','TURP','LAHANA'];
     primaryCandidates = Array.from(new Set([...primaryCandidates, ...strategicLowWater]))
       .filter(c=>normCropName(c) !== "NADAS");
+    if(inferParcelTypeKey(p) === 'orchard'){
+      const orchardConversionPool = ['NOHUT','MERCIMEK','KIMYON','BUGDAY (DANE)','ARPA (DANE)','KABAK (ÇEREZLIK)','SOGAN (KURU)'];
+      primaryCandidates = Array.from(new Set([...orchardConversionPool, ...primaryCandidates]))
+        .filter(c=>normCropName(c) !== "NADAS" && !isPerennialCropName(c));
+    }
   }
   let secondaryPool = Array.from(new Set([
     ...S1_SECONDARY_CROPS,
@@ -13220,7 +13234,7 @@ function computeCropData(p, scenarioKey, algoKey) {
   // Özellikle tarayıcıda eski yerel düzeltme kayıtları kaldığında "mevcut=Kayısı, öneri=Mercimek"
   // gibi çelişkili görünüm oluşabiliyordu. Bu blok, UI tarafında tek kaynaktan tutarlı sonuç üretir.
   const orchardMainCurrent = (dominantCurrent && isPerennialCropName(dominantCurrent.name)) ? dominantCurrent : null;
-  const orchardForcedUi = !!(p?.parcel_type === 'orchard' || p?.is_orchard || orchardMainCurrent);
+  const orchardForcedUi = _seasonModeKey() === 's2' && !!(p?.parcel_type === 'orchard' || p?.is_orchard || orchardMainCurrent);
   let recommendedForUi = recommended;
   if(orchardForcedUi && orchardMainCurrent){
     const adj = s2IrrigationAdjust(scenarioKey);
@@ -13258,8 +13272,13 @@ function computeCropData(p, scenarioKey, algoKey) {
   const altMetaForUi = { orchardKeepMainCrop: !!(opt.orchardKeepMainCrop || orchardForcedUi), orchardAlternative: opt.orchardAlternative || null, orchardAlternatives: Array.isArray(opt.orchardAlternatives) ? opt.orchardAlternatives : null, orchardAlternativeMetrics: Array.isArray(opt.orchardAlternativeMetrics) ? opt.orchardAlternativeMetrics : null };
   let alternativePatternsForUi = buildUiAlternativePatterns(p, current, recommendedForUi, altMetaForUi, scenarioKey);
   const seasonModeForUi = _seasonModeKey();
-  if(seasonModeForUi === 's1' && Array.isArray(recommendedForUi) && recommendedForUi.length > 1){
-    recommendedForUi = [recommendedForUi[0]];
+  if(seasonModeForUi === 's1'){
+    const topPatternForUi = (alternativePatternsForUi || []).find(x=>x?.selectedRecommendation) || (alternativePatternsForUi || [])[0];
+    if(topPatternForUi && Array.isArray(topPatternForUi.components) && topPatternForUi.components.length){
+      recommendedForUi = patternComponentsToRecommendationRows(topPatternForUi, recommendedForUi, p).slice(0,1);
+    }else if(Array.isArray(recommendedForUi) && recommendedForUi.length > 1){
+      recommendedForUi = [recommendedForUi[0]];
+    }
     alternativePatternsForUi = buildUiAlternativePatterns(p, current, recommendedForUi, altMetaForUi, scenarioKey);
   }else if(seasonModeForUi === 's2'){
     const topPatternForUi = (alternativePatternsForUi || []).find(x=>x?.selectedRecommendation) || (alternativePatternsForUi || [])[0];
@@ -13394,7 +13413,8 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
     const dw = Math.round(safeNum(x.deltaWater,0));
     const dp = Math.round(safeNum(x.deltaProfit,0));
     const selectedBadge = x.selectedRecommendation ? '<span class="pattern-selected-badge">Seçilen öneri</span>' : '';
-    const quotaBadge = x.quotaExceeded ? '<span class="pattern-risk-badge">Kota aşımı riski</span>' : '';
+    const quotaBadge = x.quotaExceeded ? '<span class="pattern-risk-badge">Kota aşımı riski</span>' : '<span class="pattern-selected-badge">Kota uygun</span>';
+    const scenarioTypeLabel = Array.isArray(x.components) && x.components.length > 1 ? 'Kombinasyon / yüzde dağılımı' : 'Tek ürün';
     const components = Array.isArray(x.components) && x.components.length
       ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
       : '';
@@ -13404,7 +13424,7 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
         <strong>${escapeHtml(x.patternName || '')}</strong>
         ${selectedBadge}${quotaBadge}
       </div>
-      <div class="pattern-target-order">Hedef sırası: ${escapeHtml(targetOrder)} • ${escapeHtml(metaLabel || 'Seçili hedef')}</div>
+      <div class="pattern-target-order">Hedef sırası: ${escapeHtml(targetOrder)} • ${escapeHtml(metaLabel || 'Seçili hedef')} • ${escapeHtml(scenarioTypeLabel)}</div>
       <div class="pattern-card-crops">
         <span>${escapeHtml(x.mainCrop || '-')}</span>
         <span>${escapeHtml(x.secondaryCrop || '-')}</span>
@@ -13733,7 +13753,11 @@ function renderTables() {
       ...(Array.isArray(recLead.cautionDetails) ? recLead.cautionDetails.slice(0,2).map(x=>`Dikkat: ${x}`) : [])
     ].slice(0,5) : [];
     const whyHtml = recLead ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #e6f4ea; border-radius:10px; background:#fbfffc;"><strong>Neden bu ürün önerildi?</strong><ul style="margin:6px 0 0 18px; padding:0;">${whyList.length ? whyList.map(x=>`<li>${escapeHtml(x)}</li>`).join('') : `<li>${escapeHtml(recLead.decisionNote || 'Su kotası, mevsim ve parsel uygunluğu birlikte değerlendirildi.')}</li>`}</ul><div class="muted" style="margin-top:6px;">Not: Sistem şu an su kotası, mevsim, ürün familyası/rotasyon, parsel tipi, toprak sınıfı ve sulama yöntemini modelliyor. Ayrıntılı hastalık analizi ve laboratuvar mineral verisi yüklenirse daha da güçlenir.</div></div>` : '';
-    footerRec.innerHTML = `<div class="rec-footer-kpi-v94">${recFooter}</div>${orchardInfo}${whyHtml}${altPanelHtml}`;
+    const autoDecision = STATE.autoAlgoDecisionV7;
+    const autoHtml = autoDecision?.selected
+      ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff;"><strong>Otomatik algoritma seçimi:</strong> ${escapeHtml(String(autoDecision.selected).toUpperCase())} seçildi. GA, ACO ve ABC aynı hedef/senaryo koşulunda su kotası, net kâr, TL/m³ ve hedef skoruyla kıyaslandı.</div>`
+      : '';
+    footerRec.innerHTML = `<div class="rec-footer-kpi-v94">${recFooter}</div>${autoHtml}${orchardInfo}${whyHtml}${altPanelHtml}`;
   }
 
   // --- Açıklanabilirlik kutusu (seçili parsel) ---
@@ -13899,6 +13923,7 @@ function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){
   const orchardLike = !!(curMain && isPerennialCropName(curMain.name));
   const obj = getScenarioDisplayMeta(objectiveKey).label;
   if((seasonSource||'s1') === 's1'){
+    if(orchardLike && !sameMain) return `S1 tek ürün dönüşüm modunda kurulu bahçe ürünü (${prettyCropName(curMain.name)}) yerine ${prettyCropName(recMain.name)} tek ürün alternatifi hesaplanmıştır; bu sonuç uygulamada tesis dönüşümü ve uzman onayı gerektirir.`;
     if(orchardLike) return 'Çok yıllık/bahçe parsellerinde ana ürün korunur; fark sulama yöntemi, kota ve zamanlama üzerinden hesaplanır.';
     if(sameMain) return `${prettyCropName(curMain.name)} tekrar önerildi çünkü veri setindeki uygun adaylar içinde seçili hedef (${obj}) altında daha az su veya daha yüksek net kâr sağlayan alternatif eşik değeri aşamadı. Bu durum raporda "mevcut ürün korunuyor" diye açıklanır, gizlenmez.`;
     return `S1 tek ürün modunda sistem ${prettyCropName(curMain.name)} yerine ${prettyCropName(recMain.name)} seçmiştir; karar su kotası, TL/m³, dönem-gün sayısı, pik ay ve parsel/toprak uygunluğunun birlikte puanlanmasıyla verilir.`;
@@ -17556,6 +17581,75 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
   }
 }
 
+function scoreOptimizationRunForTargetV7(out, idsForRun, scenarioKey, algoKey){
+  const targetKey = getScenarioDisplayMeta(scenarioKey).key;
+  const ids = new Set((idsForRun || []).map(x=>String(x || '').trim()).filter(Boolean));
+  const plan = out?.plan || {};
+  let water = 0;
+  let profit = 0;
+  let baseWater = 0;
+  let baseProfit = 0;
+  let quotaPenalty = 0;
+  for(const id of ids){
+    const parcel = (parcelData || []).find(p=>String(p?.id || '').trim() === String(id));
+    const rows = Array.isArray(plan[id]?.rows) ? plan[id].rows : [];
+    const totals = plan[id]?.totals || sumMetrics(rows);
+    water += safeNum(totals.water, 0);
+    profit += safeNum(totals.profit, 0);
+    if(parcel){
+      const current = runOptimization(parcel, 'mevcut', algoKey);
+      baseWater += safeNum(current?.totals?.water, 0);
+      baseProfit += safeNum(current?.totals?.profit, 0);
+      const quota = (typeof parcelWaterBudget === 'function') ? safeNum(parcelWaterBudget(safeNum(parcel.area_da, 0), parcel), 0) : 0;
+      if(quota > 0 && safeNum(totals.water, 0) > quota){
+        quotaPenalty += (safeNum(totals.water, 0) - quota) * 1200;
+      }
+    }
+  }
+  if(!ids.size){
+    water = safeNum(out?.totals?.water, water);
+    profit = safeNum(out?.totals?.profit, profit);
+  }
+  const eff = profit / Math.max(1, water);
+  const waterDrop = baseWater > 0 ? Math.max(0, baseWater - water) : 0;
+  const waterRise = baseWater > 0 ? Math.max(0, water - baseWater) : 0;
+  const profitDrop = baseProfit > 0 ? Math.max(0, baseProfit * 0.55 - profit) : 0;
+  if(targetKey === 'su_tasarruf'){
+    return (waterDrop * 1.45) + (eff * 900) + (profit * 0.04) - (waterRise * 1.10) - (profitDrop * 0.35) - quotaPenalty;
+  }
+  if(targetKey === 'maks_kar'){
+    return (profit * 1.0) + (eff * 500) - (waterRise * 0.22) - quotaPenalty;
+  }
+  return (eff * 1800) + (profit * 0.14) + (waterDrop * 0.45) - (waterRise * 0.42) - (profitDrop * 0.28) - quotaPenalty;
+}
+
+async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
+  const algos = ['ga', 'aco', 'abc'];
+  const scored = algos.map(algo=>{
+    const out = buildLocalPlanForIds(idsForRun, scenarioKey, algo);
+    return {
+      algo,
+      out,
+      score: scoreOptimizationRunForTargetV7(out, idsForRun, scenarioKey, algo)
+    };
+  });
+  scored.sort((a,b)=>safeNum(b.score, 0) - safeNum(a.score, 0));
+  const best = scored[0] || { algo:'ga', out:null, score:0 };
+  STATE.autoAlgoDecisionV7 = {
+    selected: best.algo,
+    objective: getScenarioDisplayMeta(scenarioKey).label,
+    scores: scored.map(x=>({ algo:x.algo, score:safeNum(x.score,0) })),
+    at: Date.now()
+  };
+  try{
+    const backendOut = await runOptimizationWithFallback(idsForRun, scenarioKey, best.algo);
+    return { ...best, out: backendOut || best.out };
+  }catch(err){
+    console.warn('Otomatik algoritma için backend sonucu alınamadı; yerel karşılaştırma sonucu kullanılacak.', err);
+    return best;
+  }
+}
+
   // Optimizasyonu çalıştır
   const runBtn = document.getElementById("runOptBtn");
   if (runBtn) {
@@ -17567,7 +17661,8 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
         return;
       }
       const prevContext = lastOptimizeContext ? { ...lastOptimizeContext } : null;
-      const pendingContext = { parcelId: selectedParcelId, scenario: selectedScenario, algo: selectedAlgo };
+      const wantsAutoAlgo = STATE.farmerAlgoModeV7 === 'auto' || selectedAlgo === 'auto';
+      const pendingContext = { parcelId: selectedParcelId, scenario: selectedScenario, algo: wantsAutoAlgo ? 'auto' : selectedAlgo };
       const idsForRun = getSelectedParcelIdsForRun();
       if(!idsForRun || idsForRun.length === 0){
         if (st) st.textContent = "Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon için veri setine dahil değil.";
@@ -17579,13 +17674,24 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
       runBtn.disabled = true;
       runBtn.classList.add("btn-disabled");
       STATE.isOptimizing = true;
-      if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
+      if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${wantsAutoAlgo ? 'Otomatik en iyi algoritma' : pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
 
       // Hesaplama bitene kadar ekranda SON geçerli sonuçlar kalsın (yanıltıcı ara görünüm olmasın)
       // refreshUI() çağırmıyoruz; sadece durum metni güncellenir.
 
       try{
-        const out = await runOptimizationWithFallback(idsForRun, selectedScenario, selectedAlgo);
+        let out;
+        if(wantsAutoAlgo){
+          const best = await runAutoBestOptimizationV7(idsForRun, selectedScenario);
+          out = best.out;
+          selectedAlgo = best.algo || 'ga';
+          pendingContext.algo = selectedAlgo;
+          const algoSelect = document.getElementById('algoSelect');
+          if(algoSelect) algoSelect.value = selectedAlgo;
+        }else{
+          STATE.autoAlgoDecisionV7 = null;
+          out = await runOptimizationWithFallback(idsForRun, selectedScenario, selectedAlgo);
+        }
 
         if(!out){
           if (st) st.textContent = "Yanıt yok / reddedildi";
@@ -17595,7 +17701,9 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
         lastOptimizeContext = pendingContext;
         STATE.selectionDirty = false;
         refreshUI();
-        if (st) st.textContent = out.localFallback ? (STATE.manualDataActive ? "Güncellendi (manuel CSV / yerel hesap)" : "Güncellendi (yerel hesap)") : "Güncellendi";
+        if (st) st.textContent = wantsAutoAlgo
+          ? `Güncellendi • Otomatik seçim: ${selectedAlgo.toUpperCase()}`
+          : (out.localFallback ? (STATE.manualDataActive ? "Güncellendi (manuel CSV / yerel hesap)" : "Güncellendi (yerel hesap)") : "Güncellendi");
       }catch(e){
         console.warn("Optimizasyon tamamen başarısız oldu.", e);
         lastOptimizeContext = prevContext;
@@ -17799,8 +17907,9 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
           su_tasarruf: 'water_saving',
           su_etkin: 'water_efficiency',
           maks_kar: 'maks_kar',
-          balanced: 'balanced',
-          recommended: 'recommended'
+          balanced: 'water_efficiency',
+          recommended: 'water_efficiency',
+          denge: 'water_efficiency'
         };
 
         const uiSeasonSel = document.getElementById('seasonSourceSel');
@@ -17949,8 +18058,9 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
           su_tasarruf: 'water_saving',
           su_etkin: 'water_efficiency',
           maks_kar: 'maks_kar',
-          balanced: 'balanced',
-          recommended: 'recommended'
+          balanced: 'water_efficiency',
+          recommended: 'water_efficiency',
+          denge: 'water_efficiency'
         };
 
         const uiSeasonSel = document.getElementById('seasonSourceSel');
