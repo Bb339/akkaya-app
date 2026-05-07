@@ -484,8 +484,17 @@
 <div class="farmer-assignment-summary" id="farmerAssignmentSummary">
   <div class="small muted">Parsel seçildiğinde uzman önerisi burada görünecek.</div>
 </div>
+<details class="farmer-drought-mini-v7" id="farmerDroughtMiniV7" open>
+  <summary>Kuraklık göstergeleri (2000-2025) - Detay</summary>
+  <div class="farmer-drought-grid-v7">
+    <div><span>Min doluluk</span><strong id="farmerDroughtMinV7">-</strong></div>
+    <div><span>Ortalama</span><strong id="farmerDroughtAvgV7">-</strong></div>
+    <div><span>Stres endeksi</span><strong id="farmerDroughtStressV7">-</strong></div>
+  </div>
+  <p id="farmerDroughtNoteV7">Kuraklık göstergeleri, seçili parselin hedef ve sulama kararını yorumlamak için yardımcı uyarı olarak gösterilir.</p>
+</details>
 <div class="farmer-decision-actions">
-  <button class="btn-primary" id="farmerRefreshRecommendationBtn" type="button">Öneriyi güncelle</button>
+  <button class="btn-primary" id="farmerRefreshRecommendationBtn" type="button">Öneri üret</button>
 </div>
 </div></div></details><details class="sidebar-group" id="userManagementGroup" data-role="institution" data-institution-role="admin-only"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Kullanıcı Yönetimi</strong><small>Korundu; çizim modunda ayrı sekmeden açılır</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card managed-user-sidebar-card" data-role="institution">
 <h2 class="card-title">Kullanıcı yönetimi paneli</h2>
@@ -690,6 +699,7 @@ Parsel Haritası</h2>
 <button class="tab" data-tab="users" data-role="institution" data-institution-role="admin-only">Kullanıcı yönetimi</button>
 <button class="tab active" data-tab="parcel">Parsel düzeyi desen</button>
 <button class="tab" data-tab="farmer-communication" data-role="farmer-only" id="farmerCommunicationTabBtnV7">Uzman / yönetici iletişim</button>
+<button class="tab" data-tab="institution-communication" data-role="institution" id="institutionCommunicationTabBtnV7">Mesajlar / gelen talepler</button>
 <button class="tab" data-tab="approved-plan" data-role="farmer-only" id="approvedPlanTabBtnV142">Onaylı güncel plan</button>
 <button class="tab" data-tab="drawing" data-role="institution">Parsel çizim / bilgi atama</button>
 <button class="tab" data-tab="district" data-role="institution">İlçe / il düzeyi özet</button>
@@ -853,7 +863,6 @@ Parsel Haritası</h2>
 <h2 class="card-title">Parsel çizim ve bilgi atama</h2>
 <p class="card-help small">Resmî parsel kaydını seçip sınır çizimi, GeoJSON/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu çalışma alanından yönetin. Sol panel yalnız analiz kurulumu ve hızlı özet için sade bırakıldı.</p>
 <div id="drawingTabMount"></div>
-<section class="card institution-request-inbox-v142" id="institutionRequestInbox"></section>
 </div>
 </div>
 
@@ -890,7 +899,7 @@ Parsel Haritası</h2>
 <thead>
 <tr>
 <th>Ürün</th>
-<th>Mevsim</th>
+<th>Mevsim / Oran</th>
 <th>Sulama (Öneri)</th>
 <th>Ekim Alanı (da - sezon)</th>
 <th>Su (m³/da)</th>
@@ -945,6 +954,16 @@ Parsel Haritası</h2>
 </div>
 <div class="small muted farmer-communication-help-v7">Seçili öneri talepleri, uzman yanıtları ve bildirim mesajları bu sekmede izlenir.</div>
 <div id="farmerCommunicationMountV7"></div>
+</div>
+</div>
+<div class="tab-panel institution-communication-panel-v7 hidden" id="tab-institution-communication" data-role="institution">
+<div class="card institution-communication-shell-v7">
+<div class="request-thread-head">
+<strong>Mesajlar / gelen talepler</strong>
+<span class="pill-soft">Uzman ve kurum yazışma akışı</span>
+</div>
+<div class="small muted institution-communication-help-v7">Çiftçi alternatif talepleri, yazışmalar, onay/revizyon/iptal kararları bu sekmede tutulur.</div>
+<section class="institution-request-inbox-v142" id="institutionRequestInbox"></section>
 </div>
 </div>
 <div class="tab-panel approved-plan-panel-v142 hidden" id="approvedPlanPanelV142" data-role="farmer-only"></div>

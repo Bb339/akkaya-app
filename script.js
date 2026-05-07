@@ -13677,10 +13677,14 @@ function renderTables() {
           }
           return `<div class="irr-cell"><div>${escapeHtml(sugLbl)}</div><div class="irr-hint">Mevcut: ${escapeHtml(curLbl)}</div></div>`;
         })();
+    const rawSeason = !isBlankSeasonLabel(r.season) ? String(r.season) : inferSeasonLabelFromCrop(r.name || '', p?.parcel_type || '');
+    const displaySeason = (mode === 'rec' && /desen\s*pay/i.test(rawSeason))
+      ? `Oran %${Math.round((safeNum(r.area,0) / Math.max(1, targetAreaDa || safeNum(p?.area_da,0) || safeNum(r.area,0))) * 100)}`
+      : rawSeason;
     return `
     <tr>
       <td>${escapeHtml(prettyCropName(r.name || '-'))}</td>
-      <td>${escapeHtml(!isBlankSeasonLabel(r.season) ? r.season : inferSeasonLabelFromCrop(r.name || '', p?.parcel_type || ''))}</td>
+      <td>${escapeHtml(displaySeason)}</td>
       <td>${irrCell}</td>
       <td>${safeNum(r.area,0).toFixed(1)}</td>
       <td>${safeNum(r.waterPerDa,0).toLocaleString("tr-TR")}</td>
@@ -16729,6 +16733,7 @@ function initTabs() {
     impact: document.getElementById("tab-impact"),
     plan5: document.getElementById("tab-plan5"),
     users: document.getElementById("tab-users"),
+    "institution-communication": document.getElementById("tab-institution-communication"),
     "farmer-communication": document.getElementById("tab-farmer-communication"),
     "approved-plan": document.getElementById("approvedPlanPanelV142"),
   };
@@ -20307,8 +20312,8 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const runBtn = document.getElementById('runOptBtn');
     if(runBtn){
       if(!runBtn.dataset.institutionLabel) runBtn.dataset.institutionLabel = runBtn.textContent || 'Optimizasyonu Çalıştır';
-      runBtn.textContent = isFarmerV55() ? 'Öneriyi güncelle' : runBtn.dataset.institutionLabel;
-      runBtn.title = isFarmerV55() ? 'Size atanmış parsel için mevcut öneri ekranını günceller.' : (runBtn.title || '');
+      runBtn.textContent = isFarmerV55() ? 'Öneri üret' : runBtn.dataset.institutionLabel;
+      runBtn.title = isFarmerV55() ? 'Seçili hedef, senaryo ve algoritmaya göre öneriyi üretir.' : (runBtn.title || '');
     }
     const setupTitle = document.querySelector('#setupGroup .card-title');
     if(setupTitle){
@@ -20389,8 +20394,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         </div>
         <div class="farmer-message-actions-v100" style="margin-top:10px;">
           <button class="btn-secondary" type="button" data-farmer-summary-action-v7="run">Öneri üret</button>
-          <button class="btn-secondary" type="button" data-farmer-summary-action-v7="request">Uzmana gönder</button>
-          <button class="btn-secondary" type="button" data-farmer-summary-action-v7="messages">Mesajları gör</button>
+          <button class="btn-secondary" type="button" data-farmer-summary-action-v7="request">Uzmana gönder / mesajlaş</button>
         </div>
         <div class="farmer-summary-note" style="margin-top:10px;"><strong>Not:</strong> ${escV55(note)}</div>
       </div>`;
@@ -21393,32 +21397,35 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
 
   function ensureDrawingInboxHost(){
     if(STATE?.currentUser?.role !== 'institution') return;
-    const panel = document.getElementById('tab-parcel') || document.getElementById('tab-drawing');
-    const shell = panel?.querySelector('.parcel-summary-shell') || panel;
+    const panel = document.getElementById('tab-institution-communication');
+    const shell = panel?.querySelector('.institution-communication-shell-v7') || panel;
     if(!shell) return;
     let inbox = document.getElementById('institutionRequestInbox');
     if(!inbox){
       inbox = document.createElement('section');
       inbox.id = 'institutionRequestInbox';
-      inbox.className = 'card institution-request-inbox-v142';
+      inbox.className = 'institution-request-inbox-v142';
     }
-    inbox.classList.add('card','institution-request-inbox-v142');
+    inbox.classList.add('institution-request-inbox-v142');
+    inbox.classList.remove('card');
     if(inbox.parentElement !== shell) shell.appendChild(inbox);
     if(!inbox.innerHTML.trim()){
       inbox.innerHTML = '<div class="notify-head"><strong>Kurum / uzman gelen mesajları</strong><span class="pill-soft">Hazır</span></div><div class="small muted">Çiftçi mesajları ve alternatif onay talepleri burada sabitlenir.</div>';
     }
   }
-  function forceDrawingTabV142(){
+  function openInstitutionCommunicationTabV7(){
     if(STATE?.currentUser?.role !== 'institution') return false;
-    const panel = document.getElementById('tab-parcel');
-    const btn = document.querySelector('.tab[data-tab="parcel"],button[data-tab="parcel"]');
+    const panel = document.getElementById('tab-institution-communication');
+    const btn = document.querySelector('.tab[data-tab="institution-communication"],button[data-tab="institution-communication"]');
     if(!panel || !btn) return false;
     document.querySelectorAll('.tab[data-tab]').forEach(el => el.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.tab-panels > .tab-panel').forEach(el => el.classList.remove('active'));
     panel.classList.add('active');
+    panel.classList.remove('hidden');
     return true;
   }
+  function forceDrawingTabV142(){ return openInstitutionCommunicationTabV7(); }
   function ensureFarmerMessageDock(){
     if(STATE?.currentUser?.role !== 'farmer') return;
     const card = document.getElementById('farmerCommunicationMountV7') || document.getElementById('farmerDecisionCard') || document.getElementById('tab-parcel');
@@ -21441,10 +21448,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     ensureBellIcon();
     const role = STATE?.currentUser?.role || '';
     if(role === 'institution'){
-      try{ if(typeof switchTabByKey === 'function') switchTabByKey('parcel'); }catch(_e){}
-      forceDrawingTabV142();
+      try{ if(typeof switchTabByKey === 'function') switchTabByKey('institution-communication'); }catch(_e){}
+      openInstitutionCommunicationTabV7();
       try{ if(typeof renderInstitutionRequestInbox === 'function') renderInstitutionRequestInbox(''); }catch(_e){}
-      forceDrawingTabV142();
+      openInstitutionCommunicationTabV7();
       ensureDrawingInboxHost();
       const target = document.getElementById('institutionRequestInbox');
       if(target){ try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){} }
@@ -21460,6 +21467,25 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(target){ try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){} }
     }
   }
+  function renderFarmerDroughtCardV7(){
+    if(STATE?.currentUser?.role !== 'farmer') return;
+    const card = document.getElementById('farmerDroughtMiniV7');
+    if(!card) return;
+    try{ if(typeof updateDroughtAnalytics === 'function') updateDroughtAnalytics(); }catch(_e){}
+    const minTxt = document.getElementById('droughtMinPct')?.textContent?.trim() || '-';
+    const avgTxt = document.getElementById('droughtAvgPct')?.textContent?.trim() || '-';
+    const stressTxt = document.getElementById('droughtStressIdx')?.textContent?.trim() || '-';
+    const levelTxt = document.getElementById('droughtAlarmLevel')?.textContent?.trim() || '';
+    const commentTxt = document.getElementById('droughtAutoComment')?.textContent?.trim()
+      || document.getElementById('droughtAlarmText')?.textContent?.trim()
+      || 'Kuraklık göstergeleri, seçili parselde su kotası ve ürün önerisinin riskini yorumlamak için yardımcı göstergedir.';
+    const setText = (id, value)=>{ const el = document.getElementById(id); if(el) el.textContent = value || '-'; };
+    setText('farmerDroughtMinV7', minTxt);
+    setText('farmerDroughtAvgV7', avgTxt);
+    setText('farmerDroughtStressV7', stressTxt);
+    const note = document.getElementById('farmerDroughtNoteV7');
+    if(note) note.textContent = `${levelTxt ? levelTxt + ': ' : ''}${commentTxt}`;
+  }
   function queueTextRepairV142(){
     repairVisibleText();
   }
@@ -21467,6 +21493,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     ensureBellIcon();
     ensureDrawingInboxHost();
     ensureFarmerMessageDock();
+    renderFarmerDroughtCardV7();
     ensureApprovedPlanTab(openApproved);
     repairVisibleText();
   }
