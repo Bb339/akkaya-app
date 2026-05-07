@@ -14224,17 +14224,11 @@ function renderAllScenarioSummaries(){
   // Bar chart güncelle
   // ÖNEMLİ: Grafikler, üstteki metrik kartlarıyla AYNI kapsamı (seçili parsel veya havza)
   // ve AYNI birimleri (m³ / TL) kullanmalı. Aksi hâlde kullanıcıya tutarsız görünür.
-  const scenKey = (viewCtx.scenario || 'su_tasarruf').toString();
-  const scenLabel = normalizeScenarioKey(scenKey) === 'mevcut'
-    ? 'Referans'
-    : getScenarioDisplayMeta(scenKey).shortLabel;
   const chartKeys = ['mevcut','su_tasarruf','maks_kar','su_etkin'];
-  const chartLabels = chartKeys.map(k=> normalizeScenarioKey(k) === 'mevcut' ? 'Mevcut' : getScenarioDisplayMeta(k).shortLabel);
+  const chartLabels = ['Mevcut', 'Su tasarrufu', 'Kâr odaklı', 'Su etkin kullanım'];
   const chartColors = ['rgba(73,126,230,.72)','rgba(40,191,170,.72)','rgba(255,175,91,.78)','rgba(126,92,245,.72)'];
 
   if(waterChart){
-    const w0 = totalsForScope('mevcut', viewCtx.algo).water;
-    const w1 = totalsForScope(scenKey, viewCtx.algo).water;
     waterChart.data.labels = chartLabels;
     waterChart.data.datasets[0].data = chartKeys.map(k=> totalsForScope(k, viewCtx.algo).water);
     waterChart.data.datasets[0].backgroundColor = chartColors;
@@ -14243,8 +14237,6 @@ function renderAllScenarioSummaries(){
   }
   if(profitChart){
     // Negatif net kârı da gösterebilmek için kırpma YOK.
-    const p0 = totalsForScope('mevcut', viewCtx.algo).profit;
-    const p1 = totalsForScope(scenKey, viewCtx.algo).profit;
     profitChart.data.labels = chartLabels;
     profitChart.data.datasets[0].data = chartKeys.map(k=> totalsForScope(k, viewCtx.algo).profit);
     profitChart.data.datasets[0].backgroundColor = chartColors;
@@ -14329,13 +14321,18 @@ function initCharts() {
   waterChart = new Chart(waterCtx, {
     type: "bar",
     data: {
-      labels: ["Mevcut", "Seçili senaryo"],
+      labels: ["Mevcut", "Su tasarrufu", "Kâr odaklı", "Su etkin kullanım"],
       datasets: [
         {
           label: "Su kullanımı (m³)",
-          data: [0, 0],
-          backgroundColor: [makeVerticalBarGradient(waterCtx,'rgba(68,138,255,.95)','rgba(149,208,255,.55)'), makeVerticalBarGradient(waterCtx,'rgba(24,184,166,.92)','rgba(167,240,233,.55)')],
-          borderRadius: 16, borderSkipped: false, maxBarThickness: 82,
+          data: [0, 0, 0, 0],
+          backgroundColor: [
+            makeVerticalBarGradient(waterCtx,'rgba(68,138,255,.95)','rgba(149,208,255,.55)'),
+            makeVerticalBarGradient(waterCtx,'rgba(24,184,166,.92)','rgba(167,240,233,.55)'),
+            makeVerticalBarGradient(waterCtx,'rgba(255,175,91,.92)','rgba(255,224,178,.55)'),
+            makeVerticalBarGradient(waterCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
+          ],
+          borderRadius: 10, borderSkipped: false, maxBarThickness: 58,
         },
       ],
     },
@@ -14345,13 +14342,18 @@ function initCharts() {
   profitChart = new Chart(profitCtx, {
     type: "bar",
     data: {
-      labels: ["Mevcut", "Seçili senaryo"],
+      labels: ["Mevcut", "Su tasarrufu", "Kâr odaklı", "Su etkin kullanım"],
       datasets: [
         {
           label: "Net kâr (TL)",
-          data: [0, 0],
-          backgroundColor: [makeVerticalBarGradient(profitCtx,'rgba(76,110,245,.95)','rgba(167,184,255,.55)'), makeVerticalBarGradient(profitCtx,'rgba(255,159,67,.92)','rgba(255,214,163,.55)')],
-          borderRadius: 16, borderSkipped: false, maxBarThickness: 82,
+          data: [0, 0, 0, 0],
+          backgroundColor: [
+            makeVerticalBarGradient(profitCtx,'rgba(76,110,245,.95)','rgba(167,184,255,.55)'),
+            makeVerticalBarGradient(profitCtx,'rgba(24,184,166,.92)','rgba(167,240,233,.55)'),
+            makeVerticalBarGradient(profitCtx,'rgba(255,159,67,.92)','rgba(255,214,163,.55)'),
+            makeVerticalBarGradient(profitCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
+          ],
+          borderRadius: 10, borderSkipped: false, maxBarThickness: 58,
         },
       ],
     },
@@ -14674,7 +14676,57 @@ function initBenchmarkCharts() {
   });
 }
 
-function chartBarOptions(yLabel) { return { responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false }, animation:{ duration:650, easing:'easeOutQuart' }, plugins:{ legend:{ display:false }, tooltip:{ enabled:true, backgroundColor:'rgba(30,41,59,.94)', titleColor:'#fff', bodyColor:'#fff', padding:10, cornerRadius:10, callbacks:{ label:(ctx)=>{ const v=(ctx&&ctx.parsed&&typeof ctx.parsed.y!=='undefined')?ctx.parsed.y:(ctx.raw||0); const name=(ctx.dataset&&ctx.dataset.label)?ctx.dataset.label:''; return (name?(name+': '):'')+fmtNum(v,2); } } } }, scales:{ x:{ ticks:{ font:{ size:11, weight:'600' }, color:'#5b6474' }, grid:{ display:false } }, y:{ ticks:{ font:{ size:10 }, color:'#7a8496' }, border:{ display:false }, grid:{ color:'rgba(210,223,246,.8)' }, title:{ display:!!yLabel, text:yLabel, font:{ size:10, weight:'600' }, color:'#60708a' } } } }; }
+function chartBarOptions(yLabel) {
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    resizeDelay:120,
+    interaction:{ mode:'index', intersect:false },
+    animation:{ duration:420, easing:'easeOutQuart' },
+    layout:{ padding:{ top:4, right:8, bottom:2, left:4 } },
+    plugins:{
+      legend:{ display:false },
+      tooltip:{
+        enabled:true,
+        backgroundColor:'rgba(30,41,59,.94)',
+        titleColor:'#fff',
+        bodyColor:'#fff',
+        padding:10,
+        cornerRadius:10,
+        callbacks:{
+          label:(ctx)=>{
+            const v=(ctx&&ctx.parsed&&typeof ctx.parsed.y!=='undefined')?ctx.parsed.y:(ctx.raw||0);
+            const name=(ctx.dataset&&ctx.dataset.label)?ctx.dataset.label:'';
+            return (name?(name+': '):'')+fmtNum(v,2);
+          }
+        }
+      }
+    },
+    scales:{
+      x:{
+        ticks:{
+          autoSkip:false,
+          maxRotation:0,
+          minRotation:0,
+          font:{ size:10, weight:'700' },
+          color:'#4b5563',
+          callback:function(value){
+            const label = this.getLabelForValue(value);
+            return String(label || '').replace('Su etkin kullanım','Su etkin').replace('Su tasarrufu','Su tasarruf');
+          }
+        },
+        grid:{ display:false }
+      },
+      y:{
+        beginAtZero:true,
+        ticks:{ font:{ size:10 }, color:'#7a8496', callback:(v)=>fmtNum(v,0) },
+        border:{ display:false },
+        grid:{ color:'rgba(210,223,246,.8)' },
+        title:{ display:!!yLabel, text:yLabel, font:{ size:10, weight:'600' }, color:'#60708a' }
+      }
+    }
+  };
+}
 
 function chartLineOptions(yLabel) {
   return {
@@ -21636,6 +21688,53 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       tlPerM3: num(pat.tlPerM3 || (profit / Math.max(1, water)), 0)
     };
   }
+  function approvedContext(record, parcel, pattern, components, totals){
+    const appState = (typeof STATE !== 'undefined' ? STATE : window.STATE) || {};
+    const scenarioRaw = pattern?.scenario || record?.scenario || (typeof selectedScenario !== 'undefined' ? selectedScenario : appState.selectedScenario) || 'su_etkin';
+    const objective = (typeof getScenarioDisplayMeta === 'function') ? getScenarioDisplayMeta(scenarioRaw).label : 'Su etkin kullanım';
+    const algoRaw = pattern?.algorithm || record?.algorithm || pattern?.algo || (typeof selectedAlgo !== 'undefined' ? selectedAlgo : appState.selectedAlgo) || '-';
+    const seasonRaw = pattern?.seasonSource || record?.seasonSource || appState.seasonSource || (components.length > 1 ? 's2' : 's1');
+    const scenarioLabel = String(seasonRaw).toLowerCase() === 's2' ? 'Senaryo 2 - ürün kombinasyonu / desen' : 'Senaryo 1 - tek ürün';
+    const parcelLabel = [parcel?.id || parcel?.parsel_id || '', parcel?.village || parcel?.koy || parcel?.mahalle || ''].filter(Boolean).join(' • ') || 'Seçili parsel';
+    const baseline = (() => {
+      try{
+        if(typeof runOptimization === 'function') return runOptimization(parcel, 'mevcut', String(algoRaw).toLowerCase())?.totals || null;
+      }catch(_e){}
+      return null;
+    })();
+    const quota = (() => {
+      try{ return typeof parcelWaterBudget === 'function' ? num(parcelWaterBudget(num(parcel?.area_da || parcel?.area, 0), parcel), 0) : 0; }
+      catch(_e){ return 0; }
+    })();
+    const deltaWater = Number.isFinite(Number(pattern?.deltaWater)) ? num(pattern.deltaWater) : (baseline ? totals.water - num(baseline.water, 0) : 0);
+    const deltaProfit = Number.isFinite(Number(pattern?.deltaProfit)) ? num(pattern.deltaProfit) : (baseline ? totals.profit - num(baseline.profit, 0) : 0);
+    const quotaExceeded = quota > 0 && totals.water > quota;
+    return { objective, algo:String(algoRaw).toUpperCase(), scenarioLabel, parcelLabel, quota, deltaWater, deltaProfit, quotaExceeded };
+  }
+  function approvedSummaryHtml(record, parcel, pattern, planTitle, ctx){
+    const items = [
+      ['Plan adı', planTitle],
+      ['Onaylayan uzman', record?.approved_by || 'Uzman'],
+      ['Tarih', (record?.approved_at || '').slice(0,10) || 'Onay tarihi'],
+      ['Hedef modu', ctx.objective],
+      ['Senaryo', ctx.scenarioLabel],
+      ['Algoritma', ctx.algo],
+      ['Parsel', ctx.parcelLabel],
+    ];
+    return `<div class="approved-summary-strip-v7">${items.map(([k,v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div>`;
+  }
+  function approvedKpiHtml(totals, ctx){
+    const waterDiff = ctx.deltaWater;
+    const profitDiff = ctx.deltaProfit;
+    return `<div class="approved-kpi-grid-v142 approved-kpi-grid-only-v144 approved-kpi-grid-v7">
+      <div><span>Plan suyu</span><strong>${fmt(totals.water,0)} m³</strong></div>
+      <div><span>Net kâr</span><strong>${money(totals.profit)}</strong></div>
+      <div><span>TL/m³</span><strong>${fmt(totals.tlPerM3,2)} TL/m³</strong></div>
+      <div><span>Δ su</span><strong>${waterDiff >= 0 ? '+' : ''}${fmt(waterDiff,0)} m³</strong></div>
+      <div><span>Δ kâr</span><strong>${profitDiff >= 0 ? '+' : ''}${money(profitDiff)}</strong></div>
+      <div><span>Kota durumu</span><strong>${ctx.quota ? (ctx.quotaExceeded ? 'Kota aşımı riski' : 'Kota uygun') : 'Kota izlenir'}</strong><small>${ctx.quota ? fmt(ctx.quota,0) + ' m³ sınır' : 'Parsel su hakkı kaydıyla izlenir'}</small></div>
+    </div>`;
+  }
   function monthlyHtml(guides){
     const items = [];
     guides.forEach(g => g.months.forEach(m => items.push({...m, crop:g.label})));
@@ -21705,21 +21804,19 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const totals = totalsFor(record, parcel);
     const components = componentsFromPattern(pat, parcel);
     const planTitle = pretty(pat.patternName || crops.join(' + '));
+    const ctx = approvedContext(record, parcel, pat, components, totals);
+    const reasonText = `${guides[0].target} ${components.length > 1 ? 'Ana ürün korunur; ara ürün/yüzde dağılımı su-kâr dengesini artırmak için sınırlı payla planlanır.' : 'Plan, seçilen hedefe göre parsel su hakkı ve uygulanabilirlik birlikte okunarak onaylanmıştır.'}`;
     return `<section class="approved-deep-v148" id="approvedDeepV148">
       <div class="approved-deep-hero-v148">
         <div><span>Uzman onaylı güncel plan</span><h3>${esc(planTitle)}</h3><p>${esc(pat.note || pat.areaSplit || guides[0].niğde)}</p></div>
         <div><b>${esc(record?.approved_by || 'Uzman')}</b><small>${esc((record?.approved_at || '').slice(0,10) || 'Onay tarihi')}</small></div>
       </div>
-      ${compositionHtml(components)}
-      <div class="approved-kpi-grid-v142 approved-kpi-grid-only-v144">
-        <div><span>Uygulama alanı</span><strong>${fmt(totals.area,1)} da</strong></div>
-        <div><span>Ürün/desen</span><strong>${esc(crops.join(' + '))}</strong></div>
-        <div><span>Plan suyu</span><strong>${fmt(totals.water,0)} m³</strong></div>
-        <div><span>Net kâr hedefi</span><strong>${money(totals.profit)}</strong></div>
-        <div><span>Su verimi</span><strong>${fmt(totals.tlPerM3,2)} TL/m³</strong></div>
-        <div><span>Teşvik/başvuru etkisi</span><strong>${totals.incentive ? money(totals.incentive) : 'Uygunluk kontrolü'}</strong><small>${totals.incentivePerDa ? fmt(totals.incentivePerDa,0) + ' TL/da' : 'Belge ve başvuru koşulu aranır'}</small></div>
+      ${approvedSummaryHtml(record, parcel, pat, planTitle, ctx)}
+      <div class="approved-layout-grid-v7">
+        <section class="approved-block-v148 approved-block-compact-v7"><h4>Desen bileşenleri</h4>${compositionHtml(components)}</section>
+        <section class="approved-block-v148 approved-block-compact-v7"><h4>KPI özeti</h4>${approvedKpiHtml(totals, ctx)}</section>
       </div>
-      <section class="approved-block-v148 approved-reason-v149"><h4>Niğde için neden bu plan?</h4><p>${esc(guides[0].target)} ${components.length > 1 ? 'Ana ürün korunur; ara ürün/yüzde dağılımı su-kâr dengesini artırmak için sınırlı payla planlanır.' : ''}</p></section>
+      <section class="approved-block-v148 approved-reason-v149"><h4>Neden bu plan?</h4><p>${esc(reasonText)}</p></section>
       <section class="approved-block-v148"><h4>Ay ay üretim, bakım ve sulama takvimi</h4>${monthlyHtml(guides)}</section>
       <div class="approved-section-grid-v149">
         <section class="approved-block-v148"><h4>Sulama yönetimi</h4>${irrigationHtml(guides, totals)}</section>
