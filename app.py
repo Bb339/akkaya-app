@@ -2916,6 +2916,121 @@ def candidate_allowed_for_parcel(parcel_type: str, current_crop: str, candidate_
 
     return True, "parsel tipi ile ürün tipi uyumlu"
 
+def is_annual_field_vegetable_candidate(candidate_crop: str) -> bool:
+    """Return True for the annual field/vegetable scope used by annual ranking."""
+    ck = normalize_crop_key(candidate_crop)
+    if not ck or ck == FALLOW or canonical_crop_key(candidate_crop) in PERENNIAL_CROPS:
+        return False
+    if candidate_crop_land_type(candidate_crop) not in ("field", "vegetable"):
+        return False
+    vegetable = (
+        "DOMATES", "BIBER", "KABAK", "PATLICAN", "HIYAR", "KARPUZ", "KAVUN",
+        "SOGAN", "SARIMSAK", "LAHANA", "MARUL", "ISPANAK", "HAVUC", "TURP",
+        "BAMYA", "FASULYE"
+    )
+    field = (
+        "BUGDAY", "ARPA", "CAVDAR", "YULAF", "TRITIKALE", "MERCIMEK", "NOHUT",
+        "FIG", "YEM", "BEZELYE", "AYCICEGI", "MISIR", "PANCAR", "PATATES",
+        "KIMYON"
+    )
+    return any(x in ck for x in vegetable) or any(x in ck for x in field)
+
+
+def normalize_crop_category_mode(value: Any) -> str:
+    raw = str(value or "mixed").strip().lower()
+    raw = raw.replace("-", "_").replace(" ", "_")
+    aliases = {
+        "same": "same_category",
+        "same_category": "same_category",
+        "mevcut": "same_category",
+        "field": "field_cereal",
+        "field_cereal": "field_cereal",
+        "cereal": "field_cereal",
+        "tahil": "field_cereal",
+        "tarla": "field_cereal",
+        "forage": "forage",
+        "yem": "forage",
+        "legume": "legume",
+        "baklagil": "legume",
+        "vegetable": "vegetable",
+        "sebze": "vegetable",
+        "industrial": "industrial_oil",
+        "industrial_oil": "industrial_oil",
+        "oil": "industrial_oil",
+        "endustri": "industrial_oil",
+        "orchard": "orchard",
+        "bahce": "orchard",
+        "mixed": "mixed",
+        "karisik": "mixed",
+        "all": "mixed",
+    }
+    return aliases.get(raw, "mixed")
+
+
+def annual_crop_category(candidate_crop: str) -> str:
+    ck = normalize_crop_key(candidate_crop)
+    canon = canonical_crop_key(candidate_crop)
+    if canon in PERENNIAL_CROPS or candidate_crop_land_type(candidate_crop) == "orchard":
+        return "orchard"
+    if any(x in ck for x in ("SILAJ", "YESILOT", "YEM", "FIG")):
+        return "forage"
+    if any(x in ck for x in ("MERCIMEK", "NOHUT", "FASULYE", "BAKLA", "BEZELYE")):
+        return "legume"
+    if any(x in ck for x in ("BUGDAY", "ARPA", "CAVDAR", "YULAF", "TRITIKALE")):
+        return "field_cereal"
+    if any(x in ck for x in ("AYCICEGI", "KIMYON", "PATATES", "PANCAR", "SARIMSAK", "LAVANTA", "COREK", "ASPIR")):
+        return "industrial_oil"
+    if any(x in ck for x in ("DOMATES", "BIBER", "KABAK", "PATLICAN", "HIYAR", "KARPUZ", "KAVUN", "SOGAN", "LAHANA", "MARUL", "ISPANAK", "HAVUC", "TURP", "BAMYA")):
+        return "vegetable"
+    if "MISIR" in ck:
+        return "forage" if "SILAJ" in ck else "field_cereal"
+    return "field_cereal" if candidate_crop_land_type(candidate_crop) == "field" else "vegetable"
+
+
+def annual_crop_category_label(category: str) -> str:
+    return {
+        "same_category": "Mevcut kategori",
+        "field_cereal": "Tahıl / tarla",
+        "forage": "Yem bitkisi",
+        "legume": "Baklagil",
+        "vegetable": "Sebze",
+        "industrial_oil": "Endüstri / yağ / özel",
+        "orchard": "Bahçe / çok yıllık",
+        "mixed": "Karışık mod",
+    }.get(str(category or ""), str(category or "Genel"))
+
+
+def annual_category_fit_score(candidate_category: str, mode: str, current_category: str = "") -> float:
+    cat = str(candidate_category or "").strip()
+    mode = normalize_crop_category_mode(mode)
+    current = str(current_category or "").strip()
+    if mode == "mixed":
+        return 0.72
+    if mode == "orchard":
+        return 1.0 if cat == "orchard" else 0.0
+    if mode == "same_category":
+        if cat == current:
+            return 1.0
+        near = {
+            "field_cereal": {"forage": 0.72, "legume": 0.64, "industrial_oil": 0.55},
+            "forage": {"field_cereal": 0.70, "legume": 0.58},
+            "legume": {"field_cereal": 0.62, "forage": 0.55},
+            "vegetable": {"industrial_oil": 0.46, "legume": 0.42},
+            "industrial_oil": {"field_cereal": 0.58, "vegetable": 0.52},
+        }
+        return near.get(current, {}).get(cat, 0.20)
+    if cat == mode:
+        return 1.0
+    near_mode = {
+        "field_cereal": {"forage": 0.62, "legume": 0.52, "industrial_oil": 0.45},
+        "forage": {"field_cereal": 0.58, "legume": 0.46},
+        "legume": {"field_cereal": 0.52, "forage": 0.46},
+        "vegetable": {"industrial_oil": 0.42, "legume": 0.34},
+        "industrial_oil": {"field_cereal": 0.50, "vegetable": 0.42},
+    }
+    return near_mode.get(mode, {}).get(cat, 0.08)
+
+
 def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, crop_list: List[str], season_source: str) -> np.ndarray:
     """For Senaryo-2, if a parcel is a fruit-orchard/perennial in that year, lock crop choice to that crop.
 
@@ -5453,6 +5568,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
     df = load_matrix_candidates()
     if df is None or df.empty:
         return None
+    all_matrix_df = df.copy()
 
     sel_ids = [normalize_parcel_id(p.get("id")) for p in (selected_parcels or []) if str(p.get("id", "")).strip()]
     if sel_ids:
@@ -5464,6 +5580,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
     y = int(year) if year is not None else 2024
     ratio = max(0.0, float(water_budget_ratio or 1.0))
     opts = options or {}
+    crop_category_mode = normalize_crop_category_mode(opts.get("cropCategoryMode") or opts.get("crop_category_mode") or "mixed")
     allocation_model = _normalize_allocation_model(opts.get("allocationModel") or opts.get("waterAllocationModel") or opts.get("quotaModel") or "area_fair_per_da")
     quota_col = _quota_column_for_allocation_model(allocation_model)
     if quota_col not in df.columns:
@@ -5494,11 +5611,94 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
             return pd.Series([1.0] * len(s), index=s.index)
         return (s - lo) / (hi - lo)
 
+    def _augment_annual_regional_candidates(g: pd.DataFrame, pid: str, parcel_info: Dict[str, Any], parcel_type: str, current_crop: str) -> pd.DataFrame:
+        """Expand annual field/vegetable choices from the full five-village matrix.
+
+        The matrix file stores real crop observations per parcel. Some parcels do not
+        contain every annual crop seen in the five villages, so limiting candidates to
+        selected-parcel rows makes recommendations repeat the same narrow set. This
+        augmentation clones regional annual crop intensities onto the selected parcel
+        area/quota, then the normal compatibility, quota and ranking logic evaluates
+        them for that parcel.
+        """
+        try:
+            if g is None or g.empty or all_matrix_df is None or all_matrix_df.empty:
+                return g
+            current_canon = canonical_crop_key(current_crop)
+            perennial_flag = str((parcel_info or {}).get("cok_yillik_kilit", "") or "").strip().lower()
+            orchard_locked = bool(
+                str(parcel_type or "").strip().lower() == "orchard"
+                or perennial_flag.startswith("e")
+                or perennial_flag.startswith("y")
+                or (current_canon in PERENNIAL_CROPS)
+            )
+            if orchard_locked:
+                return g
+
+            area0 = float(pd.to_numeric(g.get("area_da", pd.Series([0.0])).iloc[0], errors="coerce") or 0.0)
+            if area0 <= 0:
+                return g
+            existing = set(g["candidate_crop"].astype(str).map(canonical_crop_key).tolist())
+            base = g.iloc[0].copy()
+            additions = []
+
+            region = all_matrix_df.copy()
+            region["_cand_canon_tmp"] = region["candidate_crop"].astype(str).map(canonical_crop_key)
+            for cand_canon, grp in region.groupby("_cand_canon_tmp", sort=False):
+                if not cand_canon or cand_canon in existing or cand_canon in PERENNIAL_CROPS or cand_canon == FALLOW:
+                    continue
+                sample_name = str(grp["candidate_crop"].dropna().astype(str).iloc[0] if len(grp) else cand_canon).strip()
+                if not is_annual_field_vegetable_candidate(sample_name):
+                    continue
+                allowed, _rule = candidate_allowed_for_parcel(parcel_type, current_crop, sample_name)
+                if not allowed:
+                    continue
+
+                w_vals = pd.to_numeric(grp.get("water_m3_da", pd.Series(dtype=float)), errors="coerce").dropna()
+                p_vals = pd.to_numeric(grp.get("profit_tl_da", pd.Series(dtype=float)), errors="coerce").dropna()
+                if w_vals.empty or p_vals.empty:
+                    continue
+                water_da0 = float(w_vals.median())
+                profit_da0 = float(p_vals.median())
+                if water_da0 < 0 or profit_da0 <= 0:
+                    continue
+
+                row = base.copy()
+                row["parcel_id"] = str(pid)
+                row["candidate_crop"] = sample_name
+                row["candidate_crop_id"] = cand_canon
+                row["candidate_crop_norm"] = cand_canon
+                row["current_crop"] = current_crop
+                row["area_da"] = area0
+                row["water_m3_da"] = water_da0
+                row["net_water_m3_da"] = water_da0
+                row["water_m3_total"] = water_da0 * area0
+                row["net_water_m3_total"] = water_da0 * area0
+                row["profit_tl_da"] = profit_da0
+                row["profit_tl_total"] = profit_da0 * area0
+                if "yield_ton_da" in row.index:
+                    row["yield_ton_da"] = float(pd.to_numeric(grp.get("yield_ton_da", pd.Series([0.0])), errors="coerce").dropna().median() if "yield_ton_da" in grp.columns and not pd.to_numeric(grp.get("yield_ton_da"), errors="coerce").dropna().empty else 0.0)
+                if "production_ton" in row.index:
+                    row["production_ton"] = float(row.get("yield_ton_da", 0.0) or 0.0) * area0
+                row["source_workbook"] = str(row.get("source_workbook", "") or "") + " | regional_5_village_candidate"
+                row["_candidate_source_type"] = "regional_5_village_crop"
+                row["_candidate_village_count"] = int(grp["village"].astype(str).str.strip().replace("", np.nan).dropna().nunique()) if "village" in grp.columns else 0
+                additions.append(row)
+                existing.add(cand_canon)
+
+            if additions:
+                g = pd.concat([g, pd.DataFrame(additions)], ignore_index=True)
+        except Exception:
+            return g
+        return g
+
     for pid, g in df.groupby("parcel_id", sort=True):
         g = g.copy()
         parcel_info = parcel_info_map.get(str(pid), {})
         parcel_type = str((parcel_info or {}).get("parcel_type", "") or "").strip().lower()
         quota = float(quota_map.get(pid, 0.0))
+        current_crop_for_aug = str((parcel_info or {}).get("current_crop") or g["current_crop"].iloc[0] or "").strip()
+        g = _augment_annual_regional_candidates(g, str(pid), parcel_info, parcel_type, current_crop_for_aug)
 
         area = _safe_series(g, "area_da")
         water_da = _safe_series(g, "water_m3_da")
@@ -5530,6 +5730,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
 
         current_crop = str((parcel_info or {}).get("current_crop") or g["current_crop"].iloc[0] or "").strip()
         current_crop_canon = canonical_crop_key(current_crop)
+        current_category = annual_crop_category(current_crop)
 
         # transparent agronomic compatibility bundle (based only on available project data)
         compat_scores = []
@@ -5561,6 +5762,8 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
         g["_compat_summary"] = compat_summaries
         g["_compat_reasons"] = compat_reasons
         g["_compat_cautions"] = compat_cautions
+        g["_crop_category"] = g["candidate_crop"].astype(str).apply(annual_crop_category)
+        g["_category_fit"] = g["_crop_category"].apply(lambda c: annual_category_fit_score(c, crop_category_mode, current_category))
 
         # local utility guides all algorithms, while the final choice remains a global portfolio search
         cov_n = _norm_series(g["_coverage_pct"])
@@ -5568,15 +5771,16 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
         eff_n = _norm_series(g["_tl_per_m3"])
         water_low_n = 1.0 - _norm_series(g["_effective_water_m3"])
         compat_n = _norm_series(g["_compat_score"])
+        category_n = pd.to_numeric(g["_category_fit"], errors="coerce").fillna(0.0).clip(0.0, 1.0)
 
         if objective == "water_saving":
-            g["_local_utility"] = 0.54 * water_low_n + 0.16 * eff_n + 0.12 * compat_n + 0.10 * cov_n + 0.08 * prof_n
+            g["_local_utility"] = 0.44 * water_low_n + 0.14 * eff_n + 0.10 * compat_n + 0.08 * cov_n + 0.08 * prof_n + 0.16 * category_n
         elif objective == "water_efficiency":
-            g["_local_utility"] = 0.34 * water_low_n + 0.22 * cov_n + 0.18 * eff_n + 0.12 * prof_n + 0.14 * compat_n
+            g["_local_utility"] = 0.30 * water_low_n + 0.18 * cov_n + 0.18 * eff_n + 0.12 * prof_n + 0.10 * compat_n + 0.12 * category_n
         elif objective == "max_profit":
-            g["_local_utility"] = 0.48 * prof_n + 0.18 * cov_n + 0.08 * eff_n + 0.10 * water_low_n + 0.16 * compat_n
+            g["_local_utility"] = 0.42 * prof_n + 0.16 * cov_n + 0.08 * eff_n + 0.08 * water_low_n + 0.12 * compat_n + 0.14 * category_n
         else:
-            g["_local_utility"] = 0.30 * prof_n + 0.22 * water_low_n + 0.18 * cov_n + 0.16 * eff_n + 0.14 * compat_n
+            g["_local_utility"] = 0.28 * prof_n + 0.20 * water_low_n + 0.16 * cov_n + 0.14 * eff_n + 0.10 * compat_n + 0.12 * category_n
 
         # Strongly discourage NADAS when any non-fallow option is agronomically/economically feasible.
         try:
@@ -5659,12 +5863,46 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
             # orchard/perennial installation on field/vegetable parcels.  This keeps
             # outputs defendable for ziraat review (tarla ≠ bahçe dönüşümü).
             try:
-                allow_mask = g["candidate_crop"].astype(str).apply(lambda c: candidate_allowed_for_parcel(parcel_type, current_crop, c)[0])
+                allow_mask = g["candidate_crop"].astype(str).apply(
+                    lambda c: candidate_allowed_for_parcel(parcel_type, current_crop, c)[0]
+                    and is_annual_field_vegetable_candidate(c)
+                )
                 if bool(allow_mask.any()):
                     dropped_count = int((~allow_mask).sum())
                     if dropped_count > 0:
                         g = g[allow_mask].copy()
                         g["_compat_cautions"] = g["_compat_cautions"].apply(lambda xs: list(xs or []) + [f"{dropped_count} uyumsuz bahçe/çok yıllık aday normal senaryodan elendi."])
+            except Exception:
+                pass
+
+            try:
+                hard_modes = {"field_cereal", "forage", "legume", "vegetable", "industrial_oil", "orchard"}
+                if crop_category_mode in hard_modes:
+                    exact_mask = g["_crop_category"].astype(str) == crop_category_mode
+                    cur_mask = g["candidate_crop"].astype(str).map(canonical_crop_key) == current_crop_canon
+                    if bool(exact_mask.any()):
+                        g = g[exact_mask | (cur_mask & (crop_category_mode == "orchard"))].copy()
+                    else:
+                        cur_only = g[cur_mask].copy()
+                        if not cur_only.empty:
+                            g = cur_only
+                        g["_compat_cautions"] = g["_compat_cautions"].apply(lambda xs: list(xs or []) + ["Seçilen ürün grubunda bu parsel için güvenilir aday bulunamadı; kategori dışı ürünler ana öneri yapılmadı."])
+                        g["_local_utility"] = -10.0
+                elif crop_category_mode != "mixed":
+                    cur_mask = g["candidate_crop"].astype(str).map(canonical_crop_key) == current_crop_canon
+                    exact_mask = g["_crop_category"].astype(str) == current_category
+                    if bool(exact_mask.any()):
+                        g = g[exact_mask | cur_mask].copy()
+                        g["_category_fit"] = 1.0
+                    else:
+                        strong_mask = pd.to_numeric(g["_category_fit"], errors="coerce").fillna(0.0) >= 0.70
+                        near_mask = pd.to_numeric(g["_category_fit"], errors="coerce").fillna(0.0) >= 0.40
+                        if int(strong_mask.sum()) >= min(4, max(1, len(g))):
+                            g = g[strong_mask | cur_mask].copy()
+                        elif int(near_mask.sum()) >= 3:
+                            g = g[near_mask | cur_mask].copy()
+                    if g.empty:
+                        g = pd.DataFrame()
             except Exception:
                 pass
 
@@ -5693,6 +5931,9 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
 
         options = []
         for _, r in g.iterrows():
+            source_type = str(r.get("_candidate_source_type", "") or "").strip()
+            if (not source_type) or source_type.lower() == "nan":
+                source_type = "local_village_crop"
             options.append({
                 "name": str(r.get("candidate_crop", "") or "").strip(),
                 "candidate_crop_id": str(r.get("candidate_crop_id", "") or "").strip(),
@@ -5724,6 +5965,12 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
                 "isCurrent": bool(canonical_crop_key(str(r.get("candidate_crop", "") or "")) == current_crop_canon),
                 "candidateLandType": candidate_crop_land_type(str(r.get("candidate_crop", "") or "")),
                 "compatibilityRule": candidate_allowed_for_parcel(parcel_type, current_crop, str(r.get("candidate_crop", "") or ""))[1],
+                "sourceType": source_type,
+                "candidateVillageCount": safe_int(r.get("_candidate_village_count", 0), 0),
+                "cropCategory": str(r.get("_crop_category", "") or "").strip(),
+                "cropCategoryLabel": annual_crop_category_label(str(r.get("_crop_category", "") or "")),
+                "cropCategoryMode": crop_category_mode,
+                "categoryFitScore": float(r.get("_category_fit", 0.0) or 0.0),
             })
 
         if not options:
@@ -5769,6 +6016,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
         "allocation_model": allocation_model,
         "quota_column": quota_col,
         "planning_rule": _allocation_model_label(allocation_model),
+        "crop_category_mode": crop_category_mode,
         "parcels": parcels,
     }
 
@@ -5933,6 +6181,177 @@ def _matrix_eval_solution(problem: Dict[str, Any], sol: List[int]) -> Tuple[floa
     return float(score), metrics
 
 
+def _matrix_option_dominates_v8(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
+    aw = float(a.get("totalWater", 0.0) or 0.0)
+    bw = float(b.get("totalWater", 0.0) or 0.0)
+    ap = float(a.get("totalProfit", 0.0) or 0.0)
+    bp = float(b.get("totalProfit", 0.0) or 0.0)
+    ae = float(a.get("tlPerM3", 0.0) or 0.0)
+    be = float(b.get("tlPerM3", 0.0) or 0.0)
+    apen = (
+        float(a.get("rotationPenalty", 0.0) or 0.0)
+        + float(a.get("fieldToVegetablePenalty", 0.0) or 0.0)
+        + max(0.0, 1.0 - float(a.get("categoryFitScore", 0.0) or 0.0)) * 0.35
+    )
+    bpen = (
+        float(b.get("rotationPenalty", 0.0) or 0.0)
+        + float(b.get("fieldToVegetablePenalty", 0.0) or 0.0)
+        + max(0.0, 1.0 - float(b.get("categoryFitScore", 0.0) or 0.0)) * 0.35
+    )
+    if apen > bpen + 1e-9:
+        return False
+    water_ok = aw <= bw + max(1.0, bw * 0.002)
+    profit_ok = ap >= bp - max(1.0, bp * 0.002)
+    eff_ok = ae >= be - max(0.01, be * 0.002)
+    strict = (
+        aw < bw - max(1.0, bw * 0.005)
+        or ap > bp + max(1.0, bp * 0.005)
+        or ae > be + max(0.01, be * 0.005)
+    )
+    return bool(water_ok and profit_ok and eff_ok and strict)
+
+
+def _matrix_rank_options_v8(opts: List[Dict[str, Any]], objective: str) -> List[Dict[str, Any]]:
+    viable = [
+        o for o in (opts or [])
+        if float(o.get("area_da", 0.0) or 0.0) > 0.0
+        and float(o.get("totalProfit", 0.0) or 0.0) > 0.0
+    ]
+    if not viable:
+        return list(opts or [])
+
+    obj = str(objective or "water_efficiency")
+    current = next((o for o in viable if bool(o.get("isCurrent"))), None)
+    baseline_profit = float((current or {}).get("totalProfit", 0.0) or 0.0)
+    baseline_water = float((current or {}).get("totalWater", 0.0) or 0.0)
+    baseline_eff = float((current or {}).get("tlPerM3", 0.0) or 0.0)
+    fam_map = load_crop_family_map()
+    def annual_family(name: str) -> str:
+        fam = str(fam_map.get(normalize_crop_key(str(name or "")), "") or "").strip().lower()
+        if fam:
+            return fam
+        k = normalize_crop_key(str(name or ""))
+        if any(x in k for x in ("DOMATES", "BIBER", "PATATES", "PATLICAN")):
+            return "solanaceae"
+        if any(x in k for x in ("BUGDAY", "ARPA", "YULAF", "CAVDAR", "TRITIKALE", "MISIR")):
+            return "tahil"
+        if any(x in k for x in ("NOHUT", "MERCIMEK", "FASULYE", "FIG", "BEZELYE")):
+            return "baklagil"
+        if any(x in k for x in ("LAHANA", "TURP", "KARNABAHAR", "BROKOLI")):
+            return "brassicaceae"
+        if any(x in k for x in ("SOGAN", "SARIMSAK")):
+            return "allium"
+        if any(x in k for x in ("KABAK", "KAVUN", "KARPUZ", "HIYAR")):
+            return "cucurbitaceae"
+        if any(x in k for x in ("MARUL", "AYCICEGI")):
+            return "asteraceae"
+        return ""
+    current_family = annual_family(str((current or {}).get("name", "") or ""))
+
+    waters = [float(o.get("totalWater", 0.0) or 0.0) for o in viable]
+    profits = [float(o.get("totalProfit", 0.0) or 0.0) for o in viable]
+    effs = [float(o.get("tlPerM3", 0.0) or 0.0) for o in viable]
+    def norm(v: float, arr: List[float], invert: bool=False) -> float:
+        lo, hi = min(arr), max(arr)
+        n = 0.5 if abs(hi - lo) < 1e-9 else max(0.0, min(1.0, (v - lo) / (hi - lo)))
+        return 1.0 - n if invert else n
+    def source_score(o: Dict[str, Any]) -> float:
+        st = str(o.get("sourceType", "") or "").strip()
+        if bool(o.get("isCurrent")):
+            return 0.12
+        if st == "local_village_crop":
+            return 0.10
+        if st == "regional_5_village_crop":
+            return 0.03
+        return -0.04
+    def rotation_penalty(o: Dict[str, Any]) -> float:
+        fam = annual_family(str(o.get("name", "") or ""))
+        return 0.16 if fam and current_family and fam == current_family and not bool(o.get("isCurrent")) else 0.0
+    def field_to_vegetable_penalty(o: Dict[str, Any]) -> float:
+        fam = annual_family(str(o.get("name", "") or ""))
+        current_is_field_row = any(x in str(current_family or "").lower() for x in ("tahil", "tahıl", "yem", "cereal", "poaceae"))
+        candidate_is_field_row = any(x in str(fam or "").lower() for x in ("tahil", "tahıl", "yem", "baklagil", "cereal", "legume", "poaceae"))
+        return 0.50 if current_is_field_row and (not candidate_is_field_row) and not bool(o.get("isCurrent")) else 0.0
+    def category_penalty(o: Dict[str, Any]) -> float:
+        return max(0.0, 1.0 - float(o.get("categoryFitScore", 0.0) or 0.0)) * 0.32
+    def objective_score(o: Dict[str, Any]) -> float:
+        water = float(o.get("totalWater", 0.0) or 0.0)
+        profit = float(o.get("totalProfit", 0.0) or 0.0)
+        eff = float(o.get("tlPerM3", 0.0) or 0.0)
+        quota = 1.0 if bool(o.get("fullFeasible")) else 0.0
+        cat = max(0.0, min(1.0, float(o.get("categoryFitScore", 0.0) or 0.0)))
+        rot = rotation_penalty(o)
+        transition = field_to_vegetable_penalty(o)
+        cat_penalty = category_penalty(o)
+        if obj == "water_saving":
+            low_profit = 0.34 if baseline_profit > 0 and profit < baseline_profit * 0.35 and not bool(o.get("isCurrent")) else 0.0
+            return 0.42 * norm(water, waters, True) + 0.14 * norm(max(0.0, baseline_water - water), [max(0.0, baseline_water - w) for w in waters]) + 0.11 * norm(profit, profits) + 0.07 * norm(eff, effs) + 0.05 * quota + 0.16 * cat + source_score(o) - rot - transition - cat_penalty - low_profit
+        if obj == "max_profit":
+            return 0.52 * norm(profit, profits) + 0.13 * norm(eff, effs) + 0.07 * norm(water, waters, True) + 0.07 * quota + 0.16 * cat + source_score(o) - rot - transition - cat_penalty
+        weak = 0.42 if baseline_profit > 0 and baseline_eff > 0 and profit < baseline_profit * 0.75 and eff < baseline_eff * 0.95 and not bool(o.get("isCurrent")) else 0.0
+        return 0.42 * norm(eff, effs) + 0.23 * norm(profit, profits) + 0.15 * norm(water, waters, True) + 0.05 * quota + 0.12 * cat + source_score(o) - rot - transition - cat_penalty - weak
+
+    for o in viable:
+        profit = float(o.get("totalProfit", 0.0) or 0.0)
+        water = float(o.get("totalWater", 0.0) or 0.0)
+        eff = float(o.get("tlPerM3", 0.0) or 0.0)
+        o["cropFamily"] = annual_family(str(o.get("name", "") or ""))
+        o["rotationPenalty"] = rotation_penalty(o)
+        o["fieldToVegetablePenalty"] = field_to_vegetable_penalty(o)
+        o["categoryPenalty"] = category_penalty(o)
+        o["objectiveScore"] = objective_score(o)
+        o["finalScore"] = o["objectiveScore"]
+        o["waterSavingPct"] = (100.0 * (baseline_water - water) / baseline_water) if baseline_water > 0 else 0.0
+        o["profitDelta"] = profit - baseline_profit
+
+    if obj == "water_saving":
+        ranked = sorted(
+            viable,
+            key=lambda o: (
+                -int(bool(o.get("fullFeasible"))),
+                -int(float(o.get("categoryFitScore", 0.0) or 0.0) >= 0.70),
+                -int(float(o.get("totalProfit", 0.0) or 0.0) >= max(1.0, baseline_profit * 0.35)),
+                -float(o.get("finalScore", 0.0) or 0.0),
+                float(o.get("totalWater", 0.0) or 0.0),
+            )
+        )
+    elif obj == "max_profit":
+        ranked = sorted(
+            viable,
+            key=lambda o: (
+                -int(bool(o.get("fullFeasible"))),
+                -int(float(o.get("categoryFitScore", 0.0) or 0.0) >= 0.70),
+                -float(o.get("totalProfit", 0.0) or 0.0),
+                -float(o.get("tlPerM3", 0.0) or 0.0),
+                float(o.get("totalWater", 0.0) or 0.0),
+            )
+        )
+    else:
+        ranked = sorted(viable, key=lambda o: (-int(bool(o.get("fullFeasible"))), -int(float(o.get("categoryFitScore", 0.0) or 0.0) >= 0.70), -float(o.get("finalScore", 0.0) or 0.0), -float(o.get("tlPerM3", 0.0) or 0.0)))
+
+    for o in ranked:
+        o.pop("lowerWaterReason", None)
+
+    dominator = next((o for o in ranked[1:] if _matrix_option_dominates_v8(o, ranked[0])), None)
+    if dominator is not None:
+        ranked = [dominator] + [o for o in ranked if o is not dominator]
+
+    current = next((o for o in ranked if bool(o.get("isCurrent"))), None)
+    if current is not None and ranked and _matrix_option_dominates_v8(current, ranked[0]):
+        ranked = [current] + [o for o in ranked if o is not current]
+
+    if obj == "water_saving" and ranked:
+        lower_water = [
+            o for o in ranked[1:]
+            if bool(o.get("fullFeasible"))
+            and float(o.get("totalWater", 0.0) or 0.0) < float(ranked[0].get("totalWater", 0.0) or 0.0) - 1e-6
+        ]
+        if lower_water:
+            ranked[0]["lowerWaterReason"] = "Daha düşük su kullanan adaylar ekonomik alt eşik / kota / uygulanabilirlik nedeniyle geriye alınmıştır."
+
+    return ranked
+
+
 def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorithm: str) -> Dict[str, Any]:
     details = []
     parcels_out = []
@@ -5946,34 +6365,133 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
         idx = int(sol[i]) if i < len(sol) else 0
         if idx < 0 or idx >= len(opts):
             idx = 0
-        chosen = opts[idx]
+        ranked_opts = _matrix_rank_options_v8(opts, str(problem.get("objective") or "water_efficiency"))
+        chosen = ranked_opts[0] if ranked_opts else opts[idx]
+        objective_name = str(problem.get("objective") or "water_efficiency")
+        def _rank_reason(o: Dict[str, Any]) -> str:
+            current_opt = next((x for x in ranked_opts if bool(x.get("isCurrent"))), None)
+            cat_label = str(o.get("cropCategoryLabel") or annual_crop_category_label(str(o.get("cropCategory", "") or "")))
+            fit_pct = round(float(o.get("categoryFitScore", 0.0) or 0.0) * 100.0)
+            category_note = f" Ürün grubu uyumu: {cat_label} (%{fit_pct}). Algoritma: {str(algorithm).upper()}."
+            if bool(o.get("isCurrent")):
+                return "Mevcut desen bu hedefte alternatiflerden daha avantajlı olduğu için korunmuştur."
+            if (
+                current_opt is not None
+                and objective_name == "max_profit"
+                and not bool(current_opt.get("fullFeasible"))
+                and float(current_opt.get("totalProfit", 0.0) or 0.0) > float(o.get("totalProfit", 0.0) or 0.0)
+            ):
+                return "Mevcut ürün daha kârlıdır ancak su kotası/uygulanabilirlik riski nedeniyle ana öneri yapılmamıştır."
+            if (
+                current_opt is not None
+                and objective_name == "water_efficiency"
+                and not bool(current_opt.get("fullFeasible"))
+                and float(current_opt.get("tlPerM3", 0.0) or 0.0) >= float(o.get("tlPerM3", 0.0) or 0.0)
+                and float(current_opt.get("totalProfit", 0.0) or 0.0) > float(o.get("totalProfit", 0.0) or 0.0)
+            ):
+                return "Mevcut desen TL/m³ ve kâr açısından güçlüdür; kota riski olduğu için alternatifler karşılaştırmada tutulmuştur."
+            if objective_name == "water_saving":
+                if str(o.get("lowerWaterReason", "") or "").strip():
+                    return str(o.get("lowerWaterReason"))
+                return "Bu aday uygulanabilir ve kota uygun adaylar içinde en düşük toplam su kullanımına sahip olduğu için seçilmiştir."
+            if objective_name == "max_profit":
+                return "Bu aday uygulanabilir ve kota uygun adaylar içinde en yüksek net kârı verdiği için seçilmiştir."
+            return "Bu aday TL/m³, net kâr, su kullanımı ve kota uygunluğu birlikte değerlendirildiğinde en güçlü aday olduğu için seçilmiştir."
+
+        def _rank_reason_with_context(o: Dict[str, Any]) -> str:
+            cat_label = str(o.get("cropCategoryLabel") or annual_crop_category_label(str(o.get("cropCategory", "") or "")))
+            fit_pct = round(float(o.get("categoryFitScore", 0.0) or 0.0) * 100.0)
+            return f"{_rank_reason(o)} Ürün grubu uyumu: {cat_label} (%{fit_pct}). Algoritma: {str(algorithm).upper()}."
+
+        def _role_dedup_key(o: Dict[str, Any]) -> str:
+            name = re.sub(r"\([^)]*\)", "", str(o.get("name", "") or "")).strip()
+            season = str(o.get("season_label", "") or "").strip()
+            return f"{normalize_crop_key(name)}|primary|{normalize_crop_key(season)}"
 
         is_locked_orchard = bool(p.get("locked")) and str(p.get("lock_kind") or "") == "orchard"
-        if problem["objective"] == "water_efficiency":
-            alt_sorted = sorted(opts, key=lambda o: (-int(bool(o.get("fullFeasible"))), float(o.get("totalWater", 0.0)), -float(o.get("tlPerM3", 0.0)), -float(o.get("totalProfit", 0.0))))
-        elif problem["objective"] == "max_profit":
-            alt_sorted = sorted(opts, key=lambda o: (-float(o.get("totalProfit", 0.0)), -int(bool(o.get("fullFeasible"))), -float(o.get("coverage_pct", 0.0)), -float(o.get("tlPerM3", 0.0))))
-        else:
-            alt_sorted = sorted(opts, key=lambda o: (-float(o.get("localUtility", 0.0)), -float(o.get("coverage_pct", 0.0)), -float(o.get("totalProfit", 0.0))))
+        alt_sorted = ranked_opts
 
         if is_locked_orchard:
             alternatives = []
+            _orchard_reference = {
+                "name": str(chosen.get("name", "") or p.get("current_crop") or "").strip(),
+                "objective": objective_name,
+                "rankReason": "Bahçe/çok yıllık ürünlerde tesis sökümü ve yeniden kurulum gerektirdiği için mevcut ana ürün korunmuştur; tek yıllık ürünler ana öneri yapılmaz.",
+                "decisionNote": "Bahçe/çok yıllık ürünlerde tesis sökümü ve yeniden kurulum gerektirdiği için mevcut ana ürün korunmuştur; tek yıllık ürünler ana öneri yapılmaz.",
+                "is_current_reference": True,
+                "lifecycle": "perennial",
+                "cropCategory": "orchard",
+                "cropCategoryLabel": annual_crop_category_label("orchard"),
+                "cropCategoryMode": str(problem.get("crop_category_mode") or "same_category"),
+                "categoryFitScore": 1.0,
+                "categoryMatch": True,
+                "hardFilterPassed": True,
+                "fullFeasible": bool(chosen.get("fullFeasible")),
+                "quota_ok": bool(chosen.get("fullFeasible")),
+                "area_da": float(chosen.get("area_da", 0.0) or 0.0),
+                "totalWater": float(chosen.get("totalWater", 0.0) or 0.0),
+                "totalProfit": float(chosen.get("totalProfit", 0.0) or 0.0),
+                "tlPerM3": float(chosen.get("tlPerM3", 0.0) or 0.0),
+            }
             for ar in _orchard_interrow_alternatives(str(chosen.get("name", "") or p.get("current_crop") or "Bahçe ürünü"))[:5]:
                 alternatives.append({
                     "name": str(ar.get("name", "") or "").strip(),
                     "kind": str(ar.get("kind", "") or "").strip(),
                     "waterLevel": str(ar.get("waterLevel", "") or "").strip(),
                     "decisionNote": str(ar.get("note", "") or "").strip(),
-                    "isInterrow": True
+                    "isInterrow": True,
+                    "lifecycle": "annual_interrow",
+                    "cropCategory": "interrow",
+                    "cropCategoryLabel": "Sıra arası / uzman alternatifi",
+                    "cropCategoryMode": str(problem.get("crop_category_mode") or "same_category"),
+                    "categoryMatch": False,
+                    "hardFilterPassed": False,
+                    "requiresExpertApproval": True
                 })
         else:
             alternatives = []
-            for ar in alt_sorted[:5]:
+            seen_alt_keys = {_role_dedup_key(chosen)}
+            for ar in alt_sorted:
+                if bool(ar.get("isCurrent")):
+                    continue
+                dkey = _role_dedup_key(ar)
+                if dkey in seen_alt_keys:
+                    continue
+                seen_alt_keys.add(dkey)
+                ar_idx = len(alternatives) + 1
                 alt_cat = load_crop_catalog().get(normalize_crop_key(str(ar.get("name", "") or "")), {})
                 alt_irr_current = str(alt_cat.get("irrigationCurrentKey") or p.get("irrigation_key") or "").strip()
                 alt_irr_suggested = str(alt_cat.get("irrigationRecommendedKey") or alt_irr_current).strip()
                 alternatives.append({
                     "name": str(ar.get("name", "") or "").strip(),
+                    "objective": objective_name,
+                    "rankReason": _rank_reason_with_context(ar),
+                    "is_current_reference": bool(ar.get("isCurrent")),
+                    "debugRank": {
+                        "label": str(ar.get("name", "") or "").strip(),
+                        "scenario": "single",
+                        "objective": objective_name,
+                        "is_current_reference": bool(ar.get("isCurrent")),
+                        "totalWater": float(ar.get("totalWater", 0.0) or 0.0),
+                        "totalProfit": float(ar.get("totalProfit", 0.0) or 0.0),
+                        "tlPerM3": float(ar.get("tlPerM3", 0.0) or 0.0),
+                        "waterSavingPct": float(ar.get("waterSavingPct", 0.0) or 0.0),
+                        "profitDelta": float(ar.get("profitDelta", 0.0) or 0.0),
+                        "fullFeasible": bool(ar.get("fullFeasible")),
+                        "quota_ok": bool(ar.get("fullFeasible")),
+                        "cropFamily": str(ar.get("cropFamily", "") or ""),
+                        "rotationPenalty": float(ar.get("rotationPenalty", 0.0) or 0.0),
+                        "fieldToVegetablePenalty": float(ar.get("fieldToVegetablePenalty", 0.0) or 0.0),
+                        "categoryFitScore": float(ar.get("categoryFitScore", 0.0) or 0.0),
+                        "categoryPenalty": float(ar.get("categoryPenalty", 0.0) or 0.0),
+                        "cropCategory": str(ar.get("cropCategory", "") or ""),
+                        "cropCategoryMode": str(ar.get("cropCategoryMode", "") or ""),
+                        "objectiveScore": float(ar.get("objectiveScore", 0.0) or 0.0),
+                        "finalScore": float(ar.get("finalScore", 0.0) or 0.0),
+                        "rank": int(ar_idx),
+                        "rankReason": _rank_reason_with_context(ar),
+                        "dominatedBy": ""
+                    },
                     "season": str(ar.get("season_label", "") or infer_crop_season_label(str(ar.get("name", "") or ""), str(p.get("parcel_type", "") or ""))).strip(),
                     "area_da": float(ar.get("area_da", 0.0) or 0.0),
                     "coverage_pct": float(ar.get("coverage_pct", 0.0) or 0.0),
@@ -5982,22 +6500,63 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                     "tlPerM3": float(ar.get("tlPerM3", 0.0) or 0.0),
                     "parcelQuotaM3": float(ar.get("parcelQuotaM3", 0.0) or 0.0),
                     "quotaAdjusted": bool(ar.get("quotaAdjusted")),
+                    "fullFeasible": bool(ar.get("fullFeasible")),
+                    "quota_ok": bool(ar.get("fullFeasible")),
+                    "sourceType": str(ar.get("sourceType", "") or ""),
+                    "cropCategory": str(ar.get("cropCategory", "") or ""),
+                    "cropCategoryLabel": str(ar.get("cropCategoryLabel", "") or ""),
+                    "cropCategoryMode": str(ar.get("cropCategoryMode", "") or ""),
+                    "categoryFitScore": float(ar.get("categoryFitScore", 0.0) or 0.0),
+                    "categoryMatch": float(ar.get("categoryFitScore", 0.0) or 0.0) >= 0.999,
+                    "hardFilterPassed": float(ar.get("categoryFitScore", 0.0) or 0.0) >= 0.999 or str(ar.get("cropCategoryMode", "") or "") in ("mixed", "same_category"),
+                    "lifecycle": "perennial" if str(ar.get("cropCategory", "") or "") == "orchard" else "annual",
+                    "candidateVillageCount": safe_int(ar.get("candidateVillageCount", 0), 0),
                     "candidateLandType": str(ar.get("candidateLandType", "") or candidate_crop_land_type(str(ar.get("name", "") or ""))),
                     "compatibilityRule": str(ar.get("compatibilityRule", "") or candidate_allowed_for_parcel(str(p.get("parcel_type", "") or ""), str(p.get("current_crop", "") or ""), str(ar.get("name", "") or ""))[1]),
                     "compatibilityScore": float(ar.get("compatibilityScore", 0.0) or 0.0),
                     "reasonDetails": list(ar.get("reasonDetails", []) or []),
                     "cautionDetails": list(ar.get("cautionDetails", []) or []),
-                    "decisionNote": str(ar.get("compatibilitySummary", "") or "Eşit köy kotası ve eşit parsel kotası altında hesaplandı."),
+                    "decisionNote": _rank_reason_with_context(ar),
                     "irrigationCurrentKey": alt_irr_current,
                     "irrigationSuggestedKey": alt_irr_suggested,
                     **_decision_metrics_for_crop(str(ar.get("name", "") or ""), float(ar.get("area_da", 0.0) or 0.0), float(ar.get("water_m3_da", 0.0) or 0.0), float(ar.get("profit_tl_da", 0.0) or 0.0)),
                 })
+                if len(alternatives) >= 5:
+                    break
 
         chosen_cat = load_crop_catalog().get(normalize_crop_key(str(chosen.get("name", "") or "")), {})
         irr_current_key = str(chosen_cat.get("irrigationCurrentKey") or p.get("irrigation_key") or "").strip()
         irr_suggested_key = str(chosen_cat.get("irrigationRecommendedKey") or irr_current_key).strip()
         rec = {
             "name": str(chosen.get("name", "") or "").strip(),
+            "objective": objective_name,
+            "rankReason": _rank_reason_with_context(chosen),
+            "is_current_reference": bool(chosen.get("isCurrent")),
+            "debugRank": {
+                "label": str(chosen.get("name", "") or "").strip(),
+                "scenario": "single",
+                "objective": objective_name,
+                "is_current_reference": bool(chosen.get("isCurrent")),
+                "totalWater": float(chosen.get("totalWater", 0.0) or 0.0),
+                "totalProfit": float(chosen.get("totalProfit", 0.0) or 0.0),
+                "tlPerM3": float(chosen.get("tlPerM3", 0.0) or 0.0),
+                "waterSavingPct": float(chosen.get("waterSavingPct", 0.0) or 0.0),
+                "profitDelta": float(chosen.get("profitDelta", 0.0) or 0.0),
+                "fullFeasible": bool(chosen.get("fullFeasible")),
+                "quota_ok": bool(chosen.get("fullFeasible")),
+                "cropFamily": str(chosen.get("cropFamily", "") or ""),
+                "rotationPenalty": float(chosen.get("rotationPenalty", 0.0) or 0.0),
+                "fieldToVegetablePenalty": float(chosen.get("fieldToVegetablePenalty", 0.0) or 0.0),
+                "categoryFitScore": float(chosen.get("categoryFitScore", 0.0) or 0.0),
+                "categoryPenalty": float(chosen.get("categoryPenalty", 0.0) or 0.0),
+                "cropCategory": str(chosen.get("cropCategory", "") or ""),
+                "cropCategoryMode": str(chosen.get("cropCategoryMode", "") or ""),
+                "objectiveScore": float(chosen.get("objectiveScore", 0.0) or 0.0),
+                "finalScore": float(chosen.get("finalScore", 0.0) or 0.0),
+                "rank": 1,
+                "rankReason": _rank_reason_with_context(chosen),
+                "dominatedBy": ""
+            },
             "season": str(chosen.get("season_label", "") or infer_crop_season_label(str(chosen.get("name", "") or ""), str(p.get("parcel_type", "") or ""))).strip(),
             "area_da": float(chosen.get("area_da", 0.0) or 0.0),
             "plannedAreaDa": float(chosen.get("plannedAreaDa", 0.0) or 0.0),
@@ -6008,8 +6567,20 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "profitPerDa": float(chosen.get("profit_tl_da", 0.0) or 0.0),
             "totalWater": float(chosen.get("totalWater", 0.0) or 0.0),
             "totalProfit": float(chosen.get("totalProfit", 0.0) or 0.0),
+            "tlPerM3": float(chosen.get("tlPerM3", 0.0) or 0.0),
             "parcelQuotaM3": float(chosen.get("parcelQuotaM3", 0.0) or 0.0),
             "quotaAdjusted": bool(chosen.get("quotaAdjusted")),
+            "fullFeasible": bool(chosen.get("fullFeasible")),
+            "quota_ok": bool(chosen.get("fullFeasible")),
+            "sourceType": str(chosen.get("sourceType", "") or ""),
+            "cropCategory": str(chosen.get("cropCategory", "") or ""),
+            "cropCategoryLabel": str(chosen.get("cropCategoryLabel", "") or ""),
+            "cropCategoryMode": str(chosen.get("cropCategoryMode", "") or ""),
+            "categoryFitScore": float(chosen.get("categoryFitScore", 0.0) or 0.0),
+            "categoryMatch": bool(is_locked_orchard) or float(chosen.get("categoryFitScore", 0.0) or 0.0) >= 0.999,
+            "hardFilterPassed": bool(is_locked_orchard) or float(chosen.get("categoryFitScore", 0.0) or 0.0) >= 0.999 or str(chosen.get("cropCategoryMode", "") or "") in ("mixed", "same_category"),
+            "lifecycle": "perennial" if bool(is_locked_orchard) or str(chosen.get("cropCategory", "") or "") == "orchard" else "annual",
+            "candidateVillageCount": safe_int(chosen.get("candidateVillageCount", 0), 0),
             "candidateLandType": str(chosen.get("candidateLandType", "") or candidate_crop_land_type(str(chosen.get("name", "") or ""))),
             "compatibilityRule": str(chosen.get("compatibilityRule", "") or candidate_allowed_for_parcel(str(p.get("parcel_type", "") or ""), str(p.get("current_crop", "") or ""), str(chosen.get("name", "") or ""))[1]),
             "orchardLocked": bool(is_locked_orchard),
@@ -6024,7 +6595,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "irrigationCurrentKey": irr_current_key,
             "irrigationSuggestedKey": irr_suggested_key,
             **_decision_metrics_for_crop(str(chosen.get("name", "") or ""), float(chosen.get("area_da", 0.0) or 0.0), float(chosen.get("water_m3_da", 0.0) or 0.0), float(chosen.get("profit_tl_da", 0.0) or 0.0)),
-            "decisionNote": ("Kurulu çok yıllık/bahçe parselinde ana ürün korunmuştur; yalnızca ara ürün ve yönetim alternatifleri gösterilir." if is_locked_orchard else str(chosen.get("compatibilitySummary", "") or "Toplam mevcut su 5 köye eşit, köy içindeki parseller de eşit kota alacak şekilde planlandı."))
+            "decisionNote": ("Kurulu çok yıllık/bahçe parselinde ana ürün korunmuştur; yalnızca ara ürün ve yönetim alternatifleri gösterilir." if is_locked_orchard else _rank_reason_with_context(chosen))
         }
 
         total_water += rec["totalWater"]
@@ -6035,6 +6606,10 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "parcel_type": str(p.get("parcel_type", "") or "").strip(),
             "current_crop": str(p.get("current_crop", "") or "").strip(),
             "result": {
+                "primaryRecommendation": rec,
+                "alternativeRecommendations": [a for a in alternatives if not bool(a.get("isInterrow")) and not bool(a.get("requiresExpertApproval"))],
+                "interrowOrExpertAlternatives": [a for a in alternatives if bool(a.get("isInterrow")) or bool(a.get("requiresExpertApproval"))],
+                "conversionWarnings": (["Mevcut bahçe/çok yıllık ürün korunmuştur; yıllık ürünler ana öneri yapılmaz ve yalnızca uzman değerlendirmesi gerektirir."] if bool(is_locked_orchard) else []),
                 "recommended": [rec],
                 "alternatives": alternatives
             }
@@ -6066,6 +6641,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
         "meta": {
             "mode": "excel_area_fair_water_real_optimization_v42_agro_guarded",
             "allocation_model": str(problem.get("allocation_model") or "area_fair_per_da"),
+            "cropCategoryMode": str(problem.get("crop_category_mode") or "mixed"),
             "quota_column": str(problem.get("quota_column") or "quota_area_fair_per_da_m3"),
             "planning_rule": str(problem.get("planning_rule") or "Dekar bazlı adil kota: toplam mevcut su / toplam alan; her parsel alanı kadar su hakkı alır."),
             "objective_explanation": {
@@ -6282,6 +6858,31 @@ def optimize_from_excel_matrix(selected_parcels: List[Dict[str, Any]], algorithm
         out.setdefault("meta", {})["run_params"] = {"algorithm": algo, "seed": opts.get("seed", None), "mode": "current_baseline"}
         return out
 
+    if algo in ("AUTO", "OTOMATIK", "OTOMATİK"):
+        trials: List[Tuple[str, List[int], Dict[str, Any], float]] = []
+        auto_opts = {**opts, "popSize": min(int(opts.get("popSize", 18) or 18), 18), "generations": min(int(opts.get("generations", 18) or 18), 18), "ants": min(int(opts.get("ants", 14) or 14), 14), "iterations": min(int(opts.get("iterations", 18) or 18), 18), "foodSources": min(int(opts.get("foodSources", 14) or 14), 14), "cycles": min(int(opts.get("cycles", 18) or 18), 18)}
+        for a in ("GA", "ACO", "ABC"):
+            seed0 = opts.get("seed", None)
+            if a == "ABC":
+                sol0, meta0 = _matrix_abc_optimize(problem, seed=seed0, food_sources=int(auto_opts.get("foodSources", 14) or 14), cycles=int(auto_opts.get("cycles", 18) or 18), limit=int(auto_opts.get("limit", 10) or 10))
+            elif a == "ACO":
+                sol0, meta0 = _matrix_aco_optimize(problem, seed=seed0, ants=int(auto_opts.get("ants", 14) or 14), iterations=int(auto_opts.get("iterations", 18) or 18), rho=float(opts.get("rho", 0.22) or 0.22), q=float(opts.get("q", 1.0) or 1.0))
+            else:
+                sol0, meta0 = _matrix_ga_optimize(problem, seed=seed0, pop_size=int(auto_opts.get("popSize", 18) or 18), generations=int(auto_opts.get("generations", 18) or 18), cx_rate=float(opts.get("cxRate", 0.72) or 0.72), mut_rate=float(opts.get("mutRate", 0.05) or 0.05))
+            score0, eval0 = _matrix_eval_solution(problem, sol0)
+            trials.append((a, sol0, {**meta0, **eval0}, float(score0)))
+        trials.sort(key=lambda x: x[3], reverse=True)
+        best_algo, best_sol, best_meta, best_score = trials[0]
+        out = _matrix_solution_to_payload(problem, best_sol, best_algo)
+        out.setdefault("meta", {})["auto_algorithm"] = {
+            "selected": best_algo,
+            "score": best_score,
+            "candidates": [{"algorithm": a, "score": s, "total_profit": m.get("total_profit"), "total_water": m.get("total_water"), "efficiency": m.get("efficiency")} for a, _sol, m, s in trials],
+            "cropCategoryMode": str(problem.get("crop_category_mode") or "mixed"),
+        }
+        out.setdefault("meta", {})["run_params"] = {"algorithm": "AUTO", "selected_algorithm": best_algo, "seed": opts.get("seed", None)}
+        return out
+
     if algo == "ABC":
         sol, meta = _matrix_abc_optimize(
             problem,
@@ -6350,16 +6951,26 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
     # Senaryo-2 ise çift ürün / desen mantığı içerir; bu nedenle S2 isteklerinde matrix motorunu
     # kullanmak yanlış sonuçlara yol açıyordu ve S1/S2 farkı kayboluyordu. Aşağıda matrix motoru
     # yalnızca gerçek tek-ürün senaryolarda devreye alınır.
-    prefer_matrix = (season_source != "s2") and (not two_season) and (scenario_type == "single")
+    category_mode = normalize_crop_category_mode(opts.get("cropCategoryMode") or opts.get("crop_category_mode") or "mixed") if isinstance(opts, dict) else "mixed"
+    hard_category_mode = category_mode in {"field_cereal", "forage", "legume", "vegetable", "industrial_oil", "orchard", "same_category"}
+    orchard_guard_required = any(
+        str(p.get("parcel_type", "") or "").strip().lower() == "orchard"
+        or str(p.get("cok_yillik_kilit", "") or p.get("perennial_lock", "") or "").strip().lower().startswith(("e", "y"))
+        or canonical_crop_key(str(p.get("current_crop", "") or p.get("crop", "") or "")) in PERENNIAL_CROPS
+        for p in selected
+    )
+    prefer_matrix = ((season_source != "s2") and (not two_season) and (scenario_type == "single")) or hard_category_mode or orchard_guard_required
 
     if prefer_matrix:
         try:
             matrix_out = optimize_from_excel_matrix(selected, algorithm, scenario, water_budget_ratio, year=year, options=options)
             if matrix_out is not None:
-                matrix_out.setdefault("meta", {})["planner_mode"] = "matrix_single"
+                matrix_out.setdefault("meta", {})["planner_mode"] = "matrix_category_guarded"
                 matrix_out.setdefault("meta", {})["seasonSource"] = season_source
                 matrix_out.setdefault("meta", {})["scenarioType"] = scenario_type
-                matrix_out.setdefault("meta", {})["twoSeason"] = False
+                matrix_out.setdefault("meta", {})["twoSeason"] = bool(two_season)
+                if two_season:
+                    matrix_out.setdefault("meta", {})["category_guard_note"] = "Kategori filtresi seçili olduğu için eski çift ürün fallback yerine kategori-korumalı karar hattı kullanıldı."
                 return matrix_out
         except Exception:
             pass
@@ -8502,6 +9113,8 @@ def api_optimize():
         options = payload.get("options", None)
         if not isinstance(options, dict):
             options = {} if options is None else dict(options)
+        if payload.get("cropCategoryMode") is not None:
+            options["cropCategoryMode"] = payload.get("cropCategoryMode")
         if isinstance(payload.get("customParcels"), list) and payload.get("customParcels"):
             options["customParcels"] = payload.get("customParcels")
 

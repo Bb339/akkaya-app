@@ -303,6 +303,19 @@
 <option value="s2">Senaryo 2 - Çift ürünlü / desen bazlı parsel (1+1 ürün / bahçede sıra arası)</option>
 </select>
 </div>
+<div class="field-row" id="cropCategoryModeRow">
+<label class="field-label" for="cropCategoryModeSel">Öneri ürün grubu</label>
+<select class="select-input" id="cropCategoryModeSel">
+<option selected="" value="same_category">Mevcut kategoriye yakın öner</option>
+<option value="field_cereal">Tahıl / tarla ürünleri</option>
+<option value="forage">Yem bitkileri</option>
+<option value="legume">Baklagiller</option>
+<option value="vegetable">Sebze ürünleri</option>
+<option value="industrial_oil">Endüstri / yağ / özel ürünler</option>
+<option value="orchard">Bahçe / çok yıllık ürünler</option>
+<option value="mixed">Karışık mod - tüm uygun ürünler</option>
+</select>
+</div>
 <p class="card-help small" style="margin-top:6px;">
                 Not: Senaryo 1, her parseli esasen tek ürünlü kabul eder; sistem en iyi ana öneriyi ve diğer güçlü alternatifleri sıralar. Senaryo 2, parselde 1+1 ürün / desen yaklaşımını dener; bahçe-çok yıllık parsellerde ana ürün korunur, fark sıra arası ve sulama yönetiminden gelir.
               </p>
@@ -1159,7 +1172,7 @@ Parsel Haritası</h2>
       Tarımsal Karar Destek Sistemi • Çiftçi ve kurum için rol bazlı tez prototipi
     </footer>
 
-<script src="script.js?v=clean-v7-phase3"></script>
+<script src="script.js?v=v10-category-qc"></script>
 </body>
 </html>
 
