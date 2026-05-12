@@ -1,8 +1,0 @@
-v47: Su dağıtım ve adalet mantığı netleştirildi.
-- Ana karar modeli dekar bazlı adil kota olarak sabitlendi: toplam mevcut su / toplam alan = genel m³/da; her parsel alanı × genel m³/da kadar kota alır.
-- Eşit köy + eşit parsel modeli kaldırılmadı, fakat yalnızca karşılaştırma/idari eşitlik senaryosu olarak etiketlendi.
-- Mevcut su, parsel başına mevcut ortalama, mevcut m³/da, eşit köy payı, dekar bazlı adil pay ve fark yüzdeleri ayrı CSV'de özetlendi.
-- UI metinleri, hocaya anlatılabilecek şekilde sadeleştirildi ve 'ana model / karşılaştırma modeli' ayrımı netleştirildi.
-Yeni çıktı dosyaları:
-  data/water_allocation_decision_summary_v47.csv
-  data/water_allocation_decision_totals_v47.json

@@ -1,8 +1,0 @@
-v38 - Tüm GeoJSON klasörü kalıcı işleme alındı
-
-- Kullanıcının yüklediği geojson_yeni_klasor4.rar içindeki tüm GeoJSON dosyaları data/geojson_yeni_klasor4 içine işlendi.
-- Bor İlçe Merkezi, Kemerhisar, Bahçeli, Kaynarca ve Sazlıca parselleri aynı popup/rozet/seçim formatıyla okunacak şekilde meta ve index dosyaları güncellendi.
-- Köy sınırları ve baraj alanı parsel katmanına karıştırılmadı; ayrı katmanlarda kaldı.
-- Fiziksel parsel GeoJSON sayımı: 180
-- Köy bazlı sayım: {'Bahçeli': 31, 'Bor İlçe Merkezi': 43, 'Kaynarca': 23, 'Kemerhisar': 34, 'Sazlıca': 49}
-- Eksik resmi kayıt idleri: ['P138']

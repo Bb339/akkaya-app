@@ -1,8 +1,0 @@
-v27 - Kaynarca GeoJSON kalıcı yükleme ve görünüm hazırlığı
-
-- Kaynarca parsel GeoJSON'ları eklendiğinde Sazlıca/Bahçeli ile aynı formatta gösterilecek şekilde backend bundle eşleştirmesi güçlendirildi.
-- Artık dosya adı yalnız meta_map by_file ile eşleşmese bile, P157 gibi parsel ID'si dosya adından veya GeoJSON properties alanından yakalanır ve parcel_meta_map.by_id üzerinden köy, ürün, alan, çiftçi, sulama, desen bilgileri tamamlanır.
-- Panelden kaydedilen yeni parseller otomatik olarak data/geojson_yeni_klasor4/ klasörüne şu formatta kaydedilir:
-  koy_sulamaTipi_urun_alan da_ParselID.geojson
-- Kaynarca için beklenen kalıcı kayıtlar P157-P179 aralığındadır. Bu dosyalar klasöre eklendiğinde /api/geojson_bundle tarafından otomatik okunur.
-- Not: Bu pakete Kaynarca parsel geometri dosyaları fiziksel olarak eklenmemişse haritada görünmez; yalnızca kaynarca_siniri.geojson köy sınırı görünür. Geometri dosyaları eklendiğinde ek index düzenlemesi gerekmeden yüklenir.

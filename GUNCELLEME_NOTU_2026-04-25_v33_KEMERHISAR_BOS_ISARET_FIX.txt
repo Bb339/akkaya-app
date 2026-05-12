@@ -1,1 +1,0 @@
-Kemerhisar için çizim bekleyen P122-P156 parsel işaretleri haritada görünür hale getirildi; gerçek GeoJSON olmayan kayıtlar artık seçilebilir marker olarak gösterilir. renderTables seçili parsel bulunamadığında çökmeyecek şekilde korumaya alındı. script.js?v=330.

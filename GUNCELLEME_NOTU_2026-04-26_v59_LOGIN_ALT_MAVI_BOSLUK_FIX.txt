@@ -1,8 +1,0 @@
-V59 - Login ekranı alt mavi boşluk / aşağı kayma düzeltmesi
-
-- Giriş ekranında html ve body birlikte viewport yüksekliğine kilitlendi.
-- auth-screen artık sayfa yüksekliğini aşan ayrı bir akış oluşturmuyor.
-- Arka plan görseli fixed viewport katmanı olarak sabitlendi.
-- Login açıkken app-shell, ana panel, header, quote band ve footer tamamen gizli tutuldu.
-- Aşağı kaydırıldığında alttaki mavi boşluk veya panel kalıntısı görünmeyecek şekilde overflow kapatıldı.
-- CSS/JS cache sürümleri v59'a yükseltildi.

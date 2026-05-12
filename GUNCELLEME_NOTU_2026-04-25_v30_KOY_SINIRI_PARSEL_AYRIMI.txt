@@ -1,8 +1,0 @@
-v30 düzeltmesi
-
-- Köy sınırı polygonları artık parsel katmanı gibi gösterilmez.
-- Köy sınırı varsayılan kapalıdır; kullanıcı isterse harita katmanlarından açar.
-- Tüm parseller katmanı yalnız gerçek parsel GeoJSON dosyalarını gösterir.
-- Seçilen köyde parsel GeoJSON yoksa harita araç panelinde uyarı görünür.
-- Baraj/akkaya/sınır/boundary dosyaları parsel sayısına karıştırılmaz.
-- Yeni parsel GeoJSON dosyaları data/geojson_yeni_klasor4 içine eklendiğinde Pxxx kodu ve dosya adından otomatik eşleştirilir.

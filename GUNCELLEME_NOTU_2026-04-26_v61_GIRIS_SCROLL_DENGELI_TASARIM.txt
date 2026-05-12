@@ -1,9 +1,0 @@
-v61 - Giriş ekranı zoom/scroll ve dengeli tasarım düzeltmesi
-
-Yapılanlar:
-1) Giriş ekranında ana panel gizli kalmaya devam ederken, browser zoom/ekran büyütme durumunda giriş ekranının aşağı kaydırılabilmesi sağlandı.
-2) Önceki sürümde çok büyük görünen başlık tipografisi küçültülerek daha dengeli hale getirildi.
-3) Tez başlığı baş harf düzeniyle okunabilir hale getirildi.
-4) Sol hero kartı, sağ giriş kartı, logo kartları ve demo butonları daha kompakt ve profesyonel hale getirildi.
-5) Arka plan görseli sabit kaldı; altta ana panel/quote/footer sızıntısı yine engellenmektedir.
-6) Cache tazeleme için CSS/JS sürümleri v61 yapıldı.

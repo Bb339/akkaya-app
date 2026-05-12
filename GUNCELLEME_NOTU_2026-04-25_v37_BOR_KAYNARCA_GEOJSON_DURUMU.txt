@@ -1,6 +1,0 @@
-v37 BOR / KAYNARCA GÜNCELLEME NOTU
-
-- Kaynarca parselleri mevcut pakette kalıcı GeoJSON olarak duruyor ve haritada Sazlıca/Bahçeli formatında çalışır.
-- Bana ulaşan zip içinde Bor İlçe Merkezi parsel polygon GeoJSON dosyaları fiziksel olarak bulunmadığı için Bor parselleri bu pakete geometri olarak eklenemedi.
-- Bor parselleri data/geojson_yeni_klasor4 klasörüne eklendiğinde /api/geojson_bundle tarafından otomatik okunacak, popup/ikon/seçim formatı diğer köylerle aynı olacaktır.
-- Durum raporu: data/geojson_presence_report_v37.json

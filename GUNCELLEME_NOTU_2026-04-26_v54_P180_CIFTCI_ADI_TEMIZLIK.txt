@@ -1,6 +1,0 @@
-GÜNCELLEME NOTU - v54
-
-- Sazlıca sınıflandırılmamış alan GEO-DIGER yerine P180 olarak düzenlendi.
-- GeoJSON dosya adı ve iç property alanları P180 ile eşitlendi.
-- Parsel seç dropdownunda çiftçi isimlerinden sonra görünen tekrar ID/sayı ekleri kaldırıldı.
-- Çiftçi adı alanları CSV/JSON/GeoJSON kaynaklarında temizlendi; farmer_id değerleri korunarak sadece görünen isim sadeleştirildi.

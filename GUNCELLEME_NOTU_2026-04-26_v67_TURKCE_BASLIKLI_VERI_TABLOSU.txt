@@ -1,1 +1,0 @@
-v67 güncellemesi: Aktif dosya veri görüntüleyicisindeki İngilizce kolon başlıkları Türkçeleştirildi. Bilinmeyen başlıklarda akıllı çeviri/fallback eklendi. Başlıkları kopyala butonu artık Türkçe başlıkları kopyalıyor; orijinal başlık ise sütun başlığında tooltip olarak korunuyor.

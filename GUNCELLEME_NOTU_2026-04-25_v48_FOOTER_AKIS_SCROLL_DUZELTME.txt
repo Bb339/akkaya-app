@@ -1,1 +1,0 @@
-v48: Sol panel ve ana yerleşim footer’a kadar doğal sayfa akışında açılacak şekilde düzeltildi. Sol panelin kendi içinde sıkışan/max-height/scroll davranışı tekrar güçlü şekilde devre dışı bırakıldı. Orta ve dar ekranlarda iki kolon yerine tek kolon akış kullanılarak sağda boş alan kalması engellendi. CSS/JS cache parametreleri v480 olarak güncellendi.

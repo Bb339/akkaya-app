@@ -1,1 +1,0 @@
-v71: Senaryo özeti kartlarında düzen sabitlendi. Genel havza özeti masaüstünde 3 sütun, parsel bazlı özet 2 sütun olarak korunur; sadece dar ekranlarda kırılır. Uygulama başlığı ve sekme başlığı "Tarımsal Karar Destek Sistemi" olarak sadeleştirildi.

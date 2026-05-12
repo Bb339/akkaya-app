@@ -1,5 +1,0 @@
-v57 çiftçi sahiplik senkronu
-- Betül Demir hesabına tanımlanan P23, P149 ve P158 parsellerinin sahiplik bilgisi veri dosyalarında güncellendi.
-- Çiftçi görünümünde bu parseller diğer panellerde, parsel özetinde, harita popup/özette ve öneri kartlarında Betül Demir hesabına ait görünür.
-- Eski kaynak çiftçi adları (Bekir Çelik, Rabia Sezer, Veli Polat) ilgili demo parsellerinden temizlendi.
-- 3 parsel kurgusu korunur: P23 Sazlıca sebze, P149 Kemerhisar meyve, P158 Kaynarca tarla ürünü.

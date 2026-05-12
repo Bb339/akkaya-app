@@ -1,1 +1,0 @@
-v49: Sol panel, sağ içerik yüksekliği boyunca footer alanına kadar uzayan iki kolonlu doğal akış tasarımına alındı. Sol panel iç scroll kullanmaz; sayfa tek parça kayar. 1700px altında tek kolona zorlayan kural kaldırıldı, yalnızca dar ekranlarda tek kolona geçilir. Footer ve logo bandı iki kolon bittikten sonra normal akışta gelir.

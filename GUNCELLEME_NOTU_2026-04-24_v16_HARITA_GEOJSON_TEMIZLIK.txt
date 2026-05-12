@@ -1,8 +1,0 @@
-V16 HARİTA / GEOJSON GÜNCELLEMESİ
-
-- Haritada görünmeyen kayıtlı Excel parselleri için 202 adet temsili GeoJSON üretildi.
-- Aktif harita katmanı artık data/geojson_generated_multi_village klasörünü öncelikli kullanır.
-- Bu geometri gerçek Planet/kadastro sınırı değildir; Excel lat/lon ve alan değerlerinden üretilmiş görünürlük/atama proxy katmanıdır.
-- Eski çizimle oluşturulmuş kullanıcı parselleri ve atamalar yeni sürümde otomatik temizlenecek şekilde localStorage anahtarları yenilendi.
-- Panele "Çizimle eklenenleri sil" butonu eklendi.
-- Eski Sazlıca ağırlıklı GeoJSON katmanı pasif kaldı; gerekirse gerçek sınırlar aynı P kodlarıyla içe aktarılabilir.

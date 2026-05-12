@@ -1,7 +1,0 @@
-V58 - Panel geçiş ve scroll kilidi düzeltmesi
-
-- Giriş ekranındayken aşağı kaydırınca ana panelin görünmesine neden olan CSS çakışması giderildi.
-- body.auth-pending durumunda app-shell, app-header, app-main, quote bandı ve footer kesin olarak gizlendi.
-- Login ekranı viewport içine sabitlendi; gerekiyorsa yalnızca login alanının kendi içinde kayması sağlandı.
-- Kullanıcı giriş yapmadan alt panel, harita, analiz kartları veya footer görünmez.
-- Giriş sonrası rol bazlı otomasyon akışı korunur; kullanıcı yalnızca rolüne uygun panele geçer.
