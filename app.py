@@ -6366,7 +6366,12 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
         if idx < 0 or idx >= len(opts):
             idx = 0
         ranked_opts = _matrix_rank_options_v8(opts, str(problem.get("objective") or "water_efficiency"))
-        chosen = ranked_opts[0] if ranked_opts else opts[idx]
+        chosen = opts[idx]
+        ranked_choice_pos = -1
+        try:
+            ranked_choice_pos = next((k for k, o in enumerate(ranked_opts) if o is chosen), -1)
+        except Exception:
+            ranked_choice_pos = -1
         objective_name = str(problem.get("objective") or "water_efficiency")
         def _rank_reason(o: Dict[str, Any]) -> str:
             current_opt = next((x for x in ranked_opts if bool(x.get("isCurrent"))), None)
@@ -6537,6 +6542,9 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                 "scenario": "single",
                 "objective": objective_name,
                 "is_current_reference": bool(chosen.get("isCurrent")),
+                "algorithmChoiceIndex": int(idx),
+                "rankedChoicePosition": int(ranked_choice_pos),
+                "algorithmChoicePreserved": True,
                 "totalWater": float(chosen.get("totalWater", 0.0) or 0.0),
                 "totalProfit": float(chosen.get("totalProfit", 0.0) or 0.0),
                 "tlPerM3": float(chosen.get("tlPerM3", 0.0) or 0.0),
@@ -6959,7 +6967,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
         or canonical_crop_key(str(p.get("current_crop", "") or p.get("crop", "") or "")) in PERENNIAL_CROPS
         for p in selected
     )
-    prefer_matrix = ((season_source != "s2") and (not two_season) and (scenario_type == "single")) or hard_category_mode or orchard_guard_required
+    prefer_matrix = (season_source != "s2") and (not two_season) and (scenario_type == "single")
 
     if prefer_matrix:
         try:
@@ -7801,6 +7809,567 @@ def _to_ui_payload(raw: Dict[str, Any], selected_parcels: List[Dict[str, Any]], 
             "note": "İkinci ürün seçiminde aynı ürün ailesinden (crop_family) kaçınma + baklagil (Fabaceae) küçük teşvik bonusu eklendi."
         }
     }
+
+def _standard_objective_mode(value: Any) -> str:
+    obj = str(value or "balanced").strip().lower()
+    if obj in ("current", "mevcut", "reference", "referans"):
+        return "current"
+    if obj in ("water_saving", "su_tasarruf", "su tasarruf", "tasarruf"):
+        return "water_saving"
+    if obj in ("max_profit", "maks_kar", "maks kar", "profit", "kar"):
+        return "max_profit"
+    if obj in ("balanced", "water_efficiency", "su_etkin", "su etkin", "su_verimliligi", "recommended", "onerilen"):
+        return "balanced"
+    return obj or "balanced"
+
+
+def _standard_scenario_type(options: Dict[str, Any], payload_meta: Dict[str, Any]) -> str:
+    opt = options if isinstance(options, dict) else {}
+    meta = payload_meta if isinstance(payload_meta, dict) else {}
+    raw = str(opt.get("scenarioType") or meta.get("scenarioType") or "").strip().lower()
+    season_source = str(opt.get("seasonSource") or meta.get("seasonSource") or "").strip().lower()
+    two_season = bool(opt.get("twoSeason") or meta.get("twoSeason"))
+    if season_source == "s2" or two_season or raw in ("double", "iki", "cift", "çift", "desen"):
+        return "double"
+    return "single"
+
+
+def _safe_text(value: Any, default: str = "") -> str:
+    txt = str(value if value is not None else default).strip()
+    return txt if txt else default
+
+
+def _row_name(row: Dict[str, Any]) -> str:
+    return _safe_text(row.get("name") or row.get("crop") or row.get("chosenCrop") or row.get("crop_name"))
+
+
+def _row_water(row: Dict[str, Any]) -> float:
+    return safe_float(row.get("waterTotal", row.get("totalWater", row.get("water_m3", 0.0))), 0.0)
+
+
+def _row_profit(row: Dict[str, Any]) -> float:
+    return safe_float(row.get("profitTotal", row.get("totalProfit", row.get("profit_tl", 0.0))), 0.0)
+
+
+def _row_area(row: Dict[str, Any]) -> float:
+    return safe_float(row.get("area", row.get("area_da", row.get("plannedAreaDa", 0.0))), 0.0)
+
+
+def _row_quota_m3(row: Dict[str, Any]) -> float:
+    return safe_float(row.get("parcelQuotaM3", row.get("quota_m3", row.get("current_quota_m3", 0.0))), 0.0)
+
+
+def _row_feasible(row: Dict[str, Any], plan_feasible: bool = True) -> bool:
+    water = _row_water(row)
+    quota = _row_quota_m3(row)
+    quota_ok = True if quota <= 0 else water <= quota + 1e-6
+    explicit = row.get("fullFeasible", row.get("quota_ok", row.get("feasible", None)))
+    if explicit is None:
+        return bool(plan_feasible and quota_ok)
+    return bool(explicit) and bool(quota_ok) and bool(plan_feasible)
+
+
+def _is_fallow_name(name: str) -> bool:
+    return normalize_crop_key(name) in {normalize_crop_key(FALLOW), "nadas", "fallow", ""}
+
+
+def _standard_close_crop_key(name: str) -> str:
+    compact = canonical_crop_key(name)
+    for token in ("KURU", "YAS", "TAZE", "SULU"):
+        compact = compact.replace(token, "")
+    return compact
+
+
+def _standard_crops_too_close(a: str, b: str) -> bool:
+    if not a or not b:
+        return False
+    return _standard_close_crop_key(a) == _standard_close_crop_key(b)
+
+
+def _objective_mode_label_tr(mode: str) -> str:
+    return {
+        "current": "Mevcut",
+        "water_saving": "Su tasarrufu",
+        "max_profit": "Kar odakli",
+        "balanced": "Su-kar dengesi",
+        "water_efficiency": "Su-kar dengesi",
+    }.get(str(mode or "").strip().lower(), str(mode or "Secili hedef"))
+
+
+def _standard_crop_from_row(row: Dict[str, Any], parcel: Dict[str, Any], role: str, plan_feasible: bool) -> Dict[str, Any]:
+    area = _row_area(row)
+    parcel_area = safe_float((parcel or {}).get("area_da", area), area)
+    water = _row_water(row)
+    profit = _row_profit(row)
+    quota = _row_quota_m3(row)
+    feasible = _row_feasible(row, plan_feasible=plan_feasible)
+    warnings = []
+    if quota > 0 and water > quota + 1e-6:
+        warnings.append("Parsel su kotasini asiyor; secilebilir degil.")
+    if not _safe_text(row.get("planting_date") or row.get("ekim_tarihi") or row.get("harvest_date") or row.get("hasat_tarihi")):
+        warnings.append("Takvim verisi eksik; ekim-hasat cakismasi veriyle dogrulanamadi.")
+    return {
+        "parcel_id": _safe_text((parcel or {}).get("id") or (parcel or {}).get("parcel_id")),
+        "crop_name": _row_name(row),
+        "name": _row_name(row),
+        "role": role,
+        "season": _safe_text(row.get("season") or row.get("season_label") or "Belirtilmedi"),
+        "planting_date": _safe_text(row.get("planting_date") or row.get("ekim_tarihi")),
+        "harvest_date": _safe_text(row.get("harvest_date") or row.get("hasat_tarihi")),
+        "period_note": _safe_text(row.get("period_note") or row.get("season")),
+        "area_da": float(area),
+        "area_share_pct": float((area / parcel_area) * 100.0) if parcel_area > 0 else 0.0,
+        "water_m3": float(water),
+        "profit_tl": float(profit),
+        "tl_per_m3": float(profit / water) if water > 0 else 0.0,
+        "irrigation_method": _safe_text(row.get("irrigationSuggestedKey") or row.get("irrigationRecommended") or row.get("irrigationCurrentKey")),
+        "quota_m3": float(quota),
+        "quota_status": "Uygun" if feasible else "Kota/uygunluk riski var",
+        "feasible": bool(feasible),
+        "selectable": bool(feasible),
+        "warnings": warnings,
+        "explanation": _safe_text(row.get("reason") or row.get("decisionNote") or row.get("rankReason")),
+    }
+
+
+def _standard_recommended_rows(parcel_result: Dict[str, Any]) -> List[Dict[str, Any]]:
+    result = parcel_result.get("result") if isinstance(parcel_result, dict) else {}
+    if not isinstance(result, dict):
+        return []
+    rows = result.get("recommended")
+    if isinstance(rows, list) and rows:
+        return [r for r in rows if isinstance(r, dict)]
+    primary = result.get("primaryRecommendation")
+    if isinstance(primary, dict):
+        return [primary]
+    return []
+
+
+def _standard_alternative_rows(parcel_result: Dict[str, Any]) -> List[Dict[str, Any]]:
+    result = parcel_result.get("result") if isinstance(parcel_result, dict) else {}
+    if not isinstance(result, dict):
+        return []
+    rows = []
+    for key in ("alternativeRecommendations", "alternatives", "all_options"):
+        vals = result.get(key)
+        if isinstance(vals, list):
+            rows.extend([r for r in vals if isinstance(r, dict)])
+    return rows
+
+
+def _standard_s2_secondary_repair_row(parcel: Dict[str, Any], primary_name: str, year: int,
+                                      objective_mode: str, season_source: str,
+                                      avoid_names: Optional[List[str]] = None) -> Optional[Dict[str, Any]]:
+    try:
+        crop_list, _, _, W2, R2, _, _ = build_candidate_matrix_two_season([parcel], year=int(year), season_source=season_source or "s2")
+    except Exception:
+        return None
+    area = safe_float((parcel or {}).get("area_da", 0.0), 0.0)
+    primary_key = normalize_crop_key(primary_name)
+    avoid = [str(x or "") for x in ([primary_name] + (avoid_names or []))]
+    family_map = load_crop_family_map()
+    primary_family = family_map.get(normalize_crop_key(primary_name), "")
+    candidates = []
+    for j, crop in enumerate(crop_list):
+        name = str(crop or "").strip()
+        if _is_fallow_name(name) or normalize_crop_key(name) == primary_key:
+            continue
+        if any(_standard_crops_too_close(name, other) for other in avoid):
+            continue
+        wpd = safe_float(W2[0, j], 0.0)
+        ppd = safe_float(R2[0, j], 0.0)
+        if wpd <= 0:
+            continue
+        water = float(area * wpd)
+        profit = float(area * ppd)
+        eff = profit / water if water > 0 else 0.0
+        if objective_mode == "water_saving":
+            score = -water + 0.001 * max(profit, 0.0)
+        elif objective_mode == "max_profit":
+            score = profit - 0.001 * water
+        else:
+            score = eff + 0.000001 * profit - 0.000001 * water
+        if primary_family and family_map.get(normalize_crop_key(name), "") == primary_family:
+            score -= abs(score) * 0.08 + 1000.0
+        candidates.append((score, name, wpd, ppd, water, profit))
+    if not candidates:
+        return None
+    _, name, wpd, ppd, water, profit = max(candidates, key=lambda x: x[0])
+    return {
+        "name": name,
+        "season": infer_crop_season_label(name, str((parcel or {}).get("parcel_type", "") or "")),
+        "area": float(area),
+        "waterPerDa": float(wpd),
+        "waterTotal": float(water),
+        "profitPerDa": float(ppd),
+        "profitTotal": float(profit),
+        "reason": "Senaryo-2 iki urun sarti icin gercek aday havuzundan eklenen ikinci bilesen; kota uygunlugu ayrica degerlendirilir.",
+    }
+
+
+def _calendar_warnings_for_plan(crops: List[Dict[str, Any]], scenario_type: str) -> Tuple[str, List[str]]:
+    warnings = []
+    if scenario_type != "double":
+        return "Tek urunlu parsel plani", warnings
+    if len(crops) < 2:
+        warnings.append("Senaryo-2 icin iki urun/desen sarti saglanamadi.")
+        return "Eksik iki urunlu desen", warnings
+    same_season = normalize_crop_key(crops[0].get("season")) == normalize_crop_key(crops[1].get("season"))
+    share_sum = sum(safe_float(c.get("area_share_pct", 0.0), 0.0) for c in crops[:2])
+    if same_season:
+        if share_sum > 150.0:
+            warnings.append("Sezon etiketi ayni/eksik gorunuyor; iki bilesen tam parsel alaninda hesaplandigi icin ardisik desen olarak raporlandi.")
+            return "Ardisik iki sezon deseni", warnings
+        if abs(share_sum - 100.0) > 2.0:
+            warnings.append("Ayni sezon alan paylasimli desende alan oranlari %100 toplamiyor.")
+        return "Alan paylasimli desen", warnings
+    dates = [(c.get("planting_date"), c.get("harvest_date")) for c in crops[:2]]
+    if not all(a and b for a, b in dates):
+        warnings.append("Ardisik desen icin ekim-hasat tarihleri eksik; yalniz sezon etiketiyle raporlandi.")
+        return "Ardisik iki sezon deseni", warnings
+    try:
+        p1, h1 = pd.to_datetime(dates[0][0]), pd.to_datetime(dates[0][1])
+        p2, h2 = pd.to_datetime(dates[1][0]), pd.to_datetime(dates[1][1])
+        if not (h1 <= p2 or h2 <= p1):
+            warnings.append("Ekim-hasat tarihleri cakisiyor; desen uygulanamaz.")
+    except Exception:
+        warnings.append("Takvim tarihleri okunamadi; cakisma kontrolu tamamlanamadi.")
+    return "Ardisik iki sezon deseni", warnings
+
+
+def _standard_data_sources() -> List[str]:
+    try:
+        names = []
+        for p in sorted(DATA_DIR.glob("*")):
+            if p.is_file() and p.suffix.lower() in (".csv", ".json", ".geojson"):
+                names.append(f"data/{p.name}")
+        return names
+    except Exception:
+        return []
+
+
+def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str], algorithm: str, scenario: str,
+                                  water_budget_ratio: float, year_val: Optional[int], options: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(result, dict):
+        return result
+
+    opts = options if isinstance(options, dict) else {}
+    meta = result.get("meta") if isinstance(result.get("meta"), dict) else {}
+    scenario_type = _standard_scenario_type(opts, meta)
+    objective_mode = _standard_objective_mode(result.get("objective") or scenario)
+    y = int(result.get("year") or year_val or (available_years()[-1] if available_years() else 2024))
+
+    base_parcels = load_parcels()
+    custom_parcels = opts.get("customParcels") if isinstance(opts.get("customParcels"), list) else []
+    parcels = merge_frontend_custom_parcels(base_parcels, custom_parcels)
+    selected_norm = [normalize_parcel_id(x) for x in (selected_ids or [])]
+    selected_parcels = [p for p in parcels if (not selected_norm) or normalize_parcel_id(p.get("id")) in selected_norm]
+    parcel_meta = {normalize_parcel_id(p.get("id")): p for p in selected_parcels}
+
+    baseline_rows = []
+    baseline_warnings = []
+    for p in selected_parcels:
+        bw = safe_float(p.get("water_m3", 0.0), 0.0)
+        bp = safe_float(p.get("profit_tl", 0.0), 0.0)
+        if bw <= 0 or bp <= 0:
+            baseline_warnings.append(f"{p.get('id')} parselinde baseline su/kar verisi eksik veya sifir.")
+        baseline_rows.append({
+            "parcel_id": _safe_text(p.get("id")),
+            "crop_name": _safe_text(p.get("current_crop") or p.get("crop") or "Bilinmiyor"),
+            "area_da": float(safe_float(p.get("area_da", 0.0), 0.0)),
+            "water_m3": float(bw),
+            "profit_tl": float(bp),
+        })
+    base_water = sum(r["water_m3"] for r in baseline_rows)
+    base_profit = sum(r["profit_tl"] for r in baseline_rows)
+    baseline = {
+        "crop_pattern": baseline_rows,
+        "total_water_m3": float(base_water),
+        "total_profit_tl": float(base_profit),
+        "tl_per_m3": float(base_profit / base_water) if base_water > 0 else 0.0,
+    }
+
+    plan_rows = []
+    plan_warnings = list(baseline_warnings)
+    for pr in result.get("parcels", []) or []:
+        pid = normalize_parcel_id(pr.get("id") if isinstance(pr, dict) else "")
+        parcel = parcel_meta.get(pid, {"id": pid, "area_da": pr.get("area_da", 0.0) if isinstance(pr, dict) else 0.0})
+        rows = [r for r in _standard_recommended_rows(pr) if not _is_fallow_name(_row_name(r))]
+        if scenario_type == "double" and len(rows) < 2:
+            result_block = pr.get("result", {}) if isinstance(pr.get("result"), dict) else {}
+            orchard_alt = result_block.get("orchardAlternative")
+            if isinstance(orchard_alt, dict) and _row_name(orchard_alt):
+                rows.append({
+                    "name": _row_name(orchard_alt),
+                    "season": "Sira arasi / uzman onayli",
+                    "area": 0.0,
+                    "waterTotal": 0.0,
+                    "profitTotal": 0.0,
+                    "reason": _safe_text(orchard_alt.get("decisionNote") or orchard_alt.get("note") or "Bahce parselinde uzman onayli ara yonetim alternatifi."),
+                    "feasible": False,
+                })
+                plan_warnings.append(f"{pid} parselinde ikinci urun yalniz uzman onayli ara yonetim alternatifi olarak raporlandi.")
+            else:
+                primary_name = _row_name(rows[0]) if rows else _safe_text((parcel or {}).get("current_crop"))
+                repair_row = _standard_s2_secondary_repair_row(
+                    parcel=parcel,
+                    primary_name=primary_name,
+                    year=y,
+                    objective_mode=objective_mode,
+                    season_source=str(opts.get("seasonSource") or meta.get("seasonSource") or "s2"),
+                )
+                if repair_row is not None:
+                    rows.append(repair_row)
+                    plan_warnings.append(f"{pid} parselinde algoritma ikinci urunu bos/NADAS birakti; Senaryo-2 icin gercek aday havuzundan ikinci bilesen eklendi ve kota uygunlugu acikca raporlandi.")
+        if scenario_type == "double" and len(rows) >= 2:
+            first_name = _row_name(rows[0])
+            second_name = _row_name(rows[1])
+            if _standard_crops_too_close(first_name, second_name):
+                replacement = _standard_s2_secondary_repair_row(
+                    parcel=parcel,
+                    primary_name=first_name,
+                    year=y,
+                    objective_mode=objective_mode,
+                    season_source=str(opts.get("seasonSource") or meta.get("seasonSource") or "s2"),
+                    avoid_names=[second_name],
+                )
+                if replacement is not None:
+                    rows[1] = replacement
+                    plan_warnings.append(f"{pid} parselinde {first_name} + {second_name} ayni/yakin urun varyanti sayildi; ikinci bilesen gercek aday havuzundan farkli urunle degistirildi.")
+                else:
+                    plan_warnings.append(f"{pid} parselinde {first_name} + {second_name} ayni/yakin urun varyanti oldugu icin iki urunlu desen guvenilir degil; uygun farkli ikinci urun bulunamadi.")
+        for idx, row in enumerate(rows):
+            role = "primary" if idx == 0 else ("secondary" if scenario_type == "double" else "alternative_component")
+            plan_rows.append(_standard_crop_from_row(row, parcel, role, bool(result.get("feasible", True))))
+
+    pattern_type, calendar_warnings = _calendar_warnings_for_plan(plan_rows, scenario_type)
+    plan_warnings.extend(calendar_warnings)
+    if scenario_type == "single" and len(plan_rows) != max(1, len(selected_parcels)):
+        plan_warnings.append("Senaryo-1 tek urunlu plan bekler; parsel sayisi ile onerilen satir sayisi uyusmuyor.")
+    if scenario_type == "double" and len(selected_parcels) == 1 and len(plan_rows) != 2:
+        plan_warnings.append("Senaryo-2 ana plani tam iki urun/desen satiri uretmedi.")
+
+    row_total_water = sum(safe_float(c.get("water_m3", 0.0), 0.0) for c in plan_rows)
+    row_total_profit = sum(safe_float(c.get("profit_tl", 0.0), 0.0) for c in plan_rows)
+    total_water = row_total_water if plan_rows else safe_float(result.get("total_water_m3", 0.0), 0.0)
+    total_profit = row_total_profit if plan_rows else safe_float(result.get("total_profit_tl", 0.0), 0.0)
+    water_budget_m3 = safe_float(result.get("water_budget_m3", 0.0), 0.0)
+    area_shared_repair_applied = False
+    if scenario_type == "double" and len(selected_parcels) == 1 and len(plan_rows) == 2 and water_budget_m3 > 0 and total_water > water_budget_m3 + 1e-6:
+        parcel_area = safe_float(selected_parcels[0].get("area_da", 0.0), 0.0)
+        ratios = [(50, 50), (60, 40), (70, 30), (40, 60), (30, 70)]
+        best_ratio_plan = None
+        for r1_pct, r2_pct in ratios:
+            r1 = float(r1_pct) / 100.0
+            r2 = float(r2_pct) / 100.0
+            c1 = dict(plan_rows[0])
+            c2 = dict(plan_rows[1])
+            a1_src = safe_float(c1.get("area_da", 0.0), 0.0)
+            a2_src = safe_float(c2.get("area_da", 0.0), 0.0)
+            wpd1 = safe_float(c1.get("water_m3", 0.0), 0.0) / max(1e-9, a1_src)
+            wpd2 = safe_float(c2.get("water_m3", 0.0), 0.0) / max(1e-9, a2_src)
+            ppd1 = safe_float(c1.get("profit_tl", 0.0), 0.0) / max(1e-9, a1_src)
+            ppd2 = safe_float(c2.get("profit_tl", 0.0), 0.0) / max(1e-9, a2_src)
+            c1_area = parcel_area * r1
+            c2_area = parcel_area * r2
+            c1.update({
+                "area_da": float(c1_area),
+                "area_share_pct": float(r1_pct),
+                "water_m3": float(c1_area * wpd1),
+                "profit_tl": float(c1_area * ppd1),
+                "feasible": True,
+                "selectable": True,
+                "quota_status": "Uygun",
+            })
+            c1["tl_per_m3"] = float(c1["profit_tl"] / c1["water_m3"]) if c1["water_m3"] > 0 else 0.0
+            c2.update({
+                "area_da": float(c2_area),
+                "area_share_pct": float(r2_pct),
+                "water_m3": float(c2_area * wpd2),
+                "profit_tl": float(c2_area * ppd2),
+                "feasible": True,
+                "selectable": True,
+                "quota_status": "Uygun",
+            })
+            c2["tl_per_m3"] = float(c2["profit_tl"] / c2["water_m3"]) if c2["water_m3"] > 0 else 0.0
+            cand_water = c1["water_m3"] + c2["water_m3"]
+            cand_profit = c1["profit_tl"] + c2["profit_tl"]
+            if cand_water <= water_budget_m3 + 1e-6:
+                best_ratio_plan = (c1, c2, cand_water, cand_profit, r1_pct, r2_pct)
+                break
+        if best_ratio_plan is not None:
+            c1, c2, total_water, total_profit, r1_pct, r2_pct = best_ratio_plan
+            plan_rows = [c1, c2]
+            pattern_type = "Alan paylasimli desen"
+            area_shared_repair_applied = True
+            plan_warnings.append(f"Ardisik iki sezon deseni kota disinda kaldigi icin ayni sezon alan paylasimli %{r1_pct}-%{r2_pct} desen uygulanabilir ana plan olarak secildi.")
+    plan_feasible = (bool(result.get("feasible", True)) or area_shared_repair_applied) and all(bool(c.get("feasible")) for c in plan_rows)
+    if scenario_type == "double" and len(selected_parcels) == 1 and len(plan_rows) != 2:
+        plan_feasible = False
+    if total_water > water_budget_m3 + 1e-6 and water_budget_m3 > 0:
+        plan_feasible = False
+        plan_warnings.append("Secili plan toplam su butcesini asiyor.")
+    selected_status = "ok"
+    if scenario_type == "double" and not plan_feasible:
+        selected_status = "no_feasible_two_crop_plan"
+        plan_warnings.append("Secili parsel ve su kotasi altinda uygulanabilir iki urunlu/desenli plan bulunamadi.")
+
+    plan_names = "-".join(normalize_crop_key(c.get("crop_name")) for c in plan_rows)[:80]
+    selected_plan = {
+        "plan_id": f"{str(result.get('algorithm') or algorithm).upper()}-{scenario_type}-{objective_mode}-{y}-{plan_names}",
+        "status": selected_status,
+        "scenario_type": scenario_type,
+        "pattern_type": pattern_type,
+        "crops": plan_rows,
+        "total_water_m3": float(total_water),
+        "total_profit_tl": float(total_profit),
+        "tl_per_m3": float(total_profit / total_water) if total_water > 0 else 0.0,
+        "delta_water_m3": float(total_water - base_water),
+        "delta_profit_tl": float(total_profit - base_profit),
+        "feasible": bool(plan_feasible),
+        "selectable": bool(plan_feasible),
+        "feasibility_reasons": ["Uygun"] if plan_feasible else plan_warnings,
+        "warnings": plan_warnings,
+        "explanation": (
+            "Secili parsel ve su kotasi altinda uygulanabilir iki urunlu/desenli plan bulunamadi."
+            if selected_status == "no_feasible_two_crop_plan"
+            else (
+                "Bu mod su tuketimi, net kar ve birim su basina getiriyi birlikte degerlendirir."
+                if objective_mode == "balanced"
+                else "Secili hedef modu ve su butcesi altinda backend karar motoru tarafindan uretilen nihai plandir."
+            )
+        ),
+    }
+
+    alternatives = []
+    seen_alt = set(normalize_crop_key(c.get("crop_name")) for c in plan_rows)
+    if scenario_type == "single":
+        for pr in result.get("parcels", []) or []:
+            pid = normalize_parcel_id(pr.get("id") if isinstance(pr, dict) else "")
+            parcel = parcel_meta.get(pid, {"id": pid, "area_da": pr.get("area_da", 0.0) if isinstance(pr, dict) else 0.0})
+            for row in _standard_alternative_rows(pr):
+                name_key = normalize_crop_key(_row_name(row))
+                if _is_fallow_name(name_key) or name_key in seen_alt:
+                    continue
+                seen_alt.add(name_key)
+                crop = _standard_crop_from_row(row, parcel, "primary", True)
+                alt_water = crop["water_m3"]
+                alt_profit = crop["profit_tl"]
+                alt_feasible = bool(crop.get("feasible"))
+                alternatives.append({
+                    "plan_id": f"ALT-single-{objective_mode}-{len(alternatives)+1}-{name_key}",
+                    "scenario_type": "single",
+                    "pattern_type": "Tek urunlu alternatif",
+                    "crops": [crop],
+                    "total_water_m3": float(alt_water),
+                    "total_profit_tl": float(alt_profit),
+                    "tl_per_m3": float(alt_profit / alt_water) if alt_water > 0 else 0.0,
+                    "delta_water_m3": float(alt_water - base_water),
+                    "delta_profit_tl": float(alt_profit - base_profit),
+                    "feasible": alt_feasible,
+                    "selectable": alt_feasible,
+                    "feasibility_reasons": ["Uygun"] if alt_feasible else crop.get("warnings", []),
+                    "warnings": crop.get("warnings", []),
+                    "explanation": crop.get("explanation", ""),
+                })
+                if len(alternatives) >= 5:
+                    break
+            if len(alternatives) >= 5:
+                break
+    if scenario_type == "single" and len([a for a in alternatives if a.get("feasible")]) < 4:
+        plan_warnings.append(f"Kisitlar nedeniyle {len([a for a in alternatives if a.get('feasible')])} uygulanabilir alternatif uretildi.")
+
+    context = {
+        "parcel_id": selected_norm[0] if len(selected_norm) == 1 else selected_norm,
+        "area_da": float(sum(safe_float(p.get("area_da", 0.0), 0.0) for p in selected_parcels)),
+        "water_year": int(y),
+        "scenario_type": scenario_type,
+        "objective_mode": objective_mode,
+        "algorithm": str(result.get("algorithm") or algorithm).upper(),
+        "seed": meta.get("seed", opts.get("seed")),
+        "water_budget_m3": float(safe_float(result.get("water_budget_m3", 0.0), 0.0)),
+        "budget_method": _safe_text(meta.get("allocation_model") or meta.get("budget_method") or "backend_water_budget"),
+        "data_sources": _standard_data_sources(),
+    }
+
+    plan_risk = "Dusuk" if selected_plan["feasible"] else "Yuksek"
+    quota_status = "Uygun" if selected_plan["feasible"] else "Kota/uygunluk riski var"
+    calendar_status = "Uygun" if not calendar_warnings else "Veri eksik / kontrol gerekli"
+    charts = {
+        "target_mode_water": {
+            "title": "Hedef Modlarına Göre Toplam Su Kullanımı",
+            "unit": "m3",
+            "scope": "Secili parsel" if len(selected_parcels) == 1 else "Secili parseller",
+            "scenario_type": scenario_type,
+            "objective_mode": objective_mode,
+            "description": "Bu grafik, secili senaryo tipi altinda mevcut desen ve secili hedef modu sonucunu karsilastirir.",
+            "rows": [
+                {"label": "Mevcut", "value": float(base_water)},
+                {"label": _objective_mode_label_tr(objective_mode), "value": float(total_water)},
+            ],
+        },
+        "target_mode_profit": {
+            "title": "Hedef Modlarına Göre Toplam Net Kâr",
+            "unit": "TL",
+            "scope": "Secili parsel" if len(selected_parcels) == 1 else "Secili parseller",
+            "scenario_type": scenario_type,
+            "objective_mode": objective_mode,
+            "description": "Bu grafik, secili senaryo tipi altinda mevcut desen ve secili hedef modu sonucunu karsilastirir.",
+            "rows": [
+                {"label": "Mevcut", "value": float(base_profit)},
+                {"label": _objective_mode_label_tr(objective_mode), "value": float(total_profit)},
+            ],
+        },
+        "selected_delta": {
+            "title": "Seçili Planın Baseline'a Göre Su/Kâr Farkı",
+            "unit": "m3 / TL",
+            "scope": "Secili parsel" if len(selected_parcels) == 1 else "Secili parseller",
+            "scenario_type": scenario_type,
+            "objective_mode": objective_mode,
+            "description": "Degerler backend plan ozeti ile ayni kaynaktan uretilir.",
+            "rows": [
+                {"label": "Su farki", "value": float(selected_plan["delta_water_m3"])},
+                {"label": "Kar farki", "value": float(selected_plan["delta_profit_tl"])},
+            ],
+        },
+    }
+    tables = {
+        "plan_summary": [
+            {"label": "Mevcut", "water_m3": float(base_water), "profit_tl": float(base_profit), "tl_per_m3": baseline["tl_per_m3"]},
+            {"label": "Secili plan", "water_m3": float(total_water), "profit_tl": float(total_profit), "tl_per_m3": selected_plan["tl_per_m3"]},
+        ],
+        "alternatives": [
+            {"plan_id": a["plan_id"], "water_m3": a["total_water_m3"], "profit_tl": a["total_profit_tl"], "tl_per_m3": a["tl_per_m3"], "feasible": a["feasible"]}
+            for a in alternatives
+        ],
+    }
+    diagnostics = {
+        "backend_single_source": True,
+        "algorithm_choice_preserved": True,
+        "scenario_type": scenario_type,
+        "objective_mode": objective_mode,
+        "alternative_count": len(alternatives),
+        "feasible_alternative_count": len([a for a in alternatives if a.get("feasible")]),
+        "risk_labels": {
+            "dam_drought_risk": _safe_text(meta.get("dam_drought_risk") or "Veri yok"),
+            "plan_feasibility_risk": plan_risk,
+            "parcel_quota_status": quota_status,
+            "calendar_rotation_status": calendar_status,
+        },
+        "warnings": list(dict.fromkeys(plan_warnings)),
+        "legacy_meta": meta,
+    }
+
+    result.update({
+        "context": context,
+        "baseline": baseline,
+        "selected_plan": selected_plan,
+        "alternatives": alternatives,
+        "charts": charts,
+        "tables": tables,
+        "diagnostics": diagnostics,
+    })
+    return result
 
 
 @app.get("/")
@@ -9118,13 +9687,22 @@ def api_optimize():
         if isinstance(payload.get("customParcels"), list) and payload.get("customParcels"):
             options["customParcels"] = payload.get("customParcels")
 
-        return jsonify(optimize(
+        out = optimize(
             selected_ids=selected,
             algorithm=algorithm,
             scenario=scenario,
             water_budget_ratio=water_budget_ratio,
             year=year_val,
             options=options
+        )
+        return jsonify(_standardize_optimize_payload(
+            out,
+            selected_ids=selected,
+            algorithm=algorithm,
+            scenario=scenario,
+            water_budget_ratio=water_budget_ratio,
+            year_val=year_val,
+            options=options,
         ))
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e), "where": "api_optimize"}), 500
@@ -9163,8 +9741,8 @@ def api_benchmark():
         if year_val == 0:
             year_val = None
 
-        benchmark_mode = str(payload.get("benchmarkMode", payload.get("benchmark_mode", "fast")) or "fast").lower()
-        benchmark_mode = "detailed" if benchmark_mode in ("detailed", "detail", "tez", "academic") else "fast"
+        benchmark_mode_raw = str(payload.get("benchmarkMode", payload.get("benchmark_mode", "academic")) or "academic").lower()
+        benchmark_mode = "fast" if benchmark_mode_raw in ("fast", "quick", "hizli", "hızlı") else "detailed"
         repeats = int(payload.get("repeats", 8 if benchmark_mode == "fast" else 30) or (8 if benchmark_mode == "fast" else 30))
         if benchmark_mode == "detailed":
             repeats = max(10, min(120, repeats))
@@ -9194,7 +9772,24 @@ def api_benchmark():
             base_opts = {}
 
         seed_root = int(base_seed) if base_seed is not None else int(time.time() * 1000) % 1000000
-        results: Dict[str, Any] = {"status": "OK", "repeats": repeats, "benchmark_mode": benchmark_mode, "algorithms": {}, "backend": True, "scenario": scenario, "objective": scenario, "seed_policy": ("fixed+algo_offset" if base_seed is not None else "time_randomized+algo_offset"), "seed_root": seed_root, "selected_count": len(selected) }
+        objective_mode = _standard_objective_mode(scenario)
+        scenario_type = _standard_scenario_type(base_opts, {})
+        results: Dict[str, Any] = {
+            "status": "OK",
+            "repeats": repeats,
+            "requested_runs_per_algorithm": repeats,
+            "benchmark_mode": benchmark_mode,
+            "fast_mode": bool(benchmark_mode == "fast"),
+            "algorithms": {},
+            "backend": True,
+            "scenario": scenario,
+            "objective": scenario,
+            "objective_mode": objective_mode,
+            "scenario_type": scenario_type,
+            "seed_policy": ("fixed+algo_offset" if base_seed is not None else "time_randomized+algo_offset"),
+            "seed_root": seed_root,
+            "selected_count": len(selected),
+        }
         started_at = time.perf_counter()
         # Total time budget for the whole benchmark request.
         # Default is intentionally generous so each algorithm gets at least one run.
@@ -9247,6 +9842,25 @@ def api_benchmark():
             """
             try:
                 parts = []
+                std_grouped: Dict[str, List[Dict[str, Any]]] = {}
+                for crop in (((opt_out.get("selected_plan") or {}).get("crops") or [])):
+                    if not isinstance(crop, dict):
+                        continue
+                    pid_std = str(crop.get("parcel_id") or "").strip()
+                    if pid_std:
+                        std_grouped.setdefault(pid_std, []).append(crop)
+                if std_grouped:
+                    for pid, crops in std_grouped.items():
+                        c1 = str((crops[0] or {}).get("crop_name") or (crops[0] or {}).get("name") or "").strip() if len(crops) > 0 else ""
+                        c2 = str((crops[1] or {}).get("crop_name") or (crops[1] or {}).get("name") or "").strip() if len(crops) > 1 else ""
+                        if ignore_fallow:
+                            if c1.strip().upper() == FALLOW:
+                                c1 = ""
+                            if c2.strip().upper() == FALLOW:
+                                c2 = ""
+                        parts.append(f"{pid}:{c1}|{c2}")
+                    parts.sort()
+                    return ";".join(parts)
                 for pr in (opt_out.get("parcels") or []):
                     pid = str(pr.get("id"))
                     rec = (((pr.get("result") or {}).get("recommended")) or [])
@@ -9267,11 +9881,42 @@ def api_benchmark():
             return safe_float((row or {}).get("area", (row or {}).get("area_da", default)), default)
 
 
+        def _standard_plan_crops_by_pid(opt_out: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
+            grouped: Dict[str, List[Dict[str, Any]]] = {}
+            try:
+                crops = ((opt_out.get("selected_plan") or {}).get("crops") or [])
+                for crop in crops:
+                    if not isinstance(crop, dict):
+                        continue
+                    pid = str(crop.get("parcel_id") or "").strip()
+                    if not pid:
+                        continue
+                    grouped.setdefault(pid, []).append(crop)
+            except Exception:
+                return {}
+            return grouped
+
+
         def _secondary_metrics(opt_out: Dict[str, Any]) -> Dict[str, float]:
             total_parcels = 0
             secondary_used = 0
             secondary_area = 0.0
             try:
+                grouped = _standard_plan_crops_by_pid(opt_out)
+                if grouped:
+                    for _pid, crops in grouped.items():
+                        total_parcels += 1
+                        if len(crops) > 1:
+                            sec = crops[1] or {}
+                            sname = str(sec.get("crop_name") or sec.get("name") or "").strip()
+                            sarea = safe_float(sec.get("area_da", 0.0), 0.0)
+                            if sname and canonical_crop_key(sname) != FALLOW and sarea > 0:
+                                secondary_used += 1
+                                secondary_area += float(sarea)
+                    return {
+                        "parcel_rate": float(secondary_used / max(1, total_parcels)),
+                        "secondary_area_da": float(secondary_area),
+                    }
                 for pr in (opt_out.get("parcels") or []):
                     total_parcels += 1
                     rec = (((pr.get("result") or {}).get("recommended")) or [])
@@ -9328,6 +9973,20 @@ def api_benchmark():
             prim: Dict[str, float] = {}
             sec: Dict[str, float] = {}
             try:
+                grouped = _standard_plan_crops_by_pid(opt_out)
+                if grouped:
+                    for crops in grouped.values():
+                        if len(crops) > 0:
+                            c = str((crops[0] or {}).get("crop_name") or (crops[0] or {}).get("name") or "").strip()
+                            a = safe_float((crops[0] or {}).get("area_da", 0.0), 0.0)
+                            if c and a > 0:
+                                prim[c] = prim.get(c, 0.0) + a
+                        if len(crops) > 1:
+                            c = str((crops[1] or {}).get("crop_name") or (crops[1] or {}).get("name") or "").strip()
+                            a = safe_float((crops[1] or {}).get("area_da", 0.0), 0.0)
+                            if c and c.upper() != FALLOW and a > 0:
+                                sec[c] = sec.get(c, 0.0) + a
+                    raise StopIteration
                 for pr in (opt_out.get("parcels") or []):
                     rec = (((pr.get("result") or {}).get("recommended")) or [])
                     if len(rec) > 0:
@@ -9340,6 +9999,8 @@ def api_benchmark():
                         a = _row_area_da((rec[1] or {}), 0.0)
                         if c and c.upper() != FALLOW and a > 0:
                             sec[c] = sec.get(c, 0.0) + a
+            except StopIteration:
+                pass
             except Exception:
                 pass
 
@@ -9353,6 +10014,18 @@ def api_benchmark():
         def _plan_map(opt_out: Dict[str, Any], ignore_fallow: bool = False) -> Dict[str, Tuple[str, str]]:
             out: Dict[str, Tuple[str, str]] = {}
             try:
+                grouped = _standard_plan_crops_by_pid(opt_out)
+                if grouped:
+                    for pid, crops in grouped.items():
+                        c1 = str((crops[0] or {}).get("crop_name") or (crops[0] or {}).get("name") or "").strip() if len(crops) > 0 else ""
+                        c2 = str((crops[1] or {}).get("crop_name") or (crops[1] or {}).get("name") or "").strip() if len(crops) > 1 else ""
+                        if ignore_fallow:
+                            if c1.upper() == FALLOW:
+                                c1 = ""
+                            if c2.upper() == FALLOW:
+                                c2 = ""
+                        out[pid] = (c1, c2)
+                    return out
                 for pr in (opt_out.get("parcels") or []):
                     pid = str(pr.get("id"))
                     rec = (((pr.get("result") or {}).get("recommended")) or [])
@@ -9449,6 +10122,15 @@ def api_benchmark():
                         year=year_val,
                         options=opts,
                     )
+                    out = _standardize_optimize_payload(
+                        out,
+                        selected_ids=selected,
+                        algorithm=algo,
+                        scenario=scenario,
+                        water_budget_ratio=water_budget_ratio,
+                        year_val=year_val,
+                        options=opts,
+                    )
                     dt = time.perf_counter() - t0
                     times.append(float(dt))
 
@@ -9458,9 +10140,10 @@ def api_benchmark():
                     if not bool(out.get("feasible", True)):
                         infeasible += 1
 
-                    p_v = safe_float(out.get("total_profit_tl", 0.0), 0.0)
-                    w_v = safe_float(out.get("total_water_m3", 0.0), 0.0)
-                    e_v = safe_float(out.get("efficiency_tl_per_m3", 0.0), 0.0)
+                    selected_plan = out.get("selected_plan") if isinstance(out.get("selected_plan"), dict) else {}
+                    p_v = safe_float(selected_plan.get("total_profit_tl", out.get("total_profit_tl", 0.0)), 0.0)
+                    w_v = safe_float(selected_plan.get("total_water_m3", out.get("total_water_m3", 0.0)), 0.0)
+                    e_v = safe_float(selected_plan.get("tl_per_m3", out.get("efficiency_tl_per_m3", 0.0)), 0.0)
                     # Treat extreme or non-finite totals as infeasible (usually caused by selecting missing/unsupported cells filled with W=1e9).
                     if (not np.isfinite(w_v)) or (w_v >= 1e8) or (w_v < 0):
                         infeasible += 1
@@ -9543,22 +10226,35 @@ def api_benchmark():
                 try:
                     # compact parcel-level plan (for UI compare)
                     parcels_compact = []
-                    for pr in (best_out.get("parcels") or []):
-                        pid = str(pr.get("id"))
-                        rec = (((pr.get("result") or {}).get("recommended")) or [])
-                        c1 = (rec[0] or {}) if len(rec) > 0 else {}
-                        c2 = (rec[1] or {}) if len(rec) > 1 else {}
-                        parcels_compact.append({
-                            "id": pid,
-                            "primary": {"crop": str(c1.get("name") or ""), "area_da": _row_area_da(c1, 0.0)},
-                            "secondary": {"crop": str(c2.get("name") or ""), "area_da": _row_area_da(c2, 0.0)},
-                        })
+                    std_grouped = _standard_plan_crops_by_pid(best_out)
+                    if std_grouped:
+                        for pid, crops in std_grouped.items():
+                            c1 = (crops[0] or {}) if len(crops) > 0 else {}
+                            c2 = (crops[1] or {}) if len(crops) > 1 else {}
+                            parcels_compact.append({
+                                "id": pid,
+                                "primary": {"crop": str(c1.get("crop_name") or c1.get("name") or ""), "area_da": safe_float(c1.get("area_da", 0.0), 0.0)},
+                                "secondary": {"crop": str(c2.get("crop_name") or c2.get("name") or ""), "area_da": safe_float(c2.get("area_da", 0.0), 0.0)},
+                            })
+                    else:
+                        for pr in (best_out.get("parcels") or []):
+                            pid = str(pr.get("id"))
+                            rec = (((pr.get("result") or {}).get("recommended")) or [])
+                            c1 = (rec[0] or {}) if len(rec) > 0 else {}
+                            c2 = (rec[1] or {}) if len(rec) > 1 else {}
+                            parcels_compact.append({
+                                "id": pid,
+                                "primary": {"crop": str(c1.get("name") or ""), "area_da": _row_area_da(c1, 0.0)},
+                                "secondary": {"crop": str(c2.get("name") or ""), "area_da": _row_area_da(c2, 0.0)},
+                            })
                     parcels_compact.sort(key=lambda x: x.get("id"))
 
+                    best_selected = best_out.get("selected_plan") if isinstance(best_out.get("selected_plan"), dict) else {}
                     best_pack = {
-                        "total_profit_tl": safe_float(best_out.get("total_profit_tl", 0.0), 0.0),
-                        "total_water_m3": safe_float(best_out.get("total_water_m3", 0.0), 0.0),
-                        "efficiency_tl_per_m3": safe_float(best_out.get("efficiency_tl_per_m3", 0.0), 0.0),
+                        "total_profit_tl": safe_float(best_selected.get("total_profit_tl", best_out.get("total_profit_tl", 0.0)), 0.0),
+                        "total_water_m3": safe_float(best_selected.get("total_water_m3", best_out.get("total_water_m3", 0.0)), 0.0),
+                        "efficiency_tl_per_m3": safe_float(best_selected.get("tl_per_m3", best_out.get("efficiency_tl_per_m3", 0.0)), 0.0),
+                        "status": best_selected.get("status", "ok"),
                         "signature": _plan_signature(best_out),
                         "crop_area": _crop_area_summary(best_out),
                         "nadas": _nadas_metrics(best_out),
@@ -9572,7 +10268,35 @@ def api_benchmark():
             feasible_runs = int(max(0, successful_runs - infeasible))
             success_rate = float(successful_runs / attempted_runs) if attempted_runs > 0 else 0.0
             feasible_rate = float(feasible_runs / successful_runs) if successful_runs > 0 else 0.0
+            profit_stats = _stats(prof)
+            water_stats = _stats(wat)
+            efficiency_stats = _stats(eff)
+            runtime_stats = _stats(times)
+            plan_distance_stats = _stats(pairwise_plan_distances)
+            plan_diversity = float(unique_patterns / successful_runs) if successful_runs > 0 else None
+            completion_status = "completed" if (successful_runs == repeats and errors == 0) else f"kismi tamamlandi: {successful_runs}/{repeats}"
+            metric_warnings = []
+            if successful_runs <= 1:
+                metric_warnings.append("CV ve standart sapma icin en az iki basarili kosu gerekir.")
+            if successful_runs > 1 and not pairwise_plan_distances:
+                metric_warnings.append("Plan farki hesaplanamadi; yeterli karsilastirilabilir plan imzasi yok.")
             results["algorithms"][algo] = {
+                "run_count": successful_runs,
+                "requested_runs": repeats,
+                "completion_status": completion_status,
+                "partial": bool(successful_runs != repeats or errors > 0),
+                "best_profit": float(max(prof)) if prof else None,
+                "mean_profit": profit_stats.get("mean") if prof else None,
+                "std_profit": profit_stats.get("std") if prof else None,
+                "cv": profit_stats.get("cv") if prof else None,
+                "best_water": float(min(wat)) if wat else None,
+                "mean_water": water_stats.get("mean") if wat else None,
+                "tl_per_m3": efficiency_stats.get("mean") if eff else None,
+                "mean_runtime": runtime_stats.get("mean") if times else None,
+                "plan_diversity": plan_diversity,
+                "plan_distance": plan_distance_stats.get("mean") if pairwise_plan_distances else None,
+                "seed_policy": results["seed_policy"],
+                "metric_warnings": metric_warnings,
                 "runs": successful_runs,
                 "attempted_runs": attempted_runs,
                 "errors": errors,
@@ -9583,19 +10307,66 @@ def api_benchmark():
                 "feasible_rate": feasible_rate,
                 "unique_patterns": unique_patterns,
                 "identical_plan_warning": bool(successful_runs > 1 and unique_patterns <= 1),
-                "profit": _stats(prof),
-                "water": _stats(wat),
-                "efficiency": _stats(eff),
-                "runtime_s": _stats(times),
+                "profit": profit_stats,
+                "water": water_stats,
+                "efficiency": efficiency_stats,
+                "runtime_s": runtime_stats,
                 "nadas_ratio": _stats(nadas_ratios),
                 "secondary_parcel_rate": _stats(sec_parcel_rates),
                 "secondary_area_da": _stats(sec_area_vals),
-                "plan_distance_pct": _stats(pairwise_plan_distances),
+                "plan_distance_pct": plan_distance_stats,
                 "failed_runs": int(max(0, attempted_runs - successful_runs)),
                 "best": best_pack,
             }
 
         results["elapsed_seconds"] = float(time.perf_counter() - started_at)
+        completed_total = int(sum(safe_int(v.get("run_count", 0), 0) for v in results.get("algorithms", {}).values()))
+        requested_total = int(repeats * max(1, len(algos)))
+        partial_algorithms = [a for a, v in results.get("algorithms", {}).items() if bool(v.get("partial"))]
+        results["completed_runs"] = completed_total
+        results["requested_total_runs"] = requested_total
+        results["completion_status"] = "completed" if not partial_algorithms and completed_total == requested_total else f"kismi tamamlandi: {completed_total}/{requested_total}"
+        results["partial_algorithms"] = partial_algorithms
+        valid_algos = {
+            a: v for a, v in results.get("algorithms", {}).items()
+            if v.get("mean_profit") is not None and v.get("mean_water") is not None and safe_int(v.get("run_count", 0), 0) > 0
+        }
+        interpretation = "Yeterli basarili kosu olmadigi icin algoritmalar arasinda akademik yorum uretilemedi."
+        if valid_algos:
+            mean_profits = [safe_float(v.get("mean_profit", 0.0), 0.0) for v in valid_algos.values()]
+            mean_waters = [safe_float(v.get("mean_water", 0.0), 0.0) for v in valid_algos.values()]
+            max_profit = max(mean_profits)
+            min_profit = min(mean_profits)
+            max_water = max(mean_waters)
+            min_water = min(mean_waters)
+            profit_band = abs(max_profit - min_profit) / max(1.0, abs(max_profit))
+            water_band = abs(max_water - min_water) / max(1.0, abs(max_water))
+            if len(valid_algos) == 1:
+                only_algo = next(iter(valid_algos.keys()))
+                interpretation = f"Yalniz {only_algo} algoritmasi calistirildi; bu sonuc algoritmalar arasi ustunluk yorumu icin kullanilmamalidir."
+            elif profit_band <= 0.01 and water_band <= 0.01:
+                interpretation = "Algoritmalar esdeger performans bandindadir; karar tek algoritmaya baglanmamalidir."
+            else:
+                def _algo_rank(item: Tuple[str, Dict[str, Any]]) -> Tuple[float, float, float]:
+                    _, v = item
+                    mean_profit = safe_float(v.get("mean_profit", 0.0), 0.0)
+                    cv = safe_float(v.get("cv", 999.0), 999.0) if v.get("cv") is not None else 999.0
+                    feasible = safe_float(v.get("feasible_rate", 0.0), 0.0)
+                    return (mean_profit, feasible, -cv)
+                best_algo, best_metrics = sorted(valid_algos.items(), key=_algo_rank, reverse=True)[0]
+                interpretation = f"Secili kosullarda {best_algo} algoritmasi daha yuksek ortalama kar/uygulanabilirlik ve daha dusuk degiskenlik dengesinde one cikmistir."
+        results["interpretation"] = interpretation
+        results["diagnostics"] = {
+            "benchmark_is_backend_computed": True,
+            "fast_mode": bool(benchmark_mode == "fast"),
+            "partial": bool(partial_algorithms or completed_total != requested_total),
+            "completion_status": results["completion_status"],
+            "objective_mode": objective_mode,
+            "scenario_type": scenario_type,
+            "warnings": (
+                ["Fast mod aktif; akademik varsayilan 30 kosu yerine hizli kosu ayarlari kullanildi."] if benchmark_mode == "fast" else []
+            ) + (["Tum kosular tamamlanmadi; sonuc kismi olarak yorumlanmalidir."] if partial_algorithms or completed_total != requested_total else []),
+        }
         return jsonify(results)
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e), "where": "api_benchmark"}), 500

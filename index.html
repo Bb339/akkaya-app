@@ -540,6 +540,7 @@ Parsel Haritası</h2>
 </div>
 <!-- v72: Karar gerekçesi + koşul şeffaflığı -->
 <div class="runmeta-box" id="runMetaBox" style="display:none;"></div>
+<div class="runmeta-box" id="riskSeparationBox" style="display:none;"></div>
 
 <div class="summary-block summary-block-basin" id="basinSummaryBlock">
 <div class="summary-block-head">
@@ -687,12 +688,14 @@ Parsel Haritası</h2>
 </div>
 <div class="right-middle">
 <div class="card small-chart-card">
-<h3 class="card-subtitle">Senaryolara Göre Toplam Su Kullanımı</h3>
+<h3 class="card-subtitle">Hedef Modlarına Göre Toplam Su Kullanımı</h3>
 <canvas height="150" id="waterChart"></canvas>
+<div class="small muted">Bu grafik, seçili senaryo tipi altında mevcut desen ve backend tarafından dönen hedef modu sonucunu m³ birimiyle karşılaştırır.</div>
 </div>
 <div class="card small-chart-card">
-<h3 class="card-subtitle">Senaryolara Göre Toplam Net Kâr</h3>
+<h3 class="card-subtitle">Hedef Modlarına Göre Toplam Net Kâr</h3>
 <canvas height="150" id="profitChart"></canvas>
+<div class="small muted">Bu grafik, seçili senaryo tipi altında mevcut desen ve backend tarafından dönen hedef modu sonucunu TL birimiyle karşılaştırır.</div>
 </div>
 <div class="card small-chart-card">
 <h3 class="card-subtitle">Seçili Parsel - Önerilen Ürünler (Rotasyon)</h3>

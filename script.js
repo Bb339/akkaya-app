@@ -4158,7 +4158,8 @@ function updateDroughtAlarmCard(){
         const dw = Math.round(safeNum(x.deltaWater,0));
         const dp = Math.round(safeNum(x.deltaProfit,0));
         const selectedBadge = x.selectedRecommendation ? '<span class="pattern-selected-badge">Seçilen öneri</span>' : '';
-        const quotaBadge = x.quotaExceeded ? '<span class="pattern-risk-badge">Kota aşımı riski</span>' : '';
+        const isSelectable = x.selectable !== false && x.feasible !== false && !x.quotaExceeded;
+        const quotaBadge = x.quotaExceeded || x.feasible === false ? '<span class="pattern-risk-badge">Kota aşımı riski / uzman onayı gerekir</span>' : '';
         const components = Array.isArray(x.components) && x.components.length
           ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
           : '';
@@ -4174,7 +4175,7 @@ function updateDroughtAlarmCard(){
           <small>${escapeHtml(x.productionWindow || x.growthDays || 'Takvim kontrolü')} • ${escapeHtml(x.peakMonth || 'Pik ay kontrolü')} • ${escapeHtml(x.suitability || 'Uygunluk kontrolü')}</small>
           <div class="pattern-actions-v102">
             <button class="btn-secondary" type="button" data-pattern-detail-v102="${escapeHtml(id)}" data-alt-crop-v101="${escapeHtml(detailLabel)}">Detay</button>
-            <button class="btn-primary" type="button" data-select-pattern-v102="${escapeHtml(id)}">Seç</button>
+            <button class="btn-primary" type="button" data-select-pattern-v102="${escapeHtml(id)}" ${isSelectable ? '' : 'disabled aria-disabled="true"'}>${isSelectable ? 'Seç' : 'Seçilemez'}</button>
           </div>
         </article>`;
       }).join('');
@@ -5334,8 +5335,10 @@ function applyWaterScenarioFromUI(clearCache=false){
   const b = document.getElementById("waterIndexBadge");
   if(b){
     const r = STATE.droughtRisk;
-    const rTxt = (r>=0.75) ? "yüksek" : (r>=0.45 ? "orta" : "düşük");
-    b.textContent = `doluluk: ${ (typeof idx==="number" && isFinite(idx)) ? idx.toFixed(1) : "-" } | risk: ${rTxt}`;
+    const planRiskTxt = (r>=0.75) ? "yüksek" : (r>=0.45 ? "orta" : "düşük");
+    const storageVal = (typeof idx==="number" && isFinite(idx)) ? idx : NaN;
+    const damRiskTxt = !isFinite(storageVal) ? "-" : (storageVal < 25 ? "yüksek" : (storageVal < 50 ? "orta" : "düşük"));
+    b.textContent = `doluluk: ${ isFinite(storageVal) ? storageVal.toFixed(1) : "-" } | baraj riski: ${damRiskTxt} | plan riski: ${planRiskTxt}`;
   }
 
   updateDroughtAlarmCard();
@@ -8254,86 +8257,7 @@ function renderIrrigationPlan(parcel, rows){
 function computeBasinPlan(scenarioKey, algoKey){
   const key = basinCacheKey(scenarioKey, algoKey);
   if(basinPlanCache[key]) return basinPlanCache[key];
-
-  const plan = {};
-  let totalWater = 0;
-  let totalProfit = 0;
-
-  // 1) her parsel için ham çözüm
-  for(const p of parcelData){
-    const res = getOptimizationResult(p.id, scenarioKey, algoKey);
-    const rows = enforceParcelQuotaOnRows(res.rows, p);
-    plan[p.id] = {
-      rows: recomputeRowTotals(rows),
-      totals: sumMetrics(rows),
-      irrigationPlan: res.irrigationPlan || null,
-      lockedCrop: res.lockedCrop || null,
-      decisionMetrics: res.decisionMetrics || null,
-      decisionReason: res.decisionReason || null,
-      rankedCandidates: Array.isArray(res.rankedCandidates) ? res.rankedCandidates : null
-    };
-    totalWater += plan[p.id].totals.water;
-    totalProfit += plan[p.id].totals.profit;
-  }
-
-  // 2) küresel su bütçesi kısıtı uygula (greedy alan kaydırma)
-  let budget = computeGlobalBudgetM3();
-  // Senaryolar aynı 2024/mevcut su varlığı altında karşılaştırılır.
-  // "Su verimliliği" hedefi suyu ayrıca kısmaz; su/kâr skorlamasında fark yaratır.
-  let it = 0;
-  const maxIt = 2500;
-  while(totalWater > budget && it < maxIt){
-    // en yüksek su yoğun parseli bul
-    let worstId = null;
-    let worstScore = -Infinity;
-    for(const p of parcelData){
-      const t = plan[p.id].totals;
-      const score = t.water / Math.max(1, t.area); // m3/da
-      if(score > worstScore){ worstScore = score; worstId = p.id; }
-    }
-    if(!worstId) break;
-    const p = parcelData.find(x=>x.id===worstId);
-    const rows = plan[worstId].rows;
-    if(!rows || rows.length<2) break;
-    // en su yoğun üründen en düşük su yoğun ürüne küçük kaydırma
-    let hi = 0, lo = 0;
-    for(let i=1;i<rows.length;i++){
-      if(rows[i].waterPerDa > rows[hi].waterPerDa) hi=i;
-      if(rows[i].waterPerDa < rows[lo].waterPerDa) lo=i;
-    }
-    if(hi===lo) break;
-    const stepDa = Math.min(0.05 * p.area_da, rows[hi].area); // %5 adım
-    if(stepDa <= 0.05){
-      // daha küçük adım
-      const small = Math.min(1.0, rows[hi].area);
-      if(small <= 0) break;
-      rows[hi].area -= small;
-      rows[lo].area += small;
-    }else{
-      rows[hi].area = +(rows[hi].area - stepDa).toFixed(1);
-      rows[lo].area = +(rows[lo].area + stepDa).toFixed(1);
-    }
-    recomputeRowTotals(rows);
-    const newTotals = sumMetrics(rows);
-    // toplamları güncelle
-    totalWater = 0; totalProfit = 0;
-    for(const pp of parcelData){
-      plan[pp.id].totals = sumMetrics(plan[pp.id].rows);
-      totalWater += plan[pp.id].totals.water;
-      totalProfit += plan[pp.id].totals.profit;
-    }
-    it++;
-  }
-
-  const out = {
-    plan,
-    budget,
-    totals: { water: totalWater, profit: totalProfit, eff: totalProfit/Math.max(1,totalWater) },
-    iterations: it,
-    feasible: totalWater <= budget + 1e-6
-  };
-  basinPlanCache[key] = out;
-  return out;
+  return backendUnavailablePlan(getSelectedParcelIdsForRun(), scenarioKey, algoKey, 'Backend karar paketi cache içinde yok; frontend havza planı hesaplamadı.');
 }
 
 async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
@@ -8866,9 +8790,10 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       ? 'Toplam sonuçlar yakın olsa da algoritmalar bazı parsellerde farklı desenler üretiyor.'
       : 'Çözüm uzayı dar veya kısıtlar çok baskın; algoritmalar benzer desenlere yakınsıyor olabilir.');
 
-  const leaderReason = tiedTop.length > 1
-    ? `${tiedTop.map(x=>x.a).join(', ')} algoritmalari ayni kalite skoruna yaklasti; aktif algoritma olarak en hizli/stabil baglayici kosu ${bestAlgo} secildi.`
-    : `${bestAlgo} daha yuksek denge skoru urettigi icin lider secildi.`;
+  const backendInterpretation = String(j.interpretation || '').trim();
+  const leaderReason = backendInterpretation || (tiedTop.length > 1
+    ? `${tiedTop.map(x=>x.a).join(', ')} algoritmalari ayni kalite skoruna yaklasti; karar tek algoritmaya baglanmamalidir.`
+    : `${bestAlgo} metriklere dayali denge skorunda one cikti.`);
 
   if(updateCharts) applyBenchmarkLeaderV96(bestAlgo, objectiveLabel, leaderReason);
 
@@ -8877,10 +8802,10 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const requestedTotal = requestedRepeats * rows.length;
     const totalAttempted = rows.reduce((s,a)=> s + Number(algos[a]?.attempted_runs || algos[a]?.runs || 0), 0);
     const totalSuccessful = rows.reduce((s,a)=> s + Number(algos[a]?.successful_runs || algos[a]?.runs || 0), 0);
-    const avgFeasible = rows.reduce((s,a)=> s + Number(algos[a]?.feasible_rate || 0), 0) / Math.max(1, rows.length);
+    const avgFeasible = rows.reduce((s,a)=> s + Math.max(0, Math.min(1, Number(algos[a]?.feasible_rate || 0))), 0) / Math.max(1, rows.length);
     const avgRuntime = rows.reduce((s,a)=> s + Number(algos[a]?.runtime_s?.mean || 0), 0) / Math.max(1, rows.length);
     kpiRoot.innerHTML = [
-      {label:'Önerilen algoritma', value:bestAlgo, sub:`${objectiveLabel} hedefinde en yüksek hedef skoru`},
+      {label:'Algoritma yorumu', value:(/esdeger|eşdeğer|tek algoritmaya/i.test(leaderReason) ? 'Eşdeğer bant' : bestAlgo), sub:`${objectiveLabel} hedefinde metrik temelli okuma`},
       {label:'Tekrar politikası', value:`${requestedRepeats} tekrar`, sub:`Her algoritma için hedef tekrar; seed: ${j.seed_policy?.includes('fixed') ? 'sabit kök + algoritma ofseti' : 'rastgele kök + algoritma ofseti'}`},
       {label:'Koşu kapsamı', value:`${totalSuccessful}/${requestedTotal}`, sub:`${totalAttempted} deneme başlatıldı; süre bütçesi dolarsa fiili sayı düşebilir`},
       {label:'Plan ayrışması', value:`${fmtNum(avgPlanDistance,1)}%`, sub:`Ortalama süre: ${fmtNum(avgRuntime,2)} sn • Uygulanabilirlik: ${fmtNum(avgFeasible*100,1)}%`} 
@@ -8899,7 +8824,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
           `<div><b>Karşılaştırma notu:</b> ${escapeHtml(benchmarkHealth)}</div>`+
           `<div class="small muted" style="margin-top:6px;">Mevcut desen referans sütunu olarak tutulur; algoritmalar aynı veri, aynı aday ürün havuzu ve aynı su bütçesi altında kıyaslanır. Seçili parselde parsel bazlı davranış, tüm parsel görünümünde ise temsilî kurum kapsamı raporlanır.</div><div class="small muted" style="margin-top:6px;"><b>Not:</b> Buradaki başarısız koşu sayısı bir tahmin hatası değildir; yalnızca teknik olarak sonuç üretemeyen veya kısıt nedeniyle geçersiz kalan koşuları gösterir. 0 olması iyi durumdur.</div>`+
           `</div>`;
-  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Aktif algoritma kararı:</b> ${escapeHtml(leaderReason)} Sonraki optimizasyon ve önerilen desen bu lider algoritma ile çalışır.</div>`;
+  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Benchmark yorumu:</b> ${escapeHtml(leaderReason)}</div>`;
 
   if(j.baseline){
     html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Baseline (mevcut desen):</b> `+
@@ -8934,6 +8859,8 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
 
   html += '<div class="benchmark-table-wrap">';
   html += '<table class="mini-table pro" style="width:100%;border-collapse:collapse;">';
+  const isDoubleBenchmark = String(j?.diagnostics?.scenario_type || j?.scenario_type || '').toLowerCase() === 'double'
+    || String(j?.seasonSource || j?.season_source || '').toLowerCase() === 's2';
   html += '<thead><tr>'+
     '<th style="text-align:left;">Algoritma</th>'+
     '<th style="text-align:right;">Kâr ort</th>'+
@@ -8944,8 +8871,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     '<th style="text-align:right;">Std / CV</th>'+
     '<th style="text-align:right;">Plan farkı</th>'+
     '<th style="text-align:right;">Uygulanabilirlik</th>'+
-    '<th style="text-align:right;">2. ürün oranı</th>'+
-    '<th style="text-align:right;">2. ürün alanı</th>'+
+    (isDoubleBenchmark ? '<th style="text-align:right;">2. ürün oranı</th><th style="text-align:right;">2. ürün alanı</th>' : '')+
     '<th style="text-align:right;">Süre</th>'+
     '<th style="text-align:right;">Desen</th>'+
     '<th style="text-align:right;">Başarısız koşu</th>'+
@@ -8954,8 +8880,8 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
   for(const a of rows){
     const r = algos[a] || {};
     const p = r.profit||{}; const w = r.water||{}; const e = r.efficiency||{}; const t = r.runtime_s||{}; const pd = r.plan_distance_pct||{};
-    const feasibleTxt = `${fmtNum((Number(r.feasible_rate||0))*100,1)}%`;
-    const successTxt = `${fmtNum((Number(r.success_rate||0))*100,1)}%`;
+    const feasibleTxt = `${fmtNum(Math.max(0, Math.min(100, (Number(r.feasible_rate||0))*100)),1)}%`;
+    const successTxt = `${fmtNum(Math.max(0, Math.min(100, (Number(r.success_rate||0))*100)),1)}%`;
     const secParcelTxt = `${fmtNum((Number(r?.secondary_parcel_rate?.mean||0))*100,1)}%`;
     const secAreaTxt = `${fmtNum((Number(r?.secondary_area_da?.mean||0)),1)} da`;
     const failedRuns = Number(r.failed_runs ?? Math.max(0, Number(r.attempted_runs||0) - Number(r.successful_runs||r.runs||0)));
@@ -8969,8 +8895,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       `<td style="text-align:right;">${fmtNum(p.std,0)} / ${fmtNum((Number(p.cv||0))*100,1)}%</td>`+
       `<td style="text-align:right;">${fmtNum(pd.mean,1)}%</td>`+
       `<td style="text-align:right;">${feasibleTxt}</td>`+
-      `<td style="text-align:right;">${secParcelTxt}</td>`+
-      `<td style="text-align:right;">${secAreaTxt}</td>`+
+      (isDoubleBenchmark ? `<td style="text-align:right;">${secParcelTxt}</td><td style="text-align:right;">${secAreaTxt}</td>` : '')+
       `<td style="text-align:right;">${fmtNum(t.mean,2)} sn</td>`+
       `<td style="text-align:right;">${escapeHtml(String(r.unique_patterns ?? 0))}</td>`+
       `<td style="text-align:right;">${failedRuns > 0 ? escapeHtml(String(failedRuns)) : 'yok'}</td>`+
@@ -8994,15 +8919,17 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       const prim = (best.crop_area?.primary||[]).filter(x=>safeNum(x.area_da,0)>0);
       const sec = (best.crop_area?.secondary||[]).filter(x=>safeNum(x.area_da,0)>0);
       const primList = prim.map(x=> `${escapeHtml(prettyCropName(x.crop))} (${fmtNum(x.area_da,1)} da)`).join('<br/>') || '-';
-      const secList = sec.map(x=> `${escapeHtml(prettyCropName(x.crop))} (${fmtNum(x.area_da,1)} da)`).join('<br/>') || '-';
+      const secList = sec.map(x=> `${escapeHtml(prettyCropName(x.crop))} (${fmtNum(x.area_da,1)} da)`).join('<br/>') || (String(best.status || '') === 'no_feasible_two_crop_plan' ? 'Uygulanabilir iki ürünlü plan bulunamadı' : 'İkinci ürün/desen yok');
       const warn = algos[a]?.identical_plan_warning ? '<div class="small muted" style="margin-top:6px;">Not: tekrarlar arasında desen çeşitliliği düşük.</div>' : '';
       const pd = algos[a]?.plan_distance_pct || {};
+      const secondaryBlock = isDoubleBenchmark ? `<div class="small" style="margin-top:6px;"><b>2. ürün</b><br/>${secList}</div>` : '';
+      const secondaryMeta = isDoubleBenchmark ? ` • 2. ürün alanı: ${fmtNum((algos[a]?.secondary_area_da?.mean||0),1)} da` : '';
       pHtml += '<div class="stat benchmark-pattern-card pattern-compare-card" style="min-width:240px;">'+
         `<div class="stat-label"><b>${escapeHtml(a)}</b> - en iyi koşu</div>`+
         `<div class="small" style="margin-top:6px;"><b>1. ürün</b><br/>${primList}</div>`+
-        `<div class="small" style="margin-top:6px;"><b>2. ürün</b><br/>${secList}</div>`+
+        secondaryBlock+
         `<div class="small" style="opacity:.88;margin-top:8px;">Kâr: <b>${fmtNum(best.total_profit_tl,0)}</b> TL • Su: <b>${fmtNum(best.total_water_m3,0)}</b> m³ • TL/m³: <b>${fmtNum(best.efficiency_tl_per_m3,2)}</b></div>`+
-        `<div class="small muted" style="margin-top:4px;">Tekrar içi plan farkı: ${fmtNum(pd.mean,1)}% • 2. ürün alanı: ${fmtNum((algos[a]?.secondary_area_da?.mean||0),1)} da</div>`+
+        `<div class="small muted" style="margin-top:4px;">Tekrar içi plan farkı: ${fmtNum(pd.mean,1)}%${secondaryMeta}</div>`+
         warn+
       '</div>';
     }
@@ -9026,15 +8953,17 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       pHtml += `<div class="small muted" style="margin:10px 0 6px;">Parsel bazında farklılaşan desen sayısı: <b>${differingIds.length}</b> / ${ids.length}. Tabloda ${differingIds.length ? 'yalnız farklılaşan' : 'ilk 15'} parseller gösterilir. Geniş ekranda ilk sütun sabit kalır.</div>`;
       pHtml += '<div class="benchmark-table-wrap" style="margin-top:12px;">';
       pHtml += '<table class="mini-table pro" style="width:100%;border-collapse:collapse;">';
-      pHtml += '<thead><tr><th>Parsel</th>'+rows.map(a=>`<th>${escapeHtml(a)} (1. / 2.)</th>`).join('')+'</tr></thead><tbody>';
+      pHtml += '<thead><tr><th>Parsel</th>'+rows.map(a=>`<th>${escapeHtml(a)}${isDoubleBenchmark ? ' (1. / 2.)' : ' (ürün)'}</th>`).join('')+'</tr></thead><tbody>';
       for(const id of shownIds){
         pHtml += `<tr><td><b>${escapeHtml(id)}</b></td>`;
         for(const a of rows){
           const p = maps[a]?.[id];
           const c1 = prettyCropName(p?.primary?.crop || '-');
           const c2raw = String(p?.secondary?.crop || '').trim();
-          const c2 = c2raw ? prettyCropName(c2raw) : '-';
-          pHtml += `<td>${escapeHtml(String(c1))}<span class="muted"> / </span>${escapeHtml(String(c2))}</td>`;
+          const c2 = c2raw ? prettyCropName(c2raw) : 'uygulanabilir ikinci ürün yok';
+          pHtml += isDoubleBenchmark
+            ? `<td>${escapeHtml(String(c1))}<span class="muted"> / </span>${escapeHtml(String(c2))}</td>`
+            : `<td>${escapeHtml(String(c1))}</td>`;
         }
         pHtml += '</tr>';
       }
@@ -9058,7 +8987,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const meanWater = pushBase(rows.map(a=> +(algos[a]?.water?.mean || 0)), j.baseline?.total_water_m3 || 0);
     const maxWater  = pushBase(rows.map(a=> +(algos[a]?.water?.max || 0)), j.baseline?.total_water_m3 || 0);
     const meanEff   = pushBase(rows.map(a=> +(algos[a]?.efficiency?.mean || 0)), j.baseline?.efficiency_tl_per_m3 || 0);
-    const feasPct   = pushBase(rows.map(a=> +(Number(algos[a]?.feasible_rate || 0) * 100)), 100);
+    const feasPct   = pushBase(rows.map(a=> Math.max(0, Math.min(100, +(Number(algos[a]?.feasible_rate || 0) * 100)))), 100);
     const runtime   = pushBase(rows.map(a=> +(algos[a]?.runtime_s?.mean || 0)), 0);
     const diversity = pushBase(rows.map(a=> +(algos[a]?.unique_patterns || 0)), 0);
 
@@ -9285,6 +9214,187 @@ function normalizeBackendRecommendationPayload(parcelResult, parcelRef, currentT
   };
 }
 
+function backendUnavailablePlan(idsForRun, scenarioKey, algoKey, message){
+  const key = basinCacheKey(scenarioKey, algoKey);
+  const wanted = new Set((idsForRun || []).map(x => String(x || '').trim()).filter(Boolean));
+  const targetParcels = (parcelData || []).filter(p => !wanted.size || wanted.has(String(p?.id || '').trim()));
+  const plan = {};
+  for(const p of targetParcels){
+    plan[p.id] = {
+      rows: [],
+      totals: { water:0, profit:0, eff:0 },
+      backendUnavailable: true,
+      backendOnly: true,
+      decisionReason: message || 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.',
+      alternativePatterns: [],
+      interrowAlternatives: [],
+      conversionWarnings: [message || 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.']
+    };
+  }
+  const out = {
+    plan,
+    budget: 0,
+    totals: { water:0, profit:0, eff:0 },
+    iterations: 0,
+    feasible: false,
+    backendUnavailable: true,
+    backendOnly: true,
+    diagnostics: { warnings:[message || 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.'] }
+  };
+  basinPlanCache[key] = out;
+  return out;
+}
+
+function backendStandardCropToUiRow(crop, parcelRef){
+  const area = safeNum(crop?.area_da ?? crop?.area, safeNum(parcelRef?.area_da, 0));
+  const totalWater = safeNum(crop?.water_m3 ?? crop?.totalWater ?? crop?.waterTotal, 0);
+  const totalProfit = safeNum(crop?.profit_tl ?? crop?.totalProfit ?? crop?.profitTotal, 0);
+  const waterPerDa = area > 0 ? totalWater / area : safeNum(crop?.waterPerDa ?? crop?.water_m3_da, 0);
+  const profitPerDa = area > 0 ? totalProfit / area : safeNum(crop?.profitPerDa ?? crop?.profit_tl_da, 0);
+  const name = prettyCropName(crop?.crop_name || crop?.name || crop?.crop || '-');
+  const currentKey = crop?.irrigationCurrentKey || crop?.irrigationCurrent || irrigationKeysForCrop(name).currentKey;
+  const suggestedKey = crop?.irrigation_method || crop?.irrigationSuggestedKey || crop?.irrigationRecommended || irrigationKeysForCrop(name).suggestedKey || currentKey;
+  return {
+    ...crop,
+    name,
+    area,
+    season: crop?.season || crop?.period_note || inferSeasonLabelFromCrop(name, parcelRef?.parcel_type || ''),
+    irrigationCurrentKey: currentKey,
+    irrigationCurrentText: crop?.irrigationCurrentText || irrigationLabel(currentKey),
+    irrigationSuggestedKey: suggestedKey,
+    irrigationSuggestedText: crop?.irrigationSuggestedText || irrigationLabel(suggestedKey),
+    irrigationSuggested: crop?.irrigationSuggested || irrigationLabel(suggestedKey),
+    waterPerDa,
+    profitPerDa,
+    totalWater,
+    totalProfit,
+    tlPerM3: safeNum(crop?.tl_per_m3, totalProfit / Math.max(1, totalWater)),
+    rankReason: crop?.explanation || crop?.reason || '',
+    decisionNote: crop?.explanation || crop?.reason || '',
+    backendOnly: true,
+    feasible: crop?.feasible !== false,
+    selectable: crop?.selectable !== false
+  };
+}
+
+function backendChartLabelTr(label){
+  const key = String(label || '').trim().toLowerCase();
+  const map = {
+    water_saving: 'Su tasarrufu',
+    max_profit: 'Kâr odaklı',
+    balanced: 'Su-kâr dengesi',
+    water_efficiency: 'Su-kâr dengesi',
+    current: 'Mevcut',
+    mevcut: 'Mevcut'
+  };
+  return map[key] || String(label || '');
+}
+
+function backendStandardPlanToPattern(plan, parcelRef, baselineTotals, rank=1, selected=false){
+  const crops = Array.isArray(plan?.crops) ? plan.crops : [];
+  const rows = crops.map(c=>backendStandardCropToUiRow(c, parcelRef));
+  const totalWater = safeNum(plan?.total_water_m3, rows.reduce((a,r)=>a+safeNum(r.totalWater,0),0));
+  const totalProfit = safeNum(plan?.total_profit_tl, rows.reduce((a,r)=>a+safeNum(r.totalProfit,0),0));
+  const components = rows.map((r, idx)=>({
+    role: idx === 0 ? 'Ana ürün' : 'İkinci ürün / desen',
+    crop: r.name,
+    share: safeNum(r.area_share_pct, 0) > 0 ? safeNum(r.area_share_pct,0) / 100 : 1,
+    area: safeNum(r.area, 0),
+    water: safeNum(r.totalWater, 0),
+    profit: safeNum(r.totalProfit, 0),
+    irrigation: r.irrigationSuggested || ''
+  }));
+  return {
+    rank,
+    targetOrder: rank,
+    selectedRecommendation: !!selected,
+    backendOnly: true,
+    patternName: rows.map(r=>r.name).filter(Boolean).join(' + ') || plan?.plan_id || 'Backend plan',
+    mainCrop: rows[0]?.name || '-',
+    secondaryCrop: rows[1]?.name || '-',
+    totalWater,
+    totalProfit,
+    tlPerM3: safeNum(plan?.tl_per_m3, totalProfit / Math.max(1, totalWater)),
+    deltaWater: safeNum(plan?.delta_water_m3, totalWater - safeNum(baselineTotals?.water, 0)),
+    deltaProfit: safeNum(plan?.delta_profit_tl, totalProfit - safeNum(baselineTotals?.profit, 0)),
+    quotaExceeded: plan?.feasible === false,
+    selectable: plan?.selectable !== false && plan?.feasible !== false,
+    areaSplit: plan?.pattern_type || 'Backend karar paketi',
+    productionWindow: rows.map(r=>r.season).filter(Boolean).join(' / '),
+    suitability: (plan?.feasibility_reasons || []).join(' • ') || 'Backend uygunluk kontrolü',
+    note: plan?.explanation || (plan?.warnings || []).join(' '),
+    components,
+    source: plan
+  };
+}
+
+function backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey){
+  const key = basinCacheKey(scenarioKey, algoKey);
+  const selectedPlan = data?.selected_plan || {};
+  const context = data?.context || {};
+  const baseline = data?.baseline || {};
+  const alternatives = Array.isArray(data?.alternatives) ? data.alternatives : [];
+  const plan = {};
+  const crops = Array.isArray(selectedPlan.crops) ? selectedPlan.crops : [];
+  const byParcel = new Map();
+  const noFeasibleTwoCrop = context?.scenario_type === 'double' && (
+    selectedPlan?.status === 'no_feasible_two_crop_plan' || selectedPlan?.feasible === false
+  );
+  crops.forEach(c=>{
+    const pid = String(c?.parcel_id || context?.parcel_id || selectedParcelId || '').trim();
+    if(!pid) return;
+    if(!byParcel.has(pid)) byParcel.set(pid, []);
+    byParcel.get(pid).push(c);
+  });
+  byParcel.forEach((rowsRaw, pid)=>{
+    const parcelRef = (parcelData || []).find(p=>String(p.id)===String(pid)) || null;
+    const rows = rowsRaw.map(c=>backendStandardCropToUiRow(c, parcelRef));
+    const totals = sumMetrics(rows);
+    const baseRow = Array.isArray(baseline.crop_pattern) ? baseline.crop_pattern.find(b=>String(b.parcel_id)===String(pid)) : null;
+    const baselineTotals = { water: safeNum(baseRow?.water_m3, safeNum(baseline.total_water_m3, 0)), profit: safeNum(baseRow?.profit_tl, safeNum(baseline.total_profit_tl, 0)) };
+    const selectedPattern = backendStandardPlanToPattern(selectedPlan, parcelRef, baselineTotals, 1, true);
+    const alternativePatterns = alternatives.map((a, idx)=>backendStandardPlanToPattern(a, parcelRef, baselineTotals, idx + 2, false));
+    const shownAlternativePatterns = noFeasibleTwoCrop ? [selectedPattern].concat(alternativePatterns) : alternativePatterns;
+    const visibleRows = noFeasibleTwoCrop ? [] : rows;
+    const visibleTotals = noFeasibleTwoCrop ? {water:0, profit:0, eff:0} : totals;
+    plan[pid] = {
+      rows: visibleRows,
+      totals: visibleTotals,
+      backendOnly: true,
+      backendResult: data,
+      backendDecisionPackage: data,
+      irrigationPlan: rows.map(r=>r.irrigationSuggested || r.irrigationSuggestedText).filter(Boolean).join(' | '),
+      decisionReason: selectedPlan.explanation || (selectedPlan.warnings || []).join(' '),
+      alternativePatterns: shownAlternativePatterns,
+      interrowAlternatives: [],
+      conversionWarnings: Array.isArray(selectedPlan.warnings) ? selectedPlan.warnings : [],
+      rankedCandidates: null,
+      noFeasibleTwoCrop,
+    };
+  });
+  const totalWater = safeNum(selectedPlan.total_water_m3, crops.reduce((a,c)=>a+safeNum(c?.water_m3,0),0));
+  const totalProfit = safeNum(selectedPlan.total_profit_tl, crops.reduce((a,c)=>a+safeNum(c?.profit_tl,0),0));
+  const out = {
+    plan,
+    budget: safeNum(context.water_budget_m3, data?.water_budget_m3 || 0),
+    totals: { water: totalWater, profit: totalProfit, eff: totalProfit / Math.max(1, totalWater) },
+    iterations: 0,
+    feasible: selectedPlan.feasible !== false,
+    backendOnly: true,
+    server: true,
+    context,
+    baseline,
+    selectedPlan,
+    alternatives,
+    charts: data?.charts || {},
+    tables: data?.tables || {},
+    diagnostics: data?.diagnostics || {},
+    pythonMeta: data?.meta || {}
+  };
+  basinPlanCache[key] = out;
+  return out;
+}
+
 async function fetchAndCacheBasinPlanPython(scenarioKey, algoKey){
   // ✓ Bu çağrı bu fonksiyonun "tek" optimize isteği olsun
 
@@ -9374,6 +9484,17 @@ async function fetchAndCacheBasinPlanPython(scenarioKey, algoKey){
 
   // 4) JSON'u SADECE 1 KERE oku
   const data = await res.json();
+  if(data && data.selected_plan && data.context){
+    if (reqId !== lastOptimizeReqId) {
+      console.warn("Eski optimize cevabı yok sayıldı (reqId mismatch)");
+      return null;
+    }
+    if (data.status && data.status !== "OK") {
+      alert("Optimizasyon reddedildi: " + (data.reason || data.message || "Backend sonucu OK değil"));
+      return null;
+    }
+    return backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey);
+  }
 
   // --- Normalize backend payload shapes ---
   // Backend can return either:
@@ -9469,13 +9590,7 @@ async function fetchAndCacheBasinPlanPython(scenarioKey, algoKey){
     const backend = normalizeBackendRecommendationPayload(pr.result || {}, parcelRef, null);
     let rows = backend.primaryRows;
     if(!rows.length){
-      const currentRows = parcelRef ? runOptimization(parcelRef, 'mevcut', algoKey).rows || [] : [];
-      rows = currentRows.map(r=>({
-        ...r,
-        currentReference: true,
-        rankReason: 'Backend öneri sonucu eksik; mevcut desen kontrollü referans olarak korunuyor.',
-        decisionNote: 'Backend öneri sonucu eksik; mevcut desen kontrollü referans olarak korunuyor.'
-      }));
+      rows = [];
     }
     const totals = sumMetrics(rows);
     const backendWithTotals = normalizeBackendRecommendationPayload(pr.result || {}, parcelRef, totals);
@@ -9570,6 +9685,9 @@ async function fetchAndCacheBasinPlanFromServer(scenarioKey, algoKey){
     throw new Error('Python optimize API failed: '+res.status);
   }
   const data = await res.json();
+  if(data && data.selected_plan && data.context){
+    return backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey);
+  }
 
   const plan = {};
   let totalWater = 0;
@@ -13842,6 +13960,19 @@ function runOptimization(p, scenarioKey, algoKey){
   });
   });
   const currentTotals = sumMetrics(currentRows);
+  const scenarioNorm = String(scenarioKey||'').trim().toLowerCase();
+  if(scenarioNorm === 'mevcut' || scenarioNorm === 'current'){
+    return { rows: currentRows.map(r=>({ ...r })), totals: currentTotals, baselineOnly: true };
+  }
+  if(!STATE.allowBrowserOptimizationFallback){
+    return {
+      rows: [],
+      totals: { water:0, profit:0, eff:0 },
+      backendUnavailable: true,
+      backendOnly: true,
+      decisionReason: 'Backend karar paketi olmadan frontend optimizasyon/öneri üretmez.'
+    };
+  }
 
   // Bahçe / çok yıllık parsellerde ANA ÜRÜN KORUNUR.
   // Kullanıcı S1 veya S2 seçse bile mevcut meyve ağacı / bağ / çok yıllık ürün sökülüp
@@ -14320,7 +14451,13 @@ function getOptimizationResult(parcelId, scenarioKey, algoKey){
   const contextKey = `${basinCacheKey(scenarioKey, algoKey)}|P${parcelId}|C${cropSig || normCropName(p?.current_crop || p?.currentCrop || p?.crop || '')}|DV${STATE.dataVersion || STATE.selectedWaterYear || ''}`;
   optimizationCache[parcelId][contextKey] ??= {};
   if(!optimizationCache[parcelId][contextKey][algoKey]){
-    optimizationCache[parcelId][contextKey][algoKey] = runOptimization(p, scenarioKey, algoKey);
+    optimizationCache[parcelId][contextKey][algoKey] = {
+      rows: [],
+      totals: { water:0, profit:0, eff:0 },
+      backendUnavailable: true,
+      backendOnly: true,
+      decisionReason: 'Backend sonucu cache içinde yok; tarayıcı içi karar motoru devre dışı.'
+    };
   }
   return optimizationCache[parcelId][contextKey][algoKey];
 }
@@ -14372,6 +14509,22 @@ function computeCropData(p, scenarioKey, algoKey) {
   // Önerilen: küresel su bütçesi uygulanmış havza planından çek
   const basin = computeBasinPlan(scenarioKey, algoKey);
   const opt = basin.plan[p.id] || getOptimizationResult(p.id, scenarioKey, algoKey);
+  if(opt?.backendUnavailable){
+    return {
+      current,
+      currentTotals,
+      rec: [],
+      recTotals: { water:0, profit:0, water_eff:0, water_current_irrig:0, water_saving_m3:0, water_saving_pct:0 },
+      recMeta: {
+        backendUnavailable: true,
+        backendOnly: true,
+        decisionReason: opt.decisionReason || 'Backend sonucu yok; frontend karar üretmedi.',
+        alternativePatterns: [],
+        interrowAlternatives: [],
+        conversionWarnings: Array.isArray(opt.conversionWarnings) ? opt.conversionWarnings : ['Backend sonucu yok; frontend karar üretmedi.']
+      }
+    };
+  }
   if(opt?.backendOnly || opt?.backendResult){
     const recommendedForUi = Array.isArray(opt.rows) ? opt.rows.map(r=>({ ...r })) : [];
     const recTotalsAdj = opt.totals || sumMetrics(recommendedForUi);
@@ -14400,6 +14553,8 @@ function computeCropData(p, scenarioKey, algoKey) {
         interrowAlternatives: Array.isArray(opt.interrowAlternatives) ? opt.interrowAlternatives : [],
         conversionWarnings: Array.isArray(opt.conversionWarnings) ? opt.conversionWarnings : [],
         backendResult: opt.backendResult || null,
+        selectedPlan: opt.backendDecisionPackage?.selected_plan || opt.backendResult?.selected_plan || null,
+        noFeasibleTwoCrop: !!opt.noFeasibleTwoCrop,
         orchardKeepMainCrop: !!(recommendedForUi[0]?.orchardLocked || p?.parcel_type === 'orchard' || p?.is_orchard),
       }
     };
@@ -14677,7 +14832,8 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
     const dw = Math.round(safeNum(x.deltaWater,0));
     const dp = Math.round(safeNum(x.deltaProfit,0));
     const selectedBadge = x.selectedRecommendation ? '<span class="pattern-selected-badge">Seçilen öneri</span>' : '';
-    const quotaBadge = x.quotaExceeded ? '<span class="pattern-risk-badge">Kota aşımı riski</span>' : '<span class="pattern-selected-badge">Kota uygun</span>';
+    const isSelectable = x.selectable !== false && x.feasible !== false && !x.quotaExceeded;
+    const quotaBadge = x.quotaExceeded || x.feasible === false ? '<span class="pattern-risk-badge">Kota aşımı riski / uzman onayı gerekir</span>' : '<span class="pattern-selected-badge">Kota uygun</span>';
     const scenarioTypeLabel = Array.isArray(x.components) && x.components.length > 1 ? 'Kombinasyon / yüzde dağılımı' : 'Tek ürün';
     const components = Array.isArray(x.components) && x.components.length
       ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
@@ -14708,7 +14864,7 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
       <small>${escapeHtml(x.productionWindow || x.growthDays || 'Takvim kontrolü')} • ${escapeHtml(x.peakMonth || 'Pik ay kontrolü')} • ${escapeHtml(x.suitability || 'Uygunluk kontrolü')}</small>
       <div class="pattern-card-actions-v102">
         <button class="btn-link" type="button" data-alt-crop-v101="${escapeHtml(x.patternName || `${x.mainCrop || ''} + ${x.secondaryCrop || ''}`)}">Detay</button>
-        <button class="btn-link" type="button" data-select-pattern-v102="${escapeHtml(pickId)}">Seç</button>
+        <button class="btn-link" type="button" data-select-pattern-v102="${escapeHtml(pickId)}" ${isSelectable ? '' : 'disabled aria-disabled="true"'}>${isSelectable ? 'Seç' : 'Seçilemez'}</button>
       </div>
       <div class="small muted">${escapeHtml(x.note || 'Su, kâr, TL/m³ ve parsel uygunluğu birlikte değerlendirildi.')}</div>
     </article>`;
@@ -14744,6 +14900,14 @@ function renderTables() {
   const orchardLockedUi = !!(recMeta?.orchardKeepMainCrop || p?.parcel_type === 'orchard' || p?.is_orchard || (current && current[0] && isPerennialCropName(current[0].name)));
   const orchardAlternativeUi = orchardLockedUi ? orchardAlternativeFallback(current, rec, recMeta) : null;
   try{ STATE.lastRecMeta = recMeta || null; }catch(_e){}
+  try{
+    const recTitle = Array.from(document.querySelectorAll('.card-subtitle')).find(x => String(x.textContent || '').includes('Önerilen Ürün Deseni'));
+    if(recTitle){
+      recTitle.textContent = recMeta?.noFeasibleTwoCrop
+        ? 'Senaryo-2 için uygulanabilir iki ürünlü/desenli plan bulunamadı'
+        : 'Önerilen Ürün Deseni (Senaryo + Algoritma)';
+    }
+  }catch(_e){}
 
   // --- SEZON / ROTASYON ALAN TUTARLILIĞI ---
   // Rotasyon (örn. Yazlık + Kışlık) aynı parsel alanında ardışık yapılır.
@@ -14908,8 +15072,11 @@ function renderTables() {
           return `<div class="irr-cell"><div>${escapeHtml(sugLbl)}</div><div class="irr-hint">Mevcut: ${escapeHtml(curLbl)}</div></div>`;
         })();
     const rawSeason = !isBlankSeasonLabel(r.season) ? String(r.season) : inferSeasonLabelFromCrop(r.name || '', p?.parcel_type || '');
+    const areaShareForRow = safeNum(r.area_share_pct, 0) > 0
+      ? Math.round(safeNum(r.area_share_pct, 0))
+      : Math.round((safeNum(r.area,0) / Math.max(1, targetAreaDa || safeNum(p?.area_da,0) || safeNum(r.area,0))) * 100);
     const displaySeason = (mode === 'rec' && /desen\s*pay/i.test(rawSeason))
-      ? `Oran %${Math.round((safeNum(r.area,0) / Math.max(1, targetAreaDa || safeNum(p?.area_da,0) || safeNum(r.area,0))) * 100)}`
+      ? `Oran %${areaShareForRow}`
       : rawSeason;
     return `
     <tr>
@@ -14960,6 +15127,28 @@ function renderTables() {
   ).toLocaleString("tr-TR")} m³ | Mevcut toplam net kâr: ${Math.round(
     currentTotals.profit
   ).toLocaleString("tr-TR")} TL | Su verimliliği: ${fmtEff(effCur)} TL/m³`;
+
+  if (canShowOpt && recMeta?.noFeasibleTwoCrop) {
+    tbodyRec.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center; padding:14px; color:#92400e;">
+          Senaryo-2 için uygulanabilir iki ürünlü/desenli plan bulunamadı. Uygulanamaz desenler yalnız uzman onayıyla incelenebilir.
+        </td>
+      </tr>
+    `;
+    const uiAlternativePatterns = Array.isArray(recMeta?.alternativePatterns) ? recMeta.alternativePatterns : [];
+    const altPanelHtml = uiAlternativePatterns.length
+      ? alternativePatternPanelHtmlV94(uiAlternativePatterns, getScenarioDisplayMeta(selectedScenario).label, 'En yakın uygulanamaz alternatifler / uzman onayı gerekir')
+      : '';
+    if (footerRec) {
+      footerRec.innerHTML = `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Uygun plan yok:</strong> ${escapeHtml(recMeta.decisionReason || 'Seçili parsel ve su kotası altında uygulanabilir iki ürünlü/desenli plan bulunamadı.')}</div>${altPanelHtml}`;
+    }
+    const explainBox = document.getElementById("explainBox");
+    if (explainBox) {
+      explainBox.innerHTML = `<div><strong>Senaryo-2 sonucu:</strong> uygulanabilir iki ürünlü/desenli plan bulunamadı.</div><div style="margin-top:6px;">Backend, kotayı aşan veya takvim/uygunluk riski taşıyan desenleri ana öneri olarak seçilebilir göstermedi.</div>`;
+    }
+    return;
+  }
 
   // Öneri footer ve açıklanabilirlik kutuları sadece optimizasyon sonucu varsa hesaplanmalı.
   if (!canShowOpt || !recTotals) {
@@ -15406,6 +15595,7 @@ function renderAllScenarioSummaries(){
   // v72: Çalışma meta bilgisi + karar gerekçesi
   try{
     const metaEl = document.getElementById('runMetaBox');
+    const riskBox = document.getElementById('riskSeparationBox');
     const ratEl = document.getElementById('decisionRationale');
     const key = basinCacheKey(viewCtx.scenario, viewCtx.algo);
     const cached = basinPlanCache[key] || null;
@@ -15480,6 +15670,40 @@ function renderAllScenarioSummaries(){
       }
     }
 
+    if(riskBox){
+      if(!cached){
+        riskBox.style.display = 'none';
+        riskBox.innerHTML = '';
+      }else{
+        const labels = cached?.diagnostics?.risk_labels || {};
+        const droughtFromState = (() => {
+          const r = clamp(STATE.droughtRisk ?? 0, 0, 1);
+          if(r >= 0.66) return 'Yüksek';
+          if(r >= 0.33) return 'Orta';
+          return 'Düşük';
+        })();
+        const planRisk = labels.plan_feasibility_risk || (cached?.selectedPlan?.feasible === false ? 'Yüksek' : 'Düşük');
+        const quotaStatus = labels.parcel_quota_status || (cached?.selectedPlan?.feasible === false ? 'Kota/uygunluk riski var' : 'Uygun');
+        const calendarStatus = labels.calendar_rotation_status || ((cached?.selectedPlan?.warnings || []).some(w=>/takvim|rotasyon|desen/i.test(String(w))) ? 'Kontrol gerekli' : 'Uygun');
+        const damRisk = labels.dam_drought_risk && labels.dam_drought_risk !== 'Veri yok' ? labels.dam_drought_risk : droughtFromState;
+        const chip = (title, value, kind)=>{
+          const cls = /yüksek|asiyor|aş|risk|kontrol|uygun değil/i.test(String(value)) ? 'badge-warn' : (/orta/i.test(String(value)) ? 'badge-info' : 'badge-ok');
+          return `<span class="runmeta-tag"><span class="runmeta-ic">${kind}</span><b>${escapeHtml(title)}:</b> <span class="badge ${cls}">${escapeHtml(String(value || '-'))}</span></span>`;
+        };
+        riskBox.style.display = 'block';
+        riskBox.innerHTML = `
+          <div class="runmeta-title">Risk ve kota etiketleri ayrı okunur</div>
+          <div class="runmeta-tags">
+            ${chip('Baraj / kuraklık riski', damRisk, '&#127754;')}
+            ${chip('Plan uygulanabilirlik riski', planRisk, '&#9878;&#65039;')}
+            ${chip('Parsel su kotası durumu', quotaStatus, '&#128167;')}
+            ${chip('Takvim / rotasyon uygunluğu', calendarStatus, '&#128197;')}
+          </div>
+          <div class="small muted" style="margin-top:8px;">Baraj riski hidrolojik bağlamdır; plan riski, kota ve takvim uygunluğu backend karar paketinden ayrı izlenir.</div>
+        `;
+      }
+    }
+
     if(ratEl){
       ratEl.style.display = cached ? 'block' : 'none';
       if(!cached){ ratEl.innerHTML = ''; }
@@ -15502,20 +15726,37 @@ function renderAllScenarioSummaries(){
   const chartKeys = ['mevcut','su_tasarruf','maks_kar','su_etkin'];
   const chartLabels = ['Mevcut', 'Su tasarrufu', 'Kâr odaklı', 'Su etkin kullanım'];
   const chartColors = ['rgba(73,126,230,.72)','rgba(40,191,170,.72)','rgba(255,175,91,.78)','rgba(126,92,245,.72)'];
+  const cachedForCharts = basinPlanCache[basinCacheKey(viewCtx.scenario, viewCtx.algo)] || null;
+  const backendWaterChart = cachedForCharts?.charts?.target_mode_water || null;
+  const backendProfitChart = cachedForCharts?.charts?.target_mode_profit || null;
+  const rowsFromBackend = (chart)=> Array.isArray(chart?.rows) ? chart.rows.filter(r=>r && String(r.label||'').trim()) : [];
+  const setChartTitle = (chartObj, fallback)=>{
+    try{
+      const canvas = chartObj?.canvas || null;
+      const title = canvas?.closest?.('.small-chart-card')?.querySelector?.('.card-subtitle');
+      if(title) title.textContent = fallback;
+    }catch(_e){}
+  };
+  const waterRows = rowsFromBackend(backendWaterChart);
+  const profitRows = rowsFromBackend(backendProfitChart);
 
   if(waterChart){
-    waterChart.data.labels = chartLabels;
-    waterChart.data.datasets[0].data = chartKeys.map(k=> totalsForScope(k, viewCtx.algo).water);
-    waterChart.data.datasets[0].backgroundColor = chartColors;
-    waterChart.data.datasets[0].borderColor = chartColors.map(c=>c.replace('.72','1').replace('.78','1'));
+    const labels = waterRows.length ? waterRows.map(r=>backendChartLabelTr(r.label)) : [];
+    waterChart.data.labels = labels;
+    waterChart.data.datasets[0].data = waterRows.length ? waterRows.map(r=>safeNum(r.value,0)) : [];
+    waterChart.data.datasets[0].backgroundColor = labels.map((_,i)=>chartColors[i % chartColors.length]);
+    waterChart.data.datasets[0].borderColor = waterChart.data.datasets[0].backgroundColor.map(c=>c.replace('.72','1').replace('.78','1'));
+    setChartTitle(waterChart, backendWaterChart?.title || 'Hedef Modlarına Göre Toplam Su Kullanımı');
     waterChart.update();
   }
   if(profitChart){
     // Negatif net kârı da gösterebilmek için kırpma YOK.
-    profitChart.data.labels = chartLabels;
-    profitChart.data.datasets[0].data = chartKeys.map(k=> totalsForScope(k, viewCtx.algo).profit);
-    profitChart.data.datasets[0].backgroundColor = chartColors;
-    profitChart.data.datasets[0].borderColor = chartColors.map(c=>c.replace('.72','1').replace('.78','1'));
+    const labels = profitRows.length ? profitRows.map(r=>backendChartLabelTr(r.label)) : [];
+    profitChart.data.labels = labels;
+    profitChart.data.datasets[0].data = profitRows.length ? profitRows.map(r=>safeNum(r.value,0)) : [];
+    profitChart.data.datasets[0].backgroundColor = labels.map((_,i)=>chartColors[i % chartColors.length]);
+    profitChart.data.datasets[0].borderColor = profitChart.data.datasets[0].backgroundColor.map(c=>c.replace('.72','1').replace('.78','1'));
+    setChartTitle(profitChart, backendProfitChart?.title || 'Hedef Modlarına Göre Toplam Net Kâr');
     profitChart.update();
   }
 }
@@ -16228,7 +16469,7 @@ function cropInfoCardHtmlV93(row, idx=0){
   const area = safeNum(row?.area, 0);
   const selectedParcel = (parcelData || []).find((x) => String(x.id) === String(selectedParcelId)) || {};
   const parcelArea = safeNum(selectedParcel.area_da ?? selectedParcel.area ?? selectedParcel.alan_da ?? selectedParcel.areaDa, 0);
-  const sharePct = parcelArea > 0 && area > 0 ? Math.round((area / parcelArea) * 100) : 0;
+  const sharePct = safeNum(row?.area_share_pct, 0) > 0 ? Math.round(safeNum(row.area_share_pct, 0)) : (parcelArea > 0 && area > 0 ? Math.round((area / parcelArea) * 100) : 0);
   const waterDa = safeNum(row?.waterPerDa, meta.waterPerDa || 0);
   const fallbackWater = area * waterDa;
   const profitDa = safeNum(row?.profitPerDa, meta.profitPerDa || 0);
@@ -16339,7 +16580,11 @@ function updateProductCards(){
   STATE.lastProductDetailRows = topRows;
 
   if(!topRows.length){
-    box.innerHTML = `<div class="product-empty">Ürün önerisi henüz oluşmadı. Optimizasyonu çalıştırın.</div>`;
+    const noFeasible = !!STATE.lastRecMeta?.noFeasibleTwoCrop || STATE.lastRecMeta?.selectedPlan?.status === 'no_feasible_two_crop_plan';
+    const msg = noFeasible
+      ? 'Senaryo-2 için uygulanabilir iki ürünlü/desenli plan bulunamadı. En yakın uygulanamaz alternatifler uzman onayı gerektirir.'
+      : 'Ürün önerisi henüz oluşmadı. Optimizasyonu çalıştırın.';
+    box.innerHTML = `<div class="product-empty">${escapeHtml(msg)}</div>`;
     return;
   }
 
@@ -16374,12 +16619,12 @@ function updateProductCards(){
 
   const orchardAlternativesCompact = orchardLockedUi ? orchardAlternativeListFallback(current, rec, STATE.lastRecMeta || null).slice(0,4).map(x=>prettyCropName(x.name)).join(', ') : '';
   const orchardMainNameUi = prettyCropName(current[0]?.name || topRows[0]?.name || '');
-  const altPatternCompact = (()=>{ const list = Array.isArray(STATE.lastRecMeta?.alternativePatterns) ? STATE.lastRecMeta.alternativePatterns.slice(0,3).map(x=>x.patternName).join(' • ') : ''; return list; })();
+  const altPatternCompact = (()=>{ const list = Array.isArray(STATE.lastRecMeta?.alternativePatterns) ? STATE.lastRecMeta.alternativePatterns.slice(0,4).map(x=>x.patternName).join(' • ') : ''; return list; })();
   const orchardNote = orchardLockedUi ? `<div class="crop-note"><strong>Ana ürün korunur:</strong> ${escapeHtml(orchardMainNameUi)}. ${orchardAlternativesCompact ? `Alt / sıra arası alternatifler: ${escapeHtml(orchardAlternativesCompact)}.` : 'Ürün sökülüp yerine başka ana ürün önerilmez.'}${altPatternCompact ? ` <span class="muted">İlk alternatifler: ${escapeHtml(altPatternCompact)}.</span>` : ''}</div>` : `<div class="crop-note">${_seasonModeKey()==='s2' ? 'Çift ürün / desen bazlı senaryoda ana öneri ve diğer alternatifler birlikte değerlendirilir.' : 'Tek ürünlü senaryoda en iyi ana öneri ve diğer güçlü alternatifler listelenir.'}${altPatternCompact ? ` <span class="muted">İlk alternatifler: ${escapeHtml(altPatternCompact)}.</span>` : ''}</div>`;
   box.innerHTML = `
     <div class="crop-strip">${pills}</div>
     ${orchardNote}
-    <div class="crop-detail-list">${topRows.slice(0,3).map((r,i)=>cropInfoCardHtmlV93(r,i)).join('')}</div>
+    <div class="crop-detail-list">${topRows.slice(0,4).map((r,i)=>cropInfoCardHtmlV93(r,i)).join('')}</div>
   `;
   box.querySelectorAll('.crop-detail-open').forEach(btn=>{
     btn.addEventListener('click', ()=> openCropDetailModalV94(Number(btn.dataset.cropDetailIndex || 0)));
@@ -18729,11 +18974,27 @@ function renderObjectiveCompareMatrix(){
   const objectives = ['su_tasarruf','maks_kar','su_etkin'];
   const labelAlgo = a=> a === 'ga' ? 'GA' : (a === 'abc' ? 'ABC' : 'ACO');
   const labelObj = o=> getScenarioDisplayMeta(o).shortLabel || getScenarioDisplayMeta(o).label || o;
+  const cells = objectives.map(obj => algos.map(a => {
+    const cached = basinPlanCache?.[basinCacheKey(obj, a)] || null;
+    if(!cached || !cached.backendOnly || cached.backendUnavailable) return null;
+    const t = cached.totals || {};
+    const water = safeNum(t.water, 0);
+    const profit = safeNum(t.profit, 0);
+    const eff = safeNum(t.eff, water > 0 ? profit / water : 0);
+    return {water, profit, eff};
+  }));
+  const flat = cells.flat();
+  const ready = flat.every(Boolean);
+  const allZero = flat.every(t => !t || (safeNum(t.water,0) === 0 && safeNum(t.profit,0) === 0 && safeNum(t.eff,0) === 0));
+  if(!ready || allZero){
+    box.innerHTML = '<div class="objective-matrix-v95"><div class="matrix-title">Hedef modu x algoritma ozeti</div><p>Bu özet için yeterli backend verisi yok; sahte 0 m³ / 0 TL tablo gösterilmez.</p></div>';
+    return;
+  }
   let html = '<div class="objective-matrix-v95"><div class="matrix-title">Hedef modu x algoritma ozeti</div><table><thead><tr><th>Hedef</th>'+algos.map(a=>`<th>${labelAlgo(a)}</th>`).join('')+'</tr></thead><tbody>';
-  for(const obj of objectives){
+  for(const [rowIdx, obj] of objectives.entries()){
     html += `<tr><td><b>${escapeHtml(labelObj(obj))}</b></td>`;
-    for(const a of algos){
-      const t = computeScopeTotalsLocal(obj, a, STATE.seasonSource || 's1');
+    for(const [colIdx] of algos.entries()){
+      const t = cells[rowIdx][colIdx];
       html += `<td><span>${Math.round(t.water).toLocaleString('tr-TR')} m3</span><strong>${Math.round(t.profit).toLocaleString('tr-TR')} TL</strong><small>${safeNum(t.eff,0).toFixed(2)} TL/m3</small></td>`;
     }
     html += '</tr>';
@@ -18923,49 +19184,18 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
 function buildLocalPlanForIds(ids, scenarioKey, algoKey){
-  const wanted = new Set((ids || []).map(x => String(x || '').trim()).filter(Boolean));
-  const targetParcels = (parcelData || []).filter(p => wanted.has(String(p?.id || '').trim()));
-  const key = basinCacheKey(scenarioKey, algoKey);
-  const plan = {};
-  let totalWater = 0;
-  let totalProfit = 0;
-  for(const p of targetParcels){
-    const res = getOptimizationResult(p.id, scenarioKey, algoKey) || runOptimization(p, scenarioKey, algoKey);
-    const rows = recomputeRowTotals(deepCloneRows(res?.rows || []));
-    const totals = sumMetrics(rows);
-    plan[p.id] = {
-      rows,
-      totals,
-      irrigationPlan: res?.irrigationPlan || null,
-      lockedCrop: res?.lockedCrop || null,
-      waterSavingM3: safeNum(res?.waterSavingM3, 0),
-      profitDeltaTL: safeNum(res?.profitDeltaTL, 0)
-    };
-    totalWater += totals.water;
-    totalProfit += totals.profit;
-  }
-  const budget = computeGlobalBudgetM3();
-  const out = {
-    plan,
-    budget,
-    totals: { water: totalWater, profit: totalProfit, eff: totalProfit / Math.max(1, totalWater) },
-    iterations: 0,
-    feasible: totalWater <= budget + 1e-6,
-    localFallback: true
-  };
-  basinPlanCache[key] = out;
-  return out;
+  return backendUnavailablePlan(ids, scenarioKey, algoKey, 'Backend optimizasyon servisi kullanılamıyor; tarayıcı içi yerel karar motoru devre dışı bırakıldı.');
 }
 
 async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
   if(STATE.manualDataActive){
-    return buildLocalPlanForIds(idsForRun, scenarioKey, algoKey);
+    return backendUnavailablePlan(idsForRun, scenarioKey, algoKey, 'Manuel CSV oturumu aktif; backend/data güncellenmeden tarayıcı içi karar üretilmez.');
   }
   try{
     return await fetchAndCacheBasinPlanPython(scenarioKey, algoKey);
   }catch(err){
-    console.warn('Python optimizasyon hatası, yerel hesap kullanılacak.', err);
-    return buildLocalPlanForIds(idsForRun, scenarioKey, algoKey);
+    console.warn('Python optimizasyon hatası; yerel karar fallback kapalı.', err);
+    return backendUnavailablePlan(idsForRun, scenarioKey, algoKey, 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.');
   }
 }
 
@@ -19013,14 +19243,11 @@ function scoreOptimizationRunForTargetV7(out, idsForRun, scenarioKey, algoKey){
 
 async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   const algos = ['ga', 'aco', 'abc'];
-  const scored = algos.map(algo=>{
-    const out = buildLocalPlanForIds(idsForRun, scenarioKey, algo);
-    return {
-      algo,
-      out,
-      score: scoreOptimizationRunForTargetV7(out, idsForRun, scenarioKey, algo)
-    };
-  });
+  const scored = [];
+  for(const algo of algos){
+    const out = await runOptimizationWithFallback(idsForRun, scenarioKey, algo);
+    scored.push({ algo, out, score: scoreOptimizationRunForTargetV7(out, idsForRun, scenarioKey, algo) });
+  }
   scored.sort((a,b)=>safeNum(b.score, 0) - safeNum(a.score, 0));
   const best = scored[0] || { algo:'ga', out:null, score:0 };
   STATE.autoAlgoDecisionV7 = {
@@ -21111,12 +21338,13 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const requested = Math.max(1, n(j?.repeats));
     const totalRuns = s.rows.reduce((sum,row)=>sum+row.runs,0);
     const totalTarget = requested * Math.max(1, s.rows.length);
-    const summary = decisionText(s);
+    const summary = String(j?.interpretation || '').trim() || decisionText(s);
+    const backendTie = /esdeger|eşdeğer|tek algoritmaya/i.test(summary);
     const kpiRoot = document.getElementById('benchmarkKpiGrid');
     if(kpiRoot){
       kpiRoot.innerHTML = [
-        {label:'Net karar', value:s.isTie ? 'Eşdeğer bant' : best?.a || '-', sub:summary},
-        {label:'Koşu sayısı', value:`${fmt(totalRuns,0)}/${fmt(totalTarget,0)}`, sub:'Başarılı backend koşusu / hedef koşu'},
+        {label:'Net karar', value:(s.isTie || backendTie) ? 'Eşdeğer bant' : best?.a || '-', sub:summary},
+        {label:'Koşu sayısı', value:`${fmt(n(j?.completed_runs) || totalRuns,0)}/${fmt(n(j?.requested_total_runs) || totalTarget,0)}`, sub:'Başarılı backend koşusu / hedef koşu'},
         {label:'Grafik', value:'3 çizgi', sub:'GA, ABC, ACO ayrı çizgi; üst üste binme yakınsama demektir.'},
         {label:'Güven kontrolü', value:s.allSame ? 'Yakınsama' : `${fmt(s.spread,1)} puan fark`, sub:'CV, plan farkı ve uygulanabilirlik birlikte okunur.'}
       ].map(k => `<div class="pro-kpi"><div class="kpi-label">${esc(k.label)}</div><div class="kpi-value">${esc(k.value)}</div><div class="kpi-sub">${esc(k.sub)}</div></div>`).join('');
@@ -21146,7 +21374,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         <strong>${esc(s.objective)}</strong>
       </div>
       <div class="benchmark-decision">
-        <b>${esc(s.isTie ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-'))}</b>
+        <b>${esc((s.isTie || backendTie) ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-'))}</b>
         <span>${esc(summary)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
       </div>
       <div class="benchmark-table-wrap benchmark-report-table">
@@ -22160,6 +22388,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const pick = ev.target?.closest?.('[data-select-pattern-v102]');
     if(pick){
       const pat = window.__patternPickStoreV102?.[pick.getAttribute('data-select-pattern-v102')];
+      if(pick.disabled || pat?.selectable === false || pat?.feasible === false || pat?.quotaExceeded){
+        ev.preventDefault();
+        return;
+      }
       if(pat){
         STATE.selectedFarmerAlternativeV102 = pat;
         renderFarmerComms102();
