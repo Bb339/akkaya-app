@@ -306,6 +306,7 @@ function roleLabelForUser(user){
 }
 
 function defaultTabForUser(user){
+  if(shouldUsePresentationDefaults()) return 'parcel';
   if(!user) return 'parcel';
   if(user.role === 'farmer') return 'parcel';
   return 'district';
@@ -838,7 +839,13 @@ function selectParcelByIdAndRefresh(parcelId="", opts={}){
   selectedParcelId=pid;
   try{ refreshParcelSelect(); }catch(_e){}
   const sel=document.getElementById("parcelSelect");
-  if(sel) sel.value=pid;
+  if(sel){
+    if(typeof syncParcelSelectValueToParcel === "function"){
+      syncParcelSelectValueToParcel(pid, false);
+    }else{
+      sel.value=pid;
+    }
+  }
   // v24: Parsel seçildiğinde harita filtresi de parselin köyüne otomatik geçsin.
   try{ if(window._syncMapVillageForParcel) window._syncMapVillageForParcel(pid, true); }catch(_e){}
   try{ if(window._updateParcelStyles) window._updateParcelStyles(); }catch(_e){}
@@ -2821,7 +2828,7 @@ const STATE = {
   // v42: water allocation model used by backend optimizer.
   // Default is dekar/area fairness; equal-village remains a comparison model.
   waterAllocationModel: "area_fair_per_da",
-  cropCategoryMode: "same_category",
+  cropCategoryMode: "mixed",
   // Use the season tables to build a consistent "Mevcut" baseline (water/profit)
   // so scenario comparisons are apples-to-apples.
   useOfficialBaseline: true,
@@ -2834,6 +2841,7 @@ const STATE = {
   customParcelImageName: null,
   currentUser: null,
   onboardingReplayDismissedForSession: {},
+  presentationDefaultsActive: true,
   irrigMethods: [],
   costBreakdownRules: [],
   cropRows2024: [],
@@ -10464,7 +10472,189 @@ function displayIrrigationText(rawText, fallbackKey=''){
   return irrigationLabel(guessed || fallbackKey) || txt;
 }
 let selectedAlgo = "ga";
-let selectedScenario = "mevcut";
+let selectedScenario = "su_tasarruf";
+const PANEL_OPEN_DEFAULTS = Object.freeze({
+  parcelId: "P1",
+  scenario: "su_tasarruf",
+  seasonSource: "s1",
+  cropCategoryMode: "mixed",
+  tab: "parcel"
+});
+
+function applyPanelOpenDefaults(){
+  const defaults = PANEL_OPEN_DEFAULTS;
+  STATE.presentationDefaultsActive = true;
+  selectedScenario = defaults.scenario;
+  STATE.seasonSource = defaults.seasonSource;
+  STATE.cropCategoryMode = defaults.cropCategoryMode;
+
+  try{
+    const hasP1 = (parcelData || []).some(p => String(p?.id || "").toUpperCase() === defaults.parcelId);
+    const canUseP1 = !STATE.currentUser || typeof roleCanAccessParcel !== "function" || roleCanAccessParcel(defaults.parcelId, STATE.currentUser);
+    if(hasP1 && canUseP1) selectedParcelId = defaults.parcelId;
+  }catch(_e){}
+
+  try{
+    document.querySelectorAll('input[name="scenario"]').forEach(radio => {
+      radio.checked = String(radio.value) === defaults.scenario;
+    });
+  }catch(_e){}
+
+  const seasonSel = document.getElementById("seasonSourceSel");
+  if(seasonSel) seasonSel.value = defaults.seasonSource;
+  const cropSel = document.getElementById("cropCategoryModeSel");
+  if(cropSel) cropSel.value = defaults.cropCategoryMode;
+  try{ if(typeof setCropCategoryMode === "function") setCropCategoryMode(defaults.cropCategoryMode, false); }catch(_e){}
+}
+
+function focusPanelDefaultTab(){
+  try{
+    const btn = document.querySelector(`.tab[data-tab="${PANEL_OPEN_DEFAULTS.tab}"]`)
+      || Array.from(document.querySelectorAll(".tab[data-tab]")).find(el => String(el.textContent || "").toLocaleLowerCase("tr-TR").includes("parsel düzeyi desen"));
+    const key = btn?.getAttribute("data-tab") || PANEL_OPEN_DEFAULTS.tab;
+    let opened = false;
+    if(typeof switchTabByKey === "function") opened = !!switchTabByKey(key);
+    if(!opened && btn) btn.click();
+    if(getActiveTabKey() !== key && btn){
+      const panel = document.getElementById(`tab-${key}`);
+      document.querySelectorAll(".tab[data-tab]").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-panels > .tab-panel").forEach(el => el.classList.remove("active"));
+      btn.classList.add("active");
+      if(panel){
+        panel.classList.add("active");
+        panel.classList.remove("hidden");
+      }
+    }
+    try{
+      localStorage.setItem("activeAnalysisTab", key);
+      sessionStorage.setItem("activeAnalysisTab", key);
+    }catch(_e){}
+  }catch(_e){}
+}
+
+function isPresentationPanelRoute(){
+  try{ return String(window.location.hash || "").toLowerCase() === "#panel"; }
+  catch(_e){ return false; }
+}
+
+function shouldUsePresentationDefaults(){
+  try{ return !!(STATE?.presentationDefaultsActive || isPresentationPanelRoute()); }
+  catch(_e){ return isPresentationPanelRoute(); }
+}
+
+function getActiveTabKey(){
+  try{ return document.querySelector(".tab.active")?.getAttribute("data-tab") || ""; }
+  catch(_e){ return ""; }
+}
+
+function syncParcelSelectValueToParcel(parcelId, dispatchChange=false){
+  const pid = String(parcelId || "").trim();
+  const sel = document.getElementById("parcelSelect");
+  if(!pid || !sel) return false;
+  const options = Array.from(sel.options || []);
+  console.debug("[defaults] parcel select options count", options.length);
+  const opt = options.find(o => String(o.value || "").trim() === pid)
+    || options.find(o => String(o.value || "").trim().toUpperCase() === pid.toUpperCase())
+    || options.find(o => String(o.textContent || "").trim().toUpperCase().startsWith(pid.toUpperCase()));
+  console.debug("[defaults] P1 option found", opt ? opt.value : "");
+  if(!opt) return false;
+  sel.value = opt.value;
+  opt.selected = true;
+  selectedParcelId = pid;
+  console.debug("[defaults] parcel select value after sync", sel.value);
+  if(dispatchChange){
+    try{ sel.dispatchEvent(new Event("change", { bubbles: true })); }catch(_e){}
+  }
+  return String(sel.value || "").trim() === String(opt.value || "").trim();
+}
+
+function activatePanelDefaultParcel(){
+  const pid = PANEL_OPEN_DEFAULTS.parcelId;
+  try{
+    const hasParcel = (parcelData || []).some(p => String(p?.id || "").toUpperCase() === pid);
+    const canUseParcel = !STATE.currentUser || typeof roleCanAccessParcel !== "function" || roleCanAccessParcel(pid, STATE.currentUser);
+    if(!hasParcel || !canUseParcel) return false;
+  }catch(_e){
+    return false;
+  }
+  if(typeof selectParcelByIdAndRefresh === "function"){
+    const ok = !!selectParcelByIdAndRefresh(pid);
+    syncParcelSelectValueToParcel(pid, false);
+    console.debug("[defaults] selectedParcelId after select flow", selectedParcelId);
+    return ok;
+  }
+  selectedParcelId = pid;
+  try{ refreshParcelSelect(); }catch(_e){}
+  syncParcelSelectValueToParcel(pid, true);
+  try{ refreshUI(); }catch(_e){}
+  console.debug("[defaults] selectedParcelId after select flow", selectedParcelId);
+  return true;
+}
+
+function focusDefaultParcelMapWhenReady(attempt=0){
+  const pid = PANEL_OPEN_DEFAULTS.parcelId;
+  let result = "not-ready";
+  try{
+    if(typeof window._focusParcel === "function"){
+      result = window._focusParcel(pid) || "not-ready";
+    }
+  }catch(_e){
+    result = "not-ready";
+  }
+  if(result === "not-ready" && attempt < 5){
+    console.debug("[defaults] P1 map layer not ready", { attempt, selectedParcelId });
+    requestAnimationFrame(()=> focusDefaultParcelMapWhenReady(attempt + 1));
+  }else{
+    console.debug("[defaults] map focus P1 result", result);
+  }
+  return result;
+}
+
+function applyPresentationPanelDefaultsFinal(source="final"){
+  applyPanelOpenDefaults();
+  const selected = activatePanelDefaultParcel();
+  focusPanelDefaultTab();
+  const sel = document.getElementById("parcelSelect");
+  const selectedText = sel ? (sel.options[sel.selectedIndex]?.textContent || "") : "";
+  const fixedDropdown = !!(sel && String(sel.value || "").trim() === PANEL_OPEN_DEFAULTS.parcelId && selectedText.includes(PANEL_OPEN_DEFAULTS.parcelId));
+  const fixedTab = getActiveTabKey() === PANEL_OPEN_DEFAULTS.tab;
+  console.debug("[defaults-final] select exists", !!sel);
+  console.debug("[defaults-final] select options", sel ? Array.from(sel.options || []).map(o => [o.value, o.textContent]).slice(0,5) : []);
+  console.debug("[defaults-final] selectedParcelId", selectedParcelId);
+  console.debug("[defaults-final] select.value", sel ? sel.value : "");
+  console.debug("[defaults-final] selected option text", selectedText);
+  console.debug("[defaults-final] active tab key", getActiveTabKey());
+  console.debug("[defaults-final] active tab text", document.querySelector(".tab.active")?.textContent || "");
+  console.debug("[defaults-final] fixed dropdown?", fixedDropdown);
+  console.debug("[defaults-final] fixed tab?", fixedTab);
+  console.debug("[defaults] presentation defaults applied", {
+    source,
+    selected,
+    selectedParcelId,
+    parcelSelectValue: sel ? sel.value : "",
+    activeTab: getActiveTabKey()
+  });
+  requestAnimationFrame(()=>{
+    focusPanelDefaultTab();
+    syncParcelSelectValueToParcel(PANEL_OPEN_DEFAULTS.parcelId, false);
+    focusDefaultParcelMapWhenReady(0);
+    const selAfter = document.getElementById("parcelSelect");
+    console.debug("[defaults] selectedParcelId after defaults", selectedParcelId);
+    console.debug("[defaults] parcel select value after defaults", selAfter ? selAfter.value : "");
+    console.debug("[defaults] active tab after final apply", getActiveTabKey());
+  });
+  return selected;
+}
+
+function schedulePresentationDefaultsFinal(source="scheduled-final", frames=2){
+  const run = (left)=>{
+    requestAnimationFrame(()=>{
+      applyPresentationPanelDefaultsFinal(source);
+      if(left > 1) run(left - 1);
+    });
+  };
+  run(Math.max(1, frames));
+}
 
 // UX: while a new optimization is running, keep the last valid results visible.
 // When the user changes algo/scenario without running, keep previous results but show a warning.
@@ -10537,6 +10727,7 @@ function roleCanAccessParcel(pid){
 
 function getVisibleParcels(){
   const user = STATE.currentUser;
+  if(!user && shouldUsePresentationDefaults()) return [...(parcelData || [])];
   if(!user) return [];
   if(user.role === 'institution') return [...(parcelData || [])];
   return (parcelData || []).filter(p => p?.frontend_custom ? userOwnsFrontendParcel(user, p) : roleCanAccessParcel(p?.id));
@@ -10643,13 +10834,15 @@ function applyRoleLayerVisibility(){
 function syncAppActionLocks(){
   const need = userNeedsOnboardingLock(STATE.currentUser);
   document.body.classList.toggle('onboarding-required', need);
-  const runBtn = document.getElementById('runOptBtn');
+  const runButtons = ['runOptBtn', 'runOptBtnSecondary']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
   const benchBtn = document.getElementById('runBenchmarkBtn');
-  if(runBtn){
+  runButtons.forEach(runBtn => {
     runBtn.disabled = !!need;
     runBtn.classList.toggle('btn-disabled', !!need);
     runBtn.title = need ? 'Önce ilk kurulum adımını tamamlayın.' : '';
-  }
+  });
   if(benchBtn){
     benchBtn.disabled = !!need;
     benchBtn.classList.toggle('btn-disabled', !!need);
@@ -11239,7 +11432,14 @@ function refreshParcelSelect() {
     return Number.POSITIVE_INFINITY;
   };
 
-  const visibleParcels = getVisibleParcels();
+  let visibleParcels = getVisibleParcels();
+  const defaultPid = PANEL_OPEN_DEFAULTS?.parcelId || "P1";
+  if(shouldUsePresentationDefaults()){
+    const p1 = (parcelData || []).find(p => String(p?.id || "").trim().toUpperCase() === defaultPid.toUpperCase());
+    if(p1 && !visibleParcels.some(p => String(p?.id || "").trim().toUpperCase() === defaultPid.toUpperCase())){
+      visibleParcels = [p1, ...visibleParcels];
+    }
+  }
   const sorted = [...visibleParcels].sort((a, b) => {
     const an = _parcelNum(a);
     const bn = _parcelNum(b);
@@ -11275,9 +11475,19 @@ function refreshParcelSelect() {
         parcelSelectEl.appendChild(opt);
   });
 
-  // mümkünse önceki seçimi koru
-  if (current && visibleParcels.some((p) => p.id === current)) {
-    parcelSelectEl.value = current;
+  const wanted = String(
+    current ||
+    selectedParcelId ||
+    (shouldUsePresentationDefaults() ? defaultPid : "")
+  ).trim();
+  if (wanted) {
+    const wantedOpt = Array.from(parcelSelectEl.options || []).find(opt => String(opt.value || "").trim() === wanted)
+      || Array.from(parcelSelectEl.options || []).find(opt => String(opt.value || "").trim().toUpperCase() === wanted.toUpperCase())
+      || Array.from(parcelSelectEl.options || []).find(opt => String(opt.textContent || "").trim().toUpperCase().startsWith(wanted.toUpperCase()));
+    if(wantedOpt){
+      parcelSelectEl.value = wantedOpt.value;
+      selectedParcelId = String(wantedOpt.value || wanted);
+    }
   }
 }
 
@@ -16780,7 +16990,8 @@ function parseKmlText(txt){
 
 function focusParcelOnAnyLayer(pid){
   try{
-    if(!map) return;
+    if(!map) return 'not-ready';
+    try{ if(typeof map.invalidateSize === 'function') map.invalidateSize({ pan:false, animate:false }); }catch(_e){}
     const candidates = [];
     if(parcelLayer) candidates.push(parcelLayer);
     if(customUserLayer) candidates.push(customUserLayer);
@@ -16798,11 +17009,14 @@ function focusParcelOnAnyLayer(pid){
       if(b && b.isValid()) map.fitBounds(b.pad(0.35), { animate:true });
       else if(typeof targetLayer.getLatLng === 'function') map.setView(targetLayer.getLatLng(), Math.max(map.getZoom() || 13, 14), { animate:true });
       try{ targetLayer.openPopup(); }catch(_e){}
+      return targetLayer.getBounds ? 'polygon' : 'marker';
     }else if(window.__PENDING_MARKERS_BY_ID && window.__PENDING_MARKERS_BY_ID[String(pid)]){
       const marker = window.__PENDING_MARKERS_BY_ID[String(pid)];
       try{ map.setView(marker.getLatLng(), Math.max(map.getZoom() || 13, 14), { animate:true }); marker.openPopup(); }catch(_e){}
+      return 'marker';
     }
-  }catch(_e){}
+    return 'not-ready';
+  }catch(_e){ return 'not-ready'; }
 }
 
 // Harita başlatma (GeoJSON yüklemek için async)
@@ -18108,7 +18322,7 @@ try{
 
   // Parsel seçilince haritada odaklan + alan bilgisini göster
   function focusParcel(pid){
-    focusParcelOnAnyLayer(pid);
+    return focusParcelOnAnyLayer(pid);
   }
 
   // Küçük bir hack: global erişim
@@ -19114,6 +19328,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     setDataBadge(false, "Veri yüklenemedi");
   }
 
+  applyPanelOpenDefaults();
+
   // Parsel dropdown'ını doldur (P1, P2, ... P10 doğal sıralama)
   try{ initUserParcelControls(); }catch(_e){}
 
@@ -19131,6 +19347,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       STATE.selectionDirty = true;
       refreshUI();
     });
+    applyPresentationPanelDefaultsFinal("parcel-select-ready");
   }else{
     console.error("parcelSelect bulunamadı. HTML'de id='parcelSelect' olmalı.");
   }
@@ -19265,75 +19482,84 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   }
 }
 
-  // Optimizasyonu çalıştır
-  const runBtn = document.getElementById("runOptBtn");
-  if (runBtn) {
-    runBtn.addEventListener("click", async () => {
-      const st = document.getElementById("algoStatus");
-      if(userNeedsOnboarding(STATE.currentUser)){
-        if(st) st.textContent = 'Önce ilk kurulum tamamlanmalı';
-        alert('Önce ilk kurulum adımını tamamlayın ve parsel bilgilerinizi doğrulayın.');
-        return;
-      }
-      const prevContext = lastOptimizeContext ? { ...lastOptimizeContext } : null;
-      const wantsAutoAlgo = STATE.farmerAlgoModeV7 === 'auto' || selectedAlgo === 'auto';
-      const pendingContext = { parcelId: selectedParcelId, scenario: selectedScenario, algo: wantsAutoAlgo ? 'auto' : selectedAlgo };
-      const idsForRun = getSelectedParcelIdsForRun();
-      if(!idsForRun || idsForRun.length === 0){
-        if (st) st.textContent = "Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon için veri setine dahil değil.";
-        alert("Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon/karşılaştırma için veri setine dahil değil.");
-        return;
-      }
-      // Aynı anda birden fazla optimize isteğini engelle (Network: canceled/pending sorunlarını önler)
-      if (runBtn.disabled) return;
-      runBtn.disabled = true;
-      runBtn.classList.add("btn-disabled");
-      STATE.isOptimizing = true;
-      if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${wantsAutoAlgo ? 'Otomatik en iyi algoritma' : pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
-
-      // Hesaplama bitene kadar ekranda SON geçerli sonuçlar kalsın (yanıltıcı ara görünüm olmasın)
-      // refreshUI() çağırmıyoruz; sadece durum metni güncellenir.
-
-      try{
-        let out;
-        if(wantsAutoAlgo){
-          const best = await runAutoBestOptimizationV7(idsForRun, selectedScenario);
-          out = best.out;
-          selectedAlgo = best.algo || 'ga';
-          pendingContext.algo = selectedAlgo;
-          const algoSelect = document.getElementById('algoSelect');
-          if(algoSelect) algoSelect.value = selectedAlgo;
-        }else{
-          STATE.autoAlgoDecisionV7 = null;
-          out = await runOptimizationWithFallback(idsForRun, selectedScenario, selectedAlgo);
-        }
-
-        if(!out){
-          if (st) st.textContent = "Yanıt yok / reddedildi";
-          return;
-        }
-
-        lastOptimizeContext = pendingContext;
-        STATE.selectionDirty = false;
-        refreshUI();
-        if (st) st.textContent = wantsAutoAlgo
-          ? `Güncellendi • Otomatik seçim: ${selectedAlgo.toUpperCase()}`
-          : (out.localFallback ? (STATE.manualDataActive ? "Güncellendi (manuel CSV / yerel hesap)" : "Güncellendi (yerel hesap)") : "Güncellendi");
-      }catch(e){
-        console.warn("Optimizasyon tamamen başarısız oldu.", e);
-        lastOptimizeContext = prevContext;
-        STATE.selectionDirty = true;
-        if (st) st.textContent = "Hata: Optimizasyon tamamlanamadı";
-        try{ alert('Optimizasyon tamamlanamadı: ' + (e?.message || e)); }catch(_e){}
-      } finally {
-        STATE.isOptimizing = false;
-        runBtn.disabled = false;
-        runBtn.classList.remove("btn-disabled");
-        try{ refreshUI(); }catch(_e){}
-      }
+  // Optimizasyonu çalıştır: üst buton ve sol panel butonu aynı backend akışını kullanır.
+  const getOptimizationRunButtons = () => ["runOptBtn", "runOptBtnSecondary"]
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  const setOptimizationRunButtonsBusy = (busy) => {
+    getOptimizationRunButtons().forEach(btn => {
+      btn.disabled = !!busy;
+      btn.classList.toggle("btn-disabled", !!busy);
     });
+  };
+  const handleOptimizationRunClick = async () => {
+    const st = document.getElementById("algoStatus");
+    if(userNeedsOnboarding(STATE.currentUser)){
+      if(st) st.textContent = 'Önce ilk kurulum tamamlanmalı';
+      alert('Önce ilk kurulum adımını tamamlayın ve parsel bilgilerinizi doğrulayın.');
+      return;
+    }
+    const prevContext = lastOptimizeContext ? { ...lastOptimizeContext } : null;
+    const wantsAutoAlgo = STATE.farmerAlgoModeV7 === 'auto' || selectedAlgo === 'auto';
+    const pendingContext = { parcelId: selectedParcelId, scenario: selectedScenario, algo: wantsAutoAlgo ? 'auto' : selectedAlgo };
+    const idsForRun = getSelectedParcelIdsForRun();
+    if(!idsForRun || idsForRun.length === 0){
+      if (st) st.textContent = "Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon için veri setine dahil değil.";
+      alert("Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon/karşılaştırma için veri setine dahil değil.");
+      return;
+    }
+    // Aynı anda birden fazla optimize isteğini engelle (Network: canceled/pending sorunlarını önler)
+    if (STATE.isOptimizing) return;
+    setOptimizationRunButtonsBusy(true);
+    STATE.isOptimizing = true;
+    if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${wantsAutoAlgo ? 'Otomatik en iyi algoritma' : pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
 
-  }
+    // Hesaplama bitene kadar ekranda SON geçerli sonuçlar kalsın (yanıltıcı ara görünüm olmasın)
+    // refreshUI() çağırmıyoruz; sadece durum metni güncellenir.
+
+    try{
+      let out;
+      if(wantsAutoAlgo){
+        const best = await runAutoBestOptimizationV7(idsForRun, selectedScenario);
+        out = best.out;
+        selectedAlgo = best.algo || 'ga';
+        pendingContext.algo = selectedAlgo;
+        const algoSelect = document.getElementById('algoSelect');
+        if(algoSelect) algoSelect.value = selectedAlgo;
+      }else{
+        STATE.autoAlgoDecisionV7 = null;
+        out = await runOptimizationWithFallback(idsForRun, selectedScenario, selectedAlgo);
+      }
+
+      if(!out){
+        if (st) st.textContent = "Yanıt yok / reddedildi";
+        return;
+      }
+
+      lastOptimizeContext = pendingContext;
+      STATE.selectionDirty = false;
+      refreshUI();
+      if (st) st.textContent = wantsAutoAlgo
+        ? `Güncellendi • Otomatik seçim: ${selectedAlgo.toUpperCase()}`
+        : (out.localFallback ? (STATE.manualDataActive ? "Güncellendi (manuel CSV / yerel hesap)" : "Güncellendi (yerel hesap)") : "Güncellendi");
+    }catch(e){
+      console.warn("Optimizasyon tamamen başarısız oldu.", e);
+      lastOptimizeContext = prevContext;
+      STATE.selectionDirty = true;
+      if (st) st.textContent = "Hata: Optimizasyon tamamlanamadı";
+      try{ alert('Optimizasyon tamamlanamadı: ' + (e?.message || e)); }catch(_e){}
+    } finally {
+      STATE.isOptimizing = false;
+      setOptimizationRunButtonsBusy(false);
+      try{ syncAppActionLocks(); }catch(_e){}
+      try{ refreshUI(); }catch(_e){}
+    }
+  };
+  getOptimizationRunButtons().forEach(btn => {
+    if(btn.dataset.optimizeRunBound === "1") return;
+    btn.dataset.optimizeRunBound = "1";
+    btn.addEventListener("click", handleOptimizationRunClick);
+  });
 
   // Algoritma karşılaştırma (benchmark)
   const benchBtn = document.getElementById('runBenchmarkBtn');
@@ -19814,7 +20040,9 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   // Harita + grafikler: CDN yoksa uygulama tamamen durmasın
   if(typeof window.L !== "undefined"){
     // initMap async olduğu için hataları Promise üzerinden yakala
-    initMap().catch((e)=>{
+    initMap().then(()=>{
+      requestAnimationFrame(()=>{ applyPresentationPanelDefaultsFinal("map-ready"); });
+    }).catch((e)=>{
       console.error("initMap hata:", e);
       const mapBox = document.getElementById("map");
       if(mapBox) mapBox.innerHTML = '<div style="padding:12px;color:#667;">Harita başlatılamadı. (Leaflet/Esri eklentileri yüklenememiş olabilir)</div>';
@@ -19840,8 +20068,10 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   }
 
   initTabs();
+  focusPanelDefaultTab();
   try{ initWorkspaceEnhancements(); }catch(e){ console.error("initWorkspaceEnhancements hata:", e); }
   initDataBinding();
+  requestAnimationFrame(()=>{ applyPresentationPanelDefaultsFinal("tabs-ready"); });
 
   // 2026-04-19 equal-water planning mode
   try{
@@ -19894,6 +20124,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   refreshUI();
   try{ updateNotificationBell(); renderNotificationCenter(); renderInstitutionRequestInbox(); }catch(_e){}
   finishAppBoot();
+  schedulePresentationDefaultsFinal("final-render", 2);
+  window.addEventListener("load", ()=>{ schedulePresentationDefaultsFinal("window-load", 2); }, { once: true });
   document.addEventListener('click', (ev)=>{ const pop=document.getElementById('notificationCenter'); const btn=document.getElementById('notificationBellBtn'); if(!pop||!btn||pop.classList.contains('hidden')) return; if(pop.contains(ev.target) || btn.contains(ev.target)) return; pop.classList.add('hidden'); });
 });
 /* ============================================================

@@ -290,8 +290,8 @@
 </div><div class="card" id="scenarioCard">
 <h2 class="card-title">Hedef ve plan modu</h2>
 <div class="radio-group">
-<label><input checked="" name="scenario" type="radio" value="mevcut"/> Mevcut görünüm (referans)</label>
-<label><input name="scenario" type="radio" value="su_tasarruf"/> Su tasarrufu hedefi</label>
+<label><input name="scenario" type="radio" value="mevcut"/> Mevcut görünüm (referans)</label>
+<label><input checked="" name="scenario" type="radio" value="su_tasarruf"/> Su tasarrufu hedefi</label>
 <label><input name="scenario" type="radio" value="maks_kar"/> Kâr odaklı hedef</label>
 <label><input name="scenario" type="radio" value="su_etkin"/> Su etkin kullanım hedefi</label>
 </div>
@@ -306,15 +306,19 @@
 <div class="field-row" id="cropCategoryModeRow">
 <label class="field-label" for="cropCategoryModeSel">Öneri ürün grubu</label>
 <select class="select-input" id="cropCategoryModeSel">
-<option selected="" value="same_category">Mevcut kategoriye yakın öner</option>
+<option value="same_category">Mevcut kategoriye yakın öner</option>
 <option value="field_cereal">Tahıl / tarla ürünleri</option>
 <option value="forage">Yem bitkileri</option>
 <option value="legume">Baklagiller</option>
 <option value="vegetable">Sebze ürünleri</option>
 <option value="industrial_oil">Endüstri / yağ / özel ürünler</option>
 <option value="orchard">Bahçe / çok yıllık ürünler</option>
-<option value="mixed">Karışık mod - tüm uygun ürünler</option>
+<option selected="" value="mixed">Karışık mod - tüm uygun ürünler</option>
 </select>
+</div>
+<div class="field-row" id="sideRunOptimizeRow">
+<button class="btn-primary" id="runOptBtnSecondary" type="button">Optimizasyonu Çalıştır</button>
+<p class="card-help small" style="margin:6px 0 0;">Seçili parsel, hedef modu ve senaryo ayarlarıyla backend optimizasyonunu çalıştırır.</p>
 </div>
 <p class="card-help small" style="margin-top:6px;">
                 Not: Senaryo 1, her parseli esasen tek ürünlü kabul eder; sistem en iyi ana öneriyi ve diğer güçlü alternatifleri sıralar. Senaryo 2, parselde 1+1 ürün / desen yaklaşımını dener; bahçe-çok yıllık parsellerde ana ürün korunur, fark sıra arası ve sulama yönetiminden gelir.
