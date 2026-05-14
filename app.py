@@ -17,7 +17,7 @@ import statistics
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
-APP_BUILD = "v71-2026-04-26-baslik-ve-stabil-grid"
+APP_BUILD = "v1.0-tez-prototipi-diversity-soft"
 APP_TITLE = "Tarımsal Karar Destek Sistemi"
 APP_GENERATED_AT = datetime.now(timezone.utc).isoformat()
 
@@ -372,6 +372,18 @@ def crop_keys_equivalent(a: str, b: str) -> bool:
 
 # Global key for fallow (NADAS). This is always allowed so the solver never needs to fabricate extreme water values.
 FALLOW = normalize_crop_key('NADAS')
+
+DIVERSITY_DEFAULTS = {
+    "enabled": True,
+    "max_crop_share": 0.25,
+    "max_top3_share": 0.65,
+    "hhi_target": 0.18,
+    "soft_penalty_enabled": True,
+    "repair_enabled": False,
+    "crop_share_penalty_weight": 1.0,
+    "top3_penalty_weight": 0.5,
+    "hhi_penalty_weight": 0.5,
+}
 
 # -----------------------------------------------------------------------------
 # Profit realism (thesis-friendly safeguards)
@@ -826,6 +838,145 @@ def _max_share_penalty(chosen_keys: List[str], areas: np.ndarray, max_share: Opt
         if sh > ms:
             pen += ((sh - ms) / max(1e-6, ms)) ** 2 * float(penalty_weight)
     return float(pen)
+
+
+def _diversity_config(overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    cfg = dict(DIVERSITY_DEFAULTS)
+    if isinstance(overrides, dict):
+        for k in cfg.keys():
+            if k in overrides:
+                cfg[k] = overrides[k]
+    return cfg
+
+
+def _crop_name_for_diversity(name: Any) -> str:
+    text = str(name or "").strip()
+    return text if text else ""
+
+
+def _diversity_penalty_from_shares(shares: List[float], cfg: Optional[Dict[str, Any]] = None) -> float:
+    cfg = _diversity_config(cfg)
+    if not bool(cfg.get("enabled", True)):
+        return 0.0
+    max_crop = float(cfg.get("max_crop_share", 0.25) or 0.25)
+    max_top3 = float(cfg.get("max_top3_share", 0.65) or 0.65)
+    hhi_target = float(cfg.get("hhi_target", 0.18) or 0.18)
+    clean = []
+    for x in shares or []:
+        try:
+            v = float(x)
+        except Exception:
+            continue
+        if np.isfinite(v):
+            clean.append(max(0.0, v))
+    clean.sort(reverse=True)
+    crop_penalty = sum((s - max_crop) ** 2 for s in clean if s > max_crop)
+    top3_share = float(sum(clean[:3]))
+    top3_penalty = (top3_share - max_top3) ** 2 if top3_share > max_top3 else 0.0
+    hhi = float(sum(s * s for s in clean))
+    hhi_penalty = (hhi - hhi_target) ** 2 if hhi > hhi_target else 0.0
+    return float(
+        float(cfg.get("crop_share_penalty_weight", 1.0) or 1.0) * crop_penalty
+        + float(cfg.get("top3_penalty_weight", 0.5) or 0.5) * top3_penalty
+        + float(cfg.get("hhi_penalty_weight", 0.5) or 0.5) * hhi_penalty
+    )
+
+
+def _diversity_score_penalty_from_keys(chosen_keys: List[str], areas: np.ndarray, cfg: Optional[Dict[str, Any]] = None) -> float:
+    cfg = _diversity_config(cfg)
+    if not bool(cfg.get("enabled", True)) or not bool(cfg.get("soft_penalty_enabled", True)):
+        return 0.0
+    by: Dict[str, float] = {}
+    try:
+        for k, a in zip(chosen_keys or [], list(areas)):
+            name = _crop_name_for_diversity(k)
+            if not name or normalize_crop_key(name) == FALLOW:
+                continue
+            area = safe_float(a, 0.0)
+            if area <= 0:
+                continue
+            by[name] = by.get(name, 0.0) + float(area)
+    except Exception:
+        return 0.0
+    total = float(sum(by.values()))
+    if total <= 1e-9:
+        return 0.0
+    penalty = _diversity_penalty_from_shares([v / total for v in by.values()], cfg)
+    return float(penalty * 5.0e8)
+
+
+def compute_diversity_metrics(plan_rows: List[Dict[str, Any]], total_area_da: float = 0.0,
+                              diversity_config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    cfg = _diversity_config(diversity_config)
+    by: Dict[str, float] = {}
+    for row in plan_rows or []:
+        if not isinstance(row, dict):
+            continue
+        name = _crop_name_for_diversity(row.get("crop_name") or row.get("name") or row.get("chosenCrop") or row.get("crop"))
+        if not name or normalize_crop_key(name) == FALLOW:
+            continue
+        area = safe_float(row.get("area_da", row.get("area", row.get("plannedAreaDa", 0.0))), 0.0)
+        if area <= 0:
+            continue
+        by[name] = by.get(name, 0.0) + float(area)
+
+    changed_area = float(sum(by.values()))
+    total_area = safe_float(total_area_da, 0.0)
+    if total_area <= 0:
+        total_area = changed_area
+    shares_changed = {k: (float(v) / max(1e-9, changed_area)) for k, v in by.items()}
+    shares_total = {k: (float(v) / max(1e-9, total_area)) for k, v in by.items()}
+    ordered = sorted(shares_changed.items(), key=lambda x: x[1], reverse=True)
+    top_crop = ordered[0][0] if ordered else None
+    top_share = float(ordered[0][1]) if ordered else 0.0
+    top_area = float(by.get(top_crop, 0.0)) if top_crop else 0.0
+    top3_share = float(sum(v for _, v in ordered[:3]))
+    top_share_total = float(shares_total.get(top_crop, 0.0)) if top_crop else 0.0
+    top3_share_total = float(sum(shares_total.get(k, 0.0) for k, _ in ordered[:3]))
+    hhi = float(sum(v * v for v in shares_changed.values()))
+    max_crop = float(cfg.get("max_crop_share", 0.25) or 0.25)
+    max_top3 = float(cfg.get("max_top3_share", 0.65) or 0.65)
+    hhi_target = float(cfg.get("hhi_target", 0.18) or 0.18)
+    warnings: List[str] = []
+    if top_crop and top_share > max_crop + 1e-9:
+        warnings.append(
+            f"{top_crop}, değişen öneri alanının %{top_share * 100:.1f}'ini kaplamaktadır. "
+            f"Bu değer %{max_crop * 100:.0f} çeşitlilik sınırını aşmaktadır."
+        )
+    if top3_share > max_top3 + 1e-9:
+        warnings.append(
+            f"İlk 3 ürün, değişen öneri alanının %{top3_share * 100:.1f}'ini kaplamaktadır. "
+            f"Bu değer %{max_top3 * 100:.0f} sınırını aşmaktadır."
+        )
+    if hhi > hhi_target + 1e-9:
+        warnings.append(
+            f"HHI ürün yoğunlaşma endeksi {hhi:.3f}; hedef değer {hhi_target:.3f} üzerindedir."
+        )
+    penalty = _diversity_penalty_from_shares(list(shares_changed.values()), cfg)
+    feasible = bool((top_share <= max_crop + 1e-9) and (top3_share <= max_top3 + 1e-9) and (hhi <= hhi_target + 1e-9))
+    return {
+        "crop_area_by_crop": {k: float(v) for k, v in sorted(by.items(), key=lambda x: x[1], reverse=True)},
+        "crop_share_by_crop": {k: float(v) for k, v in ordered},
+        "crop_share_changed_by_crop": {k: float(v) for k, v in ordered},
+        "crop_share_total_by_crop": {k: float(shares_total.get(k, 0.0)) for k, _ in ordered},
+        "changed_area_da": float(changed_area),
+        "total_plan_area_da": float(total_area),
+        "top_crop": top_crop,
+        "top_crop_area_da": float(top_area),
+        "top_crop_share": float(top_share),
+        "top_crop_share_changed": float(top_share),
+        "top_crop_share_total": float(top_share_total),
+        "top3_crop_share": float(top3_share),
+        "top3_crop_share_changed": float(top3_share),
+        "top3_crop_share_total": float(top3_share_total),
+        "hhi": float(hhi),
+        "max_crop_share_limit": float(max_crop),
+        "max_top3_share_limit": float(max_top3),
+        "hhi_target": float(hhi_target),
+        "diversity_penalty": float(penalty),
+        "diversity_feasible": feasible,
+        "warnings": warnings,
+    }
 
 def _prev_year_family_map(year: int) -> Dict[str, str]:
     """Infer previous-year primary crop family per parcel from enhanced seasons table."""
@@ -3888,9 +4039,11 @@ def ga_optimize(selected_parcels: List[Dict[str,Any]], year: int, objective: str
         # ---- Budget penalty on normalized scale ----
         over_n = max(0.0, water_n - 1.0)
         penalty = over_n * (max(beta, 0.2) * 10.0)
+        chosen_keys = [crop_list[int(j)] for j in ind]
+        diversity_penalty = _diversity_score_penalty_from_keys(chosen_keys, areas, DIVERSITY_DEFAULTS) / max(1.0, profit_ref)
 
         # Fitness: maximize profit while minimizing water
-        fitness = alpha * profit_n - beta * water_n - penalty
+        fitness = alpha * profit_n - beta * water_n - penalty - diversity_penalty
         return fitness, water, profit
 
 
@@ -4037,9 +4190,10 @@ def _score_solution(chosen: np.ndarray, areas: np.ndarray, W: np.ndarray, R: np.
     prev_pen = 0.0
     if year is not None and parcel_ids is not None and chosen_keys:
         prev_pen = _prev_family_penalty([str(x) for x in parcel_ids], chosen_keys, int(year))
+    diversity_pen = _diversity_score_penalty_from_keys(chosen_keys, areas, DIVERSITY_DEFAULTS) if chosen_keys else 0.0
 
     core_score = _objective_score_value(total_profit, total_water, objective)
-    fitness = core_score - penalty - monthly_pen - div_pen - share_pen - prev_pen
+    fitness = core_score - penalty - monthly_pen - div_pen - share_pen - prev_pen - diversity_pen
     return float(fitness), float(total_water), float(total_profit)
 
 
@@ -4300,6 +4454,16 @@ def _score_solution_two_season(
     prev_pen = 0.0
     if year is not None and parcel_ids is not None and chosen_keys_primary:
         prev_pen = _prev_family_penalty([str(x) for x in parcel_ids], chosen_keys_primary, int(year))
+    diversity_pen = 0.0
+    if chosen_keys_all:
+        try:
+            diversity_pen = _diversity_score_penalty_from_keys(
+                chosen_keys_all,
+                np.concatenate([areas, areas]),
+                DIVERSITY_DEFAULTS,
+            )
+        except Exception:
+            diversity_pen = 0.0
 
 
     # --- Fallow (NADAS) penalties ---
@@ -4325,7 +4489,7 @@ def _score_solution_two_season(
         pass
 
     core_score = _objective_score_value(total_profit, total_water, objective)
-    fitness = core_score - budget_penalty - monthly_penalty - hard_penalty + soft_bonus + low_input_bonus - div_pen - share_pen - prev_pen - nadas_pen - primary_nadas_pen
+    fitness = core_score - budget_penalty - monthly_penalty - hard_penalty + soft_bonus + low_input_bonus - div_pen - share_pen - prev_pen - diversity_pen - nadas_pen - primary_nadas_pen
     return float(fitness), float(total_water), float(total_profit)
 
 
@@ -5239,14 +5403,26 @@ def abc_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
         return _enforce_locks(v)
 
     best_sol = foods[0].copy()
-    best_fit, best_w, best_p = _score_solution(best_sol, areas, W, R, budget, objective, month_weights, month_caps)
+    best_fit, best_w, best_p = _score_solution(
+        best_sol, areas, W, R, budget, objective,
+        crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+        min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+    )
 
     for _ in range(cycles):
         # employed bees
         for k in range(food_sources):
             v = neighbor(foods[k])
-            fit_v, _, _ = _score_solution(v, areas, W, R, budget, objective, month_weights, month_caps)
-            fit_k, _, _ = _score_solution(foods[k], areas, W, R, budget, objective, month_weights, month_caps)
+            fit_v, _, _ = _score_solution(
+                v, areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )
+            fit_k, _, _ = _score_solution(
+                foods[k], areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )
             if fit_v > fit_k:
                 foods[k] = v
                 trials[k] = 0
@@ -5254,7 +5430,13 @@ def abc_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
                 trials[k] += 1
 
         # onlooker probabilities (normalize positive)
-        fits = np.array([_score_solution(foods[k], areas, W, R, budget, objective, month_weights, month_caps)[0] for k in range(food_sources)], dtype=float)
+        fits = np.array([
+            _score_solution(
+                foods[k], areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )[0] for k in range(food_sources)
+        ], dtype=float)
         # shift to positive
         fmin = float(np.min(fits))
         probs = fits - fmin + 1e-9
@@ -5264,8 +5446,16 @@ def abc_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
         for _o in range(food_sources):
             k = int(np.random.choice(np.arange(food_sources), p=probs))
             v = neighbor(foods[k])
-            fit_v, _, _ = _score_solution(v, areas, W, R, budget, objective, month_weights, month_caps)
-            fit_k, _, _ = _score_solution(foods[k], areas, W, R, budget, objective, month_weights, month_caps)
+            fit_v, _, _ = _score_solution(
+                v, areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )
+            fit_k, _, _ = _score_solution(
+                foods[k], areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )
             if fit_v > fit_k:
                 foods[k] = v
                 trials[k] = 0
@@ -5280,7 +5470,11 @@ def abc_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
 
         # update best
         for k in range(food_sources):
-            fit_k, w_k, p_k = _score_solution(foods[k], areas, W, R, budget, objective, month_weights, month_caps)
+            fit_k, w_k, p_k = _score_solution(
+                foods[k], areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )
             if fit_k > best_fit:
                 best_fit, best_w, best_p = fit_k, w_k, p_k
                 best_sol = foods[k].copy()
@@ -5326,7 +5520,8 @@ def abc_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
 def aco_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: str,
                  ants: int = 40, iterations: int = 120, rho: float = 0.25, q: float = 1.0,
                  seed: Optional[int] = None, budget_ratio: float = 1.0, season_source: str = "both",
-                 env_flow_ratio: float = 0.10, irrigation_method: Optional[str] = None, enforce_delivery_caps: bool = True) -> Dict[str, Any]:
+                 env_flow_ratio: float = 0.10, irrigation_method: Optional[str] = None, enforce_delivery_caps: bool = True,
+                 min_unique_crops: int = 1, max_share_per_crop: Optional[float] = None) -> Dict[str, Any]:
     """Ant Colony Optimization (discrete crop choice per parcel)."""
     if seed is not None:
         random.seed(int(seed))
@@ -5396,7 +5591,11 @@ def aco_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
                 else:
                     probs = weights / s
                     chosen[i] = int(np.random.choice(np.arange(C), p=probs))
-            fit, tw, tp = _score_solution(chosen, areas, W, R, budget, objective, month_weights, month_caps)
+            fit, tw, tp = _score_solution(
+                chosen, areas, W, R, budget, objective,
+                crop_list=crop_list, month_weights=month_weights, month_caps=month_caps,
+                min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
+            )
             sols.append(chosen)
             fits.append((fit, tw, tp))
 
@@ -6108,6 +6307,7 @@ def _matrix_eval_solution(problem: Dict[str, Any], sol: List[int]) -> Tuple[floa
         unique_ratio = 0.0
     diversity = 0.55 * shannon + 0.45 * unique_ratio
     concentration_penalty = max(0.0, dominance - 0.35)
+    diversity_soft_penalty = _diversity_penalty_from_shares(shares, DIVERSITY_DEFAULTS) if shares else 0.0
 
     if objective == "water_saving":
         score = (
@@ -6168,6 +6368,7 @@ def _matrix_eval_solution(problem: Dict[str, Any], sol: List[int]) -> Tuple[floa
             fallow_penalty += 0.55
 
     score -= fallow_penalty
+    score -= 0.12 * diversity_soft_penalty
 
     metrics = {
         "total_profit": float(total_profit),
@@ -6673,8 +6874,11 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
 def _matrix_ga_optimize(problem: Dict[str, Any], seed: Optional[int]=None, pop_size: int=36, generations: int=36,
                         cx_rate: float=0.72, mut_rate: float=0.05) -> Tuple[List[int], Dict[str, Any]]:
     rng = random.Random(seed)
-    pop_size = max(12, min(120, int(pop_size or 36)))
-    generations = max(10, min(160, int(generations or 36)))
+    fast_benchmark = bool((problem or {}).get("benchmark_fast", False))
+    pop_floor = 4 if fast_benchmark else 12
+    generation_floor = 3 if fast_benchmark else 10
+    pop_size = max(pop_floor, min(120, int(pop_size or 36)))
+    generations = max(generation_floor, min(160, int(generations or 36)))
     cx_rate = max(0.1, min(0.95, float(cx_rate or 0.72)))
     mut_rate = max(0.01, min(0.35, float(mut_rate or 0.05)))
 
@@ -6730,9 +6934,13 @@ def _matrix_ga_optimize(problem: Dict[str, Any], seed: Optional[int]=None, pop_s
 def _matrix_abc_optimize(problem: Dict[str, Any], seed: Optional[int]=None, food_sources: int=28, cycles: int=42,
                          limit: int=10) -> Tuple[List[int], Dict[str, Any]]:
     rng = random.Random(seed)
-    food_sources = max(10, min(120, int(food_sources or 28)))
-    cycles = max(10, min(180, int(cycles or 42)))
-    limit = max(4, min(50, int(limit or 10)))
+    fast_benchmark = bool((problem or {}).get("benchmark_fast", False))
+    source_floor = 4 if fast_benchmark else 10
+    cycle_floor = 3 if fast_benchmark else 10
+    limit_floor = 2 if fast_benchmark else 4
+    food_sources = max(source_floor, min(120, int(food_sources or 28)))
+    cycles = max(cycle_floor, min(180, int(cycles or 42)))
+    limit = max(limit_floor, min(50, int(limit or 10)))
 
     foods = [_matrix_random_solution(problem, rng, mode) for mode in (["greedy", "profit", "water"] + ["mixed"] * max(0, food_sources - 3))]
     foods = foods[:food_sources]
@@ -6796,8 +7004,11 @@ def _matrix_abc_optimize(problem: Dict[str, Any], seed: Optional[int]=None, food
 def _matrix_aco_optimize(problem: Dict[str, Any], seed: Optional[int]=None, ants: int=28, iterations: int=42,
                          rho: float=0.22, q: float=1.0) -> Tuple[List[int], Dict[str, Any]]:
     rng = random.Random(seed)
-    ants = max(10, min(120, int(ants or 28)))
-    iterations = max(10, min(180, int(iterations or 42)))
+    fast_benchmark = bool((problem or {}).get("benchmark_fast", False))
+    ant_floor = 4 if fast_benchmark else 10
+    iteration_floor = 3 if fast_benchmark else 10
+    ants = max(ant_floor, min(120, int(ants or 28)))
+    iterations = max(iteration_floor, min(180, int(iterations or 42)))
     rho = max(0.05, min(0.8, float(rho or 0.22)))
     q = max(0.1, min(5.0, float(q or 1.0)))
 
@@ -7597,6 +7808,8 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
             env_flow_ratio=env_flow_ratio,
             irrigation_method=irrigation_method,
             enforce_delivery_caps=enforce_delivery_caps,
+            min_unique_crops=min_unique_crops,
+            max_share_per_crop=float(max_share_per_crop),
         ) if two_season else aco_optimize(
             selected_parcels=selected,
             year=y,
@@ -7611,6 +7824,8 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
             env_flow_ratio=env_flow_ratio,
             irrigation_method=irrigation_method,
             enforce_delivery_caps=enforce_delivery_caps,
+            min_unique_crops=min_unique_crops,
+            max_share_per_crop=float(max_share_per_crop),
         ))
         try:
             raw.setdefault("meta", {})["run_params"] = {
@@ -7866,6 +8081,8 @@ def _row_feasible(row: Dict[str, Any], plan_feasible: bool = True) -> bool:
     explicit = row.get("fullFeasible", row.get("quota_ok", row.get("feasible", None)))
     if explicit is None:
         return bool(plan_feasible and quota_ok)
+    if explicit is False and bool(row.get("quotaAdjusted", row.get("quota_adjusted", False))) and _row_area(row) > 0:
+        return bool(plan_feasible and quota_ok)
     return bool(explicit) and bool(quota_ok) and bool(plan_feasible)
 
 
@@ -7929,6 +8146,151 @@ def _standard_crop_from_row(row: Dict[str, Any], parcel: Dict[str, Any], role: s
         "selectable": bool(feasible),
         "warnings": warnings,
         "explanation": _safe_text(row.get("reason") or row.get("decisionNote") or row.get("rankReason")),
+    }
+
+
+def _scale_candidate_to_area(candidate: Dict[str, Any], target_area: float) -> Dict[str, Any]:
+    out = dict(candidate or {})
+    src_area = safe_float(out.get("area_da", 0.0), 0.0)
+    target = max(0.0, safe_float(target_area, src_area))
+    wpd = safe_float(out.get("water_m3", 0.0), 0.0) / max(1e-9, src_area)
+    ppd = safe_float(out.get("profit_tl", 0.0), 0.0) / max(1e-9, src_area)
+    out["area_da"] = float(target)
+    out["water_m3"] = float(wpd * target)
+    out["profit_tl"] = float(ppd * target)
+    out["tl_per_m3"] = float(out["profit_tl"] / out["water_m3"]) if out["water_m3"] > 0 else 0.0
+    out["area_share_pct"] = safe_float(out.get("area_share_pct", 100.0), 100.0)
+    return out
+
+
+def repair_plan_for_diversity(plan_rows: List[Dict[str, Any]], candidate_rows: List[Dict[str, Any]],
+                              diversity_config: Optional[Dict[str, Any]] = None,
+                              water_budget_m3: Optional[float] = None) -> Dict[str, Any]:
+    cfg = _diversity_config(diversity_config)
+    if not bool(cfg.get("enabled", True)) or not bool(cfg.get("repair_enabled", True)):
+        metrics = compute_diversity_metrics(plan_rows, 0.0, cfg)
+        return {"plan_rows": plan_rows, "metrics": metrics, "repair_applied": False, "warnings": []}
+
+    rows = [dict(r) for r in (plan_rows or [])]
+    candidates = [dict(c) for c in (candidate_rows or []) if isinstance(c, dict)]
+    budget = safe_float(water_budget_m3, 0.0)
+    repair_warnings: List[str] = []
+    max_repair_iterations = 20
+    max_candidate_checks_per_parcel = 10
+    max_total_replacements = 40
+    max_iter = min(max_repair_iterations, max(4, len(rows) * 2))
+    applied = False
+    improved = False
+    replacements = 0
+
+    def _tot_water(items: List[Dict[str, Any]]) -> float:
+        return float(sum(safe_float(x.get("water_m3", 0.0), 0.0) for x in items))
+
+    metrics = compute_diversity_metrics(rows, 0.0, cfg)
+    start_penalty = safe_float(metrics.get("diversity_penalty", 0.0), 0.0)
+
+    for _ in range(max_iter):
+        metrics = compute_diversity_metrics(rows, 0.0, cfg)
+        top_crop = metrics.get("top_crop")
+        if not top_crop or safe_float(metrics.get("top_crop_share", 0.0), 0.0) <= safe_float(cfg.get("max_crop_share", 0.25), 0.25) + 1e-9:
+            break
+        best_move = None
+        current_water = _tot_water(rows)
+        current_penalty = safe_float(metrics.get("diversity_penalty", 0.0), 0.0)
+        for idx, old in enumerate(rows):
+            old_name = _crop_name_for_diversity(old.get("crop_name") or old.get("name"))
+            if normalize_crop_key(old_name) != normalize_crop_key(str(top_crop)):
+                continue
+            parcel_id = str(old.get("parcel_id") or "").strip()
+            old_area = safe_float(old.get("area_da", 0.0), 0.0)
+            old_water = safe_float(old.get("water_m3", 0.0), 0.0)
+            old_profit = safe_float(old.get("profit_tl", 0.0), 0.0)
+            checked_for_parcel = 0
+            for cand in candidates:
+                if checked_for_parcel >= max_candidate_checks_per_parcel:
+                    break
+                cand_name = _crop_name_for_diversity(cand.get("crop_name") or cand.get("name"))
+                if not cand_name or normalize_crop_key(cand_name) == FALLOW:
+                    continue
+                if normalize_crop_key(cand_name) == normalize_crop_key(old_name):
+                    continue
+                if parcel_id and str(cand.get("parcel_id") or "").strip() != parcel_id:
+                    continue
+                if not bool(cand.get("feasible", True)) or not bool(cand.get("selectable", True)):
+                    continue
+                checked_for_parcel += 1
+                new_row = _scale_candidate_to_area(cand, old_area)
+                new_water_total = current_water - old_water + safe_float(new_row.get("water_m3", 0.0), 0.0)
+                if budget > 0 and new_water_total > budget + 1e-6:
+                    continue
+                trial = rows[:idx] + [new_row] + rows[idx + 1:]
+                trial_metrics = compute_diversity_metrics(trial, 0.0, cfg)
+                trial_penalty = safe_float(trial_metrics.get("diversity_penalty", 0.0), 0.0)
+                if trial_penalty >= current_penalty - 1e-12:
+                    continue
+                profit_loss = max(0.0, old_profit - safe_float(new_row.get("profit_tl", 0.0), 0.0))
+                water_increase = max(0.0, safe_float(new_row.get("water_m3", 0.0), 0.0) - old_water)
+                score = ((current_penalty - trial_penalty) * 1.0e9) - profit_loss - (10.0 * water_increase)
+                move = (score, idx, [new_row], trial_metrics, old_name, cand_name)
+                if best_move is None or move[0] > best_move[0]:
+                    best_move = move
+        if best_move is None:
+            repair_warnings.append(f"{top_crop} için çeşitlilik sınırını iyileştirecek uygulanabilir alternatif bulunamadı.")
+            break
+        _score, idx, replacement_rows, new_metrics, old_name, cand_name = best_move
+        rows = rows[:idx] + replacement_rows + rows[idx + 1:]
+        replacements += 1
+        applied = True
+        metrics = new_metrics
+        if safe_float(metrics.get("diversity_penalty", 0.0), 0.0) < start_penalty - 1e-12:
+            improved = True
+        repair_warnings.append(
+            f"Ürün çeşitliliği kısıtı nedeniyle {old_name} yerine {cand_name} seçilerek plan yeniden dengelendi."
+        )
+        if replacements >= max_total_replacements:
+            repair_warnings.append("Çeşitlilik onarımı güvenli işlem sınırına ulaştığı için durduruldu.")
+            break
+        if bool(metrics.get("diversity_feasible", False)):
+            break
+    if max_iter >= max_repair_iterations and not bool(metrics.get("diversity_feasible", False)):
+        repair_warnings.append("Çeşitlilik onarımı maksimum iterasyon sınırına ulaştığı için durduruldu.")
+
+    final_metrics = compute_diversity_metrics(rows, 0.0, cfg)
+    return {
+        "plan_rows": rows,
+        "metrics": final_metrics,
+        "repair_applied": bool(applied),
+        "repair_improved": bool(improved),
+        "warnings": list(dict.fromkeys(repair_warnings)),
+    }
+
+
+def evaluate_plan_with_diversity(plan_rows: List[Dict[str, Any]], base_metrics: Dict[str, Any],
+                                 diversity_config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    cfg = _diversity_config(diversity_config)
+    total_area_da = safe_float((base_metrics or {}).get("total_area_da", 0.0), 0.0)
+    diversity = compute_diversity_metrics(plan_rows, total_area_da, cfg)
+    feasible = bool((base_metrics or {}).get("feasible", True))
+    repair_applied = bool((base_metrics or {}).get("repair_applied", False))
+    repair_improved = bool((base_metrics or {}).get("repair_improved", False))
+    if not feasible:
+        status = "not_feasible"
+    elif bool(diversity.get("diversity_feasible", False)):
+        status = "recommended"
+    elif repair_applied or repair_improved:
+        status = "recommended_with_diversity_warning"
+    else:
+        status = "not_recommended_due_to_diversity"
+    if repair_applied:
+        diversity.setdefault("warnings", [])
+        diversity["warnings"] = list(dict.fromkeys(
+            list(diversity.get("warnings") or [])
+            + ["Ürün çeşitliliği kısıtı nedeniyle plan yeniden dengelenmiştir."]
+        ))
+    return {
+        "diversity": diversity,
+        "recommendation_status": status,
+        "selectable": bool(feasible),
     }
 
 
@@ -8048,6 +8410,203 @@ def _standard_data_sources() -> List[str]:
         return []
 
 
+RUN_COUNT_CALIBRATION_CANDIDATES = [10, 15, 30, 50, 100]
+ACADEMIC_DEFAULT_REPEAT_COUNT = 30
+RUN_COUNT_CALIBRATION_CACHE: Dict[str, Dict[str, Any]] = {}
+
+
+def _calibration_cache_key(selected_ids: List[str], algorithm: str, scenario: str, scenario_type: str, year_val: Optional[int], water_budget_ratio: float) -> str:
+    ids = ",".join(sorted(normalize_parcel_id(x) for x in (selected_ids or [])))
+    return "|".join([
+        ids,
+        str(algorithm or "").upper(),
+        _standard_objective_mode(scenario),
+        str(scenario_type or ""),
+        str(year_val or ""),
+        f"{safe_float(water_budget_ratio, 1.0):.4f}",
+    ])
+
+
+def _completion_status_kind(completed: int, requested: int) -> str:
+    return "completed" if int(completed) >= int(requested) and int(requested) > 0 else "partial"
+
+
+def _completion_status_label(completed: int, requested: int) -> str:
+    return f"Tamamlandı: {completed}/{requested} koşu" if _completion_status_kind(completed, requested) == "completed" else f"Kısmi sonuç: {completed}/{requested} koşu tamamlandı"
+
+
+def _score_plan_for_calibration(plan: Dict[str, Any], objective_mode: str) -> float:
+    water = safe_float(plan.get("total_water_m3", 0.0), 0.0)
+    profit = safe_float(plan.get("total_profit_tl", 0.0), 0.0)
+    eff = safe_float(plan.get("tl_per_m3", 0.0), 0.0)
+    feasible_bonus = 5000.0 if bool(plan.get("feasible", True)) else -50000.0
+    status = str(plan.get("recommendation_status") or plan.get("status") or "").lower()
+    diversity = plan.get("diversity") if isinstance(plan.get("diversity"), dict) else {}
+    diversity_penalty = safe_float(diversity.get("diversity_penalty", 0.0), 0.0) * 25000.0
+    if status == "recommended_with_diversity_warning":
+        diversity_penalty += 2500.0
+    elif status == "not_recommended_due_to_diversity":
+        diversity_penalty += 25000.0
+    elif status == "not_feasible":
+        diversity_penalty += 50000.0
+    if objective_mode == "water_saving":
+        return (-water * 0.8) + (profit * 0.0008) + (eff * 80.0) + feasible_bonus - diversity_penalty
+    if objective_mode == "max_profit":
+        return (profit * 0.001) - (water * 0.04) + (eff * 45.0) + feasible_bonus - diversity_penalty
+    return (eff * 600.0) + (profit * 0.0005) - (water * 0.08) + feasible_bonus - diversity_penalty
+
+
+def _selected_plan_signature(plan: Dict[str, Any]) -> str:
+    try:
+        crops = plan.get("crops") if isinstance(plan.get("crops"), list) else []
+        parts = []
+        for c in crops:
+            if not isinstance(c, dict):
+                continue
+            pid = normalize_parcel_id(c.get("parcel_id", ""))
+            crop = normalize_crop_key(c.get("crop_name") or c.get("name") or "")
+            share = round(safe_float(c.get("area_share_pct", 0.0), 0.0), 1)
+            parts.append(f"{pid}:{crop}:{share}")
+        return "|".join(parts)
+    except Exception:
+        return ""
+
+
+def _median(values: List[float]) -> float:
+    if not values:
+        return 0.0
+    return float(statistics.median(values))
+
+
+def _std(values: List[float]) -> float:
+    if len(values) <= 1:
+        return 0.0
+    return float(statistics.stdev(values))
+
+
+def _cv(values: List[float]) -> float:
+    if len(values) <= 1:
+        return 0.0
+    mean_v = float(statistics.mean(values))
+    return float(_std(values) / abs(mean_v)) if abs(mean_v) > 1e-9 else 0.0
+
+
+def _select_recommended_repeat_count(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    by_count: Dict[int, List[Dict[str, Any]]] = {}
+    for row in rows or []:
+        by_count.setdefault(int(row.get("repeat_count", 0)), []).append(row)
+    selected = None
+    reasons = []
+    for count in RUN_COUNT_CALIBRATION_CANDIDATES:
+        group = by_count.get(count, [])
+        if not group:
+            continue
+        feasible_ok = all(safe_float(r.get("feasible_rate", 0.0), 0.0) >= 0.95 for r in group)
+        cv_ok = all(safe_float(r.get("cv_score", 999.0), 999.0) <= 0.05 for r in group)
+        marginal_ok = all(
+            r.get("marginal_gain_vs_previous") is None or safe_float(r.get("marginal_gain_vs_previous", 999.0), 999.0) < 0.01
+            for r in group
+        )
+        dominance_ok = all(safe_float(r.get("dominant_plan_rate", 0.0), 0.0) <= 0.90 for r in group)
+        completed_ok = all(int(r.get("completed_runs", 0)) >= int(r.get("requested_runs", 0)) for r in group)
+        if feasible_ok and cv_ok and marginal_ok and dominance_ok and completed_ok:
+            selected = count
+            reasons.append(f"{count} tekrarda uygulanabilirlik, CV, marjinal iyileşme ve plan baskınlığı eşikleri sağlandı.")
+            break
+        reasons.append(
+            f"{count} tekrar: uygulanabilirlik={feasible_ok}, CV={cv_ok}, marjinal={marginal_ok}, plan baskınlığı={dominance_ok}, tamamlanma={completed_ok}."
+        )
+    if selected is None:
+        selected = ACADEMIC_DEFAULT_REPEAT_COUNT if ACADEMIC_DEFAULT_REPEAT_COUNT in by_count else (min(by_count.keys()) if by_count else ACADEMIC_DEFAULT_REPEAT_COUNT)
+        reasons.append(f"Eşiklerin tamamı sağlanmadığı için akademik varsayılan {selected} tekrar seçildi.")
+    return {
+        "recommended_repeat_count": int(selected),
+        "selection_rule": "feasible_rate>=95%, cv_score<=5%, marginal_gain_vs_previous<1%, dominant_plan_rate<=90%, süre/tamamlanma kabul edilebilir; bu eşiği sağlayan en küçük tekrar sayısı seçilir.",
+        "reason": " ".join(reasons[-3:]),
+    }
+
+
+def _optimization_repeat_selection(selected_ids: List[str], algorithm: str, scenario: str, scenario_type: str, year_val: Optional[int], water_budget_ratio: float, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    opts = options if isinstance(options, dict) else {}
+    fast_preview = bool(
+        opts.get("fastPreview") is True
+        or str(opts.get("optimizationMode", "")).lower() in ("fast", "fast_preview", "preview")
+        or str(opts.get("benchmarkMode", "")).lower() == "fast"
+    )
+    if fast_preview:
+        repeat_count = safe_int(opts.get("fastRepeatCount", opts.get("repeatCount", 5)), 5)
+        repeat_count = max(3, min(10, repeat_count))
+        return {
+            "mode": "fast_preview",
+            "algorithm": str(algorithm or "GA").upper(),
+            "selected_repeat_count": repeat_count,
+            "reason": "Hizli on izleme modu acik; akademik sonuc olarak yorumlanmaz.",
+            "calibration_available": False,
+        }
+    key = _calibration_cache_key(selected_ids, algorithm, scenario, scenario_type, year_val, water_budget_ratio)
+    cached = RUN_COUNT_CALIBRATION_CACHE.get(key)
+    if cached:
+        repeat_count = int(cached.get("recommended_repeat_count") or ACADEMIC_DEFAULT_REPEAT_COUNT)
+        return {
+            "mode": "calibrated",
+            "algorithm": str(algorithm or "GA").upper(),
+            "selected_repeat_count": repeat_count,
+            "reason": cached.get("reason") or "Aynı parsel/hedef/senaryo koşulları için kalibrasyon sonucu kullanıldı.",
+            "calibration_available": True,
+            "warning": "Bu optimize endpoint'i mevcut sürümde ana planı tek standart backend çalıştırmasıyla üretir; akademik tekrar istatistikleri kalibrasyon/benchmark ekranında raporlanır.",
+        }
+    return {
+        "mode": "default_30",
+        "algorithm": str(algorithm or "GA").upper(),
+        "selected_repeat_count": ACADEMIC_DEFAULT_REPEAT_COUNT,
+        "reason": "Kalibrasyon sonucu yok; akademik varsayılan 30 tekrar kabul edilir, ancak bu endpoint mevcut sürümde tek karar paketi üretmektedir.",
+        "calibration_available": False,
+        "warning": "Bu endpoint mevcut sürümde tek koşu üretmektedir; akademik tekrar karşılaştırması benchmark/kalibrasyon ekranında yapılır.",
+    }
+
+def _optimization_run_policy(selected_ids: List[str], algorithm: str, scenario: str, scenario_type: str, year_val: Optional[int], water_budget_ratio: float) -> Dict[str, Any]:
+    base = _optimization_repeat_selection(selected_ids, algorithm, scenario, scenario_type, year_val, water_budget_ratio, {})
+    repeat_count = int(base.get("selected_repeat_count") or ACADEMIC_DEFAULT_REPEAT_COUNT)
+    return {
+        **base,
+        "requested_runs": repeat_count,
+        "completed_runs": 0,
+        "completion_status_kind": "partial",
+        "best_run_index": None,
+        "feasible_run_count": 0,
+        "feasible_rate": 0.0,
+        "mean_score": None,
+        "best_score": None,
+        "cv_score": None,
+        "mean_runtime_sec": None,
+        "warning": "Bu politika alani route disi standartlastirma icin on bilgidir; /api/optimize gercek kosu istatistikleriyle doldurur.",
+    }
+
+
+def _optimization_policy_from_runs(base_policy: Dict[str, Any], run_stats: List[Dict[str, Any]], selected_run: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    requested = int(base_policy.get("selected_repeat_count") or ACADEMIC_DEFAULT_REPEAT_COUNT)
+    completed = len(run_stats or [])
+    scores = [safe_float(r.get("score", 0.0), 0.0) for r in (run_stats or []) if r.get("score") is not None]
+    runtimes = [safe_float(r.get("runtime", 0.0), 0.0) for r in (run_stats or [])]
+    feasible_count = sum(1 for r in (run_stats or []) if bool(r.get("feasible")) and bool(r.get("selectable", True)))
+    best_score = max(scores) if scores else None
+    return {
+        **base_policy,
+        "warning": None,
+        "requested_runs": requested,
+        "completed_runs": completed,
+        "completion_status_kind": _completion_status_kind(completed, requested),
+        "completion_status": _completion_status_label(completed, requested),
+        "best_run_index": selected_run.get("run_index") if isinstance(selected_run, dict) else None,
+        "feasible_run_count": int(feasible_count),
+        "feasible_rate": float(feasible_count / max(1, completed)),
+        "mean_score": float(statistics.mean(scores)) if scores else None,
+        "best_score": float(best_score) if best_score is not None else None,
+        "cv_score": _cv(scores),
+        "mean_runtime_sec": float(statistics.mean(runtimes)) if runtimes else None,
+    }
+
+
 def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str], algorithm: str, scenario: str,
                                   water_budget_ratio: float, year_val: Optional[int], options: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(result, dict):
@@ -8149,6 +8708,83 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     if scenario_type == "double" and len(selected_parcels) == 1 and len(plan_rows) != 2:
         plan_warnings.append("Senaryo-2 ana plani tam iki urun/desen satiri uretmedi.")
 
+    diversity_candidate_rows: List[Dict[str, Any]] = []
+    if bool(_diversity_config(DIVERSITY_DEFAULTS).get("repair_enabled", True)):
+        for pr in result.get("parcels", []) or []:
+            if not isinstance(pr, dict):
+                continue
+            pid = normalize_parcel_id(pr.get("id"))
+            parcel = parcel_meta.get(pid, {"id": pid, "area_da": pr.get("area_da", 0.0)})
+            raw_candidates = []
+            raw_candidates.extend(_standard_recommended_rows(pr))
+            raw_candidates.extend(_standard_alternative_rows(pr))
+            for row in raw_candidates:
+                if not isinstance(row, dict):
+                    continue
+                crop = _standard_crop_from_row(row, parcel, "primary", True)
+                if _is_fallow_name(crop.get("crop_name")):
+                    continue
+                if crop.get("area_da", 0.0) <= 0:
+                    continue
+                diversity_candidate_rows.append(crop)
+        try:
+            existing_candidate_keys = {
+                (str(c.get("parcel_id") or ""), normalize_crop_key(c.get("crop_name") or c.get("name")))
+                for c in diversity_candidate_rows
+            }
+            crop_list_fb, W_fb, R_fb = build_candidate_matrix(
+                selected_parcels,
+                year=y,
+                season_source=str(opts.get("seasonSource") or meta.get("seasonSource") or "s1"),
+            )
+            for i, parcel in enumerate(selected_parcels):
+                area = safe_float(parcel.get("area_da", 0.0), 0.0)
+                pid_txt = _safe_text(parcel.get("id"))
+                ranked = []
+                for j, crop_name in enumerate(crop_list_fb):
+                    if _is_fallow_name(crop_name):
+                        continue
+                    wpd = safe_float(W_fb[i, j], 0.0)
+                    ppd = safe_float(R_fb[i, j], 0.0)
+                    if (not np.isfinite(wpd)) or (not np.isfinite(ppd)) or wpd < 0 or wpd >= 1e8:
+                        continue
+                    water = float(area * wpd)
+                    profit = float(area * ppd)
+                    eff = profit / max(1.0, water)
+                    if objective_mode == "water_saving":
+                        score = -water + 0.001 * max(0.0, profit) + eff
+                    elif objective_mode == "max_profit":
+                        score = profit - 0.01 * water + eff
+                    else:
+                        score = eff * 1000.0 + 0.0001 * profit - 0.01 * water
+                    ranked.append((score, crop_name, water, profit))
+                ranked.sort(key=lambda x: x[0], reverse=True)
+                for _score, crop_name, water, profit in ranked[:10]:
+                    key = (pid_txt, normalize_crop_key(crop_name))
+                    if key in existing_candidate_keys:
+                        continue
+                    existing_candidate_keys.add(key)
+                    diversity_candidate_rows.append({
+                        "parcel_id": pid_txt,
+                        "crop_name": str(crop_name),
+                        "name": str(crop_name),
+                        "role": "primary",
+                        "season": "Aday",
+                        "area_da": float(area),
+                        "area_share_pct": 100.0,
+                        "water_m3": float(water),
+                        "profit_tl": float(profit),
+                        "tl_per_m3": float(profit / water) if water > 0 else 0.0,
+                        "quota_m3": 0.0,
+                        "quota_status": "Uygun",
+                        "feasible": True,
+                        "selectable": True,
+                        "warnings": [],
+                        "explanation": "Çeşitlilik onarımı için aynı parselin uygulanabilir aday havuzundan alınmıştır.",
+                    })
+        except Exception:
+            pass
+
     row_total_water = sum(safe_float(c.get("water_m3", 0.0), 0.0) for c in plan_rows)
     row_total_profit = sum(safe_float(c.get("profit_tl", 0.0), 0.0) for c in plan_rows)
     total_water = row_total_water if plan_rows else safe_float(result.get("total_water_m3", 0.0), 0.0)
@@ -8203,6 +8839,20 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
             pattern_type = "Alan paylasimli desen"
             area_shared_repair_applied = True
             plan_warnings.append(f"Ardisik iki sezon deseni kota disinda kaldigi icin ayni sezon alan paylasimli %{r1_pct}-%{r2_pct} desen uygulanabilir ana plan olarak secildi.")
+
+    diversity_repair = repair_plan_for_diversity(
+        plan_rows,
+        diversity_candidate_rows,
+        DIVERSITY_DEFAULTS,
+        water_budget_m3=water_budget_m3,
+    )
+    plan_rows = diversity_repair.get("plan_rows", plan_rows)
+    if diversity_repair.get("repair_applied"):
+        plan_warnings.append("Ürün çeşitliliği kısıtı nedeniyle plan yeniden dengelenmiştir. Amaç, tek ürüne aşırı yığılmayı azaltarak daha uygulanabilir bir ürün deseni üretmektir.")
+    plan_warnings.extend(diversity_repair.get("warnings") or [])
+    total_water = sum(safe_float(c.get("water_m3", 0.0), 0.0) for c in plan_rows) if plan_rows else total_water
+    total_profit = sum(safe_float(c.get("profit_tl", 0.0), 0.0) for c in plan_rows) if plan_rows else total_profit
+
     plan_feasible = (bool(result.get("feasible", True)) or area_shared_repair_applied) and all(bool(c.get("feasible")) for c in plan_rows)
     if scenario_type == "double" and len(selected_parcels) == 1 and len(plan_rows) != 2:
         plan_feasible = False
@@ -8214,10 +8864,31 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         selected_status = "no_feasible_two_crop_plan"
         plan_warnings.append("Secili parsel ve su kotasi altinda uygulanabilir iki urunlu/desenli plan bulunamadi.")
 
+    diversity_eval = evaluate_plan_with_diversity(
+        plan_rows,
+        {
+            "feasible": bool(plan_feasible),
+            "repair_applied": bool(diversity_repair.get("repair_applied")),
+            "repair_improved": bool(diversity_repair.get("repair_improved")),
+            "total_area_da": sum(safe_float(p.get("area_da", 0.0), 0.0) for p in selected_parcels),
+        },
+        DIVERSITY_DEFAULTS,
+    )
+    diversity_metrics = diversity_eval.get("diversity", {})
+    recommendation_status = str(diversity_eval.get("recommendation_status") or "recommended")
+    if recommendation_status == "not_feasible":
+        plan_warnings.append("Bu seçenek su/uygunluk kısıtları altında uygulanabilir değildir.")
+    elif recommendation_status == "not_recommended_due_to_diversity":
+        plan_warnings.append("Bu seçenek su/uygunluk açısından uygulanabilir olabilir; ancak ürün yoğunlaşması nedeniyle tartışmalı alternatif olarak değerlendirilmelidir.")
+    elif recommendation_status == "recommended_with_diversity_warning":
+        plan_warnings.append("Bu seçenek su/uygunluk açısından uygulanabilir görünmektedir; ancak ürün yoğunlaşması nedeniyle dikkatli değerlendirilmelidir.")
+    plan_warnings.extend(diversity_metrics.get("warnings") or [])
+
     plan_names = "-".join(normalize_crop_key(c.get("crop_name")) for c in plan_rows)[:80]
     selected_plan = {
         "plan_id": f"{str(result.get('algorithm') or algorithm).upper()}-{scenario_type}-{objective_mode}-{y}-{plan_names}",
         "status": selected_status,
+        "recommendation_status": recommendation_status,
         "scenario_type": scenario_type,
         "pattern_type": pattern_type,
         "crops": plan_rows,
@@ -8228,6 +8899,8 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         "delta_profit_tl": float(total_profit - base_profit),
         "feasible": bool(plan_feasible),
         "selectable": bool(plan_feasible),
+        "diversity": diversity_metrics,
+        "diversity_repair_applied": bool(diversity_repair.get("repair_applied")),
         "feasibility_reasons": ["Uygun"] if plan_feasible else plan_warnings,
         "warnings": plan_warnings,
         "explanation": (
@@ -8364,10 +9037,20 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         "context": context,
         "baseline": baseline,
         "selected_plan": selected_plan,
+        "diversity": diversity_metrics,
+        "recommendation_status": recommendation_status,
         "alternatives": alternatives,
         "charts": charts,
         "tables": tables,
         "diagnostics": diagnostics,
+        "optimization_run_policy": result.get("_optimization_run_policy") if isinstance(result.get("_optimization_run_policy"), dict) else _optimization_run_policy(
+            selected_ids=selected_norm,
+            algorithm=str(result.get("algorithm") or algorithm).upper(),
+            scenario=scenario,
+            scenario_type=scenario_type,
+            year_val=y,
+            water_budget_ratio=water_budget_ratio,
+        ),
     })
     return result
 
@@ -9687,23 +10370,94 @@ def api_optimize():
         if isinstance(payload.get("customParcels"), list) and payload.get("customParcels"):
             options["customParcels"] = payload.get("customParcels")
 
-        out = optimize(
+        scenario_type = _standard_scenario_type(options, {})
+        objective_mode = _standard_objective_mode(scenario)
+        base_policy = _optimization_repeat_selection(
             selected_ids=selected,
             algorithm=algorithm,
             scenario=scenario,
-            water_budget_ratio=water_budget_ratio,
-            year=year_val,
-            options=options
-        )
-        return jsonify(_standardize_optimize_payload(
-            out,
-            selected_ids=selected,
-            algorithm=algorithm,
-            scenario=scenario,
-            water_budget_ratio=water_budget_ratio,
+            scenario_type=scenario_type,
             year_val=year_val,
+            water_budget_ratio=water_budget_ratio,
             options=options,
-        ))
+        )
+        requested_runs = int(base_policy.get("selected_repeat_count") or ACADEMIC_DEFAULT_REPEAT_COUNT)
+        try:
+            seed_root = int(options.get("seed", payload.get("seed", int(time.time() * 1000) % 1000000)))
+        except Exception:
+            seed_root = int(time.time() * 1000) % 1000000
+        algo_key = str(algorithm or "GA").upper()
+        algo_seed_offset = {"GA": 0, "ABC": 10000, "ACO": 20000}.get(algo_key, 0)
+
+        run_records: List[Dict[str, Any]] = []
+        standardized_runs: List[Dict[str, Any]] = []
+        for run_idx in range(requested_runs):
+            run_options = dict(options)
+            if base_policy.get("mode") == "fast_preview":
+                fast_defaults = {"generations": 5, "popSize": 8, "cycles": 6, "foodSources": 6, "ants": 5, "iterations": 6, "riskMode": "none"}
+                for k, v in fast_defaults.items():
+                    if k not in run_options or run_options.get(k) in (None, "", 0):
+                        run_options[k] = v
+            run_options["seed"] = int(seed_root) + int(algo_seed_offset) + run_idx
+            t0 = time.perf_counter()
+            try:
+                out = optimize(
+                    selected_ids=selected,
+                    algorithm=algorithm,
+                    scenario=scenario,
+                    water_budget_ratio=water_budget_ratio,
+                    year=year_val,
+                    options=run_options
+                )
+                std = _standardize_optimize_payload(
+                    out,
+                    selected_ids=selected,
+                    algorithm=algorithm,
+                    scenario=scenario,
+                    water_budget_ratio=water_budget_ratio,
+                    year_val=year_val,
+                    options=run_options,
+                )
+                if std.get("status") != "OK":
+                    continue
+                plan = std.get("selected_plan") if isinstance(std.get("selected_plan"), dict) else {}
+                score = _score_plan_for_calibration(plan, objective_mode)
+                record = {
+                    "run_index": run_idx,
+                    "score": float(score),
+                    "feasible": bool(plan.get("feasible", False)),
+                    "selectable": bool(plan.get("selectable", plan.get("feasible", False))),
+                    "recommendation_status": str(plan.get("recommendation_status") or std.get("recommendation_status") or ""),
+                    "diversity": plan.get("diversity") if isinstance(plan.get("diversity"), dict) else std.get("diversity"),
+                    "total_water_m3": safe_float(plan.get("total_water_m3", 0.0), 0.0),
+                    "total_profit_tl": safe_float(plan.get("total_profit_tl", 0.0), 0.0),
+                    "tl_per_m3": safe_float(plan.get("tl_per_m3", 0.0), 0.0),
+                    "runtime": float(time.perf_counter() - t0),
+                }
+                std["_optimize_run_record"] = record
+                run_records.append(record)
+                standardized_runs.append(std)
+            except Exception:
+                continue
+
+        if not standardized_runs:
+            final_policy = _optimization_policy_from_runs(base_policy, run_records, None)
+            return jsonify({
+                "status": "ERROR",
+                "message": "Optimizasyon kosularindan standart karar paketi uretilemedi.",
+                "where": "api_optimize",
+                "optimization_run_policy": final_policy,
+            }), 500
+
+        feasible_runs = [r for r in standardized_runs if bool((r.get("_optimize_run_record") or {}).get("feasible")) and bool((r.get("_optimize_run_record") or {}).get("selectable"))]
+        candidate_runs = feasible_runs if feasible_runs else standardized_runs
+        chosen = max(candidate_runs, key=lambda r: safe_float((r.get("_optimize_run_record") or {}).get("score", -1e100), -1e100))
+        selected_record = chosen.get("_optimize_run_record") if isinstance(chosen.get("_optimize_run_record"), dict) else None
+        final_policy = _optimization_policy_from_runs(base_policy, run_records, selected_record)
+        final_policy["selection_rule"] = "Ana onerı uygulanabilir ve secilebilir kosular arasindan hedef fonksiyon skoruna gore secilir; uygulanabilir kosu yoksa durum acikca partial/no_feasible olarak raporlanir."
+        chosen["optimization_run_policy"] = final_policy
+        chosen.pop("_optimize_run_record", None)
+        return jsonify(chosen)
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e), "where": "api_optimize"}), 500
 
@@ -9802,6 +10556,7 @@ def api_benchmark():
             max_seconds = max(60.0, min(900.0, max_seconds))
         else:
             max_seconds = max(20.0, min(90.0, max_seconds))
+        enforce_time_budget = benchmark_mode == "fast"
 
         # Fast mode keeps the UI responsive; detailed mode is for expert/academic review.
         if benchmark_mode == "detailed":
@@ -9814,6 +10569,47 @@ def api_benchmark():
             min_depth = 3
             max_depth = 18
             max_population = 36
+
+        benchmark_matrix_problem = None
+        benchmark_candidate_builds = 0
+        selected_parcels_for_benchmark: List[Dict[str, Any]] = []
+        try:
+            base_parcels_for_benchmark = load_parcels()
+            custom_parcels_for_benchmark = base_opts.get("customParcels") if isinstance(base_opts.get("customParcels"), list) else []
+            all_parcels_for_benchmark = merge_frontend_custom_parcels(base_parcels_for_benchmark, custom_parcels_for_benchmark)
+            selected_norm_for_benchmark = [normalize_parcel_id(x) for x in (selected or [])]
+            selected_parcels_for_benchmark = [
+                p for p in all_parcels_for_benchmark
+                if (not selected_norm_for_benchmark) or normalize_parcel_id(p.get("id")) in selected_norm_for_benchmark
+            ]
+        except Exception:
+            selected_parcels_for_benchmark = []
+
+        can_use_matrix_benchmark = bool(
+            scenario_type == "single"
+            and str(base_opts.get("seasonSource") or "s1").strip().lower() != "s2"
+            and selected_parcels_for_benchmark
+        )
+        if can_use_matrix_benchmark:
+            try:
+                benchmark_matrix_problem = _matrix_build_problem(
+                    selected_parcels_for_benchmark,
+                    scenario,
+                    water_budget_ratio,
+                    year=year_val,
+                    options=base_opts,
+                )
+                if isinstance(benchmark_matrix_problem, dict):
+                    benchmark_matrix_problem["benchmark_fast"] = bool(benchmark_mode == "fast")
+                benchmark_candidate_builds = 1 if benchmark_matrix_problem is not None else 0
+            except Exception:
+                benchmark_matrix_problem = None
+                benchmark_candidate_builds = 0
+        results["benchmark_execution"] = {
+            "run_level": "matrix_fast" if benchmark_matrix_problem is not None else "standard_payload_fallback",
+            "candidate_matrix_build_count": int(benchmark_candidate_builds),
+            "standard_payload_scope": "best_run_only" if benchmark_matrix_problem is not None else "each_run_fallback",
+        }
 
         # Optional baseline (current) – useful when UI scenario was "mevcut".
         if include_baseline:
@@ -10060,11 +10856,14 @@ def api_benchmark():
             nadas_ratios = []
             sec_parcel_rates = []
             sec_area_vals = []
+            diversity_penalties = []
+            diversity_feasible_vals = []
             times = []
             infeasible = 0
             errors = 0
 
             best_out: Optional[Dict[str, Any]] = None
+            best_sol_for_payload: Optional[List[int]] = None
             best_score = -1e100
 
             s_low = str(scenario or "").lower()
@@ -10079,20 +10878,21 @@ def api_benchmark():
             # runs are comparable without collapsing into identical pseudo-random streams.
             algo_seed_offset = {"GA": 0, "ABC": 10000, "ACO": 20000}.get(algo, 0)
 
-            # Allocate a fair slice of the remaining time budget to this algorithm.
+            # In fast preview we keep a response-time budget. In detailed/academic mode
+            # the benchmark must execute the requested repeat_count x algorithms count.
             elapsed_total = time.perf_counter() - started_at
             remaining_total = max(0.0, max_seconds - elapsed_total)
             algos_left = max(1, len(algos) - algo_idx)
             # Minimum 8s per algorithm slice; if the total is low, still allow at least 1 run.
-            algo_budget = max(8.0, remaining_total / float(algos_left)) if remaining_total > 0 else 0.0
+            algo_budget = max(8.0, remaining_total / float(algos_left)) if enforce_time_budget and remaining_total > 0 else 0.0
             algo_started = time.perf_counter()
 
             for i in range(repeats):
-                # Per-algorithm time budget guard. Ensure every algorithm gets at least 1 attempt.
-                if i > 0 and algo_budget > 0 and (time.perf_counter() - algo_started) > algo_budget:
+                # Fast preview may return partial results; detailed/academic mode must not
+                # silently stop at 1 run per algorithm and call 3/90 a benchmark.
+                if enforce_time_budget and i > 0 and algo_budget > 0 and (time.perf_counter() - algo_started) > algo_budget:
                     break
-                # Also guard total budget, but allow the first run per algorithm.
-                if i > 0 and (time.perf_counter() - started_at) > max_seconds:
+                if enforce_time_budget and i > 0 and (time.perf_counter() - started_at) > max_seconds:
                     break
                 opts = dict(base_opts)
                 # ensure benchmark runs quickly and consistently
@@ -10114,6 +10914,94 @@ def api_benchmark():
                 opts["seed"] = int(seed_root) + int(algo_seed_offset) + int(i)
                 t0 = time.perf_counter()
                 try:
+                    if benchmark_matrix_problem is not None:
+                        if algo == "GA":
+                            sol, run_meta = _matrix_ga_optimize(
+                                benchmark_matrix_problem,
+                                seed=opts.get("seed"),
+                                pop_size=int(opts.get("popSize", speed_defaults["popSize"])),
+                                generations=int(opts.get("generations", speed_defaults["generations"])),
+                                cx_rate=float(opts.get("cxRate", 0.72) or 0.72),
+                                mut_rate=float(opts.get("mutRate", 0.05) or 0.05),
+                            )
+                        elif algo == "ABC":
+                            sol, run_meta = _matrix_abc_optimize(
+                                benchmark_matrix_problem,
+                                seed=opts.get("seed"),
+                                food_sources=int(opts.get("foodSources", speed_defaults["foodSources"])),
+                                cycles=int(opts.get("cycles", speed_defaults["cycles"])),
+                                limit=int(opts.get("limit", 10) or 10),
+                            )
+                        else:
+                            sol, run_meta = _matrix_aco_optimize(
+                                benchmark_matrix_problem,
+                                seed=opts.get("seed"),
+                                ants=int(opts.get("ants", speed_defaults["ants"])),
+                                iterations=int(opts.get("iterations", speed_defaults["iterations"])),
+                                rho=float(opts.get("rho", 0.22) or 0.22),
+                                q=float(opts.get("q", 1.0) or 1.0),
+                            )
+                        score, run_metrics = _matrix_eval_solution(benchmark_matrix_problem, sol)
+                        dt = time.perf_counter() - t0
+                        times.append(float(dt))
+
+                        p_v = safe_float(run_metrics.get("total_profit", 0.0), 0.0)
+                        w_v = safe_float(run_metrics.get("total_water", 0.0), 0.0)
+                        e_v = safe_float(run_metrics.get("efficiency", 0.0), 0.0)
+                        run_invalid = bool(w_v > safe_float(benchmark_matrix_problem.get("budget", 0.0), 0.0) + 1e-6)
+                        if run_invalid:
+                            infeasible += 1
+                        if (not np.isfinite(w_v)) or (w_v >= 1e8) or (w_v < 0):
+                            infeasible += 1
+                            continue
+                        if (not np.isfinite(p_v)) or (p_v < 0 and score_mode == "water_saving"):
+                            p_v = 0.0
+                        if (not np.isfinite(e_v)) or (e_v < 0) or (e_v > 1e9):
+                            e_v = 0.0
+
+                        parts = []
+                        plan_map_fast: Dict[str, Tuple[str, str]] = {}
+                        nadas_area = 0.0
+                        total_area_fast = 0.0
+                        for pi, parcel_problem in enumerate(benchmark_matrix_problem.get("parcels", [])):
+                            opts_fast = parcel_problem.get("options") or []
+                            if not opts_fast:
+                                continue
+                            choice_idx = int(sol[pi]) if pi < len(sol) else 0
+                            choice_idx = max(0, min(choice_idx, len(opts_fast) - 1))
+                            opt_fast = opts_fast[choice_idx]
+                            pid_fast = str(parcel_problem.get("id") or "")
+                            crop_fast = str(opt_fast.get("name") or "")
+                            area_fast = safe_float(opt_fast.get("area_da", 0.0), 0.0)
+                            total_area_fast += max(0.0, area_fast)
+                            if canonical_crop_key(crop_fast) == FALLOW:
+                                nadas_area += max(0.0, area_fast)
+                            parts.append(f"{pid_fast}:{crop_fast}|")
+                            plan_map_fast[pid_fast] = (crop_fast, "")
+                        parts.sort()
+                        sig = ";".join(parts)
+                        sig_core = sig.replace(FALLOW, "")
+                        sigs.append(sig)
+                        sigs_core.append(sig_core)
+                        plan_maps.append(plan_map_fast)
+                        nadas_ratios.append(float(nadas_area / max(1e-9, total_area_fast)))
+                        sec_parcel_rates.append(0.0)
+                        sec_area_vals.append(0.0)
+
+                        if float(score) > best_score:
+                            best_score = float(score)
+                            best_sol_for_payload = [int(x) for x in sol]
+
+                        runs.append({
+                            "total_profit_tl": float(p_v),
+                            "total_water_m3": float(w_v),
+                            "efficiency_tl_per_m3": float(e_v),
+                            "signature": sig,
+                            "diversity": None,
+                            "recommendation_status": None,
+                        })
+                        continue
+
                     out = optimize(
                         selected_ids=selected,
                         algorithm=algo,
@@ -10137,13 +11025,19 @@ def api_benchmark():
                     if out.get("status") != "OK":
                         errors += 1
                         continue
-                    if not bool(out.get("feasible", True)):
-                        infeasible += 1
-
                     selected_plan = out.get("selected_plan") if isinstance(out.get("selected_plan"), dict) else {}
+                    run_invalid = not bool(out.get("feasible", True))
+                    if selected_plan and (not bool(selected_plan.get("feasible", True)) or not bool(selected_plan.get("selectable", True))):
+                        run_invalid = True
+                    if run_invalid:
+                        infeasible += 1
                     p_v = safe_float(selected_plan.get("total_profit_tl", out.get("total_profit_tl", 0.0)), 0.0)
                     w_v = safe_float(selected_plan.get("total_water_m3", out.get("total_water_m3", 0.0)), 0.0)
                     e_v = safe_float(selected_plan.get("tl_per_m3", out.get("efficiency_tl_per_m3", 0.0)), 0.0)
+                    div_v = selected_plan.get("diversity") if isinstance(selected_plan.get("diversity"), dict) else out.get("diversity")
+                    if isinstance(div_v, dict):
+                        diversity_penalties.append(safe_float(div_v.get("diversity_penalty", 0.0), 0.0))
+                        diversity_feasible_vals.append(1.0 if bool(div_v.get("diversity_feasible", False)) else 0.0)
                     # Treat extreme or non-finite totals as infeasible (usually caused by selecting missing/unsupported cells filled with W=1e9).
                     if (not np.isfinite(w_v)) or (w_v >= 1e8) or (w_v < 0):
                         infeasible += 1
@@ -10171,6 +11065,10 @@ def api_benchmark():
                         score = p_v - (0.02 * w_v)
                     else:
                         score = (e_v * 1000.0) + (0.00008 * p_v) - (0.015 * w_v)
+                    try:
+                        score = _score_plan_for_calibration(selected_plan, score_mode)
+                    except Exception:
+                        pass
                     if score > best_score:
                         best_score = float(score)
                         best_out = out
@@ -10180,6 +11078,8 @@ def api_benchmark():
                         "total_water_m3": float(w_v),
                         "efficiency_tl_per_m3": float(e_v),
                         "signature": sig,
+                        "diversity": div_v if isinstance(div_v, dict) else None,
+                        "recommendation_status": selected_plan.get("recommendation_status", out.get("recommendation_status")),
                     })
                 except Exception:
                     dt = time.perf_counter() - t0
@@ -10221,6 +11121,26 @@ def api_benchmark():
             except Exception:
                 pairwise_plan_distances = []
 
+            if benchmark_matrix_problem is not None and best_sol_for_payload is not None:
+                try:
+                    best_raw = _matrix_solution_to_payload(benchmark_matrix_problem, best_sol_for_payload, algo)
+                    best_out = _standardize_optimize_payload(
+                        best_raw,
+                        selected_ids=selected,
+                        algorithm=algo,
+                        scenario=scenario,
+                        water_budget_ratio=water_budget_ratio,
+                        year_val=year_val,
+                        options=base_opts,
+                    )
+                    best_selected_for_div = best_out.get("selected_plan") if isinstance(best_out.get("selected_plan"), dict) else {}
+                    div_best = best_selected_for_div.get("diversity") if isinstance(best_selected_for_div.get("diversity"), dict) else best_out.get("diversity")
+                    if isinstance(div_best, dict):
+                        diversity_penalties.append(safe_float(div_best.get("diversity_penalty", 0.0), 0.0))
+                        diversity_feasible_vals.append(1.0 if bool(div_best.get("diversity_feasible", False)) else 0.0)
+                except Exception:
+                    best_out = None
+
             best_pack = None
             if isinstance(best_out, dict):
                 try:
@@ -10255,6 +11175,11 @@ def api_benchmark():
                         "total_water_m3": safe_float(best_selected.get("total_water_m3", best_out.get("total_water_m3", 0.0)), 0.0),
                         "efficiency_tl_per_m3": safe_float(best_selected.get("tl_per_m3", best_out.get("efficiency_tl_per_m3", 0.0)), 0.0),
                         "status": best_selected.get("status", "ok"),
+                        "feasible": bool(best_selected.get("feasible", best_out.get("feasible", True))),
+                        "selectable": bool(best_selected.get("selectable", best_selected.get("feasible", best_out.get("feasible", True)))),
+                        "recommendation_status": best_selected.get("recommendation_status", best_out.get("recommendation_status")),
+                        "diversity": best_selected.get("diversity") if isinstance(best_selected.get("diversity"), dict) else best_out.get("diversity"),
+                        "diversity_repair_applied": bool(best_selected.get("diversity_repair_applied", False)),
                         "signature": _plan_signature(best_out),
                         "crop_area": _crop_area_summary(best_out),
                         "nadas": _nadas_metrics(best_out),
@@ -10268,23 +11193,40 @@ def api_benchmark():
             feasible_runs = int(max(0, successful_runs - infeasible))
             success_rate = float(successful_runs / attempted_runs) if attempted_runs > 0 else 0.0
             feasible_rate = float(feasible_runs / successful_runs) if successful_runs > 0 else 0.0
+            feasible_rate = max(0.0, min(1.0, feasible_rate))
             profit_stats = _stats(prof)
             water_stats = _stats(wat)
             efficiency_stats = _stats(eff)
             runtime_stats = _stats(times)
             plan_distance_stats = _stats(pairwise_plan_distances)
+            diversity_stats = _stats(diversity_penalties)
+            best_diversity = {}
+            if isinstance(best_pack, dict) and isinstance(best_pack.get("diversity"), dict):
+                best_diversity = best_pack.get("diversity") or {}
             plan_diversity = float(unique_patterns / successful_runs) if successful_runs > 0 else None
-            completion_status = "completed" if (successful_runs == repeats and errors == 0) else f"kismi tamamlandi: {successful_runs}/{repeats}"
+            completion_kind = _completion_status_kind(successful_runs, repeats)
+            completion_status = _completion_status_label(successful_runs, repeats)
+            algo_partial = bool(successful_runs != repeats or errors > 0)
             metric_warnings = []
             if successful_runs <= 1:
                 metric_warnings.append("CV ve standart sapma icin en az iki basarili kosu gerekir.")
             if successful_runs > 1 and not pairwise_plan_distances:
                 metric_warnings.append("Plan farki hesaplanamadi; yeterli karsilastirilabilir plan imzasi yok.")
+            if best_diversity.get("warnings"):
+                metric_warnings.extend([str(x) for x in (best_diversity.get("warnings") or [])[:3]])
             results["algorithms"][algo] = {
                 "run_count": successful_runs,
                 "requested_runs": repeats,
                 "completion_status": completion_status,
-                "partial": bool(successful_runs != repeats or errors > 0),
+                "completion_status_kind": completion_kind,
+                "partial": algo_partial,
+                "partial_status": "partial" if algo_partial else "completed",
+                "partial_reason": (
+                    f"Fast mod sure butcesi nedeniyle {successful_runs}/{repeats} kosu tamamlandi."
+                    if algo_partial and benchmark_mode == "fast" else
+                    f"Detayli modda {successful_runs}/{repeats} kosu tamamlandi; hata veya sure siniri olabilir."
+                    if algo_partial else None
+                ),
                 "best_profit": float(max(prof)) if prof else None,
                 "mean_profit": profit_stats.get("mean") if prof else None,
                 "std_profit": profit_stats.get("std") if prof else None,
@@ -10314,6 +11256,18 @@ def api_benchmark():
                 "nadas_ratio": _stats(nadas_ratios),
                 "secondary_parcel_rate": _stats(sec_parcel_rates),
                 "secondary_area_da": _stats(sec_area_vals),
+                "diversity": best_diversity,
+                "top_crop": best_diversity.get("top_crop"),
+                "top_crop_area_da": best_diversity.get("top_crop_area_da"),
+                "top_crop_share": best_diversity.get("top_crop_share"),
+                "top3_crop_share": best_diversity.get("top3_crop_share"),
+                "hhi": best_diversity.get("hhi"),
+                "diversity_penalty": best_diversity.get("diversity_penalty"),
+                "diversity_penalty_stats": diversity_stats,
+                "diversity_feasible": best_diversity.get("diversity_feasible"),
+                "diversity_feasible_rate": float(statistics.mean(diversity_feasible_vals)) if diversity_feasible_vals else None,
+                "recommendation_status": (best_pack or {}).get("recommendation_status") if isinstance(best_pack, dict) else None,
+                "warnings": best_diversity.get("warnings", []),
                 "plan_distance_pct": plan_distance_stats,
                 "failed_runs": int(max(0, attempted_runs - successful_runs)),
                 "best": best_pack,
@@ -10323,9 +11277,21 @@ def api_benchmark():
         completed_total = int(sum(safe_int(v.get("run_count", 0), 0) for v in results.get("algorithms", {}).values()))
         requested_total = int(repeats * max(1, len(algos)))
         partial_algorithms = [a for a, v in results.get("algorithms", {}).items() if bool(v.get("partial"))]
+        partial_result = bool(partial_algorithms or completed_total != requested_total)
         results["completed_runs"] = completed_total
         results["requested_total_runs"] = requested_total
-        results["completion_status"] = "completed" if not partial_algorithms and completed_total == requested_total else f"kismi tamamlandi: {completed_total}/{requested_total}"
+        results["completion_status_kind"] = _completion_status_kind(completed_total, requested_total)
+        results["completion_status"] = _completion_status_label(completed_total, requested_total)
+        results["partial"] = partial_result
+        results["partial_status"] = "partial" if partial_result else "completed"
+        results["partial_reason"] = (
+            f"Fast mod sure butcesi nedeniyle {completed_total}/{requested_total} kosu tamamlandi."
+            if partial_result and benchmark_mode == "fast" else
+            f"Detayli modda {completed_total}/{requested_total} kosu tamamlandi; hata veya sure siniri olabilir."
+            if partial_result else None
+        )
+        results["algorithm_count"] = len(algos)
+        results["expected_total_runs"] = requested_total
         results["partial_algorithms"] = partial_algorithms
         valid_algos = {
             a: v for a, v in results.get("algorithms", {}).items()
@@ -10355,21 +11321,242 @@ def api_benchmark():
                     return (mean_profit, feasible, -cv)
                 best_algo, best_metrics = sorted(valid_algos.items(), key=_algo_rank, reverse=True)[0]
                 interpretation = f"Secili kosullarda {best_algo} algoritmasi daha yuksek ortalama kar/uygulanabilirlik ve daha dusuk degiskenlik dengesinde one cikmistir."
+        if results.get("completion_status_kind") == "partial":
+            leader = None
+            try:
+                leader = sorted(
+                    valid_algos.items(),
+                    key=lambda item: (
+                        safe_float(item[1].get("mean_profit", 0.0), 0.0),
+                        safe_float(item[1].get("feasible_rate", 0.0), 0.0),
+                        -safe_float(item[1].get("cv", 999.0), 999.0),
+                    ),
+                    reverse=True,
+                )[0][0] if valid_algos else None
+            except Exception:
+                leader = None
+            interpretation = (
+                f"Tamamlanan kosulara gore {leader} one cikmaktadir; ancak tum kosular tamamlanmadigi icin bu sonuc on degerlendirme niteligindedir."
+                if leader else
+                "Tamamlanan kosular kisitli oldugu icin sonuc on degerlendirme niteligindedir; kesin en iyi algoritma dili kullanilmamalidir."
+            )
         results["interpretation"] = interpretation
         results["diagnostics"] = {
             "benchmark_is_backend_computed": True,
             "fast_mode": bool(benchmark_mode == "fast"),
-            "partial": bool(partial_algorithms or completed_total != requested_total),
+            "partial": partial_result,
+            "partial_status": results["partial_status"],
+            "partial_reason": results["partial_reason"],
             "completion_status": results["completion_status"],
+            "completed_runs": completed_total,
+            "requested_total_runs": requested_total,
             "objective_mode": objective_mode,
             "scenario_type": scenario_type,
             "warnings": (
                 ["Fast mod aktif; akademik varsayilan 30 kosu yerine hizli kosu ayarlari kullanildi."] if benchmark_mode == "fast" else []
-            ) + (["Tum kosular tamamlanmadi; sonuc kismi olarak yorumlanmalidir."] if partial_algorithms or completed_total != requested_total else []),
+            ) + ([results["partial_reason"] or "Tum kosular tamamlanmadi; sonuc kismi olarak yorumlanmalidir."] if partial_result else []),
         }
         return jsonify(results)
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e), "where": "api_benchmark"}), 500
+
+
+@app.post("/api/run_count_calibration")
+def api_run_count_calibration():
+    """Compare 10/15/30/50/100 repeat counts for GA/ABC/ACO under the same input.
+
+    This endpoint is intentionally separate from /api/optimize: it justifies the repeat
+    policy academically by comparing stability, feasibility, marginal gain and runtime.
+    """
+    try:
+        payload = request.get_json(silent=True) or {}
+        selected = payload.get("selectedParcelIds") or payload.get("selected") or []
+        if isinstance(selected, str):
+            selected = [normalize_parcel_id(s) for s in selected.split(",") if str(s).strip()]
+        elif not isinstance(selected, list):
+            selected = list(selected) if selected else []
+
+        scenario = str(payload.get("scenario", "water_saving") or "water_saving")
+        water_budget_ratio = safe_float(payload.get("waterBudgetRatio", 1.0), 1.0)
+        year_raw = payload.get("year", None)
+        year_val = None if year_raw in (None, "", "none", "null") else safe_int(year_raw, 0)
+        if year_val == 0:
+            year_val = None
+
+        algos = payload.get("algorithms") or ["GA", "ABC", "ACO"]
+        algos = [str(a).upper() for a in algos if str(a).upper() in ("GA", "ABC", "ACO")]
+        if not algos:
+            algos = ["GA", "ABC", "ACO"]
+        candidates = payload.get("repeatCandidates") or RUN_COUNT_CALIBRATION_CANDIDATES
+        candidates = [int(x) for x in candidates if int(x) in RUN_COUNT_CALIBRATION_CANDIDATES]
+        if not candidates:
+            candidates = RUN_COUNT_CALIBRATION_CANDIDATES[:]
+
+        base_opts = payload.get("options") if isinstance(payload.get("options"), dict) else {}
+        scenario_type = _standard_scenario_type(base_opts, {})
+        objective_mode = _standard_objective_mode(scenario)
+        seed_root = payload.get("baseSeed", None)
+        try:
+            seed_root = int(seed_root) if seed_root not in (None, "", "none", "null") else int(time.time() * 1000) % 1000000
+        except Exception:
+            seed_root = int(time.time() * 1000) % 1000000
+        try:
+            max_seconds = float(payload.get("maxSeconds", 420))
+        except Exception:
+            max_seconds = 420.0
+        max_seconds = max(60.0, min(1800.0, max_seconds))
+
+        speed_defaults = {"generations": 10, "popSize": 14, "cycles": 12, "foodSources": 12, "ants": 10, "iterations": 12}
+        started = time.perf_counter()
+        rows: List[Dict[str, Any]] = []
+        previous_mean_by_algo: Dict[str, float] = {}
+        requested_total = int(sum(candidates) * len(algos))
+        completed_total = 0
+        warnings: List[str] = []
+
+        for repeat_count in candidates:
+            for algo in algos:
+                scores: List[float] = []
+                profits: List[float] = []
+                waters: List[float] = []
+                effs: List[float] = []
+                runtimes: List[float] = []
+                signatures: List[str] = []
+                feasible_count = 0
+                best_score = -1e100
+                best_profit = 0.0
+                requested_runs = int(repeat_count)
+                for i in range(requested_runs):
+                    if completed_total > 0 and (time.perf_counter() - started) > max_seconds:
+                        break
+                    opts = dict(base_opts)
+                    opts.update({k: opts.get(k, v) or v for k, v in speed_defaults.items()})
+                    opts["riskMode"] = opts.get("riskMode", "none")
+                    opts["seed"] = int(seed_root) + {"GA": 0, "ABC": 10000, "ACO": 20000}.get(algo, 0) + (repeat_count * 1000) + i
+                    t0 = time.perf_counter()
+                    try:
+                        out = optimize(
+                            selected_ids=selected,
+                            algorithm=algo,
+                            scenario=scenario,
+                            water_budget_ratio=water_budget_ratio,
+                            year=year_val,
+                            options=opts,
+                        )
+                        out = _standardize_optimize_payload(
+                            out,
+                            selected_ids=selected,
+                            algorithm=algo,
+                            scenario=scenario,
+                            water_budget_ratio=water_budget_ratio,
+                            year_val=year_val,
+                            options=opts,
+                        )
+                        plan = out.get("selected_plan") if isinstance(out.get("selected_plan"), dict) else {}
+                        score = _score_plan_for_calibration(plan, objective_mode)
+                        profit = safe_float(plan.get("total_profit_tl", 0.0), 0.0)
+                        water = safe_float(plan.get("total_water_m3", 0.0), 0.0)
+                        eff = safe_float(plan.get("tl_per_m3", 0.0), 0.0)
+                        if bool(plan.get("feasible", False)):
+                            feasible_count += 1
+                        signatures.append(_selected_plan_signature(plan))
+                        scores.append(float(score))
+                        profits.append(float(profit))
+                        waters.append(float(water))
+                        effs.append(float(eff))
+                        runtimes.append(float(time.perf_counter() - t0))
+                        completed_total += 1
+                        if score > best_score:
+                            best_score = float(score)
+                            best_profit = float(profit)
+                    except Exception:
+                        runtimes.append(float(time.perf_counter() - t0))
+
+                completed_runs = len(scores)
+                unique = len(set(s for s in signatures if s))
+                dominant = 0.0
+                if signatures:
+                    counts: Dict[str, int] = {}
+                    for sig in signatures:
+                        counts[sig] = counts.get(sig, 0) + 1
+                    dominant = max(counts.values()) / max(1, len(signatures))
+                mean_score = float(statistics.mean(scores)) if scores else 0.0
+                prev_mean = previous_mean_by_algo.get(algo)
+                marginal = None
+                if prev_mean is not None and abs(prev_mean) > 1e-9:
+                    marginal = float((mean_score - prev_mean) / abs(prev_mean))
+                previous_mean_by_algo[algo] = mean_score
+                feasible_rate = max(0.0, min(1.0, feasible_count / max(1, completed_runs)))
+                cv_score = _cv(scores)
+                plan_diversity = float(unique / max(1, completed_runs)) if completed_runs else 0.0
+                stability_label = "kararlı" if feasible_rate >= 0.95 and cv_score <= 0.05 else ("kısmi" if completed_runs < requested_runs else "oynak")
+                note = "Kararlılık ve uygulanabilirlik kabul edilebilir." if stability_label == "kararlı" else "Bu tekrar düzeyi tek başına nihai akademik karar için yeterli değildir."
+                row = {
+                    "repeat_count": int(repeat_count),
+                    "algorithm": algo,
+                    "completed_runs": int(completed_runs),
+                    "requested_runs": int(requested_runs),
+                    "completion_status_kind": _completion_status_kind(completed_runs, requested_runs),
+                    "best_score": float(max(scores)) if scores else None,
+                    "mean_score": mean_score if scores else None,
+                    "median_score": _median(scores),
+                    "std_score": _std(scores),
+                    "cv_score": cv_score,
+                    "best_profit": best_profit,
+                    "mean_profit": float(statistics.mean(profits)) if profits else 0.0,
+                    "mean_water": float(statistics.mean(waters)) if waters else 0.0,
+                    "mean_tl_per_m3": float(statistics.mean(effs)) if effs else 0.0,
+                    "feasible_rate": feasible_rate,
+                    "plan_diversity": plan_diversity,
+                    "dominant_plan_rate": float(dominant),
+                    "mean_runtime_sec": float(statistics.mean(runtimes)) if runtimes else 0.0,
+                    "marginal_gain_vs_previous": marginal,
+                    "stability_label": stability_label,
+                    "recommendation_note": note,
+                }
+                rows.append(row)
+
+        selection = _select_recommended_repeat_count(rows)
+        for algo in algos:
+            key = _calibration_cache_key(selected, algo, scenario, scenario_type, year_val, water_budget_ratio)
+            RUN_COUNT_CALIBRATION_CACHE[key] = selection
+
+        by_count = {int(c): [r for r in rows if int(r.get("repeat_count", 0)) == int(c)] for c in candidates}
+        if 100 in by_count and 50 in by_count:
+            for algo in algos:
+                r50 = next((r for r in by_count[50] if r.get("algorithm") == algo), None)
+                r100 = next((r for r in by_count[100] if r.get("algorithm") == algo), None)
+                if r50 and r100:
+                    mean_gain = safe_float(r100.get("marginal_gain_vs_previous", 0.0), 0.0)
+                    if (
+                        mean_gain < 0.01
+                        or safe_float(r100.get("dominant_plan_rate", 0.0), 0.0) > 0.90
+                        or safe_float(r100.get("cv_score", 0.0), 0.0) >= safe_float(r50.get("cv_score", 0.0), 0.0)
+                    ):
+                        warnings.append("Yüksek tekrar sayısı tekil en iyi sonucu artırsa da ortalama performans/kararlılık anlamlı biçimde iyileşmediği için bu tekrar düzeyi operasyonel varsayılan olarak seçilmemiştir.")
+                        break
+
+        response = {
+            "status": "OK",
+            "mode": "run_count_calibration",
+            "calibration_candidates": RUN_COUNT_CALIBRATION_CANDIDATES,
+            "rows": rows,
+            "recommended_repeat_count": selection["recommended_repeat_count"],
+            "selection_rule": selection["selection_rule"],
+            "reason": selection["reason"],
+            "warnings": list(dict.fromkeys(warnings)),
+            "completed_runs": int(sum(int(r.get("completed_runs", 0)) for r in rows)),
+            "requested_total_runs": int(requested_total),
+            "completion_status_kind": _completion_status_kind(sum(int(r.get("completed_runs", 0)) for r in rows), requested_total),
+            "completion_status": _completion_status_label(sum(int(r.get("completed_runs", 0)) for r in rows), requested_total),
+            "elapsed_seconds": float(time.perf_counter() - started),
+            "objective_mode": objective_mode,
+            "scenario_type": scenario_type,
+            "seed_policy": "fixed+repeat+algorithm_offset",
+        }
+        return jsonify(response)
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e), "where": "api_run_count_calibration"}), 500
 
 
 # 15-year impact route removed in equal-water planning mode

@@ -8292,11 +8292,11 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
   const seedEl = document.getElementById('benchmarkSeed');
   const modeEl = document.getElementById('benchmarkModeSel');
   const benchmarkMode = (modeEl?.value === 'detailed') ? 'detailed' : 'fast';
-  const defaultRepeats = benchmarkMode === 'detailed' ? 30 : 3;
+  const defaultRepeats = benchmarkMode === 'detailed' ? 30 : 10;
   const rawRepeats = parseInt(repeatsEl?.value || String(defaultRepeats), 10) || defaultRepeats;
   const repeats = benchmarkMode === 'detailed'
     ? Math.max(10, Math.min(120, rawRepeats))
-    : Math.max(3, Math.min(12, rawRepeats));
+    : Math.max(5, Math.min(12, rawRepeats));
   const seedRaw = (seedEl?.value ?? '').toString().trim();
   const baseSeed = seedRaw === '' ? null : (parseInt(seedRaw, 10));
   const benchmarkDepth = benchmarkMode === 'detailed'
@@ -8372,6 +8372,109 @@ async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
     if(firstKey) cache.delete(firstKey);
   }
   return data;
+}
+
+async function fetchRunCountCalibrationPython(scenarioKey, seasonSourceOverride=null){
+  const scenarioMap = {
+    mevcut: 'water_efficiency',
+    current: 'water_efficiency',
+    su_tasarruf: 'water_saving',
+    maks_kar: 'max_profit',
+    su_etkin: 'water_efficiency',
+    balanced: 'water_efficiency',
+    water_efficiency: 'water_efficiency',
+    water_saving: 'water_saving',
+    max_profit: 'max_profit'
+  };
+  const seedRaw = (document.getElementById('benchmarkSeed')?.value ?? '').toString().trim();
+  const baseSeed = seedRaw === '' ? null : parseInt(seedRaw, 10);
+  const normalizedScenario = scenarioMap[scenarioKey] || 'water_efficiency';
+  const seasonSource = seasonSourceOverride || STATE.seasonSource || 's1';
+  const benchmarkScopeIds = getBenchmarkParcelIdsForRun();
+  const payload = attachCustomParcelsToPayload({
+    selectedParcelIds: benchmarkScopeIds,
+    scenario: normalizedScenario,
+    year: STATE.selectedWaterYear || null,
+    waterBudgetRatio: budgetRatioForScenarioKey(scenarioKey),
+    baseSeed,
+    algorithms: ['GA','ABC','ACO'],
+    repeatCandidates: [10, 15, 30, 50, 100],
+    maxSeconds: 420,
+    options: {
+      seasonSource,
+      scenarioType: (seasonSource === 's2' ? 'double' : 'single'),
+      twoSeason: (seasonSource === 's2'),
+      envFlowRatio: 0.10,
+      enforceDeliveryCaps: true,
+      waterQualityFilter: true,
+      waterModel: 'calib',
+      riskMode: 'none'
+    }
+  });
+  const res = await fetch('/api/run_count_calibration', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if(!res.ok){
+    const t = await res.text().catch(()=> '');
+    throw new Error('Run-count calibration API failed: '+(t || ('HTTP '+res.status)));
+  }
+  return res.json();
+}
+
+function benchmarkCompletionText(j){
+  const completed = Number(j?.completed_runs ?? 0);
+  const requested = Number(j?.requested_total_runs ?? j?.expected_total_runs ?? 0);
+  const kind = String(j?.completion_status_kind || (requested > 0 && completed < requested ? 'partial' : 'completed')).toLowerCase();
+  if(requested <= 0) return '';
+  return kind === 'partial'
+    ? `Kısmi sonuç: ${completed}/${requested} koşu tamamlandı`
+    : `Tamamlandı: ${completed}/${requested} koşu`;
+}
+
+function renderRunCountCalibrationResults(j, box=document.getElementById('benchmarkSweepResults')){
+  if(!box) return;
+  if(!j || j.status !== 'OK'){
+    box.innerHTML = '<div class="badge badge-warn">Tekrar sayısı kararlılık analizi sonucu alınamadı.</div>';
+    return;
+  }
+  const rows = Array.isArray(j.rows) ? j.rows : [];
+  const pct = (v, digits=1)=> `${fmtNum(Math.max(0, Math.min(100, Number(v||0)*100)), digits)}%`;
+  const num = (v, digits=2)=> Number.isFinite(Number(v)) ? fmtNum(Number(v), digits) : '-';
+  const note = String(j.reason || '').trim() || 'En küçük kararlı tekrar düzeyi; uygulanabilirlik, CV, marjinal iyileşme, plan çeşitliliği ve süre birlikte okunarak seçildi.';
+  const completion = benchmarkCompletionText(j);
+  const warnings = (Array.isArray(j.warnings) ? j.warnings : []).map(w=>`<li>${escapeHtml(String(w))}</li>`).join('');
+  const tableRows = rows.map(r=>{
+    const marginal = r.marginal_gain_vs_previous === null || typeof r.marginal_gain_vs_previous === 'undefined'
+      ? '-'
+      : `${fmtNum(Number(r.marginal_gain_vs_previous || 0) * 100, 2)}%`;
+    return `<tr>
+      <td><b>${escapeHtml(String(r.repeat_count ?? '-'))}</b></td>
+      <td>${escapeHtml(String(r.algorithm ?? '-'))}</td>
+      <td>${num(r.mean_score, 3)}</td>
+      <td>${num(r.best_score, 3)}</td>
+      <td>${pct(r.cv_score, 2)}</td>
+      <td>${pct(r.feasible_rate, 1)}</td>
+      <td>${num(r.plan_diversity, 0)}</td>
+      <td>${pct(r.dominant_plan_rate, 1)}</td>
+      <td>${num(r.mean_runtime_sec, 3)} sn</td>
+      <td>${marginal}</td>
+      <td>${escapeHtml(String(r.recommendation_note || r.stability_label || '-'))}</td>
+    </tr>`;
+  }).join('');
+  box.innerHTML = `<div class="benchmark-sweep-v95">
+    <div class="matrix-title">Tekrar sayısı kararlılık analizi</div>
+    <p>En uygun tekrar sayısı yalnızca en yüksek tekil sonuca göre değil; çözüm kararlılığı, uygulanabilirlik oranı, marjinal iyileşme ve çalışma süresi birlikte değerlendirilerek seçilir.</p>
+    <div class="benchmark-note"><b>Önerilen tekrar sayısı:</b> ${escapeHtml(String(j.recommended_repeat_count ?? '-'))}<br><b>Gerekçe:</b> ${escapeHtml(note)}${completion ? `<br><b>Koşu durumu:</b> ${escapeHtml(completion)}` : ''}</div>
+    ${warnings ? `<div class="benchmark-note badge-warn"><b>Uyarılar</b><ul style="margin:6px 0 0 18px;">${warnings}</ul></div>` : ''}
+    <div class="benchmark-detail-table-v97">
+      <table><thead><tr>
+        <th>Tekrar sayısı</th><th>Algoritma</th><th>Ortalama skor</th><th>En iyi skor</th><th>CV</th><th>Uygulanabilirlik</th><th>Plan çeşitliliği</th><th>Baskın plan oranı</th><th>Ortalama süre</th><th>Marjinal iyileşme</th><th>Yorum</th>
+      </tr></thead><tbody>${tableRows || '<tr><td colspan="11">Kalibrasyon verisi yok.</td></tr>'}</tbody></table>
+    </div>
+    <p><b>100 tekrar okuması:</b> Yüksek tekrar sayısı tekil en iyi sonucu artırsa da ortalama performans, CV, plan çeşitliliği ve süre anlamlı biçimde iyileşmiyorsa operasyonel varsayılan olarak seçilmez.</p>
+  </div>`;
 }
 
 // Tarayıcı içi benchmark (yedek plan)
@@ -8799,7 +8902,8 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       : 'Çözüm uzayı dar veya kısıtlar çok baskın; algoritmalar benzer desenlere yakınsıyor olabilir.');
 
   const backendInterpretation = String(j.interpretation || '').trim();
-  const leaderReason = backendInterpretation || (tiedTop.length > 1
+  const dynamicInterpretation = benchmarkDynamicInterpretation(bestAlgo, algos, rows);
+  const leaderReason = dynamicInterpretation || backendInterpretation || (tiedTop.length > 1
     ? `${tiedTop.map(x=>x.a).join(', ')} algoritmalari ayni kalite skoruna yaklasti; karar tek algoritmaya baglanmamalidir.`
     : `${bestAlgo} metriklere dayali denge skorunda one cikti.`);
 
@@ -8832,6 +8936,8 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
           `<div><b>Karşılaştırma notu:</b> ${escapeHtml(benchmarkHealth)}</div>`+
           `<div class="small muted" style="margin-top:6px;">Mevcut desen referans sütunu olarak tutulur; algoritmalar aynı veri, aynı aday ürün havuzu ve aynı su bütçesi altında kıyaslanır. Seçili parselde parsel bazlı davranış, tüm parsel görünümünde ise temsilî kurum kapsamı raporlanır.</div><div class="small muted" style="margin-top:6px;"><b>Not:</b> Buradaki başarısız koşu sayısı bir tahmin hatası değildir; yalnızca teknik olarak sonuç üretemeyen veya kısıt nedeniyle geçersiz kalan koşuları gösterir. 0 olması iyi durumdur.</div>`+
           `</div>`;
+  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Ürün çeşitliliği kontrolü:</b> Bu sürümde algoritmalar yalnızca net kâr ve su tüketimine göre değil, ürün deseninin tarımsal uygulanabilirliği açısından da değerlendirilmektedir. Ürün yoğunlaşması göstergeleri, önerilen değişiklik yapılan alanlar üzerinden hesaplanmaktadır. Bu nedenle oranlar toplam havza alanı değil, değişen öneri alanı içindeki dağılımı ifade eder. Öneri planı içinde hesaplanan alan payı ayrıca mevcutsa uyarı içinde gösterilir.</div>`;
+  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Performans notu:</b> Yüksek tekrar sayıları hesaplama süresini artırabilir. Örneğin 100 tekrar, GA/ACO/ABC için toplam 300 koşu anlamına gelir.</div>`;
   html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Benchmark yorumu:</b> ${escapeHtml(leaderReason)}</div>`;
 
   if(j.baseline){
@@ -8879,6 +8985,8 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     '<th style="text-align:right;">Std / CV</th>'+
     '<th style="text-align:right;">Plan farkı</th>'+
     '<th style="text-align:right;">Uygulanabilirlik</th>'+
+    '<th style="text-align:right;">Baskın ürün</th>'+
+    '<th style="text-align:right;">İlk 3 / HHI</th>'+
     (isDoubleBenchmark ? '<th style="text-align:right;">2. ürün oranı</th><th style="text-align:right;">2. ürün alanı</th>' : '')+
     '<th style="text-align:right;">Süre</th>'+
     '<th style="text-align:right;">Desen</th>'+
@@ -8893,6 +9001,15 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const secParcelTxt = `${fmtNum((Number(r?.secondary_parcel_rate?.mean||0))*100,1)}%`;
     const secAreaTxt = `${fmtNum((Number(r?.secondary_area_da?.mean||0)),1)} da`;
     const failedRuns = Number(r.failed_runs ?? Math.max(0, Number(r.attempted_runs||0) - Number(r.successful_runs||r.runs||0)));
+    const div = r.diversity || {};
+    const divWarn = diversityWarningHtml(
+      div,
+      r.recommendation_status || div.recommendation_status,
+      !!r.best?.diversity_repair_applied,
+      { feasible: Number(r.feasible_rate || 0) >= 0.999, selectable: true }
+    );
+    const topCropTxt = div.top_crop ? `${prettyCropName(div.top_crop)} (${diversityPercentText(div.top_crop_share)})` : '-';
+    const statusTxt = diversityStatusLabel(r.recommendation_status);
     html += '<tr>'+
       `<td><b>${escapeHtml(a)}</b><div class="small muted">başarılı: ${successTxt}</div></td>`+
       `<td style="text-align:right;">${fmtNum(p.mean,0)}</td>`+
@@ -8903,6 +9020,8 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       `<td style="text-align:right;">${fmtNum(p.std,0)} / ${fmtNum((Number(p.cv||0))*100,1)}%</td>`+
       `<td style="text-align:right;">${fmtNum(pd.mean,1)}%</td>`+
       `<td style="text-align:right;">${feasibleTxt}</td>`+
+      `<td style="text-align:right;">${escapeHtml(topCropTxt)}<div class="small muted">${escapeHtml(statusTxt)}</div>${divWarn}</td>`+
+      `<td style="text-align:right;">${div.top3_crop_share != null ? diversityPercentText(div.top3_crop_share) : '-'} / ${div.hhi != null ? fmtNum(div.hhi,3) : '-'}</td>`+
       (isDoubleBenchmark ? `<td style="text-align:right;">${secParcelTxt}</td><td style="text-align:right;">${secAreaTxt}</td>` : '')+
       `<td style="text-align:right;">${fmtNum(t.mean,2)} sn</td>`+
       `<td style="text-align:right;">${escapeHtml(String(r.unique_patterns ?? 0))}</td>`+
@@ -8932,12 +9051,20 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
       const pd = algos[a]?.plan_distance_pct || {};
       const secondaryBlock = isDoubleBenchmark ? `<div class="small" style="margin-top:6px;"><b>2. ürün</b><br/>${secList}</div>` : '';
       const secondaryMeta = isDoubleBenchmark ? ` • 2. ürün alanı: ${fmtNum((algos[a]?.secondary_area_da?.mean||0),1)} da` : '';
+      const bestRecommendationStatus = best.recommendation_status || algos[a]?.recommendation_status || best.diversity?.recommendation_status;
+      const divBlock = diversityWarningHtml(
+        best.diversity,
+        bestRecommendationStatus,
+        !!best.diversity_repair_applied,
+        { feasible: best.feasible !== false, selectable: best.selectable !== false }
+      );
       pHtml += '<div class="stat benchmark-pattern-card pattern-compare-card" style="min-width:240px;">'+
         `<div class="stat-label"><b>${escapeHtml(a)}</b> - en iyi koşu</div>`+
         `<div class="small" style="margin-top:6px;"><b>1. ürün</b><br/>${primList}</div>`+
         secondaryBlock+
         `<div class="small" style="opacity:.88;margin-top:8px;">Kâr: <b>${fmtNum(best.total_profit_tl,0)}</b> TL • Su: <b>${fmtNum(best.total_water_m3,0)}</b> m³ • TL/m³: <b>${fmtNum(best.efficiency_tl_per_m3,2)}</b></div>`+
         `<div class="small muted" style="margin-top:4px;">Tekrar içi plan farkı: ${fmtNum(pd.mean,1)}%${secondaryMeta}</div>`+
+        divBlock+
         warn+
       '</div>';
     }
@@ -9222,6 +9349,120 @@ function normalizeBackendRecommendationPayload(parcelResult, parcelRef, currentT
   };
 }
 
+function diversityPercentText(v){
+  return `${fmtNum(Math.max(0, safeNum(v, 0)) * 100, 1)}%`;
+}
+
+const INFEASIBLE_PLAN_WARNING_TEXT = 'Bu seçenek su/uygunluk kısıtları altında uygulanabilir değildir.';
+const DIVERSITY_FEASIBLE_WARNING_TEXT = 'Bu seçenek su/uygunluk açısından uygulanabilir görünmektedir; ancak ürün yoğunlaşması nedeniyle dikkatli değerlendirilmelidir.';
+
+function isInfeasiblePlanWarningText(text){
+  const s = String(text || '').toLowerCase();
+  return s.includes('su/uygunluk') && s.includes('uygulanabilir değildir');
+}
+
+function diversityStatusLabel(status){
+  const s = String(status || '').toLowerCase();
+  if(s === 'recommended') return 'Önerilebilir';
+  if(s === 'recommended_with_diversity_warning') return 'Çeşitlilik uyarılı';
+  if(s === 'not_recommended_due_to_diversity') return 'Çeşitlilik nedeniyle tartışmalı';
+  if(s === 'not_feasible') return 'Uygulanabilir değil';
+  return status || '-';
+}
+
+function diversityWarningHtml(diversity, status, repairApplied=false, feasibility={}){
+  if(!diversity || typeof diversity !== 'object') return '';
+  const statusKey = String(status || '').toLowerCase();
+  const explicitFeasible = feasibility && Object.prototype.hasOwnProperty.call(feasibility, 'feasible') ? feasibility.feasible : undefined;
+  const explicitSelectable = feasibility && Object.prototype.hasOwnProperty.call(feasibility, 'selectable') ? feasibility.selectable : undefined;
+  const diversityOnlyStatus = statusKey === 'recommended_with_diversity_warning' || statusKey === 'not_recommended_due_to_diversity';
+  const actualInfeasible = explicitFeasible === false || (explicitSelectable === false && !diversityOnlyStatus) || (
+    statusKey === 'not_feasible' && explicitFeasible !== true && explicitSelectable !== true
+  );
+  const topShare = safeNum(diversity.top_crop_share, 0);
+  const topLimit = safeNum(diversity.max_crop_share_limit, 0.25);
+  const top3Share = safeNum(diversity.top3_crop_share, 0);
+  const top3Limit = safeNum(diversity.max_top3_share_limit, 0.65);
+  const diversityIssue = diversity.diversity_feasible === false
+    || statusKey === 'recommended_with_diversity_warning'
+    || statusKey === 'not_recommended_due_to_diversity'
+    || topShare > topLimit
+    || top3Share > top3Limit;
+  const items = [];
+  if(actualInfeasible){
+    items.push(INFEASIBLE_PLAN_WARNING_TEXT);
+  }else if(diversityIssue){
+    if(statusKey === 'not_recommended_due_to_diversity'){
+      items.push('Bu seçenek su/uygunluk açısından uygulanabilir olabilir; ancak ürün yoğunlaşması nedeniyle tartışmalı alternatif olarak değerlendirilmelidir.');
+    }else{
+      items.push(DIVERSITY_FEASIBLE_WARNING_TEXT);
+    }
+  }
+  if(topShare > topLimit){
+    items.push(`Ürün yoğunlaşması uyarısı: ${prettyCropName(diversity.top_crop || '-')}, değişen öneri alanının ${diversityPercentText(topShare)}’ını kaplamaktadır. Bu değer ${diversityPercentText(topLimit)} sınırını aşmaktadır.`);
+    const totalShare = safeNum(diversity.top_crop_share_total, NaN);
+    const changedArea = safeNum(diversity.changed_area_da, 0);
+    const totalArea = safeNum(diversity.total_plan_area_da, 0);
+    if(Number.isFinite(totalShare) && totalShare > 0 && totalArea > changedArea + 1e-6){
+      items.push(`Öneri planı içinde hesaplanan alan üzerinden payı yaklaşık ${diversityPercentText(totalShare)}’dır.`);
+    }
+  }
+  if(top3Share > top3Limit){
+    items.push(`İlk 3 ürün, değişen öneri alanının ${diversityPercentText(top3Share)}’ını kaplamaktadır. Ürün deseninde çeşitlilik sınırlı olabilir.`);
+    const top3TotalShare = safeNum(diversity.top3_crop_share_total, NaN);
+    const changedArea = safeNum(diversity.changed_area_da, 0);
+    const totalArea = safeNum(diversity.total_plan_area_da, 0);
+    if(Number.isFinite(top3TotalShare) && top3TotalShare > 0 && totalArea > changedArea + 1e-6){
+      items.push(`Öneri planı içinde hesaplanan alan üzerinden ilk 3 ürün payı yaklaşık ${diversityPercentText(top3TotalShare)}’dır.`);
+    }
+  }
+  if(repairApplied){
+    items.push('Ürün çeşitliliği kısıtı nedeniyle plan yeniden dengelenmiştir. Amaç, tek ürüne aşırı yığılmayı azaltarak daha uygulanabilir bir ürün deseni üretmektir.');
+  }
+  if(!items.length && Array.isArray(diversity.warnings) && diversity.warnings.length){
+    items.push(...diversity.warnings.slice(0, 2).filter(x=>!isInfeasiblePlanWarningText(x)));
+  }
+  if(!items.length) return '';
+  return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Ürün çeşitliliği kontrolü:</strong><ul style="margin:6px 0 0 18px; padding:0;">${items.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
+}
+
+function benchmarkDynamicInterpretation(bestAlgo, algos, rows){
+  const best = algos?.[bestAlgo];
+  if(!best || !rows?.length) return '';
+  const p = safeNum(best?.profit?.mean ?? best.mean_profit, 0);
+  const w = safeNum(best?.water?.mean ?? best.mean_water, 0);
+  const e = safeNum(best?.efficiency?.mean ?? best.tl_per_m3, 0);
+  const cv = safeNum(best?.profit?.cv ?? best.cv, 0);
+  const feas = Math.max(0, Math.min(1, safeNum(best?.feasible_rate, 0)));
+  const parts = [
+    `${bestAlgo}, seçili koşullarda ${fmtNum(p,0)} TL ortalama kâr, ${fmtNum(w,0)} m³ ortalama su, ${fmtNum(e,2)} TL/m³, ${fmtNum(cv*100,2)}% CV ve ${fmtNum(feas*100,1)}% uygulanabilirlik dengesiyle öne çıkmıştır.`
+  ];
+  const ga = algos?.GA;
+  if(ga && bestAlgo !== 'GA'){
+    const gp = safeNum(ga?.profit?.mean ?? ga.mean_profit, 0);
+    const gw = safeNum(ga?.water?.mean ?? ga.mean_water, 0);
+    if(gp > p * 1.002){
+      parts.push(`GA kâr bakımından güçlü bir alternatif üretmektedir; ancak su tüketimi/kararlılık dengesi ve karar skoru açısından ${bestAlgo} gerisinde kalmıştır.`);
+    }else{
+      parts.push(`GA benzer bir alternatif üretse de seçili metrik dengesi ${bestAlgo} lehinedir.`);
+    }
+    if(gw > w * 1.002){
+      parts.push(`GA'nın ortalama su tüketimi ${bestAlgo} değerinden yüksektir.`);
+    }
+  }
+  const abc = algos?.ABC;
+  if(abc && bestAlgo !== 'ABC'){
+    const div = abc?.diversity || {};
+    const abcCv = safeNum(abc?.profit?.cv ?? abc.cv, 0);
+    const concentration = div.diversity_feasible === false ? 'ürün yoğunlaşması' : 'desen değişkenliği';
+    parts.push(`ABC bazı koşullarda farklı desen üretebilse de ${concentration} ve ${fmtNum(abcCv*100,2)}% CV değeri nedeniyle dikkatli yorumlanmalıdır.`);
+  }
+  if(bestAlgo === 'ACO' && ga){
+    parts.unshift('ACO, net kâr bakımından güçlü alternatiflere yakın kalırken daha dengeli su kullanımı, TL/m³, düşük değişkenlik ve uygulanabilirlik bileşimiyle seçilmiştir.');
+  }
+  return parts.join(' ');
+}
+
 function backendUnavailablePlan(idsForRun, scenarioKey, algoKey, message){
   const key = basinCacheKey(scenarioKey, algoKey);
   const wanted = new Set((idsForRun || []).map(x => String(x || '').trim()).filter(Boolean));
@@ -9371,6 +9612,9 @@ function backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey){
       backendOnly: true,
       backendResult: data,
       backendDecisionPackage: data,
+      diversity: selectedPlan.diversity || data?.diversity || null,
+      diversityRepairApplied: !!selectedPlan.diversity_repair_applied,
+      recommendationStatus: selectedPlan.recommendation_status || data?.recommendation_status || '',
       irrigationPlan: rows.map(r=>r.irrigationSuggested || r.irrigationSuggestedText).filter(Boolean).join(' | '),
       decisionReason: selectedPlan.explanation || (selectedPlan.warnings || []).join(' '),
       alternativePatterns: shownAlternativePatterns,
@@ -9393,7 +9637,10 @@ function backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey){
     context,
     baseline,
     selectedPlan,
+    diversity: selectedPlan.diversity || data?.diversity || null,
+    recommendationStatus: selectedPlan.recommendation_status || data?.recommendation_status || '',
     alternatives,
+    optimizationRunPolicy: data?.optimization_run_policy || null,
     charts: data?.charts || {},
     tables: data?.tables || {},
     diagnostics: data?.diagnostics || {},
@@ -15414,9 +15661,22 @@ function renderTables() {
     const scenLabel = (_seasonModeKey()==='s2') ? 'Senaryo 2 - Çift ürün / desen' : 'Senaryo 1 - Tek ürün';
     const altPanelHtml = uiAlternativePatterns.length ? alternativePatternPanelHtmlV94(uiAlternativePatterns, metaLabel, scenLabel) : '';
     const orchardInfo = orchardLockedUi ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff;"><strong>Bahçe kuralı:</strong> Ana ürün korunur. Aşağıdaki alternatifler ürün sökümü değil; sıra arası / örtü bitkisi ve yönetim desenidir.</div>` : '';
-    const warningHtml = Array.isArray(recMeta?.conversionWarnings) && recMeta.conversionWarnings.length
-      ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Dönüşüm / uygunluk uyarısı:</strong><ul style="margin:6px 0 0 18px; padding:0;">${recMeta.conversionWarnings.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`
+    const planFeasibleForWarning = recMeta?.selectedPlan?.feasible !== false && recMeta?.selectedPlan?.selectable !== false && recMeta?.backendDecisionPackage?.selected_plan?.feasible !== false;
+    const conversionWarnings = Array.isArray(recMeta?.conversionWarnings)
+      ? recMeta.conversionWarnings.filter(x=>!(planFeasibleForWarning && isInfeasiblePlanWarningText(x)))
+      : [];
+    const warningHtml = conversionWarnings.length
+      ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Dönüşüm / uygunluk uyarısı:</strong><ul style="margin:6px 0 0 18px; padding:0;">${conversionWarnings.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></div>`
       : '';
+    const diversityHtml = diversityWarningHtml(
+      recMeta?.diversity || recMeta?.selectedPlan?.diversity || recMeta?.backendDecisionPackage?.diversity,
+      recMeta?.recommendationStatus || recMeta?.selectedPlan?.recommendation_status || recMeta?.backendDecisionPackage?.recommendation_status,
+      !!(recMeta?.diversityRepairApplied || recMeta?.selectedPlan?.diversity_repair_applied),
+      {
+        feasible: recMeta?.selectedPlan?.feasible !== false && recMeta?.backendDecisionPackage?.selected_plan?.feasible !== false,
+        selectable: recMeta?.selectedPlan?.selectable !== false && recMeta?.backendDecisionPackage?.selected_plan?.selectable !== false
+      }
+    );
     const interrowHtml = Array.isArray(recMeta?.interrowAlternatives) && recMeta.interrowAlternatives.length
       ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc;"><strong>Sıra arası / uzman alternatifi:</strong><ul style="margin:6px 0 0 18px; padding:0;">${recMeta.interrowAlternatives.slice(0,5).map(x=>`<li><b>${escapeHtml(x.name || x.cropName || '-')}</b> - ${escapeHtml(x.kind || x.cropCategoryLabel || 'Uzman değerlendirmesi')} ${x.decisionNote || x.note ? `: ${escapeHtml(x.decisionNote || x.note)}` : ''}</li>`).join('')}</ul></div>`
       : '';
@@ -15431,7 +15691,7 @@ function renderTables() {
     const autoHtml = autoDecision?.selected
       ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff;"><strong>Otomatik algoritma seçimi:</strong> ${escapeHtml(String(autoDecision.selected).toUpperCase())} seçildi. GA, ACO ve ABC aynı hedef/senaryo koşulunda su kotası, net kâr, TL/m³ ve hedef skoruyla kıyaslandı.</div>`
       : '';
-    footerRec.innerHTML = `<div class="rec-footer-kpi-v94">${recFooter}</div>${warningHtml}${autoHtml}${orchardInfo}${whyHtml}${interrowHtml}${altPanelHtml}`;
+    footerRec.innerHTML = `<div class="rec-footer-kpi-v94">${recFooter}</div>${warningHtml}${diversityHtml}${autoHtml}${orchardInfo}${whyHtml}${interrowHtml}${altPanelHtml}`;
   }
 
   // --- Açıklanabilirlik kutusu (seçili parsel) ---
@@ -15836,6 +16096,15 @@ function renderAllScenarioSummaries(){
         const antsVal = (rp && (rp.ants ?? rp.antCount)) ?? def.ants;
         const colonyVal = (rp && (rp.colonySize ?? rp.beeCount ?? rp.bees)) ?? def.colony;
         const stopVal = (rp && (rp.stopEarly !== undefined ? (rp.stopEarly ? 'İyileşme durunca' : 'Sabit iterasyon') : null)) || def.stop;
+        const policy = cached?.optimizationRunPolicy || cached?.backendDecisionPackage?.optimization_run_policy || cached?.backendResult?.optimization_run_policy || null;
+        const completedRuns = Number(policy?.completed_runs || 0);
+        const requestedRuns = Number(policy?.requested_runs || policy?.selected_repeat_count || 0);
+        const policyPartial = String(policy?.completion_status_kind || '').toLowerCase() === 'partial' || (requestedRuns > 0 && completedRuns < requestedRuns);
+        const policyText = policy && requestedRuns > 0
+          ? (policyPartial
+            ? `Kısmi optimizasyon: ${String(policy.algorithm || algoName2)} algoritması ${completedRuns}/${requestedRuns} koşu tamamladı; sonuç ön değerlendirme niteliğindedir.`
+            : `Optimizasyon tamamlandı: ${String(policy.algorithm || algoName2)} algoritması ${completedRuns}/${requestedRuns} bağımsız koşu ile çalıştırıldı. Ana öneri, uygulanabilir çözümler arasından hedef fonksiyonuna göre seçildi.`)
+          : '';
 
         // Seed'i adil karşılaştırma rozetinde göster (kullanıcı "seed=..." bilgisini arada kaybetmesin)
         const reproducible = `Rastgelelik sabit (Seed: ${seed})`;
@@ -15867,7 +16136,9 @@ function renderAllScenarioSummaries(){
             <span class="runmeta-tag"><span class="runmeta-ic">${objectiveMeta.icon}</span><b>${objectiveMeta.label}</b></span>
             <span class="runmeta-tag"><span class="runmeta-ic">&#128197;</span><b>${year}</b></span>
             <span class="runmeta-tag"><span class="runmeta-ic">&#9878;&#65039;</span><b>${reproducible}</b></span>
+            ${policy && requestedRuns > 0 ? `<span class="runmeta-tag"><span class="runmeta-ic">&#128257;</span><b>${escapeHtml(String(policy.algorithm || algoName2))}: ${completedRuns}/${requestedRuns} koşu</b></span>` : ''}
           </div>
+          ${policyText ? `<div class="benchmark-note" style="margin-top:8px;">${escapeHtml(policyText)}</div>` : ''}
 
           <details class="runmeta-details">
             <summary>Optimizasyon parametreleri</summary>
@@ -19682,7 +19953,15 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 	          }
 	        }
 
-        if(st) st.textContent = (sources.length>1) ? 'Tamamlandı (seçili sezon senaryoları)' : 'Tamamlandı';
+        if(st){
+          if(sources.length > 1){
+            st.textContent = 'Tamamlandı (seçili sezon senaryoları)';
+          }else{
+            const current = document.getElementById('_benchSingle');
+            const lastStatus = window.__lastBenchmarkRaw ? benchmarkCompletionText(window.__lastBenchmarkRaw) : '';
+            st.textContent = lastStatus || 'Tamamlandı';
+          }
+        }
       }catch(e){
         console.warn('Benchmark hata:', e);
         const box = document.getElementById('benchmarkResults');
@@ -19711,25 +19990,21 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       if(benchSweepBtn.disabled) return;
       benchSweepBtn.disabled = true;
       benchSweepBtn.classList.add('btn-disabled');
-      if(st) st.textContent = '30/50/100 taraması çalışıyor...';
-      if(box) box.innerHTML = '<div class="benchmark-note">30, 50 ve 100 tekrar sırayla çalıştırılıyor; bu işlem benchmarktan uzun sürebilir.</div>';
+      if(st) st.textContent = '10/15/30/50/100 kararlılık analizi çalışıyor...';
+      if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50 ve 100 tekrar düzeyleri GA / ABC / ACO için aynı koşullarda karşılaştırılıyor. Bu işlem ana benchmarktan uzun sürebilir.</div>';
       try{
         const objectiveRaw = (document.querySelector('input[name="scenario"]:checked')?.value || 'su_tasarruf').toString();
         const objective = objectiveRaw === 'mevcut' ? 'su_tasarruf' : objectiveRaw;
         const mode = normalizeSeasonSource(document.getElementById('benchmarkSeasonSourceSel')?.value || 'use_selected');
         const selectedSeasonSource = normalizeSeasonSource(document.getElementById('seasonSourceSel')?.value || STATE.seasonSource || 's1');
         const src = (mode === 'use_selected' || mode === 'all') ? selectedSeasonSource : mode;
-        const results = await runBenchmarkSweepV95(objective, src);
-        if(results?.length){
-          const last = results[results.length-1]?.raw;
-          if(last) renderBenchmarkResultsTo(last, document.getElementById('benchmarkResults'), document.getElementById('benchmarkPatterns'), false);
-          updateBenchmarkSweepChartsV96(results);
-        }
-        if(st) st.textContent = 'Tekrar taraması tamamlandı';
+        const calibration = await fetchRunCountCalibrationPython(objective, src);
+        renderRunCountCalibrationResults(calibration, box);
+        if(st) st.textContent = benchmarkCompletionText(calibration) || 'Tekrar sayısı kararlılık analizi tamamlandı';
       }catch(e){
         console.warn('Benchmark sweep hata:', e);
-        if(box) box.innerHTML = '<div class="badge badge-warn">Tekrar taraması hata: '+String(e?.message||e)+'</div>';
-        if(st) st.textContent = 'Tekrar taraması hata';
+        if(box) box.innerHTML = '<div class="badge badge-warn">Tekrar sayısı kararlılık analizi hata: '+String(e?.message||e)+'</div>';
+        if(st) st.textContent = 'Tekrar sayısı analizi hata';
       }finally{
         benchSweepBtn.disabled = false;
         benchSweepBtn.classList.remove('btn-disabled');
@@ -21570,13 +21845,24 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const requested = Math.max(1, n(j?.repeats));
     const totalRuns = s.rows.reduce((sum,row)=>sum+row.runs,0);
     const totalTarget = requested * Math.max(1, s.rows.length);
-    const summary = String(j?.interpretation || '').trim() || decisionText(s);
+    const completedRuns = n(j?.completed_runs) || totalRuns;
+    const requestedTotalRuns = n(j?.requested_total_runs) || n(j?.expected_total_runs) || totalTarget;
+    const completionKind = String(j?.completion_status_kind || (completedRuns < requestedTotalRuns ? 'partial' : 'completed')).toLowerCase();
+    const isPartial = completionKind === 'partial';
+    const completionText = benchmarkCompletionText(j) || (isPartial ? `Kısmi sonuç: ${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)} koşu tamamlandı` : `Tamamlandı: ${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)} koşu`);
+    const modeLabel = String(j?.benchmark_mode || '').toLowerCase() === 'fast'
+      ? 'Hızlı ön izleme'
+      : 'Akademik karşılaştırma';
+    const dynamicSummary = (typeof benchmarkDynamicInterpretation === 'function' && best?.a)
+      ? benchmarkDynamicInterpretation(best.a, j?.algorithms || {}, names(j))
+      : '';
+    const summary = dynamicSummary || String(j?.interpretation || '').trim() || decisionText(s);
     const backendTie = /esdeger|eşdeğer|tek algoritmaya/i.test(summary);
     const kpiRoot = document.getElementById('benchmarkKpiGrid');
     if(kpiRoot){
       kpiRoot.innerHTML = [
-        {label:'Net karar', value:(s.isTie || backendTie) ? 'Eşdeğer bant' : best?.a || '-', sub:summary},
-        {label:'Koşu sayısı', value:`${fmt(n(j?.completed_runs) || totalRuns,0)}/${fmt(n(j?.requested_total_runs) || totalTarget,0)}`, sub:'Başarılı backend koşusu / hedef koşu'},
+        {label:'Net karar', value:isPartial ? 'Ön değerlendirme' : ((s.isTie || backendTie) ? 'Eşdeğer bant' : best?.a || '-'), sub:summary},
+        {label:'Koşu sayısı', value:`${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)}`, sub:completionText},
         {label:'Grafik', value:'3 çizgi', sub:'GA, ABC, ACO ayrı çizgi; üst üste binme yakınsama demektir.'},
         {label:'Güven kontrolü', value:s.allSame ? 'Yakınsama' : `${fmt(s.spread,1)} puan fark`, sub:'CV, plan farkı ve uygulanabilirlik birlikte okunur.'}
       ].map(k => `<div class="pro-kpi"><div class="kpi-label">${esc(k.label)}</div><div class="kpi-value">${esc(k.value)}</div><div class="kpi-sub">${esc(k.sub)}</div></div>`).join('');
@@ -21606,9 +21892,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         <strong>${esc(s.objective)}</strong>
       </div>
       <div class="benchmark-decision">
-        <b>${esc((s.isTie || backendTie) ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-'))}</b>
-        <span>${esc(summary)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
+        <b>${esc(isPartial ? 'Ön değerlendirme' : ((s.isTie || backendTie) ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-')))}</b>
+        <span>${esc(summary)} ${esc(completionText)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
       </div>
+      <div class="benchmark-note"><b>${esc(modeLabel)}:</b> ${esc(modeLabel === 'Hızlı ön izleme' ? 'Bu mod düşük tekrar sayısı kullanır; nihai akademik değerlendirme için kararlılık analizi veya 30+ tekrar kullanılmalıdır.' : 'GA, ACO ve ABC aynı veri, aynı su kotası, aynı hedef fonksiyonu ve aynı senaryo altında karşılaştırılır.')}</div>
       <div class="benchmark-table-wrap benchmark-report-table">
         <table class="mini-table pro">
           <thead><tr><th>Alg.</th><th>Optimizasyon yaklaşımı</th><th>Net kâr</th><th>Su</th><th>TL/m³</th><th>Skor</th><th>CV</th><th>Plan farkı</th><th>Uygunluk</th><th>Süre</th><th>Net yorum</th></tr></thead>
@@ -21709,14 +21996,33 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     if(!old || old.__benchmarkSweepBound) return;
     const btn = old.cloneNode(true);
     btn.id = old.id;
-    btn.textContent = '30/50/100 kararlılık analizi';
+    btn.textContent = 'Tekrar sayısı kararlılık analizi';
     btn.__benchmarkSweepBound = true;
     old.replaceWith(btn);
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const box = document.getElementById('benchmarkSweepResults');
-      if(box) box.innerHTML = sweepHtml(window.__lastBenchmarkRaw || null);
       const st = document.getElementById('benchmarkStatus');
-      if(st) st.textContent = 'Kararlılık analizi hazır';
+      if(btn.disabled) return;
+      btn.disabled = true;
+      btn.classList.add('btn-disabled');
+      if(st) st.textContent = '10/15/30/50/100 kararlılık analizi çalışıyor...';
+      if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50 ve 100 tekrar düzeyleri aynı koşullarda test ediliyor.</div>';
+      try{
+        const objectiveRaw = (document.querySelector('input[name="scenario"]:checked')?.value || 'su_tasarruf').toString();
+        const objective = objectiveRaw === 'mevcut' ? 'su_tasarruf' : objectiveRaw;
+        const mode = normalizeSeasonSource(document.getElementById('benchmarkSeasonSourceSel')?.value || 'use_selected');
+        const selectedSeasonSource = normalizeSeasonSource(document.getElementById('seasonSourceSel')?.value || STATE.seasonSource || 's1');
+        const src = (mode === 'use_selected' || mode === 'all') ? selectedSeasonSource : mode;
+        const j = await fetchRunCountCalibrationPython(objective, src);
+        renderRunCountCalibrationResults(j, box);
+        if(st) st.textContent = benchmarkCompletionText(j) || 'Kararlılık analizi hazır';
+      }catch(e){
+        if(box) box.innerHTML = '<div class="badge badge-warn">Tekrar sayısı kararlılık analizi hata: '+esc(e?.message||e)+'</div>';
+        if(st) st.textContent = 'Tekrar sayısı analizi hata';
+      }finally{
+        btn.disabled = false;
+        btn.classList.remove('btn-disabled');
+      }
     });
   }
   window.__renderBenchmarkReport = function(j, box, patBox, updateCharts=true){

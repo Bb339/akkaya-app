@@ -1110,13 +1110,13 @@ Parsel Haritası</h2>
 <div class="field-row">
 <label class="field-label">Benchmark modu</label>
 <select class="select-input" id="benchmarkModeSel">
-<option selected="" value="fast">Hızlı karşılaştırma</option>
-<option value="detailed">Detaylı karşılaştırma</option>
+<option selected="" value="detailed">Detaylı / akademik karşılaştırma</option>
+<option value="fast">Hızlı ön izleme</option>
 </select>
 </div>
 <div class="field-row">
 <label class="field-label">Tekrar sayısı</label>
-<input class="text-input" id="benchmarkRepeats" max="120" min="3" type="number" value="3"/>
+<input class="text-input" id="benchmarkRepeats" max="120" min="3" type="number" value="30"/>
 </div>
 <div class="field-row">
 <label class="field-label">Seed (opsiyonel)</label>
@@ -1124,9 +1124,14 @@ Parsel Haritası</h2>
 </div>
 <div class="algo-actions" style="margin-top:8px;">
 <button class="btn-secondary" id="runBenchmarkBtn">Karşılaştırmayı Çalıştır</button>
-<button class="btn-secondary" id="runBenchmarkSweepBtn">30/50/100 tekrar taraması</button>
+<button class="btn-secondary" id="runBenchmarkSweepBtn">Tekrar sayısı kararlılık analizi</button>
 <span class="algo-status" id="benchmarkStatus">Hazır</span>
 </div>
+</div>
+<div class="benchmark-method-card" id="benchmarkRunCountMethodBox">
+<h3 class="card-subtitle">Tekrar sayısı kararlılık analizi</h3>
+<p class="card-help small">En uygun tekrar sayısı yalnızca en yüksek tekil sonuca göre değil; çözüm kararlılığı, uygulanabilirlik oranı, marjinal iyileşme ve çalışma süresi birlikte değerlendirilerek seçilir.</p>
+<div class="small muted">GA, ACO ve ABC stokastik/sezgisel algoritmalar olduğundan tek koşu yerine bağımsız tekrarlar üzerinden değerlendirilmiştir. Varsayılan 30 koşu, ortalama performans ve kararlılık göstergelerinin hesaplanabilmesi için kullanılır. 50 ve 100 koşu seçenekleri ek kararlılık analizi amacı taşır.</div>
 </div>
 <div class="benchmark-kpi-grid" id="benchmarkKpiGrid"></div><div class="small" id="benchmarkResults" style="margin-top:10px;"></div>
 <div class="small" id="benchmarkSweepResults" style="margin-top:10px;"></div>
