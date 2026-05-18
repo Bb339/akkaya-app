@@ -265,12 +265,6 @@ function saveAuthUser(user){
   return normalized;
 }
 
-function updateAuthUser(username, patch={}){
-  const user = getAuthUserByUsername(username);
-  if(!user) return null;
-  return saveAuthUser({ ...user, ...patch, username: user.username });
-}
-
 function userNeedsOnboardingLock(user){
   return !!(user && user.role === 'farmer' && (user.accountStatus !== 'active' || !user.onboardingCompleted));
 }
@@ -1777,16 +1771,6 @@ const S2_PRIMARY_RAW = [
 const S2_SUMMER_RAW = ['Patates','Silajlık Mısır','Şeker Pancarı','Yonca (Yeşilot)','Ayçiçeği'];
 const S2_WINTER_RAW = ['Buğday (Dane)','Arpa (Dane)','Mercimek','Nohut','Fiğ (Yeşilot)'];
 
-// Senaryo-2'de meyve/bag (çok yıllık bahce ürünleri) sadece ilgili arazi kullanımında
-// (Bahce/Bağ parselleri) önerilmelidir. Tarla parsellerinde bahce kurulumu önerisi
-// gerçekçi olmadığı için bu ürünleri aday havuzundan çıkarıyoruz.
-const S2_FRUIT_VINE_KEYS = new Set([
-  'ELMA','KİRAZ','BAĞ (ÜZÜM)','CEVİZ','ARMUT','ŞEFTALİ','NEKTARİN','KAYISI','VİŞNE','ERİK'
-].map(normCropName));
-function isS2FruitVine(name){
-  return S2_FRUIT_VINE_KEYS.has(normCropName(name));
-}
-
 // --- Senaryo-2 varsayılan su/kâr parametreleri (m3/da ve TL/da) ---
 // Senaryo-2 "mutabık ürün havuzu" (meyve + seçili tarla bitkileri) için
 // veri paketinde her zaman doğrudan ekonomi/su parametresi bulunmayabiliyor.
@@ -2960,26 +2944,6 @@ function buildSeasonIndexesFromRows(seasonRows){
 
   STATE.candidatesByParcelYear = candidatesByParcelYear;
   STATE.candidatesByParcel = candidatesByParcel;
-}
-
-function availableYearsFromSeasonRows(seasonRows){
-  const ys = new Set();
-  for(const r of (seasonRows||[])){
-    const y = +r.year;
-    if(isFinite(y)) ys.add(y);
-  }
-  return Array.from(ys).sort((a,b)=>a-b);
-}
-
-function setSeasonSource(source){
-  const src = (source || "s1").toLowerCase();
-  STATE.seasonSource = (src === "s1" || src === "s2") ? src : "s1";
-  STATE.seasonRows = getSeasonRowsForSource(STATE.seasonSource);
-  buildSeasonIndexesFromRows(STATE.seasonRows);
-  applyYearBaselinesFromSeasons();
-  // Clear caches so results can change immediately
-  try{ for(const k of Object.keys(basinPlanCache)) delete basinPlanCache[k]; }catch(_){ }
-  try{ for(const k of Object.keys(optimizationCache)) delete optimizationCache[k]; }catch(_){ }
 }
 
 function normCropName(s){
@@ -5178,28 +5142,12 @@ const bLevel=document.getElementById("droughtBannerLevel");
   ensureDroughtSeriesChart();
 }
 
-function getMethodTotalEff(methodName){
-  const m = String(methodName||"").trim();
-  if(!m) return Number(STATE.irrigEfficiency||0.62);
-  const row = (STATE.irrigMethods||[]).find(r => String(r.method||"").trim() === m);
-  const eff = row ? Number(row.total_eff) : NaN;
-  return (Number.isFinite(eff) && eff>0) ? eff : Number(STATE.irrigEfficiency||0.62);
-}
-
 function getNetM3PerDaFromSeasons(year, cropKey){
   const y = Number(year);
   const map = STATE.cropNetPerDaByYear ? STATE.cropNetPerDaByYear.get(y) : null;
   if(map && map.has(cropKey)) return Number(map.get(cropKey));
   return NaN;
 }
-
-function getPlantsPerDaFromSeasons(year, cropKey){
-  const y = Number(year);
-  const map = STATE.cropPlantsPerDaByYear ? STATE.cropPlantsPerDaByYear.get(y) : null;
-  if(map && map.has(cropKey)) return Number(map.get(cropKey));
-  return NaN;
-}
-
 
 function applyWaterScenarioFromUI(clearCache=false){
   // Keep STATE.selectedWaterYear synced with the UI dropdown (robust against missed events)
@@ -5422,10 +5370,6 @@ function renderDistrictOverview(){
 // ------------------------------------------------------------
 // Resmî tablolar (A seçeneği): su bütçesi + senaryo deseni + parsel özeti
 // ------------------------------------------------------------
-
-function toHm3(m3){
-  return m3 / 1_000_000.0;
-}
 
 function downloadTextFile(filename, text, mime="text/plain;charset=utf-8"){
   const blob = new Blob([text], { type: mime });
@@ -7546,11 +7490,6 @@ async function initDataBinding(){
 // -------------------- Canlı meteoroloji (Open-Meteo) + detaylı Kc (FAO-56 stage) --------------------
 const DEFAULT_COORDS = { lat: 37.888, lon: 34.645 }; // Akkaya 6 yerleşim merkezi
 function todayISO(){ return new Date().toISOString().slice(0,10); }
-function isoWithOffsetDays(d, days){
-  const x = new Date(d+"T00:00:00");
-  x.setDate(x.getDate()+days);
-  return x.toISOString().slice(0,10);
-}
 
 // Kc evreleri (ini/dev/mid/end) için varsayılanlar (FAO-56 tipik aralıklar - yaklaşık)
 const CROP_STAGE_DEFAULTS = {
@@ -7955,14 +7894,6 @@ function deepCloneRows(rows){
     irrigationSuggestedText: r.irrigationSuggestedText || r.irrigationSuggested || null,
     irrigationSuggested: r.irrigationSuggested || r.irrigationSuggestedText || null
   }));
-}
-
-function recomputeRowTotals(rows){
-  for(const r of rows){
-    r.totalWater = r.area * r.waterPerDa;
-    r.totalProfit = r.area * r.profitPerDa;
-  }
-  return rows;
 }
 
 function computeGlobalBudgetM3(){
@@ -8370,86 +8301,6 @@ function renderRunCountCalibrationResults(j, box=document.getElementById('benchm
   </div>`;
 }
 
-// Tarayıcı içi benchmark (yedek plan)
-// Bazı ortamlarda /api/benchmark uzun sürebilir veya bağlantı hatası verebilir.
-// Bu durumda kullanıcıya yine de "Algoritma karşılaştırması" çıktısı sunabilmek için
-// basit bir tarayıcı içi tekrar/ortalama hesaplar.
-function runBenchmarkInBrowser(objectiveKey, seasonSourceOverride=null){
-  const repeatsEl = document.getElementById('benchmarkRepeats');
-  const repeats = Math.max(10, Math.min(120, parseInt(repeatsEl?.value || '50', 10) || 50));
-
-  const oldSeason = STATE.seasonSource;
-  if(seasonSourceOverride) STATE.seasonSource = seasonSourceOverride;
-
-  const algos = ['GA','ABC','ACO'];
-  const algoKey = { GA:'ga', ABC:'abc', ACO:'aco' };
-
-  // Kapsam: seçili parsel veya tüm parseller
-  const scopeIds = getSelectedParcelIdsForRun();
-  const isSingle = scopeIds.length === 1;
-  const singleId = isSingle ? String(scopeIds[0]) : null;
-
-  const totalsFor = (scenarioKey, ak)=>{
-    if(isSingle){
-      const p = parcelData.find(x=>String(x.id)===singleId);
-      const res = runOptimization(p, scenarioKey, ak);
-      const t = res?.totals || { water:0, profit:0 };
-      return { water: +t.water||0, profit: +t.profit||0, eff: (t.water>0 ? (t.profit/t.water) : 0) };
-    }
-    const basin = computeBasinPlan(scenarioKey, ak);
-    const t = basin?.totals || { water:0, profit:0, eff:0 };
-    return { water: +t.water||0, profit: +t.profit||0, eff: (t.water>0 ? (t.profit/t.water) : 0) };
-  };
-
-  const meanStd = (arr)=>{
-    const xs = (arr||[]).map(v=>+v||0);
-    const n = xs.length || 1;
-    const mean = xs.reduce((a,b)=>a+b,0)/n;
-    const varr = xs.reduce((a,v)=>a+(v-mean)*(v-mean),0)/Math.max(1,n-1);
-    return { mean, std: Math.sqrt(varr) };
-  };
-
-  const scenarioKey = (objectiveKey||'su_tasarruf').toString();
-  const out = { status:'OK', source:'browser', repeats, scenario: scenarioKey, objective: scenarioKey, algorithms:{} };
-  try{
-    // Baseline: mevcut desen
-    const b = totalsFor('mevcut', 'ga');
-    out.baseline = {
-      total_profit_tl: b.profit,
-      total_water_m3: b.water,
-      efficiency_tl_per_m3: b.eff
-    };
-
-    for(const A of algos){
-      const prof=[], wat=[], eff=[];
-      for(let i=0;i<repeats;i++){
-        const t = totalsFor(scenarioKey, algoKey[A]);
-        prof.push(t.profit);
-        wat.push(t.water);
-        eff.push(t.eff);
-      }
-      out.algorithms[A] = {
-        profit: meanStd(prof),
-        water: meanStd(wat),
-        efficiency: meanStd(eff)
-      };
-    }
-  }finally{
-    STATE.seasonSource = oldSeason;
-  }
-  return out;
-}
-
-function getSelectedScenarioKey(){
-  try{
-    const el = document.querySelector('input[name="scenario"]:checked');
-    return (el?.value || 'su_tasarruf').toString();
-  }catch(_e){
-    return 'su_tasarruf';
-  }
-}
-
-
 function benchmarkResultLooksBroken(j){
   try{
     if(!j || j.status !== 'OK') return true;
@@ -8471,58 +8322,6 @@ function benchmarkResultLooksBroken(j){
   }catch(_e){
     return true;
   }
-}
-
-function withSeasonSourceContext(tempSource, fn){
-  const prev = STATE.seasonSource;
-  try{
-    if(tempSource){
-      STATE.seasonSource = tempSource;
-      try{
-        const rows = getSeasonRowsForSource(STATE.seasonSource);
-        rebuildSeasonDerivedIndexes(rows);
-        applyYearBaselinesFromSeasons();
-        refreshScenarioBaselineCurrent();
-      }catch(_e){}
-    }
-    return fn();
-  } finally {
-    try{
-      STATE.seasonSource = prev;
-      const rows = getSeasonRowsForSource(STATE.seasonSource);
-      rebuildSeasonDerivedIndexes(rows);
-      applyYearBaselinesFromSeasons();
-      refreshScenarioBaselineCurrent();
-    }catch(_e){}
-  }
-}
-
-function computeScopeTotalsLocal(scenarioKey, algoKey, seasonSourceOverride=null){
-  return withSeasonSourceContext(seasonSourceOverride, ()=>{
-    const scopeIds = getSelectedParcelIdsForRun();
-    const isSingle = Array.isArray(scopeIds) && scopeIds.length === 1;
-    if(isSingle){
-      const pid = String(scopeIds[0]);
-      const p = (parcelData || []).find(x=>String(x.id)===pid);
-      const res = runOptimization(p, scenarioKey, algoKey);
-      const t = res?.bestTotals || res?.currentTotals || res?.totals || (Array.isArray(res?.rows) ? sumMetrics(res.rows) : {});
-      const water = safeNum(t.totalWater ?? t.water);
-      const profit = safeNum(t.totalProfit ?? t.profit);
-      return { water, profit, eff: water > 0 ? (profit / water) : 0 };
-    }
-    const t = totalsAllParcels(scenarioKey, algoKey) || {};
-    const water = safeNum(t.water, 0);
-    const profit = safeNum(t.profit, 0);
-    return { water, profit, eff: water > 0 ? (profit / water) : 0 };
-  });
-}
-
-function seasonSourceLabel(src){
-  const s = (src||'').toString();
-  if(s === 's1') return 'Senaryo-1 (tek ürün)';
-  if(s === 's2') return 'Senaryo-2 (çift ürün / desen)';
-  if(false) return 'Senaryo-1';
-  return s;
 }
 
 function fmtNum(n, digits=1){
@@ -8557,14 +8356,6 @@ function benchmarkPlanPair(plan){
   const p1 = String(plan?.primary?.crop || '').trim();
   const p2 = String(plan?.secondary?.crop || '').trim();
   return `${p1}||${p2}`;
-}
-
-function benchmarkPlanDistancePct(mapA, mapB){
-  const ids = Array.from(new Set([...(mapA ? Object.keys(mapA) : []), ...(mapB ? Object.keys(mapB) : [])]));
-  if(!ids.length) return 0;
-  let diff = 0;
-  ids.forEach(id=>{ if(benchmarkPlanPair(mapA?.[id]) !== benchmarkPlanPair(mapB?.[id])) diff += 1; });
-  return (diff / Math.max(1, ids.length)) * 100;
 }
 
 // Benchmark çıktısını istenen hedef elementlere bas (çoklu senaryo kartları için de kullanılır)
@@ -10307,10 +10098,6 @@ function estimateParcelBaselineFromForm(parcel, cropName, irrigationKey){
   };
 }
 
-function getBaseOfficialParcel(parcel){
-  return (parcelData || []).find(x => String(x?.id) === String(parcel?.requested_for_parcel_id || '') && !x?.frontend_custom) || null;
-}
-
 function buildApproxFeatureForParcel(parcel){
   const lat = safeNum(parcel?.lat, 37.96);
   const lon = safeNum(parcel?.lon, 34.68);
@@ -11382,19 +11169,6 @@ function getRegisterableParcelChoices(){
   const ids = (parcelData || []).filter(p => !p?.map_only).map(p => String(p.id || '').trim()).filter(Boolean);
   if(ids.length) return Array.from(new Set(ids));
   return Array.from({length: 15}, (_, i) => `P${i+1}`);
-}
-
-function renderRegisterParcelPicker(selectedIds=[]){
-  const wrap = document.getElementById('registerParcelPicker');
-  if(!wrap) return;
-  const selected = new Set((selectedIds || []).map(x => String(x)));
-  wrap.innerHTML = '';
-  getRegisterableParcelChoices().forEach(pid => {
-    const item = document.createElement('label');
-    item.className = 'auth-parcel-chip';
-    item.innerHTML = `<input type="checkbox" value="${escapeHtml(pid)}" ${selected.has(pid) ? 'checked' : ''}/> <span>${escapeHtml(pid)}</span>`;
-    wrap.appendChild(item);
-  });
 }
 
 function setAuthTab(name){
@@ -21827,8 +21601,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const n = Number(String(v ?? '').replace(',','.'));
     return Number.isFinite(n) ? n : fb;
   }
-  function fmt0V55(v){ return Math.round(numV55(v,0)).toLocaleString('tr-TR'); }
-  function fmt1V55(v){ return numV55(v,0).toLocaleString('tr-TR',{maximumFractionDigits:1}); }
   function statusLabelV55(k){
     const s=String(k||'').toLowerCase();
     if(s==='farmer_selected') return 'Tercih iletildi';
@@ -22631,15 +22403,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     }
   ];
 
-  const INCENTIVE_ROWS = [
-    {title:'Nohut + mercimek / düşük su baklagil hattı', rate:'%60-75 tohum + gelir farkı primi', why:'Kurak/kısıtlı su koşullarında üretimi sürdürür, toprağa azot katkısı sağlar ve atıl alanı üretime alır.', social:'Daha az sulama baskısı, daha geniş çiftçi katılımı ve gıda güvenliği.'},
-    {title:'Kuru fasulye / barbunya', rate:'%50 damla + %60-75 sertifikalı tohum', why:'Niğde güçlü üretim merkezidir; yerli alım ve sözleşmeli pazarla çiftçi güveni artar.', social:'Yerel marka, paketleme ve ticaret değeri yaratır.'},
-    {title:'Kimyon + nohut/mercimek kombinasyonu', rate:'%35-45 gelir farkı telafisi', why:'Düşük su tüketimiyle katma değer arar; tek ürüne bağımlılığı azaltır.', social:'Baharat pazarına giriş ve küçük parsellerde yüksek TL/m³ etkisi.'},
-    {title:'Arpa/çavdar + fiğ yem deseni', rate:'%40 tohum + düşük su primi', why:'Kurak yıla dayanıklı, yem ihtiyacını destekleyen ve toprağı örten desen.', social:'Hayvancılık maliyetini ve erozyon riskini azaltır.'},
-    {title:'Elma/kiraz bahcesinde damla-sensor modernizasyonu', rate:'%50 sulama yatirimi + kalite primi', why:'Nigde meyvecilikte guclu; ana urunu sokmeden su verimliligi ve ihracat kalitesi artirilir.', social:'Paketleme, depolama ve istihdam zinciri guclenir.'},
-    {title:'Patateste sozlesmeli + damla + dortlu munavebe', rate:'%30-40 verimlilik primi', why:'Patates stratejik ama su baskisi yuksek; tesvik yalnizca verimli sulama ve munavebe kosuluyla dogru olur.', social:'Isleme sanayi, alim garantisi ve su adaleti birlikte korunur.'}
-  ];
-
   const MOJI = [
     ['Ç','Ç'],['ç','ç'],['Ö','Ö'],['ö','ö'],['Ü','Ü'],['ü','ü'],
     ['İ','İ'],['ı','ı'],['Ş','Ş'],['Ş','Ş'],['ş','ş'],['Ğ','Ğ'],['Ğ','Ğ'],['ğ','ğ'],
@@ -22823,9 +22586,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         <div class="risk-chip-row">${g.risks.map(r => `<span>${esc(fixText(r))}</span>`).join('')}</div>
       </article>`;
     }).join('');
-  }
-  function incentiveHtml(){
-    return `<div class="incentive-grid-v142">${INCENTIVE_ROWS.map(row => `<article><strong>${esc(fixText(row.title))}</strong><span>${esc(fixText(row.rate))}</span><p>${esc(fixText(row.why))}</p><small>${esc(fixText(row.social))}</small></article>`).join('')}</div>`;
   }
   function approvedPlanHtml(record, parcel){
   const pat = record?.pattern || {};
@@ -23043,9 +22803,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       const target = isApproved ? (document.getElementById('approvedPlanPanelV142') || document.getElementById('farmerUserRequestThreadV100')) : document.getElementById('farmerUserRequestThreadV100');
       if(target){ try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_e){} }
     }
-  }
-  function queueTextRepairV142(){
-    repairVisibleText();
   }
   function syncCleanRuntime(openApproved=false){
     ensureBellIcon();
