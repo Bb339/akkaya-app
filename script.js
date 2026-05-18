@@ -15743,7 +15743,6 @@ function getScenarioDisplayMeta(scenarioKey){
   return { key:s || 'su_etkin', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u{1F3AF}' };
 }
 
-function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){ const curMain=Array.isArray(currentRows)&&currentRows.length?[...currentRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0]:null; const recMain=Array.isArray(recRows)&&recRows.length?[...recRows].sort((a,b)=>safeNum(b.area)-safeNum(a.area))[0]:null; if(!curMain||!recMain) return "Desen farkı, seçilen hedefe göre hesaplanan su-kâr puanından kaynaklanır."; const sameMain=normCropName(curMain.name)===normCropName(recMain.name); const orchardLike = !!(curMain && isPerennialCropName(curMain.name)); if((seasonSource||'s1')==='s1'){ if(sameMain || orchardLike) return `Bahçe/çok yıllık parsellerde ana ürün korunur. Sistem ${prettyCropName(curMain.name)} ürününü korudu; fark esas olarak sulama yöntemi, su kısıntısı ve zamanlama uyumundan gelir.`; return `S1 modunda tek ürün ana plan yapılır. Sistem, ${prettyCropName(curMain.name)} yerine ${prettyCropName(recMain.name)} ürününü seçti çünkü seçili hedef (${getScenarioDisplayMeta(objectiveKey).label}) altında su-kâr dengesi daha güçlü bulundu.`; } const recSecond=Array.isArray(recRows)?recRows.find(r=>normCropName(r.name)!==normCropName(recMain.name)):null; if(recSecond){ return `S2 modunda tarla parselleri için yazlık+kışlık / münavebe planı kurulur. Ana ürün ${prettyCropName(recMain.name)} yanında ${prettyCropName(recSecond.name)} ile toprak ve su dengesi iyileştirilmeye çalışılır.`; } return sameMain ? 'S2 modunda bahçe/çok yıllık parsellerde mevcut ana ürün korunur. Ürün söküp başka meyve veya tarla ürünü önerilmez; fark sulama yöntemi, su kısıntısı, zamanlama ve sıra arası/örtü bitkisi yönetiminden gelir.' : 'S2 modunda bahçe/çok yıllık parsellerde ana ürün korunur; tarla parsellerinde ise yazlık-kışlık kombinasyonları denenir. Bu nedenle desen değişimi, seçili hedefe göre farklı kombinasyonların öne çıkmasından kaynaklanır.'; }
 function renderIrrigationCompare(currentRows, recRows, parcel, objectiveKey){
   const box = document.getElementById('irrigationCompareBox');
   if(!box) return;
@@ -23636,4 +23635,3 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   if(document.readyState !== 'loading') renderApprovedDeepPlan();
   else document.addEventListener('DOMContentLoaded', renderApprovedDeepPlan);
 })();
-
