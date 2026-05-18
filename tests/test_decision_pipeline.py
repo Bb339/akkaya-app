@@ -338,6 +338,22 @@ def test_index_has_no_duplicate_chart_or_risk_ids():
         assert html.count(item) == 1
 
 
+def test_legacy_15y_projection_ui_and_routes_are_inactive():
+    routes = {rule.rule for rule in app_module.app.url_map.iter_rules()}
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+
+    assert "/api/impact15y" not in routes
+    assert "/api/profit15y" not in routes
+    for legacy_id in (
+        "runImpact15yBtn",
+        "runProfit15yBtn",
+        "impact15ySummary",
+        "profit15ySummary",
+        "impactHorizonYears",
+    ):
+        assert legacy_id not in html
+
+
 def test_script_has_single_active_decision_flow_functions():
     script = (ROOT / "script.js").read_text(encoding="utf-8")
     funcs = [
