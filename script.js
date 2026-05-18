@@ -3533,11 +3533,11 @@ function updateDroughtAlarmCard(){
   try{
     getScenarioDisplayMeta = function(scenarioKey){
       const c = canonScenarioV102(scenarioKey);
-      if(c === 'mevcut') return { key:'mevcut', label:'Mevcut desen', shortLabel:'Mevcut', icon:'*' };
-      if(c === 'su_tasarruf') return { key:'su_tasarruf', label:'Su tasarrufu odaklı', shortLabel:'Su tasarrufu', icon:'~' };
-      if(c === 'maks_kar') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'TL' };
-      if(c === 'su_etkin') return { key:'su_etkin', label:'Su etkin kullanım', shortLabel:'Su etkin', icon:'=' };
-      return { key:'su_etkin', label:'Su etkin kullanım', shortLabel:'Su etkin', icon:'=' };
+      if(c === 'mevcut') return { key:'mevcut', label:'Current pattern', shortLabel:'Current', icon:'*' };
+      if(c === 'su_tasarruf') return { key:'su_tasarruf', label:'Water-saving objective', shortLabel:'Water saving', icon:'~' };
+      if(c === 'maks_kar') return { key:'maks_kar', label:'Profit-oriented objective', shortLabel:'Profit-oriented', icon:'TL' };
+      if(c === 'su_etkin') return { key:'su_etkin', label:'Water-efficiency objective', shortLabel:'Water efficiency', icon:'=' };
+      return { key:'su_etkin', label:'Water-efficiency objective', shortLabel:'Water efficiency', icon:'=' };
     };
   }catch(_e){}
 
@@ -8119,11 +8119,22 @@ function prettyCropName(name){
   const n = (name||"").toString().trim().toUpperCase();
   if(!n) return "";
   if(n === "NADAS" || n === "FALLOW"){
-    return "Nadas (Boş bırak)";
+    return "Fallow";
   }
   if(n === "TRTİKALE" || n === "TRTIKALE"){
-    return "TRİTİKALE (Dane)";
+    return "Triticale";
   }
+  const displayMap = {
+    "BUĞDAY (DANE)": "Wheat (Grain)",
+    "BUGDAY (DANE)": "Wheat (Grain)",
+    "BUĞDAY": "Wheat",
+    "BUGDAY": "Wheat",
+    "TURP (KIRMIZI)": "Red Radish",
+    "LAHANA (KIRMIZI)": "Red Cabbage",
+    "MARUL": "Lettuce",
+    "ISPANAK": "Spinach"
+  };
+  if(displayMap[n]) return displayMap[n];
   return (name||"").toString();
 }
 
@@ -8320,10 +8331,10 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const avgFeasible = rows.reduce((s,a)=> s + Math.max(0, Math.min(1, Number(algos[a]?.feasible_rate || 0))), 0) / Math.max(1, rows.length);
     const avgRuntime = rows.reduce((s,a)=> s + Number(algos[a]?.runtime_s?.mean || 0), 0) / Math.max(1, rows.length);
     kpiRoot.innerHTML = [
-      {label:'Algoritma yorumu', value:(/esdeger|eşdeğer|tek algoritmaya/i.test(leaderReason) ? 'Eşdeğer bant' : bestAlgo), sub:`${objectiveLabel} hedefinde metrik temelli okuma`},
-      {label:'Tekrar politikası', value:`${requestedRepeats} tekrar`, sub:`Her algoritma için hedef tekrar; seed: ${j.seed_policy?.includes('fixed') ? 'sabit kök + algoritma ofseti' : 'rastgele kök + algoritma ofseti'}`},
-      {label:'Koşu kapsamı', value:`${totalSuccessful}/${requestedTotal}`, sub:`${totalAttempted} deneme başlatıldı; süre bütçesi dolarsa fiili sayı düşebilir`},
-      {label:'Plan ayrışması', value:`${fmtNum(avgPlanDistance,1)}%`, sub:`Ortalama süre: ${fmtNum(avgRuntime,2)} sn • Uygulanabilirlik: ${fmtNum(avgFeasible*100,1)}%`} 
+      {label:'Result', value:(/esdeger|eşdeğer|tek algoritmaya/i.test(leaderReason) ? 'Equivalent band' : bestAlgo), sub:`Metric-based reading for ${objectiveLabel}`},
+      {label:'Run policy', value:`${requestedRepeats} runs`, sub:`Target repeats per algorithm; seed: ${j.seed_policy?.includes('fixed') ? 'fixed root + algorithm offset' : 'random root + algorithm offset'}`},
+      {label:'Run Count', value:`${totalSuccessful}/${requestedTotal}`, sub:`${totalAttempted} attempts started; actual count may fall if the time budget is reached`},
+      {label:'Plan separation', value:`${fmtNum(avgPlanDistance,1)}%`, sub:`Average runtime: ${fmtNum(avgRuntime,2)} sec • Feasibility: ${fmtNum(avgFeasible*100,1)}%`}
     ].map(k=>`<div class="pro-kpi"><div class="kpi-label">${escapeHtml(String(k.label))}</div><div class="kpi-value">${escapeHtml(String(k.value))}</div><div class="kpi-sub">${escapeHtml(String(k.sub))}</div></div>`).join('');
   }
 
@@ -8332,19 +8343,19 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
   html += `<div class="benchmark-method-card">`+
           `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">`+
           `<span class="benchmark-tag">Backend benchmark</span>`+
-          `<span class="benchmark-tag">Hedef: ${escapeHtml(objectiveLabel)}</span>`+
-          `<span class="benchmark-tag">İstenen tekrar: ${escapeHtml(String(Math.max(1, Number(j.repeats || 0))))}</span>`+
-          `${benchmarkScopeLabel ? `<span class="benchmark-tag">Kapsam: ${escapeHtml(benchmarkScopeLabel)}</span>` : ''}`+
+          `<span class="benchmark-tag">Objective: ${escapeHtml(objectiveLabel)}</span>`+
+          `<span class="benchmark-tag">Requested runs: ${escapeHtml(String(Math.max(1, Number(j.repeats || 0))))}</span>`+
+          `${benchmarkScopeLabel ? `<span class="benchmark-tag">Scope: ${escapeHtml(benchmarkScopeLabel)}</span>` : ''}`+
           `</div>`+
-          `<div><b>Karşılaştırma notu:</b> ${escapeHtml(benchmarkHealth)}</div>`+
+          `<div><b>Comparison note:</b> ${escapeHtml(benchmarkHealth)}</div>`+
           `<div class="small muted" style="margin-top:6px;">Mevcut desen referans sütunu olarak tutulur; algoritmalar aynı veri, aynı aday ürün havuzu ve aynı su bütçesi altında kıyaslanır. Seçili parselde parsel bazlı davranış, tüm parsel görünümünde ise temsilî kurum kapsamı raporlanır.</div><div class="small muted" style="margin-top:6px;"><b>Not:</b> Buradaki başarısız koşu sayısı bir tahmin hatası değildir; yalnızca teknik olarak sonuç üretemeyen veya kısıt nedeniyle geçersiz kalan koşuları gösterir. 0 olması iyi durumdur.</div>`+
           `</div>`;
-  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Ürün çeşitliliği kontrolü:</b> Bu sürümde algoritmalar yalnızca net kâr ve su tüketimine göre değil, ürün deseninin tarımsal uygulanabilirliği açısından da değerlendirilmektedir. Ürün yoğunlaşması göstergeleri, önerilen değişiklik yapılan alanlar üzerinden hesaplanmaktadır. Bu nedenle oranlar toplam havza alanı değil, değişen öneri alanı içindeki dağılımı ifade eder. Öneri planı içinde hesaplanan alan payı ayrıca mevcutsa uyarı içinde gösterilir.</div>`;
-  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Performans notu:</b> Yüksek tekrar sayıları hesaplama süresini artırabilir. Örneğin 100 tekrar, GA/ACO/ABC için toplam 300 koşu anlamına gelir.</div>`;
-  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Benchmark yorumu:</b> ${escapeHtml(leaderReason)}</div>`;
+  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Crop Diversity Check:</b> Algorithms are evaluated not only by net profit and water consumption, but also by the agronomic feasibility of the crop pattern. Crop concentration indicators are computed over the changed recommended area.</div>`;
+  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Performance note:</b> High repeat counts can increase computation time. For example, 100 repeats means 300 total runs for GA/ACO/ABC.</div>`;
+  html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Benchmark interpretation:</b> ${escapeHtml(leaderReason)}</div>`;
 
   if(j.baseline){
-    html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Baseline (mevcut desen):</b> `+
+    html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Baseline (current pattern):</b> `+
             `${fmtNum(j.baseline.total_profit_tl,0)} TL net kâr • ${fmtNum(j.baseline.total_water_m3,0)} m³ su • ${fmtNum(j.baseline.efficiency_tl_per_m3,2)} TL/m³</div>`;
   }
 
@@ -8360,18 +8371,18 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const effDelta = bestEff - bEff;
     const samePlanForDelta = avgPlanDistance < 0.5 && rows.every(a=>Number(algos[a]?.unique_patterns||0) <= 1);
     html += `<div class="benchmark-delta-grid-v97">
-      <div><span>Mevcude gore kar</span><b>${profitDelta >= 0 ? '+' : ''}${fmtNum(profitDelta,0)} TL</b><small>Benchmark lideri: ${escapeHtml(bestAlgo)}</small></div>
-      <div><span>Mevcude gore su</span><b>${waterDelta <= 0 ? '' : '+'}${fmtNum(waterDelta,0)} m3</b><small>${waterDelta <= 0 ? 'su tasarrufu yonunde' : 'daha fazla su kullaniyor'}</small></div>
-      <div><span>TL/m³ farkı</span><b>${effDelta >= 0 ? '+' : ''}${fmtNum(effDelta,2)}</b><small>verimlilik yakınsaması</small></div>
-      <div><span>Karar güveni</span><b>${samePlanForDelta ? 'Kısıt-kararlı' : fmtNum(avgPlanDistance,1) + '% plan farkı'}</b><small>${samePlanForDelta ? 'Aynı desen, dar çözüm uzayı' : 'Algoritmalar ayrışıyor'}</small></div>
+      <div><span>Profit vs current</span><b>${profitDelta >= 0 ? '+' : ''}${fmtNum(profitDelta,0)} TL</b><small>Benchmark leader: ${escapeHtml(bestAlgo)}</small></div>
+      <div><span>Water vs current</span><b>${waterDelta <= 0 ? '' : '+'}${fmtNum(waterDelta,0)} m3</b><small>${waterDelta <= 0 ? 'water-saving direction' : 'uses more water'}</small></div>
+      <div><span>TL/m³ difference</span><b>${effDelta >= 0 ? '+' : ''}${fmtNum(effDelta,2)}</b><small>productivity convergence</small></div>
+      <div><span>Reliability Check</span><b>${samePlanForDelta ? 'Constraint-stable' : fmtNum(avgPlanDistance,1) + '% plan difference'}</b><small>${samePlanForDelta ? 'Same pattern, narrow solution space' : 'Algorithms diverge'}</small></div>
     </div>`;
   }
 
   const allSamePlan = avgPlanDistance < 0.5 && rows.every(a=>Number(algos[a]?.unique_patterns||0) <= 1);
   html += `<div class="benchmark-interpretation-v97">
-    <div><b>Yakınsama yorumu</b><span>${allSamePlan ? 'Algoritmalar aynı karar noktasına kilitlenmiş. Bu, algoritma hatası olarak değil; veri havuzu, su kotası, parsel uygunluğu veya tek baskın ürün kısıtının çözümü daraltması olarak okunur.' : 'Algoritmalar arasında parsel/desen farkı var; plan farkı ve CV birlikte okunarak hangi algoritmanın daha kararlı olduğu seçilir.'}</span></div>
-    <div><b>Overfitting kontrolü</b><span>CV, plan farkı ve 30/50/100 tekrar eğilimi birlikte düşükse bu overfitting değil, kararlı yakınsamadır. CV yükselir veya tekrar arttıkça plan sürekli değişirse sonuç güvenilir sayılmaz.</span></div>
-    <div><b>Öneri deseni</b><span>Önerilen desen benchmark lideri ile çalışır; algoritmalar aynı deseni önerirse çiftçiye farklı ürün varmış gibi gösterilmez, kısıt nedeniyle aynı sonuca gelindiği açıklanır.</span></div>
+    <div><b>Convergence Rule</b><span>${allSamePlan ? 'Algorithms converged to the same decision point. This is interpreted as a narrow solution space caused by data, water quota, parcel suitability or a dominant crop constraint.' : 'Algorithms differ by parcel/pattern; plan difference and CV are read together to choose the more stable algorithm.'}</span></div>
+    <div><b>Overfitting Rule</b><span>If CV, plan difference and the 30/50/100 repeat trend remain low together, this indicates stable convergence rather than overfitting. If CV or plan changes increase with repeats, reliability decreases.</span></div>
+    <div><b>Recommended pattern</b><span>The recommended pattern follows the benchmark leader; if algorithms suggest the same pattern, the UI does not imply different crop choices.</span></div>
   </div>`;
 
   html += '<div class="benchmark-table-wrap">';
@@ -8379,15 +8390,15 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
   const isDoubleBenchmark = String(j?.diagnostics?.scenario_type || j?.scenario_type || '').toLowerCase() === 'double'
     || String(j?.seasonSource || j?.season_source || '').toLowerCase() === 's2';
   html += '<thead><tr>'+
-    '<th style="text-align:left;">Algoritma</th>'+
-    '<th style="text-align:right;">Kâr ort</th>'+
+    '<th style="text-align:left;">Algorithm</th>'+
+    '<th style="text-align:right;">Mean profit</th>'+
     '<th style="text-align:right;">Medyan</th>'+
     '<th style="text-align:right;">Min-Maks</th>'+
-    '<th style="text-align:right;">Su ort</th>'+
-    '<th style="text-align:right;">TL/m³ ort</th>'+
+    '<th style="text-align:right;">Mean water</th>'+
+    '<th style="text-align:right;">Mean TL/m³</th>'+
     '<th style="text-align:right;">Std / CV</th>'+
-    '<th style="text-align:right;">Plan farkı</th>'+
-    '<th style="text-align:right;">Uygulanabilirlik</th>'+
+    '<th style="text-align:right;">Plan difference</th>'+
+    '<th style="text-align:right;">Feasibility</th>'+
     '<th style="text-align:right;">Baskın ürün</th>'+
     '<th style="text-align:right;">İlk 3 / HHI</th>'+
     (isDoubleBenchmark ? '<th style="text-align:right;">2. ürün oranı</th><th style="text-align:right;">2. ürün alanı</th>' : '')+
@@ -8802,58 +8813,58 @@ function diversityWarningHtml(diversity, status, repairApplied=false, feasibilit
     }
   }
   if(topShare > topLimit){
-    items.push(`Ürün yoğunlaşması uyarısı: ${prettyCropName(diversity.top_crop || '-')}, değişen öneri alanının ${diversityPercentText(topShare)}’ını kaplamaktadır. Bu değer ${diversityPercentText(topLimit)} sınırını aşmaktadır.`);
+    items.push(`Crop concentration warning: ${prettyCropName(diversity.top_crop || '-')} covers ${diversityPercentText(topShare)} of the changed recommended area. This exceeds the ${diversityPercentText(topLimit)} threshold.`);
     const totalShare = safeNum(diversity.top_crop_share_total, NaN);
     const changedArea = safeNum(diversity.changed_area_da, 0);
     const totalArea = safeNum(diversity.total_plan_area_da, 0);
     if(Number.isFinite(totalShare) && totalShare > 0 && totalArea > changedArea + 1e-6){
-      items.push(`Öneri planı içinde hesaplanan alan üzerinden payı yaklaşık ${diversityPercentText(totalShare)}’dır.`);
+      items.push(`Its share within the calculated recommendation plan area is approximately ${diversityPercentText(totalShare)}.`);
     }
   }
   if(top3Share > top3Limit){
-    items.push(`İlk 3 ürün, değişen öneri alanının ${diversityPercentText(top3Share)}’ını kaplamaktadır. Ürün deseninde çeşitlilik sınırlı olabilir.`);
+    items.push(`The top 3 crops cover ${diversityPercentText(top3Share)} of the changed recommended area. Crop pattern diversity may be limited.`);
     const top3TotalShare = safeNum(diversity.top3_crop_share_total, NaN);
     const changedArea = safeNum(diversity.changed_area_da, 0);
     const totalArea = safeNum(diversity.total_plan_area_da, 0);
     if(Number.isFinite(top3TotalShare) && top3TotalShare > 0 && totalArea > changedArea + 1e-6){
-      items.push(`Öneri planı içinde hesaplanan alan üzerinden ilk 3 ürün payı yaklaşık ${diversityPercentText(top3TotalShare)}’dır.`);
+      items.push(`The top-3 crop share within the calculated recommendation plan area is approximately ${diversityPercentText(top3TotalShare)}.`);
     }
   }
   if(repairApplied){
-    items.push('Ürün çeşitliliği kısıtı nedeniyle plan yeniden dengelenmiştir. Amaç, tek ürüne aşırı yığılmayı azaltarak daha uygulanabilir bir ürün deseni üretmektir.');
+    items.push('The plan was rebalanced due to the crop-diversity constraint to reduce excessive concentration in a single crop.');
   }
   if(!items.length && Array.isArray(diversity.warnings) && diversity.warnings.length){
     items.push(...diversity.warnings.slice(0, 2).filter(x=>!isInfeasiblePlanWarningText(x)));
   }
   if(!items.length) return '';
-  return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Ürün çeşitliliği kontrolü:</strong><ul style="margin:6px 0 0 18px; padding:0;">${items.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
+  return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Crop Diversity Check:</strong><ul style="margin:6px 0 0 18px; padding:0;">${items.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
 }
 
 function agronomicRiskHtml(risk){
   if(!risk || typeof risk !== 'object') return '';
   const levelText = level => {
     const s = String(level || '').toLowerCase();
-    if(s === 'high') return 'Yüksek';
-    if(s === 'medium') return 'Orta';
-    if(s === 'low') return 'Düşük';
-    return 'Veri sınırlı';
+    if(s === 'high') return 'High';
+    if(s === 'medium') return 'Medium';
+    if(s === 'low') return 'Low';
+    return 'Limited data';
   };
-  const dataNote = part => String(part?.data_status || '').toLowerCase() === 'limited' ? ' (veri sınırlı)' : '';
+  const dataNote = part => String(part?.data_status || '').toLowerCase() === 'limited' ? ' (limited data)' : '';
   const market = risk.market_saturation_risk || {};
   const rotation = risk.rotation_risk || {};
   const labor = risk.labor_harvest_risk || {};
   const storage = risk.storage_marketing_risk || {};
   const transition = risk.transition_risk || {};
   const rows = [
-    ['Pazar/fiyat baskısı riski', levelText(market.level), market.message],
-    ['Münavebe/hastalık-zararlı riski', levelText(rotation.level) + dataNote(rotation), rotation.message],
-    ['Hasat/işçilik yoğunluğu riski', levelText(labor.level) + dataNote(labor), labor.message],
-    ['Depolama/pazarlama hassasiyeti', levelText(storage.level) + dataNote(storage), storage.message],
-    ['Çiftçi geçiş/adaptasyon riski', levelText(transition.level) + dataNote(transition), transition.message],
+    ['Market/price pressure risk', levelText(market.level), market.message],
+    ['Rotation/disease-pest risk', levelText(rotation.level) + dataNote(rotation), rotation.message],
+    ['Harvest/labor intensity risk', levelText(labor.level) + dataNote(labor), labor.message],
+    ['Storage/marketing sensitivity', levelText(storage.level) + dataNote(storage), storage.message],
+    ['Farmer transition/adaptation risk', levelText(transition.level) + dataNote(transition), transition.message],
   ].filter(r => r[2] || r[1]);
   const notes = Array.isArray(risk.notes) ? risk.notes.slice(0, 2) : [];
   if(!rows.length && !notes.length) return '';
-  return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #bfdbfe; border-radius:10px; background:#eff6ff;"><strong>Tarımsal uygulanabilirlik ve risk notu:</strong><div style="margin-top:4px;">Genel risk düzeyi: <b>${escapeHtml(levelText(risk.overall_level))}</b></div><ul style="margin:6px 0 0 18px; padding:0;">${rows.map(r=>`<li><b>${escapeHtml(r[0])}:</b> ${escapeHtml(r[1])}${r[2] ? ` - ${escapeHtml(String(r[2]))}` : ''}</li>`).join('')}${notes.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
+  return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #bfdbfe; border-radius:10px; background:#eff6ff;"><strong>Agronomic Feasibility and Risk Note:</strong><div style="margin-top:4px;">Overall risk level: <b>${escapeHtml(levelText(risk.overall_level))}</b></div><ul style="margin:6px 0 0 18px; padding:0;">${rows.map(r=>`<li><b>${escapeHtml(r[0])}:</b> ${escapeHtml(r[1])}${r[2] ? ` - ${escapeHtml(String(r[2]))}` : ''}</li>`).join('')}${notes.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
 }
 
 function benchmarkDynamicInterpretation(bestAlgo, algos, rows){
@@ -14742,8 +14753,8 @@ function renderTables() {
     const recTitle = Array.from(document.querySelectorAll('.card-subtitle')).find(x => String(x.textContent || '').includes('Önerilen Ürün Deseni'));
     if(recTitle){
       recTitle.textContent = recMeta?.noFeasibleTwoCrop
-        ? 'Senaryo-2 için uygulanabilir iki ürünlü/desenli plan bulunamadı'
-        : 'Önerilen Ürün Deseni (Senaryo + Algoritma)';
+        ? 'No feasible two-crop/pattern plan found for Scenario 2'
+        : 'Recommended Crop Pattern (Scenario + Algorithm)';
     }
   }catch(_e){}
 
@@ -14884,7 +14895,7 @@ function renderTables() {
     tbodyRec.innerHTML = `
       <tr>
         <td colspan="8" style="text-align:center; padding:14px; color:#6b7280;">
-          Bu parsel için önerilen deseni görmek için <b>Optimizasyonu Çalıştır</b> butonuna basın.
+          Press <b>Run Optimization</b> to view the recommended pattern for this parcel.
         </td>
       </tr>
     `;
@@ -14956,7 +14967,7 @@ function renderTables() {
   if(titleEl){
     titleEl.textContent = metricsTitleForCurrentRole(selectedParcelId);
     if(selectedParcelId !== '__ALL__' && STATE.currentUser?.role !== 'farmer'){
-      titleEl.textContent = `Parsel Karar Özeti (${selectedParcelId})`;
+      titleEl.textContent = `Parcel Decision Summary (${selectedParcelId})`;
     }
   }
 
@@ -15153,11 +15164,11 @@ function totalsAllParcels(scenarioKey, algoKey){
 
 function getScenarioDisplayMeta(scenarioKey){
   const s = String(scenarioKey || '').toLowerCase().trim();
-  if(s === 'mevcut' || s === 'current') return { key:'mevcut', label:'Mevcut desen', shortLabel:'Mevcut', icon:'\u{1F4CC}' };
-  if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'tasarruf') return { key:'su_tasarruf', label:'Su tasarrufu', shortLabel:'Su tasarrufu', icon:'\u{1F4A7}' };
-  if(s === 'maks_kar' || s === 'maks kar' || s === 'max_profit') return { key:'maks_kar', label:'Kâr odaklı', shortLabel:'Kâr odaklı', icon:'\u{1F4B0}' };
-  if(s === 'su_etkin' || s === 'water_efficiency' || s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'su_etkin', label:'Su etkin kullanım', shortLabel:'Su etkin', icon:'\u2696\uFE0F' };
-  return { key:s || 'su_etkin', label:'Seçili hedef', shortLabel:'Seçili hedef', icon:'\u{1F3AF}' };
+  if(s === 'mevcut' || s === 'current') return { key:'mevcut', label:'Current pattern', shortLabel:'Current', icon:'\u{1F4CC}' };
+  if(s === 'su_tasarruf' || s === 'su tasarruf' || s === 'water_saving' || s === 'tasarruf') return { key:'su_tasarruf', label:'Water-saving objective', shortLabel:'Water saving', icon:'\u{1F4A7}' };
+  if(s === 'maks_kar' || s === 'maks kar' || s === 'max_profit') return { key:'maks_kar', label:'Profit-oriented objective', shortLabel:'Profit-oriented', icon:'\u{1F4B0}' };
+  if(s === 'su_etkin' || s === 'water_efficiency' || s === 'balanced' || s === 'onerilen' || s === 'recommended' || s === 'denge') return { key:'su_etkin', label:'Water-efficiency objective', shortLabel:'Water efficiency', icon:'\u2696\uFE0F' };
+  return { key:s || 'su_etkin', label:'Selected objective', shortLabel:'Selected objective', icon:'\u{1F3AF}' };
 }
 
 function renderIrrigationCompare(currentRows, recRows, parcel, objectiveKey){
@@ -15327,22 +15338,22 @@ function renderAllScenarioSummaries(){
   const activeObjectiveBadge = document.getElementById('activeObjectiveBadge');
   if(activeObjectiveBadge){
     const objectiveMeta = getScenarioDisplayMeta(viewCtx.scenario);
-    activeObjectiveBadge.textContent = `Aktif hedef: ${objectiveMeta.label}`;
+    activeObjectiveBadge.textContent = `Active objective: ${objectiveMeta.label}`;
     activeObjectiveBadge.className = 'badge ' + (objectiveMeta.key === 'maks_kar' ? 'badge-profit' : (objectiveMeta.key === 'su_tasarruf' ? 'badge-info' : (objectiveMeta.key === 'balanced' ? 'badge-ok' : 'badge-info')));
   }
 
   const parcelSummaryTitle = document.getElementById("parcelSummaryTitle");
   const parcelSummaryNote = document.getElementById("parcelSummaryNote");
   if(parcelSummaryTitle){
-    parcelSummaryTitle.textContent = (selectedParcelId === '__ALL__') ? 'Seçili Kapsam Özeti' : `Parsel Bazlı Özet (${selectedParcelId})`;
+    parcelSummaryTitle.textContent = (selectedParcelId === '__ALL__') ? 'Selected Scope Summary' : `Parcel-level Summary (${selectedParcelId})`;
   }
   if(parcelSummaryTitle && selectedParcelId !== '__ALL__'){
-    parcelSummaryTitle.textContent = `Parsel Su-Kâr Metrikleri (${selectedParcelId})`;
+    parcelSummaryTitle.textContent = `Parcel Water-Profit Metrics (${selectedParcelId})`;
   }
   if(parcelSummaryNote){
     parcelSummaryNote.textContent = (selectedParcelId === '__ALL__')
-      ? 'Şu anda tüm görünür parseller birlikte gösteriliyor.'
-      : 'Aşağıdaki kartlar yalnızca seçili parselin değerlerini gösterir.';
+      ? 'All visible parcels are currently shown together.'
+      : 'The cards below show only the selected parcel values.';
   }
 
   const basinSummaryBlock = document.getElementById("basinSummaryBlock");
@@ -15605,7 +15616,7 @@ function renderAllScenarioSummaries(){
     waterChart.data.datasets[0].data = waterRows.length ? waterRows.map(r=>safeNum(r.value,0)) : [];
     waterChart.data.datasets[0].backgroundColor = labels.map((_,i)=>chartColors[i % chartColors.length]);
     waterChart.data.datasets[0].borderColor = waterChart.data.datasets[0].backgroundColor.map(c=>c.replace('.72','1').replace('.78','1'));
-    setChartTitle(waterChart, backendWaterChart?.title || 'Hedef Modlarına Göre Toplam Su Kullanımı');
+    setChartTitle(waterChart, backendWaterChart?.title || 'Total Water by Objective Mode');
     waterChart.update();
   }
   if(profitChart){
@@ -15615,7 +15626,7 @@ function renderAllScenarioSummaries(){
     profitChart.data.datasets[0].data = profitRows.length ? profitRows.map(r=>safeNum(r.value,0)) : [];
     profitChart.data.datasets[0].backgroundColor = labels.map((_,i)=>chartColors[i % chartColors.length]);
     profitChart.data.datasets[0].borderColor = profitChart.data.datasets[0].backgroundColor.map(c=>c.replace('.72','1').replace('.78','1'));
-    setChartTitle(profitChart, backendProfitChart?.title || 'Hedef Modlarına Göre Toplam Net Kâr');
+    setChartTitle(profitChart, backendProfitChart?.title || 'Total Net Profit by Objective Mode');
     profitChart.update();
   }
 }
@@ -16332,7 +16343,7 @@ function ensureCropDetailModalV94(){
   modal = document.createElement('div');
   modal.id = 'cropDetailModalV94';
   modal.className = 'crop-modal-v94';
-  modal.innerHTML = `<div class="crop-modal-backdrop" data-crop-modal-close="1"></div><section class="crop-modal-panel"><button type="button" class="crop-modal-close" data-crop-modal-close="1">Kapat</button><div id="cropDetailModalBodyV94"></div></section>`;
+  modal.innerHTML = `<div class="crop-modal-backdrop" data-crop-modal-close="1"></div><section class="crop-modal-panel"><button type="button" class="crop-modal-close" data-crop-modal-close="1">Close</button><div id="cropDetailModalBodyV94"></div></section>`;
   document.body.appendChild(modal);
   modal.addEventListener('click', (ev)=>{ if(ev.target?.dataset?.cropModalClose){ modal.classList.remove('is-open'); } });
   document.addEventListener('keydown', (ev)=>{ if(ev.key === 'Escape') modal.classList.remove('is-open'); });
@@ -18145,7 +18156,7 @@ function initTabs() {
           // boş görünüyorsa kullanıcıya ipucu ver
           const box = document.getElementById('benchmarkResults');
           if(box && !box.innerHTML.trim()){
-            box.innerHTML = '<div class="badge badge-info">Karşılaştırmayı başlatmak için <b>Karşılaştırmayı Çalıştır</b> butonuna basın.</div>';
+            box.innerHTML = '<div class="badge badge-info">Press <b>Run Benchmark</b> to start the comparison.</div>';
           }
         }, 60);
       }
@@ -19326,11 +19337,11 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         const src = (mode === 'use_selected' || mode === 'all') ? selectedSeasonSource : mode;
         const calibration = await fetchRunCountCalibrationPython(objective, src);
         renderRunCountCalibrationResults(calibration, box);
-        if(st) st.textContent = benchmarkCompletionText(calibration) || 'Tekrar sayısı kararlılık analizi tamamlandı';
+        if(st) st.textContent = benchmarkCompletionText(calibration) || 'Run count stability analysis completed';
       }catch(e){
         console.warn('Benchmark sweep hata:', e);
-        if(box) box.innerHTML = '<div class="badge badge-warn">Tekrar sayısı kararlılık analizi hata: '+String(e?.message||e)+'</div>';
-        if(st) st.textContent = 'Tekrar sayısı analizi hata';
+        if(box) box.innerHTML = '<div class="badge badge-warn">Run count stability analysis error: '+String(e?.message||e)+'</div>';
+        if(st) st.textContent = 'Run count analysis error';
       }finally{
         benchSweepBtn.disabled = false;
         benchSweepBtn.classList.remove('btn-disabled');
@@ -20837,7 +20848,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const isEfficiency = obj.includes('efficiency') || obj.includes('etkin') || obj.includes('verim');
     const isWater = !isEfficiency && (obj.includes('water') || obj.includes('su'));
     const isProfit = obj.includes('profit') || obj.includes('kar');
-    const objective = isEfficiency ? 'Su etkin kullanım' : (isWater && !isProfit ? 'Su tasarrufu' : (isProfit && !isWater ? 'Net kâr' : 'Su etkin kullanım'));
+    const objective = isEfficiency ? 'Water efficiency' : (isWater && !isProfit ? 'Water saving' : (isProfit && !isWater ? 'Net profit' : 'Water efficiency'));
     const w = isWater && !isProfit ? {p:.14, su:.34, e:.22, feas:.12, stab:.12, speed:.06} : (isProfit && !isWater ? {p:.34, su:.14, e:.22, feas:.12, stab:.12, speed:.06} : {p:.24, su:.24, e:.22, feas:.12, stab:.12, speed:.06});
     const rows = ns.map(a => {
       const r = algos[a] || {};
@@ -20858,9 +20869,9 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     return {rows, objective, spread, isTie: spread < 2.5 || allSame, allSame};
   }
   function decisionText(s){
-    if(s.allSame) return 'Algoritmalar aynı optimuma yakınsadı; bu durumda tek kazanan göstermek doğru değildir.';
-    if(s.isTie) return 'Skor farkı 2.5 puanın altında; karar eşdeğer bantta raporlanır.';
-    return `${s.rows[0]?.a || '-'} hedef fonksiyonunda daha yüksek birleşik skor üretmiştir.`;
+    if(s.allSame) return 'Algorithms converged near the same optimum; a single winner should not be shown in this case.';
+    if(s.isTie) return 'The score difference is below 2.5 points; the decision is reported as an equivalent band.';
+    return `${s.rows[0]?.a || '-'} produced a higher combined score for the objective function.`;
   }
   function reportHtml(j){
     const s = stats(j);
@@ -20872,10 +20883,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const requestedTotalRuns = n(j?.requested_total_runs) || n(j?.expected_total_runs) || totalTarget;
     const completionKind = String(j?.completion_status_kind || (completedRuns < requestedTotalRuns ? 'partial' : 'completed')).toLowerCase();
     const isPartial = completionKind === 'partial';
-    const completionText = benchmarkCompletionText(j) || (isPartial ? `Kısmi sonuç: ${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)} koşu tamamlandı` : `Tamamlandı: ${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)} koşu`);
+    const completionText = benchmarkCompletionText(j) || (isPartial ? `Partial result: ${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)} runs completed` : `Completed: ${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)} runs`);
     const modeLabel = String(j?.benchmark_mode || '').toLowerCase() === 'fast'
-      ? 'Hızlı ön izleme'
-      : 'Akademik karşılaştırma';
+      ? 'Fast preview'
+      : 'Academic comparison';
     const dynamicSummary = (typeof benchmarkDynamicInterpretation === 'function' && best?.a)
       ? benchmarkDynamicInterpretation(best.a, j?.algorithms || {}, names(j))
       : '';
@@ -20884,17 +20895,17 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const kpiRoot = document.getElementById('benchmarkKpiGrid');
     if(kpiRoot){
       kpiRoot.innerHTML = [
-        {label:'Net karar', value:isPartial ? 'Ön değerlendirme' : ((s.isTie || backendTie) ? 'Eşdeğer bant' : best?.a || '-'), sub:summary},
-        {label:'Koşu sayısı', value:`${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)}`, sub:completionText},
-        {label:'Grafik', value:'3 çizgi', sub:'GA, ABC, ACO ayrı çizgi; üst üste binme yakınsama demektir.'},
-        {label:'Güven kontrolü', value:s.allSame ? 'Yakınsama' : `${fmt(s.spread,1)} puan fark`, sub:'CV, plan farkı ve uygulanabilirlik birlikte okunur.'}
+        {label:'Final Decision', value:isPartial ? 'Preliminary assessment' : ((s.isTie || backendTie) ? 'Equivalent band' : best?.a || '-'), sub:summary},
+        {label:'Run Count', value:`${fmt(completedRuns,0)}/${fmt(requestedTotalRuns,0)}`, sub:completionText},
+        {label:'Chart', value:'3 lines', sub:'GA, ABC and ACO use separate lines; overlap indicates convergence.'},
+        {label:'Reliability Check', value:s.allSame ? 'Convergence' : `${fmt(s.spread,1)} point difference`, sub:'CV, plan difference and feasibility are read together.'}
       ].map(k => `<div class="pro-kpi"><div class="kpi-label">${esc(k.label)}</div><div class="kpi-value">${esc(k.value)}</div><div class="kpi-sub">${esc(k.sub)}</div></div>`).join('');
     }
     const rows = s.rows.map(row => {
       const r = row.r || {};
       const note = row.plan > 18 || row.avgCv > .08
-        ? 'Dikkat: plan farkı/CV yüksek; yüksek tekrar over-tuning riski doğurabilir.'
-        : (s.isTie ? 'Eşdeğer bant: karar tek algoritmaya bağlanmaz.' : (row === best ? 'Lider: birleşik skor en yüksek.' : 'Alternatif: tablo metrikleriyle karşılaştırılır.'));
+        ? 'Caution: plan difference/CV is high; high repeats may create over-tuning risk.'
+        : (s.isTie ? 'Equivalent band: decision is not tied to a single algorithm.' : (row === best ? 'Leader: highest combined score.' : 'Alternative: compare using table metrics.'));
       return `<tr>
         <td><b>${esc(row.a)}</b></td>
         <td>${esc(METHOD[row.a] || '-')}</td>
@@ -20911,24 +20922,24 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     }).join('');
     return `<section class="benchmark-report" id="benchmarkReport">
       <div class="benchmark-report-head">
-        <div><span>Backend benchmark raporu</span><h3>Algoritma karşılaştırmaları analizi</h3></div>
+        <div><span>Backend benchmark report</span><h3>Algorithm comparison analysis</h3></div>
         <strong>${esc(s.objective)}</strong>
       </div>
       <div class="benchmark-decision">
-        <b>${esc(isPartial ? 'Ön değerlendirme' : ((s.isTie || backendTie) ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-')))}</b>
-        <span>${esc(summary)} ${esc(completionText)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
+        <b>${esc(isPartial ? 'Preliminary assessment' : ((s.isTie || backendTie) ? 'Result: equivalent band' : 'Result: ' + (best?.a || '-')))}</b>
+        <span>${esc(summary)} ${esc(completionText)} If raw values are identical, chart lines may overlap; this is the same optimum behavior, not an error.</span>
       </div>
-      <div class="benchmark-note"><b>${esc(modeLabel)}:</b> ${esc(modeLabel === 'Hızlı ön izleme' ? 'Bu mod düşük tekrar sayısı kullanır; nihai akademik değerlendirme için kararlılık analizi veya 30+ tekrar kullanılmalıdır.' : 'GA, ACO ve ABC aynı veri, aynı su kotası, aynı hedef fonksiyonu ve aynı senaryo altında karşılaştırılır.')}</div>
+      <div class="benchmark-note"><b>${esc(modeLabel)}:</b> ${esc(modeLabel === 'Fast preview' ? 'This mode uses a low repeat count; stability analysis or 30+ repeats should be used for final academic evaluation.' : 'GA, ACO and ABC are compared under the same data, water quota, objective function and scenario.')}</div>
       <div class="benchmark-table-wrap benchmark-report-table">
         <table class="mini-table pro">
-          <thead><tr><th>Alg.</th><th>Optimizasyon yaklaşımı</th><th>Net kâr</th><th>Su</th><th>TL/m³</th><th>Skor</th><th>CV</th><th>Plan farkı</th><th>Uygunluk</th><th>Süre</th><th>Net yorum</th></tr></thead>
+          <thead><tr><th>Alg.</th><th>Optimization approach</th><th>Net profit</th><th>Water</th><th>TL/m³</th><th>Score</th><th>CV</th><th>Plan difference</th><th>Feasibility</th><th>Runtime</th><th>Brief interpretation</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
       <div class="benchmark-rules">
-        <div><b>Doğruluk kuralı</b><span>Karar yalnızca kârla verilmez; su tüketimi, TL/m³, uygulanabilirlik, CV, plan farkı ve süre birlikte puanlanır.</span></div>
-        <div><b>Overfitting kuralı</b><span>50-100 tekrar sadece stres testidir. 100 tekrarda skor artarken CV veya plan farkı büyüyorsa sonuç overfitting/over-tuning riski taşır.</span></div>
-        <div><b>Yakınsama kuralı</b><span>Üç algoritma aynı desene gelirse çiftçiye farklı öneri varmış gibi gösterilmez; veri ve kısıtlar aynı optimuma zorluyor denir.</span></div>
+        <div><b>Validity Rule</b><span>The decision is not based on profit alone; water consumption, TL/m³, feasibility, CV, plan difference and runtime are scored together.</span></div>
+        <div><b>Overfitting Rule</b><span>50-100 repeats are stress tests. If score increases while CV or plan difference grows at 100 repeats, the result carries overfitting/over-tuning risk.</span></div>
+        <div><b>Convergence Rule</b><span>If all three algorithms reach the same pattern, the farmer is not shown artificial variation; data and constraints are reported as driving the same optimum.</span></div>
       </div>
     </section>`;
   }

@@ -1,4 +1,4 @@
-import json
+﻿import json
 import math
 import re
 from pathlib import Path
@@ -615,17 +615,17 @@ def test_benchmark_ui_defaults_and_calibration_copy_are_academic_not_fast():
     assert 'id="benchmarkRepeats"' in html
     assert 'value="30"' in html
     assert '<option selected="" value="detailed">' in html
-    assert "Bu mod düşük tekrar sayısı kullanır" in script
+    assert "This mode uses a low repeat count" in script
     assert "fetchRunCountCalibrationPython" in script
     assert "/api/run_count_calibration" in script
-    assert "Tekrar sayısı kararlılık analizi" in html
+    assert "Run Count Stability Analysis" in html
 
 
 def test_partial_benchmark_language_is_preliminary_not_definitive():
     script = (ROOT / "script.js").read_text(encoding="utf-8")
     app_source = (ROOT / "app.py").read_text(encoding="utf-8")
-    assert "Ön değerlendirme" in script
-    assert "Kısmi sonuç:" in script
+    assert "Preliminary assessment" in script
+    assert "Partial result:" in script
     assert "kesin en iyi algoritma dili kullanilmamalidir" in app_source
     assert "Kesin en iyi" not in script
 
