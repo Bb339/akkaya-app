@@ -420,6 +420,27 @@ def test_legacy_15y_projection_ui_and_routes_are_inactive():
         assert legacy_id not in html
 
 
+def test_data_quality_report_has_no_matrix_feasibility_error():
+    report = app_module.build_data_quality_report()
+    assert "error" not in report.get("matrix_feasibility", {})
+
+
+def test_geojson_bundle_filters_out_of_scope_and_reports_pending_drawings(client):
+    resp = client.get("/api/geojson_bundle")
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data["status"] == "OK"
+
+    features = data["parcels"]["features"]
+    parcel_ids = [str((f.get("properties") or {}).get("id") or "") for f in features]
+    assert "P180" not in parcel_ids
+    assert parcel_ids.count("P1") == 1
+    assert len(parcel_ids) == len(set(parcel_ids))
+    assert "P138" in data.get("missing_drawing_ids", [])
+    assert "P138" in data.get("drawing_pending_ids", [])
+    assert data.get("errors") == []
+
+
 def test_script_has_single_active_decision_flow_functions():
     script = (ROOT / "script.js").read_text(encoding="utf-8")
     funcs = [

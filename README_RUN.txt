@@ -40,5 +40,5 @@ Not:
 - Çiftçi, resmî parseli doğrudan değiştirmez; düzeltme talebi oluşturur.
 - Kurum tarafında yapılan resmî parsel güncellemeleri tarayıcıda kalıcı override olarak saklanır ve hesaplamalara dahil edilir.
 - Kuraklık detay paneli varsayılan olarak kapalı açılır; çiftçi görünümünde karmaşık veri seti seçicileri gizlenir.
-- 2025-2050 su görünümü kesin tahmin değil, karar desteği amaçlı senaryolu planlama serisidir.
+- Bu sürümde ana planlama yılı 2024 mevcut desen/kota referansıdır. İleri projeksiyon modülleri aktif karar ekranından çıkarılmıştır; sistem mevcut su kullanımı, parsel kotası, ürün deseni, su/kâr karşılaştırması, tarımsal uygulanabilirlik uyarıları ve algoritma benchmarkı üzerinden çalışır.
 - Paket içinde proxy / assumed veri bulunan katmanlar vardır; bunlar savunma ve sunumda açıkça belirtilmelidir.

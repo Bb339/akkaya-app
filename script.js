@@ -1583,7 +1583,7 @@ function escapeHtml(s){
     .replace(/'/g,'&#39;');
 }
 
-// Number formatting (TR) - used in 15Y outputs & tooltips
+// Number formatting (TR) - used in output cards & tooltips
 function formatNumber(x, digits=0){
   const n = Number(x);
   if(!isFinite(n)) return '-';

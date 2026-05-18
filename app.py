@@ -124,7 +124,7 @@ def normalize_parcel_id_series(df: pd.DataFrame, cols: Optional[List[str]] = Non
 
 
 # -----------------------------
-# Minimal CSV loaders used by 15Y impact endpoints
+# Legacy CSV loaders used by baseline/data compatibility helpers
 # -----------------------------
 
 def load_parcels_csv() -> pd.DataFrame:
@@ -9536,6 +9536,34 @@ def api_geojson_bundle_v36():
     except Exception:
         registry = []
 
+    def _truthy(value: Any) -> bool:
+        if isinstance(value, bool):
+            return value
+        return str(value or "").strip().lower() in {"1", "true", "yes", "evet", "var"}
+
+    def _norm_rel(value: Any) -> str:
+        return str(value or "").strip().replace("\\", "/").lstrip("./").lower()
+
+    registry_by_id: Dict[str, Dict[str, Any]] = {}
+    registry_sources_by_id: Dict[str, set] = {}
+    for rec in registry:
+        if not isinstance(rec, dict):
+            continue
+        rid = normalize_parcel_id(rec.get("parcel_id") or rec.get("id") or "")
+        if not rid:
+            continue
+        registry_by_id[rid] = rec
+        sources = set()
+        for key in ("source_file", "geojson_file", "geojson_rel_path", "rel_path"):
+            raw_source = _norm_rel(rec.get(key))
+            if raw_source:
+                sources.add(raw_source)
+                sources.add(Path(raw_source).name.lower())
+                if not raw_source.startswith("geojson_yeni_klasor4/"):
+                    sources.add(f"geojson_yeni_klasor4/{raw_source}")
+        registry_sources_by_id[rid] = sources
+    active_parcel_ids = set(registry_by_id)
+
     def _file_village(name: str) -> str:
         low = name.lower()
         if "bahceli" in low or "bahçeli" in low:
@@ -9596,6 +9624,7 @@ def api_geojson_bundle_v36():
     files = []
     skipped = []
     errors = []
+    seen_parcel_ids = set()
 
     if not preferred_dir.exists():
         return jsonify({"status": "ERROR", "message": "geojson_yeni_klasor4 not found"}), 404
@@ -9627,6 +9656,22 @@ def api_geojson_bundle_v36():
             mm = meta_by_file.get(name, {}) or (meta_by_id.get(pid, {}) if pid else {}) or {}
             if not pid:
                 pid = str(mm.get("pid") or mm.get("parcel_id") or Path(name).stem)
+            pid = normalize_parcel_id(pid)
+            if active_parcel_ids and pid not in active_parcel_ids:
+                skipped.append({"file": rel, "parcel_id": pid, "reason": "outside_active_registry_scope"})
+                continue
+
+            preferred_sources = registry_sources_by_id.get(pid) or set()
+            preferred_exists = any((DATA_DIR / src).exists() or (preferred_dir / Path(src).name).exists() for src in preferred_sources)
+            current_rel = _norm_rel(rel)
+            current_name = _norm_rel(name)
+            if preferred_exists and preferred_sources and current_rel not in preferred_sources and current_name not in preferred_sources:
+                skipped.append({"file": rel, "parcel_id": pid, "reason": "non_preferred_duplicate_source"})
+                continue
+            if pid in seen_parcel_ids:
+                skipped.append({"file": rel, "parcel_id": pid, "reason": "duplicate_parcel_id"})
+                continue
+
             props["id"] = str(pid)
             props["name"] = str(pid)
             props["source_file"] = rel
@@ -9654,6 +9699,7 @@ def api_geojson_bundle_v36():
             _ensure_closed(feat)
             files.append(rel)
             parcels["features"].append(feat)
+            seen_parcel_ids.add(pid)
         except Exception as e:
             errors.append({"file": rel, "error": str(e)})
 
@@ -9674,6 +9720,18 @@ def api_geojson_bundle_v36():
     except Exception:
         expected_by_village = {}
     missing_by_village = {v: max(0, int(expected_by_village.get(v, 0)) - int(counts_by_village.get(v, 0))) for v in expected_by_village}
+    drawn_ids = {
+        normalize_parcel_id((f.get("properties") or {}).get("id") or (f.get("properties") or {}).get("name") or "")
+        for f in parcels["features"]
+    }
+    drawn_ids.discard("")
+    missing_drawing_ids = sorted(active_parcel_ids - drawn_ids) if active_parcel_ids else []
+    drawing_pending_ids = sorted([
+        pid for pid in missing_drawing_ids
+        if _truthy((registry_by_id.get(pid) or {}).get("drawing_required"))
+        or "pending" in str((registry_by_id.get(pid) or {}).get("geometry_source") or "").lower()
+        or "bekliyor" in str((registry_by_id.get(pid) or {}).get("geometry_status") or "").lower()
+    ])
 
     return jsonify({
         "status": "OK",
@@ -9688,6 +9746,8 @@ def api_geojson_bundle_v36():
         "counts_by_village": counts_by_village,
         "expected_by_village": expected_by_village,
         "missing_by_village": missing_by_village,
+        "missing_drawing_ids": missing_drawing_ids,
+        "drawing_pending_ids": drawing_pending_ids,
         "errors": errors,
     })
 
@@ -9977,6 +10037,7 @@ def build_data_quality_report() -> Dict[str, Any]:
                 covered_ids = set()
         total_ids = {normalize_parcel_id(p.get("id") or p.get("parcel_id") or p.get("parsel_id") or "") for p in parcels}
         total_ids.discard("")
+        covered_ids = covered_ids & total_ids
         out["geojson_coverage"] = {
             "files": int(len(geo_files)),
             "mapped_parcels": int(len(covered_ids)),
@@ -10075,7 +10136,8 @@ def build_data_quality_report() -> Dict[str, Any]:
                 zero_feasible = int(sum(1 for pid in parcel_ids if int(cnt.get(pid, 0)) == 0))
                 low_choice = int(sum(1 for pid in parcel_ids if int(cnt.get(pid, 0)) <= 3))
 
-            pa = normalize_parcel_id_series(_read_csv_safe(frames["files"].get("parcels") if isinstance(frames.get("files"), dict) else None), ["parcel_id", "parsel_id", "id"])
+            pa = frames.get("parcels", pd.DataFrame()).copy()
+            pa = normalize_parcel_id_series(pa, ["parcel_id", "parsel_id", "id"])
             missing_current = []
             if len(pa) and "current_crop" in pa.columns and "parcel_id" in pa.columns:
                 cur_rows = mx[pd.to_numeric(mx.get("is_current_crop", 0), errors="coerce").fillna(0) > 0].copy() if "is_current_crop" in mx.columns else pd.DataFrame()
