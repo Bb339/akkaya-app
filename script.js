@@ -1518,9 +1518,6 @@ function cleanFarmerDisplayNameV54(value){
   return raw.replace(/\s+\d{1,4}\s*$/u, '').trim();
 }
 
-function refreshCharts() {}
-function refreshMap() {}
-
 let parcelData =[];
 
 // =========================
@@ -2234,8 +2231,6 @@ function initSeasonSourceSelector(){
     applyWaterScenarioFromUI(true);
     // update UI
     refreshGlobalSummary();
-    refreshCharts();
-    refreshMap();
     // NOTE: optional chaining on an undeclared identifier throws a ReferenceError.
     // We always define refreshParcelInfoCards() (see below) so we can call it safely.
     refreshParcelInfoCards();
@@ -2677,7 +2672,6 @@ const STATE = {
              // [{yil, senaryo, doluluk_endeksi_0_100}]
   villagePatterns: null,        // {VILLAGE:{top_crops:[{crop,share}]}}
   districtPatterns: null,       // {DISTRICT:{top_crops:[{crop,share}]}}
-  demoOutputs: { ga:null, abc:null, aco:null },
   parcels: [],               // [{id,name,area_da,water_m3,profit_tl,lat,lon,soil,...}]
   maxCapacityM3: 3_000_000,     // 100 endeks = bu kadar m³ (demo ölçeği)
   availableWaterM3: null,
@@ -2932,8 +2926,6 @@ async function loadDataPackageA(){
     // UI refresh
     refreshParcelSelect();
     refreshGlobalSummary();
-    refreshCharts();
-    refreshMap();
     return;
 
     // 1) Ürün kataloğu
@@ -3066,11 +3058,6 @@ try{
     try{ excelDistrict = await fetchJson(DATA_FILES.excelDistrictJson); }catch(_){ excelDistrict = null; }
     STATE.villagePatterns = mergePatterns(baseVillage||{}, excelVillage||{});
     STATE.districtPatterns = mergePatterns(baseDistrict||{}, excelDistrict||{});
-
-    // 4) Demo “referans” çıktılar
-    try{ STATE.demoOutputs.ga = await fetchJson(DATA_FILES.demoOutputs.ga); }catch(_){}
-    try{ STATE.demoOutputs.abc = await fetchJson(DATA_FILES.demoOutputs.abc); }catch(_){}
-    try{ STATE.demoOutputs.aco = await fetchJson(DATA_FILES.demoOutputs.aco); }catch(_){}
 
     // 5) Toplam alan (seçili kapsam / 5 köy parselleri)
     STATE.totalAreaAllParcels = parcelData.reduce((a,p)=>a+(+p.area_da||0),0);
@@ -3337,9 +3324,6 @@ function ensureDroughtSeriesChart(){
   const avg = hist.map(r=> isFinite(r.ortalama_pct) ? +r.ortalama_pct : null);
   const minv = hist.map(r=> isFinite(r.min_pct) ? +r.min_pct : null);
   const stress = hist.map(r=> isFinite(r.doluluk) ? +r.doluluk : null);
-
-  const ySel = Number(STATE.selectedWaterYear);
-  const selIdx = labels.indexOf(String(ySel));
 
   const data = {
     labels,
@@ -17508,7 +17492,6 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
 
 
 // Özel katmanlar: baraj işareti + kullanıcı tarafından yüklenen köy sınırları
-let reservoirLayer = null;
 let reservoirMarker = null;
 let reservoirAreaLayer = null;
 let villageBoundaryLayer = null;
@@ -19854,7 +19837,6 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         for(let i=0;i<12;i++) demandByMonth[i]=totalWater*w[i];
       }
       const pBudget=(typeof parcelWaterBudget==='function') ? parcelWaterBudget(p?.area_da, p) : totalWater;
-      const totalDem=demandByMonth.reduce((a,b)=>a+num(b,0),0);
       // Tahmini kapasiteyi talebin aynısı gibi dağıtmak bütün ayları aynı oranlı
       // gösteriyordu. Bu yedek profilde yıllık su payı daha dengeli bir iletim
       // kapasitesine bölünür; böylece pik aylar gerçekten görünür olur.
@@ -20458,7 +20440,6 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 
   // Patch custom/drawn polygon popup to show full assigned record.
   if(typeof buildCustomParcelPopupHtml === 'function'){
-    const _buildCustomPopup = buildCustomParcelPopupHtml;
     buildCustomParcelPopupHtml = function(parcel){
       const p=parcel || {};
       const rec=currentRec(p.id) || REGISTRY_BY_ID[String(p.id)] || {};
@@ -21514,7 +21495,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const ass = getAssignmentV55(p);
     const status = statusLabelV55(ass?.status);
     const tone = statusToneV55(ass?.status);
-    const assignedDate = ass?.assigned_at ? new Date(ass.assigned_at).toLocaleDateString('tr-TR') : 'Henüz atama tarihi yok';
     const pattern = ass?.pattern || ass?.alternative_label || 'Uzman tarafından özel desen atanmadı';
     const note = ass?.note || (ass ? 'Uzman ataması panelinize aktarılmıştır. Uygulamadan önce kurum/uzman notunu dikkate alın.' : 'Bu parsel için henüz kurum/uzman tarafından özel atama yapılmamış. Aşağıdaki sonuçlar sistemin genel öneri ekranından izlenebilir.');
     const activeTarget = (typeof getScenarioDisplayMeta === 'function')
