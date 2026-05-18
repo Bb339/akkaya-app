@@ -2159,13 +2159,6 @@ function refreshScenarioBaselineCurrent(){
 }
 
 // --- Enhanced seasons source control (Senaryo-1 / Senaryo-2 / Birleşik) ---
-function getSeasonRowsForSource(source){
-  const raw = STATE._seasonRowsRaw || {s1:[], s2:[]};
-  const src = (source || STATE.seasonSource || 's1');if(src === 's1') return raw.s1 || [];
-  if(src === 's2') return raw.s2 || [];
-  return (raw.s1 || []).concat(raw.s2 || []);
-}
-
 function rebuildSeasonDerivedIndexes(seasonRows){
   const rows = Array.isArray(seasonRows) ? seasonRows : [];
 
