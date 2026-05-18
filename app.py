@@ -4395,57 +4395,6 @@ def _score_solution(chosen: np.ndarray, areas: np.ndarray, W: np.ndarray, R: np.
 
 
 
-def _score_components_two_season(
-    sol1: np.ndarray, sol2: np.ndarray,
-    areas: np.ndarray, W1: np.ndarray, R1: np.ndarray, W2: np.ndarray, R2: np.ndarray,
-    budget: float, objective: str,
-    crop_list: List[str], crop_family: Dict[str, str], rotation_rules: Optional[pd.DataFrame] = None,
-    month_weights: Optional[dict] = None,
-    month_caps: Optional[dict] = None,
-    month_use1: Optional[np.ndarray] = None,
-    month_use2: Optional[np.ndarray] = None,
-    min_unique_crops: int = 2,
-    max_share_per_crop: Optional[float] = 0.75,
-    year: Optional[int] = None,
-    parcel_ids: Optional[List[str]] = None,
-) -> Dict[str, Any]:
-    """Farmer-facing breakdown of the fitness result."""
-    fitness, total_water, total_profit = _score_solution_two_season(
-        sol1, sol2, areas, W1, R1, W2, R2, budget, objective, crop_list, crop_family, rotation_rules,
-        month_weights=month_weights, month_caps=month_caps,
-        month_use1=month_use1, month_use2=month_use2,
-        min_unique_crops=min_unique_crops, max_share_per_crop=max_share_per_crop,
-        year=year, parcel_ids=parcel_ids,
-    )
-    comp: Dict[str, Any] = {
-        "fitness": float(fitness),
-        "total_water_m3": float(total_water),
-        "total_profit_tl": float(total_profit),
-        "budget_m3": float(budget),
-        "over_budget_m3": float(max(0.0, total_water - budget)),
-    }
-    try:
-        crops = [crop_list[int(x)] for x in list(sol1) + list(sol2)]
-        comp["unique_crops_total"] = int(len(set(crops)))
-    except Exception:
-        pass
-    try:
-        total_area = float(np.sum(areas))
-        if total_area > 0:
-            share = {}
-            for i in range(len(areas)):
-                for s in (int(sol1[i]), int(sol2[i])):
-                    ck = crop_list[s]
-                    share[ck] = share.get(ck, 0.0) + float(areas[i])
-            for k in list(share.keys()):
-                share[k] = float(share[k] / (2.0 * total_area))
-            top = sorted(share.items(), key=lambda x: x[1], reverse=True)[:10]
-            comp["top_crop_shares"] = [{"crop": k, "share": float(v)} for k, v in top]
-    except Exception:
-        pass
-    return comp
-
-
 def _score_solution_two_season(
     chosen_primary: np.ndarray,
     chosen_secondary: np.ndarray,

@@ -1625,8 +1625,6 @@ function cleanFarmerDisplayNameV54(value){
   return raw.replace(/\s+\d{1,4}\s*$/u, '').trim();
 }
 
-function refreshParcelSelect() {}
-function refreshGlobalSummary() {}
 function refreshCharts() {}
 function refreshMap() {}
 
