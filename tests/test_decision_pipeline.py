@@ -1,3 +1,4 @@
+import json
 import math
 import re
 from pathlib import Path
@@ -42,6 +43,21 @@ def post_optimize(client, **kwargs):
     for key in ("context", "baseline", "selected_plan", "alternatives", "charts", "tables", "diagnostics"):
         assert key in data
     return data
+
+
+def js_function_body(source, name):
+    match = re.search(rf"function\s+{name}\s*\([^)]*\)\s*\{{", source)
+    assert match, f"{name} function not found"
+    idx = match.end()
+    depth = 1
+    while idx < len(source) and depth:
+        if source[idx] == "{":
+            depth += 1
+        elif source[idx] == "}":
+            depth -= 1
+        idx += 1
+    assert depth == 0, f"{name} function body was not closed"
+    return source[match.end():idx - 1]
 
 
 def test_baseline_is_invariant_across_objective_and_scenario(client):
@@ -113,6 +129,56 @@ def test_benchmark_metrics_and_completion(client):
     for key in ("best_profit", "mean_profit", "std_profit", "cv", "best_water", "mean_water", "tl_per_m3", "feasible_rate", "mean_runtime"):
         assert ga[key] is not None
     assert "ustunluk yorumu" in data["interpretation"]
+
+
+def test_optimize_payload_keeps_core_contract_and_no_infeasible_contradiction(client):
+    data = post_optimize(client, scenario_type="single", objective="water_saving", algorithm="GA")
+
+    assert "baseline" in data
+    assert "diversity" in data
+    assert "agronomic_risk" in data
+    payload_text = json.dumps(data, ensure_ascii=False).lower()
+    assert not ("uygunluk %100" in payload_text and "uygulanabilir değildir" in payload_text)
+
+
+def test_benchmark_payload_keeps_all_algorithms_diversity_and_risk(client):
+    resp = client.post(
+        "/api/benchmark",
+        json={
+            "selectedParcelIds": ["P1"],
+            "algorithms": ["GA", "ABC", "ACO"],
+            "benchmarkMode": "fast",
+            "repeats": 3,
+            "scenario": "water_saving",
+            "waterBudgetRatio": 1.0,
+            "year": 2024,
+            "options": {"scenarioType": "single", "seasonSource": "s1", "twoSeason": False, "seed": 222},
+        },
+    )
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data["status"] == "OK"
+    for algo in ("GA", "ABC", "ACO"):
+        assert algo in data["algorithms"]
+        assert "diversity" in data["algorithms"][algo]
+        assert "agronomic_risk" in data["algorithms"][algo]
+
+
+def test_frontend_backend_result_is_authoritative_and_fallback_is_warning_only():
+    script = (ROOT / "script.js").read_text(encoding="utf-8")
+    fetch_body = js_function_body(script, "fetchAndCacheBasinPlanPython")
+    local_body = js_function_body(script, "buildLocalPlanForIds")
+    fallback_body = js_function_body(script, "runOptimizationWithFallback")
+
+    assert "normalizeBackendRecommendationPayload" in fetch_body
+    assert "return backendUnavailablePlan(" in local_body
+    assert "computeBasinPlan(" not in local_body
+    assert "rankPlanCandidatesV8(" not in local_body
+    assert "rankAnnualCandidates(" not in local_body
+    assert "return await fetchAndCacheBasinPlanPython" in fallback_body
+    assert "backendUnavailablePlan" in fallback_body
+    assert "buildLocalPlanForIds" not in fallback_body
+    assert "tarayıcı içi karar üretilmedi" in fallback_body
 
 
 def test_detailed_benchmark_runs_all_requested_repeats(monkeypatch, client):

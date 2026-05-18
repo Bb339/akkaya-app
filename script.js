@@ -3167,26 +3167,6 @@ function parcelWaterBudget(areaDa, parcelLike=null){
   return areaFair;
 }
 
-function enforceParcelQuotaOnRows(rows, parcel){
-  const out = deepCloneRows(Array.isArray(rows) ? rows : []);
-  if(!parcel || !out.length || typeof parcelWaterBudget !== 'function') return out;
-  const quota = parcelWaterBudget(safeNum(parcel.area_da || parcel.area_official_da || parcel.area, 0), parcel);
-  const totals = sumMetrics(out);
-  if(!(quota > 0) || !(safeNum(totals.water,0) > quota + 1e-6)) return out;
-  const k = quota / Math.max(1, safeNum(totals.water,0));
-  out.forEach(r=>{
-    const oldArea = safeNum(r.area,0);
-    const oldWater = safeNum(r.totalWater, oldArea * safeNum(r.waterPerDa,0));
-    const oldProfit = safeNum(r.totalProfit, oldArea * safeNum(r.profitPerDa,0));
-    r.area = oldArea * k;
-    r.totalWater = oldWater * k;
-    r.totalProfit = oldProfit * k;
-    r.quotaLimited = true;
-    r.decisionNote = [r.decisionNote, 'Alan bazlı su kotası nedeniyle ekim alanı kota kadar sınırlandı.'].filter(Boolean).join(' ');
-  });
-  return out;
-}
-
 async function initWaterSelectors(){
   const yearSel = document.getElementById("waterYear");
   if(!yearSel) return;
@@ -7766,24 +7746,6 @@ function kcAvgForCrop(cropName){
   // meyveler
   if(c.includes("ELMA") || c.includes("ARMUT") || c.includes("KIRAZ") || c.includes("SEFTALI") || c.includes("KAYISI")) return 0.90;
   return 0.95;
-}
-
-function estimateWaterPerDaFromETo(parcel, cropName, fallback){
-  // 1 mm yağış/ET = 1 m3/da (1 da = 1000 m2)
-  const eto = parcel?.climate?.eto_mm;
-  const rain = parcel?.climate?.rain_mm;
-  if(!isFinite(eto) || !isFinite(rain)) return fallback;
-  const kc = kcAvgForCrop(cropName);
-  const effRain = EFFECTIVE_RAIN_FACTOR * rain;
-  const etc = eto * kc;
-  let netIrr = etc - effRain;
-  // negatifse 0'a çek
-  netIrr = Math.max(0, netIrr);
-  // sulama randımanı (vahşi sulama -> daha fazla ihtiyaç)
-  const eff = clamp(STATE.irrigEfficiency ?? 0.62, 0.45, 0.90);
-  const gross = netIrr / eff;
-  // makul aralık
-  return clamp(Math.round(gross), 120, 950);
 }
 
 function renderIrrigationPlan(parcel, rows){
@@ -15689,34 +15651,6 @@ function normalizeScenarioKey(v){
   if(norm.includes("iyi") && norm.includes("adapt")) return "iyi_adaptasyon";
   if(norm.includes("kotu") && norm.includes("kurak")) return "kotu_kuraklik";
   return norm;
-}
-
-function backfillProjectionSeries(){
-  // Ensure STATE.projSeries has all scenarios; if missing, derive from 'mevcut' curve
-  const base = (STATE.projSeries||[]).filter(x=>x.senaryo==='mevcut');
-  if(!base.length) return;
-  const have = new Set((STATE.projSeries||[]).map(x=>x.senaryo));
-  const mk = (name, mul)=> base.map(x=>({yil:x.yil, senaryo:name, doluluk: clamp((x.doluluk||0)*mul,0,100)}));
-  let out = STATE.projSeries||[];
-  if(!have.has('iyi_adaptasyon')) out = out.concat(mk('iyi_adaptasyon', 1.08));
-  if(!have.has('kotu_kuraklik')) out = out.concat(mk('kotu_kuraklik', 0.85));
-  STATE.projSeries = out;
-  // If scenario chart exists, refresh its datasets
-  if(storageScenarioChart){
-    const scenYears = Array.from({ length: 26 }, (_, i) => 2025 + i);
-    const seriesFor = (sen)=>{
-    if(fallbackProj && fallbackProj[sen]) return fallbackProj[sen];
-    return scenYears.map(y=>{
-      const r = (STATE.projSeries||[]).find(x=>x.yil===y && x.senaryo===sen);
-      return r ? r.doluluk : null;
-    });
-  };
-    storageScenarioChart.data.labels = scenYears;
-    storageScenarioChart.data.datasets[0].data = seriesFor('mevcut');
-    storageScenarioChart.data.datasets[1].data = seriesFor('iyi_adaptasyon');
-    storageScenarioChart.data.datasets[2].data = seriesFor('kotu_kuraklik');
-    storageScenarioChart.update();
-  }
 }
 
 // Chart.js grafikleri
