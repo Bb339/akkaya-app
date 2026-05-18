@@ -1510,104 +1510,6 @@ let lastOptimizeReqId = 0;
 let optimizeAbortCtrl = null; // deprecated (no longer aborting requests)
 let optimizeInFlight = 0;
 
-// Per-section abort controllers (avoid cross-tab AbortError noise)
-let benchmarkAbortCtrl = null;
-let impactAbortCtrl = null;
-let profitAbortCtrl = null;
-
-// 15-year impact charts (Chart.js instances)
-let impactWater15Chart = null;
-let impactProfit15Chart = null;
-
-function _destroyChart(ch){
-  try{ if(ch && typeof ch.destroy === "function") ch.destroy(); }catch(e){}
-}
-
-function renderImpactWater15Chart(out){
-  try{
-    const canvas = document.getElementById("impactWater15Chart");
-    if(!canvas || !window.Chart) return;
-    const s = (out && out.series) ? out.series : null;
-    if(!s || !s.years) return;
-    const labels = s.years.map(String);
-    const datasets = [];
-    const dashFor = (label)=>{
-      if(label === 'GA') return [];
-      if(label === 'ACO') return [8,4];
-      if(label === 'ABC') return [2,3];
-      if(label === 'AVG') return [10,3,2,3];
-      return [];
-    };
-    const colorFor = (label)=> ({ GA:'#2563eb', ACO:'#f59e0b', ABC:'#ef4444', AVG:'#7c3aed' }[label] || '#2563eb');
-    const algos = (out.algorithms || ["GA","ACO","ABC"]).slice();
-    for(const a of algos){
-      const v = (s[a] && s[a].cumulative_saving_m3) ? s[a].cumulative_saving_m3 : [];
-      datasets.push({label: a, data: v, borderDash: dashFor(a), pointRadius: 2, borderWidth: 2, fill: false, tension: 0.15, borderColor: colorFor(a), backgroundColor: colorFor(a)});
-    }
-    if(s.AVG && s.AVG.cumulative_saving_m3){
-      datasets.push({label: "AVG", data: s.AVG.cumulative_saving_m3, borderDash: dashFor('AVG'), pointRadius: 2, borderWidth: 2, fill: false, tension: 0.15, borderColor: colorFor('AVG'), backgroundColor: colorFor('AVG')});
-    }
-    _destroyChart(impactWater15Chart);
-    impactWater15Chart = window._droughtChart = new Chart(canvas.getContext("2d"), {
-      type: "line",
-      data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: "index", intersect: false },
-        plugins: { legend: { display: true } },
-        scales: { x: { title: { display: true, text: "Yıl" } }, y: { title: { display: true, text: "m³" } } }
-      }
-    });
-  }catch(e){}
-}
-
-function renderImpactProfit15Chart(out){
-  try{
-    const canvas = document.getElementById("impactProfit15Chart");
-    if(!canvas || !window.Chart) return;
-    const s = (out && out.series) ? out.series : null;
-    if(!s || !s.years) return;
-    const labels = s.years.map(String);
-    const datasets = [];
-    const dashFor = (label)=>{
-      if(label === 'GA') return [];
-      if(label === 'ACO') return [8,4];
-      if(label === 'ABC') return [2,3];
-      if(label === 'AVG') return [10,3,2,3];
-      return [];
-    };
-    const colorFor = (label)=> ({ GA:'#2563eb', ACO:'#f59e0b', ABC:'#ef4444', AVG:'#7c3aed' }[label] || '#2563eb');
-    const algos = (out.algorithms || ["GA","ACO","ABC"]).slice();
-    for(const a of algos){
-      const v = (s[a] && s[a].cumulative_delta_tl) ? s[a].cumulative_delta_tl : [];
-      datasets.push({label: a, data: v, borderDash: dashFor(a), pointRadius: 2, borderWidth: 2, fill: false, tension: 0.15, borderColor: colorFor(a), backgroundColor: colorFor(a)});
-    }
-    if(s.AVG && s.AVG.cumulative_delta_tl){
-      datasets.push({label: "AVG", data: s.AVG.cumulative_delta_tl, borderDash: dashFor('AVG'), pointRadius: 2, borderWidth: 2, fill: false, tension: 0.15, borderColor: colorFor('AVG'), backgroundColor: colorFor('AVG')});
-    }
-    _destroyChart(impactProfit15Chart);
-    impactProfit15Chart = new Chart(canvas.getContext("2d"), {
-      type: "line",
-      data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: "index", intersect: false },
-        plugins: { legend: { display: true } },
-        scales: { x: { title: { display: true, text: "Yıl" } }, y: { title: { display: true, text: "TL" } } }
-      }
-    });
-  }catch(e){}
-}
-
-function _resetAbort(ctrlRefName){
-  try{
-    const c = eval(ctrlRefName);
-    if(c) c.abort();
-  }catch(e){}
-}
-
 // ------------------------------------------------------------
 // Boot safety shims
 // If any of these are referenced before the main UI functions
@@ -10755,16 +10657,13 @@ function syncParcelSelectValueToParcel(parcelId, dispatchChange=false){
   const sel = document.getElementById("parcelSelect");
   if(!pid || !sel) return false;
   const options = Array.from(sel.options || []);
-  console.debug("[defaults] parcel select options count", options.length);
   const opt = options.find(o => String(o.value || "").trim() === pid)
     || options.find(o => String(o.value || "").trim().toUpperCase() === pid.toUpperCase())
     || options.find(o => String(o.textContent || "").trim().toUpperCase().startsWith(pid.toUpperCase()));
-  console.debug("[defaults] P1 option found", opt ? opt.value : "");
   if(!opt) return false;
   sel.value = opt.value;
   opt.selected = true;
   selectedParcelId = pid;
-  console.debug("[defaults] parcel select value after sync", sel.value);
   if(dispatchChange){
     try{ sel.dispatchEvent(new Event("change", { bubbles: true })); }catch(_e){}
   }
@@ -10783,14 +10682,12 @@ function activatePanelDefaultParcel(){
   if(typeof selectParcelByIdAndRefresh === "function"){
     const ok = !!selectParcelByIdAndRefresh(pid);
     syncParcelSelectValueToParcel(pid, false);
-    console.debug("[defaults] selectedParcelId after select flow", selectedParcelId);
     return ok;
   }
   selectedParcelId = pid;
   try{ refreshParcelSelect(); }catch(_e){}
   syncParcelSelectValueToParcel(pid, true);
   try{ refreshUI(); }catch(_e){}
-  console.debug("[defaults] selectedParcelId after select flow", selectedParcelId);
   return true;
 }
 
@@ -10805,10 +10702,7 @@ function focusDefaultParcelMapWhenReady(attempt=0){
     result = "not-ready";
   }
   if(result === "not-ready" && attempt < 5){
-    console.debug("[defaults] P1 map layer not ready", { attempt, selectedParcelId });
     requestAnimationFrame(()=> focusDefaultParcelMapWhenReady(attempt + 1));
-  }else{
-    console.debug("[defaults] map focus P1 result", result);
   }
   return result;
 }
@@ -10817,34 +10711,10 @@ function applyPresentationPanelDefaultsFinal(source="final"){
   applyPanelOpenDefaults();
   const selected = activatePanelDefaultParcel();
   focusPanelDefaultTab();
-  const sel = document.getElementById("parcelSelect");
-  const selectedText = sel ? (sel.options[sel.selectedIndex]?.textContent || "") : "";
-  const fixedDropdown = !!(sel && String(sel.value || "").trim() === PANEL_OPEN_DEFAULTS.parcelId && selectedText.includes(PANEL_OPEN_DEFAULTS.parcelId));
-  const fixedTab = getActiveTabKey() === PANEL_OPEN_DEFAULTS.tab;
-  console.debug("[defaults-final] select exists", !!sel);
-  console.debug("[defaults-final] select options", sel ? Array.from(sel.options || []).map(o => [o.value, o.textContent]).slice(0,5) : []);
-  console.debug("[defaults-final] selectedParcelId", selectedParcelId);
-  console.debug("[defaults-final] select.value", sel ? sel.value : "");
-  console.debug("[defaults-final] selected option text", selectedText);
-  console.debug("[defaults-final] active tab key", getActiveTabKey());
-  console.debug("[defaults-final] active tab text", document.querySelector(".tab.active")?.textContent || "");
-  console.debug("[defaults-final] fixed dropdown?", fixedDropdown);
-  console.debug("[defaults-final] fixed tab?", fixedTab);
-  console.debug("[defaults] presentation defaults applied", {
-    source,
-    selected,
-    selectedParcelId,
-    parcelSelectValue: sel ? sel.value : "",
-    activeTab: getActiveTabKey()
-  });
   requestAnimationFrame(()=>{
     focusPanelDefaultTab();
     syncParcelSelectValueToParcel(PANEL_OPEN_DEFAULTS.parcelId, false);
     focusDefaultParcelMapWhenReady(0);
-    const selAfter = document.getElementById("parcelSelect");
-    console.debug("[defaults] selectedParcelId after defaults", selectedParcelId);
-    console.debug("[defaults] parcel select value after defaults", selAfter ? selAfter.value : "");
-    console.debug("[defaults] active tab after final apply", getActiveTabKey());
   });
   return selected;
 }
@@ -17388,9 +17258,6 @@ async function initMap() {
     }
   }
 
-  try{ console.log('[GeoJSON] discovered', GEOJSON_FILES.length, 'files'); console.log('[GeoJSON] bahceli/sazlica', GEOJSON_FILES.filter(f=>String(f).toLowerCase().includes('bahceli')).length, GEOJSON_FILES.filter(f=>String(f).toLowerCase().includes('sazlica')).length); }catch(_e){}
-
-
 // -----------------------------
 // Özel katmanlar (parsel olmayan)
 // -----------------------------
@@ -17751,7 +17618,6 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
         if(!existingIdx.has(pid)){ parcelData.push(rec); existingIdx.set(pid, rec); }
       });
       try{ if(typeof refreshParcelSelect === 'function') refreshParcelSelect(); }catch(_e){}
-      try{ console.log('[v39 GeoJSON bundle] parsel:', bundle.count, 'köyler:', bundle.counts_by_village || {}); }catch(_e){}
       return { parcels: bundle.parcels, reservoirs: bundle.reservoirs || {type:'FeatureCollection', features:[]} };
     }
   }catch(e){
@@ -18532,10 +18398,6 @@ try{
     if(selVillage) selVillage.addEventListener('change', ()=>refreshFilterUi(true));
 
     refreshFilterUi(true);
-    try{
-      const totalLoaded = (geojson && geojson.features) ? geojson.features.length : 0;
-      console.log('[v39 GeoJSON] toplam parsel:', totalLoaded, 'seçili köy:', activeVillageFilter);
-    }catch(_e){}
   }
 
 }catch(_e){}
@@ -18705,7 +18567,6 @@ function initTabs() {
     water: document.getElementById("tab-water"),
     drought: document.getElementById("tab-drought"),
     benchmark: document.getElementById("tab-benchmark"),
-    impact: document.getElementById("tab-impact"),
     plan5: document.getElementById("tab-plan5"),
     users: document.getElementById("tab-users"),
     "institution-communication": document.getElementById("tab-institution-communication"),
@@ -18768,19 +18629,6 @@ function initTabs() {
         }, 60);
       }
 
-      if(key === 'impact'){
-        // Sekme ilk kez açıldığında boş görünmesin
-        setTimeout(()=>{
-          const box = document.getElementById('impact15ySummary');
-          const box2 = document.getElementById('profit15ySummary');
-          if(box && !box.innerHTML.trim()){
-            box.innerHTML = '<div class="badge badge-info">15 yıllık etkiyi görmek için <b>15Y Su Tasarrufu</b> veya <b>15Y Ortalama Kâr</b> butonuna basın.</div>';
-          }
-          if(box2 && !box2.innerHTML.trim()){
-            box2.innerHTML = '<div class="badge badge-info">Kâr projeksiyonu için üstteki butonu kullanın.</div>';
-          }
-        }, 60);
-      }
   };
 
   tabButtons.forEach((btn) => {
