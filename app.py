@@ -36,9 +36,6 @@ def add_no_cache_headers(response):
         pass
     return response
 
-# Print the real file path so you can verify which project folder is running.
-print(f"[Akkaya {APP_BUILD}] Running app from: {__file__}")
-
 # -----------------------------
 # Data loading helpers
 # -----------------------------

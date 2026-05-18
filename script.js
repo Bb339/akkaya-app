@@ -1756,13 +1756,6 @@ const S2_PRIMARY_POOL = [
   'PATATES','SİLAJLIK MISIR','YONCA (YEŞİLOT)','BUĞDAY (DANE)','ŞEKER PANCARI'
 ].map(normCropName);
 
-// Senaryo-2 aday havuzu (ham isimler). runOptimization() bu listeyi kullanarak
-// gerçekten Senaryo-2 ürün havuzuna göre öneri üretir.
-const S2_PRIMARY_RAW = [
-  'Elma','Kiraz','Bağ (Üzüm)','Ceviz','Armut','Şeftali','Nektarin','Kayısı','Vişne','Erik',
-  'Patates','Silajlık Mısır','Yonca (Yeşilot)','Buğday (Dane)','Şeker Pancarı'
-];
-
 // S2: tarla parsellerinde yazlık + kışlık münavebe planı kurulur.
 // Bahçe / bağ parsellerinde ana ürün korunur; ürün söküm-dikim önerisi yapılmaz.
 const S2_SUMMER_RAW = ['Patates','Silajlık Mısır','Şeker Pancarı','Yonca (Yeşilot)','Ayçiçeği'];
@@ -3347,10 +3340,6 @@ function ensureDroughtSeriesChart(){
 
   const ySel = Number(STATE.selectedWaterYear);
   const selIdx = labels.indexOf(String(ySel));
-
-  const onlyAt = (arr)=>{
-    return arr.map((v,i)=> (i===selIdx ? v : null));
-  };
 
   const data = {
     labels,
@@ -8591,8 +8580,6 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
     const minWater  = pushBase(rows.map(a=> +(algos[a]?.water?.min || 0)), j.baseline?.total_water_m3 || 0);
     const meanWater = pushBase(rows.map(a=> +(algos[a]?.water?.mean || 0)), j.baseline?.total_water_m3 || 0);
     const maxWater  = pushBase(rows.map(a=> +(algos[a]?.water?.max || 0)), j.baseline?.total_water_m3 || 0);
-    const meanEff   = pushBase(rows.map(a=> +(algos[a]?.efficiency?.mean || 0)), j.baseline?.efficiency_tl_per_m3 || 0);
-    const feasPct   = pushBase(rows.map(a=> Math.max(0, Math.min(100, +(Number(algos[a]?.feasible_rate || 0) * 100)))), 100);
     const runtime   = pushBase(rows.map(a=> +(algos[a]?.runtime_s?.mean || 0)), 0);
     const diversity = pushBase(rows.map(a=> +(algos[a]?.unique_patterns || 0)), 0);
 
@@ -13657,8 +13644,6 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
           const xSummer = xSeasonGuess === 'Yazlık' || summerNames.test(xk);
           return c1Winter ? xSummer : (c1Summer ? xWinter : xWinter);
         }) || null;
-        const s1Alt = inferSeasonFromCropName(c1.name);
-        const s2Alt = c2 ? inferSeasonFromCropName(c2.name) : '';
         const secondShareBase = selectedObjective === 'water_saving' ? 0.30 : (selectedObjective === 'max_profit' ? 0.38 : 0.34);
         const secondShare = c2 ? clamp(secondShareBase + ((idx % 3) - 1) * 0.04, 0.25, 0.45) : 0;
         const mainShare = c2 ? (1 - secondShare) : 1;
@@ -15102,7 +15087,6 @@ function renderTables() {
     recFooter += ` | Sulama planı: ${recMeta.irrigationPlan}`;
   }
 
-  const orchardAltMetricsUi = orchardLockedUi ? (Array.isArray(recMeta?.orchardAlternativeMetrics) && recMeta.orchardAlternativeMetrics.length ? recMeta.orchardAlternativeMetrics : orchardAlternativeScenarioMetrics(current[0]?.name || rec[0]?.name || '', safeNum(p?.area_da, rec[0]?.area || 0), selectedScenario, rec[0] || current[0], orchardAlternativeListFallback(current, rec, recMeta))) : [];
   if (footerRec) {
     const uiAlternativePatterns = Array.isArray(recMeta?.alternativePatterns) && recMeta.alternativePatterns.length
       ? recMeta.alternativePatterns
@@ -15266,7 +15250,6 @@ function renderIrrigationCompare(currentRows, recRows, parcel, objectiveKey){
     }, { water:0, net:0, irrigCost:0 });
   };
 
-  const baselineCurrent = computeMethodTotals(curRows, curRows[0]?.irrigationCurrentKey || 'sprinkler', 'current');
   const baselineRecommended = computeMethodTotals(recRowsNorm, recRowsNorm[0]?.irrigationSuggestedKey || curRows[0]?.irrigationCurrentKey || 'sprinkler', 'recommended');
 
   const tableRows = methods.map(m=>{
@@ -15526,7 +15509,6 @@ function renderAllScenarioSummaries(){
     const year = (cached && cached.year) ? cached.year : (STATE.selectedWaterYear || '-');
     const scope = (selectedParcelId === '__ALL__') ? 'Havza (tüm parseller)' : `Parsel ${selectedParcelId}`;
     const algoName2 = viewCtx.algo === 'ga' ? 'GA' : (viewCtx.algo === 'abc' ? 'ABC' : 'ACO');
-    const scenName = (viewCtx.scenario || '').toString();
 
     if(metaEl){
       if(!cached){
@@ -15656,8 +15638,6 @@ function renderAllScenarioSummaries(){
   // Bar chart güncelle
   // ÖNEMLİ: Grafikler, üstteki metrik kartlarıyla AYNI kapsamı (seçili parsel veya havza)
   // ve AYNI birimleri (m³ / TL) kullanmalı. Aksi hâlde kullanıcıya tutarsız görünür.
-  const chartKeys = ['mevcut','su_tasarruf','maks_kar','su_etkin'];
-  const chartLabels = ['Mevcut', 'Su tasarrufu', 'Kâr odaklı', 'Su etkin kullanım'];
   const chartColors = ['rgba(73,126,230,.72)','rgba(40,191,170,.72)','rgba(255,175,91,.78)','rgba(126,92,245,.72)'];
   const cachedForCharts = basinPlanCache[basinCacheKey(viewCtx.scenario, viewCtx.algo)] || null;
   const backendWaterChart = cachedForCharts?.charts?.target_mode_water || null;
@@ -18679,7 +18659,6 @@ function renderPlan5(){
   const kProfit = document.getElementById("plan5ProfitKpi");
   const kProfitSub = document.getElementById("plan5ProfitKpiSub");
   const kNadas2 = document.getElementById("plan5NadasKpi2");
-  const kNadas2Sub = document.getElementById("plan5NadasKpi2Sub");
   const kSoilExplain = document.getElementById("plan5SoilExplain");
   const kProsper = document.getElementById("plan5ProsperKpi");
   const kProsperSub = document.getElementById("plan5ProsperKpiSub");
