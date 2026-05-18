@@ -932,7 +932,6 @@ function renderInstitutionRequestInbox(focusParcelId=''){
       : (messagePick ? notifications.filter(n=>String(n.thread_id||'')===String(messagePick.id) || String(n.id||'')===String(messagePick.note?.id||'')) : notifications.slice(0,5)));
   const thread=threadId ? getParcelThread(threadId) : [];
   const latestPattern=[...thread].reverse().find(m=>m?.selected_pattern)?.selected_pattern || altPick?.selected_pattern || null;
-  const customMeta=customPick ? customParcelApprovalMeta(customPick) : null;
   const selectedIsRequest=!!pick;
   const selectedTitle=selectedIsRequest
     ? (pickType==='custom' ? (customPick.name || customPick.id || '') : (latestPattern?.patternName || altPick.text || 'Alternatif talebi'))
@@ -1501,8 +1500,6 @@ const c1Raw = S1_PRIMARY_CROPS[h % S1_PRIMARY_CROPS.length];
 }
 
 let lastOptimizeReqId = 0;
-let optimizeAbortCtrl = null; // deprecated (no longer aborting requests)
-let optimizeInFlight = 0;
 
 // ------------------------------------------------------------
 // Boot safety shims
@@ -2320,7 +2317,6 @@ async function loadEnhancedDataset(){
   const irrigationMethodsText = getSettled(7);
   const costBreakdownText = getSettled(8);
   const equalWaterSummaryText = getSettled(9);
-  const waterAllocationDecisionText = getSettled(10);
   const cropSuitabilityText = getSettled(11);
 
   // show diagnostics in UI (so users don't have to open DevTools)
@@ -2731,106 +2727,6 @@ function budgetRatioForScenarioKey(scenarioKey){
   return 1.00;
 }
 
-// --- Farmer-facing "bitki & yöntem" su hesabı yardımcıları ---
-// Bitki yoğunluğu (bitki sayısı/da). Veri yoksa tipik sıra aralığına göre yaklaşık değerler.
-const DEFAULT_PLANTS_PER_DA = {
-  "PATATES": 4800,
-  "SILAJLIK MISIR": 9500,
-  "YONCA (YESILOT)": 0,
-  "BUGDAY (DANE)": 450000,
-  "ARPA (DANE)": 350000,
-  "SEKER PANCARI": 11000,
-  "CAVDAR (DANE)": 300000,
-  "SALCALIK DOMATES": 3000,
-  "SOFRALIK DOMATES": 3000,
-  "LAHANA (BEYAZ)": 2800,
-  "KABAK (CEREZLIK)": 500,
-  "FASULYE (TAZE)": 20000,
-  "SOGAN (KURU)": 50000,
-  "KAVUN": 500,
-  "SALCALIK BIBER": 4800,
-
-  // Çok yıllıklar (ağaç/bağ)
-  "ELMA": 30,
-  "ARMUT": 30,
-  "KIRAZ": 30,
-  "VISNE": 30,
-  "SEFTALI": 35,
-  "NEKTARIN": 35,
-  "KAYISI": 35,
-  "ERIK": 35,
-  "CEVIZ": 20,
-  "BAG (UZUM)": 130
-};
-
-// Varsayılan "mevcut" sulama yöntemi (ürün bazında). Bu harita sahaya göre özelleştirilebilir.
-const DEFAULT_METHOD_BY_CROP = {
-  // Tarlalar (mevcut yaygın): yüzey/karık
-  "BUGDAY (DANE)": "surface_furrow",
-  "ARPA (DANE)": "surface_furrow",
-  "CAVDAR (DANE)": "surface_furrow",
-  "PATATES": "surface_furrow",
-  "SILAJLIK MISIR": "surface_furrow",
-  "SEKER PANCARI": "surface_furrow",
-  "YONCA (YESILOT)": "surface_furrow",
-
-  // Sebzeler
-  "SALCALIK DOMATES": "surface_furrow",
-  "SOFRALIK DOMATES": "surface_furrow",
-  "LAHANA (BEYAZ)": "surface_furrow",
-  "KABAK (CEREZLIK)": "surface_furrow",
-  "FASULYE (TAZE)": "surface_furrow",
-  "SOGAN (KURU)": "surface_furrow",
-  "KAVUN": "surface_furrow",
-  "SALCALIK BIBER": "surface_furrow",
-
-  // Çok yıllıklar (mevcut: tava/havuz vb.)
-  "ELMA": "surface_furrow",
-  "ARMUT": "surface_furrow",
-  "KIRAZ": "surface_furrow",
-  "VISNE": "surface_furrow",
-  "SEFTALI": "surface_furrow",
-  "NEKTARIN": "surface_furrow",
-  "KAYISI": "surface_furrow",
-  "ERIK": "surface_furrow",
-  "CEVIZ": "surface_furrow",
-  "BAG (UZUM)": "surface_furrow"
-};
-
-// Önerilen sulama yöntemi (ürün bazında). Çok yıllıklarda (meyve bahcesi) genelde damla önerilir.
-const RECOMMENDED_METHOD_BY_CROP = {
-  // Tahıllar: yağmurlama (veya gelişmiş yüzey)
-  "BUGDAY (DANE)": "sprinkler",
-  "ARPA (DANE)": "sprinkler",
-  "CAVDAR (DANE)": "sprinkler",
-
-  // Sıra arası bitkiler: damla
-  "PATATES": "drip",
-  "SILAJLIK MISIR": "drip",
-  "SEKER PANCARI": "drip",
-  "YONCA (YESILOT)": "sprinkler",
-  "SALCALIK DOMATES": "drip",
-  "SOFRALIK DOMATES": "drip",
-  "LAHANA (BEYAZ)": "drip",
-  "KABAK (CEREZLIK)": "drip",
-  "FASULYE (TAZE)": "drip",
-  "SOGAN (KURU)": "drip",
-  "KAVUN": "drip",
-  "SALCALIK BIBER": "drip",
-
-  // Çok yıllıklar: damla/mikro
-  "ELMA": "drip",
-  "ARMUT": "drip",
-  "KIRAZ": "drip",
-  "VISNE": "drip",
-  "SEFTALI": "drip",
-  "NEKTARIN": "drip",
-  "KAYISI": "drip",
-  "ERIK": "drip",
-  "CEVIZ": "drip",
-  "BAG (UZUM)": "drip"
-};
-
 function normCropKey(name){
   return String(name||"")
     .toUpperCase()
@@ -2898,52 +2794,6 @@ function getSeasonRowsForSource(source){
   const a = Array.isArray(raw.s1) ? raw.s1 : [];
   const b = Array.isArray(raw.s2) ? raw.s2 : [];
   return a.concat(b);
-}
-
-function buildSeasonIndexesFromRows(seasonRows){
-  // Build year->parcel->crop aggregates and parcel->crop aggregates
-  const candidatesByParcelYear = new Map();
-  const candidatesByParcel = new Map();
-
-  for(const r of (seasonRows||[])){
-    const y = +r.year;
-    const pid = (r.parcel_id||r.parsel_id||"").trim();
-    const cname = (r.crop||"").trim();
-    if(!pid || !cname) continue;
-    const ck = normCropName(cname);
-    const area = safeNum(r.area_da);
-    const water = safeNum(r.water_m3_calib_gross || r.water_m3_calib_net || r.water_m3_et_gross || r.water_m3_et_net);
-    const profit = safeNum(r.profit_tl);
-
-    // year-aware
-    if(isFinite(y)){
-      if(!candidatesByParcelYear.has(y)) candidatesByParcelYear.set(y, new Map());
-      const byParcel = candidatesByParcelYear.get(y);
-      if(!byParcel.has(pid)) byParcel.set(pid, new Map());
-      const m = byParcel.get(pid);
-      if(!m.has(ck)) m.set(ck, {name:cname, area:0, water:0, profit:0, irrigationText:'', irrigationKey:''});
-      const a = m.get(ck);
-      a.area += area;
-      a.water += water;
-      a.profit += profit;
-      if(!a.irrigationText && r.irrigation_text) a.irrigationText = String(r.irrigation_text);
-      if(!a.irrigationKey && r.irrigation_key) a.irrigationKey = String(r.irrigation_key);
-    }
-
-    // parcel-aware (all years)
-    if(!candidatesByParcel.has(pid)) candidatesByParcel.set(pid, new Map());
-    const mp = candidatesByParcel.get(pid);
-    if(!mp.has(ck)) mp.set(ck, {name:cname, area:0, water:0, profit:0, irrigationText:'', irrigationKey:''});
-    const ap = mp.get(ck);
-    ap.area += area;
-    ap.water += water;
-    ap.profit += profit;
-    if(!ap.irrigationText && r.irrigation_text) ap.irrigationText = String(r.irrigation_text);
-    if(!ap.irrigationKey && r.irrigation_key) ap.irrigationKey = String(r.irrigation_key);
-  }
-
-  STATE.candidatesByParcelYear = candidatesByParcelYear;
-  STATE.candidatesByParcel = candidatesByParcel;
 }
 
 function normCropName(s){
@@ -21258,17 +21108,6 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(titles[2]) titles[2].textContent = 'Karar skoru bileşenleri';
       if(titles[3]) titles[3].textContent = 'Kararlılık ve overfitting kontrolü';
     }catch(_e){}
-  }
-  function sweepHtml(j){
-    if(!j) return '<div class="benchmark-note">Önce ana karşılaştırmayı çalıştırın; 30/50/100 yorumu gerçek benchmark çıktısına göre üretilir.</div>';
-    const s = stats(j);
-    const rows = [30,50,100].map(count => {
-      const risk = s.rows.some(row => row.avgCv > .08 || row.plan > 18)
-        ? (count >= 100 ? 'Yüksek tekrar over-tuning riskini büyütebilir.' : 'Önce CV/plan farkı düşürülmeli.')
-        : (count === 30 ? 'Ön kararlılık okuması için yeterli.' : (count === 50 ? 'Tez raporu için dengeli stres testi.' : 'Yalnızca stres testi; tek başına daha doğru demek değildir.'));
-      return `<tr><td><b>${count}</b></td><td>${esc(s.isTie ? 'Eşdeğer bant' : s.rows[0]?.a || '-')}</td><td>${esc(risk)}</td></tr>`;
-    }).join('');
-    return `<div class="benchmark-sweep"><div class="matrix-title">30/50/100 kararlılık ve overfitting analizi</div><table><thead><tr><th>Tekrar</th><th>Karar okuması</th><th>Bilgisayarcı yorumu</th></tr></thead><tbody>${rows}</tbody></table><p>Bu bölüm yeni uzun backend koşusu başlatmaz; ana benchmarkın gerçek CV, plan farkı ve uygulanabilirlik değerlerinden karar riskini açıklar. Ağ/timeout hatası üretip ana grafikleri bozmaz.</p></div>`;
   }
   function bindSweepButton(){
     const old = document.getElementById('runBenchmarkSweepBtn');
