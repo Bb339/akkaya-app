@@ -978,6 +978,203 @@ def compute_diversity_metrics(plan_rows: List[Dict[str, Any]], total_area_da: fl
         "warnings": warnings,
     }
 
+
+def compute_agronomic_risk_metrics(plan: Any, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Explanatory agronomic/market risk layer; never changes optimization scores."""
+    ctx = context if isinstance(context, dict) else {}
+    cfg = _diversity_config(DIVERSITY_DEFAULTS)
+    if isinstance(plan, dict):
+        rows = plan.get("crops") if isinstance(plan.get("crops"), list) else []
+        diversity = plan.get("diversity") if isinstance(plan.get("diversity"), dict) else None
+    elif isinstance(plan, list):
+        rows = plan
+        diversity = None
+    else:
+        rows = []
+        diversity = None
+    rows = [r for r in rows if isinstance(r, dict)]
+    total_area = safe_float(ctx.get("total_area_da", ctx.get("area_da", 0.0)), 0.0)
+    if not isinstance(diversity, dict):
+        diversity = compute_diversity_metrics(rows, total_area, cfg)
+
+    def _risk_level(score: float) -> str:
+        if score >= 0.67:
+            return "high"
+        if score >= 0.34:
+            return "medium"
+        return "low"
+
+    def _level_score(level: str) -> float:
+        return {"low": 0.15, "medium": 0.50, "high": 0.85}.get(str(level or "").lower(), 0.0)
+
+    top_crop = str(diversity.get("top_crop") or "")
+    top_share = safe_float(diversity.get("top_crop_share_changed", diversity.get("top_crop_share", 0.0)), 0.0)
+    top3_share = safe_float(diversity.get("top3_crop_share_changed", diversity.get("top3_crop_share", 0.0)), 0.0)
+    hhi = safe_float(diversity.get("hhi", 0.0), 0.0)
+    concentration_score = max(
+        min(1.0, top_share / max(1e-9, float(cfg.get("max_crop_share", 0.25) or 0.25))),
+        min(1.0, top3_share / max(1e-9, float(cfg.get("max_top3_share", 0.65) or 0.65))),
+        min(1.0, hhi / max(1e-9, float(cfg.get("hhi_target", 0.18) or 0.18))),
+    )
+    market_level = _risk_level(concentration_score)
+
+    fam_map = load_crop_family_map()
+    catalog = load_crop_catalog()
+    family_area: Dict[str, float] = {}
+    mapped_area = 0.0
+    changed_area = 0.0
+    for row in rows:
+        crop = str(row.get("crop_name") or row.get("name") or row.get("crop") or "").strip()
+        area = max(0.0, safe_float(row.get("area_da", row.get("area", 0.0)), 0.0))
+        if not crop or area <= 0:
+            continue
+        changed_area += area
+        ck = normalize_crop_key(crop)
+        fam = str(fam_map.get(ck) or (catalog.get(ck, {}) or {}).get("cropFamily") or "").strip().lower()
+        if fam and fam != "fallow":
+            family_area[fam] = family_area.get(fam, 0.0) + area
+            mapped_area += area
+    family_shares = {
+        fam: float(area / max(1e-9, mapped_area))
+        for fam, area in sorted(family_area.items(), key=lambda x: x[1], reverse=True)
+    }
+    if family_shares:
+        top_family, top_family_share = next(iter(family_shares.items()))
+        rotation_level = "high" if top_family_share >= 0.50 else ("medium" if top_family_share >= 0.35 else "low")
+        rotation_note = f"Ayni urun familyasinda yogunlasma payi %{top_family_share * 100:.1f} duzeyindedir."
+        rotation_data_status = "available"
+    else:
+        top_family, top_family_share = "", 0.0
+        rotation_level = "medium" if top_share >= 0.35 else "low"
+        rotation_note = "Urun familyasi verisi sinirli; bu risk yogunlasma gostergelerine dayali karar destek notudur."
+        rotation_data_status = "limited"
+
+    period_area: Dict[str, float] = {}
+    for row in rows:
+        area = max(0.0, safe_float(row.get("area_da", row.get("area", 0.0)), 0.0))
+        if area <= 0:
+            continue
+        crop = str(row.get("crop_name") or row.get("name") or "").strip()
+        ck = normalize_crop_key(crop)
+        cat = catalog.get(ck, {}) or {}
+        period = _safe_text(row.get("harvest_date") or row.get("period_note") or row.get("season") or cat.get("season1"))
+        if period and period.lower() not in ("belirtilmedi", "veri yok"):
+            period_area[period] = period_area.get(period, 0.0) + area
+    if period_area:
+        period, period_max_area = sorted(period_area.items(), key=lambda x: x[1], reverse=True)[0]
+        period_share = float(period_max_area / max(1e-9, changed_area))
+        labor_level = "high" if period_share >= 0.55 else ("medium" if period_share >= 0.35 else "low")
+        labor_note = f"Hasat/donem bilgisi olan kayitlarda en yogun donem '{period}' ve pay %{period_share * 100:.1f}."
+        labor_data_status = "available"
+    else:
+        period, period_share = "", 0.0
+        labor_level = "medium" if top3_share >= 0.75 else "low"
+        labor_note = "Hasat donemi verisi sinirli; iscilik yogunlugu yorumu urun yogunlasmasina dayali varsayimsal risk notudur."
+        labor_data_status = "limited"
+
+    storage_fields = ("storageClass", "storage_class", "depolama_sinifi", "durabilityClass", "dayaniklilik_sinifi")
+    storage_values = []
+    for row in rows:
+        ck = normalize_crop_key(str(row.get("crop_name") or row.get("name") or ""))
+        cat = catalog.get(ck, {}) or {}
+        val = next((_safe_text(row.get(k) or cat.get(k)) for k in storage_fields if _safe_text(row.get(k) or cat.get(k))), "")
+        if val:
+            storage_values.append(val)
+    if storage_values:
+        storage_level = "medium" if market_level == "high" else "low"
+        storage_note = "Depolama/dayaniklilik sinifi verisi olan urunler icin pazarlama hassasiyeti ayrica izlenmelidir."
+        storage_data_status = "available"
+    else:
+        storage_level = "medium" if market_level == "high" else "low"
+        storage_note = "Depolama veya dayaniklilik sinifi verisi sinirli; kesin pazarlama tahmini olarak yorumlanmamalidir."
+        storage_data_status = "limited"
+
+    baseline_rows = ctx.get("baseline_rows") if isinstance(ctx.get("baseline_rows"), list) else []
+    baseline_by_pid = {
+        str(r.get("parcel_id") or r.get("id") or ""): normalize_crop_key(r.get("crop_name") or r.get("name") or r.get("crop"))
+        for r in baseline_rows if isinstance(r, dict)
+    }
+    changed_transition_area = 0.0
+    comparable_area = 0.0
+    for row in rows:
+        area = max(0.0, safe_float(row.get("area_da", row.get("area", 0.0)), 0.0))
+        if area <= 0:
+            continue
+        pid = str(row.get("parcel_id") or row.get("id") or "")
+        current_key = baseline_by_pid.get(pid) or normalize_crop_key(row.get("current_crop") or row.get("currentCrop"))
+        crop_key = normalize_crop_key(row.get("crop_name") or row.get("name") or row.get("crop"))
+        if current_key:
+            comparable_area += area
+            if crop_key and crop_key != current_key:
+                changed_transition_area += area
+    if comparable_area > 0:
+        transition_share = float(changed_transition_area / max(1e-9, comparable_area))
+        transition_level = "high" if transition_share >= 0.60 else ("medium" if transition_share >= 0.30 else "low")
+        transition_note = f"Mevcut urunden farkli onerilen alan payi %{transition_share * 100:.1f}; gecis ve adaptasyon planlamasi gerekebilir."
+        transition_data_status = "available"
+    else:
+        transition_share = 0.0
+        transition_level = "medium" if top3_share >= 0.75 else "low"
+        transition_note = "Mevcut urun-parsel eslesmesi sinirli; gecis riski plan farki yerine yogunlasma gostergeleriyle yorumlanmalidir."
+        transition_data_status = "limited"
+
+    levels = [market_level, rotation_level, labor_level, storage_level, transition_level]
+    overall_score = max(_level_score(x) for x in levels)
+    notes = [
+        "Bu risk katmani yalnizca karar destek uyarisidir; algoritma skoru, net kar, su, TL/m3, feasible veya selectable alanlarini degistirmez.",
+        "Pazar/fiyat baskisi uyarisi gercek fiyat elastikiyeti tahmini degildir; urun yogunlasmasi gostergelerine dayanir.",
+    ]
+    if rotation_data_status == "limited":
+        notes.append("Münavebe/familya verisi sinirli oldugu icin rotasyon riski kesin hastalik tahmini olarak yorumlanmamalidir.")
+    if labor_data_status == "limited":
+        notes.append("Hasat/iscilik riski, takvim verisi sinirli oldugunda varsayimsal risk notu olarak verilmiştir.")
+    if storage_data_status == "limited":
+        notes.append("Depolama/pazarlama hassasiyeti icin urun bazli depolama verisi sinirlidir.")
+
+    return {
+        "overall_level": _risk_level(overall_score),
+        "market_saturation_risk": {
+            "level": market_level,
+            "top_crop": top_crop,
+            "top_crop_share_changed": float(top_share),
+            "top3_crop_share_changed": float(top3_share),
+            "hhi": float(hhi),
+            "basis": "diversity_concentration",
+            "message": (
+                f"{top_crop} değişen öneri alanında %{top_share * 100:.1f} paya sahiptir; pazar doygunluğu ve fiyat baskısı açısından dikkatli izlenmelidir."
+                if top_crop else
+                "Ürün yoğunlaşması hesaplanamadı; pazar riski için veri sınırlıdır."
+            ),
+        },
+        "rotation_risk": {
+            "level": rotation_level,
+            "data_status": rotation_data_status,
+            "top_family": top_family,
+            "top_family_share": float(top_family_share),
+            "family_share_by_family": family_shares,
+            "message": rotation_note,
+        },
+        "labor_harvest_risk": {
+            "level": labor_level,
+            "data_status": labor_data_status,
+            "dominant_period": period,
+            "dominant_period_share": float(period_share),
+            "message": labor_note,
+        },
+        "storage_marketing_risk": {
+            "level": storage_level,
+            "data_status": storage_data_status,
+            "message": storage_note,
+        },
+        "transition_risk": {
+            "level": transition_level,
+            "data_status": transition_data_status,
+            "changed_area_share": float(transition_share),
+            "message": transition_note,
+        },
+        "notes": list(dict.fromkeys(notes)),
+    }
+
 def _prev_year_family_map(year: int) -> Dict[str, str]:
     """Infer previous-year primary crop family per parcel from enhanced seasons table."""
     frames = load_enhanced_frames()
@@ -8955,6 +9152,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     context = {
         "parcel_id": selected_norm[0] if len(selected_norm) == 1 else selected_norm,
         "area_da": float(sum(safe_float(p.get("area_da", 0.0), 0.0) for p in selected_parcels)),
+        "total_area_da": float(sum(safe_float(p.get("area_da", 0.0), 0.0) for p in selected_parcels)),
         "water_year": int(y),
         "scenario_type": scenario_type,
         "objective_mode": objective_mode,
@@ -8963,7 +9161,10 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         "water_budget_m3": float(safe_float(result.get("water_budget_m3", 0.0), 0.0)),
         "budget_method": _safe_text(meta.get("allocation_model") or meta.get("budget_method") or "backend_water_budget"),
         "data_sources": _standard_data_sources(),
+        "baseline_rows": baseline_rows,
     }
+    agronomic_risk = compute_agronomic_risk_metrics(selected_plan, context)
+    selected_plan["agronomic_risk"] = agronomic_risk
 
     plan_risk = "Dusuk" if selected_plan["feasible"] else "Yuksek"
     quota_status = "Uygun" if selected_plan["feasible"] else "Kota/uygunluk riski var"
@@ -9038,6 +9239,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         "baseline": baseline,
         "selected_plan": selected_plan,
         "diversity": diversity_metrics,
+        "agronomic_risk": agronomic_risk,
         "recommendation_status": recommendation_status,
         "alternatives": alternatives,
         "charts": charts,
@@ -11179,6 +11381,7 @@ def api_benchmark():
                         "selectable": bool(best_selected.get("selectable", best_selected.get("feasible", best_out.get("feasible", True)))),
                         "recommendation_status": best_selected.get("recommendation_status", best_out.get("recommendation_status")),
                         "diversity": best_selected.get("diversity") if isinstance(best_selected.get("diversity"), dict) else best_out.get("diversity"),
+                        "agronomic_risk": best_selected.get("agronomic_risk") if isinstance(best_selected.get("agronomic_risk"), dict) else best_out.get("agronomic_risk"),
                         "diversity_repair_applied": bool(best_selected.get("diversity_repair_applied", False)),
                         "signature": _plan_signature(best_out),
                         "crop_area": _crop_area_summary(best_out),
@@ -11203,6 +11406,9 @@ def api_benchmark():
             best_diversity = {}
             if isinstance(best_pack, dict) and isinstance(best_pack.get("diversity"), dict):
                 best_diversity = best_pack.get("diversity") or {}
+            best_agronomic_risk = {}
+            if isinstance(best_pack, dict) and isinstance(best_pack.get("agronomic_risk"), dict):
+                best_agronomic_risk = best_pack.get("agronomic_risk") or {}
             plan_diversity = float(unique_patterns / successful_runs) if successful_runs > 0 else None
             completion_kind = _completion_status_kind(successful_runs, repeats)
             completion_status = _completion_status_label(successful_runs, repeats)
@@ -11257,6 +11463,7 @@ def api_benchmark():
                 "secondary_parcel_rate": _stats(sec_parcel_rates),
                 "secondary_area_da": _stats(sec_area_vals),
                 "diversity": best_diversity,
+                "agronomic_risk": best_agronomic_risk,
                 "top_crop": best_diversity.get("top_crop"),
                 "top_crop_area_da": best_diversity.get("top_crop_area_da"),
                 "top_crop_share": best_diversity.get("top_crop_share"),

@@ -9058,6 +9058,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
         !!best.diversity_repair_applied,
         { feasible: best.feasible !== false, selectable: best.selectable !== false }
       );
+      const riskBlock = agronomicRiskHtml(best.agronomic_risk || algos[a]?.agronomic_risk);
       pHtml += '<div class="stat benchmark-pattern-card pattern-compare-card" style="min-width:240px;">'+
         `<div class="stat-label"><b>${escapeHtml(a)}</b> - en iyi koşu</div>`+
         `<div class="small" style="margin-top:6px;"><b>1. ürün</b><br/>${primList}</div>`+
@@ -9065,6 +9066,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
         `<div class="small" style="opacity:.88;margin-top:8px;">Kâr: <b>${fmtNum(best.total_profit_tl,0)}</b> TL • Su: <b>${fmtNum(best.total_water_m3,0)}</b> m³ • TL/m³: <b>${fmtNum(best.efficiency_tl_per_m3,2)}</b></div>`+
         `<div class="small muted" style="margin-top:4px;">Tekrar içi plan farkı: ${fmtNum(pd.mean,1)}%${secondaryMeta}</div>`+
         divBlock+
+        riskBlock+
         warn+
       '</div>';
     }
@@ -9426,6 +9428,33 @@ function diversityWarningHtml(diversity, status, repairApplied=false, feasibilit
   return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Ürün çeşitliliği kontrolü:</strong><ul style="margin:6px 0 0 18px; padding:0;">${items.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
 }
 
+function agronomicRiskHtml(risk){
+  if(!risk || typeof risk !== 'object') return '';
+  const levelText = level => {
+    const s = String(level || '').toLowerCase();
+    if(s === 'high') return 'Yüksek';
+    if(s === 'medium') return 'Orta';
+    if(s === 'low') return 'Düşük';
+    return 'Veri sınırlı';
+  };
+  const dataNote = part => String(part?.data_status || '').toLowerCase() === 'limited' ? ' (veri sınırlı)' : '';
+  const market = risk.market_saturation_risk || {};
+  const rotation = risk.rotation_risk || {};
+  const labor = risk.labor_harvest_risk || {};
+  const storage = risk.storage_marketing_risk || {};
+  const transition = risk.transition_risk || {};
+  const rows = [
+    ['Pazar/fiyat baskısı riski', levelText(market.level), market.message],
+    ['Münavebe/hastalık-zararlı riski', levelText(rotation.level) + dataNote(rotation), rotation.message],
+    ['Hasat/işçilik yoğunluğu riski', levelText(labor.level) + dataNote(labor), labor.message],
+    ['Depolama/pazarlama hassasiyeti', levelText(storage.level) + dataNote(storage), storage.message],
+    ['Çiftçi geçiş/adaptasyon riski', levelText(transition.level) + dataNote(transition), transition.message],
+  ].filter(r => r[2] || r[1]);
+  const notes = Array.isArray(risk.notes) ? risk.notes.slice(0, 2) : [];
+  if(!rows.length && !notes.length) return '';
+  return `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #bfdbfe; border-radius:10px; background:#eff6ff;"><strong>Tarımsal uygulanabilirlik ve risk notu:</strong><div style="margin-top:4px;">Genel risk düzeyi: <b>${escapeHtml(levelText(risk.overall_level))}</b></div><ul style="margin:6px 0 0 18px; padding:0;">${rows.map(r=>`<li><b>${escapeHtml(r[0])}:</b> ${escapeHtml(r[1])}${r[2] ? ` - ${escapeHtml(String(r[2]))}` : ''}</li>`).join('')}${notes.map(x=>`<li>${escapeHtml(String(x))}</li>`).join('')}</ul></div>`;
+}
+
 function benchmarkDynamicInterpretation(bestAlgo, algos, rows){
   const best = algos?.[bestAlgo];
   if(!best || !rows?.length) return '';
@@ -9613,6 +9642,7 @@ function backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey){
       backendResult: data,
       backendDecisionPackage: data,
       diversity: selectedPlan.diversity || data?.diversity || null,
+      agronomicRisk: selectedPlan.agronomic_risk || data?.agronomic_risk || null,
       diversityRepairApplied: !!selectedPlan.diversity_repair_applied,
       recommendationStatus: selectedPlan.recommendation_status || data?.recommendation_status || '',
       irrigationPlan: rows.map(r=>r.irrigationSuggested || r.irrigationSuggestedText).filter(Boolean).join(' | '),
@@ -9638,6 +9668,7 @@ function backendStandardPayloadToBasinPlan(data, scenarioKey, algoKey){
     baseline,
     selectedPlan,
     diversity: selectedPlan.diversity || data?.diversity || null,
+    agronomicRisk: selectedPlan.agronomic_risk || data?.agronomic_risk || null,
     recommendationStatus: selectedPlan.recommendation_status || data?.recommendation_status || '',
     alternatives,
     optimizationRunPolicy: data?.optimization_run_policy || null,
@@ -15677,6 +15708,9 @@ function renderTables() {
         selectable: recMeta?.selectedPlan?.selectable !== false && recMeta?.backendDecisionPackage?.selected_plan?.selectable !== false
       }
     );
+    const agronomicRiskBlock = agronomicRiskHtml(
+      recMeta?.agronomicRisk || recMeta?.selectedPlan?.agronomic_risk || recMeta?.backendDecisionPackage?.agronomic_risk
+    );
     const interrowHtml = Array.isArray(recMeta?.interrowAlternatives) && recMeta.interrowAlternatives.length
       ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc;"><strong>Sıra arası / uzman alternatifi:</strong><ul style="margin:6px 0 0 18px; padding:0;">${recMeta.interrowAlternatives.slice(0,5).map(x=>`<li><b>${escapeHtml(x.name || x.cropName || '-')}</b> - ${escapeHtml(x.kind || x.cropCategoryLabel || 'Uzman değerlendirmesi')} ${x.decisionNote || x.note ? `: ${escapeHtml(x.decisionNote || x.note)}` : ''}</li>`).join('')}</ul></div>`
       : '';
@@ -15691,7 +15725,7 @@ function renderTables() {
     const autoHtml = autoDecision?.selected
       ? `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff;"><strong>Otomatik algoritma seçimi:</strong> ${escapeHtml(String(autoDecision.selected).toUpperCase())} seçildi. GA, ACO ve ABC aynı hedef/senaryo koşulunda su kotası, net kâr, TL/m³ ve hedef skoruyla kıyaslandı.</div>`
       : '';
-    footerRec.innerHTML = `<div class="rec-footer-kpi-v94">${recFooter}</div>${warningHtml}${diversityHtml}${autoHtml}${orchardInfo}${whyHtml}${interrowHtml}${altPanelHtml}`;
+    footerRec.innerHTML = `<div class="rec-footer-kpi-v94">${recFooter}</div>${warningHtml}${diversityHtml}${agronomicRiskBlock}${autoHtml}${orchardInfo}${whyHtml}${interrowHtml}${altPanelHtml}`;
   }
 
   // --- Açıklanabilirlik kutusu (seçili parsel) ---
