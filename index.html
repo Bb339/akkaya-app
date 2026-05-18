@@ -45,7 +45,7 @@
       </div>
 
       <div class="auth-study-strip">
-        <span class="auth-badge">ÖNAP</span>
+        <span class="auth-badge">ADSS</span>
         <span class="auth-badge">Graduate thesis prototype</span>
         <span class="auth-badge">Interdisciplinary Digital Agriculture Department</span>
       </div>
@@ -66,11 +66,11 @@
         </div>
         <div class="auth-meta-item">
           <span>Advisor</span>
-          <strong>Doç. Dr. Yeşim Dokuz</strong>
+          <strong>Assoc. Prof. Dr. Yeşim Dokuz</strong>
         </div>
         <div class="auth-meta-item">
           <span>Co-advisor</span>
-          <strong>Doç. Dr. Burak Şen</strong>
+          <strong>Assoc. Prof. Dr. Burak Şen</strong>
         </div>
       </div>
 
@@ -178,52 +178,52 @@
 <section class="onboarding-shell" id="onboardingSection">
   <div class="card onboarding-card">
     <div class="onboarding-head">
-      <p class="auth-kicker">İlk giriş / bilgi tamamlama</p>
-      <h2>Hesabınız yönetim tarafından açıldı</h2>
-      <p>Bu adımda iletişim ve işletme bilgilerinizi doğrulayın. Parseliniz eksikse soldaki <strong>Kullanıcı parsel girişi</strong> kartından GeoJSON/KML yükleyebilir veya haritada çizim yapabilirsiniz. Kurulum tamamlanmadan optimizasyon ve karşılaştırma çalıştırılamaz.</p>
-      <div class="small muted">Kullanıcı adı: <strong id="onboardingUsernameLabel">-</strong></div>
-      <div class="small muted">Demo notu: Ayşe hesabında bu adım her girişte tekrar açılır; böylece ön kayıt → doğrulama → kurum teyidi akışı sunumda yeniden gösterilebilir.</div>
+      <p class="auth-kicker">First login / profile completion</p>
+      <h2>Your account was created by the institution</h2>
+      <p>Confirm your contact and farm information in this step. If your parcel is missing, use the <strong>user parcel entry</strong> card on the left to upload GeoJSON/KML or draw it on the map. Optimization and benchmark runs stay disabled until setup is complete.</p>
+      <div class="small muted">Username: <strong id="onboardingUsernameLabel">-</strong></div>
+      <div class="small muted">Demo note: the Ayşe account opens this step at every login so the pre-registration → verification → institutional confirmation flow can be shown again.</div>
     </div>
     <div class="auth-form-grid">
-      <label class="auth-label">Ad soyad
-        <input id="onboardingDisplayName" class="text-input auth-input" type="text" placeholder="Örn. Ayşe Kaya" />
+      <label class="auth-label">Full name
+        <input id="onboardingDisplayName" class="text-input auth-input" type="text" placeholder="e.g. Ayşe Kaya" />
       </label>
       <label class="auth-label">Telefon
-        <input id="onboardingPhone" class="text-input auth-input" type="text" placeholder="Örn. 05xx xxx xx xx" />
+        <input id="onboardingPhone" class="text-input auth-input" type="text" placeholder="e.g. 05xx xxx xx xx" />
       </label>
     </div>
     <div class="auth-form-grid">
-      <label class="auth-label">Köy / mevki
+      <label class="auth-label">Village / locality
         <input id="onboardingVillage" class="text-input auth-input" type="text" placeholder="Sazlıca / Bahçeli / Kemerhisar / Bor / Kaynarca" />
       </label>
-      <label class="auth-label">İlçe
-        <input id="onboardingDistrict" class="text-input auth-input" type="text" placeholder="Merkez" />
+      <label class="auth-label">District
+        <input id="onboardingDistrict" class="text-input auth-input" type="text" placeholder="Central district" />
       </label>
     </div>
     <div class="auth-form-grid">
-      <label class="auth-label">Yeni şifre
-        <input id="onboardingPassword" class="text-input auth-input" type="password" placeholder="En az 4 karakter" />
+      <label class="auth-label">New password
+        <input id="onboardingPassword" class="text-input auth-input" type="password" placeholder="At least 4 characters" />
       </label>
-      <label class="auth-label">Yeni şifre tekrar
-        <input id="onboardingPassword2" class="text-input auth-input" type="password" placeholder="Şifreyi tekrar girin" />
+      <label class="auth-label">Repeat new password
+        <input id="onboardingPassword2" class="text-input auth-input" type="password" placeholder="Enter the password again" />
       </label>
     </div>
-    <label class="auth-label">Not / işletme bilgisi
-      <textarea id="onboardingNotes" class="text-input auth-input onboarding-textarea" placeholder="İsterseniz sulama kaynağı, işletme notu veya yönetim için ek bilgi yazabilirsiniz."></textarea>
+    <label class="auth-label">Note / farm information
+      <textarea id="onboardingNotes" class="text-input auth-input onboarding-textarea" placeholder="Optionally add irrigation source, farm notes, or information for the institution."></textarea>
     </label>
     <div id="onboardingParcelSummary"></div>
     <div class="algo-actions onboarding-actions">
-      <button class="btn-secondary" id="openOnboardingParcelToolsBtn" type="button">Parsel çizim / yükleme alanına git</button>
-      <button class="btn-primary" id="completeOnboardingBtn" type="button">Bilgileri kaydet ve paneli aç</button>
+      <button class="btn-secondary" id="openOnboardingParcelToolsBtn" type="button">Go to parcel drawing / upload</button>
+      <button class="btn-primary" id="completeOnboardingBtn" type="button">Save information and open dashboard</button>
     </div>
     <div class="auth-error" id="onboardingError" role="alert"></div>
     <div class="auth-success" id="onboardingSuccess" role="status"></div>
   </div>
 </section>
 <div class="onboarding-compact-banner" id="onboardingCompactBanner">
-  <strong>İlk kurulum tamamlanmalı.</strong>
-  <span>İletişim ve parsel bilgilerinizi doğrulamadan karar destek ekranı aktif olmaz.</span>
-  <button class="btn-secondary" id="openOnboardingPanelBtn" type="button">Kurulum kartını aç</button>
+  <strong>Initial setup must be completed.</strong>
+  <span>The decision support dashboard is disabled until contact and parcel information are confirmed.</span>
+  <button class="btn-secondary" id="openOnboardingPanelBtn" type="button">Open setup card</button>
 </div>
 
 <main class="app-main">
@@ -242,278 +242,278 @@
 
 
 <div class="sidebar-panel">
-<details class="sidebar-group" id="setupGroup" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">1</span><span class="sidebar-group-text"><strong>Analiz kurulumu</strong><small>Veri kaynağı, algoritma ve senaryo ayarları</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card">
-<h2 class="card-title">Parsel seç</h2>
+<details class="sidebar-group" id="setupGroup" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">1</span><span class="sidebar-group-text"><strong>Analysis Setup</strong><small>Data source, algorithm, and scenario settings</small></span><span class="sidebar-group-caret">Expand / collapse</span></summary><div class="sidebar-group-body"><div class="card">
+<h2 class="card-title">Select Parcel</h2>
 <select class="select-input" id="parcelSelect"></select>
 <div class="algo-actions">
 <button class="btn-primary" id="runOptBtn">Run Optimization</button>
-<span class="algo-status" id="algoStatus">Hazır</span>
+<span class="algo-status" id="algoStatus">Ready</span>
 </div>
 <div class="data-loader" data-role="institution">
 <div class="data-status">
-                Veri kaynağı: <strong id="dataSourceLabel">Backend/CSV</strong>
-<span class="badge badge-warn" id="dataLoadBadge">CSV bağlanmadı</span>
+                Data source: <strong id="dataSourceLabel">Backend/CSV</strong>
+<span class="badge badge-warn" id="dataLoadBadge">CSV not connected</span>
 </div>
 <div class="data-actions data-actions--backend">
-<button class="btn-secondary" id="loadDefaultCsvBtn">Projeden CSV yükle</button>
-<button class="btn-secondary" id="clearDataCacheBtn" title="Yerel önbelleği temizle ve sayfayı yenile">Önbelleği temizle</button>
+<button class="btn-secondary" id="loadDefaultCsvBtn">Load project CSV</button>
+<button class="btn-secondary" id="clearDataCacheBtn" title="Clear local cache and refresh the page">Clear cache</button>
 </div>
 <div class="active-files" id="activeFilesBox">
-<div class="active-files-title">Aktif analiz verileri</div>
+<div class="active-files-title">Active analysis data</div>
 <div class="active-files-badges" id="activeFilesBadges"></div>
 <div class="build-meta" id="buildMetaBox"></div>
-<p class="active-files-note" id="activeFilesNote">Bu dosyalar Python backend tarafından aktif olarak kullanılmaktadır.</p>
+<p class="active-files-note" id="activeFilesNote">These files are actively used by the Python backend.</p>
 </div>
 <div class="manual-upload-panel">
-<div class="active-files-title">Test amaçlı manuel veri yükleme</div>
-<p class="card-help small">Manuel yüklenen CSV/GeoJSON dosyaları bu oturumda aktif analize alınır ve optimizasyon yerel hesap motoruyla yeniden çalışır. Kalıcı kurumsal kullanım ve Python backend çıktısı için aynı dosyalar backend/data klasörüne aktarılmalıdır.</p>
+<div class="active-files-title">Manual data upload for testing</div>
+<p class="card-help small">Manually uploaded CSV/GeoJSON files are included in the active analysis for this session and optimization reruns through the local calculation path. For persistent institutional use and Python backend outputs, the same files must be moved into the backend/data folder.</p>
 <input accept=".csv,.json,.geojson" class="file-input" id="dataFileInput" multiple="" type="file"/>
-<div class="manual-file-summary" id="manualCsvFilesSummary">Henüz manuel dosya seçilmedi.</div>
+<div class="manual-file-summary" id="manualCsvFilesSummary">No manual file selected yet.</div>
 </div>
 <div class="manual-validation-panel">
-<div class="active-files-title">Veri doğrulama sonucu</div>
+<div class="active-files-title">Data validation result</div>
 <div id="manualCsvValidationBox">
-<div class="manual-validation-empty">Dosya seçildiğinde satır, kolon, parsel eşleşmesi ve aktif analize katılım durumu burada gösterilir.</div>
+<div class="manual-validation-empty">When a file is selected, row count, columns, parcel matching, and inclusion in active analysis are shown here.</div>
 </div>
 </div>
 <p class="card-help small">
-                Bu bölüm, sistemde kullanılan parsel, ürün, su bütçesi, sulama yöntemi ve harita verilerinin aktif durumunu gösterir. Manuel yüklenen dosyalar bu tarayıcı oturumunda veri kontrolü ve senaryo testi için hesaba katılır; kalıcı ve raporlanabilir Python backend çalışması için dosyalar backend/data altında güncellenmelidir.
+                This section shows the active status of parcel, crop, water budget, irrigation method, and map datasets used by the system. Manually uploaded files are considered for data checks and scenario testing in this browser session; for persistent and reportable Python backend runs, update the files under backend/data.
               </p>
 </div>
 </div><div class="card" id="algoCard" data-role="institution">
-<h2 class="card-title">Optimizasyon algoritması</h2>
+<h2 class="card-title">Optimization Algorithm</h2>
 <select class="select-input" id="algoSelect">
-<option selected="" value="ga">Genetik Algoritma (GA)</option>
-<option value="abc">Yapay Arı Kolonisi Algoritması (ABC)</option>
-<option value="aco">Karınca Koloni Optimizasyonu (ACO)</option>
+<option selected="" value="ga">Genetic Algorithm (GA)</option>
+<option value="abc">Artificial Bee Colony (ABC)</option>
+<option value="aco">Ant Colony Optimization (ACO)</option>
 </select>
 </div><div class="card" id="scenarioCard">
-<h2 class="card-title">Hedef ve plan modu</h2>
+<h2 class="card-title">Objective and Plan Mode</h2>
 <div class="radio-group">
-<label><input name="scenario" type="radio" value="mevcut"/> Mevcut görünüm (referans)</label>
-<label><input checked="" name="scenario" type="radio" value="su_tasarruf"/> Su tasarrufu hedefi</label>
-<label><input name="scenario" type="radio" value="maks_kar"/> Kâr odaklı hedef</label>
-<label><input name="scenario" type="radio" value="su_etkin"/> Su etkin kullanım hedefi</label>
+<label><input name="scenario" type="radio" value="mevcut"/> Current pattern (reference)</label>
+<label><input checked="" name="scenario" type="radio" value="su_tasarruf"/> Water-saving objective</label>
+<label><input name="scenario" type="radio" value="maks_kar"/> Profit-oriented objective</label>
+<label><input name="scenario" type="radio" value="su_etkin"/> Water-efficiency objective</label>
 </div>
 <div class="water-controls" style="padding-top:6px;">
 <div class="field-row" id="seasonSourceRow">
-<label class="field-label">Senaryo tipi</label>
+<label class="field-label">Scenario type</label>
 <select class="select-input" id="seasonSourceSel">
-<option value="s1">Senaryo 1 - Tek ürünlü parsel (en iyi 1-2 ürün + alternatifler)</option>
-<option value="s2">Senaryo 2 - Çift ürünlü / desen bazlı parsel (1+1 ürün / bahçede sıra arası)</option>
+<option value="s1">Scenario 1 - Single-crop parcel (best 1-2 crops + alternatives)</option>
+<option value="s2">Scenario 2 - Double-crop / pattern-based parcel (1+1 crop / inter-row orchard use)</option>
 </select>
 </div>
 <div class="field-row" id="cropCategoryModeRow">
-<label class="field-label" for="cropCategoryModeSel">Öneri ürün grubu</label>
+<label class="field-label" for="cropCategoryModeSel">Recommended crop group</label>
 <select class="select-input" id="cropCategoryModeSel">
-<option value="same_category">Mevcut kategoriye yakın öner</option>
-<option value="field_cereal">Tahıl / tarla ürünleri</option>
-<option value="forage">Yem bitkileri</option>
-<option value="legume">Baklagiller</option>
-<option value="vegetable">Sebze ürünleri</option>
-<option value="industrial_oil">Endüstri / yağ / özel ürünler</option>
-<option value="orchard">Bahçe / çok yıllık ürünler</option>
-<option selected="" value="mixed">Karışık mod - tüm uygun ürünler</option>
+<option value="same_category">Recommend close to current category</option>
+<option value="field_cereal">Cereals / field crops</option>
+<option value="forage">Forage crops</option>
+<option value="legume">Legumes</option>
+<option value="vegetable">Vegetable crops</option>
+<option value="industrial_oil">Industrial / oil / specialty crops</option>
+<option value="orchard">Orchard / perennial crops</option>
+<option selected="" value="mixed">Mixed mode - all suitable crops</option>
 </select>
 </div>
 <div class="field-row" id="sideRunOptimizeRow">
 <button class="btn-primary" id="runOptBtnSecondary" type="button">Run Optimization</button>
-<p class="card-help small" style="margin:6px 0 0;">Seçili parsel, hedef modu ve senaryo ayarlarıyla backend optimizasyonunu çalıştırır.</p>
+<p class="card-help small" style="margin:6px 0 0;">Runs backend optimization with the selected parcel, objective mode, and scenario settings.</p>
 </div>
 <p class="card-help small" style="margin-top:6px;">
-                Not: Senaryo 1, her parseli esasen tek ürünlü kabul eder; sistem en iyi ana öneriyi ve diğer güçlü alternatifleri sıralar. Senaryo 2, parselde 1+1 ürün / desen yaklaşımını dener; bahçe-çok yıllık parsellerde ana ürün korunur, fark sıra arası ve sulama yönetiminden gelir.
+                Note: Scenario 1 treats each parcel primarily as single-crop and ranks the best main recommendation plus strong alternatives. Scenario 2 tests a 1+1 crop / pattern approach; in orchard-perennial parcels, the main crop is preserved and the difference comes from inter-row and irrigation management.
               </p>
 </div>
 <div class="water-controls">
 <div class="field-row">
-<label class="field-label">Plan yılı</label>
+<label class="field-label">Planning year</label>
 <select class="select-input" id="waterYear"></select>
 </div>
 <div class="data-status">
-                Kullanılabilir su: <strong id="availableWaterLabel">-</strong> m³
-                <span class="badge badge-info" id="waterIndexBadge">doluluk: -</span>
+                Available water: <strong id="availableWaterLabel">-</strong> m³
+                <span class="badge badge-info" id="waterIndexBadge">storage: -</span>
 </div>
 <p class="card-help small">
-                Not: Bu sürümde mevcut toplam su talebi önce toplam alana bölünerek genel m³/da değeri hesaplanır. Varsayılan planlama dekar bazlı adil kotadır; eşit köy payı karşılaştırma senaryosu olarak ayrıca gösterilir.
+                Note: In this version, current total water demand is first divided by total area to calculate the general m³/da value. The default planning quota is the area-based fair quota; equal village share is also shown as a comparison scenario.
               </p>
 <div class="water-allocation-explain" id="waterAllocationExplain">
-                Su dağıtım mantığı yükleniyor...
+                Loading water allocation logic...
               </div>
 </div>
-<p class="card-help">Seçilen hedef modu (su verimliliği / kâr) ile plan modu (S1 / S2) birlikte çalışır. Su hedefi en az suyu değil, mevcut suyu daha verimli kullanmayı; kâr hedefi ise su bütçesi altında geliri büyütmeyi öne çıkarır.</p>
+<p class="card-help">The selected objective mode (water efficiency / profit) and plan mode (S1 / S2) work together. The water objective prioritizes using available water more efficiently rather than simply minimizing water; the profit objective prioritizes revenue growth under the water budget.</p>
 </div></div></details><details class="sidebar-group" id="parcelGroup" data-role="institution"><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Parcel Drawing / Data Assignment</strong><small>Institution/expert data entry screen only</small></span><span class="sidebar-group-caret">Expand / collapse</span></summary><div class="sidebar-group-body"><div class="card" id="userParcelCard">
 <h2 class="card-title">Parcel Drawing / Data Assignment Panel</h2>
-<p class="card-help small">Bu panel yalnızca yönetici veri giriş/çizim modu için sadeleştirildi. 180 parselin ürün, alan, çiftçi, sulama ve atama bilgileri sisteme hazır girildi. Bu sürümde Bor İlçe Merkezi P79-P121 kayıtları çizim/düzenleme için öne alınmıştır; diğer köyler de aynı mantıkla seçilebilir.</p>
+<p class="card-help small">This panel is simplified for institutional data entry/drawing mode. Crop, area, farmer, irrigation, and assignment information for 180 parcels has already been entered into the system. In this version, Bor District Center P79-P121 records are prioritized for drawing/editing; other villages can be selected with the same workflow.</p>
 <div class="user-parcel-actions">
 <input accept=".geojson,.json,.kml,.jpg,.jpeg,.png" class="file-input" id="customParcelFileInput" type="file"/>
 <div class="inline-actions compact-wrap">
-<button class="btn-secondary" id="startDrawParcelBtn" type="button">Haritada çiz</button>
-<button class="btn-secondary" id="finishDrawParcelBtn" type="button">Çizimi bitir</button>
-<button class="btn-secondary" id="clearDrawParcelBtn" type="button">Çizimi temizle</button>
-<button class="btn-secondary danger-soft" id="clearSavedCustomParcelsBtn" type="button">Çizimle eklenenleri sil</button>
+<button class="btn-secondary" id="startDrawParcelBtn" type="button">Draw on map</button>
+<button class="btn-secondary" id="finishDrawParcelBtn" type="button">Finish drawing</button>
+<button class="btn-secondary" id="clearDrawParcelBtn" type="button">Clear drawing</button>
+<button class="btn-secondary danger-soft" id="clearSavedCustomParcelsBtn" type="button">Delete drawn additions</button>
 </div>
 </div>
-<div class="small muted" id="customParcelUploadInfo">Haritada yalnızca yüklenmiş gerçek GeoJSON sınırları görünür. Excel kayıtları sayısal analizde kullanılır; gerçek sınır yoksa temsili dikdörtgen üretilmez. Yeni sınır için GeoJSON/KML yükleyebilir veya panelde çizim yapabilirsiniz.</div>
+<div class="small muted" id="customParcelUploadInfo">Only uploaded real GeoJSON boundaries are shown on the map. Excel records are used in numerical analysis; no representative rectangle is generated when a real boundary is missing. Upload GeoJSON/KML or draw in the panel to add a new boundary.</div>
 <div class="drawing-registry-box" id="drawingRegistryBox">
   <div class="drawing-registry-head">
     <div>
-      <strong>Çizim yapılacak hazır parsel kaydı</strong>
-      <small>Parseli seçin; bilgiler otomatik dolsun. Siz yalnızca polygon sınırını çizin veya GeoJSON/KML içe aktarın.</small>
+      <strong>Ready parcel record for drawing</strong>
+      <small>Select a parcel and its information will autofill. You only draw the polygon boundary or import GeoJSON/KML.</small>
     </div>
-    <span class="pill-soft" id="drawingRegistryCount">180 kayıt</span>
+    <span class="pill-soft" id="drawingRegistryCount">180 records</span>
   </div>
   <div class="drawing-village-toolbar" style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-top:10px;">
     <div class="form-row" style="min-width:190px;flex:1;">
-      <label class="label">Çizim köy filtresi</label>
+      <label class="label">Drawing village filter</label>
       <select class="select-input" id="drawingVillageFilter">
-        <option value="">Tüm köyler</option>
+        <option value="">All villages</option>
         <option value="Sazlıca">Sazlıca</option>
         <option value="Bahçeli">Bahçeli</option>
-        <option value="Bor İlçe Merkezi" selected>Bor İlçe Merkezi</option>
+        <option value="Bor İlçe Merkezi" selected>Bor District Center</option>
         <option value="Kemerhisar">Kemerhisar</option>
         <option value="Kaynarca">Kaynarca</option>
       </select>
     </div>
-    <button class="btn-secondary" id="focusBorDrawingBtn" type="button">Bor İlçe Merkezi çizimine geç</button>
-    <button class="btn-secondary" id="focusKemerhisarDrawingBtn" type="button">Kemerhisar çizimine geç</button>
+    <button class="btn-secondary" id="focusBorDrawingBtn" type="button">Switch to Bor District Center drawing</button>
+    <button class="btn-secondary" id="focusKemerhisarDrawingBtn" type="button">Switch to Kemerhisar drawing</button>
   </div>
   <div class="grid-2" style="margin-top:10px;">
     <div class="form-row">
-      <label class="label">Parsel kaydı</label>
+      <label class="label">Parcel record</label>
       <select class="select-input" id="drawingParcelSelect">
-        <option value="">Kayıtlar yükleniyor...</option>
+        <option value="">Loading records...</option>
       </select>
     </div>
     <div class="form-row">
-      <label class="label">Durum</label>
-      <div class="drawing-registry-status" id="drawingRegistryStatus">Kayıt seçilmedi</div>
+      <label class="label">Status</label>
+      <div class="drawing-registry-status" id="drawingRegistryStatus">No record selected</div>
     </div>
   </div>
-  <div class="drawing-record-preview" id="drawingRecordPreview">Kayıt seçtiğinizde parselin ürün, çiftçi, alan, kota ve atama bilgileri burada görünecek.</div>
+  <div class="drawing-record-preview" id="drawingRecordPreview">When a record is selected, crop, farmer, area, quota, and assignment information for the parcel will appear here.</div>
 </div>
 <div class="image-preview-box" id="customParcelImagePreview" style="display:none;"></div>
 <div class="grid-2" style="margin-top:10px;">
 <div class="form-row">
-<label class="label">Parsel adı</label>
-<input class="text-input" id="manualParcelName" placeholder="Örn. Çiftçi Parseli 1" type="text"/>
+<label class="label">Parcel name</label>
+<input class="text-input" id="manualParcelName" placeholder="e.g. Farmer Parcel 1" type="text"/>
 </div>
 <div class="form-row">
 <label class="label">Alan (da)</label>
-<input class="text-input" id="manualParcelArea" placeholder="Harita veya dosyadan otomatik gelir" readonly="" step="0.1" type="number"/>
+<input class="text-input" id="manualParcelArea" placeholder="Automatically read from map or file" readonly="" step="0.1" type="number"/>
 <label class="small muted" style="display:flex;align-items:center;gap:6px;margin-top:6px;">
 <input id="manualAreaOverrideToggle" type="checkbox"/>
-                  Alanı elle düzenle
+                  Edit area manually
                 </label>
 </div>
 </div>
 <div class="grid-2">
 <div class="form-row">
-<label class="label">Köy / mevki</label>
+<label class="label">Village / locality</label>
 <input class="text-input" id="manualParcelVillage" placeholder="Sazlıca / Bahçeli / Kemerhisar / Bor / Kaynarca" type="text"/>
 </div>
 <div class="form-row">
-<label class="label">İlçe</label>
-<input class="text-input" id="manualParcelDistrict" placeholder="Merkez" type="text"/>
+<label class="label">District</label>
+<input class="text-input" id="manualParcelDistrict" placeholder="Central district" type="text"/>
 </div>
 </div>
 <div class="grid-2">
 <div class="form-row">
-<label class="label">Çiftçi / işletme</label>
-<input class="text-input" id="manualParcelFarmer" placeholder="Örn. Mehmet Demir" type="text"/>
-<div class="small muted" style="margin-top:6px;">Kayıtlı çiftçi listesinden atama yapmak için aşağıdaki atama panelini kullanın.</div>
+<label class="label">Farmer / farm</label>
+<input class="text-input" id="manualParcelFarmer" placeholder="e.g. Mehmet Demir" type="text"/>
+<div class="small muted" style="margin-top:6px;">Use the assignment panel below to assign from the registered farmer list.</div>
 </div>
 <div class="form-row">
-<label class="label">Arazi tipi</label>
+<label class="label">Land type</label>
 <select class="select-input" id="manualParcelType">
-<option selected="" value="auto">Otomatik algıla</option>
-<option value="field">Tarla / Yem</option>
-<option value="vegetable">Sebze</option>
-<option value="orchard">Meyve / Bağ / çok yıllık</option>
+<option selected="" value="auto">Detect automatically</option>
+<option value="field">Field / forage</option>
+<option value="vegetable">Vegetable</option>
+<option value="orchard">Fruit / vineyard / perennial</option>
 </select>
 </div>
 </div>
 <div class="grid-2">
 <div class="form-row">
-<label class="label">Mevcut ürün</label>
-<input class="text-input" id="manualCurrentCrop" list="cropSuggestions" placeholder="Örn. Patates" type="text"/>
+<label class="label">Current crop</label>
+<input class="text-input" id="manualCurrentCrop" list="cropSuggestions" placeholder="e.g. Potato" type="text"/>
 <datalist id="cropSuggestions"></datalist>
 </div>
 <div class="form-row">
-<label class="label">Mevcut sulama</label>
+<label class="label">Current irrigation</label>
 <select class="select-input" id="manualIrrigation">
-<option value="surface">Yüzey / Karık / Salma</option>
-<option selected="" value="sprinkler">Yağmurlama</option>
+<option value="surface">Surface / furrow / flood</option>
+<option selected="" value="sprinkler">Sprinkler</option>
 <option value="drip">Damla</option>
 <option value="pivot">Pivot / Lineer</option>
-<option value="rainfed">Yağışa bağlı / Kuru</option>
+<option value="rainfed">Rainfed / dry farming</option>
 </select>
 </div>
 </div>
 <div class="parcel-assignment-box" id="parcelAssignmentBox" style="margin-top:12px;">
   <div class="parcel-assignment-head">
     <div>
-      <strong>Parsel atama ve çiftçi tercihi</strong>
-      <small>Çizilen/yüklenen parseli çiftçiye ve seçilen alternatif desene bağlar.</small>
+      <strong>Parcel assignment and farmer preference</strong>
+      <small>Links the drawn/uploaded parcel to the farmer and selected alternative pattern.</small>
     </div>
-    <span class="pill-soft" id="assignmentStatusPill">Atama yok</span>
+    <span class="pill-soft" id="assignmentStatusPill">No assignment</span>
   </div>
   <div class="grid-2" style="margin-top:10px;">
     <div class="form-row">
-      <label class="label">Kayıtlı çiftçi</label>
+      <label class="label">Registered farmer</label>
       <select class="select-input" id="assignmentFarmerSelect"></select>
     </div>
     <div class="form-row">
-      <label class="label">Çiftçinin seçtiği alternatif</label>
+      <label class="label">Farmer-selected alternative</label>
       <select class="select-input" id="assignmentAlternativeSelect"></select>
     </div>
   </div>
   <div class="grid-2">
     <div class="form-row">
-      <label class="label">Onay durumu</label>
+      <label class="label">Approval status</label>
       <select class="select-input" id="assignmentApprovalStatus">
-        <option value="draft">Taslak</option>
-        <option value="farmer_selected">Çiftçi tercih etti</option>
-        <option value="technical_review">Teknik onay bekliyor</option>
-        <option value="approved">Onaylandı</option>
-        <option value="in_progress">Uygulamada</option>
+        <option value="draft">Draft</option>
+        <option value="farmer_selected">Farmer selected</option>
+        <option value="technical_review">Awaiting technical approval</option>
+        <option value="approved">Approved</option>
+        <option value="in_progress">In implementation</option>
       </select>
     </div>
     <div class="form-row">
-      <label class="label">Atama notu</label>
-      <input class="text-input" id="assignmentNoteInput" placeholder="Örn. Çiftçi ikinci ürünü tercih etti" type="text"/>
+      <label class="label">Assignment note</label>
+      <input class="text-input" id="assignmentNoteInput" placeholder="e.g. Farmer preferred the second crop" type="text"/>
     </div>
   </div>
-  <div class="parcel-assignment-preview" id="assignmentPreviewBox">Seçili parsel için alternatifler hazırlanıyor.</div>
+  <div class="parcel-assignment-preview" id="assignmentPreviewBox">Preparing alternatives for the selected parcel.</div>
   <div class="inline-actions compact-wrap" style="margin-top:10px;">
-    <button class="btn-primary" id="applyParcelAssignmentBtn" type="button">Alternatifi parsele ata</button>
-    <button class="btn-secondary" id="exportAssignedGeojsonBtn" type="button">Atanan GeoJSON indir</button>
+    <button class="btn-primary" id="applyParcelAssignmentBtn" type="button">Assign alternative to parcel</button>
+    <button class="btn-secondary" id="exportAssignedGeojsonBtn" type="button">Download assigned GeoJSON</button>
   </div>
 </div>
 <div class="algo-actions" style="margin-top:8px;">
-<button class="btn-primary" id="saveUserParcelBtn" type="button">Parsel bilgisini kaydet</button>
-<span class="algo-status" id="userParcelStatus">Hazır</span>
+<button class="btn-primary" id="saveUserParcelBtn" type="button">Save parcel information</button>
+<span class="algo-status" id="userParcelStatus">Ready</span>
 </div>
-<p class="card-help small" style="margin-top:8px;">Akış: 1) Hazır parsel kaydını seçin. 2) Haritada doğru sınırı çizin veya GeoJSON/KML yükleyin. 3) Sistem seçili kaydın çiftçi, ürün, sulama, kota ve atama bilgilerini otomatik bağlar. 4) Popup ve seçim davranışı kaydedilen geometri üzerinden çalışır.</p>
+<p class="card-help small" style="margin-top:8px;">Workflow: 1) Select a ready parcel record. 2) Draw the correct boundary on the map or upload GeoJSON/KML. 3) The system automatically links farmer, crop, irrigation, quota, and assignment information for the selected record. 4) Popup and selection behavior use the saved geometry.</p>
 <div class="request-thread-box" id="userRequestThread"></div>
-</div></div></details><details class="sidebar-group farmer-decision-group" id="farmerDecisionGroup" data-role="farmer-only" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Uzman önerisi ve kendi parselim</strong><small>Yalnızca size atanmış karar bilgileri</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card farmer-decision-card" id="farmerDecisionCard">
-<h2 class="card-title">Kendi parsel karar özeti</h2>
-<p class="card-help small">Bu çiftçi görünümünde çizim, veri kaynağı, algoritma, kullanıcı yönetimi ve parsel atama işlemleri gösterilmez. Kurum/uzman tarafından atanan desen varsa burada sade özet olarak görünür.</p>
+</div></div></details><details class="sidebar-group farmer-decision-group" id="farmerDecisionGroup" data-role="farmer-only" open=""><summary class="sidebar-group-summary"><span class="sidebar-group-step">2</span><span class="sidebar-group-text"><strong>Expert recommendation and my parcel</strong><small>Decision information assigned only to you</small></span><span class="sidebar-group-caret">Expand / collapse</span></summary><div class="sidebar-group-body"><div class="card farmer-decision-card" id="farmerDecisionCard">
+<h2 class="card-title">My Parcel Decision Summary</h2>
+<p class="card-help small">In this farmer view, drawing, data source, algorithm, user management, and parcel assignment operations are hidden. If the institution/expert has assigned a crop pattern, it appears here as a concise summary.</p>
 <div class="farmer-assignment-summary" id="farmerAssignmentSummary">
-  <div class="small muted">Parsel seçildiğinde uzman önerisi burada görünecek.</div>
+  <div class="small muted">The expert recommendation will appear here when a parcel is selected.</div>
 </div>
 <div class="farmer-decision-actions">
-  <button class="btn-primary" id="farmerRefreshRecommendationBtn" type="button">Öneri üret</button>
+  <button class="btn-primary" id="farmerRefreshRecommendationBtn" type="button">Generate recommendation</button>
 </div>
-</div></div></details><details class="sidebar-group" id="userManagementGroup" data-role="institution" data-institution-role="admin-only"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Kullanıcı Yönetimi</strong><small>Korundu; çizim modunda ayrı sekmeden açılır</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card managed-user-sidebar-card" data-role="institution">
-<h2 class="card-title">Kullanıcı yönetimi paneli</h2>
-<p class="card-help small">Bu modül sol sütunda sıkışmasın diye ayrı bir çalışma alanına taşındı. Çiftçi listesi, arama, düzenleme, pasif yapma, şifre yenileme ve parsel atama işlemlerini sağdaki geniş panelde yönetin.</p>
+</div></div></details><details class="sidebar-group" id="userManagementGroup" data-role="institution" data-institution-role="admin-only"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>User Management</strong><small>Kept as a separate tab in drawing mode</small></span><span class="sidebar-group-caret">Expand / collapse</span></summary><div class="sidebar-group-body"><div class="card managed-user-sidebar-card" data-role="institution">
+<h2 class="card-title">User Management Panel</h2>
+<p class="card-help small">This module was moved to a separate workspace to avoid crowding the left column. Manage farmer lists, search, editing, deactivation, password reset, and parcel assignment in the wider panel on the right.</p>
 <div class="managed-user-sidebar-preview" id="managedUserSidebarPreview"></div>
 <div class="algo-actions managed-user-sidebar-actions" style="margin-top:10px;">
-<button class="btn-primary" id="openUserManagementTabBtn" type="button">Yönetim panelini aç</button>
-<span class="algo-status">Geniş görünüm</span>
+<button class="btn-primary" id="openUserManagementTabBtn" type="button">Open management panel</button>
+<span class="algo-status">Wide view</span>
 </div>
-</div></div></details><details class="sidebar-group" id="summaryGroup"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Parsel özeti</strong><small>Seçili parsel için hızlı durum görünümü</small></span><span class="sidebar-group-caret">Aç / kapa</span></summary><div class="sidebar-group-body"><div class="card" id="parcelSummary">
-<h2 class="card-title">Parsel Özeti</h2>
+</div></div></details><details class="sidebar-group" id="summaryGroup"><summary class="sidebar-group-summary"><span class="sidebar-group-step">3</span><span class="sidebar-group-text"><strong>Parcel Summary</strong><small>Quick status view for the selected parcel</small></span><span class="sidebar-group-caret">Expand / collapse</span></summary><div class="sidebar-group-body"><div class="card" id="parcelSummary">
+<h2 class="card-title">Parcel Summary</h2>
 <div class="parcel-summary-body">
 <!-- JS ile dolduruluyor -->
 </div>
@@ -523,8 +523,8 @@
 
 <!-- v72: Kullanıcı seçim yaptı ama yeni optimizasyon çalıştırmadıysa uyarı -->
 <div class="stale-banner" id="staleBanner" style="display:none;">
-<div class="stale-banner-title">Uyarı: Seçim değişti</div>
-<div class="stale-banner-body">Ekrandaki sonuçlar <b>önceki çalıştırmaya</b> aittir. Yeni sonuçlar için <b>Optimizasyonu Çalıştır</b> butonuna basın.</div>
+<div class="stale-banner-title">Warning: selection changed</div>
+<div class="stale-banner-body">The results on screen belong to the <b>previous run</b>. Click <b>Run Optimization</b> for fresh results.</div>
 </div>
 <div class="role-info-banner" id="roleInfoBanner"></div>
 <div class="right-top" id="overviewSection">
@@ -620,12 +620,12 @@ Parcel Map</h2>
 <div class="metric-pill pill-profit" id="mProfitDiff">-</div>
 </div>
 <div class="metric">
-<div class="metric-label">Su Verimliliği (TL/m³ - Mevcut)</div>
+<div class="metric-label">Water Productivity (TL/m³ - Current)</div>
 <div class="metric-value"><span id="mEffCurrent">-</span></div>
-<div class="metric-note">Mevcut desen</div>
+<div class="metric-note">Current pattern</div>
 </div>
 <div class="metric">
-<div class="metric-label">Su Verimliliği (TL/m³ - Seçili senaryo)</div>
+<div class="metric-label">Water Productivity (TL/m³ - Selected scenario)</div>
 <div class="metric-value"><span id="mEffScenario">-</span></div>
 <div class="metric-pill pill-eff" id="mEffDiff">-</div>
 </div>
@@ -634,14 +634,14 @@ Parcel Map</h2>
 <div class="rationale-box" id="decisionRationale" style="display:none;"></div>
 <div class="drought-impact-box" id="droughtImpactBox">
 <details class="drought-impact-details">
-<summary class="drought-impact-title">Kuraklık notu (yardımcı kontrol)</summary>
+<summary class="drought-impact-title">Drought note (helper check)</summary>
 <div class="drought-impact-body">
 <div class="drought-impact-col">
-<div class="drought-impact-sub">Kaçın / azalt</div>
+<div class="drought-impact-sub">Avoid / reduce</div>
 <ul class="drought-impact-list" id="droughtAvoidList"></ul>
 </div>
 <div class="drought-impact-col">
-<div class="drought-impact-sub">Tercih et</div>
+<div class="drought-impact-sub">Prefer</div>
 <ul class="drought-impact-list" id="droughtPreferList"></ul>
 </div>
 </div>
@@ -652,14 +652,14 @@ Parcel Map</h2>
 </div>
 <div class="card drought-details-card" id="waterRiskSection">
 <details class="drought-details">
-<summary class="drought-details__summary"><span class="drought-details__title">Kuraklık göstergeleri (2000-2025) - Detay</span><span class="drought-summary-badge" id="droughtSummaryBadge">KRİTİK</span></summary>
+<summary class="drought-details__summary"><span class="drought-details__title">Drought Indicators (2000-2025) - Details</span><span class="drought-summary-badge" id="droughtSummaryBadge">CRITICAL</span></summary>
 <div class="drought-details__body">
 <div class="card drought-main-container">
-<h2 class="card-title">Akkaya Sulama Alanı Kuraklık ve Su Bütçesi Göstergeleri (2000-2025)</h2>
-<p class="card-help small">Grafik üzerinde gezerek yıllık değerleri görebilirsiniz. Seçili "Su yılı" vurgulanır; kritik yıllarda panel dikkat çekici biçimde öne çıkar.</p>
+<h2 class="card-title">Akkaya Irrigation Area Drought and Water Budget Indicators (2000-2025)</h2>
+<p class="card-help small">Hover over the chart to see annual values. The selected water year is highlighted; critical years are emphasized in the panel.</p>
 <div class="drought-card" id="droughtAlarmCard">
 <div class="drought-card__head">
-<span class="drought-card__title">Kuraklık Alarmı</span>
+<span class="drought-card__title">Drought Alarm</span>
 <span class="badge badge-warn" id="droughtAlarmLevel">-</span>
 </div>
 <div class="drought-layout">
@@ -669,20 +669,20 @@ Parcel Map</h2>
 <div class="drought-side">
 <div class="drought-grid drought-grid--side">
 <div class="drought-metric">
-<div class="drought-metric__label">Min doluluk</div>
+<div class="drought-metric__label">Minimum storage</div>
 <div class="drought-metric__value drought-metric__value--big"><span id="droughtMinPct">-</span><span class="unit">%</span></div>
 </div>
 <div class="drought-metric">
-<div class="drought-metric__label">Ortalama</div>
+<div class="drought-metric__label">Average</div>
 <div class="drought-metric__value drought-metric__value--big"><span id="droughtAvgPct">-</span><span class="unit">%</span></div>
 </div>
 <div class="drought-metric">
-<div class="drought-metric__label">Stres endeksi</div>
+<div class="drought-metric__label">Stress index</div>
 <div class="drought-metric__value drought-metric__value--big"><span id="droughtStressIdx">-</span></div>
 </div>
 </div>
 <div class="drought-note small" id="droughtAlarmText">-</div>
-<div class="small muted" style="margin-top:8px;">İpucu: Grafikteki noktalara gelerek yıllık değerleri görebilirsiniz.</div>
+<div class="small muted" style="margin-top:8px;">Tip: hover over chart points to see annual values.</div>
 </div>
 </div>
 </div>
@@ -692,18 +692,18 @@ Parcel Map</h2>
 </div>
 <div class="right-middle">
 <div class="card small-chart-card">
-<h3 class="card-subtitle">Hedef Modlarına Göre Toplam Su Kullanımı</h3>
+<h3 class="card-subtitle">Total Water Use by Objective Mode</h3>
 <canvas height="150" id="waterChart"></canvas>
-<div class="small muted">Bu grafik, seçili senaryo tipi altında mevcut desen ve backend tarafından dönen hedef modu sonucunu m³ birimiyle karşılaştırır.</div>
+<div class="small muted">This chart compares the current pattern and backend objective-mode result under the selected scenario type in m³.</div>
 </div>
 <div class="card small-chart-card">
-<h3 class="card-subtitle">Hedef Modlarına Göre Toplam Net Kâr</h3>
+<h3 class="card-subtitle">Total Net Profit by Objective Mode</h3>
 <canvas height="150" id="profitChart"></canvas>
-<div class="small muted">Bu grafik, seçili senaryo tipi altında mevcut desen ve backend tarafından dönen hedef modu sonucunu TL birimiyle karşılaştırır.</div>
+<div class="small muted">This chart compares the current pattern and backend objective-mode result under the selected scenario type in TL.</div>
 </div>
 <div class="card small-chart-card">
-<h3 class="card-subtitle">Seçili Parsel - Önerilen Ürünler (Rotasyon)</h3>
-<div aria-label="Önerilen ürünler" class="product-cards" id="productCards"></div>
+<h3 class="card-subtitle">Selected Parcel - Recommended Crops (Rotation)</h3>
+<div aria-label="Recommended crops" class="product-cards" id="productCards"></div>
 </div>
 </div>
 <div class="tabs" id="analysisTables">
@@ -711,7 +711,7 @@ Parcel Map</h2>
 <button class="tab active" data-tab="parcel">Parcel-level Crop Pattern</button>
 <button class="tab" data-tab="farmer-communication" data-role="farmer-only" id="farmerCommunicationTabBtnV7">Expert / Admin Communication</button>
 <button class="tab" data-tab="institution-communication" data-role="institution" id="institutionCommunicationTabBtnV7">Messages / Requests</button>
-<button class="tab" data-tab="approved-plan" data-role="farmer-only" id="approvedPlanTabBtnV142">Onaylı güncel plan</button>
+<button class="tab" data-tab="approved-plan" data-role="farmer-only" id="approvedPlanTabBtnV142">Approved Current Plan</button>
 <button class="tab" data-tab="drawing" data-role="institution">Parcel Drawing / Data Assignment</button>
 <button class="tab" data-tab="district" data-role="institution">District / Village Summary</button>
 <button class="tab" data-tab="official" data-role="institution">Official Summary Tables</button>
@@ -722,13 +722,13 @@ Parcel Map</h2>
 <div class="management-workspace-shell">
   <div class="management-workspace-head management-workspace-head--hero">
     <div>
-      <div class="small muted">Kurumsal çalışma alanı</div>
-      <h2 class="card-title" style="margin-top:4px;">Çiftçi kullanıcı yönetim modülü</h2>
-      <p class="card-help small" style="margin-top:6px;">Bu sürümde görünüm tablo + sağ detay paneli mantığıyla yeniden düzenlendi. Böylece çok sayıda hesabı daha rahat tarayabilir, satır seçip sağdaki detay çekmecesinde kayıt işlemlerini yapabilirsiniz. Ayrıca çiftçi tarafından bildirilen yeni parseller burada incelenip onaylanır.</p>
+      <div class="small muted">Institutional workspace</div>
+      <h2 class="card-title" style="margin-top:4px;">Farmer User Management Module</h2>
+      <p class="card-help small" style="margin-top:6px;">This version was reorganized with a table plus right-side detail panel. You can scan many accounts more comfortably, select a row, and complete record actions in the detail drawer. New parcels reported by farmers are also reviewed and approved here.</p>
     </div>
     <div class="management-workspace-actions">
-      <span class="badge badge-info">Kurumsal modül</span>
-      <button class="btn-secondary" id="managedUserWorkspaceNewBtn" type="button">Yeni kayıt başlat</button>
+      <span class="badge badge-info">Institutional module</span>
+      <button class="btn-secondary" id="managedUserWorkspaceNewBtn" type="button">Start new record</button>
     </div>
   </div>
   <div class="card managed-user-card-v15" id="managedUserCard" data-role="institution" data-institution-role="admin-only">
@@ -737,40 +737,40 @@ Parcel Map</h2>
       <div class="managed-user-main-panel">
         <div class="managed-user-toolbar managed-user-toolbar--table">
           <div class="form-row managed-user-toolbar-field">
-            <label class="label">Çiftçi ara</label>
-            <input class="text-input" id="managedUserSearch" placeholder="Ad, kullanıcı adı, telefon, köy veya parsel ile ara" type="text"/>
+            <label class="label">Search farmer</label>
+            <input class="text-input" id="managedUserSearch" placeholder="Search by name, username, phone, village, or parcel" type="text"/>
           </div>
           <div class="form-row managed-user-toolbar-field">
-            <label class="label">Durum filtresi</label>
+            <label class="label">Status filter</label>
             <select class="select-input" id="managedUserStatusFilter">
-              <option value="all">Tümü</option>
-              <option value="pending_setup">İlk kurulum bekleyenler</option>
-              <option value="active">Aktif hesaplar</option>
-              <option value="passive">Pasif hesaplar</option>
+              <option value="all">All</option>
+              <option value="pending_setup">Pending setup</option>
+              <option value="active">Active accounts</option>
+              <option value="passive">Passive accounts</option>
             </select>
           </div>
           <div class="managed-user-toolbar-actions">
-            <button class="btn-secondary" id="managedUserNewBtn" type="button">Yeni kayıt</button>
+            <button class="btn-secondary" id="managedUserNewBtn" type="button">New record</button>
           </div>
         </div>
         <div class="managed-user-table-shell">
           <div class="managed-user-table-headline">
             <div>
-              <h3 class="card-subtitle" style="margin:0;">Çiftçi hesap listesi</h3>
-              <div class="small muted managed-user-list-meta" id="managedUsersListMeta">Liste hazırlanıyor...</div>
+              <h3 class="card-subtitle" style="margin:0;">Farmer Account List</h3>
+              <div class="small muted managed-user-list-meta" id="managedUsersListMeta">Preparing list...</div>
             </div>
-            <div class="mini-tag">Satıra tıklayın • detay sağda açılır</div>
+            <div class="mini-tag">Click a row • details open on the right</div>
           </div>
           <div class="managed-user-table-wrap">
             <table class="managed-user-table">
               <thead>
                 <tr>
-                  <th>Çiftçi</th>
-                  <th>Durum</th>
-                  <th>Parsel atama</th>
-                  <th>İlk kurulum</th>
-                  <th>Not / son işlem</th>
-                  <th class="ta-right">Hızlı işlemler</th>
+                  <th>Farmer</th>
+                  <th>Status</th>
+                  <th>Parcel assignment</th>
+                  <th>Initial setup</th>
+                  <th>Note / last action</th>
+                  <th class="ta-right">Quick actions</th>
                 </tr>
               </thead>
               <tbody id="managedUsersList"></tbody>
@@ -782,11 +782,11 @@ Parcel Map</h2>
         <div class="managed-user-detail-card">
           <div class="managed-user-drawer-hero">
             <div>
-              <div class="small muted">Seçili kayıt / form</div>
-              <h3 id="managedUserDrawerTitle">Yeni çiftçi hesabı</h3>
-              <p class="card-help small" id="managedUserDrawerSubtitle">Sol taraftan satır seçebilir veya doğrudan yeni kayıt oluşturabilirsiniz.</p>
+              <div class="small muted">Selected record / form</div>
+              <h3 id="managedUserDrawerTitle">New farmer account</h3>
+              <p class="card-help small" id="managedUserDrawerSubtitle">Select a row from the left or create a new record directly.</p>
             </div>
-            <span class="mini-tag">Detay paneli</span>
+            <span class="mini-tag">Detail panel</span>
           </div>
           <div class="managed-user-drawer-summary" id="managedUserDrawerSummary"></div>
           <div class="managed-user-drawer-actions" id="managedUserDrawerQuickActions"></div>
@@ -794,72 +794,72 @@ Parcel Map</h2>
           <div class="managed-user-form-panel managed-user-form-panel--drawer">
             <div class="managed-user-form-head">
               <div>
-                <div class="small muted">Yönetim formu</div>
-                <h3 id="managedUserFormTitle">Yeni çiftçi hesabı</h3>
+                <div class="small muted">Management form</div>
+                <h3 id="managedUserFormTitle">New farmer account</h3>
               </div>
               <div class="managed-user-form-badges">
-                <span class="managed-user-status pending" id="managedUserAccountStatusBadge">İlk kurulum bekliyor</span>
-                <span class="mini-tag" id="managedUserSetupBadge">İlk kurulum: Bekliyor</span>
+                <span class="managed-user-status pending" id="managedUserAccountStatusBadge">Pending setup</span>
+                <span class="mini-tag" id="managedUserSetupBadge">Initial setup: pending</span>
               </div>
             </div>
             <input id="managedUserEditUsername" type="hidden"/>
             <div class="grid-2">
               <div class="form-row">
-                <label class="label">Çiftçi adı</label>
-                <input class="text-input" id="managedUserDisplayName" placeholder="Örn. Mehmet Yılmaz" type="text"/>
+                <label class="label">Farmer name</label>
+                <input class="text-input" id="managedUserDisplayName" placeholder="e.g. Mehmet Yılmaz" type="text"/>
               </div>
               <div class="form-row">
-                <label class="label">Kullanıcı adı</label>
-                <input class="text-input" id="managedUserUsername" placeholder="Örn. mehmet.yilmaz" type="text"/>
+                <label class="label">Username</label>
+                <input class="text-input" id="managedUserUsername" placeholder="e.g. mehmet.yilmaz" type="text"/>
               </div>
             </div>
             <div class="grid-2">
               <div class="form-row">
-                <label class="label">Geçici / yeni şifre</label>
-                <input class="text-input" id="managedUserPassword" placeholder="Boş bırakılırsa yeni kayıtta demo123 atanır" type="text"/>
+                <label class="label">Temporary / new password</label>
+                <input class="text-input" id="managedUserPassword" placeholder="If left blank, demo123 is assigned for new records" type="text"/>
               </div>
               <div class="form-row">
                 <label class="label">Telefon</label>
-                <input class="text-input" id="managedUserPhone" placeholder="Örn. 05xx xxx xx xx" type="text"/>
+                <input class="text-input" id="managedUserPhone" placeholder="e.g. 05xx xxx xx xx" type="text"/>
               </div>
             </div>
             <div class="grid-2">
               <div class="form-row">
-                <label class="label">Köy / mevki</label>
+                <label class="label">Village / locality</label>
                 <input class="text-input" id="managedUserVillage" placeholder="Sazlıca / Bahçeli / Kemerhisar / Bor / Kaynarca" type="text"/>
               </div>
               <div class="form-row">
-                <label class="label">İlçe</label>
-                <input class="text-input" id="managedUserDistrict" placeholder="Merkez" type="text"/>
+                <label class="label">District</label>
+                <input class="text-input" id="managedUserDistrict" placeholder="Central district" type="text"/>
               </div>
             </div>
             <div class="grid-2">
               <div class="form-row">
-                <label class="label">Hesap durumu</label>
+                <label class="label">Account status</label>
                 <select class="select-input" id="managedUserAccountStatus">
-                  <option value="pending_setup">İlk kurulum bekliyor</option>
-                  <option value="active">Aktif</option>
-                  <option value="passive">Pasif</option>
+                  <option value="pending_setup">Pending setup</option>
+                  <option value="active">Active</option>
+                  <option value="passive">Passive</option>
                 </select>
               </div>
               <div class="form-row">
-                <label class="label">İlk kurulum durumu</label>
-                <div class="managed-user-readonly" id="managedUserSetupState">Bekliyor</div>
+                <label class="label">Initial setup status</label>
+                <div class="managed-user-readonly" id="managedUserSetupState">Pending</div>
               </div>
             </div>
             <div class="form-row">
-              <label class="label">Parsel atama</label>
+              <label class="label">Parcel assignment</label>
               <div class="auth-parcel-picker" id="adminParcelPicker"></div>
-              <div class="small muted">Resmi parsel ataması yapılmamışsa kullanıcı ilk girişte kendi parselini ekleyebilir.</div>
+              <div class="small muted">If no official parcel is assigned, the user can add their own parcel at first login.</div>
             </div>
             <div class="form-row">
-              <label class="label">Yönetim notu</label>
-              <textarea class="text-input onboarding-textarea" id="managedUserNotes" placeholder="Örn. İlk girişte çizim yapması bekleniyor."></textarea>
+              <label class="label">Management note</label>
+              <textarea class="text-input onboarding-textarea" id="managedUserNotes" placeholder="e.g. Expected to draw a parcel at first login."></textarea>
             </div>
             <div class="algo-actions managed-user-form-actions" style="margin-top:8px;">
-              <button class="btn-primary" id="saveManagedFarmerBtn" type="button">Kaydet</button>
-              <button class="btn-secondary" id="cancelManagedFarmerBtn" type="button">Temizle</button>
-              <span class="algo-status" id="managedUserCreateStatus">Hazır</span>
+              <button class="btn-primary" id="saveManagedFarmerBtn" type="button">Save</button>
+              <button class="btn-secondary" id="cancelManagedFarmerBtn" type="button">Clear</button>
+              <span class="algo-status" id="managedUserCreateStatus">Ready</span>
             </div>
           </div>
         </div>
@@ -872,7 +872,7 @@ Parcel Map</h2>
 <div class="tab-panel" id="tab-drawing" data-role="institution">
 <div class="drawing-tab-shell">
 <h2 class="card-title">Parcel Drawing / Data Assignment</h2>
-<p class="card-help small">Resmî parsel kaydını seçip sınır çizimi, GeoJSON/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu çalışma alanından yönetin. Sol panel yalnız analiz kurulumu ve hızlı özet için sade bırakıldı.</p>
+<p class="card-help small">Select the official parcel record and manage boundary drawing, GeoJSON/KML upload, farmer assignment, and selected alternative pattern registration from this workspace. The left panel is kept concise for analysis setup and quick summary.</p>
 <div id="drawingTabMount"></div>
 </div>
 </div>
@@ -882,7 +882,7 @@ Parcel Map</h2>
 <div class="card table-card">
 <h3 class="card-subtitle">Current Crop Pattern</h3>
 <p class="card-help small">
-                      Seçili parselde mevcut durumdaki desen ve referans değerler.
+                      Current pattern and reference values for the selected parcel.
                     </p>
 <table class="data-table" id="tblCurrent">
 <thead>
@@ -891,9 +891,9 @@ Parcel Map</h2>
 <th>Season</th>
 <th>Irrigation (Current)</th>
 <th>Cultivated Area (da - season)</th>
-<th>Su (m³/da)</th>
+<th>Water (m³/da)</th>
 <th>Total Water</th>
-<th>Kâr (TL/da)</th>
+<th>Profit (TL/da)</th>
 <th>Total Profit</th>
 </tr>
 </thead>
@@ -904,7 +904,7 @@ Parcel Map</h2>
 <div class="card table-card">
 <h3 class="card-subtitle">Recommended Crop Pattern (Scenario + Algorithm)</h3>
 <p class="card-help small">
-                      Seçili senaryo ve algoritmaya göre eşit su kotası altında önerilen desen.
+                      Recommended pattern under equal water quota for the selected scenario and algorithm.
                     </p>
 <table class="data-table" id="tblRecommended">
 <thead>
@@ -913,9 +913,9 @@ Parcel Map</h2>
 <th>Season / Share</th>
 <th>Irrigation (Recommended)</th>
 <th>Cultivated Area (da - season)</th>
-<th>Su (m³/da)</th>
+<th>Water (m³/da)</th>
 <th>Total Water</th>
-<th>Kâr (TL/da)</th>
+<th>Profit (TL/da)</th>
 <th>Total Profit</th>
 </tr>
 </thead>
@@ -930,30 +930,30 @@ Parcel Map</h2>
 <div class="explain-box" id="explainBox">-</div>
 </div>
 <div class="card table-card">
-<h3 class="card-subtitle">Rotasyon / 2. Ürün Önerisi (basit kurallar)</h3>
+<h3 class="card-subtitle">Rotation / Second Crop Recommendation (simple rules)</h3>
 <div class="explain-box" id="rotationBox">-</div>
 </div>
 </div>
 <div class="tables-row" style="margin-top:14px;">
 <div class="card table-card">
-<h3 class="card-subtitle">Sulama yöntemi karşılaştırması</h3>
-<p class="card-help small">Mevcut kayıtlı yöntem, optimizasyonun önerdiği yöntem ve diğer sulama seçenekleri aynı tabloda otomatik karşılaştırılır. Ayrı manuel seçim kaldırılmıştır.</p>
+<h3 class="card-subtitle">Irrigation Method Comparison</h3>
+<p class="card-help small">The currently registered method, the method recommended by optimization, and other irrigation options are automatically compared in the same table. Separate manual selection has been removed.</p>
 <div class="explain-box" id="irrigationCompareBox">-</div>
 </div>
 <div class="card table-card">
-<h3 class="card-subtitle">Ekonomik dayanak (2024 fiyat / verim / gider)</h3>
-<p class="card-help small">2024 ürün fiyatı, verim, toplam üretim, toplam su, sulama işletme gideri ve toplam gider kalemleri aynı yerde gösterilir. Böylece kâr değeri yalnız tek bir sayı olarak değil, dayanağıyla birlikte okunur.</p>
+<h3 class="card-subtitle">Economic Basis (2024 price / yield / cost)</h3>
+<p class="card-help small">2024 crop price, yield, total production, total water, irrigation operating cost, and total cost items are shown in one place. Profit is therefore read with its basis rather than as a single isolated number.</p>
 <div class="explain-box" id="businessMetricsBox">-</div>
 </div>
 </div>
 <div class="card table-card" style="margin-top:14px;">
 <h3 class="card-subtitle">Monthly Water Capacity and Critical Months</h3>
-<p class="card-help small">İletim kapasitesi varsa, seçili desenin aylık su talebi ile karşılaştırılır. CROPWAT/FAO-56 referanslı aylık ETc/ETo verisi mevcutsa onunla; yoksa ay-ağırlık yaklaşımıyla hesaplanır.</p>
+<p class="card-help small">If conveyance capacity is available, it is compared with monthly water demand for the selected pattern. When CROPWAT/FAO-56 monthly ETc/ETo data is available it is used; otherwise a month-weighted approach is applied.</p>
 <div class="explain-box" id="deliveryBox">-</div>
 </div>
 <div class="card" style="margin-top:14px;">
-<h3 class="card-subtitle">Seçili parsel için sulama planı (aylık / haftalık / günlük rehber)</h3>
-<p class="card-help small">Not: Bu plan, seçili parselin iklim serisi ve ürün takvimi üzerinden yaklaşık ETc hesabıyla üretilir. Günlük meteoroloji açılırsa daha hassas, kapalıyken aylık iklim ortalamalarıyla çalışır.</p>
+<h3 class="card-subtitle">Irrigation Plan for the Selected Parcel (monthly / weekly / daily guide)</h3>
+<p class="card-help small">Note: this plan is generated with an approximate ETc calculation using the selected parcel's climate series and crop calendar. If daily meteorology is enabled it becomes more precise; otherwise it uses monthly climate averages.</p>
 <div class="explain-box" id="irrigPlanBox">-</div>
 </div>
 </div>
@@ -963,7 +963,7 @@ Parcel Map</h2>
 <strong>Expert / Admin Communication</strong>
 <span class="pill-soft">Message and request flow</span>
 </div>
-<div class="small muted farmer-communication-help-v7">Seçili öneri talepleri, uzman yanıtları ve bildirim mesajları bu sekmede izlenir.</div>
+<div class="small muted farmer-communication-help-v7">Selected recommendation requests, expert replies, and notification messages are tracked in this tab.</div>
 <div id="farmerCommunicationMountV7"></div>
 </div>
 </div>
@@ -973,7 +973,7 @@ Parcel Map</h2>
 <strong>Messages / Requests</strong>
 <span class="pill-soft">Expert and institution correspondence</span>
 </div>
-<div class="small muted institution-communication-help-v7">Çiftçi alternatif talepleri, yazışmalar, onay/revizyon/iptal kararları bu sekmede tutulur.</div>
+<div class="small muted institution-communication-help-v7">Farmer alternative requests, correspondence, and approval/revision/cancellation decisions are kept in this tab.</div>
 <section class="institution-request-inbox-v142" id="institutionRequestInbox"></section>
 </div>
 </div>
@@ -982,15 +982,15 @@ Parcel Map</h2>
 <div class="card">
 <h3 class="card-subtitle">District / Village Decision Summary</h3>
 <p class="card-help">
-                    Bu bölüm artık temsili sabit grafik yerine seçili kapsamdan hesaplanan gerçek özetleri gösterir.
-                    Amaç; hangi köyde ne kadar alan, mevcut ve önerilen su/kâr farkı ve su tahsis baskısı olduğunu ilk bakışta anlaşılır biçimde sunmaktır.
+                    This section now shows real summaries calculated from the selected scope rather than representative static charts.
+                    The aim is to make village area, current vs recommended water/profit differences, and water allocation pressure understandable at a glance.
                   </p>
 <div class="district-kpi-grid" id="districtKpiGrid"></div>
 <div class="district-note" id="districtNarrative">-</div>
 <div class="district-row district-row-pro">
-<div class="chart-card chart-card-tall"><div class="chart-title">Köy bazında toplam alan ve parsel sayısı</div><canvas height="200" id="districtAreaChart"></canvas></div>
-<div class="chart-card chart-card-tall"><div class="chart-title">Köy bazında mevcut ve önerilen toplam su</div><canvas height="200" id="districtIrrigChart"></canvas></div>
-<div class="chart-card chart-card-tall"><div class="chart-title">Köy bazında mevcut ve önerilen net kâr</div><canvas height="200" id="provinceShareChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">Total area and parcel count by village</div><canvas height="200" id="districtAreaChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">Current and recommended total water by village</div><canvas height="200" id="districtIrrigChart"></canvas></div>
+<div class="chart-card chart-card-tall"><div class="chart-title">Current and recommended net profit by village</div><canvas height="200" id="provinceShareChart"></canvas></div>
 </div>
 <div class="district-summary-table" id="districtSummaryTable"></div>
 </div>
@@ -999,7 +999,7 @@ Parcel Map</h2>
 <div class="tables-row">
 <div class="card table-card">
 <h3 class="card-subtitle">Basin Water Budget - Official Summary</h3>
-<p class="card-help small">Seçili su yılı/senaryosu üzerinden hesaplanan toplam kullanılabilir su ve mevcut talep.</p>
+<p class="card-help small">Total available water and current demand calculated for the selected water year/scenario.</p>
 <table class="data-table" id="tblOfficialWater">
 <thead>
 <tr><th>Indicator</th><th>Value</th><th>Unit</th></tr>
@@ -1012,8 +1012,8 @@ Parcel Map</h2>
 </div>
 </div>
 <div class="card table-card">
-<h3 class="card-subtitle">Seçili Senaryoya Göre Optimum Bitki Deseni - Resmî</h3>
-<p class="card-help small">Seçili kapsam / 5 köy parselleri için ürün bazında ekim alanı (sezon/dönem bazında), su ve kâr toplulaştırması. Rotasyon/2. ürün varsa aynı parsel alanı yıl içinde birden fazla ürünle değerlendirilebilir.</p>
+<h3 class="card-subtitle">Optimum Crop Pattern by Selected Scenario - Official</h3>
+<p class="card-help small">Crop-based cultivated area (by season/period), water, and profit aggregation for the selected scope / five-village parcel set. If rotation/second crop exists, the same parcel area may be used by more than one crop within the year.</p>
 <table class="data-table" id="tblOfficialScenario">
 <thead>
 <tr>
@@ -1030,7 +1030,7 @@ Parcel Map</h2>
 </div>
 <div class="card table-card" style="margin-top:14px;">
 <h3 class="card-subtitle">Parcel-level Summary - Official</h3>
-<p class="card-help small">Her parsel için seçili senaryo+algoritma sonucunun su/kâr özeti (küresel su bütçesi sonrası).</p>
+<p class="card-help small">Water/profit summary of the selected scenario + algorithm result for each parcel after applying the global water budget.</p>
 <table class="data-table" id="tblOfficialParcels">
 <thead>
 <tr>
@@ -1041,18 +1041,18 @@ Parcel Map</h2>
 </table>
 <div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
 <button class="btn" id="btnExportParcelsCsv">Download CSV</button>
-<span class="small muted">Not: Bu tablolar, rapora doğrudan eklenebilir/Excel'e aktarılabilir formatta üretilir.</span>
+<span class="small muted">Note: these tables are generated in a format that can be added directly to the report or exported to Excel.</span>
 </div>
 </div>
 <div class="card table-card" style="margin-top:14px;">
 <h3 class="card-subtitle">All Parcels - Current vs Recommended (Transparent Comparison)</h3>
 <p class="card-help small">
-                    Çiftçi için: Her parselde mevcut ekim deseni ile seçili senaryo+algoritma sonucu önerilen desen yan yana.
-                    Her parsel satırında "Kıyasla" ile alternatif ürünlerin su/kâr karşılaştırması görülebilir.
+                    For farmers: current crop pattern and the pattern recommended by the selected scenario + algorithm are shown side by side for each parcel.
+                    Each parcel row can show water/profit comparisons for alternative crops with "Compare".
                   </p>
 <div class="table-footer" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
 <button class="btn" id="btnExportAllParcelCompareCsv">Download CSV</button>
-<span class="small muted" id="allParcelCompareNote">Not: Öneriler, son "Optimizasyonu Çalıştır" sonucuyla senkron tutulur.</span>
+<span class="small muted" id="allParcelCompareNote">Note: recommendations are synchronized with the latest "Run Optimization" result.</span>
 </div>
 <div style="overflow:auto;">
 <table class="data-table" id="tblOfficialAllParcelCompare">
@@ -1066,8 +1066,8 @@ Parcel Map</h2>
 <th>Recommended Pattern (season)</th>
 <th>Recommended Water (m³)</th>
 <th>Recommended Profit (TL)</th>
-<th>Δ Su</th>
-<th>Δ Kâr</th>
+<th>Δ Water</th>
+<th>Δ Profit</th>
 <th>Why?</th>
 </tr>
 </thead>
@@ -1076,15 +1076,15 @@ Parcel Map</h2>
 </div>
 </div>
 <div class="card table-card" style="margin-top:14px;">
-<h3 class="card-subtitle">Köy / İlçe bazlı resmî ekim desenleri (paketten özet)</h3>
-<p class="card-help small">Bu bölüm, veri paketindeki Excel tablolarından türetilen özetleri gösterir (kullanılan bonuslar buradan gelir).</p>
+<h3 class="card-subtitle">Village / District-based Official Crop Patterns (package summary)</h3>
+<p class="card-help small">This section shows summaries derived from the Excel tables in the data package; the bonuses used by the system come from here.</p>
 <div class="small" id="officialSummary"></div>
 </div>
 </div>
 <div class="tab-panel" id="tab-drought">
 <div class="card">
 <h2 class="card-title">Drought Indicators</h2>
-<p class="card-help small">Kuraklık grafikleri üst bölümde "Kuraklık göstergeleri (2000-2025) - Detay" alanında yer almaktadır.</p>
+<p class="card-help small">Drought charts are located in the "Drought Indicators (2000-2025) - Details" area above.</p>
 </div>
 </div>
 <!-- Algoritma Karşılaştırma Sekmesi -->
@@ -1093,9 +1093,9 @@ Parcel Map</h2>
 <h2 class="card-title">Algorithm Benchmark</h2>
 <div class="badge badge-info" id="benchmarkLoadedBadge" style="display:inline-block; margin-top:6px;">Benchmark tab loaded.</div>
 <p class="card-help small" style="margin-top:-6px;">
-                    Bu bölüm yalnızca <strong>backend benchmark</strong> sonucunu kullanır. Aynı veri, aynı su bütçesi ve aynı tekrar sayısı altında
-                    GA/ABC/ACO algoritmalarının ortalama-medyan-min/max-oynaklık-uygulanabilir çözüm oranı ve süre metrikleri birlikte raporlanır.
-                    <br/><span class="muted">Not: "Mevcut desen" seçiliyken algoritma kıyası anlamlı değildir; kıyas için Su Tasarrufu / Kâr / Su Etkin Kullanım hedeflerinden birini seçin.</span>
+                    This section uses only the <strong>backend benchmark</strong> result. Under the same data, water budget, and repetition count,
+                    GA/ABC/ACO algorithms are reported together with mean, median, min/max, variability, feasible-solution rate, and runtime metrics.
+                    <br/><span class="muted">Note: algorithm comparison is not meaningful when "Current pattern" is selected; choose Water Saving, Profit, or Water Efficiency for comparison.</span>
 </p>
 <div class="water-controls" style="padding-top:6px;">
 <div class="field-row">
@@ -1130,12 +1130,12 @@ Parcel Map</h2>
 </div>
 <div class="benchmark-method-card" id="benchmarkRunCountMethodBox">
 <h3 class="card-subtitle">Run Count Stability Analysis</h3>
-<p class="card-help small">En uygun tekrar sayısı yalnızca en yüksek tekil sonuca göre değil; çözüm kararlılığı, uygulanabilirlik oranı, marjinal iyileşme ve çalışma süresi birlikte değerlendirilerek seçilir.</p>
-<div class="small muted">GA, ACO ve ABC stokastik/sezgisel algoritmalar olduğundan tek koşu yerine bağımsız tekrarlar üzerinden değerlendirilmiştir. Varsayılan 30 koşu, ortalama performans ve kararlılık göstergelerinin hesaplanabilmesi için kullanılır. 50 ve 100 koşu seçenekleri ek kararlılık analizi amacı taşır.</div>
+<p class="card-help small">The most suitable run count is selected not only by the highest single result, but by evaluating solution stability, feasibility rate, marginal improvement, and runtime together.</p>
+<div class="small muted">Because GA, ACO, and ABC are stochastic/heuristic algorithms, they are evaluated through independent repetitions rather than a single run. The default 30 runs are used to calculate average performance and stability indicators. The 50 and 100 run options provide additional stability analysis.</div>
 </div>
 <div class="benchmark-kpi-grid" id="benchmarkKpiGrid"></div><div class="small" id="benchmarkResults" style="margin-top:10px;"></div>
 <div class="small" id="benchmarkSweepResults" style="margin-top:10px;"></div>
-<div class="card-help small" id="objectiveCompareMatrix" style="margin-top:8px;">Kurum görünümünde hedef modu × algoritma karşılaştırma özeti burada gösterilir.</div>
+<div class="card-help small" id="objectiveCompareMatrix" style="margin-top:8px;">In the institution view, the objective mode × algorithm comparison summary is shown here.</div>
 <div class="chart-grid chart-grid-benchmark" style="margin-top:10px;">
 <div class="chart-card chart-card-tall">
 <div class="chart-title">Net Profit Distribution (mean / min / max)</div>
@@ -1162,26 +1162,26 @@ Parcel Map</h2>
 </section></main></div>
 
 
-<section class="app-quote-band" aria-label="Tez ve kurumsal bilgi alanı">
+<section class="app-quote-band" aria-label="Thesis and institutional information area">
   <div class="quote-wrap">
-    <img src="images/ohmu_logo_1992.png" alt="Niğde Ömer Halisdemir Üniversitesi logosu" class="quote-logo" />
+    <img src="images/ohmu_logo_1992.png" alt="Nigde Omer Halisdemir University logo" class="quote-logo" />
     <div class="quote-center">
-      <p class="quote-text">"Suyunu koruyamayan bir tarım, toprağını; toprağını koruyamayan bir millet, geleceğini&nbsp;kaybeder."</p>
-      <p class="quote-meta">Hazırlayan: Betül Demir • Yüksek Lisans Tezi<br>Niğde Ömer Halisdemir Üniversitesi</p>
+      <p class="quote-text">"An agriculture that cannot protect its water loses its soil; a nation that cannot protect its soil loses its future."</p>
+      <p class="quote-meta">Prepared by: Betül Demir • Master's Thesis<br>Nigde Omer Halisdemir University</p>
       <div class="quote-audio">
-        <span class="quote-audio-label"><span class="music-emoji">♪</span> Ziraat Marşı</span>
+        <span class="quote-audio-label"><span class="music-emoji">♪</span> Agriculture Anthem</span>
         <audio controls preload="none">
           <source src="audio/ziraat_marsi.mp4" type="audio/mp4">
-          Tarayıcınız ses oynatmayı desteklemiyor.
+          Your browser does not support audio playback.
         </audio>
       </div>
     </div>
-    <img src="images/ahmet_sahenk_logo.png" alt="Tarım Bilimleri ve Teknolojileri logosu" class="quote-logo" />
+    <img src="images/ahmet_sahenk_logo.png" alt="Agricultural Sciences and Technologies logo" class="quote-logo" />
   </div>
 </section>
 
 <footer class="app-footer">
-      Tarımsal Karar Destek Sistemi • Çiftçi ve kurum için rol bazlı tez prototipi
+      Agricultural Decision Support System • Role-based thesis prototype for farmers and institutions
     </footer>
 
 <script src="script.js?v=v10-category-qc"></script>
