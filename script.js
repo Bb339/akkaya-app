@@ -16042,7 +16042,7 @@ function initCharts() {
             makeVerticalBarGradient(waterCtx,'rgba(255,175,91,.92)','rgba(255,224,178,.55)'),
             makeVerticalBarGradient(waterCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
           ],
-          borderRadius: 10, borderSkipped: false, maxBarThickness: 58,
+          borderRadius: 10, borderSkipped: false, barThickness: 46, maxBarThickness: 74, categoryPercentage: 0.78, barPercentage: 0.86,
         },
       ],
     },
@@ -16063,7 +16063,7 @@ function initCharts() {
             makeVerticalBarGradient(profitCtx,'rgba(255,159,67,.92)','rgba(255,214,163,.55)'),
             makeVerticalBarGradient(profitCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
           ],
-          borderRadius: 10, borderSkipped: false, maxBarThickness: 58,
+          borderRadius: 10, borderSkipped: false, barThickness: 46, maxBarThickness: 74, categoryPercentage: 0.78, barPercentage: 0.86,
         },
       ],
     },
@@ -16410,6 +16410,14 @@ function chartBarOptions(yLabel) {
             return (name?(name+': '):'')+fmtNum(v,2);
           }
         }
+      }
+    },
+    datasets:{
+      bar:{
+        categoryPercentage:0.78,
+        barPercentage:0.86,
+        barThickness:46,
+        maxBarThickness:74
       }
     },
     scales:{

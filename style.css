@@ -13528,10 +13528,11 @@ body.role-farmer #waterRiskSection .drought-main-container{
 /* Optimization result card sizing */
 .right-middle{
   align-items:stretch !important;
+  grid-auto-rows:minmax(0, 1fr) !important;
 }
 
 .right-middle .small-chart-card{
-  min-height:clamp(390px, 36vh, 470px) !important;
+  min-height:clamp(372px, 36vh, 430px) !important;
   display:flex !important;
   flex-direction:column !important;
   gap:10px !important;
@@ -13544,17 +13545,17 @@ body.role-farmer #waterRiskSection .drought-main-container{
 
 .right-middle .small-chart-card canvas{
   width:100% !important;
-  height:clamp(235px, 24vh, 300px) !important;
-  min-height:235px !important;
+  height:clamp(225px, 23vh, 270px) !important;
+  min-height:225px !important;
   max-height:none !important;
-  flex:1 1 clamp(235px, 24vh, 300px) !important;
+  flex:0 0 clamp(225px, 23vh, 270px) !important;
   aspect-ratio:auto !important;
 }
 
 #waterChart,
 #profitChart{
-  height:clamp(235px, 24vh, 300px) !important;
-  min-height:235px !important;
+  height:clamp(225px, 23vh, 270px) !important;
+  min-height:225px !important;
   max-height:none !important;
 }
 
@@ -13565,14 +13566,14 @@ body.role-farmer #waterRiskSection .drought-main-container{
 }
 
 .right-middle .small-chart-card:has(#productCards){
-  min-height:clamp(390px, 40vh, 520px) !important;
+  min-height:clamp(372px, 36vh, 430px) !important;
   overflow:visible !important;
 }
 
 #productCards.product-cards{
   flex:1 1 auto !important;
   min-height:0 !important;
-  max-height:clamp(310px, 34vh, 460px) !important;
+  max-height:clamp(285px, 30vh, 350px) !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
   padding-right:4px !important;
@@ -13582,28 +13583,57 @@ body.role-farmer #waterRiskSection .drought-main-container{
   max-height:none !important;
 }
 
-@media (max-width: 1200px){
+@media (min-width: 960px){
+  .right-middle{
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  }
+
   .right-middle .small-chart-card{
-    min-height:360px !important;
+    height:clamp(372px, 36vh, 430px) !important;
+    min-height:0 !important;
+  }
+
+  .right-middle .small-chart-card:has(#productCards){
+    height:clamp(372px, 36vh, 430px) !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+  }
+
+  #productCards.product-cards{
+    max-height:none !important;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 960px){
+  .right-middle .small-chart-card,
+  .right-middle .small-chart-card:has(#productCards){
+    height:430px !important;
   }
 
   .right-middle .small-chart-card canvas,
   #waterChart,
   #profitChart{
-    height:220px !important;
-    min-height:220px !important;
-    flex-basis:220px !important;
+    height:210px !important;
+    min-height:210px !important;
+    flex-basis:210px !important;
   }
 
   #productCards.product-cards{
-    max-height:380px !important;
+    max-height:none !important;
   }
 }
 
-@media (max-width: 820px){
+@media (max-width: 959px){
+  .right-middle{
+    grid-template-columns:1fr !important;
+    grid-auto-rows:auto !important;
+  }
+
   .right-middle .small-chart-card,
   .right-middle .small-chart-card:has(#productCards){
+    height:auto !important;
     min-height:auto !important;
+    overflow:visible !important;
   }
 
   #productCards.product-cards{
