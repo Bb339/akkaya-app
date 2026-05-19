@@ -16042,7 +16042,7 @@ function initCharts() {
             makeVerticalBarGradient(waterCtx,'rgba(255,175,91,.92)','rgba(255,224,178,.55)'),
             makeVerticalBarGradient(waterCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
           ],
-          borderRadius: 10, borderSkipped: false, barThickness: 46, maxBarThickness: 74, categoryPercentage: 0.78, barPercentage: 0.86,
+          borderRadius: 10, borderSkipped: false, barThickness: 60, maxBarThickness: 92, categoryPercentage: 0.82, barPercentage: 0.9,
         },
       ],
     },
@@ -16063,7 +16063,7 @@ function initCharts() {
             makeVerticalBarGradient(profitCtx,'rgba(255,159,67,.92)','rgba(255,214,163,.55)'),
             makeVerticalBarGradient(profitCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
           ],
-          borderRadius: 10, borderSkipped: false, barThickness: 46, maxBarThickness: 74, categoryPercentage: 0.78, barPercentage: 0.86,
+          borderRadius: 10, borderSkipped: false, barThickness: 60, maxBarThickness: 92, categoryPercentage: 0.82, barPercentage: 0.9,
         },
       ],
     },
@@ -16401,8 +16401,10 @@ function chartBarOptions(yLabel) {
         backgroundColor:'rgba(30,41,59,.94)',
         titleColor:'#fff',
         bodyColor:'#fff',
-        padding:10,
+        padding:11,
         cornerRadius:10,
+        titleFont:{ size:12, weight:'700' },
+        bodyFont:{ size:12, weight:'600' },
         callbacks:{
           label:(ctx)=>{
             const v=(ctx&&ctx.parsed&&typeof ctx.parsed.y!=='undefined')?ctx.parsed.y:(ctx.raw||0);
@@ -16414,10 +16416,10 @@ function chartBarOptions(yLabel) {
     },
     datasets:{
       bar:{
-        categoryPercentage:0.78,
-        barPercentage:0.86,
-        barThickness:46,
-        maxBarThickness:74
+        categoryPercentage:0.82,
+        barPercentage:0.9,
+        barThickness:60,
+        maxBarThickness:92
       }
     },
     scales:{
@@ -16426,7 +16428,7 @@ function chartBarOptions(yLabel) {
           autoSkip:false,
           maxRotation:0,
           minRotation:0,
-          font:{ size:10, weight:'700' },
+          font:{ size:12, weight:'700' },
           color:'#4b5563',
           callback:function(value){
             const label = this.getLabelForValue(value);
@@ -16437,10 +16439,10 @@ function chartBarOptions(yLabel) {
       },
       y:{
         beginAtZero:true,
-        ticks:{ font:{ size:10 }, color:'#7a8496', callback:(v)=>fmtNum(v,0) },
+        ticks:{ font:{ size:11 }, color:'#7a8496', callback:(v)=>fmtNum(v,0) },
         border:{ display:false },
         grid:{ color:'rgba(210,223,246,.8)' },
-        title:{ display:!!yLabel, text:yLabel, font:{ size:10, weight:'600' }, color:'#60708a' }
+        title:{ display:!!yLabel, text:yLabel, font:{ size:11, weight:'600' }, color:'#60708a' }
       }
     }
   };
