@@ -481,10 +481,11 @@ def test_s1_benchmark_pattern_cards_hide_second_crop_block():
 
 def test_water_badge_names_risk_types_explicitly():
     script = (ROOT / "script.js").read_text(encoding="utf-8")
-    assert "baraj riski:" in script
-    assert "plan riski:" in script
+    assert "reservoir risk:" in script
+    assert "plan risk:" in script
     assert "| risk: ${rTxt}" not in script
     assert "risk: düşük" not in script
+    assert "baraj riski:" not in script
 
 
 def test_benchmark_feasible_rate_clamped_and_s2_best_has_second_crop_or_status(client):
