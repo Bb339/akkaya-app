@@ -166,7 +166,7 @@ const DEFAULT_AUTH_USERS = [
     password: 'demo123',
     role: 'institution',
     institutionRole: 'analyst',
-    displayName: 'Niğde Technical Expert',
+    displayName: 'Niğde Agricultural Expert',
     accountStatus: 'active',
     onboardingCompleted: true,
     temporaryPassword: false,
@@ -311,7 +311,7 @@ function managedUserStatusMeta(user){
   const isPassive = user?.accountStatus === 'passive';
   const onboardingPending = !isPassive && userNeedsOnboardingLock(user);
   const profilePending = !isPassive && userAwaitingInstitutionProfileReview(user);
-  const accountText = isPassive ? 'Pasif' : 'Aktif';
+  const accountText = isPassive ? 'Inactive' : 'Active';
   const accountClass = isPassive ? 'passive' : ((onboardingPending || profilePending) ? 'pending' : 'active');
   const setupText = onboardingPending ? 'Pending' : (user?.onboardingCompleted ? 'Completed' : 'Pending');
   const summaryText = isPassive ? 'Inactive account' : (onboardingPending ? 'First setup pending' : (profilePending ? 'Post-setup review pending' : 'Active'));
@@ -3822,7 +3822,7 @@ function updateDroughtAlarmCard(){
         const eff = safeNum(x.tlPerM3,0).toFixed(2);
         const rank = safeNum(x.rank,0) || '';
         const targetOrder = safeNum(x.targetOrder, rank) || rank;
-        const split = x.areaSplit || (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Aynı parselde yıllık desen olarak değerlendirilir' : 'Main crop %100');
+        const split = x.areaSplit || (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Evaluated as an annual pattern on the same parcel' : 'Main crop %100');
         const detailLabel = [x.mainCrop, x.secondaryCrop].filter(v=>v && v !== '-').join(' + ');
         const dw = Math.round(safeNum(x.deltaWater,0));
         const dp = Math.round(safeNum(x.deltaProfit,0));
@@ -6246,17 +6246,17 @@ function setDataBadge(ok, label){
   if(ok===true){
     if(isManualActive){
       badge.classList.add("badge-ok");
-      badge.textContent = "Hesaplamaya dahil";
+      badge.textContent = "Included in calculation";
     }else if(isManualPreview){
       badge.classList.add("badge-warn");
-      badge.textContent = "Önizleme hazır";
+      badge.textContent = "Preview ready";
     }else{
       badge.classList.add("badge-ok");
       badge.textContent = "CSV connected";
     }
   }else if(ok===false){
     badge.classList.add("badge-err");
-    badge.textContent = isManualPreview ? "Önizleme hatası" : "CSV yüklenemedi";
+    badge.textContent = isManualPreview ? "Preview error" : "CSV could not be loaded";
   }else{
     badge.classList.add("badge-warn");
     badge.textContent = isManualPreview ? "Kontrol ediliyor" : "CSV bağlanmadı";
@@ -6513,12 +6513,12 @@ function inferManualFileKindV92(headers, fileName){
   if(hasAny(['reservoir', 'baraj', 'su_bilanco', 'storage']) || keys.has('storage_m3')) return {kind:'Reservoir water budget', required:['month','storage_m3']};
   if(hasAny(['irrigation', 'sulama_yontemi']) || keys.has('application_efficiency')) return {kind:'Irrigation method', required:['method','application_efficiency']};
   if((keys.has('crop') || keys.has('urun') || keys.has('bitki')) && (keys.has('water_m3_calib_gross') || keys.has('water_m3') || keys.has('su_m3'))){
-    return {kind:'Ürün-su-profit dosyası', required:['crop','water_m3_calib_gross','profit_tl']};
+    return {kind:'Crop-water-profit file', required:['crop','water_m3_calib_gross','profit_tl']};
   }
   if(keys.has('parcel_id') || keys.has('parsel_id') || keys.has('area_da') || keys.has('alan_da')){
     return {kind:'Parcel file', required:['parcel_id','area_da']};
   }
-  return {kind:'Tanımsız CSV', required:[]};
+  return {kind:'Undefined CSV', required:[]};
 }
 
 function findHeaderByCandidatesV92(headers, candidates){
@@ -6543,8 +6543,8 @@ async function validateManualDataFilesV92(fileList){
   const results = [];
   for(const file of files){
     const item = {
-      fileName: file.name || 'dosya',
-      kind: 'Tanımsız',
+      fileName: file.name || 'file',
+      kind: 'Undefined',
       rows: 0,
       headers: [],
       missingRequired: [],
@@ -6554,7 +6554,7 @@ async function validateManualDataFilesV92(fileList){
       parcelMatches: null,
       geoMatches: null,
       backendIncluded: false,
-      status: 'Kontrol edilemedi'
+      status: 'Could not be checked'
     };
     try{
       const text = await file.text();
@@ -6599,9 +6599,9 @@ async function validateManualDataFilesV92(fileList){
         item.parcelMatches = `${matched}/${ids.size}`;
         item.geoMatches = `${geo}/${ids.size}`;
       }
-      item.status = item.missingRequired.length ? 'Eksik kolon var' : 'Başarılı';
+      item.status = item.missingRequired.length ? 'Missing columns' : 'Successful';
     }catch(e){
-      item.status = `Hata: ${e?.message || e}`;
+      item.status = `Error: ${e?.message || e}`;
     }
     results.push(item);
   }
@@ -6633,18 +6633,18 @@ function renderManualCsvValidation(){
       <td>${escapeHtml(emptyStatus)}</td>
       <td>${escapeHtml(r.parcelMatches || '-')}</td>
       <td>${escapeHtml(r.geoMatches || '-')}</td>
-      <td><span class="${included ? 'manual-backend-yes' : 'manual-backend-no'}">${included ? 'Evet - oturum hesabı' : 'Hayır - önizleme'}</span></td>
+      <td><span class="${included ? 'manual-backend-yes' : 'manual-backend-no'}">${included ? 'Yes - session calculation' : 'No - preview'}</span></td>
       <td>${escapeHtml(r.appliedNote || '-')}</td>
     </tr>`;
   }).join('');
   const warnText = STATE.manualDataActive
-    ? 'Manuel dosyalar tarayıcıdaki aktif analize alındı. Optimizasyon bu oturumda yerel hesap motoruyla çalışır; Python backend/data klasörü fiziksel olarak değişmedi.'
-    : 'Manuel dosyalar hesaplamaya dahil edilmedi; backend/data içine aktarılmadıkça optimizasyon aktif analiz verileriyle çalışır.';
+    ? 'Manual files were included in the active browser analysis. Optimization runs with the local calculation engine in this session; the Python backend/data folder was not physically changed.'
+    : 'Manual files were not included in calculation; unless imported into backend/data, optimization runs with the active analysis data.';
   box.innerHTML = `
     <div class="manual-validation-warning">${escapeHtml(warnText)}</div>
     <div class="manual-validation-scroll">
       <table class="manual-validation-table">
-        <thead><tr><th>Dosya</th><th>Tür</th><th>Satır</th><th>Kolon</th><th>Eksik değer</th><th>Parcel eşleşmesi</th><th>GeoJSON</th><th>Optimizasyona dahil</th><th>İşlem sonucu</th></tr></thead>
+        <thead><tr><th>File</th><th>Type</th><th>Rows</th><th>Columns</th><th>Missing values</th><th>Parcel match</th><th>GeoJSON</th><th>Included in optimization</th><th>Processing result</th></tr></thead>
         <tbody>${tableRows}</tbody>
       </table>
     </div>`;
@@ -6674,14 +6674,14 @@ function ensureDataTableViewer(){
     <div class="data-viewer-dialog" role="dialog" aria-modal="true" aria-labelledby="dataViewerTitle">
       <div class="data-viewer-head">
         <div>
-          <div class="data-viewer-kicker">Aktif veri dosyası</div>
-          <h3 id="dataViewerTitle">Veri tablosu</h3>
+          <div class="data-viewer-kicker">Active data file</div>
+          <h3 id="dataViewerTitle">Data table</h3>
           <div class="data-viewer-path" id="dataViewerPath">-</div>
         </div>
-        <button type="button" class="data-viewer-close" data-data-viewer-close="1" aria-label="Kapat">×</button>
+        <button type="button" class="data-viewer-close" data-data-viewer-close="1" aria-label="Close">×</button>
       </div>
       <div class="data-viewer-toolbar">
-        <input type="search" id="dataViewerSearch" class="data-viewer-search" placeholder="Tabloda ara: ürün, parsel, köy, ay..." />
+        <input type="search" id="dataViewerSearch" class="data-viewer-search" placeholder="Search table: crop, parcel, village, month..." />
         <button type="button" id="dataViewerShowAll" class="btn-secondary">Show all rows</button>
         <button type="button" id="dataViewerCopyHead" class="btn-secondary">Copy headers</button>
       </div>
@@ -6742,7 +6742,7 @@ function closeDataTableViewer(){
 async function fetchTextWithFallbackV66(url){
   const candidates = [];
   const u = String(url||'').trim();
-  if(!u) throw new Error('Dosya yolu boş.');
+  if(!u) throw new Error('File path is empty.');
   candidates.push(u);
   if(u.startsWith('data/')) candidates.push('/' + u);
   if(u.startsWith('/data/')) candidates.push(u.slice(1));
@@ -6754,7 +6754,7 @@ async function fetchTextWithFallbackV66(url){
       lastErr = new Error(`HTTP ${r.status} - ${c}`);
     }catch(e){ lastErr = e; }
   }
-  throw lastErr || new Error('Dosya okunamadı.');
+  throw lastErr || new Error('File could not be read.');
 }
 
 function parseCsvRobustV66(text){
@@ -6905,19 +6905,19 @@ const DATA_VIEWER_HEADER_MAP_V67 = {
   total_profit_tl: 'Toplam profit (TL)',
   revenue_tl: 'Gelir (TL)',
   cost_tl: 'Maliyet (TL)',
-  source_file: 'Kaynak dosya',
-  source_label: 'Kaynak etiketi',
-  status: 'Durum',
+  source_file: 'Source file',
+  source_label: 'Source label',
+  status: 'Status',
   note: 'Not',
-  notes: 'Notlar',
+  notes: 'Notes',
   farmer: 'Farmer',
   farmer_name: 'Farmer name',
-  owner: 'Sahip',
-  geometry_type: 'Geometry türü',
-  sira: 'Sıra',
-  anahtar: 'Anahtar',
-  deger: 'Değer',
-  file: 'Dosya'
+  owner: 'Owner',
+  geometry_type: 'Geometry type',
+  sira: 'Order',
+  anahtar: 'Key',
+  deger: 'Value',
+  file: 'File'
 };
 
 const DATA_VIEWER_TOKEN_MAP_V67 = {
@@ -7018,9 +7018,9 @@ async function openDataFileViewer(url, label, path){
   const search = document.getElementById('dataViewerSearch');
   if(search) search.value = '';
   __dataViewerState = {rows:[], headers:[], fileLabel:label||'', filePath:path||url||'', mode:'preview', filter:'', showAll:false};
-  if(title) title.textContent = label || 'Veri tablosu';
+  if(title) title.textContent = label || 'Data table';
   if(pathEl) pathEl.textContent = path || url || '-';
-  if(summary) summary.innerHTML = '<span class="data-viewer-loading">Dosya okunuyor...</span>';
+  if(summary) summary.innerHTML = '<span class="data-viewer-loading">Reading file...</span>';
   if(wrap) wrap.innerHTML = '';
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden','false');
@@ -7038,8 +7038,8 @@ async function openDataFileViewer(url, label, path){
     __dataViewerState.headers = parsed.headers || [];
     renderDataViewerTable();
   }catch(e){
-    if(summary) summary.innerHTML = `<span class="data-viewer-error">Dosya açılamadı: ${escapeHtml(e.message || e)}</span>`;
-    if(wrap) wrap.innerHTML = '<div class="data-viewer-empty">Bu dosya tarayıcıdan okunamadı. Projeyi VS Code Live Server veya Flask ile çalıştırdığından emin ol.</div>';
+    if(summary) summary.innerHTML = `<span class="data-viewer-error">File could not be opened: ${escapeHtml(e.message || e)}</span>`;
+    if(wrap) wrap.innerHTML = '<div class="data-viewer-empty">This file could not be read by the browser. Make sure the project is running with VS Code Live Server or Flask.</div>';
   }
 }
 
@@ -7062,12 +7062,12 @@ function renderDataViewerTable(){
     showAllBtn.textContent = __dataViewerState.showAll ? 'Return to first 200 rows' : `Show all rows (${filtered.length})`;
   }
   if(summary){
-    const filterText = q ? ` • filtreli: ${filtered.length}` : '';
-    const shownText = filtered.length > shown.length ? ` • ekranda: ilk ${shown.length}` : ` • ekranda: ${shown.length}`;
-    summary.innerHTML = `<strong>${escapeHtml(__dataViewerState.fileLabel || 'Dosya')}</strong> • ${headers.length} kolon • ${rows.length} satır${filterText}${shownText}`;
+    const filterText = q ? ` • filtered: ${filtered.length}` : '';
+    const shownText = filtered.length > shown.length ? ` • shown: first ${shown.length}` : ` • shown: ${shown.length}`;
+    summary.innerHTML = `<strong>${escapeHtml(__dataViewerState.fileLabel || 'File')}</strong> • ${headers.length} columns • ${rows.length} rows${filterText}${shownText}`;
   }
   if(!headers.length){
-    wrap.innerHTML = '<div class="data-viewer-empty">Tabloya dönüştürülebilecek veri bulunamadı.</div>';
+    wrap.innerHTML = '<div class="data-viewer-empty">No data could be converted into a table.</div>';
     return;
   }
   const thead = `<thead><tr>${headers.map(h=>`<th title="${escapeHtml(h)}">${escapeHtml(translateHeaderLabelV67(h))}</th>`).join('')}</tr></thead>`;
@@ -7083,7 +7083,7 @@ async function initDataBinding(){
   if(loadBtn){
     loadBtn.addEventListener("click", async ()=>{
       try{
-        setDataBadge(null, "Projeden CSV");
+        setDataBadge(null, "Project CSV");
         await loadCsvFromProject();
         // önbellek sıfırla (parametreler değişti)
         for(const k of Object.keys(optimizationCache)) delete optimizationCache[k];
@@ -7096,12 +7096,12 @@ async function initDataBinding(){
         STATE.manualDataActive = false;
         STATE.manualDataFiles = [];
         STATE.manualDataAppliedSummary = null;
-        setDataBadge(true, "Projeden CSV");
+        setDataBadge(true, "Project CSV");
         renderActiveFiles();
       }catch(e){
         console.error(e);
-        setDataBadge(false, "Projeden CSV");
-        alert("Projeden CSV okunamadı. Live Server ile açtığından emin ol.\n\nHata: " + (e?.message||e));
+        setDataBadge(false, "Project CSV");
+        alert("Project CSV could not be read. Make sure it is opened with Live Server.\n\nError: " + (e?.message||e));
       }
     });
   }
@@ -7109,7 +7109,7 @@ async function initDataBinding(){
   if(fileInput){
     fileInput.addEventListener("change", async ()=>{
       try{
-        setDataBadge(null, "Manuel CSV aktif ediliyor");
+        setDataBadge(null, "Activating manual CSV");
         STATE.userFiles = Array.from(fileInput.files||[]).map(f=>f.name);
         STATE.manualCsvValidation = await validateManualDataFilesV92(fileInput.files);
         const applied = await applyManualCsvFilesToAnalysisV93(fileInput.files);
@@ -7117,8 +7117,8 @@ async function initDataBinding(){
           ...r,
           backendIncluded: (applied.appliedByFile?.[r.fileName]?.applied || 0) > 0,
           appliedNote: (applied.appliedByFile?.[r.fileName]?.applied || 0) > 0
-            ? `Tarayıcı aktif analizine aktarıldı (${(applied.appliedByFile?.[r.fileName]?.parcelsApplied || 0) + (applied.appliedByFile?.[r.fileName]?.seasonParcelsApplied || 0)} parsel, ${applied.appliedByFile?.[r.fileName]?.cropsApplied || 0} ürün katsayısı, ${applied.appliedByFile?.[r.fileName]?.irrigationApplied || 0} sulama, ${applied.appliedByFile?.[r.fileName]?.reservoirApplied || 0} baraj)`
-            : 'Şema/kolon eşleşmediği için hesaplamaya dahil edilmedi'
+            ? `Transferred to active browser analysis (${(applied.appliedByFile?.[r.fileName]?.parcelsApplied || 0) + (applied.appliedByFile?.[r.fileName]?.seasonParcelsApplied || 0)} parcels, ${applied.appliedByFile?.[r.fileName]?.cropsApplied || 0} crop coefficients, ${applied.appliedByFile?.[r.fileName]?.irrigationApplied || 0} irrigation records, ${applied.appliedByFile?.[r.fileName]?.reservoirApplied || 0} reservoir records)`
+            : 'Not included in calculation because schema/columns did not match'
         }));
         for(const k of Object.keys(optimizationCache)) delete optimizationCache[k];
         for(const k of Object.keys(basinPlanCache)) delete basinPlanCache[k];
@@ -7127,14 +7127,14 @@ async function initDataBinding(){
         try{ renderParcelSummary(); }catch(_e){}
         try{ renderTables(); }catch(_e){}
         try{ renderAllScenarioWatermmaries(); }catch(_e){}
-        setDataBadge(STATE.manualDataActive ? true : null, STATE.manualDataActive ? "Manuel CSV aktif" : "Manuel CSV önizleme");
+        setDataBadge(STATE.manualDataActive ? true : null, STATE.manualDataActive ? "Manual CSV active" : "Manual CSV preview");
         renderActiveFiles();
         renderManualCsvValidation();
       }catch(e){
         console.error(e);
-        setDataBadge(false, "Manuel CSV aktif");
+        setDataBadge(false, "Manual CSV active");
         renderManualCsvValidation();
-        alert("Manuel CSV aktif analize alınamadı.\n\nHata: " + (e?.message||e));
+        alert("Manual CSV could not be included in the active analysis.\n\nError: " + (e?.message||e));
       }
     });
   }
@@ -7199,7 +7199,7 @@ async function initDataBinding(){
           return;
         }
 
-        if(weatherStatus) weatherStatus.textContent = "Yükleniyor...";
+        if(weatherStatus) weatherStatus.textContent = "Loading...";
         const lat = parseNumFlex(weatherLat?.value, DEFAULT_COORDS.lat);
         const lon = parseNumFlex(weatherLon?.value, DEFAULT_COORDS.lon);
         const s = (weatherStart?.value || `${y}-04-01`).trim();
@@ -7267,8 +7267,8 @@ async function initDataBinding(){
           return;
         }
         const url = (marketUrl?.value||"").trim();
-        if(!url) { alert("Lütfen fiyat/teşvik URL gir."); return; }
-        if(marketStatus) marketStatus.textContent = "Yükleniyor...";
+        if(!url) { alert("Please enter a price/incentive URL."); return; }
+        if(marketStatus) marketStatus.textContent = "Loading...";
         const txt = await fetchText(url);
         let records = [];
         if(url.toLowerCase().endsWith(".json")){
@@ -7286,7 +7286,7 @@ async function initDataBinding(){
       }catch(e){
         console.error(e);
         if(marketStatus) marketStatus.textContent = "Hata";
-        alert("Fiyat/teşvik verisi yüklenemedi.\n\nHata: "+(e?.message||e));
+        alert("Price/incentive data could not be loaded.\n\nError: "+(e?.message||e));
       }
     });
   }
@@ -7756,13 +7756,13 @@ function renderIrrigationPlan(parcel, rows){
 
   const top = [...rows].sort((a,b)=>b.area-a.area).slice(0,3);
   if(top.length===0){
-    box.textContent = "Ürün deseni bulunamadı.";
+    box.textContent = "No crop pattern found.";
     return;
   }
 
   const eff = clamp(STATE.irrigEfficiency ?? 0.62, 0.45, 0.90);
   const lines = [];
-  const src = (STATE.weatherSource==="openmeteo" && Array.isArray(STATE.weatherDaily)) ? "Open-Meteo (günlük ET0/yağış)" : "Yüklenen aylık iklim serisi";
+  const src = (STATE.weatherSource==="openmeteo" && Array.isArray(STATE.weatherDaily)) ? "Open-Meteo (daily ET0/rainfall)" : "Uploaded monthly climate series";
   const role = STATE.currentUser?.role || 'institution';
   lines.push(`<div><strong>Source:</strong> ${src} - <strong>Irrigation efficiency:</strong> ${(eff*100).toFixed(0)}%</div>`);
 
@@ -7792,7 +7792,7 @@ function renderIrrigationPlan(parcel, rows){
       <thead>
         <tr>
           <th>Crop</th><th>Planting</th><th>Days</th>
-          <th>ETc (mm)</th><th>Etkin yağış (mm)</th><th>Net (mm)</th><th>Brüt (mm)</th>
+          <th>ETc (mm)</th><th>Effective rainfall (mm)</th><th>Net (mm)</th><th>Gross (mm)</th>
           <th>Gross (m³/da)</th><th>Pattern area (da)</th><th>Total water (m³)</th>
         </tr>
       </thead>
@@ -7802,7 +7802,7 @@ function renderIrrigationPlan(parcel, rows){
     const p = stageParamsForCrop(r.name);
     const calc = computeSeasonIrrigation(parcel, r.name);
     if(calc.mode==="none"){
-      html += `<tr><td>${r.name}</td><td>-</td><td>-</td><td colspan="7">İklim verisi yok</td></tr>`;
+      html += `<tr><td>${prettyCropName(r.name)}</td><td>-</td><td>-</td><td colspan="7">No climate data</td></tr>`;
       continue;
     }
     const targetTotal = safeNum(r.totalWater ?? r.water_m3 ?? r.water_m3_total, 0);
@@ -7812,7 +7812,7 @@ function renderIrrigationPlan(parcel, rows){
       ? (gross_m3_da / Math.max(1, calc.monthly.reduce((s,m)=>s+safeNum(m.gross,0),0)))
       : 1;
     html += `<tr>
-      <td>${r.name}</td>
+      <td>${prettyCropName(r.name)}</td>
       <td>${(calc.sowISO || (p.sow ? p.sow : "-"))}</td>
       <td>${p.Lini+p.Ldev+p.Lmid+p.Lend}</td>
       <td>${calc.sumEtc.toFixed(0)}</td>
@@ -7876,7 +7876,7 @@ function renderIrrigationPlan(parcel, rows){
 function computeBasinPlan(scenarioKey, algoKey){
   const key = basinCacheKey(scenarioKey, algoKey);
   if(basinPlanCache[key]) return basinPlanCache[key];
-  return backendUnavailablePlan(getSelectedParcelIdsForRun(), scenarioKey, algoKey, 'Backend karar paketi cache içinde yok; frontend havza planı hesaplamadı.');
+  return backendUnavailablePlan(getSelectedParcelIdsForRun(), scenarioKey, algoKey, 'Backend decision package is not available in cache; the frontend did not calculate a basin plan.');
 }
 
 async function fetchBenchmarkPython(scenarioKey, seasonSourceOverride=null){
@@ -8226,6 +8226,8 @@ function uiDisplayTextEn(value){
     ['Demo notu: Ayşe hesabı her girişte doğrulama ekranını tekrar açar. Sunumda ön kayıt → doğrulama → kurum teyidi zinciri gösterilebilir.', 'Demo note: the Ayşe account reopens the verification screen at every login. The pre-registration → verification → institutional confirmation chain can be shown in the presentation.'],
     ['Ayşe Kaya demo hesabı için kurulum sonrası administrator teyidi akışı hazır.', 'The post-setup administrator confirmation flow is ready for the Ayşe Kaya demo account.'],
     ['Niğde Tarım Birimi', 'Niğde Agricultural Unit'],
+    ['Niğde Teknik Uzman', 'Niğde Agricultural Expert'],
+    ['Niğde Technical Expert', 'Niğde Agricultural Expert'],
     ['Bor İlçe Merkezi', 'Bor District Center'],
     ['Bor District Merkezi', 'Bor District Center'],
     ['Parcel Decision Özeti', 'Parcel Decision Summary'],
@@ -8242,6 +8244,13 @@ function uiDisplayTextEn(value){
     ['Su-kâr dengesi', 'Water-profit balance'],
     ['su-kar dengesi', 'water-profit balance'],
     ['su kâr dengesi', 'water-profit balance'],
+    ['Su tasarrufu', 'Water saving'],
+    ['Su etkin kullanım', 'Water-efficiency use'],
+    ['Su etkin kullanımı', 'Water-efficiency use'],
+    ['Kâr odaklı', 'Profit-oriented'],
+    ['Kar odaklı', 'Profit-oriented'],
+    ['Hedef: Su tasarrufu.', 'Objective: Water saving.'],
+    ['Hedef: Su etkin kullanımı.', 'Objective: Water-efficiency use.'],
     ['su_etkin', 'Water-efficiency objective'],
     ['su_tasarrufu', 'Water-saving objective'],
     ['su_tasarruf', 'Water-saving objective'],
@@ -8250,9 +8259,23 @@ function uiDisplayTextEn(value){
     ['referans', 'reference'],
     ['Ana crop', 'Main crop'],
     ['Ana ürün', 'Main crop'],
+    ['Ana urun', 'Main crop'],
+    ['Ana Ürün', 'Main crop'],
+    ['ANA ÜRÜN', 'MAIN CROP'],
+    ['ANA URUN', 'MAIN CROP'],
     ['İkinci ürün', 'Second crop'],
+    ['Tamamlayici urun', 'Complementary crop'],
     ['Tek ürün', 'Single crop'],
     ['tek ürün', 'single crop'],
+    ['Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.', 'Parcel information was entered from the Excel source; the user will only complete the boundary drawing/polygon.'],
+    ['Betül Demir P23 parceli icin mesaj gonderdi.', 'Betül Demir sent a message for parcel P23.'],
+    ['Betül Demir P23 parceli için mesaj gönderdi.', 'Betül Demir sent a message for parcel P23.'],
+    ['Betül Demir P23 parceli için alternatif talebi gönderdi.', 'Betül Demir sent an alternative request for parcel P23.'],
+    ['Betül Demir P23 parceli icin alternatif talebi gönderdi.', 'Betül Demir sent an alternative request for parcel P23.'],
+    ['Betül Demir P23 parceli icin alternatif talebi gonderdi.', 'Betül Demir sent an alternative request for parcel P23.'],
+    ['Talebiniz uzman tarafından onaylandı. Seçilen alternatif onaylı güncel plan sekmesine eklendi.', 'Your request was approved by the expert. The selected alternative was added to the approved current plan tab.'],
+    ['Talebiniz uzman tarafından onaylandı.', 'Your request was approved by the expert.'],
+    ['Uzman onayı rica ederim.', 'I kindly request expert approval.'],
     ['Alan bazlı kota mevcut talebe YAKIN', 'Area-based quota is close to current demand'],
     ['Alan bazlı kota mevcut talebi YAKIN', 'Area-based quota is close to current demand'],
     ['Alan bazlı kota mevcut talebe ÜSTÜNDE', 'Area-based quota is above current demand'],
@@ -8351,7 +8374,11 @@ function uiDisplayTextEn(value){
     ['Durum', 'Status'],
     ['Yağmurlama', 'Sprinkler irrigation'],
     ['Yagmurlama', 'Sprinkler irrigation'],
+    ['Damlama', 'Drip irrigation'],
     ['Damla', 'Drip irrigation'],
+    ['Karık/salma', 'Furrow/flood irrigation'],
+    ['Karık / salma', 'Furrow/flood irrigation'],
+    ['Karık/Salma', 'Furrow/flood irrigation'],
     ['Karık', 'Furrow'],
     ['Salma', 'Flood irrigation'],
     ['Yüzey', 'Surface irrigation'],
@@ -8364,6 +8391,7 @@ function uiDisplayTextEn(value){
   ];
   for(const [tr, en] of replacements) out = out.split(tr).join(en);
   out = out
+    .replace(/Main crop\s*-\s*Main crop/g, 'Main crop')
     .replace(/Feasible değil/g, 'Not feasible')
     .replace(/feasible değil/g, 'not feasible')
     .replace(/Suitable/g, 'Suitable')
@@ -8511,7 +8539,7 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
   const algos = j.algorithms || {};
   const rows = Object.keys(algos);
   if(!rows.length){
-    box.innerHTML = '<div class="badge badge-warn">Veri yok</div>';
+    box.innerHTML = '<div class="badge badge-warn">No data</div>';
     if(kpiRoot) kpiRoot.innerHTML = '';
     return;
   }
@@ -10659,7 +10687,7 @@ function syncRoleInfoBanner(){
   if(user.role === 'farmer'){
     const count = getVisibleUsableParcelIds().length;
     if(userNeedsOnboardingLock(user)){
-      banner.innerHTML = `<strong>${escapeHtml(user.displayName || user.username)}</strong> hesabı için ilk kurulum açık. Yönetim tarafından açılmış hesabınızı kullanıyorsunuz. İletişim bilgilerinizi doğrulayın, gerekirse parsel ekleyin ve ardından paneli aktif hale getirin.`;
+      banner.innerHTML = `<strong>${escapeHtml(user.displayName || user.username)}</strong> has the initial setup step open. You are using an account created by the institution. Verify your contact information, add a parcel if needed, and then activate the panel.`;
     }else if(shouldShowOnboardingPanel(user)){
       banner.innerHTML = `<strong>${escapeHtml(user.displayName || user.username)}</strong> demo account reopened the information verification step in this session. The pre-registration → verification → institutional confirmation flow can be shown again in the presentation.`;
     }else if(userAwaitingInstitutionProfileReview(user)){
@@ -10738,12 +10766,12 @@ function syncAppActionLocks(){
   runButtons.forEach(runBtn => {
     runBtn.disabled = !!need;
     runBtn.classList.toggle('btn-disabled', !!need);
-    runBtn.title = need ? 'Önce ilk kurulum adımını tamamlayın.' : '';
+    runBtn.title = need ? 'Complete the initial setup step first.' : '';
   });
   if(benchBtn){
     benchBtn.disabled = !!need;
     benchBtn.classList.toggle('btn-disabled', !!need);
-    benchBtn.title = need ? 'Önce ilk kurulum adımını tamamlayın.' : '';
+    benchBtn.title = need ? 'Complete the initial setup step first.' : '';
   }
 }
 
@@ -10776,11 +10804,11 @@ function renderManagedUsersList(){
   const selectedUsername = document.getElementById('managedUserEditUsername')?.value || '';
   if(metaBox){
     metaBox.textContent = users.length === total
-      ? `${total} farmer hesabı listeleniyor.`
+      ? `${total} farmer accounts are listed.`
       : `${users.length} records shown • ${total} farmer accounts in total.`;
   }
   if(!users.length){
-    box.innerHTML = '<tr><td colspan="6"><div class="managed-user-empty">Filtreye uyan farmer hesabı bulunamadı.</div></td></tr>';
+    box.innerHTML = '<tr><td colspan="6"><div class="managed-user-empty">No farmer account matches the filter.</div></td></tr>';
     return;
   }
   box.innerHTML = users.map(user => {
@@ -10789,10 +10817,10 @@ function renderManagedUsersList(){
     const officialIds = getAllowedParcelIdsForUser(user) || [];
     const customIds = getUserCustomParcelIds(user);
     const phoneTag = user.phone ? `<span class="mini-tag">${escapeHtml(user.phone)}</span>` : '';
-    const temp = user.temporaryPassword ? '<span class="mini-tag">Geçici şifre</span>' : '';
-    const noteText = user.notes ? escapeHtml(user.notes) : 'Not girilmedi';
+    const temp = user.temporaryPassword ? '<span class="mini-tag">Temporary password</span>' : '';
+    const noteText = user.notes ? escapeHtml(user.notes) : 'No note entered';
     const lastAction = user.lastPasswordResetAt
-      ? `Şifre yenileme • ${escapeHtml(formatManagedUserTimestamp(user.lastPasswordResetAt))}`
+      ? `Password reset • ${escapeHtml(formatManagedUserTimestamp(user.lastPasswordResetAt))}`
       : `Update • ${escapeHtml(formatManagedUserTimestamp(user.updatedAt || user.createdAt))}`;
     return `<tr class="managed-user-row-item ${selected ? 'is-selected' : ''}" data-managed-select="${escapeHtml(user.username)}">
       <td>
@@ -10802,12 +10830,12 @@ function renderManagedUsersList(){
       </td>
       <td><span class="managed-user-status ${meta.accountClass}">${escapeHtml(meta.summaryText)}</span></td>
       <td>
-        <div class="managed-user-parcel-count"><strong>${officialIds.length}</strong> resmi parsel</div>
-        <div class="small muted">${customIds.length} kullanıcı parseli</div>
+        <div class="managed-user-parcel-count"><strong>${officialIds.length}</strong> official parcels</div>
+        <div class="small muted">${customIds.length} user parcels</div>
       </td>
       <td>
         <div class="managed-user-setup-line">${escapeHtml(meta.setupText)}</div>
-        <div class="small muted">${escapeHtml(meta.detailText || (meta.onboardingPending ? 'İşlem bekliyor' : 'Ready'))}</div>
+        <div class="small muted">${escapeHtml(meta.detailText || (meta.onboardingPending ? 'Action pending' : 'Ready'))}</div>
       </td>
       <td>
         <div class="managed-user-note-preview">${noteText}</div>
@@ -10815,9 +10843,9 @@ function renderManagedUsersList(){
       </td>
       <td class="ta-right">
         <div class="managed-user-table-actions">
-          <button class="managed-user-table-btn" type="button" data-managed-action="edit" data-username="${escapeHtml(user.username)}">Düzenle</button>
-          <button class="managed-user-table-btn ${user.accountStatus === 'passive' ? '' : 'warn'}" type="button" data-managed-action="toggle-passive" data-username="${escapeHtml(user.username)}">${user.accountStatus === 'passive' ? 'Aktif et' : 'Pasif yap'}</button>
-          <button class="managed-user-table-btn danger" type="button" data-managed-action="reset-password" data-username="${escapeHtml(user.username)}">Şifre yenile</button>
+          <button class="managed-user-table-btn" type="button" data-managed-action="edit" data-username="${escapeHtml(user.username)}">Edit</button>
+          <button class="managed-user-table-btn ${user.accountStatus === 'passive' ? '' : 'warn'}" type="button" data-managed-action="toggle-passive" data-username="${escapeHtml(user.username)}">${user.accountStatus === 'passive' ? 'Activate' : 'Deactivate'}</button>
+          <button class="managed-user-table-btn danger" type="button" data-managed-action="reset-password" data-username="${escapeHtml(user.username)}">Reset password</button>
         </div>
       </td>
     </tr>`;
@@ -10859,7 +10887,7 @@ function renderOnboardingParcelSummary(){
   }
   const assigned = getAllowedParcelIdsForUser(user) || [];
   const customIds = getUserCustomParcelIds(user);
-  const assignedHtml = assigned.length ? assigned.map(pid => `<span class="auth-parcel-chip auth-parcel-chip--readonly">${escapeHtml(pid)}</span>`).join('') : '<span class="small muted">Yönetim tarafından henüz resmi parsel atanmadı.</span>';
+  const assignedHtml = assigned.length ? assigned.map(pid => `<span class="auth-parcel-chip auth-parcel-chip--readonly">${escapeHtml(pid)}</span>`).join('') : '<span class="small muted">No official parcel has been assigned by the administration yet.</span>';
   const customHtml = customIds.length ? customIds.map(pid => {
     const parcel = getCustomParcelById(pid);
     const meta = customParcelApprovalMeta(parcel);
@@ -10868,7 +10896,7 @@ function renderOnboardingParcelSummary(){
   box.innerHTML = `
     <div class="onboarding-summary-grid">
       <div>
-        <strong>Yönetim tarafından atanmış parseller</strong>
+        <strong>Parcels assigned by the administration</strong>
         <div class="auth-parcel-picker auth-parcel-picker--readonly">${assignedHtml}</div>
       </div>
       <div>
@@ -10929,13 +10957,13 @@ function completeCurrentUserOnboarding(){
   const pass2 = String(document.getElementById('onboardingPassword2')?.value || '');
   const assigned = getAllowedParcelIdsForUser(user) || [];
   const customIds = getUserCustomParcelIds(user);
-  if(!displayName){ if(errEl) errEl.textContent = 'Lütfen ad soyad bilgisini girin.'; return; }
+  if(!displayName){ if(errEl) errEl.textContent = 'Please enter the full name.'; return; }
   if(user.temporaryPassword || userNeedsOnboarding(user)){
-    if(pass1.length < 4){ if(errEl) errEl.textContent = 'İlk kurulumda yeni şifre en az 4 karakter olmalıdır.'; return; }
-    if(pass1 !== pass2){ if(errEl) errEl.textContent = 'Şifre tekrar alanı eşleşmiyor.'; return; }
+    if(pass1.length < 4){ if(errEl) errEl.textContent = 'The new password must be at least 4 characters during initial setup.'; return; }
+    if(pass1 !== pass2){ if(errEl) errEl.textContent = 'The password confirmation does not match.'; return; }
   }
   if(!assigned.length && !customIds.length){
-    if(errEl) errEl.textContent = 'Panele geçmeden önce en az bir parsel atanmış olmalı veya kullanıcı parseli oluşturulmalıdır.';
+    if(errEl) errEl.textContent = 'At least one parcel must be assigned or a user parcel must be created before opening the panel.';
     return;
   }
   const reviewNeeded = !!user.demoRequiresInstitutionReviewAfterSetup;
@@ -11051,8 +11079,8 @@ function initManagedUserAdmin(){
       const notes = String(document.getElementById('managedUserNotes')?.value || '').trim();
       const accountStatus = String(document.getElementById('managedUserAccountStatus')?.value || 'pending_setup');
       const selectedIds = Array.from(document.querySelectorAll('#adminParcelPicker input:checked')).map(el => String(el.value || ''));
-      if(!displayName){ setManagedUserStatusMessage('Lütfen farmer adını girin.', 'error'); return; }
-      if(!editUsername && (!username || username.length < 3)){ setManagedUserStatusMessage('Geçerli bir kullanıcı adı girin.', 'error'); return; }
+      if(!displayName){ setManagedUserStatusMessage('Please enter the farmer name.', 'error'); return; }
+      if(!editUsername && (!username || username.length < 3)){ setManagedUserStatusMessage('Please enter a valid username.', 'error'); return; }
       if(!editUsername && getAuthUserByUsername(username)){ setManagedUserStatusMessage('This username is already registered.', 'error'); return; }
 
       const existing = editUsername ? getAuthUserByUsername(editUsername) : null;
@@ -13779,7 +13807,7 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
         tlPerM3: totalWater > 0 ? (totalProfit/totalWater) : 0,
         peakMonth: 'Jun-Jul',
         seasonLabel: 'Orchard + inter-row',
-        note: a.note || `${main} ana ürün korunur; ara ürün yalnız sıra arası ve kontrollü oranda değerlendirilir.`,
+        note: a.note || `${prettyCropName(main)} is retained as the main crop; the companion crop is evaluated only between rows and at a controlled share.`,
         components,
         score: _objectiveScorePattern(totalWater, totalProfit, scenarioKey) + safeNum(a.score,0)*0.01
       });
@@ -14921,7 +14949,7 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
     const eff = safeNum(x.tlPerM3,0).toFixed(2);
     const rank = safeNum(x.rank,0) || '';
     const targetOrder = safeNum(x.targetOrder, rank) || rank;
-    const split = x.areaSplit || (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Aynı parselde yıllık desen olarak değerlendirilir' : 'Main crop %100');
+    const split = x.areaSplit || (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Evaluated as an annual pattern on the same parcel' : 'Main crop %100');
     const dw = Math.round(safeNum(x.deltaWater,0));
     const dp = Math.round(safeNum(x.deltaProfit,0));
     const selectedBadge = x.selectedRecommendation ? '<span class="pattern-selected-badge">Selected recommendation</span>' : '';
@@ -14965,7 +14993,7 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
   return `<details class="pattern-panel-v94">
     <summary>
       <span><strong>${escapeHtml(metaLabel)}</strong> • ${escapeHtml(scenLabel)}</span>
-      <em>İlk ${rows.length} alternatifi aç</em>
+      <em>Open the first ${rows.length} alternatives</em>
     </summary>
     <div class="pattern-panel-note">Patterns are ranked by jointly interpreting water quota, profit, TL/m³, period/day count, peak month, crop family/rotation, and parcel suitability. In Scenario 2, the second crop is not an independent recommendation by itself; it is evaluated as an annual pattern together with the main crop.</div>
     <div class="pattern-card-grid-v94">${cards}</div>
@@ -15362,7 +15390,7 @@ function renderTables() {
   catch(err){
     console.warn('renderDeliveryBoxV14 hata:', err);
     const deliveryBox = document.getElementById('deliveryBox');
-    if(deliveryBox) deliveryBox.innerHTML = '<div class="callout callout-warn">Aylık water yükü tablowater üretilemedi.</div>';
+    if(deliveryBox) deliveryBox.innerHTML = '<div class="callout callout-warn">Monthly water load table could not be generated.</div>';
   }
 
   // --- Rotasyon / 2. ürün recommendation ---
@@ -15372,10 +15400,10 @@ function renderTables() {
     const rot = makeRotationSuggestions(main);
     const orchardAlternativeListUi = orchardLockedUi ? orchardAlternativeListFallback(current, rec, recMeta) : [];
     const orchardAlternativeMetricsUi = orchardLockedUi ? (Array.isArray(recMeta?.orchardAlternativeMetrics) && recMeta.orchardAlternativeMetrics.length ? recMeta.orchardAlternativeMetrics : orchardAlternativeScenarioMetrics(main, safeNum(p?.area_da, 0), selectedScenario, rec[0] || current[0], orchardAlternativeListUi)) : [];
-    const altHtml = orchardLockedUi && orchardAlternativeMetricsUi.length ? `<div class="small" style="margin:8px 0 0 0; padding:8px 10px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc;"><strong>Sıra arası alternatifler (ana ürün yerine değil):</strong><table class="data-table" style="margin-top:8px; font-size:12px;"><thead><tr><th>Ürün</th><th>Rol</th><th>Area</th><th>Water</th><th>Profit</th><th>TL/m³</th></tr></thead><tbody>${orchardAlternativeMetricsUi.slice(0,4).map(x=>`<tr><td><b>${escapeHtml(prettyCropName(x.name))}</b></td><td>${escapeHtml(x.kind || 'Sıra arası')}</td><td>${safeNum(x.area,0).toFixed(1)} da</td><td>${Math.round(safeNum(x.totalWater,0)).toLocaleString('tr-TR')} m³</td><td>${Math.round(safeNum(x.totalProfit,0)).toLocaleString('tr-TR')} TL</td><td>${safeNum(x.tlPerM3,0).toFixed(2)}</td></tr><tr><td colspan="6" class="muted" style="padding-top:0;">${escapeHtml(x.note || '')}</td></tr>`).join('')}</tbody></table></div>` : '';
+    const altHtml = orchardLockedUi && orchardAlternativeMetricsUi.length ? `<div class="small" style="margin:8px 0 0 0; padding:8px 10px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc;"><strong>Between-row alternatives (not replacing the main crop):</strong><table class="data-table" style="margin-top:8px; font-size:12px;"><thead><tr><th>Crop</th><th>Role</th><th>Area</th><th>Water</th><th>Profit</th><th>TL/m³</th></tr></thead><tbody>${orchardAlternativeMetricsUi.slice(0,4).map(x=>`<tr><td><b>${escapeHtml(prettyCropName(x.name))}</b></td><td>${escapeHtml(uiDisplayTextEn(x.kind || 'Between rows'))}</td><td>${safeNum(x.area,0).toFixed(1)} da</td><td>${Math.round(safeNum(x.totalWater,0)).toLocaleString('tr-TR')} m³</td><td>${Math.round(safeNum(x.totalProfit,0)).toLocaleString('tr-TR')} TL</td><td>${safeNum(x.tlPerM3,0).toFixed(2)}</td></tr><tr><td colspan="6" class="muted" style="padding-top:0;">${escapeHtml(uiDisplayTextEn(x.note || ''))}</td></tr>`).join('')}</tbody></table></div>` : '';
     const s2Note = (_seasonModeKey()==='s2')
       ? '<div class="small" style="margin:8px 0; padding:8px 10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff;"><strong>Second-crop reading:</strong> The second crop shown here is not a separate independent recommendation; it is tested as an annual pattern/rotation together with the main crop for the same parcel. Suitability is evaluated together with period/day count, water quota, peak month, crop family, and current soil class/proxy data.</div>'
-      : '<div class="small" style="margin:8px 0; padding:8px 10px; border:1px solid #e5e7eb; border-radius:10px; background:#fff;"><strong>Single crop modu:</strong> In this mode, the main decision is a single-crop pattern; the second crop is shown only as a literature/rotation note, not as an optimization pattern.</div>';
+      : '<div class="small" style="margin:8px 0; padding:8px 10px; border:1px solid #e5e7eb; border-radius:10px; background:#fff;"><strong>Single-crop mode:</strong> In this mode, the main decision is a single-crop pattern; the second crop is shown only as a literature/rotation note, not as an optimization pattern.</div>';
     rotationBox.innerHTML = `<div><strong>${rot.title}:</strong></div>${s2Note}<ul style="margin:6px 0 0 18px;">${rot.items.map(x=>`<li>${x}</li>`).join("")}</ul>${altHtml}`;
   }
   renderIrrigationCompare(current, rec, p, selectedScenario);
@@ -18300,14 +18328,14 @@ function initUserParcelControls(){
         const txt = await f.text();
         if(/\.kml$/i.test(lname)) feature = parseKmlText(txt);
         else feature = parseGeoJsonOrJsonText(txt);
-        if(!feature) throw new Error('Dosya içinden polygon okunamadı.');
+        if(!feature) throw new Error('Polygon could not be read from the file.');
         const parcel = createOrUpdateCustomParcel(feature, { name: f.name.replace(/\.[^.]+$/, ''), source_label: f.name });
         updateAreaInputFromGeometry(parcel, true);
         if(infoEl) infoEl.innerHTML = `<span class="custom-parcel-badge"><span class="dot"></span>File uploaded</span> <span style="margin-left:6px;">${escapeHtml(f.name)} was successfully converted into a parcel.</span>`;
         setUserParcelStatus(`GeoJSON/KML uploaded • automatic area: ${formatAreaSummaryText(safeNum(parcel.area_da,0))}`);
       }catch(err){
         console.error(err);
-        setUserParcelStatus('Dosya okunamadı', true);
+        setUserParcelStatus('File could not be read', true);
         alert('Parcel file could not be read: ' + (err?.message || err));
       }
     });
@@ -19199,7 +19227,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     if(STATE.backendMeta){
       setDataBadge(true, "Backend (Python)");
     }else{
-      setDataBadge(true, "Projeden CSV");
+      setDataBadge(true, "Project CSV");
     }
     renderActiveFiles();
     try{ restoreCustomParcelsFromStorage(); }catch(_e){}
@@ -19212,7 +19240,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 	  if (!selectedParcelId && parcelData.length) selectedParcelId = parcelData[0].id;
   } catch (e) {
     console.error("ENHANCED veri seti yüklenemedi:", e);
-    setDataBadge(false, "Veri yüklenemedi");
+    setDataBadge(false, "Data could not be loaded");
   }
 
   applyPanelOpenDefaults();
@@ -19288,7 +19316,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
 function buildLocalPlanForIds(ids, scenarioKey, algoKey){
-  return backendUnavailablePlan(ids, scenarioKey, algoKey, 'Backend optimizasyon servisi kullanılamıyor; tarayıcı içi yerel karar motoru devre dışı bırakıldı.');
+  return backendUnavailablePlan(ids, scenarioKey, algoKey, 'The backend optimization service is unavailable; the browser-side local decision engine is disabled.');
 }
 
 async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
@@ -19298,8 +19326,8 @@ async function runOptimizationWithFallback(idsForRun, scenarioKey, algoKey){
   try{
     return await fetchAndCacheBasinPlanPython(scenarioKey, algoKey);
   }catch(err){
-    console.warn('Python optimizasyon hatası; yerel karar fallback kapalı.', err);
-    return backendUnavailablePlan(idsForRun, scenarioKey, algoKey, 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.');
+    console.warn('Python optimization failed; local decision fallback is disabled.', err);
+    return backendUnavailablePlan(idsForRun, scenarioKey, algoKey, 'The backend optimization result could not be retrieved; no browser-side decision was generated.');
   }
 }
 
@@ -19364,7 +19392,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     const backendOut = await runOptimizationWithFallback(idsForRun, scenarioKey, best.algo);
     return { ...best, out: backendOut || best.out };
   }catch(err){
-    console.warn('Otomatik algoritma için backend sonucu alınamadı; yerel karşılaştırma sonucu kullanılacak.', err);
+    console.warn('The backend result for the automatic algorithm could not be retrieved; the local comparison result will be used.', err);
     return best;
   }
 }
@@ -19382,8 +19410,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   const handleOptimizationRunClick = async () => {
     const st = document.getElementById("algoStatus");
     if(userNeedsOnboarding(STATE.currentUser)){
-      if(st) st.textContent = 'Önce ilk kurulum tamamlanmalı';
-      alert('Önce ilk kurulum adımını tamamlayın ve parsel bilgilerinizi doğrulayın.');
+      if(st) st.textContent = 'Initial setup must be completed first';
+      alert('Complete the initial setup step and verify your parcel information first.');
       return;
     }
     const prevContext = lastOptimizeContext ? { ...lastOptimizeContext } : null;
@@ -19391,15 +19419,15 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     const pendingContext = { parcelId: selectedParcelId, scenario: selectedScenario, algo: wantsAutoAlgo ? 'auto' : selectedAlgo };
     const idsForRun = getSelectedParcelIdsForRun();
     if(!idsForRun || idsForRun.length === 0){
-      if (st) st.textContent = "Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon için veri setine dahil değil.";
-      alert("Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon/karşılaştırma için veri setine dahil değil.");
+      if (st) st.textContent = "This parcel was added only for map display (demo). It is not included in the optimization dataset.";
+      alert("This parcel was added only for map display (demo). It is not included in the optimization/benchmark dataset.");
       return;
     }
     // Aynı anda birden fazla optimize isteğini engelle (Network: canceled/pending sorunlarını önler)
     if (STATE.isOptimizing) return;
     setOptimizationRunButtonsBusy(true);
     STATE.isOptimizing = true;
-    if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${wantsAutoAlgo ? 'Otomatik en iyi algoritma' : pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
+    if (st) st.textContent = `Calculating... (${STATE.manualDataActive ? 'Manual CSV / local' : 'Python'}) - ${wantsAutoAlgo ? 'Automatic best algorithm' : pendingContext.algo.toUpperCase()} - ${uiDisplayTextEn(pendingContext.scenario)}`;
 
     // Hesaplama bitene kadar ekranda SON geçerli sonuçlar kalsın (yanıltıcı ara görünüm olmasın)
     // refreshUI() çağırmıyoruz; sadece durum metni güncellenir.
@@ -19454,8 +19482,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     benchBtn.addEventListener('click', async ()=>{
       const st = document.getElementById('benchmarkStatus');
       if(userNeedsOnboarding(STATE.currentUser)){
-        if(st) st.textContent = 'Önce ilk kurulum tamamlanmalı';
-        alert('Algorithm karşılaştırmasına geçmeden önce ilk kurulum adımını tamamlayın.');
+        if(st) st.textContent = 'Initial setup must be completed first';
+        alert('Complete the initial setup step before running the algorithm comparison.');
         return;
       }
       if(benchBtn.disabled) return;
@@ -19465,8 +19493,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 
       const idsForRun = getSelectedParcelIdsForRun();
       if(!idsForRun || idsForRun.length === 0){
-        if(st) st.textContent = "Bu parsel sadece harita gösterimi için eklendi (demo).";
-        alert("Bu parsel sadece harita gösterimi için eklendi (demo). Karşılaştırma için veri setine dahil değil.");
+        if(st) st.textContent = "This parcel was added only for map display (demo).";
+        alert("This parcel was added only for map display (demo). It is not included in the benchmark dataset.");
         benchBtn.disabled = false;
         benchBtn.classList.remove('btn-disabled');
         return;
@@ -19639,7 +19667,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     });
   }else{
     const mapBox = document.getElementById("map");
-    if(mapBox) mapBox.innerHTML = '<div style="padding:12px;color:#667;">Harita yüklenemedi (Leaflet CDN erişimi yok).</div>';
+    if(mapBox) mapBox.innerHTML = '<div style="padding:12px;color:#667;">Map could not be loaded (Leaflet CDN is unavailable).</div>';
   }
 
   if(typeof window.Chart !== "undefined"){
@@ -20187,7 +20215,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
             <div><span>Assigned pattern</span><strong>${es(assignedPattern)}</strong></div>
           </div>
           <div class="farmer-compact-note">
-            <strong>Veri durumu:</strong> ${es(confidence.label || '-')}
+            <strong>Data status:</strong> ${es(uiDisplayTextEn(confidence.label || '-'))}
             <span>The recommendation is calculated in the main panel on the right together with water, profit, and crop alternatives.</span>
           </div>
         </div>`;
@@ -20764,7 +20792,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       let feature=null;
       if(/\.kml$/i.test(lname) && typeof parseKmlText==='function') feature=parseKmlText(txt);
       else if(typeof parseGeoJsonOrJsonText==='function') feature=parseGeoJsonOrJsonText(txt);
-      if(!feature) throw new Error('Dosya içinden polygon okunamadı.');
+      if(!feature) throw new Error('Polygon could not be read from the file.');
       feature.properties = Object.assign({}, feature.properties || {}, { id:rec.parcel_id, name:rec.parcel_name || rec.parcel_id });
       let autoArea=0;
       try{ autoArea = (typeof featureAreaSquareMeters==='function') ? featureAreaSquareMeters(feature)/1000 : 0; }catch(_e){}
@@ -20772,7 +20800,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       afterParcelCreatedV18(parcel, rec, autoArea);
       try{ savePanelGeojsonToServerV21(parcel, rec); }catch(_e){}
     }catch(err){
-      try{ setUserParcelStatus('Dosya kaydedilemedi', true); }catch(_e){}
+      try{ setUserParcelStatus('File could not be saved', true); }catch(_e){}
       alert('Parcel file could not be read: ' + (err?.message || err));
     }
   }
@@ -21365,8 +21393,8 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     try{ localStorage.setItem(STORAGE_KEY_COLLAPSED, flag ? '1' : '0'); }catch(_e){}
     const btn = document.getElementById('sidebarToggleBtn');
     if(btn){
-      btn.textContent = flag ? '⟩ Aç' : '⟨ Daralt';
-      btn.title = flag ? 'Sol paneli yeniden aç' : 'Sol paneli daralt';
+      btn.textContent = flag ? 'Open' : 'Collapse';
+      btn.title = flag ? 'Reopen the left panel' : 'Collapse the left panel';
     }
     if(flag){
       document.querySelectorAll('.left-col details[open]').forEach(el => { el.dataset.wasOpen='1'; el.open=false; });
@@ -21394,14 +21422,14 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     toolbar.innerHTML = `
       <div class="sidebar-toolbar-meta">
         <strong>Left panel view</strong>
-        <small>Paneli genişlet, daralt veya sağ kenardan sürükleyerek yeniden boyutlandır.</small>
+        <small>Expand, collapse, or resize the panel by dragging the right edge.</small>
       </div>
       <div class="sidebar-toolbar-actions">
         <span class="sidebar-width-readout" id="sidebarWidthReadout">${DEFAULT_W} px</span>
-        <button class="sidebar-tool-btn sidebar-size-btn" data-sidebar-action="smaller" type="button" title="Biraz daralt">ï¼</button>
-        <button class="sidebar-tool-btn sidebar-size-btn" data-sidebar-action="larger" type="button" title="Biraz genişlet">ï¼‹</button>
-        <button class="sidebar-tool-btn" data-sidebar-action="reset" type="button" title="Varsayılan genişlik">Varsayılan</button>
-        <button class="sidebar-tool-btn primaryish" id="sidebarToggleBtn" data-sidebar-action="toggle" type="button" title="Sol paneli daralt">⟨ Daralt</button>
+        <button class="sidebar-tool-btn sidebar-size-btn" data-sidebar-action="smaller" type="button" title="Narrow slightly">-</button>
+        <button class="sidebar-tool-btn sidebar-size-btn" data-sidebar-action="larger" type="button" title="Widen slightly">+</button>
+        <button class="sidebar-tool-btn" data-sidebar-action="reset" type="button" title="Default width">Default</button>
+        <button class="sidebar-tool-btn primaryish" id="sidebarToggleBtn" data-sidebar-action="toggle" type="button" title="Collapse the left panel">Collapse</button>
       </div>`;
     leftCol.insertBefore(toolbar, sidebarPanel);
 
@@ -21678,30 +21706,30 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   function syncFarmerTextLabelsV55(){
     const runBtn = document.getElementById('runOptBtn');
     if(runBtn){
-      if(!runBtn.dataset.institutionLabel) runBtn.dataset.institutionLabel = runBtn.textContent || 'Optimizasyonu Çalıştır';
+      if(!runBtn.dataset.institutionLabel) runBtn.dataset.institutionLabel = runBtn.textContent || 'Run Optimization';
       runBtn.textContent = isFarmerV55() ? 'Generate recommendation' : runBtn.dataset.institutionLabel;
       runBtn.title = isFarmerV55() ? 'Generates the recommendation according to the selected objective, scenario, and algorithm.' : (runBtn.title || '');
     }
     const setupTitle = document.querySelector('#setupGroup .card-title');
     if(setupTitle){
-      if(!setupTitle.dataset.institutionLabel) setupTitle.dataset.institutionLabel = setupTitle.textContent || 'Parcel seç';
+      if(!setupTitle.dataset.institutionLabel) setupTitle.dataset.institutionLabel = setupTitle.textContent || 'Select Parcel';
       setupTitle.textContent = isFarmerV55() ? 'My parcel' : setupTitle.dataset.institutionLabel;
     }
     const parcelTab = document.querySelector('.tab[data-tab="parcel"]');
     if(parcelTab){
-      if(!parcelTab.dataset.institutionLabel) parcelTab.dataset.institutionLabel = parcelTab.textContent || 'Parcel düzeyi desen';
+      if(!parcelTab.dataset.institutionLabel) parcelTab.dataset.institutionLabel = parcelTab.textContent || 'Parcel-level Crop Pattern';
       parcelTab.textContent = isFarmerV55() ? 'Parcel-level Crop Pattern' : parcelTab.dataset.institutionLabel;
     }
     document.querySelectorAll('#tab-parcel h3.card-subtitle').forEach(h=>{
       if(!h.dataset.institutionLabel) h.dataset.institutionLabel = h.textContent || '';
       if(isFarmerV55()){
         if(h.dataset.institutionLabel.includes('Recommended Crop Pattern')) h.textContent = 'Expert / system recommendation';
-        if(h.dataset.institutionLabel.includes('Decision açıklaması')) h.textContent = 'Recommendation rationale';
+        if(h.dataset.institutionLabel.includes('Decision rationale') || h.dataset.institutionLabel.includes('Decision açıklaması')) h.textContent = 'Recommendation rationale';
         if(h.dataset.institutionLabel.includes('Rotasyon')) h.textContent = 'Feasible additional crop / rotation note';
         if(h.dataset.institutionLabel.includes('Irrigation method')) h.textContent = 'Irrigation method recommendation';
-        if(h.dataset.institutionLabel.includes('Ekonomik dayanak')) h.textContent = 'Revenue and cost summary';
-        if(h.dataset.institutionLabel.includes('Aylık water kapasitesi')) h.textContent = 'Monthly water demand and months to monitor';
-        if(h.dataset.institutionLabel.includes('sulama planı')) h.textContent = 'Practical irrigation guide';
+        if(h.dataset.institutionLabel.includes('Economic basis') || h.dataset.institutionLabel.includes('Ekonomik dayanak')) h.textContent = 'Revenue and cost summary';
+        if(h.dataset.institutionLabel.includes('Monthly water capacity') || h.dataset.institutionLabel.includes('Aylık water kapasitesi')) h.textContent = 'Monthly water demand and months to monitor';
+        if(h.dataset.institutionLabel.includes('irrigation plan') || h.dataset.institutionLabel.includes('sulama planı')) h.textContent = 'Practical irrigation guide';
       }else{
         h.textContent = h.dataset.institutionLabel;
       }
@@ -21732,7 +21760,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       ? 'Scenario 2 - crop combination / pattern'
       : 'Scenario 1 - single crop';
     const activeAlgo = STATE.farmerAlgoModeV7 === 'auto'
-      ? 'Otomatik en iyi algoritma'
+      ? 'Automatic best algorithm'
       : String(selectedAlgo || 'GA').toUpperCase();
     const threadId = (typeof parcelThreadKeyFor === 'function') ? parcelThreadKeyFor(p, user.username || '') : '';
     const msgCount = threadId && typeof getParcelThread === 'function' ? getParcelThread(threadId).length : 0;
@@ -21855,11 +21883,11 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(!user) return;
       const current = Array.isArray(user.allowedParcelIds) ? user.allowedParcelIds.map(x=>String(x||'').trim()).filter(Boolean) : [];
       const same = current.length === BETUL_DEMO_PARCELS_V56.length && BETUL_DEMO_PARCELS_V56.every((id, i)=> current[i] === id);
-      if(!same || String(user.village||'') !== '3 Köy Demo'){
+      if(!same || String(user.village||'') !== '3-Village Demo'){
         const saved = saveAuthUser({
           ...user,
           allowedParcelIds: BETUL_DEMO_PARCELS_V56.slice(),
-          village: '3 Köy Demo',
+          village: '3-Village Demo',
           district: 'Akkaya Irrigation Area',
           notes: 'Three sample parcels were assigned for the demo farmer account: vegetable in Sazlıca, fruit in Kemerhisar, and field crop in Kaynarca.'
         });
@@ -22079,7 +22107,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         </select></label>
         <label><span>Recommended crop group</span><select class="select-input" id="farmerCropCategoryModeV102">${cropCategoryModeOptionsHtml()}</select></label>
         <label><span>Algorithm</span><select class="select-input" id="farmerAlgoSelectV102">
-          <option value="auto">Otomatik en iyi algoritma</option>
+          <option value="auto">Automatic best algorithm</option>
           <option value="ga">GA</option>
           <option value="aco">ACO</option>
           <option value="abc">ABC</option>
@@ -22934,7 +22962,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         {m:'Haziran', stage:'Bakla bağlama ve dane dolumu', jobs:['En kritik dönemdir; bitki öğle saatinde kalıcı solgunluk gösteriyorsa destek sulama uygulanır.','Yeşil kurt baklada delik ve dışkı bırakır; rastgele bitki kontrolüyle yoğunluk takip edilir.','Yaprak sararması ile kök hastalığı karıştırılmaz; kök sökülüp damar kararması ve kök çürümesi kontrol edilir.']},
         {m:'Temmuz', stage:'Olgunlaşma', jobs:['Baklaların çoğu sararıp tane sertleştiğinde sulama tamamen kesilir.','Hasat gecikirse bakla çatlaması ve tane dökümü artar; sabah serinliği hasat kaybını azaltır.','Biçerdöver ayarı tane kırığını azaltacak şekilde yapılır; yabancı otlu parseller ayrı harmanlanır.']},
         {m:'Ağustos', stage:'Hasat sonrası', jobs:['Ürün nemi depolama için güvenli seviyeye düşürülür; çuvallar zeminden yükseltilir ve havalandırılır.','Bruchus/tohum böceği delikleri kontrol edilir; bulaşık parti ayrı depolanır.','Anız ve bitki artıkları hastalık kaynağı olmaması için yönetilir; sonraki yıl için münavebe kaydı tutulur.']},
-        {m:'Eylül-Ekim', stage:'Münavebe ve toprak sağlığı', jobs:['Nohut sonrası tahıl veya yem bitkisi planlanır; aynı parselde üst üste baklagil yapılmaz.','Toprak organik maddesini artıracak yanmış çiftlik gübresi/örtü bitkisi seçenekleri değerlendirilir.','Verim, su, masraf ve hastalık kayıtları gelecek yıl kararına esas olacak şekilde dosyalanır.']}
+        {m:'September-October', stage:'Rotation and soil health', jobs:['A cereal or forage crop is planned after chickpea; legumes are not repeated on the same parcel in consecutive cycles.','Well-rotted farmyard manure or cover-crop options are evaluated to increase soil organic matter.','Yield, water, cost, and disease records are filed as the basis for next year’s decision.']}
       ],
       diseases:[
         {name:'Antraknoz / Ascochyta yanıklığı', symptoms:'Yaprak, sap ve baklada kahverengi-siyah, çökük ve halkalı lekeler; yağışlı-serin havada hızlı yayılım; şiddetli durumda dal kırılması ve bakla kararması.', prevention:'Sertifikalı tohum, 3-4 yıl münavebe, hastalıklı artıkların tarlada bırakılmaması, sık ekimden kaçınma ve yaprak ıslaklığını azaltan sulama.', bio:'Dayanıklı çeşit, sağlıklı tohum, Trichoderma/Bacillus içerikli ruhsatlı biyolojik ürünler ve iyi havalanan bitki sıklığı.', chem:'İlk belirtiler veya yüksek riskli yağış döneminde yalnızca nohut için ruhsatlı fungisitler, etiket dozu ve il/ilçe tarım recommendationyle uygulanır; aynı etki grubunun sürekli tekrarı direnç oluşturabilir.'},
@@ -22956,7 +22984,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         {m:'Şubat', stage:'Hazırlık', jobs:['Tohum ve tarla seçimi yapılır, yabancı ot history kontrol edilir.','Toprak analizi ve taban gübresi planı hazırlanır.']},
         {m:'Mart', stage:'Ekim', jobs:['Tarla tavındayken ekim yapılır, ekim derinliği homojen tutulur.','Çıkış sonrası kaymak tabakası ve boşluklar kontrol edilir.']},
         {m:'Nisan', stage:'Bakım', jobs:['Yabancı ot erken dönemde bastırılır.','Pas/antraknoz ve yaprak biti haftalık izlenir.']},
-        {m:'Mayıs', stage:'Çiçeklenme', jobs:['Kuraklık varsa tek destek sulama değerlendirilir.','Hastalık belirtisi yağışlı haftalarda artar; sık tarla kontrolü yapılır.']},
+        {m:'May', stage:'Flowering', jobs:['If drought occurs, a single supplemental irrigation is evaluated.','Disease symptoms increase during rainy weeks; frequent field scouting is carried out.']},
         {m:'Haziran-Temmuz', stage:'Hasat', jobs:['Bitki sararınca hasat geciktirilmez.','Dane nemi ve yabancı madde ayrımı yapılır.']}
       ],
       diseases:[
@@ -23235,7 +23263,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const reasonText = `${guides[0].target} ${components.length > 1 ? 'The main crop is retained; the intercrop/percentage distribution is planned with a limited share to improve the water-profit balance.' : 'The plan was approved by jointly interpreting the selected objective, parcel water entitlement, and feasibility.'}`;
     return `<section class="approved-deep-v148" id="approvedDeepV148">
       <div class="approved-deep-hero-v148">
-        <div><span>Expert-approved current plan</span><h3>${esc(planTitle)}</h3><p>${esc(pat.note || pat.areaSplit || guides[0].niğde)}</p></div>
+        <div><span>Expert-approved current plan</span><h3>${esc(planTitle)}</h3><p>${esc(uiDisplayTextEn(pat.note || pat.areaSplit || guides[0].niğde))}</p></div>
         <div><b>${esc(record?.approved_by || 'Expert')}</b><small>${esc((record?.approved_at || '').slice(0,10) || 'Approval date')}</small></div>
       </div>
       ${approvedSummaryHtml(record, parcel, pat, planTitle, ctx)}

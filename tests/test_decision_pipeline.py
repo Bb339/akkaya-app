@@ -178,7 +178,7 @@ def test_frontend_backend_result_is_authoritative_and_fallback_is_warning_only()
     assert "return await fetchAndCacheBasinPlanPython" in fallback_body
     assert "backendUnavailablePlan" in fallback_body
     assert "buildLocalPlanForIds" not in fallback_body
-    assert "tarayıcı içi karar üretilmedi" in fallback_body
+    assert "no browser-side decision was generated" in fallback_body
 
 
 def test_detailed_benchmark_runs_all_requested_repeats(monkeypatch, client):
