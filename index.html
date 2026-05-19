@@ -267,8 +267,9 @@
 <div class="manual-upload-panel">
 <div class="active-files-title">Manual data upload for testing</div>
 <p class="card-help small">Manually uploaded CSV/GeoJSON files are included in the active analysis for this session and optimization reruns through the local calculation path. For persistent institutional use and Python backend outputs, the same files must be moved into the backend/data folder.</p>
-<input accept=".csv,.json,.geojson" class="file-input" id="dataFileInput" multiple="" type="file"/>
-<div class="manual-file-summary" id="manualCsvFilesSummary">No manual file selected yet.</div>
+<input accept=".csv,.json,.geojson" class="file-input" id="dataFileInput" multiple="" type="file" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"/>
+<label class="btn-secondary" for="dataFileInput" role="button">Choose files</label>
+<div class="manual-file-summary" id="manualCsvFilesSummary">No file selected</div>
 </div>
 <div class="manual-validation-panel">
 <div class="active-files-title">Data validation result</div>
@@ -345,7 +346,9 @@
 <h2 class="card-title">Parcel Drawing / Data Assignment Panel</h2>
 <p class="card-help small">This panel is simplified for institutional data entry/drawing mode. Crop, area, farmer, irrigation, and assignment information for 180 parcels has already been entered into the system. In this version, Bor District Center P79-P121 records are prioritized for drawing/editing; other villages can be selected with the same workflow.</p>
 <div class="user-parcel-actions">
-<input accept=".geojson,.json,.kml,.jpg,.jpeg,.png" class="file-input" id="customParcelFileInput" type="file"/>
+<input accept=".geojson,.json,.kml,.jpg,.jpeg,.png" class="file-input" id="customParcelFileInput" type="file" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"/>
+<label class="btn-secondary" for="customParcelFileInput" role="button">Choose files</label>
+<span class="small muted" id="customParcelFileSummary">No file selected</span>
 <div class="inline-actions compact-wrap">
 <button class="btn-secondary" id="startDrawParcelBtn" type="button">Draw on map</button>
 <button class="btn-secondary" id="finishDrawParcelBtn" type="button">Finish drawing</button>

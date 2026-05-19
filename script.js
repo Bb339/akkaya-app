@@ -877,7 +877,7 @@ function openNotificationTarget(notificationId=''){ const all=loadParcelNotifica
 try{ renderInstitutionRequestInbox(); }catch(_e){}
  const target=(isFarmerApprovalTarget ? document.getElementById('approvedPlanPanelV142') : document.getElementById('farmerUserRequestThreadV100')) || document.getElementById('userRequestThread') || document.getElementById('farmerNotificationBox'); if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); flashNotificationTarget(target); }
 }
-function renderNotificationCenter(){ const root=document.getElementById('notificationCenter'); const btn=document.getElementById('notificationBellBtn'); if(!root||!btn) return; const user=STATE.currentUser||null; if(!user){ root.classList.add('hidden'); root.innerHTML=''; btn.onclick=null; return; } const rows=notificationsForCurrentUser().slice(0,20); root.innerHTML = rows.length ? `<div class="notify-head"><strong>Notifications</strong><span class="pill-soft">${rows.length} records</span></div><div class="request-thread-actions" style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="notifyMarkAllReadBtn" type="button">Mark all as read</button><button class="btn-secondary" id="notifyDeleteReadBtn" type="button">Delete read</button><button class="btn-secondary" id="notifyDeleteAllBtn" type="button">Delete all</button></div><div class="notify-list">${rows.map(n=>{ const kindLabel = n.kind==='parcel_request' ? 'Request' : (n.kind==='message' ? 'Message' : (n.kind==='approval' ? 'Approval' : (n.kind==='revision' ? 'Revision' : 'Notification'))); const targetUser=notificationTargetUsername(n); const unreadClass=!n.read ? ' is-unread' : ''; return `<div class="notify-item notify-item-action${unreadClass}"><button class="notify-open-btn" type="button" data-notification-open="${escapeHtml(n.id || '')}"><div class="notify-meta">${escapeHtml(n.actor_username || 'System')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(n.text || '')}</div><div class="small muted" style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;"><span class="pill-soft">${escapeHtml(kindLabel)}</span>${targetUser ? `<span>Farmer: <b>${escapeHtml(targetUser)}</b></span>` : ''}${n.parcel_id ? `<span>Parcel: <b>${escapeHtml(n.parcel_id)}</b></span>` : ''}</div></button><div class="small muted" style="margin-top:6px;display:flex;gap:8px;justify-content:flex-end;"><button class="btn-link" type="button" data-notification-mark="${escapeHtml(n.id || '')}">${n.read ? 'Mark unread' : 'Mark read'}</button><button class="btn-link" type="button" data-notification-delete="${escapeHtml(n.id || '')}">Delete</button></div></div>`; }).join('')}</div><div class="small muted">You can open notifications, mark them as read, or delete them.</div>` : '<div class="notify-empty">No new notifications yet.</div>';
+function renderNotificationCenter(){ const root=document.getElementById('notificationCenter'); const btn=document.getElementById('notificationBellBtn'); if(!root||!btn) return; const user=STATE.currentUser||null; if(!user){ root.classList.add('hidden'); root.innerHTML=''; btn.onclick=null; return; } const rows=notificationsForCurrentUser().slice(0,20); root.innerHTML = rows.length ? `<div class="notify-head"><strong>Notifications</strong><span class="pill-soft">${rows.length} records</span></div><div class="request-thread-actions" style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="notifyMarkAllReadBtn" type="button">Mark all as read</button><button class="btn-secondary" id="notifyDeleteReadBtn" type="button">Delete read</button><button class="btn-secondary" id="notifyDeleteAllBtn" type="button">Delete all</button></div><div class="notify-list">${rows.map(n=>{ const kindLabel = n.kind==='parcel_request' ? 'Request' : (n.kind==='message' ? 'Message' : (n.kind==='approval' ? 'Approval' : (n.kind==='revision' ? 'Revision' : 'Notification'))); const targetUser=notificationTargetUsername(n); const unreadClass=!n.read ? ' is-unread' : ''; return `<div class="notify-item notify-item-action${unreadClass}"><button class="notify-open-btn" type="button" data-notification-open="${escapeHtml(n.id || '')}"><div class="notify-meta">${escapeHtml(n.actor_username || 'System')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(uiDisplayTextEn(n.text || ''))}</div><div class="small muted" style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;"><span class="pill-soft">${escapeHtml(kindLabel)}</span>${targetUser ? `<span>Farmer: <b>${escapeHtml(targetUser)}</b></span>` : ''}${n.parcel_id ? `<span>Parcel: <b>${escapeHtml(n.parcel_id)}</b></span>` : ''}</div></button><div class="small muted" style="margin-top:6px;display:flex;gap:8px;justify-content:flex-end;"><button class="btn-link" type="button" data-notification-mark="${escapeHtml(n.id || '')}">${n.read ? 'Mark unread' : 'Mark read'}</button><button class="btn-link" type="button" data-notification-delete="${escapeHtml(n.id || '')}">Delete</button></div></div>`; }).join('')}</div><div class="small muted">You can open notifications, mark them as read, or delete them.</div>` : '<div class="notify-empty">No new notifications yet.</div>';
   root.querySelectorAll('[data-notification-open]').forEach(el=>{ el.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); const id=el.getAttribute('data-notification-open'); markNotificationsRead(id,true); openNotificationTarget(id); }); });
   root.querySelectorAll('[data-notification-mark]').forEach(el=>{ el.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); const id=String(el.getAttribute('data-notification-mark')||'').trim(); const item=loadParcelNotifications().find(n=>String(n.id||'')===id); markNotificationsRead(id, !!item?.read ? false : true); renderNotificationCenter(); }); });
   root.querySelectorAll('[data-notification-delete]').forEach(el=>{ el.addEventListener('click', (ev)=>{ ev.preventDefault(); ev.stopPropagation(); dismissNotificationForCurrentUser(el.getAttribute('data-notification-delete')||''); renderNotificationCenter(); }); });
@@ -898,7 +898,7 @@ function saveParcelThreads(obj){ try{ localStorage.setItem(PARCEL_THREADS_STORAG
 function parcelThreadKeyFor(parcel, usernameOverride=''){ const owner=String(usernameOverride || parcel?.owner_username || STATE.currentUser?.username || '').trim() || 'user'; const official=String(parcel?.requested_for_parcel_id || parcel?.id || selectedParcelId || '').trim() || 'parcel'; return `THREAD-${official}-${owner}`; }
 function postParcelThreadMessage(threadId, text, meta={}){ const msg=String(text||'').trim(); if(!threadId || !msg) return; const store=loadParcelThreads(); const list=Array.isArray(store[threadId]) ? store[threadId] : []; list.push({id:`MSG-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,created_at:new Date().toISOString(),actor_role:meta.actor_role || (STATE.currentUser?.role || 'institution'),actor_username:meta.actor_username || (STATE.currentUser?.username || ''),actor_name:meta.actor_name || (STATE.currentUser?.displayName || STATE.currentUser?.username || 'User'),text:msg,parcel_id:meta.parcel_id || '',selected_pattern:meta.selected_pattern || null,decision_status:meta.decision_status || ''}); store[threadId]=list.slice(-100); saveParcelThreads(store); try{ updateNotificationBell(); renderNotificationCenter(); renderInstitutionRequestInbox(); }catch(_e){} }
 function getParcelThread(threadId){ const store=loadParcelThreads(); return Array.isArray(store[threadId]) ? store[threadId] : []; }
-function renderUserRequestThread(){ const root=document.getElementById('userRequestThread'); if(!root) return; const role=STATE.currentUser?.role||'institution'; if(role!=='farmer'){ root.innerHTML=''; return; } const username=String(STATE.currentUser?.username||'').trim(); const selected=(parcelData||[]).find(x=>String(x.id)===String(selectedParcelId)); let req=null; if(selected?.frontend_custom && String(selected.owner_username||'')===username){ req=selected; } if(!req && selected && !selected.frontend_custom){ req=(parcelData||[]).find(x=>!!x?.frontend_custom && String(x.owner_username||'')===username && String(x.requested_for_parcel_id||'')===String(selected.id)) || null; } const related=notificationsForCurrentUser().filter(n=> String(n.parcel_id||'')===String(req?.requested_for_parcel_id || req?.id || selected?.id || '')); if(!req && !related.length){ root.innerHTML=''; return; } const threadId=parcelThreadKeyFor(req || selected || {}, username); const thread=getParcelThread(threadId); root.innerHTML=`<div class="request-thread-head"><strong>Notifications and correspondence</strong><span class="pill-soft">${related.length} notifications • ${thread.length} messages</span></div>${related.length ? `<div class="notify-list">${related.slice(0,4).map(n=>`<div class="notify-item"><div class="notify-meta">${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(n.text || '')}</div></div>`).join('')}</div>` : '<div class="small muted">No notification for this parcel yet.</div>'}<div class="request-thread-list">${thread.length ? thread.slice(-4).map(m=>`<div class="request-msg-item ${m.actor_role===role?'mine':''}"><div class="request-msg-meta">${escapeHtml(m.actor_name || m.actor_username || 'User')} • ${escapeHtml(formatManagedUserTimestamp(m.created_at))}</div><div class="request-msg-text">${escapeHtml(m.text || '')}</div></div>`).join('') : '<div class="small muted">No message history yet. You can send your question to the administrator.</div>'}</div><div class="request-thread-actions"><textarea class="text-input" id="userRequestMessageInput" placeholder="Example: The crop and irrigation record for this parcel is not current; please review it."></textarea><button class="btn-secondary" id="userRequestSendBtn" type="button">Send message</button><button class="btn-secondary" id="userRequestQuickInfoBtn" type="button">Ready requests</button></div><div class="small muted" style="margin-top:6px;">Ready requests: irrigation plan summary, approval status question, parcel correction rationale, document request.</div>`; const sendBtn=document.getElementById('userRequestSendBtn'); const quickBtn=document.getElementById('userRequestQuickInfoBtn'); const input=document.getElementById('userRequestMessageInput'); if(sendBtn && input){ sendBtn.onclick=()=>{ const val=String(input.value||'').trim(); if(!val) return; postParcelThreadMessage(threadId, val, { actor_role:'farmer', actor_username: username, actor_name: STATE.currentUser?.displayName || username, parcel_id: String(req?.requested_for_parcel_id || req?.id || selected?.id || '') }); pushParcelNotification({ target_role:'institution', actor_username: username, text:`${STATE.currentUser?.displayName || username} left a new message.`, parcel_id: String(req?.requested_for_parcel_id || req?.id || selected?.id || ''), thread_id: threadId, kind:'message' }); input.value=''; renderUserRequestThread(); setUserParcelStatus('Message sent to the administrator panel.'); }; } if(quickBtn && input){ quickBtn.onclick=()=>{ input.value='Ready request: 1) Could you share my approval status? 2) I would like the irrigation plan summary as a downloadable file. 3) I added the parcel correction rationale; could you review the field again?'; input.focus(); }; } }
+function renderUserRequestThread(){ const root=document.getElementById('userRequestThread'); if(!root) return; const role=STATE.currentUser?.role||'institution'; if(role!=='farmer'){ root.innerHTML=''; return; } const username=String(STATE.currentUser?.username||'').trim(); const selected=(parcelData||[]).find(x=>String(x.id)===String(selectedParcelId)); let req=null; if(selected?.frontend_custom && String(selected.owner_username||'')===username){ req=selected; } if(!req && selected && !selected.frontend_custom){ req=(parcelData||[]).find(x=>!!x?.frontend_custom && String(x.owner_username||'')===username && String(x.requested_for_parcel_id||'')===String(selected.id)) || null; } const related=notificationsForCurrentUser().filter(n=> String(n.parcel_id||'')===String(req?.requested_for_parcel_id || req?.id || selected?.id || '')); if(!req && !related.length){ root.innerHTML=''; return; } const threadId=parcelThreadKeyFor(req || selected || {}, username); const thread=getParcelThread(threadId); root.innerHTML=`<div class="request-thread-head"><strong>Notifications and correspondence</strong><span class="pill-soft">${related.length} notifications • ${thread.length} messages</span></div>${related.length ? `<div class="notify-list">${related.slice(0,4).map(n=>`<div class="notify-item"><div class="notify-meta">${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(uiDisplayTextEn(n.text || ''))}</div></div>`).join('')}</div>` : '<div class="small muted">No notification for this parcel yet.</div>'}<div class="request-thread-list">${thread.length ? thread.slice(-4).map(m=>`<div class="request-msg-item ${m.actor_role===role?'mine':''}"><div class="request-msg-meta">${escapeHtml(m.actor_name || m.actor_username || 'User')} • ${escapeHtml(formatManagedUserTimestamp(m.created_at))}</div><div class="request-msg-text">${escapeHtml(uiDisplayTextEn(m.text || ''))}</div></div>`).join('') : '<div class="small muted">No message history yet. You can send your question to the administrator.</div>'}</div><div class="request-thread-actions"><textarea class="text-input" id="userRequestMessageInput" placeholder="Example: The crop and irrigation record for this parcel is not current; please review it."></textarea><button class="btn-secondary" id="userRequestSendBtn" type="button">Send message</button><button class="btn-secondary" id="userRequestQuickInfoBtn" type="button">Ready requests</button></div><div class="small muted" style="margin-top:6px;">Ready requests: irrigation plan summary, approval status question, parcel correction rationale, document request.</div>`; const sendBtn=document.getElementById('userRequestSendBtn'); const quickBtn=document.getElementById('userRequestQuickInfoBtn'); const input=document.getElementById('userRequestMessageInput'); if(sendBtn && input){ sendBtn.onclick=()=>{ const val=String(input.value||'').trim(); if(!val) return; postParcelThreadMessage(threadId, val, { actor_role:'farmer', actor_username: username, actor_name: STATE.currentUser?.displayName || username, parcel_id: String(req?.requested_for_parcel_id || req?.id || selected?.id || '') }); pushParcelNotification({ target_role:'institution', actor_username: username, text:`${STATE.currentUser?.displayName || username} left a new message.`, parcel_id: String(req?.requested_for_parcel_id || req?.id || selected?.id || ''), thread_id: threadId, kind:'message' }); input.value=''; renderUserRequestThread(); setUserParcelStatus('Message sent to the administrator panel.'); }; } if(quickBtn && input){ quickBtn.onclick=()=>{ input.value='Ready request: 1) Could you share my approval status? 2) I would like the irrigation plan summary as a downloadable file. 3) I added the parcel correction rationale; could you review the field again?'; input.focus(); }; } }
 
 function renderInstitutionRequestInbox(focusParcelId=''){
   const root=document.getElementById('institutionRequestInbox');
@@ -942,7 +942,7 @@ function renderInstitutionRequestInbox(focusParcelId=''){
   const selectedParcel=selectedIsRequest
     ? (pickType==='custom' ? (customPick.requested_for_parcel_id || customPick.id || '-') : (altPick.parcel_id || '-'))
     : (messagePick?.note?.parcel_id || messagePick?.last?.parcel_id || '-');
-  const messageListHtml=messageThreads.length ? `<div class="notify-list institution-message-list-v7">${messageThreads.slice(0,10).map(x=>{ const last=x.last || {}; const note=x.note || {}; const isActive=String(x.id)===String(threadId); const unread=x.rows.some(m=>m.actor_role==='farmer' && !m.read_at) || !note.read; return `<button class="notify-item notify-item-action ${isActive?'is-active':''} ${unread?'is-unread':''}" type="button" data-open-message-thread="${escapeHtml(x.id)}"><div class="notify-meta">${escapeHtml(note.actor_username || last.actor_username || 'farmer')} • ${escapeHtml(formatManagedUserTimestamp(last.created_at || note.created_at))}</div><div class="notify-text">${escapeHtml(last.text || note.text || 'Message')}</div><div class="small muted" style="margin-top:4px;">Parcel: ${escapeHtml(note.parcel_id || last.parcel_id || '-')} • ${x.rows.length} messages</div></button>`; }).join('')}</div>` : '<div class="small muted" style="margin-top:8px;">No incoming messages.</div>';
+  const messageListHtml=messageThreads.length ? `<div class="notify-list institution-message-list-v7">${messageThreads.slice(0,10).map(x=>{ const last=x.last || {}; const note=x.note || {}; const isActive=String(x.id)===String(threadId); const unread=x.rows.some(m=>m.actor_role==='farmer' && !m.read_at) || !note.read; return `<button class="notify-item notify-item-action ${isActive?'is-active':''} ${unread?'is-unread':''}" type="button" data-open-message-thread="${escapeHtml(x.id)}"><div class="notify-meta">${escapeHtml(note.actor_username || last.actor_username || 'farmer')} • ${escapeHtml(formatManagedUserTimestamp(last.created_at || note.created_at))}</div><div class="notify-text">${escapeHtml(uiDisplayTextEn(last.text || note.text || 'Message'))}</div><div class="small muted" style="margin-top:4px;">Parcel: ${escapeHtml(note.parcel_id || last.parcel_id || '-')} • ${x.rows.length} messages</div></button>`; }).join('')}</div>` : '<div class="small muted" style="margin-top:8px;">No incoming messages.</div>';
   const decisionActions=selectedIsRequest ? `<div class="request-thread-actions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="instApproveReqBtn" type="button">Approve</button><button class="btn-secondary" id="instRevisionReqBtn" type="button">Request revision</button><button class="btn-secondary" id="instRejectReqBtn" type="button">Cancel / reject</button></div>` : '';
   const altSummary = latestPattern ? `<div class="selected-alt-v102 institution-selected-alt-v102">
     <b>Selected alternative:</b> ${escapeHtml(latestPattern.patternName || '-')}
@@ -952,10 +952,10 @@ function renderInstitutionRequestInbox(focusParcelId=''){
   root.innerHTML=`<div class="request-thread-head"><strong>Institutional Requests / Correspondence</strong><span class="pill-soft">${pending.length + altRequests.length} pending requests • ${notifications.length} notifications</span></div>
     <div class="request-thread-actions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"><button class="btn-secondary" id="instMarkReadBtn" type="button">Mark viewed as read</button><button class="btn-secondary" id="instClearReadBtn" type="button">Clear read notifications</button><button class="btn-secondary" id="instClearAllBtn" type="button">Clear all notifications</button></div>
     ${pending.length ? `<div class="notify-list">${pending.slice(0,6).map(p=>`<button class="notify-item notify-item-action ${pickType==='custom'&&String(p.id||'')===String(customPick?.id||'')?'is-active':''}" type="button" data-open-request="${escapeHtml(p.id||'')}"><div class="notify-meta">${escapeHtml(p.owner_username || 'farmer')} • ${escapeHtml(p.requested_for_parcel_id || p.id || '')}</div><div class="notify-text">${escapeHtml(p.name || 'Parcel notification')} • ${escapeHtml(customParcelApprovalMeta(p).label)}</div><div class="small muted" style="margin-top:4px;">Parcel correction / drawing request</div></button>`).join('')}</div>` : ''}
-    ${altRequests.length ? `<div class="notify-list">${altRequests.slice(0,8).map(n=>`<button class="notify-item notify-item-action ${pickType==='alternative'&&String(n.id||'')===String(altPick?.id||'')?'is-active':''}" type="button" data-open-alt-request="${escapeHtml(n.id||'')}"><div class="notify-meta">${escapeHtml(n.actor_username || 'farmer')} • ${escapeHtml(n.parcel_id || '')}</div><div class="notify-text">${escapeHtml(n.selected_pattern?.patternName || n.text || 'Alternative request')}</div><div class="small muted" style="margin-top:4px;">Farmer alternative approval request</div></button>`).join('')}</div>` : ''}
+    ${altRequests.length ? `<div class="notify-list">${altRequests.slice(0,8).map(n=>`<button class="notify-item notify-item-action ${pickType==='alternative'&&String(n.id||'')===String(altPick?.id||'')?'is-active':''}" type="button" data-open-alt-request="${escapeHtml(n.id||'')}"><div class="notify-meta">${escapeHtml(n.actor_username || 'farmer')} • ${escapeHtml(n.parcel_id || '')}</div><div class="notify-text">${escapeHtml(uiDisplayTextEn(n.selected_pattern?.patternName || n.text || 'Alternative request'))}</div><div class="small muted" style="margin-top:4px;">Farmer alternative approval request</div></button>`).join('')}</div>` : ''}
     ${(!pending.length && !altRequests.length) ? '<div class="small muted" style="margin-top:8px;">No pending request.</div>' : ''}
     <div class="institution-message-section-v7"><div class="request-thread-head"><strong>Incoming Messages / Correspondence</strong><span class="pill-soft">${messageThreads.length} conversations</span></div>${messageListHtml}</div>
-    ${(pick || messagePick) ? `<div class="institution-thread-detail-v7"><div class="small muted" style="margin-top:8px;">Selected ${selectedIsRequest ? 'request' : 'conversation'}: <b>${escapeHtml(selectedTitle)}</b> • Farmer: <b>${escapeHtml(selectedOwner)}</b> • Parcel: <b>${escapeHtml(selectedParcel)}</b></div>${altSummary}${decisionActions}${related.length ? `<div class="notify-list" style="margin-top:8px;">${related.slice(0,6).map(n=>`<div class="notify-item"><div class="notify-meta">${escapeHtml(n.actor_username || 'System')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(n.text || '')}</div><div class="small muted" style="margin-top:6px;display:flex;justify-content:flex-end;"><button class="btn-link" type="button" data-delete-notification="${escapeHtml(n.id||'')}">Delete</button></div></div>`).join('')}</div>` : ''}<div class="request-thread-list">${thread.length ? thread.slice(-8).map(m=>`<div class="request-msg-item ${m.actor_role==='institution'?'mine':''}"><div class="request-msg-meta">${escapeHtml(m.actor_name || m.actor_username || 'User')} • ${escapeHtml(formatManagedUserTimestamp(m.created_at))}</div><div class="request-msg-text">${escapeHtml(m.text || '')}</div></div>`).join('') : '<div class="small muted">No message history for this conversation.</div>'}</div><div class="request-thread-actions"><textarea class="text-input" id="instThreadReply" placeholder="Write a reply / revision explanation to the farmer"></textarea><button class="btn-secondary" id="instThreadSendBtn" type="button">Send message</button></div></div>` : '<div class="small muted" style="margin-top:8px;">Select a request or message to view details.</div>'}`;
+    ${(pick || messagePick) ? `<div class="institution-thread-detail-v7"><div class="small muted" style="margin-top:8px;">Selected ${selectedIsRequest ? 'request' : 'conversation'}: <b>${escapeHtml(uiDisplayTextEn(selectedTitle))}</b> • Farmer: <b>${escapeHtml(selectedOwner)}</b> • Parcel: <b>${escapeHtml(selectedParcel)}</b></div>${altSummary}${decisionActions}${related.length ? `<div class="notify-list" style="margin-top:8px;">${related.slice(0,6).map(n=>`<div class="notify-item"><div class="notify-meta">${escapeHtml(n.actor_username || 'System')} • ${escapeHtml(formatManagedUserTimestamp(n.created_at))}</div><div class="notify-text">${escapeHtml(uiDisplayTextEn(n.text || ''))}</div><div class="small muted" style="margin-top:6px;display:flex;justify-content:flex-end;"><button class="btn-link" type="button" data-delete-notification="${escapeHtml(n.id||'')}">Delete</button></div></div>`).join('')}</div>` : ''}<div class="request-thread-list">${thread.length ? thread.slice(-8).map(m=>`<div class="request-msg-item ${m.actor_role==='institution'?'mine':''}"><div class="request-msg-meta">${escapeHtml(m.actor_name || m.actor_username || 'User')} • ${escapeHtml(formatManagedUserTimestamp(m.created_at))}</div><div class="request-msg-text">${escapeHtml(uiDisplayTextEn(m.text || ''))}</div></div>`).join('') : '<div class="small muted">No message history for this conversation.</div>'}</div><div class="request-thread-actions"><textarea class="text-input" id="instThreadReply" placeholder="Write a reply / revision explanation to the farmer"></textarea><button class="btn-secondary" id="instThreadSendBtn" type="button">Send message</button></div></div>` : '<div class="small muted" style="margin-top:8px;">Select a request or message to view details.</div>'}`;
   root.querySelectorAll('[data-open-request]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); const pid=el.getAttribute('data-open-request')||''; selectParcelByIdAndRefresh(pid); renderInstitutionRequestInbox(pid); }; });
   root.querySelectorAll('[data-open-alt-request]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); renderInstitutionRequestInbox(el.getAttribute('data-open-alt-request')||''); }; });
   root.querySelectorAll('[data-open-message-thread]').forEach(el=>{ el.onclick=(ev)=>{ ev.preventDefault(); renderInstitutionRequestInbox(el.getAttribute('data-open-message-thread')||''); }; });
@@ -3830,7 +3830,7 @@ function updateDroughtAlarmCard(){
         const isSelectable = x.selectable !== false && x.feasible !== false && !x.quotaExceeded;
         const quotaBadge = x.quotaExceeded || x.feasible === false ? '<span class="pattern-risk-badge">Quota exceedance risk / expert approval required</span>' : '';
         const components = Array.isArray(x.components) && x.components.length
-          ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
+          ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(uiDisplayTextEn(c.role || 'Crop'))}: <b>${escapeHtml(prettyCropName(c.crop || '-'))}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
           : '';
         return `<article class="pattern-card-v94 pattern-card-v102${x.selectedRecommendation ? ' pattern-card-selected-v149' : ''}">
           <div class="pattern-card-top"><span class="pattern-rank">#${escapeHtml(rank)}</span><strong>${escapeHtml(x.patternName || '')}</strong>${selectedBadge}${quotaBadge}</div>
@@ -4616,7 +4616,7 @@ function updateDroughtAlarmCard(){
     const yieldKg = nval(meta.yieldKgDa ?? meta.yield_kg_da, NaN);
     const econNote = (typeof economyQualityTextV95 === 'function') ? economyQualityTextV95(meta) : 'The economy row is read from the loaded catalog.';
     const marketRef = (typeof marketPriceReferenceV95 === 'function') ? marketPriceReferenceV95(row?.name || '') : null;
-    const marketLine = marketRef ? `${marketRef.date} ${marketRef.label}: ${marketRef.product} producer ${marketRef.producer} TL/kg${marketRef.market ? ', market '+marketRef.market+' TL/kg' : ''}` : 'No current market reference is linked; the CSV price catalog was used.';
+    const marketLine = marketRef ? `${marketRef.date} ${marketRef.label}: ${marketRef.product} producer ${marketRef.producer} TL/kg${marketRef.market ? ', market '+marketRef.market+' TL/kg' : ''}` : 'Current market reference is not linked; the CSV price catalog was used.';
     const steps = (g.care || []).map(x=>`<li>${esc(x)}</li>`).join('');
     return `<div class="crop-modal-title"><span>${idx===0?'Main crop':'Complementary crop'}</span><h3>${esc(name)}</h3></div>
       <div class="crop-modal-kpis">
@@ -4629,9 +4629,9 @@ function updateDroughtAlarmCard(){
         <section><h4>Niğde climate and frost risk</h4><p><strong>GDD:</strong> ${esc(g.gdd)}; <strong>base:</strong> ${esc(g.base)} C. ${esc(g.temp)}</p><p><strong>Calendar:</strong> ${esc(g.calendar)}</p></section>
         <section><h4>Planting / spacing</h4><p>${esc(g.spacing)}</p></section>
         <section><h4>Soil and rotation</h4><p>${esc(g.soil)}</p></section>
-        <section><h4>Income-cost source</h4><p>${esc(econNote)}</p><p><strong>${esc(marketLine)}</strong></p></section>
-        <section class="crop-modal-wide"><h4>Crop Management Tasks</h4><ol>${steps}</ol></section>
-        <section class="crop-modal-wide"><h4>Disease/Pest Symptoms and Control</h4>${window.cropDiseaseGuideHtmlV95(row?.name || '')}</section>
+        <section><h4>Revenue and cost source</h4><p>${esc(econNote)}</p><p><strong>${esc(marketLine)}</strong></p></section>
+        <section class="crop-modal-wide"><h4>Maintenance tasks</h4><ol>${steps}</ol></section>
+        <section class="crop-modal-wide"><h4>Disease / pest symptoms and control</h4>${window.cropDiseaseGuideHtmlV95(row?.name || '')}</section>
       </div>`;
   };
   try{ cropFullInfoHtmlV94 = window.cropFullInfoHtmlV94; }catch(_e){}
@@ -5740,7 +5740,7 @@ function renderOfficialAllParcelCompare(basin){
     const curLabel = uiDisplayTextEn(_rowsToLabel(curRows));
     const recLabel = rec && rec.length
       ? (uiDisplayTextEn(_rowsToLabel(rec)) + (recWasGenerated ? ' <span class="badge badge-soft" style="margin-left:6px;">Live</span>' : ''))
-      : '<span class="muted">No recommendation generated</span>';
+      : '<span class="muted">Recommendation not generated</span>';
 
     // Alternatives (top candidates)
     const rankedForCompare = validateRecommendationResultV8(
@@ -5772,7 +5772,7 @@ function renderOfficialAllParcelCompare(basin){
           <td>${_fmtNum(a.water)}</td>
           <td>${_fmtNum(a.profit)}</td>
           <td>${a.eff.toFixed(2)}</td>
-          <td class="muted">${_whyNotText(chosenT,a)}</td>
+          <td class="muted">${escapeHtml(uiDisplayTextEn(_whyNotText(chosenT,a)))}</td>
           <td><button class="btn-link alt-detail-btn-v101" type="button" data-alt-crop-v101="${escapeHtml(a.crop || '')}">Details</button></td>
         </tr>`).join('');
       altHtml = `
@@ -6614,7 +6614,7 @@ function renderManualCsvValidation(){
   const rows = Array.isArray(STATE.manualCsvValidation) ? STATE.manualCsvValidation : [];
   if(summary){
     const names = Array.isArray(STATE.userFiles) ? STATE.userFiles : [];
-    summary.textContent = names.length ? `${names.length} files selected: ${names.join(', ')}` : 'No manual file has been selected yet.';
+    summary.textContent = names.length ? `${names.length} files selected: ${names.join(', ')}` : 'No file selected';
   }
   if(!box) return;
   if(!rows.length){
@@ -8084,7 +8084,7 @@ function renderRunCountCalibrationResults(j, box=document.getElementById('benchm
         <th>Repeat count</th><th>Algorithm</th><th>Mean score</th><th>Best score</th><th>CV</th><th>Feasibility</th><th>Plan diversity</th><th>Dominant plan rate</th><th>Mean runtime</th><th>Marginal improvement</th><th>Comment</th>
       </tr></thead><tbody>${tableRows || '<tr><td colspan="11">No calibration data.</td></tr>'}</tbody></table>
     </div>
-    <p><b>100 tekrar okuması:</b> High tekrar sayısı tekil en iyi sonucu artırsa da ortalama performans, CV, plan çeşitliliği ve süre anlamlı biçimde iyileşmiyorsa operasyonel varsayılan olarak seçilmez.</p>
+    <p><b>100-run reading:</b> A high repeat count can improve the single best result, but it is not selected as the operational default unless mean performance, CV, plan diversity, and runtime improve meaningfully.</p>
   </div>`;
 }
 
@@ -8153,6 +8153,8 @@ function prettyCropName(name){
     "ARPA (YESILOT)": "Barley (Green Fodder)",
     "YULAF (YESILOT)": "Oat (Green Fodder)",
     "CAVDAR (YESILOT)": "Rye (Green Fodder)",
+    "TRTIKALE (YESILOT)": "Triticale (Green Fodder)",
+    "TRITIKALE (YESILOT)": "Triticale (Green Fodder)",
     "TRITIKALE": "Triticale",
     "SALCALIK DOMATES": "Processing Tomato",
     "SOFRALIK DOMATES": "Fresh Tomato",
@@ -8212,7 +8214,8 @@ function prettyCropName(name){
     "BAMYA": "Okra",
     "BEZELYE": "Pea",
     "KARPUZ": "Watermelon",
-    "CILEK": "Strawberry"
+    "CILEK": "Strawberry",
+    "YESILOT": "Green fodder"
   };
   return displayMap[directKey] || displayMap[key] || raw;
 }
@@ -8270,11 +8273,15 @@ function uiDisplayTextEn(value){
     ['Parsel bilgileri Excel kaynağından girildi; kullanıcı yalnızca sınır çizimini/polygonu tamamlayacak.', 'Parcel information was entered from the Excel source; the user will only complete the boundary drawing/polygon.'],
     ['Betül Demir P23 parceli icin mesaj gonderdi.', 'Betül Demir sent a message for parcel P23.'],
     ['Betül Demir P23 parceli için mesaj gönderdi.', 'Betül Demir sent a message for parcel P23.'],
-    ['Betül Demir P23 parceli için alternatif talebi gönderdi.', 'Betül Demir sent an alternative request for parcel P23.'],
-    ['Betül Demir P23 parceli icin alternatif talebi gönderdi.', 'Betül Demir sent an alternative request for parcel P23.'],
-    ['Betül Demir P23 parceli icin alternatif talebi gonderdi.', 'Betül Demir sent an alternative request for parcel P23.'],
+    ['Betül Demir P23 parceli için alternatif talebi gönderdi.', 'Betül Demir submitted an alternative request for parcel P23.'],
+    ['Betül Demir P23 parceli icin alternatif talebi gönderdi.', 'Betül Demir submitted an alternative request for parcel P23.'],
+    ['Betül Demir P23 parceli icin alternatif talebi gonderdi.', 'Betül Demir submitted an alternative request for parcel P23.'],
     ['Talebiniz uzman tarafından onaylandı. Seçilen alternatif onaylı güncel plan sekmesine eklendi.', 'Your request was approved by the expert. The selected alternative was added to the approved current plan tab.'],
     ['Talebiniz uzman tarafından onaylandı.', 'Your request was approved by the expert.'],
+    ['Yönetim tarafından ön kayıt açıldı. İlk girişte bilgi', 'A pre-registration was opened by the administration. Profile information will be completed at first login'],
+    ['Yonetim tarafindan on kayit acildi. Ilk giriste bilgi', 'A pre-registration was opened by the administration. Profile information will be completed at first login'],
+    ['Demo çiftçi hesabı için üç örnek parsel tanımlandı', 'Three sample parcels were assigned to the demo farmer account'],
+    ['Demo ciftci hesabi icin uc ornek parsel tanimlandi', 'Three sample parcels were assigned to the demo farmer account'],
     ['Uzman onayı rica ederim.', 'I kindly request expert approval.'],
     ['Alan bazlı kota mevcut talebe YAKIN', 'Area-based quota is close to current demand'],
     ['Alan bazlı kota mevcut talebi YAKIN', 'Area-based quota is close to current demand'],
@@ -8292,6 +8299,7 @@ function uiDisplayTextEn(value){
     ['Water kotası', 'Water quota'],
     ['su kotası', 'water quota'],
     ['Mevcut pattern / Excel referenceı', 'Current pattern / Excel reference'],
+    ['Mevcut desen / Excel referansı', 'Current pattern / Excel reference'],
     ['Mevcut pattern', 'Current pattern'],
     ['referenceı', 'reference'],
     ['Mevcut', 'Current'],
@@ -8363,7 +8371,10 @@ function uiDisplayTextEn(value){
     ['Kota durumu', 'Quota status'],
     ['Atanan desen', 'Assigned pattern'],
     ['Veri durumu', 'Data status'],
+    ['Yüklü gerçek GeoJSON', 'Loaded real GeoJSON'],
+    ['Panelde çizildi', 'Drawn in panel'],
     ['Tarla', 'Field'],
+    ['Bahçe', 'Orchard'],
     ['Alan', 'Area'],
     ['İlçe', 'District'],
     ['Yer', 'Location'],
@@ -8376,18 +8387,35 @@ function uiDisplayTextEn(value){
     ['Yagmurlama', 'Sprinkler irrigation'],
     ['Damlama', 'Drip irrigation'],
     ['Damla', 'Drip irrigation'],
-    ['Karık/salma', 'Furrow/flood irrigation'],
-    ['Karık / salma', 'Furrow/flood irrigation'],
-    ['Karık/Salma', 'Furrow/flood irrigation'],
+    ['Karık/salma', 'Furrow / flood irrigation'],
+    ['Karık / salma', 'Furrow / flood irrigation'],
+    ['Karık/Salma', 'Furrow / flood irrigation'],
     ['Karık', 'Furrow'],
     ['Salma', 'Flood irrigation'],
     ['Yüzey', 'Surface irrigation'],
-    ['Yazlık', 'Summer season'],
+    ['Yazlık', 'Summer'],
     ['Kışlık', 'Winter / cool season'],
     ['Çok yıllık', 'Perennial'],
     ['Yağışa bağlı', 'Rainfed'],
     ['Genelde sulamasız', 'Generally non-irrigated'],
-    ['Destek sulama', 'Supplemental irrigation']
+    ['Destek sulama', 'Supplemental irrigation'],
+    ['Kıyasla', 'Compare'],
+    ['Alternatif ürün', 'Alternative crop'],
+    ['Neden seçilmedi?', 'Why not selected?'],
+    ['Generate recommendationilemedi', 'Recommendation not generated'],
+    ['Generate recommendation üretilemedi', 'Recommendation not generated'],
+    ['Generate recommendation uretilemedi', 'Recommendation not generated'],
+    ['Recommendationilemedi', 'Recommendation not generated'],
+    ['Alternatif desen üretilemedi.', 'Recommendation not generated.'],
+    ['Alternatif desen uretilemedi.', 'Recommendation not generated.'],
+    ['Bu parsel için alternatif üretilemedi.', 'No alternative could be generated for this parcel.'],
+    ['Atama yapılırsa parsele aktarılır', 'Transferred to the parcel if assigned'],
+    ['Atama yapılırsa', 'If assigned'],
+    ['Yıllık su', 'Annual water'],
+    ['Seçilen alternatif', 'Selected alternative'],
+    ['Selectilen alternatif', 'Selected alternative'],
+    ['Atanacak alternatif bulunamadı.', 'No alternative was found to assign.'],
+    ['Bu parsel için geometri bulunamadı.', 'No geometry was found for this parcel.']
   ];
   for(const [tr, en] of replacements) out = out.split(tr).join(en);
   out = out
@@ -8401,7 +8429,8 @@ function uiDisplayTextEn(value){
     'MARUL','ISPANAK','SOĞAN (KURU)','SOĞAN (TAZE)','PATATES','SALÇALIK DOMATES','SOFRALIK DOMATES',
     'SALÇALIK BİBER','SİVRİ BİBER','KABAK (SAKIZ)','KABAK (BAL)','ELMA','BAĞ','CEVİZ','ERİK','KAYISI',
     'AYVA','ŞEFTALİ','NEKTAR','BADEM','NOHUT','KURU FASULYE','AYÇİÇEĞİ','YONCA','FİĞ','TRİTİKALE',
-    'SİLAJLIK MISIR','ŞEKER PANCARI','SALATALIK','KARPUZ','KAVUN','ARMUT','KİRAZ','VİŞNE','ÜZÜM'
+    'TRTİKALE','ÇAVDAR (Dane)','ÇAVDAR','SİLAJLIK MISIR','ŞEKER PANCARI','SALATALIK','KARPUZ','KAVUN',
+    'ARMUT','KİRAZ','VİŞNE','ÜZÜM','ÇİLEK','MAYDONOZ','MAYDANOZ','YEŞİLOT'
   ];
   for(const crop of cropKeys) out = out.split(crop).join(prettyCropName(crop));
   return out;
@@ -8445,7 +8474,7 @@ function updateBenchmarkDiagnosticChartsV96(j, rows, algos){
   if(benchmarkEffChart){
     benchmarkEffChart.data.labels = rows;
     benchmarkEffChart.data.datasets = [
-      { label:'TL/m³ ort', data:rows.map(a=> +(algos[a]?.efficiency?.mean || 0)), type:'line', borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,.10)', pointRadius:4, tension:.22, yAxisID:'y' },
+      { label:'TL/m³ mean', data:rows.map(a=> +(algos[a]?.efficiency?.mean || 0)), type:'line', borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,.10)', pointRadius:4, tension:.22, yAxisID:'y' },
       { label:'Feasibility %', data:rows.map(a=> +(Number(algos[a]?.feasible_rate || 0) * 100)), type:'line', borderColor:'#0f766e', backgroundColor:'rgba(15,118,110,.10)', pointRadius:4, tension:.22, yAxisID:'y1' },
       { label:'Plan distance %', data:rows.map(a=> +(algos[a]?.plan_distance_pct?.mean || 0)), type:'line', borderColor:'#f97316', backgroundColor:'rgba(249,115,22,.10)', pointRadius:4, tension:.22, yAxisID:'y1' }
     ];
@@ -8466,10 +8495,10 @@ function updateBenchmarkSweepChartsV96(items){
   const ok = (items||[]).filter(x=>x?.raw?.algorithms);
   if(!ok.length) return;
   const titles = document.querySelectorAll('.chart-grid-benchmark .chart-title');
-  if(titles[0]) titles[0].textContent = '30/50/100 profit yakınsaması - normalize skor';
-  if(titles[1]) titles[1].textContent = '30/50/100 water uygunlugu - normalize skor';
-  if(titles[2]) titles[2].textContent = '30/50/100 TL/m³ verimlilik yakınsaması';
-  if(titles[3]) titles[3].textContent = '30/50/100 süre avantajı - normalize skor';
+  if(titles[0]) titles[0].textContent = '30/50/100 profit convergence - normalized score';
+  if(titles[1]) titles[1].textContent = '30/50/100 water suitability - normalized score';
+  if(titles[2]) titles[2].textContent = '30/50/100 TL/m³ efficiency convergence';
+  if(titles[3]) titles[3].textContent = '30/50/100 runtime advantage - normalized score';
   const labels = ok.map(x=>String(x.repeat));
   const algNames = Array.from(new Set(ok.flatMap(x=>Object.keys(x.raw.algorithms || {}))));
   const colors = {GA:'#2563eb', ABC:'#0f766e', ACO:'#f97316'};
@@ -9219,7 +9248,7 @@ function backendStandardCropToUiRow(crop, parcelRef){
     ...crop,
     name,
     area,
-    season: crop?.season || crop?.period_note || inferSeasonLabelFromCrop(name, parcelRef?.parcel_type || ''),
+    season: uiDisplayTextEn(crop?.season || crop?.period_note || inferSeasonLabelFromCrop(name, parcelRef?.parcel_type || '')),
     irrigationCurrentKey: currentKey,
     irrigationCurrentText: crop?.irrigationCurrentText || irrigationLabel(currentKey),
     irrigationSuggestedKey: suggestedKey,
@@ -9240,15 +9269,30 @@ function backendStandardCropToUiRow(crop, parcelRef){
 
 function backendChartLabelTr(label){
   const key = String(label || '').trim().toLowerCase();
+  const normalized = key
+    .replace(/[ığüşöç]/g, ch => ({'ı':'i','ğ':'g','ü':'u','ş':'s','ö':'o','ç':'c'}[ch] || ch))
+    .replace(/â/g, 'a')
+    .replace(/\s+/g, ' ')
+    .trim();
   const map = {
     water_saving: 'Water saving',
+    water_saving_objective: 'Water-saving objective',
+    su_tasarrufu: 'Water-saving objective',
+    su_tasarruf: 'Water-saving objective',
     max_profit: 'Profit-oriented',
+    maks_kar: 'Profit-oriented objective',
+    kar_odakli: 'Profit-oriented objective',
     balanced: 'Water-profit balance',
     water_efficiency: 'Water-profit balance',
+    su_etkin: 'Water-efficiency objective',
+    'su etkin': 'Water-efficiency objective',
+    'su-kar dengesi': 'Water-profit balance',
+    'su kar dengesi': 'Water-profit balance',
+    'water-profit balance': 'Water-profit balance',
     current: 'Current',
     mevcut: 'Current'
   };
-  return map[key] || String(label || '');
+  return map[key] || map[normalized] || uiDisplayTextEn(String(label || ''));
 }
 
 function backendStandardPlanToPattern(plan, parcelRef, baselineTotals, rank=1, selected=false){
@@ -9830,7 +9874,7 @@ function buildCustomParcelTooltipHtml(parcel){
   const label = escapeHtml(String(parcel?.name || parcel?.id || 'User'));
   const approval = customParcelApprovalMeta(parcel);
   const conf = evaluateParcelDataConfidence(parcel);
-  return `<span class="parcel-badge ${typeKey === 'orchard' ? 'orchard' : ''}"><span class="dot"></span><span>${label}</span><span class="hint">${escapeHtml(approval.label)} • Veri: ${escapeHtml(conf.label)}</span></span>`;
+  return `<span class="parcel-badge ${typeKey === 'orchard' ? 'orchard' : ''}"><span class="dot"></span><span>${label}</span><span class="hint">${escapeHtml(uiDisplayTextEn(approval.label))} • Data: ${escapeHtml(conf.label)}</span></span>`;
 }
 
 function ensureCustomLayerTooltip(layer, html){
@@ -9872,15 +9916,15 @@ function buildCustomParcelPopupHtml(parcel){
       </div>
       <div class="s"><span class="k">Area</span><span class="v">${escapeHtml(areaTxt)} da</span></div>
       <div class="s"><span class="k">Area (m²)</span><span class="v">${escapeHtml(areaM2Txt)} m²</span></div>
-      <div class="s"><span class="k">İlçe</span><span class="v">${escapeHtml(p.district || '-')}</span></div>
-      <div class="s"><span class="k">Yer</span><span class="v">${escapeHtml(p.village || '-')}</span></div>
-      <div class="s"><span class="k">Kaynak</span><span class="v right source-file">${escapeHtml(srcTxt)}</span></div>
-      <div class="s"><span class="k">Approval durumu</span><span class="v">${escapeHtml(approval.label)}</span></div>
+      <div class="s"><span class="k">District</span><span class="v">${escapeHtml(uiDisplayTextEn(p.district || '-'))}</span></div>
+      <div class="s"><span class="k">Location</span><span class="v">${escapeHtml(uiDisplayTextEn(p.village || '-'))}</span></div>
+      <div class="s"><span class="k">Source</span><span class="v right source-file">${escapeHtml(uiDisplayTextEn(srcTxt))}</span></div>
+      <div class="s"><span class="k">Approval status</span><span class="v">${escapeHtml(uiDisplayTextEn(approval.label))}</span></div>
       <div class="s"><span class="k">Data confidence</span><span class="v">${parcelConfidenceBadgeHtml(p)}</span></div>
-      <div class="s"><span class="k">Ürün</span><span class="v">${escapeHtml(cropTxt)}</span></div>
+      <div class="s"><span class="k">Crop</span><span class="v">${escapeHtml(prettyCropName(cropTxt))}</span></div>
       <div class="s"><span class="k">Irrigation</span><span class="v">${escapeHtml(irrTxt || '-')}</span></div>
       <div class="s"><span class="k">Farmer</span><span class="v">${escapeHtml(farmerTxt)}</span></div>
-      <div class="small muted" style="margin-top:8px;">${escapeHtml(evaluateParcelDataConfidence(p).note)}${evaluateParcelDataConfidence(p).missing.length ? ' Eksik başlıklar: ' + escapeHtml(evaluateParcelDataConfidence(p).missing.join(', ')) : ''}</div>
+      <div class="small muted" style="margin-top:8px;">${escapeHtml(uiDisplayTextEn(evaluateParcelDataConfidence(p).note))}${evaluateParcelDataConfidence(p).missing.length ? ' Missing fields: ' + escapeHtml(evaluateParcelDataConfidence(p).missing.join(', ')) : ''}</div>
     </div>
   `;
 }
@@ -13028,7 +13072,7 @@ function cropSuitabilityForParcel(parcel, cropName){
 
 function patternSuitabilitySummary(parcel, rows){
   const list = (rows || []).filter(Boolean).map(r=>cropSuitabilityForParcel(parcel, r.name || r.mainCrop || r.crop));
-  if(!list.length) return { score:0, label:'-', basis:'Ürün satırı yok' };
+  if(!list.length) return { score:0, label:'-', basis:'No crop row' };
   const minScore = Math.min(...list.map(x=>safeNum(x.score,0)));
   const weakest = list.sort((a,b)=>safeNum(a.score)-safeNum(b.score))[0];
   return { score:minScore, label:weakest?.label || '-', basis:weakest?.basis || '' };
@@ -13063,7 +13107,7 @@ function rankedCandidatesToUiPatternsV8(parcel, currentRows, rankedCandidates, s
       season: (row?.patternPercent || row?.patternShare) ? 'Pattern share' : (row?.season || (scenarioType === 's2' ? 'Pattern share' : inferSeasonFromCropName(crop) || 'Single season'))
     };
   };
-  const splitLabel = (components)=>components.map(c=>`${c.role || 'Ürün'} %${Math.round(safeNum(c.share,0)*100)}`).join(' + ');
+  const splitLabel = (components)=>components.map(c=>`${uiDisplayTextEn(c.role || 'Crop')} %${Math.round(safeNum(c.share,0)*100)}`).join(' + ');
   return ranked.slice(0, 8).map((candidate, idx)=>{
     const rows = Array.isArray(candidate.rows) ? candidate.rows.filter(Boolean) : [];
     const metrics = candidate.metrics || planDecisionMetricsV8(parcel, rows, baselineTotals, scenarioKey);
@@ -13572,7 +13616,7 @@ function buildAnnualRecommendationPayload(parcel, currentRows, scenarioKey){
   const universe = buildAnnualCandidateUniverse(parcel, currentRows, scenarioKey);
   const currentTotals = sumMetrics(currentRows || []);
   if(!universe.length){
-    const reason = 'Selectilen ürün grubunda bu parsel için güvenilir aday bulunamadı; kategori dışı ürünler ana recommendation yapılmadı ve mevcut desen referans olarak korundu.';
+    const reason = 'No reliable candidate was found in the selected crop group for this parcel; out-of-category crops were not made the main recommendation, and the current pattern was kept as the reference.';
     const rows = (currentRows || []).map(r=>({ ...r, currentReference:true }));
     const metrics = planDecisionMetricsV8(parcel, rows, currentTotals, scenarioKey);
     const selected = {
@@ -13705,7 +13749,7 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
   };
   const splitLabel = (components)=> (components || [])
     .filter(c=>safeNum(c.share, 0) > 0)
-    .map(c=>`${c.role || 'Ürün'} %${Math.round(safeNum(c.share,0)*100)}`)
+    .map(c=>`${uiDisplayTextEn(c.role || 'Crop')} %${Math.round(safeNum(c.share,0)*100)}`)
     .join(' + ') || 'Main crop %100';
   const patternWithDerived = (pattern)=>{
     const water = safeNum(pattern.totalWater, 0);
@@ -14957,7 +15001,7 @@ function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
     const quotaBadge = x.quotaExceeded || x.feasible === false ? '<span class="pattern-risk-badge">Quota exceedance risk / expert approval required</span>' : '<span class="pattern-selected-badge">Quota suitable</span>';
     const scenarioTypeLabel = Array.isArray(x.components) && x.components.length > 1 ? 'Combination / percentage distribution' : 'Single crop';
     const components = Array.isArray(x.components) && x.components.length
-      ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
+      ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(uiDisplayTextEn(c.role || 'Crop'))}: <b>${escapeHtml(prettyCropName(c.crop || '-'))}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
       : '';
     return `<article class="pattern-card-v94${x.selectedRecommendation ? ' pattern-card-selected-v149' : ''}">
       <div class="pattern-card-top">
@@ -15910,7 +15954,7 @@ function renderAllScenarioWatermmaries(){
     try{
       const canvas = chartObj?.canvas || null;
       const title = canvas?.closest?.('.small-chart-card')?.querySelector?.('.card-subtitle');
-      if(title) title.textContent = fallback;
+      if(title) title.textContent = uiDisplayTextEn(fallback);
     }catch(_e){}
   };
   const waterRows = rowsFromBackend(backendWaterChart);
@@ -15922,6 +15966,7 @@ function renderAllScenarioWatermmaries(){
     waterChart.data.datasets[0].data = waterRows.length ? waterRows.map(r=>safeNum(r.value,0)) : [];
     waterChart.data.datasets[0].backgroundColor = labels.map((_,i)=>chartColors[i % chartColors.length]);
     waterChart.data.datasets[0].borderColor = waterChart.data.datasets[0].backgroundColor.map(c=>c.replace('.72','1').replace('.78','1'));
+    waterChart.data.datasets[0].label = uiDisplayTextEn(waterChart.data.datasets[0].label || 'Water use (m³)');
     setChartTitle(waterChart, backendWaterChart?.title || 'Total Water Use by Objective Mode');
     waterChart.update();
   }
@@ -15932,6 +15977,7 @@ function renderAllScenarioWatermmaries(){
     profitChart.data.datasets[0].data = profitRows.length ? profitRows.map(r=>safeNum(r.value,0)) : [];
     profitChart.data.datasets[0].backgroundColor = labels.map((_,i)=>chartColors[i % chartColors.length]);
     profitChart.data.datasets[0].borderColor = profitChart.data.datasets[0].backgroundColor.map(c=>c.replace('.72','1').replace('.78','1'));
+    profitChart.data.datasets[0].label = uiDisplayTextEn(profitChart.data.datasets[0].label || 'Net profit (TL)');
     setChartTitle(profitChart, backendProfitChart?.title || 'Total Net Profit by Objective Mode');
     profitChart.update();
   }
@@ -16585,7 +16631,7 @@ function cropFullInfoHtmlV94(row, idx=0){
   const profitDa = safeNum(row?.profitPerDa, meta.profitPerDa || 0);
   const totalWater = safeNum(row?.totalWater, area * waterDa);
   const totalProfit = safeNum(row?.totalProfit, area * profitDa);
-  const season = row?.season || inferSeasonFromCropName(row?.name || '') || 'No season data';
+  const season = uiDisplayTextEn(row?.season || inferSeasonFromCropName(row?.name || '') || 'No season data');
   const days = stageTotalDays(stageParamsForCrop(row?.name || '')) || cropGrowthDays(row?.name || '', season);
   const thermal = cropThermalNeedV94(row?.name || '');
   const price = safeNum(meta.price_tl_kg ?? meta.priceTlPerKg, NaN);
@@ -16626,7 +16672,7 @@ function cropInfoCardHtmlV93(row, idx=0){
   const totalProfitRaw = safeNum(row?.totalProfit, 0);
   const totalWater = totalWaterRaw > 0 ? totalWaterRaw : fallbackWater;
   const totalProfit = totalProfitRaw !== 0 ? totalProfitRaw : fallbackProfit;
-  const season = row?.season || inferSeasonFromCropName(row?.name || '') || 'No season data';
+  const season = uiDisplayTextEn(row?.season || inferSeasonFromCropName(row?.name || '') || 'No season data');
   const role = idx === 0 ? 'Main crop' : 'Second crop / complementary';
   return `<article class="crop-detail-card crop-detail-card--compact">
     <div class="crop-detail-summary">
@@ -16716,7 +16762,7 @@ function updateProductCards(){
             totalProfit: totalProfitRaw !== 0 ? totalProfitRaw : area * profitPerDa,
             season: (() => {
               const componentSeason = String(c.season || '').trim();
-              return (!componentSeason || componentSeason === '-' || /desen|pay|oran|pattern|share/i.test(componentSeason) ? '' : componentSeason) || inferSeasonFromCropName(cropName) || (idx === 0 ? 'Main crop' : 'Pattern partner');
+              return uiDisplayTextEn((!componentSeason || componentSeason === '-' || /desen|pay|oran|pattern|share/i.test(componentSeason) ? '' : componentSeason) || inferSeasonFromCropName(cropName) || (idx === 0 ? 'Main crop' : 'Pattern partner'));
             })()
           };
         });
@@ -16759,7 +16805,7 @@ function updateProductCards(){
   const pillRows = orchardLockedUi && current && current.length && !hasMultiProductRecommendation ? current.slice(0,1) : topRows;
   const pills = pillRows.map((r, idx)=>{
     const name = escapeHtml(r.name);
-    const season = escapeHtml(r.season || '');
+    const season = escapeHtml(uiDisplayTextEn(r.season || ''));
     const label = season && season !== '-' ? `${name} <span class="pill-season">${season}</span>` : name;
     const sep = (idx < pillRows.length-1) ? `<span class="crop-sep">/</span>` : '';
     return `<span class="crop-pill"><span class="crop-emoji">${emojiFor(r.name)}</span><span class="pill-name">${label}</span></span>${sep}`;
@@ -17317,7 +17363,7 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
     });
 
     // Hover bilgi kutuwater (P + alan + ilçe + yer + kaynak)
-    const tagText = meta.orchard ? 'Bahçe' : 'Tarla';
+    const tagText = meta.orchard ? 'Orchard' : 'Field';
     const villageText = feature?.properties?.village || meta.village || '';
     const districtText = feature?.properties?.district || meta.district || '';
     const waterMode = detectWaterMode(meta, feature, geoFile);
@@ -17333,14 +17379,14 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
         </div>
         <div class="s"><span class="k">Area</span><span class="v">${escapeHtml(fmtDa(areaDa))} da</span></div>
         <div class="s"><span class="k">Area (m²)</span><span class="v">${escapeHtml(Number.isFinite(areaDa) ? Math.round(areaDa * 1000).toLocaleString('tr-TR') : '-')} m²</span></div>
-        <div class="s"><span class="k">District</span><span class="v">${escapeHtml(districtText || '-')}</span></div>
-        <div class="s"><span class="k">Location</span><span class="v">${escapeHtml(villageText || '-')}</span></div>
-        <div class="s"><span class="k">Source</span><span class="v right source-file">${escapeHtml(srcFile || '-')}</span></div>
+        <div class="s"><span class="k">District</span><span class="v">${escapeHtml(uiDisplayTextEn(districtText || '-'))}</span></div>
+        <div class="s"><span class="k">Location</span><span class="v">${escapeHtml(uiDisplayTextEn(villageText || '-'))}</span></div>
+        <div class="s"><span class="k">Source</span><span class="v right source-file">${escapeHtml(uiDisplayTextEn(srcFile || '-'))}</span></div>
         <div class="s"><span class="k">Crop</span><span class="v">${escapeHtml(prettyCropName(meta.crop))}</span></div>
-        <div class="s"><span class="k">Irrigation</span><span class="v">${escapeHtml(meta.irr)}</span></div>
+        <div class="s"><span class="k">Irrigation</span><span class="v">${escapeHtml(uiDisplayTextEn(meta.irr))}</span></div>
         <div class="s"><span class="k">Farmer</span><span class="v">${escapeHtml(meta.farmer)}</span></div>
-        ${meta.selected_pattern ? `<div class="s"><span class="k">Assigned pattern</span><span class="v">${escapeHtml(meta.selected_pattern)}</span></div>` : ''}
-        ${meta.selected_alternative_label ? `<div class="s"><span class="k">Alternative</span><span class="v">${escapeHtml(meta.selected_alternative_label)}</span></div>` : ''}
+        ${meta.selected_pattern ? `<div class="s"><span class="k">Assigned pattern</span><span class="v">${escapeHtml(uiDisplayTextEn(meta.selected_pattern))}</span></div>` : ''}
+        ${meta.selected_alternative_label ? `<div class="s"><span class="k">Alternative</span><span class="v">${escapeHtml(uiDisplayTextEn(meta.selected_alternative_label))}</span></div>` : ''}
         ${meta.assignment_status ? `<div class="s"><span class="k">Status</span><span class="v">${escapeHtml(meta.assignment_status === 'geometry_ready' ? 'GeoJSON loaded / selectable' : meta.assignment_status)}</span></div>` : ''}
       </div>
     `;
@@ -18293,6 +18339,7 @@ function initUserParcelControls(){
   const areaEl = document.getElementById('manualParcelArea');
   const previewEl = document.getElementById('customParcelImagePreview');
   const infoEl = document.getElementById('customParcelUploadInfo');
+  const fileSummaryEl = document.getElementById('customParcelFileSummary');
   const areaToggle = document.getElementById('manualAreaOverrideToggle');
 
   if(areaToggle){
@@ -18311,6 +18358,7 @@ function initUserParcelControls(){
   if(fileInput){
     fileInput.addEventListener('change', async ()=>{
       const f = (fileInput.files || [])[0];
+      if(fileSummaryEl) fileSummaryEl.textContent = f ? f.name : 'No file selected';
       if(!f) return;
       const lname = f.name.toLowerCase();
       try{
@@ -19635,7 +19683,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       benchSweepBtn.disabled = true;
       benchSweepBtn.classList.add('btn-disabled');
       if(st) st.textContent = '10/15/30/50/100 kararlılık analizi çalışıyor...';
-      if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50 ve 100 tekrar düzeyleri GA / ABC / ACO için aynı koşullarda karşılaştırılıyor. Bu işlem ana benchmarktan uzun sürebilir.</div>';
+      if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50, and 100 repeat levels are compared for GA / ABC / ACO under the same conditions. This may take longer than the main benchmark.</div>';
       try{
         const objectiveRaw = (document.querySelector('input[name="scenario"]:checked')?.value || 'su_tasarruf').toString();
         const objective = objectiveRaw === 'mevcut' ? 'su_tasarruf' : objectiveRaw;
@@ -19884,7 +19932,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       return `<option value="${es(val)}"${sel}>${es(f.name)}${f.village ? ' • '+es(f.village) : ''}</option>`;
     }).join('');
     const alternatives=buildParcelAlternativesV14(p);
-    altSel.innerHTML = alternatives.map(a=>`<option value="${es(a.id)}" ${currentAssign?.alternative_id===a.id?'selected':''}>${es(a.label)} • ${fmt0(a.water_m3)} m³ • ${fmt0(a.profit_tl)} TL</option>`).join('') || '<option value="">Alternatif yok</option>';
+    altSel.innerHTML = alternatives.map(a=>`<option value="${es(a.id)}" ${currentAssign?.alternative_id===a.id?'selected':''}>${es(uiDisplayTextEn(a.label))} • ${fmt0(a.water_m3)} m³ • ${fmt0(a.profit_tl)} TL</option>`).join('') || '<option value="">No alternative</option>';
     if(statusSel) statusSel.value = currentAssign?.status || 'draft';
     if(noteInp) noteInp.value = currentAssign?.note || '';
     const activeAlt = alternatives.find(a=>a.id===altSel.value) || alternatives[0];
@@ -19898,10 +19946,10 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     }
     preview.innerHTML = activeAlt ? `
       <div class="assignment-preview-grid">
-        <div><span>Selected pattern</span><strong>${es(activeAlt.pattern)}</strong><small>${es(activeAlt.desc)}</small></div>
-        <div><span>Yıllık su</span><strong>${fmt0(activeAlt.water_m3)} m³</strong><small>Atama yapılırsa parsele aktarılır</small></div>
+        <div><span>Selected pattern</span><strong>${es(uiDisplayTextEn(activeAlt.pattern))}</strong><small>${es(uiDisplayTextEn(activeAlt.desc))}</small></div>
+        <div><span>Annual water</span><strong>${fmt0(activeAlt.water_m3)} m³</strong><small>Transferred to the parcel if assigned</small></div>
         <div><span>Net profit</span><strong>${fmt0(activeAlt.profit_tl)} TL</strong><small>${num(activeAlt.tl_per_m3,0).toFixed(2)} TL/m³</small></div>
-      </div>` : '<div class="small muted">Bu parsel için alternatif üretilemedi.</div>';
+      </div>` : '<div class="small muted">No alternative could be generated for this parcel.</div>';
   }
 
   function applyParcelAssignmentV14(){
@@ -19913,7 +19961,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     const noteInp=document.getElementById('assignmentNoteInput');
     const alternatives=buildParcelAlternativesV14(p);
     const alt=alternatives.find(a=>a.id===altSel?.value) || alternatives[0];
-    if(!alt){ alert('Atanacak alternatif bulunamadı.'); return; }
+    if(!alt){ alert('No alternative was found to assign.'); return; }
     const farmers=farmerOptionsV14();
     const fv=String(farmerSel?.value || '').trim();
     const farmer = farmers.find(f=>(f.username && f.username===fv) || (`name:${f.name}`===fv)) || null;
@@ -19998,7 +20046,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     const ass=getParcelAssignmentV14(p);
     let feature=null;
     try{ feature=JSON.parse(JSON.stringify(p.feature || (typeof buildApproxFeatureForParcel==='function' ? buildApproxFeatureForParcel(p) : null))); }catch(_e){}
-    if(!feature){ alert('Bu parsel için geometri bulunamadı.'); return; }
+    if(!feature){ alert('No geometry was found for this parcel.'); return; }
     feature.type='Feature';
     feature.properties = Object.assign({}, feature.properties || {}, {
       id: p.id,
@@ -20257,7 +20305,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
           <section><div class="parcel-panel-head"><h4>${STATE?.currentUser?.role==='farmer' && ass ? 'Panelinize düşen yeni ürün ataması' : 'Atama bilgisi'}</h4><span>${ass?.assigned_at ? es(new Date(ass.assigned_at).toLocaleDateString('tr-TR')) : 'Henüz atanmadı'}</span></div>
             <div class="assignment-summary-card">
               <div><span>Farmer</span><strong>${es(ass?.farmer_name || p.farmer || 'Not assigned')}</strong></div>
-              <div><span>Selectilen alternatif</span><strong>${es(ass?.alternative_label || 'No assignment made')}</strong></div>
+              <div><span>Selected alternative</span><strong>${es(uiDisplayTextEn(ass?.alternative_label || 'No assignment made'))}</strong></div>
               <div><span>Current crop</span><strong>${es(p.current_crop || '-')}</strong></div>
               <div><span>Atanan yeni ürün/desen</span><strong>${es(ass?.pattern || '-')}</strong></div>
               <div><span>Water / Profit</span><strong>${ass ? `${fmt0(ass.water_m3)} m³ • ${fmt0(ass.profit_tl)} TL` : '-'}</strong></div>
@@ -20957,7 +21005,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     const resp = await fetch('/api/save_panel_geojson', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({feature})});
     const out = await resp.json().catch(()=>null);
     if(out && out.status==='OK'){
-      try{ setUserParcelStatus(`GeoJSON kalıcı klasöre kaydedildi: ${out.filename}`); }catch(_e){}
+      try{ setUserParcelStatus(`GeoJSON saved to the persistent folder: ${out.filename}`); }catch(_e){}
       return out;
     }
     return out || {status:'ERROR'};
@@ -21300,7 +21348,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       {id:'benchmarkProfitChart', labels:['Min','Mean','Max'], title:'Net profit (TL)', getter:row => [n(row.r?.profit?.min), n(row.r?.profit?.mean), n(row.r?.profit?.max)]},
       {id:'benchmarkWaterChart', labels:['Min','Mean','Max'], title:'Water use (m³)', getter:row => [n(row.r?.water?.min), n(row.r?.water?.mean), n(row.r?.water?.max)]},
       {id:'benchmarkEffChart', labels:['Profit','Water','TL/m³','Stability','Feasibility','Decision'], title:'0-100 score', getter:row => [row.pScore,row.suScore,row.eScore,row.stability,row.feasible,row.score]},
-      {id:'benchmarkRuntimeChart', labels:['Hız','CV güveni','Plan güveni','Koşu tamamı','Overfit direnci'], title:'0-100 güven', getter:row => [row.speed, clamp(100-row.avgCv*350), clamp(100-row.plan), clamp(row.runs/Math.max(1,n(j?.repeats))*100), clamp(100-row.plan-row.avgCv*260)]}
+      {id:'benchmarkRuntimeChart', labels:['Speed','CV confidence','Plan confidence','Run completion','Overfit resistance'], title:'0-100 confidence', getter:row => [row.speed, clamp(100-row.avgCv*350), clamp(100-row.plan), clamp(row.runs/Math.max(1,n(j?.repeats))*100), clamp(100-row.plan-row.avgCv*260)]}
     ];
     const dash = {GA:[], ABC:[6,4], ACO:[2,4]};
     charts.forEach(cfg => {
