@@ -15679,7 +15679,7 @@ function initCharts() {
             makeVerticalBarGradient(waterCtx,'rgba(255,175,91,.92)','rgba(255,224,178,.55)'),
             makeVerticalBarGradient(waterCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
           ],
-          borderRadius: 10, borderSkipped: false, maxBarThickness: 58,
+          borderRadius: 10, borderSkipped: false, barThickness: 60, maxBarThickness: 92, categoryPercentage: 0.82, barPercentage: 0.9,
         },
       ],
     },
@@ -15700,7 +15700,7 @@ function initCharts() {
             makeVerticalBarGradient(profitCtx,'rgba(255,159,67,.92)','rgba(255,214,163,.55)'),
             makeVerticalBarGradient(profitCtx,'rgba(126,92,245,.92)','rgba(196,181,253,.55)')
           ],
-          borderRadius: 10, borderSkipped: false, maxBarThickness: 58,
+          borderRadius: 10, borderSkipped: false, barThickness: 60, maxBarThickness: 92, categoryPercentage: 0.82, barPercentage: 0.9,
         },
       ],
     },
@@ -16039,14 +16039,22 @@ function chartBarOptions(yLabel) {
         titleColor:'#fff',
         bodyColor:'#fff',
         padding:10,
+        bodyFont:{ size:12, weight:'600' },
         cornerRadius:10,
         callbacks:{
           label:(ctx)=>{
             const v=(ctx&&ctx.parsed&&typeof ctx.parsed.y!=='undefined')?ctx.parsed.y:(ctx.raw||0);
-            const name=(ctx.dataset&&ctx.dataset.label)?ctx.dataset.label:'';
-            return (name?(name+': '):'')+fmtNum(v,2);
+            return `${ctx.dataset.label || ''}: ${fmtNum(v,0)} ${yLabel||''}`;
           }
         }
+      }
+    },
+    datasets:{
+      bar:{
+        categoryPercentage:0.82,
+        barPercentage:0.9,
+        barThickness:60,
+        maxBarThickness:92
       }
     },
     scales:{

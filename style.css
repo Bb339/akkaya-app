@@ -13524,3 +13524,57 @@ body.role-farmer #waterRiskSection .drought-main-container{
     height:54px !important;
   }
 }
+
+/* Optimization result cards: keep the two charts and recommendation card balanced. */
+.right-middle{
+  align-items:stretch;
+}
+
+.right-middle > .small-chart-card{
+  min-height:380px !important;
+  max-height:390px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.right-middle > .small-chart-card > canvas{
+  width:100% !important;
+  height:265px !important;
+  min-height:250px !important;
+  max-height:280px !important;
+  flex:0 0 265px !important;
+  aspect-ratio:auto !important;
+}
+
+.right-middle > .small-chart-card > .small.muted{
+  margin-top:auto;
+  line-height:1.45;
+}
+
+.right-middle > .small-chart-card #productCards{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  padding-right:6px;
+  align-content:flex-start;
+}
+
+@media (max-width: 900px){
+  .right-middle > .small-chart-card{
+    min-height:0 !important;
+    max-height:none;
+  }
+
+  .right-middle > .small-chart-card > canvas{
+    height:220px !important;
+    min-height:210px !important;
+    max-height:240px !important;
+    flex-basis:220px !important;
+  }
+
+  .right-middle > .small-chart-card #productCards{
+    overflow-y:visible;
+    padding-right:0;
+  }
+}
