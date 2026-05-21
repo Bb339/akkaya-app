@@ -128,7 +128,7 @@ def test_benchmark_metrics_and_completion(client):
     assert data["requested_total_runs"] == 5
     for key in ("best_profit", "mean_profit", "std_profit", "cv", "best_water", "mean_water", "tl_per_m3", "feasible_rate", "mean_runtime"):
         assert ga[key] is not None
-    assert "ustunluk yorumu" in data["interpretation"]
+    assert "superiority across algorithms" in data["interpretation"]
 
 
 def test_optimize_payload_keeps_core_contract_and_no_infeasible_contradiction(client):
@@ -310,7 +310,7 @@ def test_quota_exceeded_plan_or_alternative_is_not_selectable(client):
     if plan["feasible"] is False:
         assert plan["selectable"] is False
         assert plan["status"] == "no_feasible_two_crop_plan"
-        assert "uygulanabilir iki urunlu/desenli plan bulunamadi" in plan["explanation"]
+        assert "No feasible two-crop/pattern plan was found" in plan["explanation"]
     for alt in data["alternatives"]:
         if alt.get("feasible") is False:
             assert alt.get("selectable") is False
@@ -360,7 +360,7 @@ def test_s2_area_share_repair_can_show_50_50_on_2700_da():
     plan = data["selected_plan"]
     shares = [round(c["area_share_pct"]) for c in plan["crops"]]
     areas = [round(c["area_da"]) for c in plan["crops"]]
-    assert plan["pattern_type"] == "Alan paylasimli desen"
+    assert plan["pattern_type"] == "Area-sharing pattern"
     assert shares == [50, 50]
     assert areas == [1350, 1350]
     assert sum(shares) == 100
@@ -547,7 +547,7 @@ def test_run_count_calibration_candidates_and_selection_not_best_score_only():
 
 def test_completion_status_helpers_distinguish_partial_and_completed():
     assert app_module._completion_status_kind(4, 90) == "partial"
-    assert "K" in app_module._completion_status_label(4, 90)
+    assert "Partial result:" in app_module._completion_status_label(4, 90)
     assert app_module._completion_status_kind(90, 90) == "completed"
 
 
@@ -627,7 +627,7 @@ def test_partial_benchmark_language_is_preliminary_not_definitive():
     app_source = (ROOT / "app.py").read_text(encoding="utf-8")
     assert "Preliminary assessment" in script
     assert "Partial result:" in script
-    assert "kesin en iyi algoritma dili kullanilmamalidir" in app_source
+    assert "definitive best-algorithm language should not be used" in app_source
     assert "Kesin en iyi" not in script
 
 

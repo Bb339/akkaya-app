@@ -18,7 +18,7 @@ import statistics
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 APP_BUILD = "v1.0-tez-prototipi-diversity-soft"
-APP_TITLE = "Tarımsal Karar Destek Sistemi"
+APP_TITLE = "Agricultural Decision Support System"
 APP_GENERATED_AT = datetime.now(timezone.utc).isoformat()
 
 app = Flask(__name__, static_folder=None)
@@ -99,7 +99,7 @@ def normalize_parcel_id(pid: Any) -> str:
     if not s:
         return ""
     s = s.replace(" ", "")
-    # Historic Sazlıca ids in season CSVs used SAZ_P### while the active project uses P#.
+    # Historic SazlÃ„Â±ca ids in season CSVs used SAZ_P### while the active project uses P#.
     m = re.match(r'^SAZ[_-]?P0*([0-9]+)$', s)
     if m:
         return f"P{int(m.group(1))}"
@@ -278,8 +278,7 @@ def load_area_overrides() -> Dict[str, Dict[str, float]]:
 def normalize_crop_key(name: str) -> str:
     s = (name or "").strip().upper()
     # Turkish -> ASCII-like
-    tr_map = str.maketrans({"Ç":"C","Ğ":"G","İ":"I","Ö":"O","Ş":"S","Ü":"U","\u00c2":"A","Û":"U","Î":"I",
-                            "ç":"C","ğ":"G","ı":"I","ö":"O","ş":"S","ü":"U"})
+    tr_map = str.maketrans("\u00c7\u011e\u0130\u00d6\u015e\u00dc\u00c2\u00db\u00ce\u00e7\u011f\u0131\u00f6\u015f\u00fc\u00e2\u00fb\u00ee", "CGIOSUAUIcgiosuaui")
     s = s.translate(tr_map)
     for ch in ["-", ".", ",", "(", ")", "[", "]", "{", "}", "/"]:
         s = s.replace(ch, " ")
@@ -297,11 +296,11 @@ _CANONICAL_CROP_ALIASES = {
     "UZUM_SOFRALIK": "BAG",
     "UZUM_SARAPLIK": "BAG",
     "VISNE": "VISNE",
-    "VİSNE": "VISNE",
+    "VÃ„Â°SNE": "VISNE",
     "SEFTALI": "SEFTALI",
     "ERIK": "ERIK",
     "CEVIZ": "CEVIZ",
-    "CEVİZ": "CEVIZ",
+    "CEVÃ„Â°Z": "CEVIZ",
 }
 
 
@@ -309,8 +308,8 @@ def canonical_crop_key(name: str) -> str:
     """Return a stable crop key for cross-file matching.
 
     The Excel-derived matrix sometimes stores crops as compact ids such as
-    BUGDAYDANE, while UI/catalog records use names such as BUĞDAY (Dane) or
-    BUGDAY_DANE. For decision locking ("mevcut ürün"), perennial protection and
+    BUGDAYDANE, while UI/catalog records use names such as BUÃ„ÂDAY (Dane) or
+    BUGDAY_DANE. For decision locking ("mevcut ÃƒÂ¼rÃƒÂ¼n"), perennial protection and
     candidate filtering we compare the compact canonical form.
     """
     nk = normalize_crop_key(name)
@@ -414,7 +413,7 @@ def _realistic_profit_per_da(crop_key: str, profit_per_da: float) -> float:
 
     ck = normalize_crop_key(crop_key)
 
-    # Base caps (TL/da) — conservative to keep thesis outputs defendable.
+    # Base caps (TL/da) Ã¢â‚¬â€ conservative to keep thesis outputs defendable.
     # These represent *net* profit per decare and already embed a risk discount.
     cap_default = 8000.0
     cap_rainfed = 4500.0
@@ -505,7 +504,7 @@ def catalog_parcel_type(rec: Optional[Dict[str, Any]]) -> str:
         if val in ("field", "vegetable", "orchard"):
             return val
     cat = str(rec.get("category", "") or rec.get("kategori", "")).strip().lower()
-    if "meyve" in cat or "bağ" in cat:
+    if "meyve" in cat or "baÃ„Å¸" in cat:
         return "orchard"
     if "sebze" in cat:
         return "vegetable"
@@ -547,12 +546,12 @@ def infer_crop_season_label(crop_name: str, parcel_type: str = "") -> str:
     nk = normalize_crop_key(crop_name)
     ptype = str(parcel_type or "").strip().lower()
     if ptype == "orchard":
-        return "Çok yıllık / bahçe"
+        return "Perennial / orchard"
     if any(x in nk for x in ("DOMATES","BIBER","KABAK","PATLICAN","HIYAR","KARPUZ","KAVUN","MISIR","PANCAR","PATATES","AYCICEGI","SOGAN","SARIMSAK","LAHANA","FASULYE_TAZE","CILEK")):
-        return "Yazlık"
-    if any(x in nk for x in ("BUGDAY","ARPA","CAVDAR","YULAF","TRITIKALE","MERCIMEK","NOHUT","FIG","FIĞ","YEM_BEZELYESI")):
-        return "Kışlık / serin dönem"
-    return "Ana ürün"
+        return "Summer"
+    if any(x in nk for x in ("BUGDAY","ARPA","CAVDAR","YULAF","TRITIKALE","MERCIMEK","NOHUT","FIG","YEM_BEZELYESI")):
+        return "Winter / cool season"
+    return "Main crop"
 
 
 def _soil_rank_from_text(value: Any) -> int:
@@ -602,65 +601,65 @@ def _agronomic_reason_bundle(
     score = 0.0
 
     season_label = infer_crop_season_label(candidate_crop, ptype)
-    reasons.append(f"Mevsim uyumu: {season_label}.")
+    reasons.append(f"Season suitability: {season_label}.")
     score += 0.14
 
     full_fit = feasible_area_da >= max(0.0, area_da) - 1e-6
     coverage_pct = 100.0 * feasible_area_da / max(1e-9, area_da)
     if full_fit:
-        reasons.append("Parsel su kotasına tam sığıyor.")
+        reasons.append("The parcel fully fits within the water quota.")
         score += 0.28
     else:
-        reasons.append(f"Su kotası nedeniyle alanın yaklaşık %{coverage_pct:.0f} kadarı güvenli görünüyor.")
-        cautions.append("Tam parsel yerine kota kadar ekim önerildi.")
+        reasons.append(f"Because of the water quota, approximately {coverage_pct:.0f}% of the area appears safe.")
+        cautions.append("Planting was recommended only up to the quota instead of the full parcel.")
         score += 0.10
 
     if ptype == "orchard":
         if cand_key == cur_key:
-            reasons.append("Çok yıllık parselde kurulu ana ürün korunuyor.")
+            reasons.append("The established main crop is preserved in the perennial parcel.")
             score += 0.30
         else:
-            cautions.append("Bahçe parselinde ana ürün değişimi uygun değildir.")
+            cautions.append("Changing the main crop is not suitable in an orchard parcel.")
             score -= 0.60
     else:
         if cand_fam and cur_fam and cand_fam == cur_fam and cand_key != cur_key:
-            cautions.append("Mevcut ürünle aynı familya; hastalık/rotasyon baskısı artabilir.")
+            cautions.append("Same family as the current crop; disease/rotation pressure may increase.")
             score -= 0.18
         elif cand_fam and cur_fam and cand_fam != cur_fam:
-            reasons.append("Farklı familya; rotasyon ve hastalık baskısı açısından daha dengeli.")
+            reasons.append("Different family; more balanced in terms of rotation and disease pressure.")
             score += 0.16
 
     soil_rank = _soil_rank_from_text(lcc_text)
     high_input = any(x in cand_key for x in ("DOMATES","BIBER","PATATES","PANCAR","KABAK","KAVUN","KARPUZ","SOGAN","SARIMSAK","LAHANA"))
     if high_input and soil_rank >= 5:
-        cautions.append(f"Toprak kabiliyet sınıfı {soil_rank}; yüksek girdi isteyen ürün dikkatle yönetilmeli.")
+        cautions.append(f"Land capability class {soil_rank}; high-input crops should be managed carefully.")
         score -= 0.12
     elif (not high_input) and soil_rank >= 5:
-        reasons.append("Toprak sınıfı zayıf olduğu için daha dayanıklı ürün lehine uyumlu.")
+        reasons.append("Because the soil class is weak, the candidate is compatible as a more resilient crop.")
         score += 0.08
     else:
-        reasons.append("Toprak sınıfı ürün tipi için kabul edilebilir.")
+        reasons.append("The soil class is acceptable for this crop type.")
         score += 0.08
 
     irr = str(irrigation_text or "").strip()
     if irr:
         if "damla" in irr.lower():
-            reasons.append("Önerilen sulama yöntemi damla; su verimliliği açısından güçlü.")
+            reasons.append("The recommended irrigation method is drip irrigation; it is strong for water efficiency.")
             score += 0.08
-        elif "yağmurlama" in irr.lower() or "yagmurlama" in irr.lower():
-            reasons.append("Yağmurlama ile uygulanabilir.")
+        elif "yaÃ„Å¸murlama" in irr.lower() or "yagmurlama" in irr.lower():
+            reasons.append("Feasible with sprinkler irrigation.")
             score += 0.04
         elif "kuru" in irr.lower():
-            reasons.append("Yağışa bağlı / destek sulama ile düşünülebilir.")
+            reasons.append("Can be considered with rainfed / supplemental irrigation.")
             score += 0.02
 
     if peak_month:
-        reasons.append(f"Pik su dönemi: {peak_month}.")
+        reasons.append(f"Peak water period: {peak_month}.")
         score += 0.02
 
     modeled_factors = [
-        "su kotası", "mevsim etiketi", "ürün familyası / rotasyon",
-        "parsel tipi", "toprak kabiliyet sınıfı", "sulama yöntemi", "pik su ayı"
+        "water quota", "season label", "crop family / rotation",
+        "parcel type", "land capability class", "irrigation method", "peak water month"
     ]
     if cautions:
         score = max(0.0, min(1.0, score))
@@ -937,17 +936,17 @@ def compute_diversity_metrics(plan_rows: List[Dict[str, Any]], total_area_da: fl
     warnings: List[str] = []
     if top_crop and top_share > max_crop + 1e-9:
         warnings.append(
-            f"{top_crop}, değişen öneri alanının %{top_share * 100:.1f}'ini kaplamaktadır. "
-            f"Bu değer %{max_crop * 100:.0f} çeşitlilik sınırını aşmaktadır."
+            f"{top_crop} covers {top_share * 100:.1f}% of the changed recommended area. "
+            f"This exceeds the {max_crop * 100:.0f}% diversity threshold."
         )
     if top3_share > max_top3 + 1e-9:
         warnings.append(
-            f"İlk 3 ürün, değişen öneri alanının %{top3_share * 100:.1f}'ini kaplamaktadır. "
-            f"Bu değer %{max_top3 * 100:.0f} sınırını aşmaktadır."
+            f"The top 3 crops cover {top3_share * 100:.1f}% of the changed recommended area. "
+            f"This exceeds the {max_top3 * 100:.0f}% threshold."
         )
     if hhi > hhi_target + 1e-9:
         warnings.append(
-            f"HHI ürün yoğunlaşma endeksi {hhi:.3f}; hedef değer {hhi_target:.3f} üzerindedir."
+            f"The HHI crop concentration index is {hhi:.3f}; it is above the target value of {hhi_target:.3f}."
         )
     penalty = _diversity_penalty_from_shares(list(shares_changed.values()), cfg)
     feasible = bool((top_share <= max_crop + 1e-9) and (top3_share <= max_top3 + 1e-9) and (hhi <= hhi_target + 1e-9))
@@ -1038,12 +1037,12 @@ def compute_agronomic_risk_metrics(plan: Any, context: Optional[Dict[str, Any]] 
     if family_shares:
         top_family, top_family_share = next(iter(family_shares.items()))
         rotation_level = "high" if top_family_share >= 0.50 else ("medium" if top_family_share >= 0.35 else "low")
-        rotation_note = f"Ayni urun familyasinda yogunlasma payi %{top_family_share * 100:.1f} duzeyindedir."
+        rotation_note = f"Concentration in the same crop family is at {top_family_share * 100:.1f}%."
         rotation_data_status = "available"
     else:
         top_family, top_family_share = "", 0.0
         rotation_level = "medium" if top_share >= 0.35 else "low"
-        rotation_note = "Urun familyasi verisi sinirli; bu risk yogunlasma gostergelerine dayali karar destek notudur."
+        rotation_note = "Crop family data is limited; this risk is a decision-support note based on concentration indicators."
         rotation_data_status = "limited"
 
     period_area: Dict[str, float] = {}
@@ -1066,7 +1065,7 @@ def compute_agronomic_risk_metrics(plan: Any, context: Optional[Dict[str, Any]] 
     else:
         period, period_share = "", 0.0
         labor_level = "medium" if top3_share >= 0.75 else "low"
-        labor_note = "Hasat donemi verisi sinirli; iscilik yogunlugu yorumu urun yogunlasmasina dayali varsayimsal risk notudur."
+        labor_note = "Harvest-period data is limited; the labor concentration interpretation is an indicative risk note based on crop concentration."
         labor_data_status = "limited"
 
     storage_fields = ("storageClass", "storage_class", "depolama_sinifi", "durabilityClass", "dayaniklilik_sinifi")
@@ -1079,11 +1078,11 @@ def compute_agronomic_risk_metrics(plan: Any, context: Optional[Dict[str, Any]] 
             storage_values.append(val)
     if storage_values:
         storage_level = "medium" if market_level == "high" else "low"
-        storage_note = "Depolama/dayaniklilik sinifi verisi olan urunler icin pazarlama hassasiyeti ayrica izlenmelidir."
+        storage_note = "Marketing sensitivity should also be monitored for crops with storage/durability class data."
         storage_data_status = "available"
     else:
         storage_level = "medium" if market_level == "high" else "low"
-        storage_note = "Depolama veya dayaniklilik sinifi verisi sinirli; kesin pazarlama tahmini olarak yorumlanmamalidir."
+        storage_note = "Storage or durability class data is limited; this should not be interpreted as a precise marketing forecast."
         storage_data_status = "limited"
 
     baseline_rows = ctx.get("baseline_rows") if isinstance(ctx.get("baseline_rows"), list) else []
@@ -1107,26 +1106,26 @@ def compute_agronomic_risk_metrics(plan: Any, context: Optional[Dict[str, Any]] 
     if comparable_area > 0:
         transition_share = float(changed_transition_area / max(1e-9, comparable_area))
         transition_level = "high" if transition_share >= 0.60 else ("medium" if transition_share >= 0.30 else "low")
-        transition_note = f"Mevcut urunden farkli onerilen alan payi %{transition_share * 100:.1f}; gecis ve adaptasyon planlamasi gerekebilir."
+        transition_note = f"The share of area recommended to shift away from the current crop is {transition_share * 100:.1f}%; transition and adaptation planning may be needed."
         transition_data_status = "available"
     else:
         transition_share = 0.0
         transition_level = "medium" if top3_share >= 0.75 else "low"
-        transition_note = "Mevcut urun-parsel eslesmesi sinirli; gecis riski plan farki yerine yogunlasma gostergeleriyle yorumlanmalidir."
+        transition_note = "Current crop-parcel matching is limited; transition risk is interpreted with concentration indicators instead of direct plan difference."
         transition_data_status = "limited"
 
     levels = [market_level, rotation_level, labor_level, storage_level, transition_level]
     overall_score = max(_level_score(x) for x in levels)
     notes = [
-        "Bu risk katmani yalnizca karar destek uyarisidir; algoritma skoru, net kar, su, TL/m3, feasible veya selectable alanlarini degistirmez.",
-        "Pazar/fiyat baskisi uyarisi gercek fiyat elastikiyeti tahmini degildir; urun yogunlasmasi gostergelerine dayanir.",
+        "This risk layer is only a decision-support warning; it does not change algorithm score, net profit, water use, TL/m3, feasible, or selectable fields.",
+        "The market/price pressure warning is not a real price-elasticity estimate; it is based on crop concentration indicators.",
     ]
     if rotation_data_status == "limited":
-        notes.append("Münavebe/familya verisi sinirli oldugu icin rotasyon riski kesin hastalik tahmini olarak yorumlanmamalidir.")
+        notes.append("Because rotation/family data is limited, rotation risk should not be interpreted as a definitive disease forecast.")
     if labor_data_status == "limited":
-        notes.append("Hasat/iscilik riski, takvim verisi sinirli oldugunda varsayimsal risk notu olarak verilmiştir.")
+        notes.append("When calendar data is limited, harvest/labor risk is provided as an indicative risk note.")
     if storage_data_status == "limited":
-        notes.append("Depolama/pazarlama hassasiyeti icin urun bazli depolama verisi sinirlidir.")
+        notes.append("Crop-level storage data is limited for storage/marketing sensitivity.")
 
     return {
         "overall_level": _risk_level(overall_score),
@@ -1138,9 +1137,9 @@ def compute_agronomic_risk_metrics(plan: Any, context: Optional[Dict[str, Any]] 
             "hhi": float(hhi),
             "basis": "diversity_concentration",
             "message": (
-                f"{top_crop} değişen öneri alanında %{top_share * 100:.1f} paya sahiptir; pazar doygunluğu ve fiyat baskısı açısından dikkatli izlenmelidir."
+                f"{top_crop} has a {top_share * 100:.1f}% share in the changed recommended area; it should be monitored carefully for market saturation and price-pressure risk."
                 if top_crop else
-                "Ürün yoğunlaşması hesaplanamadı; pazar riski için veri sınırlıdır."
+                "Crop concentration could not be calculated; data is limited for market risk."
             ),
         },
         "rotation_risk": {
@@ -1238,7 +1237,7 @@ def load_parcels() -> List[Dict[str, Any]]:
     if key in _cache:
         return _cache[key]
 
-    
+
     # GeoJSON-derived parcel area overrides (optional)
     overrides = load_area_overrides()
 
@@ -1358,7 +1357,7 @@ def load_parcels() -> List[Dict[str, Any]]:
             wpd = water_m3 / area_da if water_m3 > 0 else 0.0
             ppd = profit_tl / area_da if profit_tl > 0 else 0.0
             # Typical annual delivered irrigation demand in this demo ranges roughly
-            # ~100–2000 m3/da depending on crop + method. Below 60 is almost certainly wrong.
+            # ~100Ã¢â‚¬â€œ2000 m3/da depending on crop + method. Below 60 is almost certainly wrong.
             if (wpd > 0 and wpd < 60) or (wpd > 6000):
                 water_m3 = 0.0
             # Profit intensity sanity: below 200 TL/da is unlikely for the catalog here.
@@ -1480,7 +1479,7 @@ def merge_frontend_custom_parcels(base_parcels: List[Dict[str, Any]], custom_par
         rec = {
             "id": pid,
             "name": str(raw.get("name", pid) or pid),
-            "village": str(raw.get("village", "Sazlıca") or "Sazlıca").strip(),
+            "village": str(raw.get("village", "SazlÃ„Â±ca") or "SazlÃ„Â±ca").strip(),
             "district": str(raw.get("district", "Merkez") or "Merkez").strip(),
             "area_da": float(max(0.0, area_da)),
             "area_m2": float(max(0.0, area_da) * 1000.0),
@@ -1509,7 +1508,7 @@ def merge_frontend_custom_parcels(base_parcels: List[Dict[str, Any]], custom_par
 
 
 def load_crop_catalog() -> Dict[str, Dict[str, Any]]:
-    """Load Sazlıca crop catalog from CSV.
+    """Load SazlÃ„Â±ca crop catalog from CSV.
 
     Expected columns:
       urun_adi, su_tuketimi_m3_da, beklenen_verim_kg_da, net_kar_tl_da,
@@ -1613,16 +1612,16 @@ def load_s1_crop_calendar_rules() -> dict:
         if rules_path.exists():
             rules = json.loads(rules_path.read_text(encoding="utf-8"))
         else:
-            err = f"rules file missing: {rules_path}" 
+            err = f"rules file missing: {rules_path}"
     except Exception as e:
-        err = f"failed to read rules: {e}" 
+        err = f"failed to read rules: {e}"
         rules = {}
 
-    # Normalize rule crop names to match catalog (handles shorthand like 'Fiğ' vs 'Fiğ (Yeşilot)')
+    # Normalize rule crop names to match catalog (handles shorthand like 'FiÃ„Å¸' vs 'FiÃ„Å¸ (YeÃ…Å¸ilot)')
     _aliases = {
-        'Fiğ': 'Fiğ (Yeşilot)',
-        'Ayçiçeği (Yağlık)': 'Ayçiçeği',
-        'Ayçiçeği (Yağlık )': 'Ayçiçeği',
+        'FiÃ„Å¸': 'FiÃ„Å¸ (YeÃ…Å¸ilot)',
+        'AyÃƒÂ§iÃƒÂ§eÃ„Å¸i (YaÃ„Å¸lÃ„Â±k)': 'AyÃƒÂ§iÃƒÂ§eÃ„Å¸i',
+        'AyÃƒÂ§iÃƒÂ§eÃ„Å¸i (YaÃ„Å¸lÃ„Â±k )': 'AyÃƒÂ§iÃƒÂ§eÃ„Å¸i',
         'Yem Bezelyesi': 'Yem Bezelyesi',
     }
     if isinstance(rules, dict) and rules:
@@ -1678,7 +1677,7 @@ def load_s1_crop_calendar_rules() -> dict:
             continue
         k = normalize_crop_key(name)
         water_per_da = float(r.get("su_tuketimi_m3_da", 0) or 0)
-        # net kar öncelikli; yoksa verim*fiyat - maliyet
+        # net kar ÃƒÂ¶ncelikli; yoksa verim*fiyat - maliyet
         if pd.notna(r.get("net_kar_tl_da", None)):
             profit_per_da = float(r.get("net_kar_tl_da", 0) or 0)
         else:
@@ -1699,7 +1698,7 @@ def load_s1_crop_calendar_rules() -> dict:
 
 
 def merged_pattern_candidates(village: str, district: str, top_n: int = 12, parcel_type: str = "") -> List[Tuple[str, float]]:
-    """Return Sazlıca candidate crops with weights from village/district pattern JSON.
+    """Return SazlÃ„Â±ca candidate crops with weights from village/district pattern JSON.
 
     If parcel_type is provided (field / vegetable / orchard), only that pool is returned.
     """
@@ -1709,7 +1708,7 @@ def merged_pattern_candidates(village: str, district: str, top_n: int = 12, parc
     district_obj = load_json(district_path) if district_path.exists() else {}
 
     merged: Dict[str, float] = {}
-    type_label = {"field":"Tarla/Yem","vegetable":"Sebze","orchard":"Meyve/Bağ"}.get(str(parcel_type or "").strip().lower(), "")
+    type_label = {"field":"Tarla/Yem","vegetable":"Sebze","orchard":"Meyve/BaÃ„Å¸"}.get(str(parcel_type or "").strip().lower(), "")
 
     def _consume(obj: Any, weight: float) -> None:
         if not isinstance(obj, dict):
@@ -1727,7 +1726,7 @@ def merged_pattern_candidates(village: str, district: str, top_n: int = 12, parc
                 merged[ck] = merged.get(ck, 0.0) + weight * sh
 
     _consume(district_obj.get(normalize_crop_key(district), {}), 0.6)
-    _consume(village_obj.get(village, {}) or village_obj.get("Sazlıca", {}), 0.4)
+    _consume(village_obj.get(village, {}) or village_obj.get("SazlÃ„Â±ca", {}), 0.4)
 
     if not merged:
         cat = load_crop_catalog()
@@ -1743,7 +1742,7 @@ def merged_pattern_candidates(village: str, district: str, top_n: int = 12, parc
 
 
 def recommend_crop_for_parcel(parcel: Dict[str, Any], algo: str = "GA") -> Optional[Dict[str, Any]]:
-    """Transparent single-parcel recommendation based on Sazlıca crop pools."""
+    """Transparent single-parcel recommendation based on SazlÃ„Â±ca crop pools."""
     catalog = load_crop_catalog()
     if not catalog:
         return None
@@ -1751,7 +1750,7 @@ def recommend_crop_for_parcel(parcel: Dict[str, Any], algo: str = "GA") -> Optio
     if not ptype or ptype == "auto":
         ptype = infer_parcel_type_for_selection(parcel)
     current_crop = normalize_crop_key(str(parcel.get("current_crop", "") or "").strip())
-    candidates = merged_pattern_candidates(parcel.get("village","Sazlıca"), parcel.get("district","MERKEZ"), parcel_type=ptype)
+    candidates = merged_pattern_candidates(parcel.get("village","SazlÃ„Â±ca"), parcel.get("district","MERKEZ"), parcel_type=ptype)
     best = None
     best_score = -1e18
     for crop_name, share in candidates:
@@ -2330,7 +2329,7 @@ def compute_monthly_delivery_report(total_water_m3: float,
                                    monthly_demand_override: Optional[List[float]] = None) -> Optional[Dict[str, Any]]:
     """Build a UI-friendly monthly delivery capacity report.
 
-    If monthly_demand_override is provided, it must be a list of length 12 (m³ per month).
+    If monthly_demand_override is provided, it must be a list of length 12 (mÃ‚Â³ per month).
     Otherwise demand is approximated by distributing total_water_m3 using month_weights.
     """
     if month_caps is None or month_weights is None:
@@ -2370,7 +2369,7 @@ def _monthly_demand_from_mu(areas_da: np.ndarray,
                            MU2: Optional[np.ndarray],
                            ch1: np.ndarray,
                            ch2: np.ndarray) -> Optional[List[float]]:
-    """Compute 12-month demand (m³) using FAO-56 monthly irrigation matrices (m³/da)."""
+    """Compute 12-month demand (mÃ‚Â³) using FAO-56 monthly irrigation matrices (mÃ‚Â³/da)."""
     try:
         if MU1 is None:
             return None
@@ -2428,7 +2427,7 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
         src = "s1"
     # Season-source selection with a robust fallback.
     # Problem observed in field: Senaryo-2 dataset may not contain rows for the selected parcels/year,
-    # which previously caused empty candidates and therefore "boş sonuç" in the UI.
+    # which previously caused empty candidates and therefore "boÃ…Å¸ sonuÃƒÂ§" in the UI.
     if src == "s1":
         seasons = frames.get("s1", pd.DataFrame()).copy()
     elif src == "s2":
@@ -2466,7 +2465,7 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
     }.items():
         if _col not in seasons.columns:
             seasons[_col] = _default
-    # Normalise parcel ids aggressively to prevent "Senaryo-2 sonuç yok" issues
+    # Normalise parcel ids aggressively to prevent "Senaryo-2 sonuÃƒÂ§ yok" issues
     # caused by whitespace / casing inconsistencies between parcel meta and season CSVs.
     seasons["parcel_id"] = seasons["parcel_id"].astype(str).map(normalize_parcel_id)
     seasons["crop_key"] = seasons["crop"].astype(str).map(normalize_crop_key)
@@ -2519,16 +2518,16 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
 
 
     crop_list = sorted([c for c in agg["crop_key"].dropna().unique().tolist() if str(c).strip()])
-    # Senaryo-1: kullanıcı tarafından eklenen Niğde odaklı ürünler (sezon verisinde yoksa bile aday havuzuna dahil)
+    # Senaryo-1: kullanÃ„Â±cÃ„Â± tarafÃ„Â±ndan eklenen NiÃ„Å¸de odaklÃ„Â± ÃƒÂ¼rÃƒÂ¼nler (sezon verisinde yoksa bile aday havuzuna dahil)
     try:
         src_norm = str(season_source or "s1").lower().strip()
         if src_norm in ("s1","senaryo1","scenario1","1"):
             extra_s1 = [
-                "SALÇALIK DOMATES","SOFRALIK DOMATES","LAHANA (BEYAZ)","KABAK (ÇEREZLİK)","FASULYE (TAZE)",
-                "SOĞAN (KURU)","KAVUN","SALÇALIK BİBER",
-                "PATATES","SİLAJLIK MISIR","YONCA (YEŞİLOT)","BUĞDAY (DANE)","ARPA (DANE)","ŞEKER PANCARI","ÇAVDAR (DANE)"
+                "SALÃƒâ€¡ALIK DOMATES","SOFRALIK DOMATES","LAHANA (BEYAZ)","KABAK (Ãƒâ€¡EREZLÃ„Â°K)","FASULYE (TAZE)",
+                "SOÃ„ÂAN (KURU)","KAVUN","SALÃƒâ€¡ALIK BÃ„Â°BER",
+                "PATATES","SÃ„Â°LAJLIK MISIR","YONCA (YEÃ…ÂÃ„Â°LOT)","BUÃ„ÂDAY (DANE)","ARPA (DANE)","Ã…ÂEKER PANCARI","Ãƒâ€¡AVDAR (DANE)"
             ,
-                "FİĞ (YEŞİLOT)","KORUNGA (YEŞİLOT)","BURÇAK (YEŞİLOT)","YEM BEZELYESİ","YULAF (YEŞİLOT)","NOHUT","YEŞİL MERCİMEK","KURU FASULYE"
+                "FÃ„Â°Ã„Â (YEÃ…ÂÃ„Â°LOT)","KORUNGA (YEÃ…ÂÃ„Â°LOT)","BURÃƒâ€¡AK (YEÃ…ÂÃ„Â°LOT)","YEM BEZELYESÃ„Â°","YULAF (YEÃ…ÂÃ„Â°LOT)","NOHUT","YEÃ…ÂÃ„Â°L MERCÃ„Â°MEK","KURU FASULYE"
             ]
             s = set([str(x).strip() for x in crop_list])
             for c in extra_s1:
@@ -2537,19 +2536,19 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
     except Exception:
         pass
 
-    
+
     # Always include a "fallow/no-crop" option so the optimizer stays feasible under tight water budgets.
     FALLOW = normalize_crop_key("NADAS")
     if FALLOW not in crop_list:
         crop_list = [FALLOW] + crop_list
-    
+
     # --- Project-aligned low-water crop pool (fallback) ---
     # When scenario tables miss key low-water cereals/legumes, the optimizer over-uses NADAS.
     # These are conservative placeholder candidates. Replace with calibrated local agronomy + market data.
-    # NOTE (UI/Thesis): We present "Su (m³)" as a proxy for total crop water demand/consumption
+    # NOTE (UI/Thesis): We present "Su (mÃ‚Â³)" as a proxy for total crop water demand/consumption
     # (ETc-like), not only "additional irrigation". Therefore, rainfed ("*_KURU") crops should
     # not appear with 0 water in tables/plots.
-    # Values below are conservative placeholders (m³/da) and can be calibrated later.
+    # Values below are conservative placeholders (mÃ‚Â³/da) and can be calibrated later.
     default_crop_params = {
         normalize_crop_key("ARPA"): {"water_per_da": 180.0, "profit_per_da": 3800.0},
         normalize_crop_key("BUGDAY"): {"water_per_da": 220.0, "profit_per_da": 4200.0},
@@ -2562,9 +2561,9 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
         normalize_crop_key("MERCIMEK_KURU"): {"water_per_da": 160.0, "profit_per_da": 3200.0},
     }
 
-    # --- Scenario-1 vegetable & high-value crops (Niğde) ---
+    # --- Scenario-1 vegetable & high-value crops (NiÃ„Å¸de) ---
     # Only activate these candidates when the user selects seasonSource = 's1' (Senaryo-1).
-    # Values are conservative defaults: water_per_da in m³/da, profit_per_da in TL/da (net = revenue - cost).
+    # Values are conservative defaults: water_per_da in mÃ‚Â³/da, profit_per_da in TL/da (net = revenue - cost).
     if src in ("s1", "senaryo-1", "senaryo1", "scenario1", "1"):
         _s1_extras = {
             normalize_crop_key("SALCALIK_DOMATES"): {"water_per_da": 650.0, "profit_per_da": 52000.0},
@@ -2575,18 +2574,18 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
             normalize_crop_key("SOGAN_KURU"): {"water_per_da": 500.0, "profit_per_da": 24000.0},
             normalize_crop_key("KAVUN"): {"water_per_da": 550.0, "profit_per_da": 12000.0},
             normalize_crop_key("SALCALIK_BIBER"): {"water_per_da": 600.0, "profit_per_da": 25000.0},
-       
-            normalize_crop_key("FİĞ (YEŞİLOT)"): {"water_per_da": 160.0, "profit_per_da": 6500.0},
-            normalize_crop_key("KORUNGA (YEŞİLOT)"): {"water_per_da": 140.0, "profit_per_da": 6000.0},
-            normalize_crop_key("BURÇAK (YEŞİLOT)"): {"water_per_da": 140.0, "profit_per_da": 6200.0},
-            normalize_crop_key("YEM BEZELYESİ"): {"water_per_da": 150.0, "profit_per_da": 6400.0},
-            normalize_crop_key("YULAF (YEŞİLOT)"): {"water_per_da": 160.0, "profit_per_da": 5500.0},
+
+            normalize_crop_key("FÃ„Â°Ã„Â (YEÃ…ÂÃ„Â°LOT)"): {"water_per_da": 160.0, "profit_per_da": 6500.0},
+            normalize_crop_key("KORUNGA (YEÃ…ÂÃ„Â°LOT)"): {"water_per_da": 140.0, "profit_per_da": 6000.0},
+            normalize_crop_key("BURÃƒâ€¡AK (YEÃ…ÂÃ„Â°LOT)"): {"water_per_da": 140.0, "profit_per_da": 6200.0},
+            normalize_crop_key("YEM BEZELYESÃ„Â°"): {"water_per_da": 150.0, "profit_per_da": 6400.0},
+            normalize_crop_key("YULAF (YEÃ…ÂÃ„Â°LOT)"): {"water_per_da": 160.0, "profit_per_da": 5500.0},
  }
         default_crop_params.update(_s1_extras)
     for ck in list(default_crop_params.keys()):
         if ck not in crop_list:
             crop_list.append(ck)
-    
+
     # Keep deterministic ordering with FALLOW first.
     crop_list = [FALLOW] + sorted([c for c in crop_list if c != FALLOW])
 
@@ -2717,7 +2716,7 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
         pass
 
 
-    # Sazlıca parcel-type filter: field / vegetable / orchard pools are kept separate.
+    # SazlÃ„Â±ca parcel-type filter: field / vegetable / orchard pools are kept separate.
     try:
         cat = load_crop_catalog()
         for i, parcel in enumerate(selected_parcels):
@@ -2760,7 +2759,7 @@ def build_candidate_matrix(selected_parcels: List[Dict[str,Any]], year: Optional
     W = np.where(infeasible, 1e9, W)
     R = np.where(infeasible, 0.0, R)
     # Ensure NADAS is feasible everywhere.
-    # We assign a small non-zero water proxy so UI tables do not show 0 m³ for fallow in totals.
+    # We assign a small non-zero water proxy so UI tables do not show 0 mÃ‚Â³ for fallow in totals.
     # (Represents soil evaporation/maintenance; can be calibrated.)
     if len(crop_list) and crop_list[0] == FALLOW:
         W[:, 0] = 50.0
@@ -2886,7 +2885,7 @@ def build_candidate_matrix_two_season(
     FALLOW = normalize_crop_key("NADAS")
     if FALLOW not in crop_list:
         crop_list = [FALLOW] + crop_list
-    
+
     # Project-aligned low-water crop pool (fallback placeholders)
     default_crop_params = {
         normalize_crop_key("ARPA"): {"water_per_da": 180.0, "profit_per_da": 3800.0},
@@ -2916,7 +2915,7 @@ def build_candidate_matrix_two_season(
         crop_list = [FALLOW] + sorted([ck for ck in deduped_crop_list if ck != FALLOW])
     except Exception:
         crop_list = [FALLOW] + sorted([ck for ck in crop_list if ck != FALLOW])
-    
+
     parcel_ids = [str(p["id"]) for p in selected_parcels]
     P, C = len(parcel_ids), len(crop_list)
     idx_crop = {c: i for i, c in enumerate(crop_list)}
@@ -3135,7 +3134,7 @@ def build_candidate_matrix_two_season(
 
 
 # -----------------------------
-# Amaç normalizasyonu ve açıklanabilir ekonomik metrikler
+# AmaÃƒÂ§ normalizasyonu ve aÃƒÂ§Ã„Â±klanabilir ekonomik metrikler
 # -----------------------------
 
 def _normalize_objective_key(objective: Optional[str]) -> str:
@@ -3144,7 +3143,7 @@ def _normalize_objective_key(objective: Optional[str]) -> str:
         return "water_saving"
     if obj in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin", "balanced", "denge", "onerilen", "recommended"):
         return "water_efficiency"
-    if obj in ("maks_kar", "maks kar", "max_profit", "profit", "kar", "kâr"):
+    if obj in ("maks_kar", "maks kar", "max_profit", "profit", "kar", "kÃƒÂ¢r"):
         return "max_profit"
     if obj in ("mevcut", "current"):
         return "current"
@@ -3195,12 +3194,12 @@ def _decision_metrics_for_crop(crop_name: str, area_da: float, water_per_da: flo
         "decisionGroup": rec.get("decisionGroup") or None,
         "perennialLockRule": rec.get("perennialLockRule") or None,
         "managementNote": rec.get("managementNote") or None,
-        "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+        "selectionBasis": "alan Ãƒâ€” verim Ãƒâ€” fiyat Ãƒâ€” maliyet Ãƒâ€” su yoÃ„Å¸unluÃ„Å¸u Ãƒâ€” su bÃƒÂ¼tÃƒÂ§esi Ãƒâ€” aylÃ„Â±k kapasite",
     }
 
 
 # -----------------------------
-# Senaryo-2 (bahçe/perennial) kısıtı ve sulama ayarı
+# Senaryo-2 (bahÃƒÂ§e/perennial) kÃ„Â±sÃ„Â±tÃ„Â± ve sulama ayarÃ„Â±
 # -----------------------------
 
 PERENNIAL_CROPS = {
@@ -3238,7 +3237,7 @@ def candidate_allowed_for_parcel(parcel_type: str, current_crop: str, candidate_
     - Field parcels must not be converted into orchard/perennial crops inside the normal
       annual product-pattern scenario.
     - Vegetable parcels can compare vegetable/field crops, but not orchard installation
-      unless a separate "tesis dönüşümü" scenario is explicitly built.
+      unless a separate "tesis dÃƒÂ¶nÃƒÂ¼Ã…Å¸ÃƒÂ¼mÃƒÂ¼" scenario is explicitly built.
     """
     ptype = str(parcel_type or "").strip().lower() or "field"
     cand_type = candidate_crop_land_type(candidate_crop)
@@ -3246,20 +3245,20 @@ def candidate_allowed_for_parcel(parcel_type: str, current_crop: str, candidate_
     cand_canon = canonical_crop_key(candidate_crop)
 
     if cand_canon == FALLOW:
-        return True, "nadas/boş bırakma güvenlik seçeneği"
+        return True, "nadas/boÃ…Å¸ bÃ„Â±rakma gÃƒÂ¼venlik seÃƒÂ§eneÃ„Å¸i"
 
     if ptype == "orchard":
         if cur_canon and cand_canon == cur_canon:
-            return True, "kurulu bahçede mevcut ana ürün korunur"
-        return False, "kurulu bahçe/çok yıllık parselde ana ürün değişimi normal optimizasyonda yasak"
+            return True, "the established main crop is preserved in an orchard"
+        return False, "main-crop change is not allowed in established orchard/perennial parcels under normal optimization"
 
     if ptype == "field" and cand_type == "orchard" and cand_canon != cur_canon:
-        return False, "tarla parseline bahçe/çok yıllık ürün önerisi ayrı tesis dönüşümü senaryosu gerektirir"
+        return False, "recommending orchard/perennial crops for field parcels requires a separate establishment-conversion scenario"
 
     if ptype == "vegetable" and cand_type == "orchard" and cand_canon != cur_canon:
-        return False, "sebze parseline bahçe/çok yıllık ürün önerisi ayrı tesis dönüşümü senaryosu gerektirir"
+        return False, "recommending orchard/perennial crops for vegetable parcels requires a separate establishment-conversion scenario"
 
-    return True, "parsel tipi ile ürün tipi uyumlu"
+    return True, "parcel type and crop type are compatible"
 
 def is_annual_field_vegetable_candidate(candidate_crop: str) -> bool:
     """Return True for the annual field/vegetable scope used by annual ranking."""
@@ -3334,14 +3333,14 @@ def annual_crop_category(candidate_crop: str) -> str:
 
 def annual_crop_category_label(category: str) -> str:
     return {
-        "same_category": "Mevcut kategori",
-        "field_cereal": "Tahıl / tarla",
+        "same_category": "Current category",
+        "field_cereal": "TahÃ„Â±l / tarla",
         "forage": "Yem bitkisi",
         "legume": "Baklagil",
         "vegetable": "Sebze",
-        "industrial_oil": "Endüstri / yağ / özel",
-        "orchard": "Bahçe / çok yıllık",
-        "mixed": "Karışık mod",
+        "industrial_oil": "Industrial / oil / specialty",
+        "orchard": "Orchard / perennial",
+        "mixed": "Mixed mode",
     }.get(str(category or ""), str(category or "Genel"))
 
 
@@ -3384,7 +3383,7 @@ def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, c
     P = len(selected_parcels)
     locks = np.full(P, -1, dtype=int)
     src = str(season_source or "both").lower()
-    # Bahçe / çok yıllık parsellerde ana ürün her modda korunur.
+    # BahÃƒÂ§e / ÃƒÂ§ok yÃ„Â±llÃ„Â±k parsellerde ana ÃƒÂ¼rÃƒÂ¼n her modda korunur.
     if P == 0:
         return locks
 
@@ -3410,7 +3409,7 @@ def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, c
         parcel_type = str(p.get('parcel_type','') or '').strip().lower()
         current_crop = normalize_crop_key(str(p.get('current_crop') or p.get('crop') or ''))
         orchard_like = (parcel_type == 'orchard') or (current_crop in PERENNIAL_CROPS)
-        # Eğer parsel bahçe/çok yıllıksa, sezon tablosu eksik olsa bile mevcut ürünü kilitle.
+        # EÃ„Å¸er parsel bahÃƒÂ§e/ÃƒÂ§ok yÃ„Â±llÃ„Â±ksa, sezon tablosu eksik olsa bile mevcut ÃƒÂ¼rÃƒÂ¼nÃƒÂ¼ kilitle.
         if orchard_like and current_crop in idx_crop:
             ck = current_crop
         if (not ck) and orchard_like and current_crop in idx_crop:
@@ -3423,7 +3422,7 @@ def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, c
 
 
 def _orchard_interrow_alternatives(main_crop: str) -> List[Dict[str, Any]]:
-    main = str(main_crop or '').strip() or 'Bahçe ürünü'
+    main = str(main_crop or '').strip() or 'BahÃƒÂ§e ÃƒÂ¼rÃƒÂ¼nÃƒÂ¼'
     csv_path = DATA_DIR / 'orchard_interrow_alternatives.csv'
     if csv_path.exists():
         try:
@@ -3442,10 +3441,10 @@ def _orchard_interrow_alternatives(main_crop: str) -> List[Dict[str, Any]]:
         except Exception:
             pass
     return [
-        {'name': 'Mercimek', 'kind': 'Sıra arası / baklagil', 'waterLevel': 'Düşük su', 'note': f'{main} ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz.'},
-        {'name': 'Nohut', 'kind': 'Sıra arası / baklagil', 'waterLevel': 'Düşük-orta su', 'note': f'{main} bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez.'},
-        {'name': 'Fiğ (Yeşilot)', 'kind': 'Örtü bitkisi / yeşil gübre', 'waterLevel': 'Düşük-orta su', 'note': f'{main} bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır.'},
-        {'name': 'Arpa (Yeşilot)', 'kind': 'Örtü bitkisi / yem', 'waterLevel': 'Düşük-orta su', 'note': f'{main} bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir.'},
+        {'name': 'Mercimek', 'kind': 'SÃ„Â±ra arasÃ„Â± / baklagil', 'waterLevel': 'DÃƒÂ¼Ã…Å¸ÃƒÂ¼k su', 'note': f'{main} ana ÃƒÂ¼rÃƒÂ¼n olarak korunur. Mercimek; dÃƒÂ¼Ã…Å¸ÃƒÂ¼k su tÃƒÂ¼ketimi, baklagil etkisi ve kÃ„Â±sa dÃƒÂ¶nemli sÃ„Â±ra arasÃ„Â± deÃ„Å¸erlendirme iÃƒÂ§in uygundur. Ana ÃƒÂ¼rÃƒÂ¼n yerine yazÃ„Â±lmaz.'},
+        {'name': 'Nohut', 'kind': 'SÃ„Â±ra arasÃ„Â± / baklagil', 'waterLevel': 'DÃƒÂ¼Ã…Å¸ÃƒÂ¼k-orta su', 'note': f'{main} bahÃƒÂ§esinde sÃ„Â±ra arasÃ„Â± ticari alternatif olarak dÃƒÂ¼Ã…Å¸ÃƒÂ¼nÃƒÂ¼lebilir. KÃƒÂ¶k rekabeti ve gÃƒÂ¶lge durumu uygunsa sÃ„Â±nÃ„Â±rlÃ„Â± alanda uygulanmalÃ„Â±dÃ„Â±r; ana ÃƒÂ¼rÃƒÂ¼n yerine geÃƒÂ§mez.'},
+        {'name': 'FiÃ„Å¸ (YeÃ…Å¸ilot)', 'kind': 'Ãƒâ€“rtÃƒÂ¼ bitkisi / yeÃ…Å¸il gÃƒÂ¼bre', 'waterLevel': 'DÃƒÂ¼Ã…Å¸ÃƒÂ¼k-orta su', 'note': f'{main} bahÃƒÂ§esinde topraÃ„Å¸Ã„Â± ÃƒÂ¶rtme, organik maddeyi destekleme ve yeÃ…Å¸il gÃƒÂ¼breleme amacÃ„Â±yla uygundur. Ticari ana ÃƒÂ¼rÃƒÂ¼n deÃ„Å¸il, yÃƒÂ¶netim amaÃƒÂ§lÃ„Â± ara seÃƒÂ§enek olarak ele alÃ„Â±nmalÃ„Â±dÃ„Â±r.'},
+        {'name': 'Arpa (YeÃ…Å¸ilot)', 'kind': 'Ãƒâ€“rtÃƒÂ¼ bitkisi / yem', 'waterLevel': 'DÃƒÂ¼Ã…Å¸ÃƒÂ¼k-orta su', 'note': f'{main} bahÃƒÂ§esinde erozyon kontrolÃƒÂ¼ ve toprak ÃƒÂ¶rtÃƒÂ¼sÃƒÂ¼ amacÃ„Â±yla dÃƒÂ¼Ã…Å¸ÃƒÂ¼nÃƒÂ¼lebilir. Su aÃƒÂ§Ã„Â±Ã„Å¸Ã„Â± yÃƒÂ¼ksek yÃ„Â±llarda dÃƒÂ¼Ã…Å¸ÃƒÂ¼k yoÃ„Å¸unluklu uygulanmalÃ„Â±; ana ÃƒÂ¼rÃƒÂ¼n yerine deÃ„Å¸erlendirilmemelidir.'},
     ]
 
 def _apply_s2_irrigation_adjustments(objective: str) -> Tuple[float, float, str]:
@@ -3455,23 +3454,23 @@ def _apply_s2_irrigation_adjustments(objective: str) -> Tuple[float, float, str]
     """
     obj = _normalize_objective_key(objective)
     if obj == "water_saving":
-        return 0.72, 0.90, "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)"
+        return 0.72, 0.90, "Same orchard crop + drip irrigation + strict deficit irrigation (28%)"
     if obj == "water_efficiency":
-        return 0.84, 1.00, "Aynı bahçe ürünü + damla + dengeli kısıntı (%16)"
+        return 0.84, 1.00, "Same orchard crop + drip irrigation + balanced deficit irrigation (16%)"
     if obj == "max_profit":
-        return 0.96, 1.06, "Aynı bahçe ürünü + verim odaklı damla sulama"
-    return 0.90, 1.00, "Aynı bahçe ürünü + damla + hafif kısıntı (%10)"
+        return 0.96, 1.06, "Same orchard crop + yield-oriented drip irrigation"
+    return 0.90, 1.00, "Same orchard crop + drip irrigation + light deficit irrigation (10%)"
 
 
 # -----------------------------
-# UI çıktı formatı (en az 2 ürün + 2 sezon etiketleri)
+# UI ÃƒÂ§Ã„Â±ktÃ„Â± formatÃ„Â± (en az 2 ÃƒÂ¼rÃƒÂ¼n + 2 sezon etiketleri)
 # -----------------------------
 
 
 def _objective_alpha_beta(objective: str) -> Tuple[float, float]:
     """Return legacy weights for helper ranking.
 
-    Main optimization now also uses explicit TL/m³ efficiency scoring via
+    Main optimization now also uses explicit TL/mÃ‚Â³ efficiency scoring via
     _objective_score_value().
     """
     obj = _normalize_objective_key(objective)
@@ -3495,12 +3494,12 @@ def _build_two_crop_recommendations(
     enforce_delivery_caps: bool = True,
     **_ignored: Any,
 ) -> Dict[str, Any]:
-    """UI-friendly 1. ürün + 2. ürün planı.
+    """UI-friendly 1. ÃƒÂ¼rÃƒÂ¼n + 2. ÃƒÂ¼rÃƒÂ¼n planÃ„Â±.
 
-    Bu sürümde Senaryo-1 için kritik kurallar:
-      1) **Ana ürün** mutlaka 15 ürün havuzundan seçilir.
-      2) **İkinci ürün** (hasat sonrası) Niğde'de yaygın ve toprak için faydalı düşük-su havuzundan seçilir.
-      3) Yıllık toplam su: (Ana ürün suyu + İkinci ürün suyu) alan ile çarpılarak net şekilde raporlanır.
+    Bu sÃƒÂ¼rÃƒÂ¼mde Senaryo-1 iÃƒÂ§in kritik kurallar:
+      1) **Ana ÃƒÂ¼rÃƒÂ¼n** mutlaka 15 ÃƒÂ¼rÃƒÂ¼n havuzundan seÃƒÂ§ilir.
+      2) **Ã„Â°kinci ÃƒÂ¼rÃƒÂ¼n** (hasat sonrasÃ„Â±) NiÃ„Å¸de'de yaygÃ„Â±n ve toprak iÃƒÂ§in faydalÃ„Â± dÃƒÂ¼Ã…Å¸ÃƒÂ¼k-su havuzundan seÃƒÂ§ilir.
+      3) YÃ„Â±llÃ„Â±k toplam su: (Ana ÃƒÂ¼rÃƒÂ¼n suyu + Ã„Â°kinci ÃƒÂ¼rÃƒÂ¼n suyu) alan ile ÃƒÂ§arpÃ„Â±larak net Ã…Å¸ekilde raporlanÃ„Â±r.
     """
 
     crop_list, W, R = build_candidate_matrix(selected_parcels, year=year, season_source=season_source)
@@ -3591,12 +3590,12 @@ def _build_two_crop_recommendations(
 
     src_norm = str(season_source or "").lower().strip()
 
-    # ---- Primary crop constraint (Senaryo-1 15 ürün) ----
+    # ---- Primary crop constraint (Senaryo-1 15 ÃƒÂ¼rÃƒÂ¼n) ----
     primary_allowed_idx: Optional[set] = None
     if src_norm in ("s1", "senaryo1", "senaryo-1", "scenario1", "1"):
         primary_15 = [
-            "PATATES","SİLAJLIK MISIR","YONCA (YEŞİLOT)","BUĞDAY (DANE)","ARPA (DANE)","ŞEKER PANCARI","ÇAVDAR (DANE)",
-            "SALÇALIK DOMATES","SOFRALIK DOMATES","LAHANA (BEYAZ)","KABAK (ÇEREZLİK)","FASULYE (TAZE)","SOĞAN (KURU)","KAVUN","SALÇALIK BİBER"
+            "PATATES","SÃ„Â°LAJLIK MISIR","YONCA (YEÃ…ÂÃ„Â°LOT)","BUÃ„ÂDAY (DANE)","ARPA (DANE)","Ã…ÂEKER PANCARI","Ãƒâ€¡AVDAR (DANE)",
+            "SALÃƒâ€¡ALIK DOMATES","SOFRALIK DOMATES","LAHANA (BEYAZ)","KABAK (Ãƒâ€¡EREZLÃ„Â°K)","FASULYE (TAZE)","SOÃ„ÂAN (KURU)","KAVUN","SALÃƒâ€¡ALIK BÃ„Â°BER"
         ]
         primary_15 = set([normalize_crop_key(x) for x in primary_15])
         primary_allowed_idx = set([j for j,c in enumerate(crop_list) if c in primary_15])
@@ -3622,7 +3621,7 @@ def _build_two_crop_recommendations(
 
     # ---- Secondary crop constraint (Senaryo-1 ikinci sezon havuzu) ----
     second_pool = set([normalize_crop_key(x) for x in [
-        "FİĞ (YEŞİLOT)","KORUNGA (YEŞİLOT)","BURÇAK (YEŞİLOT)","YEM BEZELYESİ","NOHUT","YEŞİL MERCİMEK","KURU FASULYE","YULAF (YEŞİLOT)"
+        "FÃ„Â°Ã„Â (YEÃ…ÂÃ„Â°LOT)","KORUNGA (YEÃ…ÂÃ„Â°LOT)","BURÃƒâ€¡AK (YEÃ…ÂÃ„Â°LOT)","YEM BEZELYESÃ„Â°","NOHUT","YEÃ…ÂÃ„Â°L MERCÃ„Â°MEK","KURU FASULYE","YULAF (YEÃ…ÂÃ„Â°LOT)"
     ]])
 
     secondary_idx = np.zeros(P, dtype=int)
@@ -3674,9 +3673,9 @@ def _build_two_crop_recommendations(
 
 
     # Decide whether to actually use a secondary crop (show at most 2 options to user).
-    # UI kararı:
-    #   - S1: tek ürün ana plan
-    #   - S2: tarla için münavebe / yazlık+kışlık, bahçe için ana ürün koruma
+    # UI kararÃ„Â±:
+    #   - S1: tek ÃƒÂ¼rÃƒÂ¼n ana plan
+    #   - S2: tarla iÃƒÂ§in mÃƒÂ¼navebe / yazlÃ„Â±k+kÃ„Â±Ã…Å¸lÃ„Â±k, bahÃƒÂ§e iÃƒÂ§in ana ÃƒÂ¼rÃƒÂ¼n koruma
     use_second = np.ones(P, dtype=bool)
     if src_norm in ("s1", "senaryo1", "senaryo-1", "scenario1", "1"):
         use_second[:] = False
@@ -3706,7 +3705,7 @@ def _build_two_crop_recommendations(
         if not use_second[i]:
             secondary_idx[i] = int(primary_idx[i])
 
-    # Area split (same parcel içinde iki sezon)
+    # Area split (same parcel iÃƒÂ§inde iki sezon)
     # If use_second[i] is False, keep only one crop (a2=0).
     a1 = np.maximum(0.0, np.round(areas.copy(), 1))
     a2 = np.zeros(P, dtype=float)
@@ -3827,9 +3826,9 @@ def _build_two_crop_recommendations(
         rule1 = s1_rules.get(c1, {}) if isinstance(s1_rules, dict) else {}
         # Season labels from Scenario-1 calendar rules (if available)
         rule1 = (s1_rules.get(c1, {}) if isinstance(s1_rules, dict) else {})
-        season1 = (rule1.get("primary_season") or rule1.get("season") or "—")
+        season1 = (rule1.get("primary_season") or rule1.get("season") or "Ã¢â‚¬â€")
         rule2 = (s1_rules.get(c2, {}) if isinstance(s1_rules, dict) else {})
-        season2 = (rule1.get("secondary_season") if (rule1.get("secondary_crop") == c2) else (rule2.get("primary_season") or rule2.get("season") or "—"))
+        season2 = (rule1.get("secondary_season") if (rule1.get("secondary_crop") == c2) else (rule2.get("primary_season") or rule2.get("season") or "Ã¢â‚¬â€"))
 
         rec = [
             {
@@ -3841,7 +3840,7 @@ def _build_two_crop_recommendations(
                 "profitPerDa": p1,
                 "profitTotal": pt1,
                 **_irrig_block(c1, float(a1[i]), w1),
-                "reason": ("Tek ürün ana plan: seçili hedef, su-kâr dengesi ve parsel uygunluğu") if src_norm in ("s1","senaryo1","senaryo-1","scenario1","1") else "Ana ürün: seçili hedef, su-kâr dengesi ve parsel uygunluğu"
+                "reason": ("Single-crop main plan: selected objective, water-profit balance, and parcel suitability") if src_norm in ("s1","senaryo1","senaryo-1","scenario1","1") else "Main crop: selected objective, water-profit balance, and parcel suitability"
             },
         ]
         if float(a2[i]) > 0.05:
@@ -3854,12 +3853,12 @@ def _build_two_crop_recommendations(
                 "profitPerDa": p2,
                 "profitTotal": pt2,
                 **_irrig_block(c2, float(a2[i]), w2),
-                "reason": "İkinci ürün / münavebe: yazlık-kışlık geçişi, toprak ve su dengesi için"
+                "reason": "Second crop / rotation: summer-winter transition for soil and water balance"
             })
         if irrigation_label is not None and bool(lock_mask[i]):
             for r in rec:
                 r["irrigation_plan"] = irrigation_label
-                r["reason"] = "Bahçe ürünü kilitli (Senaryo-2): ürün değişmez; sulama planı uygulanır."
+                r["reason"] = "Orchard crop locked (Scenario 2): the crop does not change; the irrigation plan is applied."
 
         parcel_annual = {
             "annualWaterTotal": float(wt1 + wt2),
@@ -3902,9 +3901,9 @@ def _build_two_crop_recommendations(
         "feasible": feasible,
         "iterations": int(it),
         "formula": {
-            "water_m3": "Su (m³) = Alan(da) × SuYoğunluğu(m³/da) (1. sezon + 2. sezon)",
-            "profit_tl": "Kâr (TL) = Alan(da) × NetKârYoğunluğu(TL/da) (1. sezon + 2. sezon)",
-            "score": "Skor = α·Kâr - β·Su (bütçe aşımı cezası)",
+            "water_m3": "Su (mÃ‚Â³) = Alan(da) Ãƒâ€” SuYoÃ„Å¸unluÃ„Å¸u(mÃ‚Â³/da) (1. sezon + 2. sezon)",
+            "profit_tl": "KÃƒÂ¢r (TL) = Alan(da) Ãƒâ€” NetKÃƒÂ¢rYoÃ„Å¸unluÃ„Å¸u(TL/da) (1. sezon + 2. sezon)",
+            "score": "Skor = ÃÂ±Ã‚Â·KÃƒÂ¢r - ÃÂ²Ã‚Â·Su (bÃƒÂ¼tÃƒÂ§e aÃ…Å¸Ã„Â±mÃ„Â± cezasÃ„Â±)",
         },
         "weights": {"alpha": float(alpha), "beta": float(beta)},
     }
@@ -3934,8 +3933,8 @@ def _build_two_season_recommendations(
     sequential double-cropping on the *same* parcel area within a year.
 
     Totals:
-      water_m3 = Σ(area_da * (W_primary + W_secondary))
-      profit_tl = Σ(area_da * (R_primary + R_secondary))
+      water_m3 = ÃÂ£(area_da * (W_primary + W_secondary))
+      profit_tl = ÃÂ£(area_da * (R_primary + R_secondary))
     """
     crop_list, W1, R1, W2, R2, MU1, MU2 = build_candidate_matrix_two_season(
         selected_parcels,
@@ -3954,7 +3953,7 @@ def _build_two_season_recommendations(
     base_budget, month_weights, month_caps = basin_budget_and_delivery_caps(int(year), selected_parcels, env_flow_ratio=float(env_flow_ratio or 0.0))
     budget = max(1.0, float(base_budget) * float(budget_ratio or 1.0))
 
-    # Irrigation method efficiency (damla/yağmurlama/yüzey)
+    # Irrigation method efficiency (damla/yaÃ„Å¸murlama/yÃƒÂ¼zey)
     if irrigation_method:
         W = apply_irrigation_method_to_W(W, selected_parcels, irrigation_method)
 
@@ -4034,9 +4033,9 @@ def _build_two_season_recommendations(
     def _season_label(crop: str, which: str='primary') -> str:
         rule = (s1_rules.get(crop, {}) if isinstance(s1_rules, dict) else {})
         if which == 'primary':
-            return str(rule.get('primary_season') or rule.get('season') or '—')
+            return str(rule.get('primary_season') or rule.get('season') or 'Ã¢â‚¬â€')
         # secondary
-        return str(rule.get('secondary_season') or '—')
+        return str(rule.get('secondary_season') or 'Ã¢â‚¬â€')
 
     def _irrig_block(crop_name: str, area_da: float, water_per_da: float):
         info = crop_irrig_map.get(crop_name, {}) if isinstance(crop_irrig_map, dict) else {}
@@ -4070,7 +4069,7 @@ def _build_two_season_recommendations(
         recommended = [
             {
                 "name": c1,
-                "season": ('Ana ürün' if str(season_source).lower() == 's1' else _season_label(c1, 'primary')),
+                "season": ('Ana ÃƒÂ¼rÃƒÂ¼n' if str(season_source).lower() == 's1' else _season_label(c1, 'primary')),
                 "area": float(areas[i]),
                 "waterPerDa": float(W1[i, int(ch1[i])]),
                 "waterTotal": float(areas[i]) * float(W1[i, int(ch1[i])]),
@@ -4078,14 +4077,14 @@ def _build_two_season_recommendations(
                 "profitTotal": float(areas[i]) * float(R1[i, int(ch1[i])]),
                 **_decision_metrics_for_crop(c1, float(areas[i]), float(W1[i, int(ch1[i])]), float(R1[i, int(ch1[i])])),
                 **_irrig_block(c1, float(areas[i]), float(W1[i, int(ch1[i])])),
-                "reason": ("Tek ürün ana plan: seçili hedef, su bütçesi, aylık kapasite ve ticari parametreler birlikte puanlandı." if str(season_source).lower() == 's1' else "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)")
+                "reason": ("Single-crop main plan: selected objective, water budget, monthly capacity, and commercial parameters were scored together." if str(season_source).lower() == "s1" else "Main crop: two-season solution (water budget + parcel suitability + commercial parameters)")
             }
         ]
         is_locked_orchard = bool(lock_mask[i]) if np.any(lock_mask) else False
         if is_locked_orchard:
             orchard_alternatives = _orchard_interrow_alternatives(c1)
-            recommended[0]["reason"] = "Mevcut bahçe ürünü korunur; kayısı/elma/armut gibi kurulmuş bahçelerde mercimek-nohut gibi tek yıllık ürüne geçiş önerilmez. İyileştirme sulama yöntemi, sulama zamanı, kısıntılı sulama ve sıra arası/örtü bitkisi yönetimi üzerinden yapılır."
-            recommended[0]["season"] = recommended[0].get("season") or "Bahçe (çok yıllık)"
+            recommended[0]["reason"] = "The current orchard crop is preserved; switching established orchards such as apricot/apple/pear to annual crops such as lentil-chickpea is not recommended. Improvement is handled through irrigation method, irrigation timing, deficit irrigation, and inter-row/cover-crop management."
+            recommended[0]["season"] = recommended[0].get("season") or "Orchard (perennial)"
             recommended[0]["interrowAlternatives"] = orchard_alternatives
         if str(season_source).lower() != 's1' and (not is_locked_orchard) and str(c2).strip().upper() != FALLOW:
             recommended.append({
@@ -4098,7 +4097,7 @@ def _build_two_season_recommendations(
                 "profitTotal": float(areas[i]) * float(R2[i, int(ch2[i])]),
                 **_decision_metrics_for_crop(c2, float(areas[i]), float(W2[i, int(ch2[i])]), float(R2[i, int(ch2[i])])),
                 **_irrig_block(c2, float(areas[i]), float(W2[i, int(ch2[i])])),
-                "reason": "İkinci ürün: rotasyon + düşük su + kârlılık dengesi"
+                "reason": "Second crop: rotation + low water use + profitability balance"
             })
         parcels_out.append({
             "id": p.get("id"),
@@ -4124,8 +4123,8 @@ def _build_two_season_recommendations(
         "budget": float(budget),
         "delivery_report": delivery_report,
         "formula": {
-            "water_m3": "Su (m³) = Σ[Alan(da) × (SuYoğunluğu1 + SuYoğunluğu2)]",
-            "profit_tl": "Kâr (TL) = Σ[Alan(da) × (NetKârYoğunluğu1 + NetKârYoğunluğu2)]",
+            "water_m3": "Su (mÃ‚Â³) = ÃÂ£[Alan(da) Ãƒâ€” (SuYoÃ„Å¸unluÃ„Å¸u1 + SuYoÃ„Å¸unluÃ„Å¸u2)]",
+            "profit_tl": "KÃƒÂ¢r (TL) = ÃÂ£[Alan(da) Ãƒâ€” (NetKÃƒÂ¢rYoÃ„Å¸unluÃ„Å¸u1 + NetKÃƒÂ¢rYoÃ„Å¸unluÃ„Å¸u2)]",
         }
     }
 
@@ -4281,7 +4280,7 @@ def ga_optimize(selected_parcels: List[Dict[str,Any]], year: int, objective: str
             else:
                 c1, c2 = p1, p2
 
-            # Senaryo-2 kilitleri uygula (bahçe ürünü değişmesin)
+            # Senaryo-2 kilitleri uygula (bahÃƒÂ§e ÃƒÂ¼rÃƒÂ¼nÃƒÂ¼ deÃ„Å¸iÃ…Å¸mesin)
             c1 = _enforce_locks(c1)
             c2 = _enforce_locks(c2)
             # mutation
@@ -5857,7 +5856,7 @@ def _matrix_objective_from_scenario(scenario: str) -> str:
         return "water_saving"
     if s in ("water_efficiency", "su_verimliligi", "su verimliligi", "etkin_su", "etkin su", "su_etkin", "su etkin", "balanced", "denge", "onerilen", "recommended"):
         return "water_efficiency"
-    if s in ("maks_kar", "maks kar", "max_profit", "kar", "kâr"):
+    if s in ("maks_kar", "maks kar", "max_profit", "kar", "kÃƒÂ¢r"):
         return "max_profit"
     return "water_efficiency"
 
@@ -5868,11 +5867,11 @@ def _matrix_objective_from_scenario(scenario: str) -> str:
 def _normalize_allocation_model(model: Any) -> str:
     """Normalize water-allocation model names used by UI/API.
 
-    v42 default is dekar/area fairness: every parcel receives the same m³/da right.
+    v42 default is dekar/area fairness: every parcel receives the same mÃ‚Â³/da right.
     Equal-village is retained as a comparison scenario, not the default planning rule.
     """
     m = str(model or "").strip().lower()
-    m = m.replace("ı", "i").replace("ğ", "g").replace("ü", "u").replace("ş", "s").replace("ö", "o").replace("ç", "c")
+    m = m.replace("Ã„Â±", "i").replace("Ã„Å¸", "g").replace("ÃƒÂ¼", "u").replace("Ã…Å¸", "s").replace("ÃƒÂ¶", "o").replace("ÃƒÂ§", "c")
     m = m.replace("-", "_").replace(" ", "_")
     if not m or m in ("default", "area", "alan", "dekar", "da", "adil", "area_fair", "dekar_bazli", "dekar_bazli_adil", "area_weighted", "area_weighted_per_da", "area_fair_per_da"):
         return "area_fair_per_da"
@@ -5898,11 +5897,11 @@ def _quota_column_for_allocation_model(model: Any) -> str:
 def _allocation_model_label(model: Any) -> str:
     m = _normalize_allocation_model(model)
     return {
-        "area_fair_per_da": "Dekar bazlı adil kota: toplam mevcut su / toplam alan; her parsel alanı kadar su hakkı alır.",
-        "equal_village_equal_parcel": "Eşit köy + eşit parsel kotası: her köye aynı su, köy içinde her parsele aynı kota.",
-        "current_demand_reference": "Mevcut talep referansı: her parselin mevcut ürün desenindeki su tüketimi kadar kota.",
-        "hybrid_area70_current30": "Karma kota: %70 alan bazlı adil kota + %30 mevcut talep referansı.",
-    }.get(m, "Dekar bazlı adil kota")
+        "area_fair_per_da": "Area-based fair quota: total current water / total area; each parcel receives water rights proportional to its area.",
+        "equal_village_equal_parcel": "Equal village + equal parcel quota: each village receives the same water, and each parcel within the village receives the same quota.",
+        "current_demand_reference": "Current demand reference: quota equals each parcel current crop-pattern water use.",
+        "hybrid_area70_current30": "Hybrid quota: 70% area-based fair quota + 30% current demand reference.",
+    }.get(m, "Area-based fair quota")
 
 def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
                           water_budget_ratio: float, year: Optional[int]=None,
@@ -6203,7 +6202,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
         if not locked:
             # Hard agronomic filter: prevent normal annual planning from suggesting
             # orchard/perennial installation on field/vegetable parcels.  This keeps
-            # outputs defendable for ziraat review (tarla ≠ bahçe dönüşümü).
+            # outputs defendable for ziraat review (tarla Ã¢â€°Â  bahÃƒÂ§e dÃƒÂ¶nÃƒÂ¼Ã…Å¸ÃƒÂ¼mÃƒÂ¼).
             try:
                 allow_mask = g["candidate_crop"].astype(str).apply(
                     lambda c: candidate_allowed_for_parcel(parcel_type, current_crop, c)[0]
@@ -6213,7 +6212,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
                     dropped_count = int((~allow_mask).sum())
                     if dropped_count > 0:
                         g = g[allow_mask].copy()
-                        g["_compat_cautions"] = g["_compat_cautions"].apply(lambda xs: list(xs or []) + [f"{dropped_count} uyumsuz bahçe/çok yıllık aday normal senaryodan elendi."])
+                        g["_compat_cautions"] = g["_compat_cautions"].apply(lambda xs: list(xs or []) + [f"{dropped_count} uyumsuz bahÃƒÂ§e/ÃƒÂ§ok yÃ„Â±llÃ„Â±k aday normal senaryodan elendi."])
             except Exception:
                 pass
 
@@ -6228,7 +6227,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
                         cur_only = g[cur_mask].copy()
                         if not cur_only.empty:
                             g = cur_only
-                        g["_compat_cautions"] = g["_compat_cautions"].apply(lambda xs: list(xs or []) + ["Seçilen ürün grubunda bu parsel için güvenilir aday bulunamadı; kategori dışı ürünler ana öneri yapılmadı."])
+                        g["_compat_cautions"] = g["_compat_cautions"].apply(lambda xs: list(xs or []) + ["SeÃƒÂ§ilen ÃƒÂ¼rÃƒÂ¼n grubunda bu parsel iÃƒÂ§in gÃƒÂ¼venilir aday bulunamadÃ„Â±; kategori dÃ„Â±Ã…Å¸Ã„Â± ÃƒÂ¼rÃƒÂ¼nler ana ÃƒÂ¶neri yapÃ„Â±lmadÃ„Â±."])
                         g["_local_utility"] = -10.0
                 elif crop_category_mode != "mixed":
                     cur_mask = g["candidate_crop"].astype(str).map(canonical_crop_key) == current_crop_canon
@@ -6613,8 +6612,8 @@ def _matrix_rank_options_v8(opts: List[Dict[str, Any]], objective: str) -> List[
         return 0.16 if fam and current_family and fam == current_family and not bool(o.get("isCurrent")) else 0.0
     def field_to_vegetable_penalty(o: Dict[str, Any]) -> float:
         fam = annual_family(str(o.get("name", "") or ""))
-        current_is_field_row = any(x in str(current_family or "").lower() for x in ("tahil", "tahıl", "yem", "cereal", "poaceae"))
-        candidate_is_field_row = any(x in str(fam or "").lower() for x in ("tahil", "tahıl", "yem", "baklagil", "cereal", "legume", "poaceae"))
+        current_is_field_row = any(x in str(current_family or "").lower() for x in ("tahil", "tahÃ„Â±l", "yem", "cereal", "poaceae"))
+        candidate_is_field_row = any(x in str(fam or "").lower() for x in ("tahil", "tahÃ„Â±l", "yem", "baklagil", "cereal", "legume", "poaceae"))
         return 0.50 if current_is_field_row and (not candidate_is_field_row) and not bool(o.get("isCurrent")) else 0.0
     def category_penalty(o: Dict[str, Any]) -> float:
         return max(0.0, 1.0 - float(o.get("categoryFitScore", 0.0) or 0.0)) * 0.32
@@ -6691,7 +6690,7 @@ def _matrix_rank_options_v8(opts: List[Dict[str, Any]], objective: str) -> List[
             and float(o.get("totalWater", 0.0) or 0.0) < float(ranked[0].get("totalWater", 0.0) or 0.0) - 1e-6
         ]
         if lower_water:
-            ranked[0]["lowerWaterReason"] = "Daha düşük su kullanan adaylar ekonomik alt eşik / kota / uygulanabilirlik nedeniyle geriye alınmıştır."
+            ranked[0]["lowerWaterReason"] = "Lower-water candidates were held back because of the economic lower threshold, quota, or feasibility."
 
     return ranked
 
@@ -6721,16 +6720,16 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             current_opt = next((x for x in ranked_opts if bool(x.get("isCurrent"))), None)
             cat_label = str(o.get("cropCategoryLabel") or annual_crop_category_label(str(o.get("cropCategory", "") or "")))
             fit_pct = round(float(o.get("categoryFitScore", 0.0) or 0.0) * 100.0)
-            category_note = f" Ürün grubu uyumu: {cat_label} (%{fit_pct}). Algoritma: {str(algorithm).upper()}."
+            category_note = f" ÃƒÅ“rÃƒÂ¼n grubu uyumu: {cat_label} (%{fit_pct}). Algoritma: {str(algorithm).upper()}."
             if bool(o.get("isCurrent")):
-                return "Mevcut desen bu hedefte alternatiflerden daha avantajlı olduğu için korunmuştur."
+                return "The current pattern was preserved because it is more advantageous than the alternatives under this objective."
             if (
                 current_opt is not None
                 and objective_name == "max_profit"
                 and not bool(current_opt.get("fullFeasible"))
                 and float(current_opt.get("totalProfit", 0.0) or 0.0) > float(o.get("totalProfit", 0.0) or 0.0)
             ):
-                return "Mevcut ürün daha kârlıdır ancak su kotası/uygulanabilirlik riski nedeniyle ana öneri yapılmamıştır."
+                return "The current crop is more profitable, but it was not used as the main recommendation because of water quota/feasibility risk."
             if (
                 current_opt is not None
                 and objective_name == "water_efficiency"
@@ -6738,19 +6737,19 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                 and float(current_opt.get("tlPerM3", 0.0) or 0.0) >= float(o.get("tlPerM3", 0.0) or 0.0)
                 and float(current_opt.get("totalProfit", 0.0) or 0.0) > float(o.get("totalProfit", 0.0) or 0.0)
             ):
-                return "Mevcut desen TL/m³ ve kâr açısından güçlüdür; kota riski olduğu için alternatifler karşılaştırmada tutulmuştur."
+                return "The current pattern is strong in TL/m3 and profit; alternatives are kept in the comparison because of quota risk."
             if objective_name == "water_saving":
                 if str(o.get("lowerWaterReason", "") or "").strip():
                     return str(o.get("lowerWaterReason"))
-                return "Bu aday uygulanabilir ve kota uygun adaylar içinde en düşük toplam su kullanımına sahip olduğu için seçilmiştir."
+                return "This candidate was selected because it is feasible and has the lowest total water use among quota-suitable candidates."
             if objective_name == "max_profit":
-                return "Bu aday uygulanabilir ve kota uygun adaylar içinde en yüksek net kârı verdiği için seçilmiştir."
-            return "Bu aday TL/m³, net kâr, su kullanımı ve kota uygunluğu birlikte değerlendirildiğinde en güçlü aday olduğu için seçilmiştir."
+                return "This candidate was selected because it is feasible and has the highest net profit among quota-suitable candidates."
+            return "This candidate was selected because it is strongest when TL/m3, net profit, water use, and quota suitability are evaluated together."
 
         def _rank_reason_with_context(o: Dict[str, Any]) -> str:
             cat_label = str(o.get("cropCategoryLabel") or annual_crop_category_label(str(o.get("cropCategory", "") or "")))
             fit_pct = round(float(o.get("categoryFitScore", 0.0) or 0.0) * 100.0)
-            return f"{_rank_reason(o)} Ürün grubu uyumu: {cat_label} (%{fit_pct}). Algoritma: {str(algorithm).upper()}."
+            return f"{_rank_reason(o)} ÃƒÅ“rÃƒÂ¼n grubu uyumu: {cat_label} (%{fit_pct}). Algoritma: {str(algorithm).upper()}."
 
         def _role_dedup_key(o: Dict[str, Any]) -> str:
             name = re.sub(r"\([^)]*\)", "", str(o.get("name", "") or "")).strip()
@@ -6765,8 +6764,8 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             _orchard_reference = {
                 "name": str(chosen.get("name", "") or p.get("current_crop") or "").strip(),
                 "objective": objective_name,
-                "rankReason": "Bahçe/çok yıllık ürünlerde tesis sökümü ve yeniden kurulum gerektirdiği için mevcut ana ürün korunmuştur; tek yıllık ürünler ana öneri yapılmaz.",
-                "decisionNote": "Bahçe/çok yıllık ürünlerde tesis sökümü ve yeniden kurulum gerektirdiği için mevcut ana ürün korunmuştur; tek yıllık ürünler ana öneri yapılmaz.",
+                "rankReason": "For orchard/perennial crops, the current main crop is preserved because removal and re-establishment would be required; annual crops are not used as the main recommendation.",
+                "decisionNote": "For orchard/perennial crops, the current main crop is preserved because removal and re-establishment would be required; annual crops are not used as the main recommendation.",
                 "is_current_reference": True,
                 "lifecycle": "perennial",
                 "cropCategory": "orchard",
@@ -6782,7 +6781,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                 "totalProfit": float(chosen.get("totalProfit", 0.0) or 0.0),
                 "tlPerM3": float(chosen.get("tlPerM3", 0.0) or 0.0),
             }
-            for ar in _orchard_interrow_alternatives(str(chosen.get("name", "") or p.get("current_crop") or "Bahçe ürünü"))[:5]:
+            for ar in _orchard_interrow_alternatives(str(chosen.get("name", "") or p.get("current_crop") or "BahÃƒÂ§e ÃƒÂ¼rÃƒÂ¼nÃƒÂ¼"))[:5]:
                 alternatives.append({
                     "name": str(ar.get("name", "") or "").strip(),
                     "kind": str(ar.get("kind", "") or "").strip(),
@@ -6791,7 +6790,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                     "isInterrow": True,
                     "lifecycle": "annual_interrow",
                     "cropCategory": "interrow",
-                    "cropCategoryLabel": "Sıra arası / uzman alternatifi",
+                    "cropCategoryLabel": "SÃ„Â±ra arasÃ„Â± / uzman alternatifi",
                     "cropCategoryMode": str(problem.get("crop_category_mode") or "same_category"),
                     "categoryMatch": False,
                     "hardFilterPassed": False,
@@ -6940,14 +6939,14 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "reasonDetails": list(chosen.get("reasonDetails", []) or []),
             "cautionDetails": list(chosen.get("cautionDetails", []) or []),
             "modeledFactors": [
-                "su kotası", "mevsim etiketi", "ürün familyası / rotasyon",
-                "parsel tipi", "toprak kabiliyet sınıfı", "sulama yöntemi", "pik su ayı"
+                "water quota", "season label", "crop family / rotation",
+                "parcel type", "land capability class", "irrigation method", "peak water month"
             ],
             "irrigation": {"current": str(chosen.get("irrigation_text", "") or "").strip()},
             "irrigationCurrentKey": irr_current_key,
             "irrigationSuggestedKey": irr_suggested_key,
             **_decision_metrics_for_crop(str(chosen.get("name", "") or ""), float(chosen.get("area_da", 0.0) or 0.0), float(chosen.get("water_m3_da", 0.0) or 0.0), float(chosen.get("profit_tl_da", 0.0) or 0.0)),
-            "decisionNote": ("Kurulu çok yıllık/bahçe parselinde ana ürün korunmuştur; yalnızca ara ürün ve yönetim alternatifleri gösterilir." if is_locked_orchard else _rank_reason_with_context(chosen))
+            "decisionNote": ("The main crop is preserved in the established perennial/orchard parcel; only inter-row crops and management alternatives are shown." if is_locked_orchard else _rank_reason_with_context(chosen))
         }
 
         total_water += rec["totalWater"]
@@ -6961,7 +6960,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                 "primaryRecommendation": rec,
                 "alternativeRecommendations": [a for a in alternatives if not bool(a.get("isInterrow")) and not bool(a.get("requiresExpertApproval"))],
                 "interrowOrExpertAlternatives": [a for a in alternatives if bool(a.get("isInterrow")) or bool(a.get("requiresExpertApproval"))],
-                "conversionWarnings": (["Mevcut bahçe/çok yıllık ürün korunmuştur; yıllık ürünler ana öneri yapılmaz ve yalnızca uzman değerlendirmesi gerektirir."] if bool(is_locked_orchard) else []),
+                "conversionWarnings": (["The current orchard/perennial crop is preserved; annual crops are not used as the main recommendation and require expert review only."] if bool(is_locked_orchard) else []),
                 "recommended": [rec],
                 "alternatives": alternatives
             }
@@ -6995,21 +6994,21 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "allocation_model": str(problem.get("allocation_model") or "area_fair_per_da"),
             "cropCategoryMode": str(problem.get("crop_category_mode") or "mixed"),
             "quota_column": str(problem.get("quota_column") or "quota_area_fair_per_da_m3"),
-            "planning_rule": str(problem.get("planning_rule") or "Dekar bazlı adil kota: toplam mevcut su / toplam alan; her parsel alanı kadar su hakkı alır."),
+            "planning_rule": str(problem.get("planning_rule") or "Area-based fair quota: total current water / total area; each parcel receives water rights proportional to its area."),
             "objective_explanation": {
-                "current": "Mevcut desen referanstır; öneri üretmez.",
-                "water_efficiency": "Parsel kotası altında daha düşük/etkin su, alan kapsaması, TL/m³ ve ziraat uygunluğu birlikte puanlanır.",
-                "max_profit": "Parsel kotası aşılmadan etkin ekilebilir alan için en yüksek net kâr ve uygunluk skoru aranır.",
-                "balanced": "Su, kâr, kapsama, TL/m³, ürün çeşitliliği ve ziraat uygunluğu birlikte dengelenir."
+                "current": "The current pattern is a reference; it does not generate a recommendation.",
+                "water_efficiency": "Lower/effective water use, area coverage, TL/m3, and agronomic suitability are scored together under the parcel quota.",
+                "max_profit": "The highest net profit and suitability score are sought for the effectively plantable area without exceeding the parcel quota.",
+                "balanced": "Water use, profit, coverage, TL/m3, crop diversity, and agronomic suitability are balanced together."
             },
             "water_allocation": build_water_allocation_logic(),
             "agronomic_guards": [
-                "tarla/sebze parselinde bahçe veya çok yıllık ürün normal senaryoda önerilmez",
-                "kurulu bahçe/çok yıllık parselde ana ürün korunur",
-                "mevcut ürün adları kompakt kanonik anahtarla eşleştirilir",
-                "kota yetmezse tam parsel yerine güvenli ekilebilir alan raporlanır"
+                "orchard or perennial crops are not recommended for field/vegetable parcels in the normal scenario",
+                "the main crop is preserved in established orchard/perennial parcels",
+                "current crop names are matched with compact canonical keys",
+                "if the quota is insufficient, the safe plantable area is reported instead of the full parcel"
             ],
-            "note": "İleri projeksiyon kaldırıldı. Excel türevi parsel×ürün matrisi üzerinde gerçek algoritmik arama çalıştırıldı."
+            "note": "Forward projection was removed. A real algorithmic search was run on the Excel-derived parcel-crop matrix."
         }
     }
 
@@ -7220,7 +7219,7 @@ def optimize_from_excel_matrix(selected_parcels: List[Dict[str, Any]], algorithm
         out.setdefault("meta", {})["run_params"] = {"algorithm": algo, "seed": opts.get("seed", None), "mode": "current_baseline"}
         return out
 
-    if algo in ("AUTO", "OTOMATIK", "OTOMATİK"):
+    if algo in ("AUTO", "OTOMATIK", "OTOMATÃ„Â°K"):
         trials: List[Tuple[str, List[int], Dict[str, Any], float]] = []
         auto_opts = {**opts, "popSize": min(int(opts.get("popSize", 18) or 18), 18), "generations": min(int(opts.get("generations", 18) or 18), 18), "ants": min(int(opts.get("ants", 14) or 14), 14), "iterations": min(int(opts.get("iterations", 18) or 18), 18), "foodSources": min(int(opts.get("foodSources", 14) or 14), 14), "cycles": min(int(opts.get("cycles", 18) or 18), 18)}
         for a in ("GA", "ACO", "ABC"):
@@ -7276,7 +7275,7 @@ def optimize_from_excel_matrix(selected_parcels: List[Dict[str, Any]], algorithm
     out = _matrix_solution_to_payload(problem, sol, algo)
     out.setdefault("meta", {}).update({
         "run_params": {"algorithm": algo, "seed": opts.get("seed", None), **meta},
-        "optimization_model": "tek ürün / eşit parsel kotası / küresel portföy araması",
+        "optimization_model": "single crop / equal parcel quota / global portfolio search",
     })
     return out
 
@@ -7302,17 +7301,17 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
     if season_source == "s2":
         two_season = True
         scenario_type = "double"
-    elif scenario_type in ("double", "iki", "cift", "çift", "desen"):
+    elif scenario_type in ("double", "iki", "cift", "ÃƒÂ§ift", "desen"):
         two_season = True
     else:
         two_season = False
         scenario_type = "single"
 
     # IMPORTANT:
-    # Excel-derived matrix optimizer is intentionally limited to tek ürün / tek sezon mantığı.
-    # Senaryo-2 ise çift ürün / desen mantığı içerir; bu nedenle S2 isteklerinde matrix motorunu
-    # kullanmak yanlış sonuçlara yol açıyordu ve S1/S2 farkı kayboluyordu. Aşağıda matrix motoru
-    # yalnızca gerçek tek-ürün senaryolarda devreye alınır.
+    # Excel-derived matrix optimizer is intentionally limited to tek ÃƒÂ¼rÃƒÂ¼n / tek sezon mantÃ„Â±Ã„Å¸Ã„Â±.
+    # Senaryo-2 ise ÃƒÂ§ift ÃƒÂ¼rÃƒÂ¼n / desen mantÃ„Â±Ã„Å¸Ã„Â± iÃƒÂ§erir; bu nedenle S2 isteklerinde matrix motorunu
+    # kullanmak yanlÃ„Â±Ã…Å¸ sonuÃƒÂ§lara yol aÃƒÂ§Ã„Â±yordu ve S1/S2 farkÃ„Â± kayboluyordu. AÃ…Å¸aÃ„Å¸Ã„Â±da matrix motoru
+    # yalnÃ„Â±zca gerÃƒÂ§ek tek-ÃƒÂ¼rÃƒÂ¼n senaryolarda devreye alÃ„Â±nÃ„Â±r.
     category_mode = normalize_crop_category_mode(opts.get("cropCategoryMode") or opts.get("crop_category_mode") or "mixed") if isinstance(opts, dict) else "mixed"
     hard_category_mode = category_mode in {"field_cereal", "forage", "legume", "vegetable", "industrial_oil", "orchard", "same_category"}
     orchard_guard_required = any(
@@ -7332,7 +7331,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
                 matrix_out.setdefault("meta", {})["scenarioType"] = scenario_type
                 matrix_out.setdefault("meta", {})["twoSeason"] = bool(two_season)
                 if two_season:
-                    matrix_out.setdefault("meta", {})["category_guard_note"] = "Kategori filtresi seçili olduğu için eski çift ürün fallback yerine kategori-korumalı karar hattı kullanıldı."
+                    matrix_out.setdefault("meta", {})["category_guard_note"] = "Kategori filtresi seÃƒÂ§ili olduÃ„Å¸u iÃƒÂ§in eski ÃƒÂ§ift ÃƒÂ¼rÃƒÂ¼n fallback yerine kategori-korumalÃ„Â± karar hattÃ„Â± kullanÃ„Â±ldÃ„Â±."
                 return matrix_out
         except Exception:
             pass
@@ -7373,7 +7372,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
 
     # Supported optimization objectives:
     # - current / mevcut: observed baseline only
-    # - water_efficiency: use available water effectively (maximize TL/m³ under constraints)
+    # - water_efficiency: use available water effectively (maximize TL/mÃ‚Â³ under constraints)
     # - max_profit: prioritize profit, but still apply realism / feasibility guards
     # - old balanced/recommended aliases are treated as water_efficiency
     obj_raw = str(scenario or objective or "water_efficiency").lower()
@@ -7381,7 +7380,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
         objective = "water_saving"
     elif obj_raw in ("water_efficiency", "su_verimliligi", "su verimliligi", "su_etkin", "su etkin", "balanced", "denge", "onerilen", "recommended"):
         objective = "water_efficiency"
-    elif obj_raw in ("maks_kar", "maks kar", "max_profit", "kar", "kâr"):
+    elif obj_raw in ("maks_kar", "maks kar", "max_profit", "kar", "kÃƒÂ¢r"):
         objective = "max_profit"
     elif obj_raw in ("mevcut", "current"):
         objective = "current"
@@ -7397,20 +7396,20 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
         catalog = load_crop_catalog()
         season_source = str((options or {}).get('seasonSource', 's1') or 's1').strip().lower()
         # --- Scenario-2: perennial lock + single-crop water-saving logic (farmer-friendly) ---
-        # Scenario-2 "çok yıllık" ürün havuzu (normalize_crop_key ile normalize ediliyor).
-        # Datasetlerde parantez/şapka/İ-Ş-Ğ vb. farklar olabildiği için hem TR hem normalize
-        # varyantları ekliyoruz (örn. "BAĞ (ÜZÜM)" -> "BAG").
+        # Scenario-2 "ÃƒÂ§ok yÃ„Â±llÃ„Â±k" ÃƒÂ¼rÃƒÂ¼n havuzu (normalize_crop_key ile normalize ediliyor).
+        # Datasetlerde parantez/Ã…Å¸apka/Ã„Â°-Ã…Â-Ã„Â vb. farklar olabildiÃ„Å¸i iÃƒÂ§in hem TR hem normalize
+        # varyantlarÃ„Â± ekliyoruz (ÃƒÂ¶rn. "BAÃ„Â (ÃƒÅ“ZÃƒÅ“M)" -> "BAG").
         SC2_PERENNIAL = [
             'ELMA',
-            'KIRAZ','KİRAZ','VİŞNE','VISNE',
+            'KIRAZ','KÃ„Â°RAZ','VÃ„Â°Ã…ÂNE','VISNE',
             'ARMUT','AYVA',
-            'ŞEFTALİ','SEFTALI','NEKTARİN','NEKTARIN','KAYISI','ERIK','ERİK',
-            'BAĞ','BAG','ÜZÜM','UZUM','UZUM_SOFRALIK','UZUM_SARAPLIK',
-            'CEVIZ','CEVİZ','BADEM',
+            'Ã…ÂEFTALÃ„Â°','SEFTALI','NEKTARÃ„Â°N','NEKTARIN','KAYISI','ERIK','ERÃ„Â°K',
+            'BAÃ„Â','BAG','ÃƒÅ“ZÃƒÅ“M','UZUM','UZUM_SOFRALIK','UZUM_SARAPLIK',
+            'CEVIZ','CEVÃ„Â°Z','BADEM',
             'NAR','ZEYTIN','FISTIK','FINDIK','INCIR'
         ]
         SC2_ANNUAL = [
-            'PATATES','SİLAJLIK MISIR','SILAJLIK MISIR','YONCA','BUĞDAY (DANE)','BUGDAY (DANE)','ŞEKER PANCARI','SEKER PANCARI'
+            'PATATES','SÃ„Â°LAJLIK MISIR','SILAJLIK MISIR','YONCA','BUÃ„ÂDAY (DANE)','BUGDAY (DANE)','Ã…ÂEKER PANCARI','SEKER PANCARI'
         ]
         def _sc2_norm(x: str) -> str:
             try:
@@ -7423,8 +7422,8 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
             k = _sc2_norm(key)
             if k not in catalog:
                 catalog[k] = {'water_per_da': float(default_water), 'profit_per_da': float(default_profit)}
-        # Çok yıllık/bahçe ürünleri, kullanıcı S1 veya S2 seçse bile katalogda güvenli şekilde bulunabilmeli.
-        # Aksi halde kullanıcı beyanıyla gelen mevcut kayısı/elma vb. ürünler basit modda yanlışlıkla yıllık ürüne çevrilebiliyordu.
+        # Ãƒâ€¡ok yÃ„Â±llÃ„Â±k/bahÃƒÂ§e ÃƒÂ¼rÃƒÂ¼nleri, kullanÃ„Â±cÃ„Â± S1 veya S2 seÃƒÂ§se bile katalogda gÃƒÂ¼venli Ã…Å¸ekilde bulunabilmeli.
+        # Aksi halde kullanÃ„Â±cÃ„Â± beyanÃ„Â±yla gelen mevcut kayÃ„Â±sÃ„Â±/elma vb. ÃƒÂ¼rÃƒÂ¼nler basit modda yanlÃ„Â±Ã…Å¸lÃ„Â±kla yÃ„Â±llÃ„Â±k ÃƒÂ¼rÃƒÂ¼ne ÃƒÂ§evrilebiliyordu.
         for k in SC2_PERENNIAL_N:
             _ensure_catalog_key(k, default_water=320.0, default_profit=9000.0)
         if season_source == 's2':
@@ -7516,7 +7515,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
                 roman = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8}
                 if s in roman:
                     return roman[s]
-                # sometimes like "1. SINIF" or "II. sınıf"
+                # sometimes like "1. SINIF" or "II. sÃ„Â±nÃ„Â±f"
                 for k, v in roman.items():
                     if k in s:
                         return v
@@ -7629,8 +7628,8 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
             except Exception:
                 h = 0
 
-            # Çok yıllık/bahçe kuralı: kullanıcı S1 veya S2 seçse bile kurulmuş bahçede ana ürün korunur.
-            # Kullanıcı beyanı (parsel düzeltmesi) varsa önce onu dikkate al, sonra veri setindeki mevcut ürüne düş.
+            # Ãƒâ€¡ok yÃ„Â±llÃ„Â±k/bahÃƒÂ§e kuralÃ„Â±: kullanÃ„Â±cÃ„Â± S1 veya S2 seÃƒÂ§se bile kurulmuÃ…Å¸ bahÃƒÂ§ede ana ÃƒÂ¼rÃƒÂ¼n korunur.
+            # KullanÃ„Â±cÃ„Â± beyanÃ„Â± (parsel dÃƒÂ¼zeltmesi) varsa ÃƒÂ¶nce onu dikkate al, sonra veri setindeki mevcut ÃƒÂ¼rÃƒÂ¼ne dÃƒÂ¼Ã…Å¸.
             curr_raw = (
                 parcel.get('current_crop')
                 or parcel.get('currentCrop')
@@ -7657,7 +7656,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
                     'water_m3_da': w1, 'waterPerDa': w1,
                     'profit_tl_da': p1, 'profitPerDa': p1,
                     'orchard_locked': True,
-                    'decision_note': 'Kurulu bahçe/çok yıllık parsel: ana ürün korunur; iyileştirme sulama ve yönetim üzerinden yapılır.'
+                    'decision_note': 'Established orchard/perennial parcel: the main crop is preserved; improvements are made through irrigation and management.',
                 }]
 
             if season_source == 's2':
@@ -7704,7 +7703,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
         # Here we assign primaries across parcels with a soft per-crop cap to produce diverse, realistic
         # suggestions while still maximizing the objective.
         # Determine a soft cap for how many parcels can get the same primary.
-        # With 15 parcels and 15 primaries, this typically becomes 1–3.
+        # With 15 parcels and 15 primaries, this typically becomes 1Ã¢â‚¬â€œ3.
         try:
             import math
             if len(primary_crops) >= len(selected) and len(selected) > 0:
@@ -7789,7 +7788,7 @@ def optimize(selected_ids: List[str], algorithm: str, scenario: str, water_budge
             "efficiency_tl_per_m3": float(eff2),
             "parcels": parcels_out,
             "details": details_out,
-            "meta":{"mode":"simple_v52","note":"Bahçe/çok yıllık parseller tüm modlarda ana ürünü korur; su verimliliği ve kâr birlikte puanlanır."}
+            "meta":{"mode":"simple_v52","note":"Orchard/perennial parcels preserve the main crop in all modes; water efficiency and profit are scored together."}
         }
 
     algo = str(algorithm or "GA").upper()
@@ -8016,14 +8015,14 @@ def _to_ui_payload(raw: Dict[str, Any], selected_parcels: List[Dict[str, Any]], 
     """Convert optimizer output into the UI-friendly response.
 
     Key fixes vs older versions:
-      - Tek bir yerden ( _build_two_crop_recommendations ) 1. ürün + 2. ürün önerisi üretilir.
-      - Senaryo-2 bahçe/perennial kilitleri burada da tutarlı şekilde uygulanır.
-      - Ürün aileleri (crop_family) ile 1. ve 2. ürünün aynı familyadan olmaması tercih edilir.
-      - Suitability (LCC x crop) kâr/da değerine çarpan olarak uygulanır (build_candidate_matrix içinde).
+      - Tek bir yerden ( _build_two_crop_recommendations ) 1. ÃƒÂ¼rÃƒÂ¼n + 2. ÃƒÂ¼rÃƒÂ¼n ÃƒÂ¶nerisi ÃƒÂ¼retilir.
+      - Senaryo-2 bahÃƒÂ§e/perennial kilitleri burada da tutarlÃ„Â± Ã…Å¸ekilde uygulanÃ„Â±r.
+      - ÃƒÅ“rÃƒÂ¼n aileleri (crop_family) ile 1. ve 2. ÃƒÂ¼rÃƒÂ¼nÃƒÂ¼n aynÃ„Â± familyadan olmamasÃ„Â± tercih edilir.
+      - Suitability (LCC x crop) kÃƒÂ¢r/da deÃ„Å¸erine ÃƒÂ§arpan olarak uygulanÃ„Â±r (build_candidate_matrix iÃƒÂ§inde).
 
-    Not: Buradaki 2 ürün, "aynı yıl içinde iki farklı ekim" yaklaşımını temsil eder. 
-    Ön yüz aynı anda alan bölüştürme gibi gösterse bile, arka tarafta "su/kâr" hesabı şeffaftır:
-      su = Σ(area1*water1 + area2*water2), kâr = Σ(area1*profit1 + area2*profit2).
+    Not: Buradaki 2 ÃƒÂ¼rÃƒÂ¼n, "aynÃ„Â± yÃ„Â±l iÃƒÂ§inde iki farklÃ„Â± ekim" yaklaÃ…Å¸Ã„Â±mÃ„Â±nÃ„Â± temsil eder.
+    Ãƒâ€“n yÃƒÂ¼z aynÃ„Â± anda alan bÃƒÂ¶lÃƒÂ¼Ã…Å¸tÃƒÂ¼rme gibi gÃƒÂ¶sterse bile, arka tarafta "su/kÃƒÂ¢r" hesabÃ„Â± Ã…Å¸effaftÃ„Â±r:
+      su = ÃÂ£(area1*water1 + area2*water2), kÃƒÂ¢r = ÃÂ£(area1*profit1 + area2*profit2).
     """
     # Build candidate matrices (this already applies suitability)
     crop_list, _, _ = build_candidate_matrix(selected_parcels, year=year, season_source=season_source)
@@ -8158,13 +8157,13 @@ def _to_ui_payload(raw: Dict[str, Any], selected_parcels: List[Dict[str, Any]], 
             "delivery_report": delivery_report,
             "season_source": season_source,
             "formulas": {
-                "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
-                "profit_tl": "Σ(area_da * profitPerDa) (1. ürün + 2. ürün)",
+                "water_m3": "ÃÂ£(area_da * waterPerDa) (1. ÃƒÂ¼rÃƒÂ¼n + 2. ÃƒÂ¼rÃƒÂ¼n)",
+                "profit_tl": "ÃÂ£(area_da * profitPerDa) (1. ÃƒÂ¼rÃƒÂ¼n + 2. ÃƒÂ¼rÃƒÂ¼n)",
                 "efficiency": "total_profit_tl / total_water_m3",
                 "score": "alpha*profitPerDa - beta*waterPerDa",
                 "suitability": "profitPerDa = profitPerDa * suitability(LCC, crop)",
             },
-            "note": "İkinci ürün seçiminde aynı ürün ailesinden (crop_family) kaçınma + baklagil (Fabaceae) küçük teşvik bonusu eklendi."
+            "note": "Ã„Â°kinci ÃƒÂ¼rÃƒÂ¼n seÃƒÂ§iminde aynÃ„Â± ÃƒÂ¼rÃƒÂ¼n ailesinden (crop_family) kaÃƒÂ§Ã„Â±nma + baklagil (Fabaceae) kÃƒÂ¼ÃƒÂ§ÃƒÂ¼k teÃ…Å¸vik bonusu eklendi."
         }
     }
 
@@ -8187,7 +8186,7 @@ def _standard_scenario_type(options: Dict[str, Any], payload_meta: Dict[str, Any
     raw = str(opt.get("scenarioType") or meta.get("scenarioType") or "").strip().lower()
     season_source = str(opt.get("seasonSource") or meta.get("seasonSource") or "").strip().lower()
     two_season = bool(opt.get("twoSeason") or meta.get("twoSeason"))
-    if season_source == "s2" or two_season or raw in ("double", "iki", "cift", "çift", "desen"):
+    if season_source == "s2" or two_season or raw in ("double", "iki", "cift", "ÃƒÂ§ift", "desen"):
         return "double"
     return "single"
 
@@ -8265,7 +8264,7 @@ def _standard_crop_from_row(row: Dict[str, Any], parcel: Dict[str, Any], role: s
     feasible = _row_feasible(row, plan_feasible=plan_feasible)
     warnings = []
     if quota > 0 and water > quota + 1e-6:
-        warnings.append("Parsel su kotasini asiyor; secilebilir degil.")
+        warnings.append("The parcel exceeds the water quota; it is not selectable.")
     if not _safe_text(row.get("planting_date") or row.get("ekim_tarihi") or row.get("harvest_date") or row.get("hasat_tarihi")):
         warnings.append("Takvim verisi eksik; ekim-hasat cakismasi veriyle dogrulanamadi.")
     return {
@@ -8284,7 +8283,7 @@ def _standard_crop_from_row(row: Dict[str, Any], parcel: Dict[str, Any], role: s
         "tl_per_m3": float(profit / water) if water > 0 else 0.0,
         "irrigation_method": _safe_text(row.get("irrigationSuggestedKey") or row.get("irrigationRecommended") or row.get("irrigationCurrentKey")),
         "quota_m3": float(quota),
-        "quota_status": "Uygun" if feasible else "Kota/uygunluk riski var",
+        "quota_status": "Suitable" if feasible else "Quota/feasibility risk",
         "feasible": bool(feasible),
         "selectable": bool(feasible),
         "warnings": warnings,
@@ -8378,7 +8377,7 @@ def repair_plan_for_diversity(plan_rows: List[Dict[str, Any]], candidate_rows: L
                 if best_move is None or move[0] > best_move[0]:
                     best_move = move
         if best_move is None:
-            repair_warnings.append(f"{top_crop} için çeşitlilik sınırını iyileştirecek uygulanabilir alternatif bulunamadı.")
+            repair_warnings.append(f"No feasible alternative was found to improve the diversity limit for {top_crop}.")
             break
         _score, idx, replacement_rows, new_metrics, old_name, cand_name = best_move
         rows = rows[:idx] + replacement_rows + rows[idx + 1:]
@@ -8388,15 +8387,15 @@ def repair_plan_for_diversity(plan_rows: List[Dict[str, Any]], candidate_rows: L
         if safe_float(metrics.get("diversity_penalty", 0.0), 0.0) < start_penalty - 1e-12:
             improved = True
         repair_warnings.append(
-            f"Ürün çeşitliliği kısıtı nedeniyle {old_name} yerine {cand_name} seçilerek plan yeniden dengelendi."
+            f"ÃƒÅ“rÃƒÂ¼n ÃƒÂ§eÃ…Å¸itliliÃ„Å¸i kÃ„Â±sÃ„Â±tÃ„Â± nedeniyle {old_name} yerine {cand_name} seÃƒÂ§ilerek plan yeniden dengelendi."
         )
         if replacements >= max_total_replacements:
-            repair_warnings.append("Çeşitlilik onarımı güvenli işlem sınırına ulaştığı için durduruldu.")
+            repair_warnings.append("Ãƒâ€¡eÃ…Å¸itlilik onarÃ„Â±mÃ„Â± gÃƒÂ¼venli iÃ…Å¸lem sÃ„Â±nÃ„Â±rÃ„Â±na ulaÃ…Å¸tÃ„Â±Ã„Å¸Ã„Â± iÃƒÂ§in durduruldu.")
             break
         if bool(metrics.get("diversity_feasible", False)):
             break
     if max_iter >= max_repair_iterations and not bool(metrics.get("diversity_feasible", False)):
-        repair_warnings.append("Çeşitlilik onarımı maksimum iterasyon sınırına ulaştığı için durduruldu.")
+        repair_warnings.append("Ãƒâ€¡eÃ…Å¸itlilik onarÃ„Â±mÃ„Â± maksimum iterasyon sÃ„Â±nÃ„Â±rÃ„Â±na ulaÃ…Å¸tÃ„Â±Ã„Å¸Ã„Â± iÃƒÂ§in durduruldu.")
 
     final_metrics = compute_diversity_metrics(rows, 0.0, cfg)
     return {
@@ -8428,7 +8427,7 @@ def evaluate_plan_with_diversity(plan_rows: List[Dict[str, Any]], base_metrics: 
         diversity.setdefault("warnings", [])
         diversity["warnings"] = list(dict.fromkeys(
             list(diversity.get("warnings") or [])
-            + ["Ürün çeşitliliği kısıtı nedeniyle plan yeniden dengelenmiştir."]
+            + ["ÃƒÅ“rÃƒÂ¼n ÃƒÂ§eÃ…Å¸itliliÃ„Å¸i kÃ„Â±sÃ„Â±tÃ„Â± nedeniyle plan yeniden dengelenmiÃ…Å¸tir."]
         ))
     return {
         "diversity": diversity,
@@ -8508,38 +8507,38 @@ def _standard_s2_secondary_repair_row(parcel: Dict[str, Any], primary_name: str,
         "waterTotal": float(water),
         "profitPerDa": float(ppd),
         "profitTotal": float(profit),
-        "reason": "Senaryo-2 iki urun sarti icin gercek aday havuzundan eklenen ikinci bilesen; kota uygunlugu ayrica degerlendirilir.",
+        "reason": "Second component added from the real candidate pool for the Scenario 2 two-crop condition; quota suitability is evaluated separately.",
     }
 
 
 def _calendar_warnings_for_plan(crops: List[Dict[str, Any]], scenario_type: str) -> Tuple[str, List[str]]:
     warnings = []
     if scenario_type != "double":
-        return "Tek urunlu parsel plani", warnings
+        return "Single-crop parcel plan", warnings
     if len(crops) < 2:
-        warnings.append("Senaryo-2 icin iki urun/desen sarti saglanamadi.")
-        return "Eksik iki urunlu desen", warnings
+        warnings.append("The two-crop/pattern requirement for Scenario 2 could not be met.")
+        return "Incomplete two-crop pattern", warnings
     same_season = normalize_crop_key(crops[0].get("season")) == normalize_crop_key(crops[1].get("season"))
     share_sum = sum(safe_float(c.get("area_share_pct", 0.0), 0.0) for c in crops[:2])
     if same_season:
         if share_sum > 150.0:
-            warnings.append("Sezon etiketi ayni/eksik gorunuyor; iki bilesen tam parsel alaninda hesaplandigi icin ardisik desen olarak raporlandi.")
-            return "Ardisik iki sezon deseni", warnings
+            warnings.append("Season labels appear identical/missing; because both components are calculated over the full parcel area, the result is reported as a sequential pattern.")
+            return "Sequential two-season pattern", warnings
         if abs(share_sum - 100.0) > 2.0:
-            warnings.append("Ayni sezon alan paylasimli desende alan oranlari %100 toplamiyor.")
-        return "Alan paylasimli desen", warnings
+            warnings.append("Area shares do not total 100% in the same-season area-sharing pattern.")
+        return "Area-sharing pattern", warnings
     dates = [(c.get("planting_date"), c.get("harvest_date")) for c in crops[:2]]
     if not all(a and b for a, b in dates):
-        warnings.append("Ardisik desen icin ekim-hasat tarihleri eksik; yalniz sezon etiketiyle raporlandi.")
-        return "Ardisik iki sezon deseni", warnings
+        warnings.append("Planting-harvest dates are missing for the sequential pattern; it was reported using the season label only.")
+        return "Sequential two-season pattern", warnings
     try:
         p1, h1 = pd.to_datetime(dates[0][0]), pd.to_datetime(dates[0][1])
         p2, h2 = pd.to_datetime(dates[1][0]), pd.to_datetime(dates[1][1])
         if not (h1 <= p2 or h2 <= p1):
-            warnings.append("Ekim-hasat tarihleri cakisiyor; desen uygulanamaz.")
+            warnings.append("Planting-harvest dates overlap; the pattern is not feasible.")
     except Exception:
-        warnings.append("Takvim tarihleri okunamadi; cakisma kontrolu tamamlanamadi.")
-    return "Ardisik iki sezon deseni", warnings
+        warnings.append("Calendar dates could not be read; the overlap check could not be completed.")
+    return "Sequential two-season pattern", warnings
 
 
 def _standard_data_sources() -> List[str]:
@@ -8575,7 +8574,7 @@ def _completion_status_kind(completed: int, requested: int) -> str:
 
 
 def _completion_status_label(completed: int, requested: int) -> str:
-    return f"Tamamlandı: {completed}/{requested} koşu" if _completion_status_kind(completed, requested) == "completed" else f"Kısmi sonuç: {completed}/{requested} koşu tamamlandı"
+    return f"Completed: {completed}/{requested} runs" if _completion_status_kind(completed, requested) == "completed" else f"Partial result: {completed}/{requested} runs completed"
 
 
 def _score_plan_for_calibration(plan: Dict[str, Any], objective_mode: str) -> float:
@@ -8654,17 +8653,17 @@ def _select_recommended_repeat_count(rows: List[Dict[str, Any]]) -> Dict[str, An
         completed_ok = all(int(r.get("completed_runs", 0)) >= int(r.get("requested_runs", 0)) for r in group)
         if feasible_ok and cv_ok and marginal_ok and dominance_ok and completed_ok:
             selected = count
-            reasons.append(f"{count} tekrarda uygulanabilirlik, CV, marjinal iyileşme ve plan baskınlığı eşikleri sağlandı.")
+            reasons.append(f"At {count} repeats, feasibility, CV, marginal improvement, and dominant-plan thresholds were satisfied.")
             break
         reasons.append(
-            f"{count} tekrar: uygulanabilirlik={feasible_ok}, CV={cv_ok}, marjinal={marginal_ok}, plan baskınlığı={dominance_ok}, tamamlanma={completed_ok}."
+            f"{count} repeats: feasibility={feasible_ok}, CV={cv_ok}, marginal={marginal_ok}, dominant_plan={dominance_ok}, completion={completed_ok}."
         )
     if selected is None:
         selected = ACADEMIC_DEFAULT_REPEAT_COUNT if ACADEMIC_DEFAULT_REPEAT_COUNT in by_count else (min(by_count.keys()) if by_count else ACADEMIC_DEFAULT_REPEAT_COUNT)
-        reasons.append(f"Eşiklerin tamamı sağlanmadığı için akademik varsayılan {selected} tekrar seçildi.")
+        reasons.append(f"Because all thresholds were not satisfied, the academic default of {selected} repeats was selected.")
     return {
         "recommended_repeat_count": int(selected),
-        "selection_rule": "feasible_rate>=95%, cv_score<=5%, marginal_gain_vs_previous<1%, dominant_plan_rate<=90%, süre/tamamlanma kabul edilebilir; bu eşiği sağlayan en küçük tekrar sayısı seçilir.",
+        "selection_rule": "feasible_rate>=95%, cv_score<=5%, marginal_gain_vs_previous<1%, dominant_plan_rate<=90%, runtime/completion acceptable; the smallest repeat count satisfying this threshold is selected.",
         "reason": " ".join(reasons[-3:]),
     }
 
@@ -8683,7 +8682,7 @@ def _optimization_repeat_selection(selected_ids: List[str], algorithm: str, scen
             "mode": "fast_preview",
             "algorithm": str(algorithm or "GA").upper(),
             "selected_repeat_count": repeat_count,
-            "reason": "Hizli on izleme modu acik; akademik sonuc olarak yorumlanmaz.",
+            "reason": "Fast preview mode is enabled; this should not be interpreted as an academic result.",
             "calibration_available": False,
         }
     key = _calibration_cache_key(selected_ids, algorithm, scenario, scenario_type, year_val, water_budget_ratio)
@@ -8694,17 +8693,17 @@ def _optimization_repeat_selection(selected_ids: List[str], algorithm: str, scen
             "mode": "calibrated",
             "algorithm": str(algorithm or "GA").upper(),
             "selected_repeat_count": repeat_count,
-            "reason": cached.get("reason") or "Aynı parsel/hedef/senaryo koşulları için kalibrasyon sonucu kullanıldı.",
+            "reason": cached.get("reason") or "The calibration result was used for the same parcel/objective/scenario conditions.",
             "calibration_available": True,
-            "warning": "Bu optimize endpoint'i mevcut sürümde ana planı tek standart backend çalıştırmasıyla üretir; akademik tekrar istatistikleri kalibrasyon/benchmark ekranında raporlanır.",
+            "warning": "This optimize endpoint produces the main plan with one standard backend run in the current version; academic repetition statistics are reported in the calibration/benchmark screen.",
         }
     return {
         "mode": "default_30",
         "algorithm": str(algorithm or "GA").upper(),
         "selected_repeat_count": ACADEMIC_DEFAULT_REPEAT_COUNT,
-        "reason": "Kalibrasyon sonucu yok; akademik varsayılan 30 tekrar kabul edilir, ancak bu endpoint mevcut sürümde tek karar paketi üretmektedir.",
+        "reason": "No calibration result is available; the academic default of 30 repeats is accepted, but this endpoint currently produces a single decision package.",
         "calibration_available": False,
-        "warning": "Bu endpoint mevcut sürümde tek koşu üretmektedir; akademik tekrar karşılaştırması benchmark/kalibrasyon ekranında yapılır.",
+        "warning": "This endpoint currently produces a single run; academic repetition comparison is performed in the benchmark/calibration screen.",
     }
 
 def _optimization_run_policy(selected_ids: List[str], algorithm: str, scenario: str, scenario_type: str, year_val: Optional[int], water_budget_ratio: float) -> Dict[str, Any]:
@@ -8722,7 +8721,7 @@ def _optimization_run_policy(selected_ids: List[str], algorithm: str, scenario: 
         "best_score": None,
         "cv_score": None,
         "mean_runtime_sec": None,
-        "warning": "Bu politika alani route disi standartlastirma icin on bilgidir; /api/optimize gercek kosu istatistikleriyle doldurur.",
+        "warning": "This policy field is preliminary information for out-of-route standardization; /api/optimize fills it with real run statistics.",
     }
 
 
@@ -8774,7 +8773,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         bw = safe_float(p.get("water_m3", 0.0), 0.0)
         bp = safe_float(p.get("profit_tl", 0.0), 0.0)
         if bw <= 0 or bp <= 0:
-            baseline_warnings.append(f"{p.get('id')} parselinde baseline su/kar verisi eksik veya sifir.")
+            baseline_warnings.append(f"Baseline water/profit data is missing or zero for parcel {p.get('id')}.")
         baseline_rows.append({
             "parcel_id": _safe_text(p.get("id")),
             "crop_name": _safe_text(p.get("current_crop") or p.get("crop") or "Bilinmiyor"),
@@ -8803,14 +8802,14 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
             if isinstance(orchard_alt, dict) and _row_name(orchard_alt):
                 rows.append({
                     "name": _row_name(orchard_alt),
-                    "season": "Sira arasi / uzman onayli",
+                    "season": "Inter-row / expert-approved",
                     "area": 0.0,
                     "waterTotal": 0.0,
                     "profitTotal": 0.0,
-                    "reason": _safe_text(orchard_alt.get("decisionNote") or orchard_alt.get("note") or "Bahce parselinde uzman onayli ara yonetim alternatifi."),
+                    "reason": _safe_text(orchard_alt.get("decisionNote") or orchard_alt.get("note") or "Expert-approved interim management alternative for the orchard parcel."),
                     "feasible": False,
                 })
-                plan_warnings.append(f"{pid} parselinde ikinci urun yalniz uzman onayli ara yonetim alternatifi olarak raporlandi.")
+                plan_warnings.append(f"For parcel {pid}, the second crop was reported only as an expert-approved interim management alternative.")
             else:
                 primary_name = _row_name(rows[0]) if rows else _safe_text((parcel or {}).get("current_crop"))
                 repair_row = _standard_s2_secondary_repair_row(
@@ -8822,7 +8821,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                 )
                 if repair_row is not None:
                     rows.append(repair_row)
-                    plan_warnings.append(f"{pid} parselinde algoritma ikinci urunu bos/NADAS birakti; Senaryo-2 icin gercek aday havuzundan ikinci bilesen eklendi ve kota uygunlugu acikca raporlandi.")
+                    plan_warnings.append(f"For parcel {pid}, the algorithm left the second crop empty/FALLOW; a second component from the real candidate pool was added for Scenario 2, and quota suitability was reported explicitly.")
         if scenario_type == "double" and len(rows) >= 2:
             first_name = _row_name(rows[0])
             second_name = _row_name(rows[1])
@@ -8837,9 +8836,9 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                 )
                 if replacement is not None:
                     rows[1] = replacement
-                    plan_warnings.append(f"{pid} parselinde {first_name} + {second_name} ayni/yakin urun varyanti sayildi; ikinci bilesen gercek aday havuzundan farkli urunle degistirildi.")
+                    plan_warnings.append(f"For parcel {pid}, {first_name} + {second_name} were treated as the same or a close crop variant; the second component was replaced with a different crop from the real candidate pool.")
                 else:
-                    plan_warnings.append(f"{pid} parselinde {first_name} + {second_name} ayni/yakin urun varyanti oldugu icin iki urunlu desen guvenilir degil; uygun farkli ikinci urun bulunamadi.")
+                    plan_warnings.append(f"For parcel {pid}, {first_name} + {second_name} are the same or a close crop variant, so the two-crop pattern is not reliable; no suitable different second crop was found.")
         for idx, row in enumerate(rows):
             role = "primary" if idx == 0 else ("secondary" if scenario_type == "double" else "alternative_component")
             plan_rows.append(_standard_crop_from_row(row, parcel, role, bool(result.get("feasible", True))))
@@ -8847,9 +8846,9 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     pattern_type, calendar_warnings = _calendar_warnings_for_plan(plan_rows, scenario_type)
     plan_warnings.extend(calendar_warnings)
     if scenario_type == "single" and len(plan_rows) != max(1, len(selected_parcels)):
-        plan_warnings.append("Senaryo-1 tek urunlu plan bekler; parsel sayisi ile onerilen satir sayisi uyusmuyor.")
+        plan_warnings.append("Scenario 1 expects a single-crop plan; the parcel count and recommended row count do not match.")
     if scenario_type == "double" and len(selected_parcels) == 1 and len(plan_rows) != 2:
-        plan_warnings.append("Senaryo-2 ana plani tam iki urun/desen satiri uretmedi.")
+        plan_warnings.append("The main Scenario 2 plan did not produce exactly two crop/pattern rows.")
 
     diversity_candidate_rows: List[Dict[str, Any]] = []
     if bool(_diversity_config(DIVERSITY_DEFAULTS).get("repair_enabled", True)):
@@ -8919,11 +8918,11 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                         "profit_tl": float(profit),
                         "tl_per_m3": float(profit / water) if water > 0 else 0.0,
                         "quota_m3": 0.0,
-                        "quota_status": "Uygun",
+                        "quota_status": "Suitable",
                         "feasible": True,
                         "selectable": True,
                         "warnings": [],
-                        "explanation": "Çeşitlilik onarımı için aynı parselin uygulanabilir aday havuzundan alınmıştır.",
+                        "explanation": "Selected from the same parcel's feasible candidate pool for diversity repair.",
                     })
         except Exception:
             pass
@@ -8958,7 +8957,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                 "profit_tl": float(c1_area * ppd1),
                 "feasible": True,
                 "selectable": True,
-                "quota_status": "Uygun",
+                "quota_status": "Suitable",
             })
             c1["tl_per_m3"] = float(c1["profit_tl"] / c1["water_m3"]) if c1["water_m3"] > 0 else 0.0
             c2.update({
@@ -8968,7 +8967,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                 "profit_tl": float(c2_area * ppd2),
                 "feasible": True,
                 "selectable": True,
-                "quota_status": "Uygun",
+                "quota_status": "Suitable",
             })
             c2["tl_per_m3"] = float(c2["profit_tl"] / c2["water_m3"]) if c2["water_m3"] > 0 else 0.0
             cand_water = c1["water_m3"] + c2["water_m3"]
@@ -8979,9 +8978,9 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         if best_ratio_plan is not None:
             c1, c2, total_water, total_profit, r1_pct, r2_pct = best_ratio_plan
             plan_rows = [c1, c2]
-            pattern_type = "Alan paylasimli desen"
+            pattern_type = "Area-sharing pattern"
             area_shared_repair_applied = True
-            plan_warnings.append(f"Ardisik iki sezon deseni kota disinda kaldigi icin ayni sezon alan paylasimli %{r1_pct}-%{r2_pct} desen uygulanabilir ana plan olarak secildi.")
+            plan_warnings.append(f"Because the sequential two-season pattern exceeded the quota, a same-season area-sharing {r1_pct}-{r2_pct}% pattern was selected as the feasible main plan.")
 
     diversity_repair = repair_plan_for_diversity(
         plan_rows,
@@ -8991,7 +8990,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     )
     plan_rows = diversity_repair.get("plan_rows", plan_rows)
     if diversity_repair.get("repair_applied"):
-        plan_warnings.append("Ürün çeşitliliği kısıtı nedeniyle plan yeniden dengelenmiştir. Amaç, tek ürüne aşırı yığılmayı azaltarak daha uygulanabilir bir ürün deseni üretmektir.")
+        plan_warnings.append("The plan was rebalanced because of the crop-diversity constraint. The goal is to reduce excessive concentration in one crop and produce a more feasible crop pattern.")
     plan_warnings.extend(diversity_repair.get("warnings") or [])
     total_water = sum(safe_float(c.get("water_m3", 0.0), 0.0) for c in plan_rows) if plan_rows else total_water
     total_profit = sum(safe_float(c.get("profit_tl", 0.0), 0.0) for c in plan_rows) if plan_rows else total_profit
@@ -9001,11 +9000,11 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         plan_feasible = False
     if total_water > water_budget_m3 + 1e-6 and water_budget_m3 > 0:
         plan_feasible = False
-        plan_warnings.append("Secili plan toplam su butcesini asiyor.")
+        plan_warnings.append("The selected plan exceeds the total water budget.")
     selected_status = "ok"
     if scenario_type == "double" and not plan_feasible:
         selected_status = "no_feasible_two_crop_plan"
-        plan_warnings.append("Secili parsel ve su kotasi altinda uygulanabilir iki urunlu/desenli plan bulunamadi.")
+        plan_warnings.append("No feasible two-crop/pattern plan was found under the selected parcel and water quota.")
 
     diversity_eval = evaluate_plan_with_diversity(
         plan_rows,
@@ -9020,11 +9019,11 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     diversity_metrics = diversity_eval.get("diversity", {})
     recommendation_status = str(diversity_eval.get("recommendation_status") or "recommended")
     if recommendation_status == "not_feasible":
-        plan_warnings.append("Bu seçenek su/uygunluk kısıtları altında uygulanabilir değildir.")
+        plan_warnings.append("This option is not feasible under the water/suitability constraints.")
     elif recommendation_status == "not_recommended_due_to_diversity":
-        plan_warnings.append("Bu seçenek su/uygunluk açısından uygulanabilir olabilir; ancak ürün yoğunlaşması nedeniyle tartışmalı alternatif olarak değerlendirilmelidir.")
+        plan_warnings.append("This option may be feasible in terms of water and suitability, but it should be evaluated as a debatable alternative because of crop concentration.")
     elif recommendation_status == "recommended_with_diversity_warning":
-        plan_warnings.append("Bu seçenek su/uygunluk açısından uygulanabilir görünmektedir; ancak ürün yoğunlaşması nedeniyle dikkatli değerlendirilmelidir.")
+        plan_warnings.append("This option appears feasible in terms of water and suitability, but it should be evaluated carefully because of crop concentration.")
     plan_warnings.extend(diversity_metrics.get("warnings") or [])
 
     plan_names = "-".join(normalize_crop_key(c.get("crop_name")) for c in plan_rows)[:80]
@@ -9044,15 +9043,15 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
         "selectable": bool(plan_feasible),
         "diversity": diversity_metrics,
         "diversity_repair_applied": bool(diversity_repair.get("repair_applied")),
-        "feasibility_reasons": ["Uygun"] if plan_feasible else plan_warnings,
+        "feasibility_reasons": ["Suitable"] if plan_feasible else plan_warnings,
         "warnings": plan_warnings,
         "explanation": (
-            "Secili parsel ve su kotasi altinda uygulanabilir iki urunlu/desenli plan bulunamadi."
+            "No feasible two-crop/pattern plan was found under the selected parcel and water quota."
             if selected_status == "no_feasible_two_crop_plan"
             else (
                 "Bu mod su tuketimi, net kar ve birim su basina getiriyi birlikte degerlendirir."
                 if objective_mode == "balanced"
-                else "Secili hedef modu ve su butcesi altinda backend karar motoru tarafindan uretilen nihai plandir."
+                else "This is the final plan generated by the backend decision engine under the selected objective mode and water budget."
             )
         ),
     }
@@ -9075,7 +9074,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                 alternatives.append({
                     "plan_id": f"ALT-single-{objective_mode}-{len(alternatives)+1}-{name_key}",
                     "scenario_type": "single",
-                    "pattern_type": "Tek urunlu alternatif",
+                    "pattern_type": "Single-crop alternative",
                     "crops": [crop],
                     "total_water_m3": float(alt_water),
                     "total_profit_tl": float(alt_profit),
@@ -9084,7 +9083,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
                     "delta_profit_tl": float(alt_profit - base_profit),
                     "feasible": alt_feasible,
                     "selectable": alt_feasible,
-                    "feasibility_reasons": ["Uygun"] if alt_feasible else crop.get("warnings", []),
+                    "feasibility_reasons": ["Suitable"] if alt_feasible else crop.get("warnings", []),
                     "warnings": crop.get("warnings", []),
                     "explanation": crop.get("explanation", ""),
                 })
@@ -9093,7 +9092,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
             if len(alternatives) >= 5:
                 break
     if scenario_type == "single" and len([a for a in alternatives if a.get("feasible")]) < 4:
-        plan_warnings.append(f"Kisitlar nedeniyle {len([a for a in alternatives if a.get('feasible')])} uygulanabilir alternatif uretildi.")
+        plan_warnings.append(f"Because of the constraints, {len([a for a in alternatives if a.get('feasible')])} feasible alternatives were generated.")
 
     context = {
         "parcel_id": selected_norm[0] if len(selected_norm) == 1 else selected_norm,
@@ -9113,40 +9112,40 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     selected_plan["agronomic_risk"] = agronomic_risk
 
     plan_risk = "Dusuk" if selected_plan["feasible"] else "Yuksek"
-    quota_status = "Uygun" if selected_plan["feasible"] else "Kota/uygunluk riski var"
-    calendar_status = "Uygun" if not calendar_warnings else "Veri eksik / kontrol gerekli"
+    quota_status = "Suitable" if selected_plan["feasible"] else "Quota/feasibility risk"
+    calendar_status = "Suitable" if not calendar_warnings else "Data missing / check required"
     charts = {
         "target_mode_water": {
-            "title": "Hedef Modlarına Göre Toplam Su Kullanımı",
+            "title": "Total Water Use by Objective Mode",
             "unit": "m3",
-            "scope": "Secili parsel" if len(selected_parcels) == 1 else "Secili parseller",
+            "scope": "Selected parcel" if len(selected_parcels) == 1 else "Selected parcels",
             "scenario_type": scenario_type,
             "objective_mode": objective_mode,
-            "description": "Bu grafik, secili senaryo tipi altinda mevcut desen ve secili hedef modu sonucunu karsilastirir.",
+            "description": "This chart compares the current pattern and selected objective-mode result under the selected scenario type.",
             "rows": [
-                {"label": "Mevcut", "value": float(base_water)},
+                {"label": "Current", "value": float(base_water)},
                 {"label": _objective_mode_label_tr(objective_mode), "value": float(total_water)},
             ],
         },
         "target_mode_profit": {
-            "title": "Hedef Modlarına Göre Toplam Net Kâr",
+            "title": "Total Net Profit by Objective Mode",
             "unit": "TL",
-            "scope": "Secili parsel" if len(selected_parcels) == 1 else "Secili parseller",
+            "scope": "Selected parcel" if len(selected_parcels) == 1 else "Selected parcels",
             "scenario_type": scenario_type,
             "objective_mode": objective_mode,
-            "description": "Bu grafik, secili senaryo tipi altinda mevcut desen ve secili hedef modu sonucunu karsilastirir.",
+            "description": "This chart compares the current pattern and selected objective-mode result under the selected scenario type.",
             "rows": [
-                {"label": "Mevcut", "value": float(base_profit)},
+                {"label": "Current", "value": float(base_profit)},
                 {"label": _objective_mode_label_tr(objective_mode), "value": float(total_profit)},
             ],
         },
         "selected_delta": {
-            "title": "Seçili Planın Baseline'a Göre Su/Kâr Farkı",
+            "title": "Selected Plan Water/Profit Difference from Baseline",
             "unit": "m3 / TL",
-            "scope": "Secili parsel" if len(selected_parcels) == 1 else "Secili parseller",
+            "scope": "Selected parcel" if len(selected_parcels) == 1 else "Selected parcels",
             "scenario_type": scenario_type,
             "objective_mode": objective_mode,
-            "description": "Degerler backend plan ozeti ile ayni kaynaktan uretilir.",
+            "description": "Values are produced from the same source as the backend plan summary.",
             "rows": [
                 {"label": "Su farki", "value": float(selected_plan["delta_water_m3"])},
                 {"label": "Kar farki", "value": float(selected_plan["delta_profit_tl"])},
@@ -9155,7 +9154,7 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     }
     tables = {
         "plan_summary": [
-            {"label": "Mevcut", "water_m3": float(base_water), "profit_tl": float(base_profit), "tl_per_m3": baseline["tl_per_m3"]},
+            {"label": "Current", "water_m3": float(base_water), "profit_tl": float(base_profit), "tl_per_m3": baseline["tl_per_m3"]},
             {"label": "Secili plan", "water_m3": float(total_water), "profit_tl": float(total_profit), "tl_per_m3": selected_plan["tl_per_m3"]},
         ],
         "alternatives": [
@@ -9231,7 +9230,7 @@ def data_files(filename: str):
 def api_data_table_preview():
     rel = str(request.args.get("path", "")).strip().replace("\\", "/")
     if not rel:
-        return jsonify({"status": "ERROR", "message": "Dosya yolu boş."}), 400
+        return jsonify({"status": "ERROR", "message": "Dosya yolu boÃ…Å¸."}), 400
     if rel.startswith("/"):
         rel = rel[1:]
     if rel.startswith("data/"):
@@ -9240,9 +9239,9 @@ def api_data_table_preview():
     try:
         target.relative_to(DATA_DIR.resolve())
     except ValueError:
-        return jsonify({"status": "ERROR", "message": "Geçersiz dosya yolu."}), 400
+        return jsonify({"status": "ERROR", "message": "GeÃƒÂ§ersiz dosya yolu."}), 400
     if not target.exists() or not target.is_file():
-        return jsonify({"status": "ERROR", "message": "Dosya bulunamadı."}), 404
+        return jsonify({"status": "ERROR", "message": "Dosya bulunamadÃ„Â±."}), 404
 
     lower = target.name.lower()
     try:
@@ -9313,12 +9312,12 @@ def api_meta():
     enhanced_csv_dir = DATA_DIR / "enhanced_dataset" / "csv"
     available = []
     try:
-        # v66: Sunumda veri izlenebilirliği için yalnızca enhanced CSV'leri değil,
-        # paket içindeki tüm CSV/JSON veri dosyalarını UI'ye bildiriyoruz.
-        # Gerçek parsel sınırları yüzlerce GeoJSON içerdiği için burada listelenmez;
-        # onların kapsamı build meta rozetinde ayrıca gösterilir.
+        # v66: Sunumda veri izlenebilirliÃ„Å¸i iÃƒÂ§in yalnÃ„Â±zca enhanced CSV'leri deÃ„Å¸il,
+        # paket iÃƒÂ§indeki tÃƒÂ¼m CSV/JSON veri dosyalarÃ„Â±nÃ„Â± UI'ye bildiriyoruz.
+        # GerÃƒÂ§ek parsel sÃ„Â±nÃ„Â±rlarÃ„Â± yÃƒÂ¼zlerce GeoJSON iÃƒÂ§erdiÃ„Å¸i iÃƒÂ§in burada listelenmez;
+        # onlarÃ„Â±n kapsamÃ„Â± build meta rozetinde ayrÃ„Â±ca gÃƒÂ¶sterilir.
         exts = {".csv", ".json"}
-        skip_names = {"_index.json"}  # klasör indekslerini tekrar tekrar şişirmesin
+        skip_names = {"_index.json"}  # klasÃƒÂ¶r indekslerini tekrar tekrar Ã…Å¸iÃ…Å¸irmesin
         for fp in sorted(DATA_DIR.rglob("*"), key=lambda x: str(x.relative_to(DATA_DIR)).lower()):
             if not fp.is_file() or fp.suffix.lower() not in exts:
                 continue
@@ -9328,11 +9327,11 @@ def api_meta():
                 rel_fp = str(fp.relative_to(DATA_DIR)).replace("\\", "/")
             except Exception:
                 rel_fp = str(fp).replace("\\", "/")
-            # Eski sync/log dosyalarını ve paket raporlarını listeyi kirletmemesi için dışarıda bırak.
+            # Eski sync/log dosyalarÃ„Â±nÃ„Â± ve paket raporlarÃ„Â±nÃ„Â± listeyi kirletmemesi iÃƒÂ§in dÃ„Â±Ã…Å¸arÃ„Â±da bÃ„Â±rak.
             if rel_fp.startswith("ZIP_SYNC_LOG") or rel_fp.startswith("_unused_archive"):
                 continue
             available.append(rel_fp)
-        # Önce aktif enhanced dosyalar görünsün, sonra diğerleri alfabetik gelsin.
+        # Ãƒâ€“nce aktif enhanced dosyalar gÃƒÂ¶rÃƒÂ¼nsÃƒÂ¼n, sonra diÃ„Å¸erleri alfabetik gelsin.
         def _prio(x):
             return (0 if x.startswith("enhanced_dataset/csv/") else 1, x.lower())
         available = sorted(set(available), key=_prio)
@@ -9349,7 +9348,7 @@ def api_meta():
             crop_irrigation_map = json.load(f)
     except Exception:
         crop_irrigation_map = {}
-    
+
     return jsonify({
         "status": "OK",
         "build": APP_BUILD,
@@ -9358,7 +9357,7 @@ def api_meta():
         "data_quality": build_data_quality_report(),
         "water_allocation": build_water_allocation_logic(),
         "backend": {
-            "data_source": "5 yerleşimli Excel türevli veri paketi (Sazlıca, Bahçeli, Kemerhisar, Bor İlçe Merkezi, Kaynarca)",
+            "data_source": "5 yerleÃ…Å¸imli Excel tÃƒÂ¼revli veri paketi (SazlÃ„Â±ca, BahÃƒÂ§eli, Kemerhisar, Bor Ã„Â°lÃƒÂ§e Merkezi, Kaynarca)",
             "files": rel,
             "files_available": available,
             "years_min": int(min(years)) if years else None,
@@ -9468,8 +9467,8 @@ def api_geojson_files():
     }
 
     files = []
-    # v17: Varsayılan harita katmanı yalnızca kullanıcının yüklediği GERÇEK GeoJSON klasörüdür.
-    # Excel alanından otomatik üretilen temsili dikdörtgen poligonlar haritadan kaldırıldı.
+    # v17: VarsayÃ„Â±lan harita katmanÃ„Â± yalnÃ„Â±zca kullanÃ„Â±cÃ„Â±nÃ„Â±n yÃƒÂ¼klediÃ„Å¸i GERÃƒâ€¡EK GeoJSON klasÃƒÂ¶rÃƒÂ¼dÃƒÂ¼r.
+    # Excel alanÃ„Â±ndan otomatik ÃƒÂ¼retilen temsili dikdÃƒÂ¶rtgen poligonlar haritadan kaldÃ„Â±rÃ„Â±ldÃ„Â±.
     preferred_dir = DATA_DIR / "geojson_yeni_klasor4"
     scan_roots = [preferred_dir] if preferred_dir.exists() else [DATA_DIR]
     for scan_root in scan_roots:
@@ -9510,7 +9509,7 @@ def api_geojson_files():
 def api_geojson_bundle_v36():
     """Return persistent parcel GeoJSONs as one server-side FeatureCollection.
 
-    v38: Tüm yüklenmiş parsel GeoJSON dosyaları tek paket halinde sunulur; köy sınırları ve baraj ayrı katmanda kalır.
+    v38: TÃƒÂ¼m yÃƒÂ¼klenmiÃ…Å¸ parsel GeoJSON dosyalarÃ„Â± tek paket halinde sunulur; kÃƒÂ¶y sÃ„Â±nÃ„Â±rlarÃ„Â± ve baraj ayrÃ„Â± katmanda kalÃ„Â±r.
     This prevents the screen from showing only a large village boundary when the user
     expects individual parcels. Real parcel files are read from data/geojson_yeni_klasor4;
     village boundaries remain under data/village_boundaries and are controlled separately.
@@ -9566,16 +9565,16 @@ def api_geojson_bundle_v36():
 
     def _file_village(name: str) -> str:
         low = name.lower()
-        if "bahceli" in low or "bahçeli" in low:
-            return "Bahçeli"
-        if "sazlica" in low or "sazlıca" in low:
-            return "Sazlıca"
+        if "bahceli" in low or "bahÃƒÂ§eli" in low:
+            return "BahÃƒÂ§eli"
+        if "sazlica" in low or "sazlÃ„Â±ca" in low:
+            return "SazlÃ„Â±ca"
         if "kemerhisar" in low:
             return "Kemerhisar"
         if "kaynarca" in low:
             return "Kaynarca"
-        if "borilce" in low or "bor_ilce" in low or "bor ilce" in low or "bor_ilçe" in low or "bor ilçe" in low or "borilcemerkezi" in low or "bor_ilce_merkezi" in low or "bor_ilçe_merkezi" in low or "bor_merkez" in low:
-            return "Bor İlçe Merkezi"
+        if "borilce" in low or "bor_ilce" in low or "bor ilce" in low or "bor_ilÃƒÂ§e" in low or "bor ilÃƒÂ§e" in low or "borilcemerkezi" in low or "bor_ilce_merkezi" in low or "bor_ilÃƒÂ§e_merkezi" in low or "bor_merkez" in low:
+            return "Bor Ã„Â°lÃƒÂ§e Merkezi"
         return ""
 
     def _is_boundary_or_reservoir(name: str, props=None) -> bool:
@@ -9583,9 +9582,9 @@ def api_geojson_bundle_v36():
         kind = str((props or {}).get("kind") or "").lower()
         title = str((props or {}).get("title") or "").lower()
         joined = " ".join([low, kind, title])
-        if any(t in joined for t in ["sinir", "sınır", "boundary", "koy_siniri", "köy sınırı", "village_boundary"]):
+        if any(t in joined for t in ["sinir", "sÃ„Â±nÃ„Â±r", "boundary", "koy_siniri", "kÃƒÂ¶y sÃ„Â±nÃ„Â±rÃ„Â±", "village_boundary"]):
             return True
-        if any(t in joined for t in ["baraj", "akkaya", "reservoir", "göl", "gol"]):
+        if any(t in joined for t in ["baraj", "akkaya", "reservoir", "gÃƒÂ¶l", "gol"]):
             return True
         return False
 
@@ -9594,7 +9593,7 @@ def api_geojson_bundle_v36():
             v = str((props or {}).get(k) or (meta or {}).get(k) or "").strip().lower()
             if v in ("kuru", "rainfed", "dry"):
                 return "kuru"
-            if v in ("sulu", "irrigated", "drip", "sprinkler", "damla", "yağmurlama", "yagmurlama"):
+            if v in ("sulu", "irrigated", "drip", "sprinkler", "damla", "yaÃ„Å¸murlama", "yagmurlama"):
                 return "sulu"
         low = name.lower()
         if "_kuru_" in low or low.startswith("kuru_"):
@@ -9683,9 +9682,9 @@ def api_geojson_bundle_v36():
             props["farmer_name"] = props.get("farmer_name") or mm.get("farmer_name") or props.get("farmer") or ""
             props["farmer_id"] = props.get("farmer_id") or mm.get("farmer_id") or props.get("owner_username") or ""
             props["assigned_pattern"] = props.get("assigned_pattern") or mm.get("selected_pattern") or props.get("current_crop") or ""
-            props["assigned_alternative_label"] = props.get("assigned_alternative_label") or mm.get("selected_alternative_label") or "Mevcut desen / Excel referansı"
-            props["geometry_status"] = "Yüklü gerçek GeoJSON"
-            props["assignment_status_label"] = "GeoJSON yüklü, seçilebilir"
+            props["assigned_alternative_label"] = props.get("assigned_alternative_label") or mm.get("selected_alternative_label") or "Current pattern / Excel reference"
+            props["geometry_status"] = "YÃƒÂ¼klÃƒÂ¼ gerÃƒÂ§ek GeoJSON"
+            props["assignment_status_label"] = "GeoJSON yÃƒÂ¼klÃƒÂ¼, seÃƒÂ§ilebilir"
             props["water_mode"] = _water_mode(name, props, mm)
             props["is_orchard"] = bool(props.get("is_orchard") if "is_orchard" in props else mm.get("orchard", False))
             props["parcel_type"] = props.get("parcel_type") or mm.get("parcel_type") or ("orchard" if props["is_orchard"] else "field")
@@ -9713,9 +9712,9 @@ def api_geojson_bundle_v36():
         for r in registry:
             if not isinstance(r, dict):
                 continue
-            v = str(r.get("village") or r.get("köy") or "").strip()
+            v = str(r.get("village") or r.get("kÃƒÂ¶y") or "").strip()
             pid = str(r.get("parcel_id") or r.get("id") or "").strip()
-            if v and pid and not re.search(r"kızılca|kizilca", v, re.I):
+            if v and pid and not re.search(r"kÃ„Â±zÃ„Â±lca|kizilca", v, re.I):
                 expected_by_village[v] = expected_by_village.get(v, 0) + 1
     except Exception:
         expected_by_village = {}
@@ -9755,8 +9754,8 @@ def api_geojson_bundle_v36():
 def api_save_panel_geojson_v36():
     """Save a panel-drawn parcel GeoJSON into data/geojson_yeni_klasor4.
 
-    v36: Kaynarca/Kemerhisar/Bor İlçe Merkezi dahil tüm köylerde dosya adı köy + sulama tipi + ürün + alan + parsel ID
-    düzeninde üretilir ve bundle endpointi tarafından otomatik okunur.
+    v36: Kaynarca/Kemerhisar/Bor Ã„Â°lÃƒÂ§e Merkezi dahil tÃƒÂ¼m kÃƒÂ¶ylerde dosya adÃ„Â± kÃƒÂ¶y + sulama tipi + ÃƒÂ¼rÃƒÂ¼n + alan + parsel ID
+    dÃƒÂ¼zeninde ÃƒÂ¼retilir ve bundle endpointi tarafÃ„Â±ndan otomatik okunur.
 
     This makes drawings persistent when the app is run through Flask. If the UI is opened
     as static files, the frontend still exports/downloads the GeoJSON, but the browser cannot
@@ -9773,13 +9772,13 @@ def api_save_panel_geojson_v36():
         crop = str(props.get("current_crop") or props.get("assigned_pattern") or payload.get("crop") or "urun").strip()
         irr_key = str(props.get("irrigation_key") or "").strip().lower()
         irr = str(props.get("irrigation_current") or props.get("irrigation_label") or "").lower()
-        water_word = "kuru" if ("kuru" in irr or "yağış" in irr or irr_key == "rainfed") else "sulu"
+        water_word = "kuru" if ("kuru" in irr or "yaÃ„Å¸Ã„Â±Ã…Å¸" in irr or irr_key == "rainfed") else "sulu"
         try:
             area_da = float(str(props.get("area_official_da") or props.get("area_da") or payload.get("area_da") or 0).replace(",", "."))
         except Exception:
             area_da = 0.0
         def slugify(s):
-            tr = str.maketrans({'ç':'c','Ç':'c','ğ':'g','Ğ':'g','ı':'i','İ':'i','ö':'o','Ö':'o','ş':'s','Ş':'s','ü':'u','Ü':'u'})
+            tr = str.maketrans({'ÃƒÂ§':'c','Ãƒâ€¡':'c','Ã„Å¸':'g','Ã„Â':'g','Ã„Â±':'i','Ã„Â°':'i','ÃƒÂ¶':'o','Ãƒâ€“':'o','Ã…Å¸':'s','Ã…Â':'s','ÃƒÂ¼':'u','ÃƒÅ“':'u'})
             s = str(s or '').translate(tr).lower()
             s = re.sub(r'\s+', '_', s)
             s = re.sub(r'[^a-z0-9_\-]+', '_', s)
@@ -9794,7 +9793,7 @@ def api_save_panel_geojson_v36():
         feature["properties"]["source_file"] = f"geojson_yeni_klasor4/{safe_name}"
         feature["properties"]["source_label"] = safe_name
         feature["properties"]["geometry_source"] = feature["properties"].get("geometry_source") or "panel_saved_geojson"
-        feature["properties"]["geometry_status"] = feature["properties"].get("geometry_status") or "Yüklü gerçek GeoJSON"
+        feature["properties"]["geometry_status"] = feature["properties"].get("geometry_status") or "YÃƒÂ¼klÃƒÂ¼ gerÃƒÂ§ek GeoJSON"
         (out_dir / safe_name).write_text(json.dumps(feature, ensure_ascii=False, indent=2), encoding="utf-8")
         files = sorted([f"geojson_yeni_klasor4/{p.name}" for p in out_dir.glob("*.geojson") if p.is_file()], key=lambda x: x.lower())
         idx = {"status":"OK", "base":"data", "files":files, "count":len(files)}
@@ -9804,18 +9803,18 @@ def api_save_panel_geojson_v36():
         except Exception:
             pass
 
-        # v36: Kalıcı kayıt sadece dosyayı yazmakla kalmaz; çizim kütüğü ve meta haritası da güncellenir.
-        # Böylece Bor İlçe Merkezi dahil yeni çizimler yeniden açılışta Sazlıca/Bahçeli/Kaynarca ile aynı biçimde görünür.
+        # v36: KalÃ„Â±cÃ„Â± kayÃ„Â±t sadece dosyayÃ„Â± yazmakla kalmaz; ÃƒÂ§izim kÃƒÂ¼tÃƒÂ¼Ã„Å¸ÃƒÂ¼ ve meta haritasÃ„Â± da gÃƒÂ¼ncellenir.
+        # BÃƒÂ¶ylece Bor Ã„Â°lÃƒÂ§e Merkezi dahil yeni ÃƒÂ§izimler yeniden aÃƒÂ§Ã„Â±lÃ„Â±Ã…Å¸ta SazlÃ„Â±ca/BahÃƒÂ§eli/Kaynarca ile aynÃ„Â± biÃƒÂ§imde gÃƒÂ¶rÃƒÂ¼nÃƒÂ¼r.
         try:
             pid_key = str(parcel_id).strip()
             rel_path = f"geojson_yeni_klasor4/{safe_name}"
             status_updates = {
-                "geometry_status": "Yüklü gerçek GeoJSON",
+                "geometry_status": "YÃƒÂ¼klÃƒÂ¼ gerÃƒÂ§ek GeoJSON",
                 "geometry_source": "panel_saved_geojson",
                 "has_real_geojson": True,
                 "drawing_required": False,
                 "assignment_status": "geometry_ready",
-                "assignment_status_label": "GeoJSON yüklü, seçilebilir",
+                "assignment_status_label": "GeoJSON yÃƒÂ¼klÃƒÂ¼, seÃƒÂ§ilebilir",
                 "geojson_file": rel_path,
                 "source_file": rel_path,
             }
@@ -9833,7 +9832,7 @@ def api_save_panel_geojson_v36():
                 if isinstance(raw, dict):
                     raw["records"] = records
                     raw["updated_at"] = datetime.now().isoformat(timespec="seconds")
-                    raw["note"] = "v36 panel kayıt sonrası geometri durumları güncellendi"
+                    raw["note"] = "v36 panel kayÃ„Â±t sonrasÃ„Â± geometri durumlarÃ„Â± gÃƒÂ¼ncellendi"
                     reg_path.write_text(json.dumps(raw, ensure_ascii=False, indent=2), encoding="utf-8")
                 else:
                     reg_path.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -9873,18 +9872,18 @@ def api_save_panel_geojson_v36():
                 "farmer_id": props.get("farmer_id") or "",
                 "farmer_name": props.get("farmer_name") or props.get("farmer") or "",
                 "selected_pattern": props.get("selected_pattern") or props.get("assigned_pattern") or crop,
-                "selected_alternative_label": props.get("selected_alternative_label") or props.get("assigned_alternative_label") or "Mevcut desen / Excel referansı",
+                "selected_alternative_label": props.get("selected_alternative_label") or props.get("assigned_alternative_label") or "Current pattern / Excel reference",
                 "area_da": area_da,
                 "geojson_file": rel_path,
                 "source_file": rel_path,
-                "geometry_status": "Yüklü gerçek GeoJSON",
+                "geometry_status": "YÃƒÂ¼klÃƒÂ¼ gerÃƒÂ§ek GeoJSON",
                 "has_real_geojson": True,
                 "drawing_required": False,
             })
             by_id[pid_key] = m
             by_file[safe_name] = m
             meta["updated_at"] = datetime.now().isoformat(timespec="seconds")
-            meta["note"] = "v36 panel kayıt sonrası dosya/parsel meta eşleştirmesi güncellendi"
+            meta["note"] = "v36 panel kayÃ„Â±t sonrasÃ„Â± dosya/parsel meta eÃ…Å¸leÃ…Å¸tirmesi gÃƒÂ¼ncellendi"
             meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
         except Exception as meta_err:
             app.logger.warning("v36 registry/meta update failed: %s", meta_err)
@@ -9896,11 +9895,11 @@ def api_save_panel_geojson_v36():
 
 @app.get("/api/boundary/nigde")
 def api_boundary_nigde():
-    """Return Niğde province boundary as GeoJSON (FeatureCollection).
+    """Return NiÃ„Å¸de province boundary as GeoJSON (FeatureCollection).
 
     Priority:
       1) data/boundaries/nigde_il_siniri.geojson (if provided for offline use)
-      2) Fetch from Simplemaps admin1 dataset and extract TR51 (Niğde) (requires internet)
+      2) Fetch from Simplemaps admin1 dataset and extract TR51 (NiÃ„Å¸de) (requires internet)
 
     If internet is blocked, please place the boundary file in data/boundaries/.
     """
@@ -9951,12 +9950,12 @@ def api_boundary_nigde():
             fid = str(props.get("id") or props.get("code") or props.get("adm1_code") or "").strip()
             name = str(props.get("name") or props.get("NAME_1") or props.get("adm1_name") or "").strip()
             low = (name or "").lower()
-            if fid.upper() == "TR51" or low in ("nigde", "niğde") or ("niğde" in low) or ("nigde" in low):
+            if fid.upper() == "TR51" or low in ("nigde", "niÃ„Å¸de") or ("niÃ„Å¸de" in low) or ("nigde" in low):
                 target = f
                 break
 
         if not target:
-            return jsonify({"status": "ERROR", "message": "Niğde feature not found in admin1 dataset"}), 404
+            return jsonify({"status": "ERROR", "message": "NiÃ„Å¸de feature not found in admin1 dataset"}), 404
 
         fc = {"type": "FeatureCollection", "features": [target]}
         _cache[key] = fc
@@ -10015,7 +10014,7 @@ def build_data_quality_report() -> Dict[str, Any]:
         try:
             out["manifest"] = json.loads(manifest_path.read_text(encoding="utf-8"))
         except Exception:
-            out["manifest"] = {"warning": "manifest okunamadı"}
+            out["manifest"] = {"warning": "manifest okunamadÃ„Â±"}
 
     # GeoJSON coverage transparency
     try:
@@ -10044,7 +10043,7 @@ def build_data_quality_report() -> Dict[str, Any]:
             "total_parcels": int(len(total_ids)),
             "coverage_ratio": float(len(covered_ids) / max(1, len(total_ids))),
             "geometry_source": geometry_source,
-            "note": "Haritada yalnızca yüklenmiş gerçek GeoJSON sınırları gösterilir. Excel'deki diğer köy/parsel kayıtları sayısal analizde kullanılır; gerçek GeoJSON sınırı yoksa haritada temsili dikdörtgen üretilmez."
+            "note": "Only loaded real GeoJSON boundaries are shown on the map. Other village/parcel records in Excel are used in numerical analysis; no representative rectangle is generated on the map when a real GeoJSON boundary is unavailable."
         }
     except Exception as e:
         out["geojson_coverage"] = {"error": str(e)}
@@ -10152,7 +10151,7 @@ def build_data_quality_report() -> Dict[str, Any]:
                 "rows": int(len(mx)),
                 "parcels_zero_feasible": int(zero_feasible),
                 "parcels_low_choice_3_or_less": int(low_choice),
-                "feasibility_definition": "Parsel kotası altında en az kısmi ekim alanı üretilebilen aday sayısı",
+                "feasibility_definition": "Number of candidates that can produce at least partial planted area under the parcel quota",
                 "missing_current_crop_in_candidates": sorted(missing_current)[:50],
                 "missing_current_crop_count": int(len(missing_current)),
             }
@@ -10194,9 +10193,9 @@ def build_validation_report(payload: Dict[str, Any]) -> Dict[str, Any]:
     price_shock_profit_tl = cand_profit * 0.90
     robustness = "orta"
     if (stress_budget.get("feasible") is True) and (price_shock_profit_tl >= 0.8 * cand_profit):
-        robustness = "güçlü"
+        robustness = "gÃƒÂ¼ÃƒÂ§lÃƒÂ¼"
     elif (stress_budget.get("feasible") is False) or (price_shock_profit_tl < 0.7 * cand_profit):
-        robustness = "kırılgan"
+        robustness = "kÃ„Â±rÃ„Â±lgan"
 
     score_components = candidate.get("score_components") or ((candidate.get("meta") or {}).get("score_components")) or {}
     dominant_constraint = None
@@ -10241,14 +10240,14 @@ def build_validation_report(payload: Dict[str, Any]) -> Dict[str, Any]:
             },
             "price_minus_10_ex_post": {
                 "optimized_profit_tl_after_shock": price_shock_profit_tl,
-                "note": "Bu test yeniden optimizasyon değil; mevcut planın fiyat şokuna maruziyetini gösterir.",
+                "note": "This test is not re-optimization; it shows the current plan exposure to price shocks.",
             },
         },
         "decision_rationale": {
             "dominant_constraint": dominant_constraint,
             "robustness": robustness,
             "explainability_available": bool(candidate.get("meta")),
-            "note": "Su ve kâr farkları mevcut desen referansına göre hesaplandı."
+            "note": "Water and profit differences were calculated relative to the current pattern reference."
         }
     }
 
@@ -10265,7 +10264,7 @@ def build_water_allocation_logic() -> Dict[str, Any]:
     out: Dict[str, Any] = {
         "version": "v47_area_fair_per_da_default_decision_model",
         "recommended_model": "area_fair_per_da",
-        "allocation_model": "Ana karar modeli: observed_current_total_water -> total m3/da -> parcel area × m3/da; eşit köy modeli yalnızca karşılaştırmadır",
+        "allocation_model": "Ana karar modeli: observed_current_total_water -> total m3/da -> parcel area Ãƒâ€” m3/da; eÃ…Å¸it kÃƒÂ¶y modeli yalnÃ„Â±zca karÃ…Å¸Ã„Â±laÃ…Å¸tÃ„Â±rmadÃ„Â±r",
         "villages_expected": 5,
         "villages": [],
         "totals": {},
@@ -10274,53 +10273,53 @@ def build_water_allocation_logic() -> Dict[str, Any]:
         "allocation_models": [
             {
                 "key": "area_fair_per_da",
-                "label": "Dekar bazlı adil kota",
+                "label": "Area-based fair quota",
                 "is_default": True,
-                "description": "Toplam mevcut su toplam alana bölünür; her parsel alanı kadar su hakkı alır. Dekar başına eşitlik sağlar.",
+                "description": "Total current water is divided by total area; each parcel receives water rights proportional to its area. This provides equality per decare.",
             },
             {
                 "key": "equal_village_equal_parcel",
-                "label": "Eşit köy + eşit parsel kotası",
+                "label": "Equal village + equal parcel quota",
                 "is_default": False,
-                "description": "Her köye aynı toplam su verilir; köy içinde her parsele aynı kota düşer. Yalnızca karşılaştırma/idari eşitlik senaryosudur; dekar adaleti sağlamaz.",
+                "description": "Each village receives the same total water; each parcel in the village receives the same quota. This is only a comparison/administrative equality scenario and does not provide decare-level fairness.",
             },
             {
                 "key": "current_demand_reference",
-                "label": "Mevcut talep referansı",
+                "label": "Current demand reference",
                 "is_default": False,
-                "description": "Her parselin mevcut ürün desenindeki su talebi korunur. Mevcut düzeni gösterir; tasarruf baskısı oluşturmaz.",
+                "description": "Each parcel current crop-pattern water demand is preserved. It shows the current arrangement and does not create saving pressure.",
             },
             {
                 "key": "hybrid_area70_current30",
                 "label": "Karma adalet",
                 "is_default": False,
-                "description": "%70 dekar bazlı adil kota + %30 mevcut talep referansı. Geçiş dönemi senaryosu olarak kullanılabilir.",
+                "description": "70% area-based fair quota + 30% current demand reference. This can be used as a transition-period scenario.",
             },
         ],
         "formula": {
-            "observed_current_total_water_m3": "Σ(mevcut parsel ürün suyu)",
-            "total_observed_m3_per_da": "Σ(mevcut su) / Σ(alan_da)",
-            "area_fair_parcel_quota_m3": "parcel_area_da × total_observed_m3_per_da",
-            "area_fair_village_share_m3": "Σ(area_fair_parcel_quota_m3)",
-            "equal_village_share_m3": "Σ(mevcut su) / aktif köy sayısı",
+            "observed_current_total_water_m3": "sum(current parcel crop water)",
+            "total_observed_m3_per_da": "sum(current water) / sum(area_da)",
+            "area_fair_parcel_quota_m3": "parcel_area_da x total_observed_m3_per_da",
+            "area_fair_village_share_m3": "sum(area_fair_parcel_quota_m3)",
+            "equal_village_share_m3": "sum(current water) / active village count",
             "equal_parcel_quota_m3": "equal_village_share_m3 / village_parcel_count",
-            "current_demand_reference_m3": "mevcut ürün deseninin parsel su tüketimi",
-            "hybrid_area70_current30_m3": "0.70×area_fair_parcel_quota_m3 + 0.30×current_demand_reference_m3",
+            "current_demand_reference_m3": "current crop-pattern parcel water use",
+            "hybrid_area70_current30_m3": "0.70 x area_fair_parcel_quota_m3 + 0.30 x current_demand_reference_m3",
             "candidate_effective_area_da": "min(parcel_area_da, selected_quota_m3 / crop_water_m3_da)",
-            "candidate_water_m3": "candidate_effective_area_da × crop_water_m3_da",
-            "candidate_profit_tl": "candidate_effective_area_da × crop_profit_tl_da",
+            "candidate_water_m3": "candidate_effective_area_da x crop_water_m3_da",
+            "candidate_profit_tl": "candidate_effective_area_da x crop_profit_tl_da",
         },
         "interpretation": (
-            "Bu çalışma barajdan ölçülen kesin çekişi doğrudan dağıtmaz; 5 köyün mevcut ürün deseninden "
-            "hesaplanan tarımsal su talebini planlama referansı alır. v42'de öneri üretiminde ana kota "
-            "dekar bazlıdır: herkes aynı m³/da hakkına sahip olur. Eşit köy payı ise yalnızca karşılaştırma "
-            "senaryosu olarak ekranda tutulur."
+            "This study does not directly distribute exact withdrawals measured from the dam; it uses the agricultural water demand "
+            "calculated from the current crop patterns of the five villages as the planning reference. In v42, the main quota "
+            "for recommendation generation is decare-based: every decare receives the same m3/da allocation. The equal-village "
+            "share is kept on screen only as a comparison scenario."
         ),
         "fairness_note": (
-            "Dekar bazlı model, tarımsal planlama açısından daha savunulabilir kabul edilir; çünkü 10 da ve "
-            "7000 da parsel aynı suyu almaz. Eşit köy modeli idari olarak basittir ancak köylerin alan ve "
-            "parsel dağılımı farklı olduğunda Kaynarca gibi küçük/az parsel içeren yerleri aşırı avantajlı, "
-            "Bor veya Kemerhisar gibi büyük tüketim alanlarını ise fazla kısıtlı gösterebilir."
+            "The decare-based model is considered more defensible for agricultural planning because 10 da and 7000 da parcels "
+            "do not receive the same water. The equal-village model is administratively simple, but when village area and parcel "
+            "distributions differ, it can over-advantage smaller villages with fewer parcels and make larger consumption areas "
+            "such as Bor or Kemerhisar look overly constrained."
         )
     }
 
@@ -10415,9 +10414,9 @@ def build_water_allocation_logic() -> Dict[str, Any]:
                     "hybrid_area70_current30_share_m3": hybrid_share,
                     "hybrid_area70_current30_parcel_avg_m3": hybrid_per_parcel_avg,
                     "interpretation_label": (
-                        "Alan bazlı kota mevcut talebi ÜSTÜNDE" if ((area_fair_share - current_water) / current_water * 100.0 if current_water else 0) > 5 else
-                        "Alan bazlı kota mevcut talebi ALTINDA" if ((area_fair_share - current_water) / current_water * 100.0 if current_water else 0) < -5 else
-                        "Alan bazlı kota mevcut talebe YAKIN"
+                        "Area-based quota is ABOVE current demand" if ((area_fair_share - current_water) / current_water * 100.0 if current_water else 0) > 5 else
+                        "Area-based quota is BELOW current demand" if ((area_fair_share - current_water) / current_water * 100.0 if current_water else 0) < -5 else
+                        "Area-based quota is CLOSE to current demand"
                     )
                 })
 
@@ -10453,17 +10452,17 @@ def build_water_allocation_logic() -> Dict[str, Any]:
                 area_dec = min(rows, key=lambda x: x.get("area_fair_vs_current_change_pct", 0.0))
                 out["fairness"] = {
                     "primary_model": "area_fair_per_da",
-                    "primary_model_type": "tarımsal/dekar bazlı adalet",
+                    "primary_model_type": "agricultural/decare-based fairness",
                     "recommended": True,
                     "why_more_fair": (
-                        "Eşit köy payı, köylerin alanı ve parsel büyüklüğü farklı olduğunda gerçek tarımsal yükü "
-                        "yansıtmayabilir. Dekar bazlı modelde her da aynı su hakkını aldığı için parsel ve köy "
-                        "büyüklüğü doğal olarak hesaba katılır."
+                        "Equal-village sharing may not reflect the real agricultural load when village area and parcel size differ. "
+                        "In the decare-based model, each decare receives the same water entitlement, so parcel and village size "
+                        "are naturally included in the calculation."
                     ),
                     "equal_village_model_kept_for_comparison": True,
                     "equal_village_warning": (
-                        "Eşit köy modeli idari eşitliktir; dekar başına eşitlik değildir. Küçük/az parsel içeren köyleri "
-                        "çok avantajlı, büyük alanlı köyleri kısıtlı gösterebilir."
+                        "The equal-village model represents administrative equality, not equality per decare. It can make smaller "
+                        "villages with fewer parcels look highly advantaged and make larger-area villages look constrained."
                     ),
                     "most_increased_equal_village": {
                         "village": eq_inc.get("village"),
@@ -10506,7 +10505,7 @@ def build_water_allocation_logic() -> Dict[str, Any]:
                 "avg_observed_draw_hm3": float(draw.mean() / 1_000_000.0) if len(draw) else 0.0,
                 "avg_inflow_m3": float(inflow.mean()) if len(inflow) else 0.0,
                 "avg_inflow_hm3": float(inflow.mean() / 1_000_000.0) if len(inflow) else 0.0,
-                "source_note": "Baraj serisi bağlam amaçlıdır; kota hesabının ana girdisi mevcut parsel×ürün su tüketimidir.",
+                "source_note": "Reservoir series are contextual; the main quota input is current parcel-crop water use.",
             }
         except Exception:
             out["reservoir_context"] = {}
@@ -10654,7 +10653,7 @@ def api_optimize():
             final_policy = _optimization_policy_from_runs(base_policy, run_records, None)
             return jsonify({
                 "status": "ERROR",
-                "message": "Optimizasyon kosularindan standart karar paketi uretilemedi.",
+                "message": "The standard decision package could not be generated from the optimization runs.",
                 "where": "api_optimize",
                 "optimization_run_policy": final_policy,
             }), 500
@@ -10664,7 +10663,7 @@ def api_optimize():
         chosen = max(candidate_runs, key=lambda r: safe_float((r.get("_optimize_run_record") or {}).get("score", -1e100), -1e100))
         selected_record = chosen.get("_optimize_run_record") if isinstance(chosen.get("_optimize_run_record"), dict) else None
         final_policy = _optimization_policy_from_runs(base_policy, run_records, selected_record)
-        final_policy["selection_rule"] = "Ana onerı uygulanabilir ve secilebilir kosular arasindan hedef fonksiyon skoruna gore secilir; uygulanabilir kosu yoksa durum acikca partial/no_feasible olarak raporlanir."
+        final_policy["selection_rule"] = "The main recommendation is selected among feasible and selectable runs according to the objective-function score; if no feasible run exists, the status is explicitly reported as partial/no_feasible."
         chosen["optimization_run_policy"] = final_policy
         chosen.pop("_optimize_run_record", None)
         return jsonify(chosen)
@@ -10676,7 +10675,7 @@ def api_optimize():
 def api_benchmark():
     """Run GA/ABC/ACO multiple times under identical inputs and return comparable summary stats.
 
-    Payload (JSON) – largely compatible with /api/optimize:
+    Payload (JSON) Ã¢â‚¬â€œ largely compatible with /api/optimize:
       {
         selectedParcelIds: ["P1", ...],
         scenario: "mevcut"|"su_tasarruf"|"maks_kar"|"balanced",
@@ -10706,7 +10705,7 @@ def api_benchmark():
             year_val = None
 
         benchmark_mode_raw = str(payload.get("benchmarkMode", payload.get("benchmark_mode", "academic")) or "academic").lower()
-        benchmark_mode = "fast" if benchmark_mode_raw in ("fast", "quick", "hizli", "hızlı") else "detailed"
+        benchmark_mode = "fast" if benchmark_mode_raw in ("fast", "quick", "hizli", "hÃ„Â±zlÃ„Â±") else "detailed"
         repeats = int(payload.get("repeats", 8 if benchmark_mode == "fast" else 30) or (8 if benchmark_mode == "fast" else 30))
         if benchmark_mode == "detailed":
             repeats = max(10, min(120, repeats))
@@ -10821,7 +10820,7 @@ def api_benchmark():
             "standard_payload_scope": "best_run_only" if benchmark_matrix_problem is not None else "each_run_fallback",
         }
 
-        # Optional baseline (current) – useful when UI scenario was "mevcut".
+        # Optional baseline (current) Ã¢â‚¬â€œ useful when UI scenario was "mevcut".
         if include_baseline:
             try:
                 base_out = optimize(
@@ -11423,9 +11422,9 @@ def api_benchmark():
             algo_partial = bool(successful_runs != repeats or errors > 0)
             metric_warnings = []
             if successful_runs <= 1:
-                metric_warnings.append("CV ve standart sapma icin en az iki basarili kosu gerekir.")
+                metric_warnings.append("At least two successful runs are required for CV and standard deviation.")
             if successful_runs > 1 and not pairwise_plan_distances:
-                metric_warnings.append("Plan farki hesaplanamadi; yeterli karsilastirilabilir plan imzasi yok.")
+                metric_warnings.append("Plan distance could not be calculated; there are not enough comparable plan signatures.")
             if best_diversity.get("warnings"):
                 metric_warnings.extend([str(x) for x in (best_diversity.get("warnings") or [])[:3]])
             results["algorithms"][algo] = {
@@ -11436,9 +11435,9 @@ def api_benchmark():
                 "partial": algo_partial,
                 "partial_status": "partial" if algo_partial else "completed",
                 "partial_reason": (
-                    f"Fast mod sure butcesi nedeniyle {successful_runs}/{repeats} kosu tamamlandi."
+                    f"Fast mode completed {successful_runs}/{repeats} runs due to the time budget."
                     if algo_partial and benchmark_mode == "fast" else
-                    f"Detayli modda {successful_runs}/{repeats} kosu tamamlandi; hata veya sure siniri olabilir."
+                    f"Detailed mode completed {successful_runs}/{repeats} runs; there may be errors or time-limit stops."
                     if algo_partial else None
                 ),
                 "best_profit": float(max(prof)) if prof else None,
@@ -11500,9 +11499,9 @@ def api_benchmark():
         results["partial"] = partial_result
         results["partial_status"] = "partial" if partial_result else "completed"
         results["partial_reason"] = (
-            f"Fast mod sure butcesi nedeniyle {completed_total}/{requested_total} kosu tamamlandi."
+            f"Fast mode completed {completed_total}/{requested_total} runs due to the time budget."
             if partial_result and benchmark_mode == "fast" else
-            f"Detayli modda {completed_total}/{requested_total} kosu tamamlandi; hata veya sure siniri olabilir."
+            f"Detailed mode completed {completed_total}/{requested_total} runs; there may be errors or time-limit stops."
             if partial_result else None
         )
         results["algorithm_count"] = len(algos)
@@ -11512,7 +11511,7 @@ def api_benchmark():
             a: v for a, v in results.get("algorithms", {}).items()
             if v.get("mean_profit") is not None and v.get("mean_water") is not None and safe_int(v.get("run_count", 0), 0) > 0
         }
-        interpretation = "Yeterli basarili kosu olmadigi icin algoritmalar arasinda akademik yorum uretilemedi."
+        interpretation = "There were not enough successful runs to generate an academic interpretation across algorithms."
         if valid_algos:
             mean_profits = [safe_float(v.get("mean_profit", 0.0), 0.0) for v in valid_algos.values()]
             mean_waters = [safe_float(v.get("mean_water", 0.0), 0.0) for v in valid_algos.values()]
@@ -11524,9 +11523,9 @@ def api_benchmark():
             water_band = abs(max_water - min_water) / max(1.0, abs(max_water))
             if len(valid_algos) == 1:
                 only_algo = next(iter(valid_algos.keys()))
-                interpretation = f"Yalniz {only_algo} algoritmasi calistirildi; bu sonuc algoritmalar arasi ustunluk yorumu icin kullanilmamalidir."
+                interpretation = f"Only the {only_algo} algorithm was run; this result should not be used to interpret superiority across algorithms."
             elif profit_band <= 0.01 and water_band <= 0.01:
-                interpretation = "Algoritmalar esdeger performans bandindadir; karar tek algoritmaya baglanmamalidir."
+                interpretation = "The algorithms are in an equivalent performance band; the decision should not be tied to a single algorithm."
             else:
                 def _algo_rank(item: Tuple[str, Dict[str, Any]]) -> Tuple[float, float, float]:
                     _, v = item
@@ -11535,7 +11534,7 @@ def api_benchmark():
                     feasible = safe_float(v.get("feasible_rate", 0.0), 0.0)
                     return (mean_profit, feasible, -cv)
                 best_algo, best_metrics = sorted(valid_algos.items(), key=_algo_rank, reverse=True)[0]
-                interpretation = f"Secili kosullarda {best_algo} algoritmasi daha yuksek ortalama kar/uygulanabilirlik ve daha dusuk degiskenlik dengesinde one cikmistir."
+                interpretation = f"Under the selected conditions, the {best_algo} algorithm stands out for its balance of higher average profit/feasibility and lower variability."
         if results.get("completion_status_kind") == "partial":
             leader = None
             try:
@@ -11551,9 +11550,9 @@ def api_benchmark():
             except Exception:
                 leader = None
             interpretation = (
-                f"Tamamlanan kosulara gore {leader} one cikmaktadir; ancak tum kosular tamamlanmadigi icin bu sonuc on degerlendirme niteligindedir."
+                f"Based on completed runs, {leader} is ahead; however, because not all runs were completed, this result is a preliminary assessment."
                 if leader else
-                "Tamamlanan kosular kisitli oldugu icin sonuc on degerlendirme niteligindedir; kesin en iyi algoritma dili kullanilmamalidir."
+                "Because completed runs are limited, this result is a preliminary assessment; definitive best-algorithm language should not be used."
             )
         results["interpretation"] = interpretation
         results["diagnostics"] = {
@@ -11568,8 +11567,8 @@ def api_benchmark():
             "objective_mode": objective_mode,
             "scenario_type": scenario_type,
             "warnings": (
-                ["Fast mod aktif; akademik varsayilan 30 kosu yerine hizli kosu ayarlari kullanildi."] if benchmark_mode == "fast" else []
-            ) + ([results["partial_reason"] or "Tum kosular tamamlanmadi; sonuc kismi olarak yorumlanmalidir."] if partial_result else []),
+                ["Fast mode is active; fast-run settings were used instead of the academic default of 30 runs."] if benchmark_mode == "fast" else []
+            ) + ([results["partial_reason"] or "Not all runs were completed; the result should be interpreted as partial."] if partial_result else []),
         }
         return jsonify(results)
     except Exception as e:
@@ -11704,8 +11703,8 @@ def api_run_count_calibration():
                 feasible_rate = max(0.0, min(1.0, feasible_count / max(1, completed_runs)))
                 cv_score = _cv(scores)
                 plan_diversity = float(unique / max(1, completed_runs)) if completed_runs else 0.0
-                stability_label = "kararlı" if feasible_rate >= 0.95 and cv_score <= 0.05 else ("kısmi" if completed_runs < requested_runs else "oynak")
-                note = "Kararlılık ve uygulanabilirlik kabul edilebilir." if stability_label == "kararlı" else "Bu tekrar düzeyi tek başına nihai akademik karar için yeterli değildir."
+                stability_label = "stable" if feasible_rate >= 0.95 and cv_score <= 0.05 else ("partial" if completed_runs < requested_runs else "variable")
+                note = "Stability and feasibility are acceptable." if stability_label == "stable" else "This repetition level alone is not sufficient for a final academic decision."
                 row = {
                     "repeat_count": int(repeat_count),
                     "algorithm": algo,
@@ -11748,7 +11747,7 @@ def api_run_count_calibration():
                         or safe_float(r100.get("dominant_plan_rate", 0.0), 0.0) > 0.90
                         or safe_float(r100.get("cv_score", 0.0), 0.0) >= safe_float(r50.get("cv_score", 0.0), 0.0)
                     ):
-                        warnings.append("Yüksek tekrar sayısı tekil en iyi sonucu artırsa da ortalama performans/kararlılık anlamlı biçimde iyileşmediği için bu tekrar düzeyi operasyonel varsayılan olarak seçilmemiştir.")
+                        warnings.append("YÃƒÂ¼ksek tekrar sayÃ„Â±sÃ„Â± tekil en iyi sonucu artÃ„Â±rsa da ortalama performans/kararlÃ„Â±lÃ„Â±k anlamlÃ„Â± biÃƒÂ§imde iyileÃ…Å¸mediÃ„Å¸i iÃƒÂ§in bu tekrar dÃƒÂ¼zeyi operasyonel varsayÃ„Â±lan olarak seÃƒÂ§ilmemiÃ…Å¸tir.")
                         break
 
         response = {
@@ -11779,6 +11778,6 @@ if __name__ == "__main__":
     # NOTE (Windows): Werkzeug's debug reloader (watchdog) may incorrectly detect
     # changes inside site-packages and restart the server continuously.
     # That breaks long-running optimization requests and causes the UI to show
-    # "Hata: Önceki sonuçlar gösteriliyor".
+    # "Hata: Ãƒâ€“nceki sonuÃƒÂ§lar gÃƒÂ¶steriliyor".
     # Keep debug enabled (for tracebacks), but disable the auto-reloader.
     app.run(debug=True, host="127.0.0.1", port=5000, use_reloader=False)

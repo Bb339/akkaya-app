@@ -4516,7 +4516,7 @@ body.app-booting #panel{
   pointer-events:none !important;
 }
 body.app-booting::before{
-  content:"Yükleniyor...";
+  content:"Loading...";
   position:fixed;
   inset:0;
   z-index:2147483000;
@@ -7887,7 +7887,7 @@ body.role-farmer #setupGroup .sidebar-group-text small{
   font-size:0;
 }
 body.role-farmer #setupGroup .sidebar-group-text small::after{
-  content:"Kendi parselinizi seçin ve öneriyi görüntüleyin";
+  content:"Select your parcel and view the recommendation";
   font-size:11px;
 }
 

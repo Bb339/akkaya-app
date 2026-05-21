@@ -4048,7 +4048,7 @@ function updateDroughtAlarmCard(){
       if(n.includes('DOMATES') || n.includes('BIBER')){
         return [
           {name:'Downy mildew / early leaf blight', sign:'Brown leaf spots, mold layer on the lower leaf surface, and fruit quality loss.', action:'Drip irrigation, good ventilation, removal of diseased residues; licensed copper, mancozeb, cymoxanil/metalaxyl groups.'},
-          {name:'Tuta absoluta / kirmizi orumcek', sign:'Yaprak galerileri, meyvede giris deligi, bronzlasma ve ag kurma.', action:'Feromon tuzak, yaprak alti izleme, biyoteknik mucadele; spinosad, chlorantraniliprole, emamectin veya abamectin gruplari rotasyonla.'}
+          {name:'Tuta absoluta / red spider mite', sign:'Leaf mines, fruit entry holes, bronzing, and webbing.', action:'Pheromone traps, underside leaf monitoring, and biotechnical control; rotate spinosad, chlorantraniliprole, emamectin, or abamectin groups.'}
         ];
       }
       return [
@@ -4439,9 +4439,9 @@ function updateDroughtAlarmCard(){
     if(STATE?.currentUser?.role !== 'farmer') return;
     const p = currentParcelV100();
     const title = document.getElementById('parcelSummaryTitle');
-    if(title && selectedParcelId !== '__ALL__') title.textContent = `Kendi parselim (${selectedParcelId})`;
+    if(title && selectedParcelId !== '__ALL__') title.textContent = `My parcel (${selectedParcelId})`;
     const cardTitle = document.querySelector('#farmerDecisionCard .card-title');
-    if(cardTitle) cardTitle.textContent = p ? `Kendi parselim - ${escV100(p.id || '')}` : 'Kendi parselim';
+    if(cardTitle) cardTitle.textContent = p ? `My parcel - ${escV100(p.id || '')}` : 'My parcel';
     const help = document.querySelector('#farmerDecisionCard .card-help.small');
     if(help) help.textContent = 'The assigned current pattern is retained; you can review alternative objectives and send a message/request to the expert or administrator.';
   }
@@ -4781,9 +4781,9 @@ function updateDroughtAlarmCard(){
   const originalMetricsTitleV98 = (typeof metricsTitleForCurrentRole === 'function') ? metricsTitleForCurrentRole : null;
   window.metricsTitleForCurrentRole = function(pid){
     if(STATE?.currentUser?.role === 'farmer'){
-      return pid && pid !== '__ALL__' ? `Kendi parsel karar paneli (${pid})` : 'Kendi parsellerim';
+      return pid && pid !== '__ALL__' ? `My parcel decision panel (${pid})` : 'My parcels';
     }
-    return originalMetricsTitleV98 ? originalMetricsTitleV98(pid) : `Scenario Özeti (${pid})`;
+    return originalMetricsTitleV98 ? originalMetricsTitleV98(pid) : `Scenario Summary (${pid})`;
   };
 
   try{ metricsTitleForCurrentRole = window.metricsTitleForCurrentRole; }catch(_e){}
@@ -4827,7 +4827,7 @@ function updateDroughtAlarmCard(){
     if(cards[2]) cards[2].style.display = 'flex';
     if(cards[3]) cards[3].style.display = 'flex';
     const titles = document.querySelectorAll('.chart-grid-benchmark .chart-title');
-    if(titles[2]) titles[2].textContent = 'Decision quality score (profit + water + TL/m³)';
+    if(titles[2]) titles[2].textContent = 'Decision score components';
     if(titles[3]) titles[3].textContent = 'Runtime, stability and plan distance';
   }
 
@@ -4838,7 +4838,7 @@ function updateDroughtAlarmCard(){
     if(cards[2]) cards[2].style.display = '';
     if(cards[3]) cards[3].style.display = '';
     const titles = document.querySelectorAll('.chart-grid-benchmark .chart-title');
-    if(titles[2]) titles[2].textContent = 'Decision quality score (higher is better)';
+    if(titles[2]) titles[2].textContent = 'Decision score components';
     if(titles[3]) titles[3].textContent = 'Runtime cost and stability';
     const maxProfit = Math.max(1, ...rows.map(a=>nval(algos[a]?.profit?.mean,0)));
     const minWater = Math.min(...rows.map(a=>nval(algos[a]?.water?.mean,0)).filter(x=>x>0));
@@ -6894,7 +6894,7 @@ const DATA_VIEWER_HEADER_MAP_V67 = {
   irrigation_efficiency: 'Irrigation efficiency',
   conveyance_efficiency: 'İletim randımanı',
   total_efficiency: 'Toplam randıman',
-  rainfall_mm: 'Yağış (mm)',
+  rainfall_mm: 'Rainfall (mm)',
   effective_rainfall_mm: 'Efektif yağış (mm)',
   eto_mm: 'ETo (mm)',
   etc_mm: 'ETc (mm)',
@@ -8040,8 +8040,8 @@ function benchmarkCompletionText(j){
   const kind = String(j?.completion_status_kind || (requested > 0 && completed < requested ? 'partial' : 'completed')).toLowerCase();
   if(requested <= 0) return '';
   return kind === 'partial'
-    ? `Kısmi sonuç: ${completed}/${requested} koşu tamamlandı`
-    : `Completed: ${completed}/${requested} koşu`;
+    ? `Partial result: ${completed}/${requested} runs completed`
+    : `Completed: ${completed}/${requested} runs`;
 }
 
 function renderRunCountCalibrationResults(j, box=document.getElementById('benchmarkSweepResults')){
@@ -8467,7 +8467,7 @@ function applyBenchmarkLeaderV96(bestAlgo, objectiveLabel, reasonText){
 
 function updateBenchmarkDiagnosticChartsV96(j, rows, algos){
   const titles = document.querySelectorAll('.chart-grid-benchmark .chart-title');
-  if(titles[0]) titles[0].textContent = 'Net profit distribution (mean / min / max)';
+  if(titles[0]) titles[0].textContent = 'Net profit statistics - GA / ABC / ACO';
   if(titles[1]) titles[1].textContent = 'Total water distribution (mean / min / max)';
   if(titles[2]) titles[2].textContent = 'Algorithm quality profile (TRY/m³ - feasibility - plan difference)';
   if(titles[3]) titles[3].textContent = 'Runtime - variability - pattern diversity profile';
@@ -8501,7 +8501,7 @@ function updateBenchmarkSweepChartsV96(items){
   if(titles[3]) titles[3].textContent = '30/50/100 runtime advantage - normalized score';
   const labels = ok.map(x=>String(x.repeat));
   const algNames = Array.from(new Set(ok.flatMap(x=>Object.keys(x.raw.algorithms || {}))));
-  const colors = {GA:'#2563eb', ABC:'#0f766e', ACO:'#f97316'};
+  const colors = {GA:'Population-based search; improves patterns over generations through selection, crossover, and mutation.', ABC:'Food-source search; explores around good patterns through employed, onlooker, and scout bees.', ACO:'#f97316'};
   const makeLine = (label, values)=>({label, data:values, type:'line', borderColor:colors[label]||'#334155', backgroundColor:'rgba(37,99,235,.08)', pointRadius:4, tension:.22, fill:false});
   const normSeries = (metric, higherBetter=true)=>{
     const byAlgo = {};
@@ -10449,16 +10449,16 @@ function getBenchmarkParcelIdsForRun(){
 
 function getBenchmarkScopeLabel(ids){
   const arr = Array.isArray(ids) ? ids.map(String) : [];
-  if(!arr.length) return 'Kapsam belirlenemedi';
+  if(!arr.length) return 'Scope could not be determined';
   const visible = getVisibleParcels().filter(p => !p?.map_only && arr.includes(String(p.id)));
   const villages = Array.from(new Set(visible.map(p => String(p.village || p.koy || '').trim()).filter(Boolean)));
   if(arr.length === 1){
     const p = visible[0] || null;
-    return `${arr[0]} parseli${p?.village ? ' • '+p.village : ''}`;
+    return `Parcel ${arr[0]}${p?.village ? ' ? '+p.village : ''}`;
   }
-  if(villages.length === 1) return `${villages[0]} köyü • ${arr.length} parsel`;
-  if(villages.length > 1) return `${villages.length} köy • ${arr.length} parsel`;
-  return `${arr.length} parsel`;
+  if(villages.length === 1) return `${villages[0]} village ? ${arr.length} parcels`;
+  if(villages.length > 1) return `${villages.length} villages ? ${arr.length} parcels`;
+  return `${arr.length} parcels`;
 }
 
 function displayIrrigationText(rawText, fallbackKey=''){
@@ -10711,12 +10711,12 @@ function metricsTitleForCurrentRole(pid){
   const visibleCount = getVisibleUsableParcelIds().length;
   if(user?.role === 'farmer'){
     return pid && pid !== '__ALL__'
-      ? `Kendi parsel özeti (${pid})`
-      : `Kendi parsellerim (${visibleCount} parsel)`;
+      ? `My parcel summary (${pid})`
+      : `My parcels (${visibleCount} parcels)`;
   }
   return pid === '__ALL__'
-    ? `Scenario Özeti (${visibleCount || 0} parsel toplamı)`
-    : `Scenario Özeti (${pid} parseli)`;
+    ? `Scenario Summary (${visibleCount || 0} parcels total)`
+    : `Scenario Summary (parcel ${pid})`;
 }
 
 function syncRoleInfoBanner(){
@@ -11735,8 +11735,8 @@ function renderParcelSummary() {
           <div class="parcel-panel-head"><h4>Climate Summary</h4><span>${escapeHtml(String(climateDiag?.selectedYear || climate.periodLabel || 'Selected period'))}</span></div>
           <div class="parcel-kv-grid">
             <div class="parcel-kv"><span>Mean temperature</span><strong>${Number.isFinite(climate.t_avg)? Number(climate.t_avg).toFixed(1) : '-'} °C</strong></div>
-            <div class="parcel-kv"><span>Don riski</span><strong>${escapeHtml(climateDiag?.frost || 'Bilinmiyor')}</strong></div>
-            <div class="parcel-kv"><span>Büyüme sezonu</span><strong>${escapeHtml(climateDiag?.seasonLabel || 'Bilinmiyor')}</strong></div>
+            <div class="parcel-kv"><span>Frost risk</span><strong>${escapeHtml(climateDiag?.frost || 'Unknown')}</strong></div>
+            <div class="parcel-kv"><span>Büyüme sezonu</span><strong>${escapeHtml(climateDiag?.seasonLabel || 'Unknown')}</strong></div>
             <div class="parcel-kv"><span>Data coverage</span><strong>${climate.sourceYears > 1 ? `${climate.sourceYears} year average` : 'Single year / selected period'}</strong></div>
           </div>
         </section>
@@ -13168,13 +13168,13 @@ function rankedCandidatesToUiPatternsV8(parcel, currentRows, rankedCandidates, s
 }
 
 function _annualCropFamily(name){
-  if(typeof familyOf === 'function') return familyOf(name) || 'Genel';
+  if(typeof familyOf === 'function') return familyOf(name) || 'General';
   const k = normCropName(name);
   if(/DOMATES|BIBER|PATLICAN|PATATES/.test(k)) return 'Solanaceae';
   if(/LAHANA|TURP|KARNABAHAR|BROKOLI/.test(k)) return 'Brassicaceae';
   if(/MARUL|AYCICEGI/.test(k)) return 'Asteraceae';
   if(/BUGDAY|ARPA|YULAF|CAVDAR|TRITIKALE|MISIR/.test(k)) return 'Cereal';
-  if(/NOHUT|MERCIMEK|FASULYE|FIG|BEZELYE/.test(k)) return 'Baklagil';
+  if(/NOHUT|MERCIMEK|FASULYE|FIG|BEZELYE/.test(k)) return 'Legume';
   if(/SOGAN|SARIMSAK/.test(k)) return 'Allium';
   return 'Diğer';
 }
@@ -13417,7 +13417,7 @@ function scoreAnnualCandidateByObjective(candidate, objectiveKey, ranges, contex
   const currentFamily = context.currentFamily || '';
   const familyPenalty = candidate.cropFamily && currentFamily && candidate.cropFamily === currentFamily && candidate.type !== 'current_reference' ? 0.16 : 0;
   const rotationPenalty = familyPenalty;
-  const fieldToVegetablePenalty = /Cereal|Yem|Poaceae/i.test(currentFamily) && !/Cereal|Yem|Baklagil|Poaceae/i.test(candidate.cropFamily || '') && candidate.type !== 'current_reference' ? 0.50 : 0;
+  const fieldToVegetablePenalty = /Cereal|Yem|Poaceae/i.test(currentFamily) && !/Cereal|Yem|Baklagil|Legume|Poaceae/i.test(candidate.cropFamily || '') && candidate.type !== 'current_reference' ? 0.50 : 0;
   const localRegionalScore = candidate.sourceType === 'current_reference'
     ? 0.12
     : (candidate.seenInSelectedVillage ? 0.10 : (candidate.seenInOtherVillages ? 0.03 : -0.04));
@@ -13875,7 +13875,7 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
         const st = stageParamsForCrop(c.name);
         const days = stageTotalDays(st);
         patterns.push({
-          patternName: `${prettyCropName(c.name)} tek ürün`,
+          patternName: `${prettyCropName(c.name)} single crop`,
           mainCrop: prettyCropName(c.name),
           secondaryCrop: '-',
           areaSplit: splitLabel(components),
@@ -13934,7 +13934,7 @@ function buildUiAlternativePatterns(parcel, currentRows, recRows, recMeta, scena
             ]
           : [component(c1.name, 1, c1, 'Main crop', { water:totalWater, profit:totalProfit, irrigationKey:c1.irrigationKey })];
         patterns.push({
-          patternName: c2 ? `${prettyCropName(c1.name)} + ${prettyCropName(c2.name)}` : `${prettyCropName(c1.name)} tek ürün`,
+          patternName: c2 ? `${prettyCropName(c1.name)} + ${prettyCropName(c2.name)}` : `${prettyCropName(c1.name)} single crop`,
           mainCrop: prettyCropName(c1.name),
           secondaryCrop: c2 ? prettyCropName(c2.name) : '-',
           areaSplit: splitLabel(components),
@@ -15588,7 +15588,7 @@ function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){
   if((seasonSource||'s1') === 's1'){
   if(orchardLike && !sameMain) return `In S1 single-crop conversion mode, ${prettyCropName(recMain.name)} was calculated as a single-crop alternative instead of the established orchard crop (${prettyCropName(curMain.name)}); this result requires orchard conversion and expert approval in practice.`;
     if(orchardLike) return 'For perennial/orchard parcels, the main crop is preserved; the difference is calculated through irrigation method, quota, and timing.';
-    if(sameMain) return `${prettyCropName(curMain.name)} tekrar recommendationldi çünkü veri setindeki uygun adaylar içinde seçili hedef (${obj}) altında daha az water veya daha yüksek net profit sağlayan alternatif eşik değeri aşamadı. Bu durum raporda "mevcut ürün korunuyor" diye açıklanır, gizlenmez.`;
+    if(sameMain) return `${prettyCropName(curMain.name)} was recommended again because no suitable candidate in the dataset passed the threshold for lower water use or higher net profit under the selected objective (${obj}). The report explains this as "the current crop is preserved" rather than hiding it.`;
     return `In S1 single-crop mode, the system selected ${prettyCropName(recMain.name)} instead of ${prettyCropName(curMain.name)}; the decision is based on joint scoring of water quota, TRY/m³, period-day count, peak month, and parcel/soil suitability.`;
   }
   const recSecond = Array.isArray(recRows) ? recRows.find(r=>normCropName(r.name)!==normCropName(recMain.name)) : null;
@@ -15801,7 +15801,7 @@ function renderAllScenarioWatermmaries(){
     const rp = (cached && cached.meta && (cached.meta.run_params || cached.meta.runParams)) ? (cached.meta.run_params || cached.meta.runParams) : null;
     const seed = (rp && (rp.seed !== undefined)) ? rp.seed : (cached && cached.meta ? cached.meta.seed : 42);
     const year = (cached && cached.year) ? cached.year : (STATE.selectedWaterYear || '-');
-    const scope = (selectedParcelId === '__ALL__') ? 'Havza (tüm parseller)' : `Parcel ${selectedParcelId}`;
+    const scope = (selectedParcelId === '__ALL__') ? 'Basin (all parcels)' : `Parcel ${selectedParcelId}`;
     const algoName2 = viewCtx.algo === 'ga' ? 'GA' : (viewCtx.algo === 'abc' ? 'ABC' : 'ACO');
 
     if(metaEl){
@@ -17421,7 +17421,7 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
 
     // Önce "... 07000km2" / "... 07000 km2" / "... 07000km" yakala
     let m = s.match(/(\d+(?:[\.,]\d+)?)\s*(km2|km²|km)\b/);
-    // Yoksa en sondaki sayıyı yakala
+    // Nonesa en sondaki sayıyı yakala
     if(!m) m = s.match(/(\d+(?:[\.,]\d+)?)(?!.*\d)/);
     if(!m) return NaN;
 
@@ -17503,7 +17503,7 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
         rec.farmer_id = pr.farmer_id || rec.farmer_id || '';
         rec.farmer_name = pr.farmer_name || pr.farmer || rec.farmer_name || '';
         rec.is_orchard = !!(pr.is_orchard || pr.parcel_type === 'orchard');
-        rec.geometry_status = pr.geometry_status || rec.geometry_status || 'Yüklü gerçek GeoJSON';
+        rec.geometry_status = pr.geometry_status || rec.geometry_status || 'Loaded real GeoJSON';
         if(Number.isFinite(area_da) && area_da>0){
           rec.area_da = +area_da.toFixed(1);
           rec.area_ha = +(area_da/10).toFixed(1);
@@ -18154,15 +18154,15 @@ if(reservoirsGeojson && Array.isArray(reservoirsGeojson.features) && reservoirsG
         </div>
         <div class="s"><span class="k">Amaç</span><span class="v">${escapeHtml(fmt(i.purpose))}</span></div>
         <div class="s"><span class="k">Akarsu</span><span class="v">${escapeHtml(fmt(i.river))}</span></div>
-        <div class="s"><span class="k">Yapım</span><span class="v">${escapeHtml(fmt(i.construction))}</span></div>
-        <div class="s"><span class="k">Tip</span><span class="v">${escapeHtml(fmt(i.dam_type))}</span></div>
-        <div class="s"><span class="k">Highlik</span><span class="v">${escapeHtml(fmtNum(i.height_m,0))} m</span></div>
-        <div class="s"><span class="k">Gövde Hacmi</span><span class="v">${escapeHtml(fmtNum(i.body_volume_m3,0))} m³</span></div>
-        <div class="s"><span class="k">Göl Hacmi</span><span class="v">${escapeHtml(fmtNum(i.reservoir_volume_hm3,1))} hm³</span></div>
-        <div class="s"><span class="k">Göl Areaı</span><span class="v">${escapeHtml(fmtNum(i.reservoir_area_km2,2))} km²</span></div>
+        <div class="s"><span class="k">Construction</span><span class="v">${escapeHtml(fmt(i.construction))}</span></div>
+        <div class="s"><span class="k">Type</span><span class="v">${escapeHtml(fmt(i.dam_type))}</span></div>
+        <div class="s"><span class="k">Height</span><span class="v">${escapeHtml(fmtNum(i.height_m,0))} m</span></div>
+        <div class="s"><span class="k">Body volume</span><span class="v">${escapeHtml(fmtNum(i.body_volume_m3,0))} m3</span></div>
+        <div class="s"><span class="k">Reservoir volume</span><span class="v">${escapeHtml(fmtNum(i.reservoir_volume_hm3,1))} hm3</span></div>
+        <div class="s"><span class="k">Reservoir area</span><span class="v">${escapeHtml(fmtNum(i.reservoir_area_km2,2))} km2</span></div>
         <div class="s"><span class="k">Irrigation Area</span><span class="v">${escapeHtml(fmtNum(i.irrigation_area_ha,0))} ha</span></div>
-        <div class="s"><span class="k">Statü</span><span class="v">${escapeHtml(fmt(i.wetland_status))}</span></div>
-        <div class="s"><span class="k">Biyoçeşitlilik</span><span class="v">${escapeHtml(fmt(i.biodiversity))}</span></div>
+        <div class="s"><span class="k">Status</span><span class="v">${escapeHtml(fmt(i.wetland_status))}</span></div>
+        <div class="s"><span class="k">Biodiversity</span><span class="v">${escapeHtml(fmt(i.biodiversity))}</span></div>
         <div class="s note"><span class="v">${escapeHtml(fmt(i.note))}</span></div>
       </div>
     `;
@@ -18545,7 +18545,7 @@ function renderPlan5(){
   if(sel && sel.options.length===0){
     const optAll = document.createElement("option");
     optAll.value = "__ALL__";
-    optAll.textContent = "Tümü (Genel Özet)";
+    optAll.textContent = "All (General Summary)";
     sel.appendChild(optAll);
     for(const p of parcelData){
       const o = document.createElement("option");
@@ -18992,8 +18992,8 @@ function renderPlan5(){
     const totalArea = parcelData.reduce((a,p)=>a+(+p.area_da||0),0);
     const totalFallowAreaYears = parcelData.reduce((a,p)=> a + ((parcelAgg[p.id]?.fallowPct||0)/100)*(+p.area_da||0)*5, 0);
     fallowPct = (totalArea>0) ? (totalFallowAreaYears/(totalArea*5))*100 : 0;
-    if(kWaterSub) kWaterSub.textContent = "Current patterne göre (tüm parseller)";
-    if(kProfitSub) kProfitSub.textContent = "Current patterne göre (tüm parseller)";
+    if(kWaterSub) kWaterSub.textContent = "Compared with the current pattern (all parcels)";
+    if(kProfitSub) kProfitSub.textContent = "Compared with the current pattern (all parcels)";
     if(kSoilSub) kSoilSub.textContent = "Rotation + legumes + cover crops (all parcels)";
   }
 
@@ -19004,14 +19004,14 @@ function renderPlan5(){
 
   if(kWater) kWater.textContent = `${fmtSigned(waterDelta)} m³ (${waterPct==null?"-":fmtSigned(waterPct)}%)`;
   if(kProfit) kProfit.textContent = `${fmtSigned(profitDelta)} TL (${profitPct==null?"-":fmtSigned(profitPct)}%)`;
-  if(kSoil) kSoil.textContent = `${soilScore>=0?"+":""}${Math.round(soilScore)} puan`;
+  if(kSoil) kSoil.textContent = `${soilScore>=0?"+":""}${Math.round(soilScore)} points`;
   if(kNadas) kNadas.textContent = `${Math.max(0,Math.min(100,fallowPct)).toFixed(1)}%`;
   if(kNadas2) kNadas2.textContent = `${Math.max(0,Math.min(100,fallowPct)).toFixed(1)}%`;
-  if(kSoilExplain) kSoilExplain.textContent = "Baklagil (+2), örtü (+1), rotasyon (+1), tekdüze (-2), nadas (-3)";
+  if(kSoilExplain) kSoilExplain.textContent = "Legume (+2), cover crop (+1), rotation (+1), monotony (-2), fallow (-3)";
 
   // Refaha geçiş & desen değişimi
   if(kProsper){
-    kProsper.textContent = firstProsperYear ? String(firstProsperYear) : "Belirsiz";
+    kProsper.textContent = firstProsperYear ? String(firstProsperYear) : "Undetermined";
   }
   if(kProsperSub){
     kProsperSub.textContent = firstProsperYear
@@ -19047,8 +19047,9 @@ function renderPlan5(){
 
 
 function _scenarioLabelTR(v){
-  if(v === 'su_tasarruf') return 'Water tasarruf odaklı';
-  if(v === 'maks_kar') return 'Profit-oriented';
+  const meta = (typeof getScenarioDisplayMeta === 'function') ? getScenarioDisplayMeta(v) : null;
+  if(meta && meta.label) return meta.label;
+  if(v === 'maks_kar') return 'Profit-oriented objective';
   return 'Current pattern';
 }
 
@@ -19186,7 +19187,7 @@ function renderObjectiveCompareMatrix(){
     }
     html += '</tr>';
   }
-  html += '</tbody></table><p>Bu tablo, seçili plan modu ve kapsamda algoritmaların aynı hedef altında hangi su/profit noktasına yaklaştığını hızlı gösterir. Ayrıntılı istatistik ve tekrar stabilitesi için benchmark ve 30/50/100 taraması kullanılır.</p></div>';
+  html += '</tbody></table><p>This table provides a quick view of the water/profit point each algorithm approaches under the same objective for the selected plan mode and scope. Use the benchmark and 30/50/100 sweep for detailed statistics and repetition stability.</p></div>';
   box.innerHTML = html;
 }
 
@@ -19217,8 +19218,8 @@ try{ renderInstitutionRequestInbox(); }catch(_e){}
       const algoName = ctx.algo === "ga" ? "GA" : (ctx.algo === "abc" ? "ABC" : "ACO");
       const baseTxt = (ctx.scenario === "mevcut")
         ? ("Ready • " + algoName)
-        : ("Ready • " + algoName + " • " + ctx.scenario);
-      st.textContent = baseTxt + (STATE.selectionDirty ? " • seçim değişti" : "");
+        : ("Ready ? " + algoName + " ? " + _scenarioLabelTR(ctx.scenario));
+      st.textContent = baseTxt + (STATE.selectionDirty ? " ? selection changed" : "");
     }
   }
 
@@ -19468,7 +19469,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   const handleOptimizationRunClick = async () => {
     const st = document.getElementById("algoStatus");
     if(userNeedsOnboarding(STATE.currentUser)){
-      if(st) st.textContent = 'Initial setup must be completed first';
+      if(st) st.textContent = 'Running...';
       alert('Complete the initial setup step and verify your parcel information first.');
       return;
     }
@@ -19516,11 +19517,11 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         ? `Updated • Automatic selection: ${selectedAlgo.toUpperCase()}`
         : (out.localFallback ? (STATE.manualDataActive ? "Updated (manual CSV / local calculation)" : "Updated (local calculation)") : "Updated");
     }catch(e){
-      console.warn("Optimizasyon tamamen başarısız oldu.", e);
+      console.warn("Optimization failed completely.", e);
       lastOptimizeContext = prevContext;
       STATE.selectionDirty = true;
-      if (st) st.textContent = "Hata: Optimizasyon tamamlanamadı";
-      try{ alert('Optimizasyon tamamlanamadı: ' + (e?.message || e)); }catch(_e){}
+      if (st) st.textContent = "Error: Optimization could not be completed";
+      try{ alert('Optimization could not be completed: ' + (e?.message || e)); }catch(_e){}
     } finally {
       STATE.isOptimizing = false;
       setOptimizationRunButtonsBusy(false);
@@ -19547,7 +19548,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       if(benchBtn.disabled) return;
       benchBtn.disabled = true;
       benchBtn.classList.add('btn-disabled');
-      if(st) st.textContent = 'Çalışıyor…';
+      if(st) st.textContent = 'Running...';
 
       const idsForRun = getSelectedParcelIdsForRun();
       if(!idsForRun || idsForRun.length === 0){
@@ -19584,8 +19585,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 
 
         const labelFor = (src)=>{
-          if(src === 's1') return 'Scenario-1 (tek ürün)';
-          if(src === 's2') return 'Scenario-2 (çift ürün / desen)';
+          if(src === 's1') return 'Scenario 1 (single crop)';
+          if(src === 's2') return 'Scenario 2 (two-crop / pattern)';
                     return String(src);
         };
         const targetLabelFor = (key)=>{
@@ -19595,8 +19596,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
           return 'Water-efficiency objective';
         };
         const benchmarkModeLabel = document.getElementById('benchmarkModeSel')?.value === 'detailed'
-          ? 'detaylı karşılaştırma'
-          : 'hızlı karşılaştırma';
+          ? 'detailed comparison'
+          : 'fast comparison';
 
         const sources = (mode === 'all') ? ['s1','s2'] : [ (mode === 'use_selected') ? selectedSeasonSource : mode ];
 
@@ -19610,9 +19611,9 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 	        // Tek kaynak seçiliyse (en yaygın kullanım): sonuçları yalnızca 1 kez göster (tekrarlı başlık oluşmasın)
 	        if(sources.length === 1){
 	          const src = sources[0];
-	          if(st) st.textContent = `Çalışıyor... ${benchmarkModeLabel} • ${labelFor(src)} • ${targetLabelFor(objective)}`;
+	          if(st) st.textContent = `Running... ${benchmarkModeLabel} • ${labelFor(src)} • ${targetLabelFor(objective)}`;
 	          const j = await fetchBenchmarkPython(objective, src);
-	          if(benchmarkResultLooksBroken(j)) throw new Error('Benchmark çıktısı boş veya tüm koşular hatalı görünüyor');
+	          if(benchmarkResultLooksBroken(j)) throw new Error('Benchmark output appears empty or all runs appear failed');
 	          // box'a küçük bir etiket basıp normal render fonksiyonunu kullan
 	          if(box){
 	            box.innerHTML = `${objectiveNote ? `<div class="benchmark-note">${objectiveNote}</div>` : ''}<div class="benchmark-tag">${labelFor(src)} • Objective: ${targetLabelFor(objective)} • ${benchmarkModeLabel}</div><div id="_benchSingle"></div>`;
@@ -19631,9 +19632,9 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 
 	          let lastOk = null;
 	          for(const src of sources){
-	            if(st) st.textContent = `Çalışıyor... ${benchmarkModeLabel} • ${labelFor(src)} • ${targetLabelFor(objective)}`;
+	            if(st) st.textContent = `Running... ${benchmarkModeLabel} • ${labelFor(src)} • ${targetLabelFor(objective)}`;
 	            const j = await fetchBenchmarkPython(objective, src);
-	            if(benchmarkResultLooksBroken(j)) throw new Error('Benchmark çıktısı boş veya tüm koşular hatalı görünüyor');
+	            if(benchmarkResultLooksBroken(j)) throw new Error('Benchmark output appears empty or all runs appear failed');
 	            if(j && j.status === 'OK') lastOk = j;
 
 	            const card = document.createElement('div');
@@ -19657,7 +19658,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
 
         if(st){
           if(sources.length > 1){
-            st.textContent = 'Completed (seçili sezon senaryoları)';
+            st.textContent = 'Completed (selected season scenarios)';
           }else{
             const current = document.getElementById('_benchSingle');
             const lastStatus = window.__lastBenchmarkRaw ? benchmarkCompletionText(window.__lastBenchmarkRaw) : '';
@@ -19665,14 +19666,14 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
           }
         }
       }catch(e){
-        console.warn('Benchmark hata:', e);
+        console.warn('Benchmark error:', e);
         const box = document.getElementById('benchmarkResults');
         const kpi = document.getElementById('benchmarkKpiGrid');
         const pat = document.getElementById('benchmarkPatterns');
         if(kpi) kpi.innerHTML = '';
         if(pat) pat.innerHTML = '';
-        if(box) box.innerHTML = '<div class="badge badge-warn">Benchmark hata: '+String(e?.message||e)+'<br><span class="muted">Bu sekmede yalnızca backend benchmark kabul edilir; tarayıcı içi yedek sonuç gösterilmez.</span></div>';
-        if(st) st.textContent = 'Hata';
+        if(box) box.innerHTML = '<div class="badge badge-warn">Benchmark error: '+String(e?.message||e)+'<br><span class="muted">Only backend benchmark results are accepted in this tab; no in-browser fallback result is shown.</span></div>';
+        if(st) st.textContent = 'Error';
       }finally{
         benchBtn.disabled = false;
         benchBtn.classList.remove('btn-disabled');
@@ -19685,14 +19686,14 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       const st = document.getElementById('benchmarkStatus');
       const box = document.getElementById('benchmarkSweepResults');
       if(userNeedsOnboarding(STATE.currentUser)){
-        if(st) st.textContent = 'Once ilk kurulum tamamlanmali';
+        if(st) st.textContent = 'Complete the initial setup first';
         alert('Algorithm taramasına geçmeden önce ilk kurulum adımını tamamlayın.');
         return;
       }
       if(benchSweepBtn.disabled) return;
       benchSweepBtn.disabled = true;
       benchSweepBtn.classList.add('btn-disabled');
-      if(st) st.textContent = '10/15/30/50/100 kararlılık analizi çalışıyor...';
+      if(st) st.textContent = '10/15/30/50/100 stability analysis is running...';
       if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50, and 100 repeat levels are compared for GA / ABC / ACO under the same conditions. This may take longer than the main benchmark.</div>';
       try{
         const objectiveRaw = (document.querySelector('input[name="scenario"]:checked')?.value || 'su_tasarruf').toString();
@@ -19704,7 +19705,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         renderRunCountCalibrationResults(calibration, box);
         if(st) st.textContent = benchmarkCompletionText(calibration) || 'Run count stability analysis completed';
       }catch(e){
-        console.warn('Benchmark sweep hata:', e);
+        console.warn('Benchmark sweep error:', e);
         if(box) box.innerHTML = '<div class="badge badge-warn">Run count stability analysis error: '+String(e?.message||e)+'</div>';
         if(st) st.textContent = 'Run count analysis error';
       }finally{
@@ -19721,7 +19722,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     }).catch((e)=>{
       console.error("initMap hata:", e);
       const mapBox = document.getElementById("map");
-      if(mapBox) mapBox.innerHTML = '<div style="padding:12px;color:#667;">Harita başlatılamadı. (Leaflet/Esri eklentileri yüklenememiş olabilir)</div>';
+      if(mapBox) mapBox.innerHTML = '<div style="padding:12px;color:#667;">The map could not be initialized. (Leaflet/Esri plugins may not have loaded.)</div>';
     });
   }else{
     const mapBox = document.getElementById("map");
@@ -19809,7 +19810,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
    - Parcel özeti yeniden tasarlandı.
    - Aylık water kapasitesi tablosunda tahmini/gerçek veri ayrımı yapıldı.
    - Panel içi parsel drawingsi + farmer + alternatif desen ataması eklendi.
-   - Atama bilgisi GeoJSON özelliklerine ve yerel kayıt alanına yazılır.
+   - Assignment information GeoJSON özelliklerine ve yerel kayıt alanına yazılır.
    - Önbellek temizliği eski parsel override/local state kayıtlarını da kapsar.
    ============================================================ */
 (function(){
@@ -19853,7 +19854,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     if(s==='approved') return 'Approved';
     if(s==='in_progress') return 'In progress';
     if(s==='draft') return 'Taslak';
-    return s ? s : 'Atama yok';
+    return s ? s : 'No assignment';
   }
   function assignmentToneClassV14(k){
     const s=String(k||'').toLowerCase();
@@ -20081,7 +20082,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       farmer_id: p.farmer_id || p.assigned_farmer_username || '',
       farmer_name: ass?.farmer_name || p.farmer_name || p.farmer || '',
       source_label: buildParcelGeojsonFilenameV21(Object.assign({}, p, {farmer_name: ass?.farmer_name || p.farmer_name || p.farmer || ''})),
-      geometry_status: p.geometry_status || 'Panelde çizildi',
+      geometry_status: p.geometry_status || 'Drawn in panel',
       geometry_source: p.geometry_source || 'panel_drawing'
     });
     const blob=new Blob([JSON.stringify(feature,null,2)],{type:'application/geo+json;charset=utf-8'});
@@ -20293,7 +20294,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
       <div class="parcel-kv"><span>Soil code</span><strong>${es(soilCode)}</strong></div>
       <div class="parcel-kv"><span>Soil group</span><strong>${es(decoded?.groupText || 'Code could not be decoded')}</strong></div>
       <div class="parcel-kv"><span>Land capability</span><strong>${es(decoded?.capTok || '-')}</strong></div>
-      <div class="parcel-kv"><span>Erozyon / derinlik</span><strong>${es(decoded?.erosionText || decoded?.ebdDetail?.depthText || '-')}</strong></div>` : `
+      <div class="parcel-kv"><span>Erosion / depth</span><strong>${es(decoded?.erosionText || decoded?.ebdDetail?.depthText || '-')}</strong></div>` : `
       <div class="parcel-empty-state"><strong>Soil data missing</strong><span>Add a soil code to the dataset for detailed soil interpretation.</span><button class="btn-secondary" type="button" data-open-parcel-form="1">Edit soil/data fields</button></div>`;
     root.innerHTML = `
       <div class="parcel-summary-v14 ${STATE?.currentUser?.role==='farmer'?'is-farmer':'is-institution'}">
@@ -20308,11 +20309,11 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         <div class="parcel-kpi-strip">
           <div class="parcel-kpi water"><span>Current water</span><strong>${fmt0(p.water_m3)} m³</strong><small>Reference pattern</small></div>
           <div class="parcel-kpi profit"><span>Current net profit</span><strong>${fmt0(p.profit_tl)} TL</strong><small>Annual estimate</small></div>
-          <div class="parcel-kpi rain"><span>Yağış</span><strong>${Number.isFinite(+rain)?fmt0(rain):'-'} mm</strong><small>${STATE?.selectedWaterYear || 'seçili yıl'}</small></div>
+          <div class="parcel-kpi rain"><span>Rainfall</span><strong>${Number.isFinite(+rain)?fmt0(rain):'-'} mm</strong><small>${STATE?.selectedWaterYear || 'selected year'}</small></div>
           <div class="parcel-kpi eto"><span>ETo</span><strong>${Number.isFinite(+eto)?fmt0(eto):'-'} mm</strong><small>CROPWAT/FAO-56 ref.</small></div>
         </div>
         <div class="parcel-summary-v14-tabs">
-          <section><div class="parcel-panel-head"><h4>${STATE?.currentUser?.role==='farmer' && ass ? 'Panelinize düşen yeni ürün ataması' : 'Atama bilgisi'}</h4><span>${ass?.assigned_at ? es(new Date(ass.assigned_at).toLocaleDateString('tr-TR')) : 'Henüz atanmadı'}</span></div>
+          <section><div class="parcel-panel-head"><h4>${STATE?.currentUser?.role==='farmer' && ass ? 'Panelinize düşen yeni ürün ataması' : 'Assignment information'}</h4><span>${ass?.assigned_at ? es(new Date(ass.assigned_at).toLocaleDateString('tr-TR')) : 'Henüz atanmadı'}</span></div>
             <div class="assignment-summary-card">
               <div><span>Farmer</span><strong>${es(ass?.farmer_name || p.farmer || 'Not assigned')}</strong></div>
               <div><span>Selected alternative</span><strong>${es(uiDisplayTextEn(ass?.alternative_label || 'No assignment made'))}</strong></div>
@@ -20320,15 +20321,15 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
               <div><span>Atanan yeni ürün/desen</span><strong>${es(ass?.pattern || '-')}</strong></div>
               <div><span>Water / Profit</span><strong>${ass ? `${fmt0(ass.water_m3)} m³ • ${fmt0(ass.profit_tl)} TL` : '-'}</strong></div>
             </div>
-            <div class="parcel-summary-actions"><button class="btn-secondary" type="button" data-open-assignment-panel="1">Atama panelini aç</button><button class="btn-secondary" type="button" data-export-summary-geojson="1">GeoJSON indir</button></div>
+            <div class="parcel-summary-actions"><button class="btn-secondary" type="button" data-open-assignment-panel="1">Open assignment panel</button><button class="btn-secondary" type="button" data-export-summary-geojson="1">Download GeoJSON</button></div>
           </section>
-          <section><div class="parcel-panel-head"><h4>Toprak özeti</h4><span>${soilCode ? 'Kod var' : 'Eksik veri'}</span></div><div class="parcel-kv-grid">${soilHtml}</div></section>
+          <section><div class="parcel-panel-head"><h4>Soil summary</h4><span>${soilCode ? 'Code available' : 'Missing data'}</span></div><div class="parcel-kv-grid">${soilHtml}</div></section>
           <section><div class="parcel-panel-head"><h4>Climate Summary</h4><span>${es(climateDiag?.selectedYear || STATE?.selectedWaterYear || 'Selected period')}</span></div>
             <div class="parcel-kv-grid">
               <div class="parcel-kv"><span>Mean temperature</span><strong>${Number.isFinite(+climateRaw.t_avg)?(+climateRaw.t_avg).toFixed(1):'-'} °C</strong></div>
-              <div class="parcel-kv"><span>Don riski</span><strong>${es(climateDiag?.frost || 'Bilinmiyor')}</strong></div>
-              <div class="parcel-kv"><span>Büyüme sezonu</span><strong>${es(climateDiag?.seasonLabel || 'Bilinmiyor')}</strong></div>
-              <div class="parcel-kv"><span>Eksik başlık</span><strong>${confidence.missing?.length ? es(confidence.missing.join(', ')) : 'Yok'}</strong></div>
+              <div class="parcel-kv"><span>Frost risk</span><strong>${es(climateDiag?.frost || 'Unknown')}</strong></div>
+              <div class="parcel-kv"><span>Büyüme sezonu</span><strong>${es(climateDiag?.seasonLabel || 'Unknown')}</strong></div>
+              <div class="parcel-kv"><span>Missing fields</span><strong>${confidence.missing?.length ? es(confidence.missing.join(', ')) : 'None'}</strong></div>
             </div>
           </section>
         </div>
@@ -20407,8 +20408,8 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   function fmt1(x){ const v=num(x,0); return (Math.round(v*10)/10).toLocaleString('tr-TR',{minimumFractionDigits:1, maximumFractionDigits:1}); }
   function statusText(st){
     const s=String(st||'').toLowerCase();
-    if(s==='geometry_ready') return 'GeoJSON yüklü';
-    if(s==='drawn_in_panel') return 'Panelde çizildi';
+    if(s==='geometry_ready') return 'GeoJSON loaded';
+    if(s==='drawn_in_panel') return 'Drawn in panel';
     if(s==='info_ready_drawing_pending') return 'Drawing pending';
     if(s==='approved') return 'Approved';
     return st || 'Bilgi hazır';
@@ -21005,10 +21006,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       props.assigned_alternative_id = props.selected_alternative_id;
       props.assigned_alternative_label = props.selected_alternative_label;
       props.assigned_pattern = props.selected_pattern;
-      props.geometry_status = 'Yüklü gerçek GeoJSON';
+      props.geometry_status = 'Loaded real GeoJSON';
       props.geometry_source = 'panel_saved_geojson';
       props.assignment_status = 'geometry_ready';
-      props.assignment_status_label = 'GeoJSON yüklü, seçilebilir';
+      props.assignment_status_label = 'GeoJSON loaded, selectable';
     }
     props.source_label = buildParcelGeojsonFilenameV21(props);
     feature = {type:'Feature', properties: props, geometry: feature.geometry};
@@ -21186,9 +21187,9 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     catch(_e){ return String(Math.round(n(value))); }
   };
   const METHOD = {
-    GA:'Popülasyon tabanlı arama; seçim-çaprazlama-mutasyon ile desenleri nesiller halinde iyileştirir.',
-    ABC:'Besin kaynağı araması; işçi/gözcü/kaşif arılarla iyi desen çevresinde arama yapar.',
-    ACO:'Feromon tabanlı arama; iyi parsel-ürün eşleşmelerini güçlendirir, buharlaşma ile erken kilitlenmeyi sınırlar.'
+    GA:'Population-based search; improves patterns over generations through selection, crossover, and mutation.',
+    ABC:'Food-source search; explores around good patterns through employed, onlooker, and scout bees.',
+    ACO:'Pheromone-based search; reinforces good parcel-crop matches and limits early lock-in through evaporation.'
   };
   const COLORS = {GA:'#2563eb', ABC:'#16a34a', ACO:'#f97316'};
   function names(j){
@@ -21377,10 +21378,10 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
     });
     try{
       const titles = document.querySelectorAll('#tab-benchmark .chart-title');
-      if(titles[0]) titles[0].textContent = 'Net profit istatistiği - GA / ABC / ACO';
-      if(titles[1]) titles[1].textContent = 'Water tüketimi istatistiği - GA / ABC / ACO';
-      if(titles[2]) titles[2].textContent = 'Decision skoru bileşenleri';
-      if(titles[3]) titles[3].textContent = 'Stability ve overfitting kontrolü';
+      if(titles[0]) titles[0].textContent = 'Net profit statistics - GA / ABC / ACO';
+      if(titles[1]) titles[1].textContent = 'Water use statistics - GA / ABC / ACO';
+      if(titles[2]) titles[2].textContent = 'Decision score components';
+      if(titles[3]) titles[3].textContent = 'Runtime, stability and plan distance';
     }catch(_e){}
   }
   function bindSweepButton(){
@@ -21397,8 +21398,8 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       if(btn.disabled) return;
       btn.disabled = true;
       btn.classList.add('btn-disabled');
-      if(st) st.textContent = '10/15/30/50/100 kararlılık analizi çalışıyor...';
-      if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50 ve 100 tekrar düzeyleri aynı koşullarda test ediliyor.</div>';
+      if(st) st.textContent = '10/15/30/50/100 stability analysis is running...';
+      if(box) box.innerHTML = '<div class="benchmark-note">10, 15, 30, 50, and 100 repetition levels are being tested under the same conditions.</div>';
       try{
         const objectiveRaw = (document.querySelector('input[name="scenario"]:checked')?.value || 'su_tasarruf').toString();
         const objective = objectiveRaw === 'mevcut' ? 'su_tasarruf' : objectiveRaw;
@@ -21407,9 +21408,9 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         const src = (mode === 'use_selected' || mode === 'all') ? selectedSeasonSource : mode;
         const j = await fetchRunCountCalibrationPython(objective, src);
         renderRunCountCalibrationResults(j, box);
-        if(st) st.textContent = benchmarkCompletionText(j) || 'Stability analizi hazır';
+        if(st) st.textContent = benchmarkCompletionText(j) || 'Stability analysis ready';
       }catch(e){
-        if(box) box.innerHTML = '<div class="badge badge-warn">Repetition Stability Analysis hata: '+esc(e?.message||e)+'</div>';
+        if(box) box.innerHTML = '<div class="badge badge-warn">Repetition Stability Analysis error: '+esc(e?.message||e)+'</div>';
         if(st) st.textContent = 'Repeat-count analysis error';
       }finally{
         btn.disabled = false;
@@ -22994,65 +22995,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   const norm = value => String(value || '').toLocaleUpperCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/İ/g,'I');
   const pretty = value => (typeof prettyCropName === 'function') ? prettyCropName(value) : String(value || '').trim();
 
-  const GUIDES = {
-    NOHUT: {
-      label:'Nohut',
-      niğde:'Niğde koşullarında nohut; düşük water ihtiyacı, kireçli-tınlı topraklara uyum ve kuru hasat avantajı nedeniyle water kısıtı olan parsellerde güçlü bir seçenektir. Bor, Altunhisar, Çiftlik ve merkeze bağlı kuru-yarı kuru alanlarda ilkbahar yağışı izlenerek destek sulama planlanmalıdır.',
-      target:'Sertifikalı, antraknoza dayanıklı tohum; 3-4 yıl baklagil dışı münavebe; yabancı ot baskısı düşük, drenajı iyi tarla.',
-      gdd:'Yaklaşık 850-1.150 GDD. Çıkış-serpme döneminde serinlik, çiçeklenme ve bakla dolumunda ani sıcak-kurak stresin azaltılması önemlidir.',
-      soil:[
-        'Toprak analizi yapılır; pH 6,5-8,0 aralığı ve iyi drenaj hedeflenir. Ağır, taban suyu yüksek ve kaymak bağlayan alanlarda kök hastalığı riski artar.',
-        'Sonbahar derin sürüm, ilkbaharda tavı kaçırmadan ikileme ve merdane recommendationlir. Tohum yatağı keseksiz ama fazla ufalanmamış olmalıdır.',
-        'Başlangıç azotu düşük tutulur; fosfor ana besindir. Taban gübresi toprak analizine göre verilir, Rhizobium aşılaması kök nodülünü ve azot bağlamayı destekler.'
-      ],
-      irrigation:[
-        {stage:'Ekim-çıkış', rule:'Toprak tavı yeterliyse sulama yapılmaz; kuru ekimde çimlenmeyi garanti etmek için düşük debili can suyu verilir.'},
-        {stage:'Dallanma-çiçeklenme öncesi', rule:'İlkbahar yağışı zayıfsa 25-35 mm destek sulama yapılır. Amaç bitkiyi aşırı vegetatif büyütmek değil, çiçeklenmeye sağlıklı sokmaktır.'},
-        {stage:'Bakla bağlama-dane dolumu', rule:'Kurak ve sıcak rüzgarlı haftada 30-40 mm destek sulama verilebilir. Yaprak ıslaklığı oluşturacak geç saat yağmurlamadan kaçınılır.'},
-        {stage:'Sararma-hasat', rule:'Daneler sararmaya başladığında sulama kesilir; geç sulama hasadı geciktirir, tane rengini ve depolama kalitesini bozar.'}
-      ],
-      months:[
-        {m:'Ocak', stage:'Planlama', jobs:['Parcel history kontrol edilir; son 3 yılda nohut/mercimek/bezelye yoğunluğu varsa kök hastalığı riski nedeniyle başka parsel seçilir.','Toprak analizi için örnek alınır; pH, organik madde, fosfor, potasyum, kireç ve tuzluluk kayıt altına alınır.','Sertifikalı, antraknoz dayanımı bilinen çeşit ve tohum ilaçlama/aşılama planı hazırlanır.']},
-        {m:'Şubat', stage:'Tohum ve tarla hazırlığı', jobs:['Tohum çimlenme gücü kontrol edilir; kırık, buruşuk ve lekeli taneler ayrılır.','Sonbahar sürümü yoksa tarla tavındayken derin olmayan işleme yapılır; erozyon riski olan eğimli alanlarda fazla işleme yapılmaz.','Taban gübresi dozu toprak analizine göre netleştirilir; gereksiz azottan kaçınılır.']},
-        {m:'Mart', stage:'Ekim dönemi', jobs:['Niğde’de tarla tavı ve don riski izlenerek Mart sonu-Nisan başı ekim hedeflenir.','Tohum Rhizobium ile aşılanır; aşılama sonrası güneşte bekletilmeden ekilir.','Sıra arası mekanik çapa yapılacak şekilde ayarlanır; ekim sonrası merdane ile tohum-toprak teması artırılır.']},
-        {m:'Nisan', stage:'Çıkış ve ilk bakım', jobs:['Çıkış homojenliği kontrol edilir; boşluk varsa neden kaymak tabakası, kuş zararı, tohum çürümesi veya derin ekim olarak ayrılır.','Yabancı ot çıkışı erken dönemde bastırılır; mekanik çapa için toprak tavı beklenir.','Kök boğazı kararması, solgunluk ve antraknoz lekesi için haftalık tarla yürüyüşü yapılır.']},
-        {m:'Mayıs', stage:'Dallanma ve çiçeklenme başlangıcı', jobs:['Yağış azsa çiçeklenme öncesi destek sulama planlanır; aşırı sulama kök çürüklüğünü artıracağı için toprak nemi kontrol edilmeden sulama yapılmaz.','Antraknoz için alt yaprak, sap ve ilk bakla lekeleri izlenir; yağışlı-serin hafta sonrası risk yükselir.','Yaprak biti kolonileri ve yeşil kurt yumurta/larva başlangıcı kontrol edilir.']},
-        {m:'Haziran', stage:'Bakla bağlama ve dane dolumu', jobs:['En kritik dönemdir; bitki öğle saatinde kalıcı solgunluk gösteriyorsa destek sulama uygulanır.','Yeşil kurt baklada delik ve dışkı bırakır; rastgele bitki kontrolüyle yoğunluk takip edilir.','Yaprak sararması ile kök hastalığı karıştırılmaz; kök sökülüp damar kararması ve kök çürümesi kontrol edilir.']},
-        {m:'Temmuz', stage:'Olgunlaşma', jobs:['Baklaların çoğu sararıp tane sertleştiğinde sulama tamamen kesilir.','Hasat gecikirse bakla çatlaması ve tane dökümü artar; sabah serinliği hasat kaybını azaltır.','Biçerdöver ayarı tane kırığını azaltacak şekilde yapılır; yabancı otlu parseller ayrı harmanlanır.']},
-        {m:'Ağustos', stage:'Hasat sonrası', jobs:['Ürün nemi depolama için güvenli seviyeye düşürülür; çuvallar zeminden yükseltilir ve havalandırılır.','Bruchus/tohum böceği delikleri kontrol edilir; bulaşık parti ayrı depolanır.','Anız ve bitki artıkları hastalık kaynağı olmaması için yönetilir; sonraki yıl için münavebe kaydı tutulur.']},
-        {m:'September-October', stage:'Rotation and soil health', jobs:['A cereal or forage crop is planned after chickpea; legumes are not repeated on the same parcel in consecutive cycles.','Well-rotted farmyard manure or cover-crop options are evaluated to increase soil organic matter.','Yield, water, cost, and disease records are filed as the basis for next year’s decision.']}
-      ],
-      diseases:[
-        {name:'Antraknoz / Ascochyta yanıklığı', symptoms:'Yaprak, sap ve baklada kahverengi-siyah, çökük ve halkalı lekeler; yağışlı-serin havada hızlı yayılım; şiddetli durumda dal kırılması ve bakla kararması.', prevention:'Sertifikalı tohum, 3-4 yıl münavebe, hastalıklı artıkların tarlada bırakılmaması, sık ekimden kaçınma ve yaprak ıslaklığını azaltan sulama.', bio:'Dayanıklı çeşit, sağlıklı tohum, Trichoderma/Bacillus içerikli ruhsatlı biyolojik ürünler ve iyi havalanan bitki sıklığı.', chem:'İlk belirtiler veya yüksek riskli yağış döneminde yalnızca nohut için ruhsatlı fungisitler, etiket dozu ve il/ilçe tarım recommendationyle uygulanır; aynı etki grubunun sürekli tekrarı direnç oluşturabilir.'},
-        {name:'Fusarium solgunluğu ve kök çürüklüğü', symptoms:'Alt yapraklarda sararma, tek taraflı solgunluk, kök boğazında kahverengileşme, kökte çürüme ve sıcak-kurak günlerde ani çökme.', prevention:'Drenajı iyi parsel, aşırı sulamadan kaçınma, münavebe, temiz tohum ve ekim öncesi toprak sıkışıklığının giderilmesi.', bio:'Rhizobium aşılamasını doğru yapmak, organik maddeyi artırmak ve faydalı mikrobiyal preparatları tohum/toprak uygulamasında kullanmak.', chem:'Tohum kaynaklı riskte ruhsatlı tohum ilaçları kullanılır; tarlada yaygın solgunluk başladıktan sonra kimyasal başarı sınırlıdır, odak parseller gelecek yıl baklagilden çıkarılır.'},
-        {name:'Yeşil kurt', symptoms:'Çiçek ve baklada delik, bakla içinde beslenen larva, dışkı kalıntısı ve tane kaybı. Haziran ayında sıcak ve kuru koşullarda risk artar.', prevention:'Düzenli sürvey, erken ekimle kritik dönemi yoğun uçuş öncesine çekme, hasadı geciktirmeme.', bio:'Feromon tuzakları ile uçuş takibi, Bacillus thuringiensis içerikli ruhsatlı biyolojik ürünler ve faydalı böcekleri koruyan seçici uygulamalar.', chem:'Ekonomik zarar eşiği aşılırsa ruhsatlı insektisit kullanılır; çiçeklenmede arı aktivitesi ve hasat aralığı mutlaka dikkate alınır.'},
-        {name:'Yaprak biti', symptoms:'Sürgün uçlarında koloni, yaprak kıvrılması, yapışkan salgı, zayıf gelişme ve virüs taşıma riski.', prevention:'Aşırı azottan kaçınma, tarla kenarı yabancı ot kontrolü, haftalık yaprak altı kontrolü.', bio:'Doğal düşmanları koruyan seçici mücadele; yoğun olmayan odaklarda mekanik uzaklaştırma ve biyolojik preparatlar.', chem:'Koloni hızlı artıyor ve faydalı yoğunluğu yetersizse ruhsatlı afisitler etiketine göre uygulanır; aynı etki grubu ardışık kullanılmaz.'},
-        {name:'Bruchus / tohum böceği', symptoms:'Depoda veya tarlada tanede yuvarlak çıkış deliği, kalite ve çimlenme kaybı.', prevention:'Zamanında hasat, temiz depo, düşük nem, bulaşık partinin ayrılması ve depoda düzenli kontrol.', bio:'Depo hijyeni, elek-temizleme ve fiziksel ayırma.', chem:'Depo bulaşmasında yalnızca yetkili kişilerce ruhsatlı fumigasyon/depo uygulaması yapılır; gıda güvenliği kuralları önceliklidir.'}
-      ],
-      harvest:['Daneler sertleşip bitki sarardığında hasat edilir; fazla gecikme bakla çatlaması ve tane dökümü yapar.','Biçerdöver batör/devri tane kırığını azaltacak şekilde ayarlanır; kırık tane depoda böcek ve küf riskini artırır.','Parti bazında nem, yabancı madde ve tane iriliği kaydı tutulur; alıcıya temiz ve sınıflanmış parti sunulur.']
-    },
-    MERCIMEK: {
-      label:'Mercimek',
-      niğde:'Niğde’de mercimek kısa sezon ve çok düşük water isteğiyle kurak yıl tamponudur; erken ilkbahar tavı ve yabancı ot yönetimi başarıyı belirler.',
-      target:'Erken ekim, temiz tohum, hızlı çıkış ve hasadı geciktirmeden dane kaybını azaltma.',
-      gdd:'Yaklaşık 800-1.100 GDD.',
-      soil:['Tavlı, iyi drene ve keseksiz tohum yatağı hazırlanır.','Fosfor ve mikro elementler toprak analizine göre düzenlenir.','Aşırı azot yatma ve hastalık riskini artırır.'],
-      irrigation:[{stage:'Çıkış', rule:'Genelde yağış yeterlidir; kuru çıkışta düşük destek sulama yapılır.'},{stage:'Çiçeklenme', rule:'Şiddetli kuraklıkta tek destek sulama verilebilir.'},{stage:'Olgunlaşma', rule:'Irrigation kesilir; hasat kaybını azaltmak için zamanlama izlenir.'}],
-      months:[
-        {m:'Şubat', stage:'Hazırlık', jobs:['Tohum ve tarla seçimi yapılır, yabancı ot history kontrol edilir.','Toprak analizi ve taban gübresi planı hazırlanır.']},
-        {m:'Mart', stage:'Ekim', jobs:['Tarla tavındayken ekim yapılır, ekim derinliği homojen tutulur.','Çıkış sonrası kaymak tabakası ve boşluklar kontrol edilir.']},
-        {m:'Nisan', stage:'Bakım', jobs:['Yabancı ot erken dönemde bastırılır.','Pas/antraknoz ve yaprak biti haftalık izlenir.']},
-        {m:'May', stage:'Flowering', jobs:['If drought occurs, a single supplemental irrigation is evaluated.','Disease symptoms increase during rainy weeks; frequent field scouting is carried out.']},
-        {m:'Haziran-Temmuz', stage:'Hasat', jobs:['Bitki sararınca hasat geciktirilmez.','Dane nemi ve yabancı madde ayrımı yapılır.']}
-      ],
-      diseases:[
-        {name:'Antraknoz', symptoms:'Yaprak ve sapta kahverengi lekeler, kurumalar ve zayıf dane dolumu.', prevention:'Temiz tohum, münavebe, sık ekimden kaçınma.', bio:'Dayanıklı çeşit ve biyolojik tohum uygulamaları.', chem:'Risk ve belirti durumunda mercimeğe ruhsatlı fungisitler etiketine göre kullanılır.'},
-        {name:'Pas', symptoms:'Yaprakta pas rengi püstüller ve erken yaprak dökümü.', prevention:'Dayanıklı çeşit, iyi havalanma.', bio:'Dengeli besleme ve tarla artık yönetimi.', chem:'Eşik aşılırsa ruhsatlı fungisit uygulanır.'},
-        {name:'Yaprak biti', symptoms:'Sürgünde koloni ve kıvrılma.', prevention:'Yabancı ot kontrolü ve haftalık gözlem.', bio:'Faydalıları koruyan uygulamalar.', chem:'Yoğunluk artarsa ruhsatlı seçici ürünler.'}
-      ],
-      harvest:['Hasat gecikirse bakla çatlar; sabah serinliği kaybı azaltır.','Temizleme ve sınıflama satış değerini yükseltir.']
-    }
-  };
+  const GUIDES = {};
 
   function genericGuide(crop){
     return {
