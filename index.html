@@ -259,10 +259,10 @@
 <button class="btn-secondary" id="clearDataCacheBtn" title="Yerel önbelleği temizle ve sayfayı yenile">Önbelleği temizle</button>
 </div>
 <div class="active-files" id="activeFilesBox">
-<div class="active-files-title">Aktif analiz verileri</div>
+<div class="active-files-title">Aktif veri kaynakları</div>
 <div class="active-files-badges" id="activeFilesBadges"></div>
 <div class="build-meta" id="buildMetaBox"></div>
-<p class="active-files-note" id="activeFilesNote">Bu dosyalar Python backend tarafından aktif olarak kullanılmaktadır.</p>
+<p class="active-files-note" id="activeFilesNote">Kartlar, kişisel veri içermeyen ve savunmada anlamlı bulunan kaynak tablolardan gelir.</p>
 </div>
 <div class="manual-upload-panel">
 <div class="active-files-title">Test amaçlı manuel veri yükleme</div>
@@ -523,8 +523,8 @@
 
 <!-- v72: Kullanıcı seçim yaptı ama yeni optimizasyon çalıştırmadıysa uyarı -->
 <div class="stale-banner" id="staleBanner" style="display:none;">
-<div class="stale-banner-title">Uyarı: Seçim değişti</div>
-<div class="stale-banner-body">Ekrandaki sonuçlar <b>önceki çalıştırmaya</b> aittir. Yeni sonuçlar için <b>Optimizasyonu Çalıştır</b> butonuna basın.</div>
+<div class="stale-banner-title">Yeni seçim yapıldı</div>
+<div class="stale-banner-body">Bu seçim için optimizasyon henüz çalıştırılmadı. Senaryo sonucu, bütçe, algoritma koşusu ve uygunluk alanları <b>yeniden çalıştırma gerekli</b> durumunda tutulur.</div>
 </div>
 <div class="role-info-banner" id="roleInfoBanner"></div>
 <div class="right-top" id="overviewSection">
@@ -539,7 +539,7 @@ Parsel Haritası</h2>
 <div class="card metrics-card">
 <div class="metrics-title-row"><h2 class="card-title" id="metricsTitle">Senaryo Özeti (seçili kapsam)</h2><span class="badge badge-info" id="activeObjectiveBadge">Aktif hedef: Mevcut desen</span></div>
 <div class="metrics-topnote">
-<span class="badge badge-info" id="globalBudgetBadge">Küresel su bütçesi: -</span>
+<span class="badge badge-info" id="globalBudgetBadge">Toplam planlama su bütçesi: -</span>
 <span class="badge badge-warn" id="globalBudgetStatus">bütçe durumu: -</span>
 </div>
 <!-- v72: Karar gerekçesi + koşul şeffaflığı -->
@@ -999,7 +999,7 @@ Parsel Haritası</h2>
 <div class="tables-row">
 <div class="card table-card">
 <h3 class="card-subtitle">Havza Su Bütçesi - Resmî Özet</h3>
-<p class="card-help small">Seçili su yılı/senaryosu üzerinden hesaplanan toplam kullanılabilir su ve mevcut talep.</p>
+<p class="card-help small">Planlama su bütçesi, 2024 mevcut ürün deseninden hesaplanan toplam sulama suyu talebi referans alınarak tanımlanmıştır. Su yılı seçimi kuraklık ve gösterge panellerinde bağlamsal analiz için kullanılır.</p>
 <table class="data-table" id="tblOfficialWater">
 <thead>
 <tr><th>Gösterge</th><th>Değer</th><th>Birim</th></tr>

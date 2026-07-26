@@ -78,6 +78,90 @@ const AUTH_STORAGE_KEY = 'sazlicaAuthUsersV4';
 const AUTH_SESSION_KEY = 'sazlicaDemoUserV4';
 const CUSTOM_PARCELS_STORAGE_KEY = 'akkayaCustomParcelsV16';
 const OFFICIAL_PARCEL_OVERRIDES_STORAGE_KEY = 'akkayaOfficialParcelOverridesV16';
+const LOW_RISK_DECISION_NOTICE_V150 = 'Bu çıktı kesin tarımsal reçete değildir. Saha koşulları, toprak analizi, su kalitesi, pazar koşulları, üretici tercihi ve ziraat mühendisi değerlendirmesiyle birlikte yorumlanmalıdır.';
+const LOW_RISK_CROPWAT_NOTE_V150 = 'CROPWAT/FAO-56 yaklaşımı, ürün su ihtiyacı hesabında ETo-Kc-ETc zincirinin referans ve doğrulama çerçevesi olarak kullanılmıştır. Parsel-ürün aday matrisi ve yerleşim/parsel toplamları; etkili yağış, sulama randımanı, parsel alanı, net kâr, TL/m³ ve kota göstergeleriyle karar destek sistemi içinde hesaplanmıştır.';
+const LOW_RISK_ETO_NOTE_V150 = 'ETc, ürün katsayısı Kc ile referans evapotranspirasyon ETo çarpımıyla hesaplanır. Etkili yağış düşüldükten sonra net sulama ihtiyacı elde edilir; sulama randımanı net ihtiyacı brüt baraj/şebeke su çekişine dönüştürür. Randıman ETc değerini değil, brüt su ihtiyacını etkiler.';
+const LOW_RISK_ORCHARD_NOTICE_V150 = 'Kurulu meyve bahçelerinde öneri, ana ürünün sökülmesi veya kısa dönemli ana ürün dönüşümü anlamına gelmez. Ana ürün korunarak sulama verimliliği, kısıntılı sulama, sıra arası/örtü bitkisi ve ziraat mühendisi onaylı yönetim alternatifleri değerlendirilmelidir.';
+const LOW_RISK_ALGO_NOTICE_V150 = 'GA, ACO ve ABC sezgisel/stokastik algoritmalardır. Seed sabit değilse aynı koşulda benzer kalitede fakat farklı ürün desenleri oluşabilir. Sonuçlar bu veri seti, kota modeli ve hedef fonksiyonu bağlamında yorumlanmalıdır.';
+const LOW_RISK_ACO_NOTICE_V150 = 'Bu veri seti, kota modeli ve hedef fonksiyonu altında ACO daha dengeli sonuç üretmiş olabilir. Bu sonuç ACO’nun her veri setinde evrensel olarak en iyi algoritma olduğu anlamına gelmez.';
+const LOW_RISK_METHOD_COMPACT_V150 = 'CROPWAT/FAO-56 yaklaşımı ETo-Kc-ETc zinciri için referans/doğrulama çerçevesidir. Parsel-ürün aday matrisi model/Excel hesap izi içinde oluşturulur. Bu çıktı kesin tarımsal reçete değildir; saha, toprak, pazar ve ziraat mühendisi değerlendirmesiyle yorumlanmalıdır.';
+function lowRiskEscapeV150(v){
+  return (typeof escapeHtml === 'function') ? escapeHtml(String(v ?? '')) : String(v ?? '');
+}
+function lowRiskHasMetricV150(x={}, keys=[]){
+  return keys.some(k => Object.prototype.hasOwnProperty.call(x, k) && x[k] !== null && x[k] !== undefined && x[k] !== '' && Number.isFinite(Number(x[k])));
+}
+function lowRiskMetricTextV150(x={}, keys=[], suffix='', decimals=0, fallback='—'){
+  if(x && (x.metricsUnavailable || x.noFeasibleRecommendation || x.recommendationStatus === 'no_feasible_two_crop_plan')){
+    return fallback;
+  }
+  for(const k of keys){
+    if(Object.prototype.hasOwnProperty.call(x, k) && x[k] !== null && x[k] !== undefined && x[k] !== ''){
+      const n = Number(x[k]);
+      if(Number.isFinite(n)){
+        if(n === 0) return fallback;
+        const opts = decimals > 0 ? {minimumFractionDigits:decimals, maximumFractionDigits:decimals} : {maximumFractionDigits:0};
+        return `${n.toLocaleString('tr-TR', opts)}${suffix ? ' ' + suffix : ''}`;
+      }
+    }
+  }
+  return fallback;
+}
+function lowRiskIsManagementAlternativeV150(x={}){
+  const text = [x.patternName, x.mainCrop, x.secondaryCrop, x.name, x.areaSplit, x.note, x.role, lowRiskCropLabelV150(x)].filter(Boolean).join(' ');
+  return Boolean(x.isInterrow || x.requiresExpertApproval || /sıra\s*arası|örtü|yonetim|yönetim|ana ürün korunur|bahçe/i.test(text));
+}
+function lowRiskDataConfidenceBadgesV150(x={}){
+  const badges = ['CROPWAT/FAO-56 referanslı', 'Excel/model hesap izi', 'Proxy/varsayım kontrolü', 'Uzman onayı gerekir'];
+  return `<div class="data-confidence-row-v150">${badges.map(b=>`<span>${lowRiskEscapeV150(b)}</span>`).join('')}</div>`;
+}
+function lowRiskRiskLabelV150(x={}){
+  if(x.selectable === false || x.feasible === false) return 'Seçilebilir değil';
+  if(x.quotaExceeded || x.fullFeasible === false || x.quota_ok === false) return 'Kota riski';
+  if(lowRiskIsManagementAlternativeV150(x)) return 'Bahçe yönetimi';
+  if(String(x.riskLabel || '').trim()) return String(x.riskLabel).trim().split(/[.;-]/)[0].slice(0, 28);
+  return 'Uygun';
+}
+function lowRiskRoleLabelV150(x={}){
+  if(lowRiskIsManagementAlternativeV150(x)) return 'Yönetim alternatifi';
+  if(x.selectedRecommendation) return 'Ana ürün';
+  return 'Alternatif';
+}
+function lowRiskQuotaStatusV150(x={}){
+  if(x.quotaExceeded || x.feasible === false || x.fullFeasible === false || x.quota_ok === false) return 'Kota riski';
+  return 'Kota uygun';
+}
+function lowRiskWhyTextV150(x={}){
+  const dw = lowRiskHasMetricV150(x, ['deltaWater']) ? Number(x.deltaWater) : null;
+  const dp = lowRiskHasMetricV150(x, ['deltaProfit']) ? Number(x.deltaProfit) : null;
+  const quotaRisk = x.quotaExceeded || x.feasible === false || x.fullFeasible === false || x.quota_ok === false;
+  const bullets = [];
+  if(quotaRisk) bullets.push('Kota riski nedeniyle uzman kontrolü gerekir.');
+  else bullets.push('Kota altında veya plan düzeyinde izlenebilir.');
+  if(dw !== null && dw < 0) bullets.push('Mevcut ürüne göre su tasarrufu sağlar.');
+  if(dp !== null && dp > 0) bullets.push('Kâr artışı potansiyeli taşır.');
+  if(!bullets.some(b=>/su|kâr|kar/i.test(b))) bullets.push('Su/kâr dengesi hedef fonksiyonuna göre değerlendirilmiştir.');
+  bullets.push('Proxy/pazar/toprak riski uzman tarafından kontrol edilmelidir.');
+  return bullets.slice(0, 3);
+}
+function lowRiskCropLabelV150(x={}){
+  const main = String(x.mainCrop || x.name || x.patternName || '').trim();
+  const secondary = String(x.secondaryCrop || '').trim();
+  const orchard = /ELMA|ARMUT|KIRAZ|VİŞNE|VISNE|KAYISI|KAYSI|CEVİZ|CEVIZ|BADEM|BAĞ|BAG|ERİK|ERIK|ŞEFTALİ|SEFTALI|NEKTAR/i.test(main);
+  if(orchard && secondary && secondary !== '-') return `${main} korunur + sıra arası ${secondary}`;
+  if(orchard) return `${main || 'Bahçe'} - Ana ürün korunur`;
+  return main || 'Öneri üretilemedi';
+}
+function lowRiskPatternExplainHtmlV150(x={}){
+  const reasons = lowRiskWhyTextV150(x);
+  const cropText = [x.mainCrop, x.secondaryCrop, x.patternName, x.name].filter(Boolean).join(' ');
+  const orchard = /ELMA|ARMUT|KIRAZ|VİŞNE|VISNE|KAYISI|KAYSI|CEVİZ|CEVIZ|BADEM|BAĞ|BAG|ERİK|ERIK|ŞEFTALİ|SEFTALI|NEKTAR/i.test(cropText);
+  return `<div class="pattern-explain-v150">
+    <div><b>Neden önerildi?</b><ul>${reasons.map(r=>`<li>${lowRiskEscapeV150(r)}</li>`).join('')}</ul></div>
+    <div><b>Veri güven düzeyi</b>${lowRiskDataConfidenceBadgesV150(x)}</div>
+    ${orchard ? `<div class="orchard-notice-v150"><b>Ana ürün korunur</b><span>Bu seçenek ana ürün dönüşümü değildir; ziraat mühendisi onayı gerekir.</span></div>` : ''}
+  </div>`;
+}
 const LEGACY_OFFICIAL_PARCEL_OVERRIDE_KEYS = ['sazlicaOfficialParcelOverridesV1','sazlicaOfficialParcelOverridesV2','akkayaOfficialParcelOverridesV14','akkayaOfficialParcelOverridesV15'];
 const LEGACY_CUSTOM_PARCEL_KEYS = ['sazlicaCustomParcelsV1','akkayaCustomParcelsV14','akkayaCustomParcelsV15'];
 const LEGACY_ASSIGNMENT_STORAGE_KEYS = ['akkayaParcelAssignmentsV14','akkayaParcelAssignmentsV15'];
@@ -3203,6 +3287,7 @@ async function initWaterSelectors(){
 
   const _handleWaterYearChange = ()=>{
     STATE.selectedWaterYear = Number(yearSel.value);
+    markSelectionChangedV151();
 
     // Rebuild year-dependent baselines and clear optimization caches
     // so recommendations can change across parcels/years.
@@ -3214,6 +3299,7 @@ async function initWaterSelectors(){
     refreshTimeSeriesFromBackend();
     // refresh projection/time series charts
     refreshTimeSeriesFromBackend();
+    refreshUI();
   };
 
   yearSel.addEventListener('change', _handleWaterYearChange);
@@ -3224,7 +3310,7 @@ async function initWaterSelectors(){
   const scenSel = document.getElementById("waterScenarioSel");
   if(scenSel){
     scenSel.value = STATE.selectedProjScenario;
-    scenSel.onchange=()=>{ STATE.selectedProjScenario=scenSel.value; applyWaterScenarioFromUI(true); };
+    scenSel.onchange=()=>{ STATE.selectedProjScenario=scenSel.value; markSelectionChangedV151(); applyWaterScenarioFromUI(true); refreshUI(); };
   }
 }
 
@@ -3765,7 +3851,7 @@ function updateDroughtAlarmCard(){
           </select></label>
           <label><span>Öneri ürün grubu</span><select class="select-input" id="farmerCropCategoryModeV100">${cropCategoryModeOptionsHtml()}</select></label>
           <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV100">
-            <option value="auto">Otomatik en iyi algoritma</option>
+            <option value="auto">Otomatik önerilen algoritma</option>
             <option value="ga">GA</option>
             <option value="aco">ACO</option>
             <option value="abc">ABC</option>
@@ -3810,47 +3896,141 @@ function updateDroughtAlarmCard(){
     window.__patternPickStoreV102[id] = x;
     return id;
   }
+  function lowRiskDataConfidenceBadgesV150(x={}){
+    const badges = ['CROPWAT/FAO-56 referanslı', 'Excel/model hesap izi', 'Proxy/varsayım kontrolü', 'Uzman onayı gerekir'];
+    return `<div class="data-confidence-row-v150">${badges.map(b=>`<span>${escapeHtml(b)}</span>`).join('')}</div>`;
+  }
+  function lowRiskHasMetricV150(x={}, keys=[]){
+    return keys.some(k => Object.prototype.hasOwnProperty.call(x, k) && x[k] !== null && x[k] !== undefined && x[k] !== '' && Number.isFinite(Number(x[k])));
+  }
+  function lowRiskMetricTextV150(x={}, keys=[], suffix='', decimals=0, fallback='—'){
+    if(x && (x.metricsUnavailable || x.noFeasibleRecommendation || x.recommendationStatus === 'no_feasible_two_crop_plan')){
+      return fallback;
+    }
+    for(const k of keys){
+      if(Object.prototype.hasOwnProperty.call(x, k) && x[k] !== null && x[k] !== undefined && x[k] !== ''){
+        const n = Number(x[k]);
+        if(Number.isFinite(n)){
+          if(n === 0) return fallback;
+          const opts = decimals > 0 ? {minimumFractionDigits:decimals, maximumFractionDigits:decimals} : {maximumFractionDigits:0};
+          return `${n.toLocaleString('tr-TR', opts)}${suffix ? ' ' + suffix : ''}`;
+        }
+      }
+    }
+    return fallback;
+  }
+  function lowRiskIsManagementAlternativeV150(x={}){
+    const text = [x.patternName, x.mainCrop, x.secondaryCrop, x.name, x.areaSplit, x.note, x.role, lowRiskCropLabelV150(x)].filter(Boolean).join(' ');
+    return Boolean(x.isInterrow || x.requiresExpertApproval || /sıra\s*arası|örtü|yonetim|yönetim|ana ürün korunur|bahçe/i.test(text));
+  }
+  function lowRiskRiskLabelV150(x={}){
+    if(x.selectable === false || x.feasible === false) return 'Seçilebilir değil';
+    if(x.quotaExceeded || x.fullFeasible === false || x.quota_ok === false) return 'Kota riski';
+    if(lowRiskIsManagementAlternativeV150(x)) return 'Bahçe yönetimi';
+    if(String(x.riskLabel || '').trim()) return String(x.riskLabel).trim().split(/[.;-]/)[0].slice(0, 28);
+    return 'Uygun';
+  }
+  function lowRiskRoleLabelV150(x={}){
+    if(lowRiskIsManagementAlternativeV150(x)) return 'Yönetim alternatifi';
+    if(x.selectedRecommendation) return 'Ana ürün';
+    return 'Alternatif';
+  }
+  function lowRiskWhyTextV150(x={}){
+    const dw = lowRiskHasMetricV150(x, ['deltaWater']) ? Number(x.deltaWater) : null;
+    const dp = lowRiskHasMetricV150(x, ['deltaProfit']) ? Number(x.deltaProfit) : null;
+    const quotaRisk = x.quotaExceeded || x.feasible === false || x.fullFeasible === false || x.quota_ok === false;
+    const bullets = [];
+    if(quotaRisk) bullets.push('Kota riski nedeniyle uzman kontrolü gerekir.');
+    else bullets.push('Kota altında veya plan düzeyinde izlenebilir.');
+    if(dw !== null && dw < 0) bullets.push('Mevcut ürüne göre su tasarrufu sağlar.');
+    if(dp !== null && dp > 0) bullets.push('Kâr artışı potansiyeli taşır.');
+    if(!bullets.some(b=>/su|kâr|kar/i.test(b))) bullets.push('Su/kâr dengesi hedef fonksiyonuna göre değerlendirilmiştir.');
+    bullets.push('Proxy/pazar/toprak riski uzman tarafından kontrol edilmelidir.');
+    return bullets.slice(0, 3);
+  }
+  function lowRiskQuotaStatusV150(x={}){
+    if(x.quotaExceeded || x.feasible === false || x.fullFeasible === false || x.quota_ok === false) return 'Kota riski';
+    return 'Kota uygun';
+  }
+  function lowRiskCropLabelV150(x={}){
+    const main = String(x.mainCrop || x.name || x.patternName || '').trim();
+    const secondary = String(x.secondaryCrop || '').trim();
+    const orchard = /ELMA|ARMUT|KIRAZ|VİŞNE|VISNE|KAYISI|KAYSI|CEVİZ|CEVIZ|BADEM|BAĞ|BAG|ERİK|ERIK|ŞEFTALİ|SEFTALI|NEKTAR/i.test(main);
+    if(orchard && secondary && secondary !== '-') return `${main} korunur + sıra arası ${secondary}`;
+    if(orchard) return `${main || 'Bahçe'} - Ana ürün korunur`;
+    return main || 'Öneri üretilemedi';
+  }
+  function lowRiskPatternExplainHtmlV150(x={}){
+    const reasons = lowRiskWhyTextV150(x);
+    const cropText = [x.mainCrop, x.secondaryCrop, x.patternName, x.name].filter(Boolean).join(' ');
+    const orchard = /ELMA|ARMUT|KIRAZ|VİŞNE|VISNE|KAYISI|KAYSI|CEVİZ|CEVIZ|BADEM|BAĞ|BAG|ERİK|ERIK|ŞEFTALİ|SEFTALI|NEKTAR/i.test(cropText);
+    return `<div class="pattern-explain-v150">
+      <div><b>Neden önerildi?</b><ul>${reasons.map(r=>`<li>${escapeHtml(r)}</li>`).join('')}</ul></div>
+      <div><b>Veri güven düzeyi</b>${lowRiskDataConfidenceBadgesV150(x)}</div>
+      ${orchard ? `<div class="orchard-notice-v150"><b>Ana ürün korunur</b><span>Bu seçenek ana ürün dönüşümü değildir; ziraat mühendisi onayı gerekir.</span></div>` : ''}
+    </div>`;
+  }
   try{
     alternativePatternPanelHtmlV94 = function(patterns, metaLabel, scenLabel){
-      const rows = (Array.isArray(patterns) ? patterns : []).slice(0, 10);
+      const rows = Array.isArray(patterns) ? patterns : [];
       if(!rows.length) return `<div class="pattern-panel-empty">Alternatif desen uretilemedi.</div>`;
+      const totalCandidateCount = Array.isArray(patterns) ? patterns.length : 0;
+      const shownCandidateCount = rows.length;
+      const eliminatedCandidateCount = Math.max(0, totalCandidateCount - shownCandidateCount);
       const cards = rows.map(x=>{
         const id = patternStorePutV102(x);
-        const water = Math.round(safeNum(x.totalWater,0)).toLocaleString('tr-TR');
-        const profit = Math.round(safeNum(x.totalProfit,0)).toLocaleString('tr-TR');
-        const eff = safeNum(x.tlPerM3,0).toFixed(2);
-        const rank = safeNum(x.rank,0) || '';
-        const targetOrder = safeNum(x.targetOrder, rank) || rank;
-        const split = x.areaSplit || (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Aynı parselde yıllık desen olarak değerlendirilir' : 'Ana ürün %100');
+        const management = lowRiskIsManagementAlternativeV150(x);
+        const water = lowRiskMetricTextV150(x, ['waterPerDa','water_m3_da'], 'm³/da', 1, management ? 'Yönetim alternatifi' : '—');
+        const profit = lowRiskMetricTextV150(x, ['profitPerDa','profit_tl_da'], 'TL/da', 0, management ? 'Yönetim alternatifi' : '—');
+        const eff = lowRiskMetricTextV150(x, ['tlPerM3','efficiency_tl_per_m3'], '', 2, management ? 'Yönetim alternatifi' : '—');
+        const totalWater = lowRiskMetricTextV150(x, ['totalWater','total_water_m3'], 'm³', 0, management ? 'Yönetim alternatifi' : '—');
+        const totalProfit = lowRiskMetricTextV150(x, ['totalProfit','total_profit_tl'], 'TL', 0, management ? 'Yönetim alternatifi' : '—');
+        const targetOrder = safeNum(x.targetOrder, x.rank) || '';
+        const cropLabel = lowRiskCropLabelV150(x);
+        const split = x.areaSplit || (management ? 'Ana ürün korunur; yönetim alternatifi olarak yorumlanır.' : (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Aynı parselde yıllık desen olarak değerlendirilir' : 'Ana ürün %100'));
         const detailLabel = [x.mainCrop, x.secondaryCrop].filter(v=>v && v !== '-').join(' + ');
-        const dw = Math.round(safeNum(x.deltaWater,0));
-        const dp = Math.round(safeNum(x.deltaProfit,0));
-        const selectedBadge = x.selectedRecommendation ? '<span class="pattern-selected-badge">Seçilen öneri</span>' : '';
+        const dw = lowRiskMetricTextV150(x, ['deltaWater'], 'm³', 0, '—');
+        const dp = lowRiskMetricTextV150(x, ['deltaProfit'], 'TL', 0, '—');
         const isSelectable = x.selectable !== false && x.feasible !== false && !x.quotaExceeded;
-        const quotaBadge = x.quotaExceeded || x.feasible === false ? '<span class="pattern-risk-badge">Kota aşımı riski / uzman onayı gerekir</span>' : '';
+        const roleBadge = `<span class="pattern-role-badge-v150">${escapeHtml(lowRiskRoleLabelV150(x))}</span>`;
+        const quotaBadge = `<span class="pattern-risk-badge">${escapeHtml(lowRiskQuotaStatusV150(x))}</span>`;
         const components = Array.isArray(x.components) && x.components.length
           ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
           : '';
-        return `<article class="pattern-card-v94 pattern-card-v102${x.selectedRecommendation ? ' pattern-card-selected-v149' : ''}">
-          <div class="pattern-card-top"><span class="pattern-rank">#${escapeHtml(rank)}</span><strong>${escapeHtml(x.patternName || '')}</strong>${selectedBadge}${quotaBadge}</div>
-          <div class="pattern-target-order">Hedef sırası: ${escapeHtml(targetOrder)} • ${escapeHtml(metaLabel || 'Seçili hedef')}</div>
-          <div class="pattern-card-crops"><span>${escapeHtml(x.mainCrop || '-')}</span><span>${escapeHtml(x.secondaryCrop || '-')}</span></div>
-          <div class="pattern-card-metrics"><div><span>Su</span><b>${water} m³</b></div><div><span>Net kâr</span><b>${profit} TL</b></div><div><span>TL/m³</span><b>${eff}</b></div></div>
-          <div class="pattern-card-deltas"><span>Δ su <b>${dw>=0?'+':''}${dw.toLocaleString('tr-TR')} m³</b></span><span>Δ kâr <b>${dp>=0?'+':''}${dp.toLocaleString('tr-TR')} TL</b></span></div>
-          <p>${escapeHtml(split)}</p>
-          ${components}
-          <small>Sulama: ${escapeHtml(x.irrigation || '-')}</small>
-          <small>${escapeHtml(x.productionWindow || x.growthDays || 'Takvim kontrolü')} • ${escapeHtml(x.peakMonth || 'Pik ay kontrolü')} • ${escapeHtml(x.suitability || 'Uygunluk kontrolü')}</small>
-          <div class="pattern-actions-v102">
-            <button class="btn-secondary" type="button" data-pattern-detail-v102="${escapeHtml(id)}" data-alt-crop-v101="${escapeHtml(detailLabel)}">Detay</button>
-            <button class="btn-primary" type="button" data-select-pattern-v102="${escapeHtml(id)}" ${isSelectable ? '' : 'disabled aria-disabled="true"'}>${isSelectable ? 'Seç' : 'Seçilemez'}</button>
-          </div>
+        const reasonItems = lowRiskWhyTextV150(x).slice(0,2).map(t=>`<li>${escapeHtml(t)}</li>`).join('');
+        return `<article class="pattern-card-v94 pattern-card-v102 pattern-card-simple-v150${x.selectedRecommendation ? ' pattern-card-selected-v149' : ''}">
+          <div class="pattern-card-top"><strong>${escapeHtml(cropLabel)}</strong>${roleBadge}${quotaBadge}</div>
+          <div class="pattern-card-metrics pattern-card-metrics-v150 pattern-card-metrics-compact-v150"><div><span>Su</span><b>${escapeHtml(water)}</b></div><div><span>Kâr</span><b>${escapeHtml(profit)}</b></div><div><span>TL/m³</span><b>${escapeHtml(eff)}</b></div></div>
+          <div class="pattern-short-reason-v150"><b>Kısa neden</b><ul>${reasonItems}</ul></div>
+          <details class="pattern-card-details-v150">
+            <summary>Detay</summary>
+            <div class="pattern-target-order">${targetOrder ? `Hedef sırası: ${escapeHtml(targetOrder)} • ` : ''}${escapeHtml(metaLabel || 'Seçili hedef')}</div>
+            <div class="pattern-card-crops"><span>${escapeHtml(x.mainCrop || (management ? 'Ana ürün korunur' : '-'))}</span><span>${escapeHtml(x.secondaryCrop || (management ? 'Yönetim alternatifi' : '-'))}</span></div>
+            <div class="pattern-card-deltas"><span>Δ su <b>${escapeHtml(dw)}</b></span><span>Δ kâr <b>${escapeHtml(dp)}</b></span><span>Toplam su <b>${escapeHtml(totalWater)}</b></span><span>Toplam kâr <b>${escapeHtml(totalProfit)}</b></span></div>
+            ${lowRiskPatternExplainHtmlV150(x)}
+            <p>${escapeHtml(split)}</p>
+            ${components}
+            <small>Sulama: ${escapeHtml(x.irrigation || '-')}</small>
+            <small>${escapeHtml(x.productionWindow || x.growthDays || 'Takvim kontrolü')} • ${escapeHtml(x.peakMonth || 'Pik ay kontrolü')} • ${escapeHtml(x.suitability || 'Uygunluk kontrolü')}</small>
+            <div class="pattern-actions-v102">
+              <button class="btn-secondary" type="button" data-pattern-detail-v102="${escapeHtml(id)}" data-alt-crop-v101="${escapeHtml(detailLabel)}">Detay</button>
+              <button class="btn-primary" type="button" data-select-pattern-v102="${escapeHtml(id)}" ${isSelectable ? '' : 'disabled aria-disabled="true"'}>${isSelectable ? 'Seç' : 'Seçilemez'}</button>
+            </div>
+          </details>
         </article>`;
-      }).join('');
+      });
+      const visibleCards = cards.slice(0,3).join('');
+      const hiddenCards = cards.slice(3).join('');
+      const orchardPanel = rows.some(x => lowRiskIsManagementAlternativeV150(x))
+        ? `<div class="orchard-panel-v150">Bu parsel kurulu meyve bahçesi olarak değerlendirilmiştir. Ana ürün korunur. Gösterilen seçenekler doğrudan ana ürün değişikliği değildir; sulama verimliliği, sıra arası/örtü bitkisi veya yönetim alternatifi olarak yorumlanmalıdır.</div>`
+        : '';
       return `<details class="pattern-panel-v94 pattern-panel-v102" open>
-        <summary><span><strong>${escapeHtml(metaLabel)}</strong> • ${escapeHtml(scenLabel)}</span><em>İlk ${rows.length} alternatifi aç/kapat</em></summary>
-        <div class="pattern-panel-note">Alternatifler hedef moduna göre farklı sıralanır: su tasarrufu en düşük suyu, kâr odaklı parsel su kotası içinde en yüksek net kârı, su etkin kullanım ise kâr + su + TL/m³ dengesini arar. Senaryo 2'de alan oranları birlikte desen olarak okunur.</div>
-        <div class="pattern-card-grid-v94">${cards}</div>
+        <summary><span><strong>${escapeHtml(metaLabel)}</strong> • ${escapeHtml(scenLabel)}</span><em>İlk 3 öneri görünür</em></summary>
+        ${orchardPanel}
+        <div class="pattern-panel-note low-risk-count-note-v150">Gösterilen alternatifler; seçili senaryo, ürün grubu, kota uygunluğu, rotasyon/ürün ailesi kuralları ve meyve bahçelerinde ana ürün koruma filtresinden sonra listelenmiştir. <span class="pattern-count-badges-v150"><b>Toplam aday: ${escapeHtml(String(totalCandidateCount))}</b><b>Filtre sonrası gösterilen: ${escapeHtml(String(shownCandidateCount))}</b><b>Elenen: ${escapeHtml(String(eliminatedCandidateCount))}</b></span></div>
+        <details class="pattern-panel-note low-risk-method-note-v150"><summary>Metodoloji ve veri güveni</summary><span>${escapeHtml(LOW_RISK_METHOD_COMPACT_V150)}</span></details>
+        <div class="pattern-card-grid-v94">${visibleCards}</div>
+        ${hiddenCards ? `<details class="pattern-extra-v150"><summary>Diğer alternatifleri göster (${cards.length - 3})</summary><div class="pattern-card-grid-v94">${hiddenCards}</div></details>` : ''}
       </details>`;
     };
   }catch(_e){}
@@ -3933,7 +4113,7 @@ function updateDroughtAlarmCard(){
         return `<div class="request-msg-item ${mine?'mine':''}"><div class="request-msg-meta">${escV100(m.actor_name || m.actor_username || 'Kullanıcı')} <span class="msg-status-v102">${status}</span>${actions}</div><div class="request-msg-text">${escV100(m.text || '')}</div></div>`;
       }).join('');
       root.innerHTML = `<div class="request-thread-head"><strong>Uzman / yönetici iletişim</strong><span class="pill-soft">${related.length} bildirim - ${thread.length} mesaj</span></div>
-        ${selectedAlt ? `<div class="selected-alt-v102"><b>Seçilen alternatif:</b> ${escV100(selectedAlt.patternName || '')}<span>${Math.round(safeNum(selectedAlt.totalWater,0)).toLocaleString('tr-TR')} m³ su - ${Math.round(safeNum(selectedAlt.totalProfit,0)).toLocaleString('tr-TR')} TL net kâr</span></div>` : ''}
+      ${selectedAlt ? `<div class="selected-alt-v102"><b>Seçilen alternatif:</b> ${escV100(selectedAlt.patternName || '')}<span>${lowRiskMetricTextV150(selectedAlt, ['totalWater','total_water_m3'], 'm³ su', 0, '—')} - ${lowRiskMetricTextV150(selectedAlt, ['totalProfit','total_profit_tl'], 'TL net kâr', 0, '—')}</span></div>` : ''}
         <div class="farmer-message-list-v100">${thread.length ? msgRows : '<div class="small muted">Bu parsel için henüz yazışma yok. Alternatiflerden Seç butonuna basıp uzman onayı isteyebilirsiniz.</div>'}</div>
         <textarea class="text-input" id="farmerMessageInputV100" placeholder="Örn. Bu öneriyi uygulamak istiyorum, uzman onayı rica ederim."></textarea>
         <div class="farmer-message-actions-v100"><button class="btn-primary" id="farmerSendMessageV100" type="button">Mesaj gönder</button><button class="btn-secondary" id="farmerRequestSelectedV100" type="button">Seçili öneriyi talep et</button></div>`;
@@ -3950,7 +4130,7 @@ function updateDroughtAlarmCard(){
         if(requestMode){
           const scen = getScenarioDisplayMeta(selectedScenario === 'mevcut' ? 'su_tasarruf' : selectedScenario).shortLabel;
           val = alt
-            ? `${alt.patternName} alternatifini talep ediyorum. Hedef: ${scen}. Algoritma: ${String(selectedAlgo||'GA').toUpperCase()}. Su: ${Math.round(safeNum(alt.totalWater,0)).toLocaleString('tr-TR')} m³, net kâr: ${Math.round(safeNum(alt.totalProfit,0)).toLocaleString('tr-TR')} TL. Uzman onayı ve parselime tanımlama rica ederim.`
+            ? `${alt.patternName} alternatifini talep ediyorum. Hedef: ${scen}. Algoritma: ${String(selectedAlgo||'GA').toUpperCase()}. Su: ${lowRiskMetricTextV150(alt, ['totalWater','total_water_m3'], 'm³', 0, '—')}, net kâr: ${lowRiskMetricTextV150(alt, ['totalProfit','total_profit_tl'], 'TL', 0, '—')}. Uzman onayı ve parselime tanımlama rica ederim.`
             : `${scen} hedefindeki ${String(selectedAlgo||'GA').toUpperCase()} algoritma önerisi için uzman incelemesi ve parselime tanımlama talep ediyorum.`;
         }
         if(!val) return;
@@ -3982,7 +4162,7 @@ function updateDroughtAlarmCard(){
       if(pat){
         STATE.selectedFarmerAlternativeV102 = pat;
         const input = document.getElementById('farmerMessageInputV100');
-        const text = `${pat.patternName} alternatifini seçmek istiyorum. Su: ${Math.round(safeNum(pat.totalWater,0)).toLocaleString('tr-TR')} m³, net kâr: ${Math.round(safeNum(pat.totalProfit,0)).toLocaleString('tr-TR')} TL. Uzman onayı rica ederim.`;
+        const text = `${pat.patternName} alternatifini seçmek istiyorum. Su: ${lowRiskMetricTextV150(pat, ['totalWater','total_water_m3'], 'm³', 0, '—')}, net kâr: ${lowRiskMetricTextV150(pat, ['totalProfit','total_profit_tl'], 'TL', 0, '—')}. Uzman onayı rica ederim.`;
         if(input) input.value = text;
         try{ renderFarmerCommunicationV100(); }catch(_e){}
         document.getElementById('farmerUserRequestThreadV100')?.scrollIntoView({behavior:'smooth', block:'center'});
@@ -4290,7 +4470,7 @@ function updateDroughtAlarmCard(){
         </select></label>
         <label><span>Öneri ürün grubu</span><select class="select-input" id="farmerCropCategoryModeV100">${cropCategoryModeOptionsHtml()}</select></label>
         <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV100">
-          <option value="auto">Otomatik en iyi algoritma</option>
+          <option value="auto">Otomatik önerilen algoritma</option>
           <option value="ga">GA</option>
           <option value="aco">ACO</option>
           <option value="abc">ABC</option>
@@ -4398,7 +4578,7 @@ function updateDroughtAlarmCard(){
       return `<div class="request-msg-item ${mine?'mine':''}"><div class="request-msg-meta">${escV100(m.actor_name || m.actor_username || 'Kullanıcı')} <span class="msg-status-v102">${mine ? (m.read_at ? 'Okundu' : 'Gönderildi') : 'Uzman/kurum'}</span>${actions}</div><div class="request-msg-text">${escV100(m.text || '')}</div></div>`;
     }).join('');
     root.innerHTML = `<div class="request-thread-head"><strong>Uzman / yönetici iletişim</strong><span class="pill-soft">${related.length} bildirim - ${thread.length} mesaj</span></div>
-      ${selectedAlt ? `<div class="selected-alt-v102"><b>Seçilen alternatif:</b> ${escV100(selectedAlt.patternName || '')}<span>${Math.round(safeNum(selectedAlt.totalWater,0)).toLocaleString('tr-TR')} m³ su - ${Math.round(safeNum(selectedAlt.totalProfit,0)).toLocaleString('tr-TR')} TL net kâr - ${safeNum(selectedAlt.tlPerM3,0).toFixed(2)} TL/m³</span></div>` : ''}
+      ${selectedAlt ? `<div class="selected-alt-v102"><b>Seçilen alternatif:</b> ${escV100(selectedAlt.patternName || '')}<span>${lowRiskMetricTextV150(selectedAlt, ['totalWater','total_water_m3'], 'm³ su', 0, '—')} - ${lowRiskMetricTextV150(selectedAlt, ['totalProfit','total_profit_tl'], 'TL net kâr', 0, '—')} - ${lowRiskMetricTextV150(selectedAlt, ['tlPerM3','efficiency_tl_per_m3'], 'TL/m³', 2, '—')}</span></div>` : ''}
       <div class="farmer-message-list-v100">${thread.length ? msgRows : '<div class="small muted">Bu parsel için henüz yazışma yok. Alternatiflerden Seç butonuna basıp uzman onayı isteyebilirsiniz.</div>'}</div>
       <textarea class="text-input" id="farmerMessageInputV100" placeholder="Örn. Bu öneriyi uygulamak istiyorum, uzman onayı rica ederim."></textarea>
       <div class="farmer-message-actions-v100">
@@ -4425,7 +4605,7 @@ function updateDroughtAlarmCard(){
       const scenMeta = getScenarioDisplayMeta(selectedScenario === 'mevcut' ? 'su_tasarruf' : (selectedScenario || 'su_tasarruf'));
       const alt = STATE.selectedFarmerAlternativeV102 || null;
       const msg = alt
-        ? `${alt.patternName} alternatifini talep ediyorum. Hedef: ${scenMeta.shortLabel}. Algoritma: ${String(selectedAlgo||'GA').toUpperCase()}. Alan: ${alt.areaSplit || '-'}, su: ${Math.round(safeNum(alt.totalWater,0)).toLocaleString('tr-TR')} m³, net kâr: ${Math.round(safeNum(alt.totalProfit,0)).toLocaleString('tr-TR')} TL, TL/m³: ${safeNum(alt.tlPerM3,0).toFixed(2)}. Uzman onayı ve parselime tanımlama rica ederim.`
+        ? `${alt.patternName} alternatifini talep ediyorum. Hedef: ${scenMeta.shortLabel}. Algoritma: ${String(selectedAlgo||'GA').toUpperCase()}. Alan: ${alt.areaSplit || '-'}, su: ${lowRiskMetricTextV150(alt, ['totalWater','total_water_m3'], 'm³', 0, '—')}, net kâr: ${lowRiskMetricTextV150(alt, ['totalProfit','total_profit_tl'], 'TL', 0, '—')}, TL/m³: ${lowRiskMetricTextV150(alt, ['tlPerM3','efficiency_tl_per_m3'], '', 2, '—')}. Uzman onayı ve parselime tanımlama rica ederim.`
         : `${scenMeta.shortLabel} hedefindeki ${String(selectedAlgo||'GA').toUpperCase()} algoritma önerisi için uzman incelemesi ve parselime tanımlama talep ediyorum.`;
       if(typeof postParcelThreadMessage === 'function') postParcelThreadMessage(threadId, msg, {actor_role:'farmer', actor_username:user.username||'', actor_name:user.displayName||user.username||'Çiftçi', parcel_id:String(p.id||''), selected_pattern: alt});
       if(typeof pushParcelNotification === 'function') pushParcelNotification({target_role:'institution', target_usernames:['kurum.nigde','uzman.nigde'], actor_username:user.username||'', text:`${user.displayName || user.username || 'Çiftçi'} ${p.id} için seçili alternatif talebi gönderdi.`, parcel_id:String(p.id||''), thread_id:threadId, kind:'alternative_request', selected_pattern: alt});
@@ -4613,6 +4793,9 @@ function updateDroughtAlarmCard(){
     const totalProfit = nval(row?.totalProfit, area * profitDa);
     const price = nval(meta.priceTlKg ?? meta.price_tl_kg, NaN);
     const yieldKg = nval(meta.yieldKgDa ?? meta.yield_kg_da, NaN);
+    const quotaM3 = nval(row?.quota_m3 ?? row?.parcelQuotaM3 ?? row?.parcel_quota_m3 ?? row?.current_quota_m3, 0);
+    const quotaMain = quotaM3 > 0 ? `${fmt0(quotaM3)} m3` : 'Plan düzeyinde izlenir';
+    const quotaSub = quotaM3 > 0 ? 'ürün/parsel satırı' : 'Kota plan toplamında izlenir';
     const econNote = (typeof economyQualityTextV95 === 'function') ? economyQualityTextV95(meta) : 'Ekonomi satiri yuklu katalogdan okunur.';
     const marketRef = (typeof marketPriceReferenceV95 === 'function') ? marketPriceReferenceV95(row?.name || '') : null;
     const marketLine = marketRef ? `${marketRef.date} ${marketRef.label}: ${marketRef.product} uretici ${marketRef.producer} TL/kg${marketRef.market ? ', market '+marketRef.market+' TL/kg' : ''}` : 'Guncel piyasa referansi baglanmadi; CSV fiyat katalogu kullanildi.';
@@ -4622,6 +4805,7 @@ function updateDroughtAlarmCard(){
         <div><span>Su</span><strong>${fmt1(waterDa)} m3/da</strong><small>${fmt0(totalWater)} m3 toplam</small></div>
         <div><span>Net kâr</span><strong>${fmt0(profitDa)} TL/da</strong><small>${fmt0(totalProfit)} TL toplam</small></div>
         <div><span>Takvim</span><strong>${esc(g.calendar)}</strong><small>${esc(g.season)}</small></div>
+        <div><span>Kota</span><strong>${esc(quotaMain)}</strong><small>${esc(quotaSub)}</small></div>
         <div><span>Ekonomi</span><strong>${Number.isFinite(price) ? price.toFixed(2)+' TL/kg' : 'CSV/proxy'}</strong><small>${Number.isFinite(yieldKg) ? fmt0(yieldKg)+' kg/da' : 'verim katalogdan/proxy'}</small></div>
       </div>
       <div class="crop-modal-grid crop-modal-grid-v98">
@@ -4713,7 +4897,7 @@ function updateDroughtAlarmCard(){
         <option value="su_etkin">Su etkin kullanım</option>
       </select></label>
       <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV98">
-        <option value="auto">Otomatik en iyi algoritma</option><option value="ga">GA</option><option value="aco">ACO</option><option value="abc">ABC</option>
+        <option value="auto">Otomatik önerilen algoritma</option><option value="ga">GA</option><option value="aco">ACO</option><option value="abc">ABC</option>
       </select></label>
       <label><span>Öneri ürün grubu</span><select class="select-input" id="farmerCropCategoryModeV98">${cropCategoryModeOptionsHtml()}</select></label>
       <button class="btn-primary" id="farmerRunDecisionV98" type="button">Bu hedefle öneriyi çalıştır</button>
@@ -4808,12 +4992,15 @@ function updateDroughtAlarmCard(){
     const node = document.createElement('div');
     node.id = 'benchmarkMethodologyV98';
     node.className = 'benchmark-methodology-v98';
-    node.innerHTML = `<details open><summary>Algoritmalar veriyi nasıl hesaplıyor?</summary>
+    node.innerHTML = `<details open><summary>Metodoloji ve veri güveni</summary>
+      <div class="benchmark-method-compact-v150">${escapeHtml(LOW_RISK_METHOD_COMPACT_V150)}</div>
       <div class="benchmark-method-grid-v98">
         <div><b>1. Aday havuzu</b><span>Parsel, ürün takvimi, toprak uygunluğu, rotasyon/familya, su kotası ve sulama yöntemi aynı veri setinden alınır.</span></div>
         <div><b>2. Skor</b><span>Hedefe göre net kâr, toplam su, TL/m³, uygulanabilirlik, plan farkı ve süre birlikte puanlanır.</span></div>
         <div><b>3. Tekrar</b><span>30/50/100 tekrar CV ve plan farkı için kullanılır. Düşük CV + düşük plan farkı, overfitting değil kararlı yakınsamadır.</span></div>
         <div><b>4. Aynı sonuç</b><span>Üç algoritma aynı desene gelirse bu genelde tek parsel/dar aday havuzu/kota baskısıdır. Ekran bunu ayrıca yorumlar.</span></div>
+        <div><b>5. Kota modeli</b><span>Varsayılan model alan-oransal/dekar bazlı kotadır; parseller aynı m³/da standardı içinde karşılaştırılır.</span></div>
+        <div><b>6. Uyarı</b><span>GA, ACO ve ABC stokastiktir; sonuçlar veri seti, kota modeli ve hedef fonksiyonu bağlamında yorumlanır.</span></div>
       </div></details>`;
     const help = section.querySelector('.card-help');
     if(help && help.parentNode) help.parentNode.insertBefore(node, help.nextSibling);
@@ -6353,134 +6540,62 @@ function renderBuildMeta(){
   box.innerHTML = chips.join('') + lines.join('');
 }
 
-function renderActiveFiles(){
+const DEFENSE_DATASET_PANEL_NOTE = 'Kartlar, kişisel veri içermeyen ve savunmada anlamlı bulunan kaynak tablolardan gelir.';
+let __defenseDatasetCatalog = [];
+let __defenseDatasetRoleFilter = 'ana';
+let __defenseDatasetCatalogRequest = 0;
+
+function renderDefenseDatasetCards(){
+  const box = document.getElementById('activeFilesBadges') || document.getElementById('activeFilesText');
+  if(!box) return;
+  const visible = __defenseDatasetCatalog.filter(item=>item.defense_role === __defenseDatasetRoleFilter);
+  box.classList.add('active-dataset-groups');
+  box.innerHTML = `
+    <div class="active-dataset-filter" role="group" aria-label="Veri kümesi türü">
+      ${['ana','teknik'].map(role=>`<button type="button" class="${role === __defenseDatasetRoleFilter ? 'is-active' : ''}" data-defense-role-filter="${role}">${role === 'ana' ? 'Ana' : 'Teknik'} <span>${__defenseDatasetCatalog.filter(item=>item.defense_role === role).length}</span></button>`).join('')}
+    </div>
+    <div class="active-dataset-list">
+      ${visible.map(item=>`
+        <button type="button" class="active-dataset-card" data-defense-dataset-id="${escapeHtml(item.dataset_id)}">
+          <span class="active-dataset-card-title">${escapeHtml(item.title || item.source_sheet || 'Veri tablosu')}</span>
+          <span class="active-dataset-card-meta">${escapeHtml(item.location || '-')} • ${escapeHtml(item.source_type || '-')}</span>
+          <span class="active-dataset-card-desc">${escapeHtml(item.defense_use || '')}</span>
+          <span class="active-dataset-card-badges">
+            <span>${escapeHtml(item.data_quality || 'Kaynak verisi')}</span>
+            <span>${escapeHtml(String(item.row_count ?? 0))} × ${escapeHtml(String(item.column_count ?? 0))}</span>
+          </span>
+          <span class="active-dataset-card-source">${escapeHtml(item.source_file || '-')} / ${escapeHtml(item.source_sheet || '-')}</span>
+        </button>`).join('') || '<div class="active-dataset-empty">Bu filtrede veri kümesi yok.</div>'}
+    </div>`;
+  ensureDataTableViewer();
+}
+
+async function renderActiveFiles(){
   const box = document.getElementById('activeFilesBadges') || document.getElementById('activeFilesText');
   if(!box) return;
   const noteBox = document.getElementById('activeFilesNote');
-
-  const baseName = (p)=>{
-    if(!p) return '';
-    const s = String(p);
-    const parts = s.split(/[/\\]/);
-    return parts[parts.length-1] || s;
-  };
-  const cleanDataPath = (p)=>{
-    if(!p) return '';
-    let s = String(p).trim().replace(/\\/g, '/');
-    s = s.replace(/^\/+/, '');
-    if(s.startsWith('data/')) s = s.slice(5);
-    return s;
-  };
-  const fileUrl = (p)=>{
-    const rel = cleanDataPath(p);
-    if(!rel) return '';
-    return `data/${rel}`;
-  };
-  const badges = [];
-  const addBadge = (cls, label, path, detail)=>{
-    const rel = cleanDataPath(path || label);
-    const url = rel ? fileUrl(rel) : '';
-    badges.push({cls, label: label || baseName(rel), path: rel, url, detail: detail || rel});
-  };
-
-  // Backend (Python)
-  const b = STATE.backendMeta;
-  if(b && b.files){
-    const f = b.files;
-    const s = STATE.seasonSource || 's1';
-    const selectedSeasonPath = (s==='s1') ? f.seasons1 : (s==='s2') ? f.seasons2 : (f.seasons1 || f.seasons2);
-    const selectedSeasonLabel = (s==='s1') ? baseName(f.seasons1) : (s==='s2') ? baseName(f.seasons2) : `${baseName(f.seasons1)} + ${baseName(f.seasons2)}`;
-    addBadge('backend', `Parsel dosyası: ${baseName(f.parcels) || 'parcel_assumptions.csv'}`, f.parcels, 'Parsel kimliği, alan ve köy bilgileri');
-    addBadge('season', `Ürün-su-kâr dosyası: ${selectedSeasonLabel || 'seasons.csv'}`, selectedSeasonPath, 'Seçili senaryo/sezon ürün-su-kâr verisi');
-    addBadge('reservoir', `Baraj su bütçesi: ${baseName(f.reservoir) || 'reservoir.csv'}`, f.reservoir, 'Aylık baraj/rezervuar su verisi');
-    if(f.irrigation_methods) addBadge('optional', `Sulama yöntemi: ${baseName(f.irrigation_methods)}`, f.irrigation_methods, 'Sulama yöntemi ve randıman varsayımları');
-    if(f.delivery) addBadge('optional', `İletim kapasitesi: ${baseName(f.delivery)}`, f.delivery, 'Aylık iletim/kapasite varsayımları');
-    const geo = STATE.appMeta?.dataQuality?.geojson_coverage || {};
-    const geoText = geo.total_parcels
-      ? `Harita sınırı: gerçek GeoJSON • ${geo.mapped_parcels || 0}/${geo.total_parcels || 0} parsel`
-      : 'Harita sınırı: gerçek GeoJSON';
-    badges.push({cls:'optional', label: geoText, path:'', url:'', detail:'Harita çizimleri için kullanılan gerçek GeoJSON sınırları'});
-  }else{
-    // Project CSV (browser-side)
-    const f = DATA_FILES?.enhanced || {};
-    const s = STATE.seasonSource || 's1';
-    const seasonPath = (s==='s1') ? f.senaryo1SeasonsCsv : (s==='s2') ? f.senaryo2SeasonsCsv : (f.senaryo1SeasonsCsv || f.senaryo2SeasonsCsv);
-    const seasons = (s==='s1') ? baseName(f.senaryo1SeasonsCsv)
-      : (s==='s2') ? baseName(f.senaryo2SeasonsCsv)
-      : `${baseName(f.senaryo1SeasonsCsv)} + ${baseName(f.senaryo2SeasonsCsv)}`;
-    if(f.parcelAssumptionsCsv) addBadge('backend', `Parsel dosyası: ${baseName(f.parcelAssumptionsCsv)}`, f.parcelAssumptionsCsv, 'Parsel kimliği, alan ve köy bilgileri');
-    if(seasons && seasons!=='undefined') addBadge('season', `Ürün-su-kâr dosyası: ${seasons}`, seasonPath, 'Seçili senaryo/sezon ürün-su-kâr verisi');
-    if(f.reservoirMonthlyCsv) addBadge('reservoir', `Baraj su bütçesi: ${baseName(f.reservoirMonthlyCsv)}`, f.reservoirMonthlyCsv, 'Aylık baraj/rezervuar su verisi');
-    if(f.irrigationMethodsCsv) addBadge('optional', `Sulama yöntemi: ${baseName(f.irrigationMethodsCsv)}`, f.irrigationMethodsCsv, 'Sulama yöntemi ve randıman varsayımları');
-    if(f.deliveryCapacityCsv) addBadge('optional', `İletim kapasitesi: ${baseName(f.deliveryCapacityCsv)}`, f.deliveryCapacityCsv, 'Aylık iletim/kapasite varsayımları');
-    badges.push({cls:'optional', label:'Harita sınırı: gerçek GeoJSON', path:'', url:'', detail:'Harita çizimleri için kullanılan gerçek GeoJSON sınırları'});
-  }
-
-  const ef = DATA_FILES?.enhanced || {};
-  [
-    ['soil', 'Toprak parametreleri', ef.soilParamsCsv, 'Toprak sinifi ve toprak varsayimlari'],
-    ['climate', 'Aylik iklim', ef.climateMonthlyCsv, 'Nigde/parsel bazli aylik sicaklik ve ET yardimci verisi'],
-    ['rules', 'Urun parametreleri', ef.cropParamsCsv, 'Kc, donem ve CROPWAT evre varsayimlari'],
-    ['rules', 'Rotasyon kurallari', ef.rotationRulesCsv, 'Uyumlu/uyumsuz urun ve familya kurallari'],
-    ['rules', 'Toprak-urun uygunlugu', ef.cropSuitabilityCsv, 'Parsel toprak sinifi ve urun uygunluk puanlari'],
-    ['optional', 'Aylik iletim kapasitesi', ef.deliveryCapacityCsv, 'Aylik sulama iletim kapasitesi kontrolu'],
-    ['optional', 'Su kalitesi', ef.waterQualityCsv, 'Aylik su kalitesi yardimci kontrolu'],
-    ['economy', '2024 gider kalemi oranlari', DATA_FILES.costBreakdownRulesCsv, 'Tohum, gubre, ilac, iscilik, hasat ve diger oran bazli maliyet dagilimi'],
-    ['economy', 'Ekonomi/fiyat katalogu', DATA_FILES.cropsCsv, 'Urun fiyat, verim, maliyet ve net kar katalogu'],
-    ['economy', 'Piyasa/fiyat override dosyasi', ef.marketOverridesDemoCsv, 'Varsa manuel fiyat/tesvik guncellemeleri'],
-    ['water', 'Adil su kota ozeti', DATA_FILES.equalWaterSummaryCsv, 'Koy/parsel/dekar bazli adil kota hesabi'],
-    ['water', 'Su tahsis karar ozeti', DATA_FILES.waterAllocationDecisionCsv, 'Kota karar metni ve tahsis ozeti']
-  ].forEach(([cls, label, path, detail])=>{
-    if(path) addBadge(cls, `${label}: ${baseName(path)}`, path, detail);
-  });
-
-  if(STATE.manualDataActive && Array.isArray(STATE.manualDataFiles) && STATE.manualDataFiles.length){
-    badges.unshift({cls:'manual', label:`Manuel CSV aktif: ${STATE.manualDataFiles.join(', ')}`, path:'', url:'', detail:'Bu oturumda tarayıcıdaki analiz verisine uygulanmıştır'});
-  }
+  const titleBox = document.querySelector('#activeFilesBox .active-files-title');
+  if(titleBox) titleBox.textContent = 'Aktif veri kaynakları';
   if(noteBox){
     noteBox.textContent = STATE.manualDataActive
-      ? 'Manuel dosyalar bu oturumda aktif analize uygulanmıştır. Python backend/data dosyaları fiziksel olarak değiştirilmediği için kalıcı rapor üretiminde ayrıca backend/data güncellenmelidir.'
-      : 'Bu dosyalar Python backend tarafından aktif olarak kullanılmaktadır.';
+      ? `${DEFENSE_DATASET_PANEL_NOTE} Manuel dosyalar yalnız bu oturumun hesaplama akışında ayrıca etkindir.`
+      : DEFENSE_DATASET_PANEL_NOTE;
   }
-
-  // Render
-  if(box.id === 'activeFilesBadges'){
-    box.innerHTML = '';
-    if(!badges.length){
-      box.innerHTML = '<span class="file-badge"><span class="dot"></span>-</span>';
-      return;
-    }
-    const seen = new Set();
-    for(const b of badges){
-      const key = `${b.path || b.label}`.toLowerCase();
-      if(seen.has(key)) continue;
-      seen.add(key);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = `file-badge file-badge-click ${b.cls||''}`;
-      btn.title = b.path ? `${b.path} verisini tablo olarak aç` : 'Manuel dosya bilgisi';
-      if(b.url){
-        btn.dataset.fileUrl = b.url;
-        btn.dataset.filePath = b.path || b.url;
-        btn.dataset.fileLabel = b.label || baseName(b.path);
-      }else{
-        btn.disabled = true;
-      }
-      const dot = document.createElement('span');
-      dot.className = 'dot';
-      btn.appendChild(dot);
-      const txt = document.createElement('span');
-      txt.textContent = b.label;
-      btn.appendChild(txt);
-      box.appendChild(btn);
-    }
-    ensureDataTableViewer();
-    renderManualCsvValidation();
-  }else{
-    // fallback to old text span if present
-    box.textContent = badges.length ? badges.map(x=>x.label).join(' • ') : '-';
-    renderManualCsvValidation();
+  const requestId = ++__defenseDatasetCatalogRequest;
+  box.classList.add('active-dataset-groups');
+  box.innerHTML = '<div class="active-dataset-empty">Veri kaynakları yükleniyor…</div>';
+  try{
+    const response = await fetch('/api/defense-datasets', {cache:'no-store'});
+    const payload = await response.json();
+    if(!response.ok || payload.status !== 'OK') throw new Error(payload.message || `HTTP ${response.status}`);
+    if(requestId !== __defenseDatasetCatalogRequest) return;
+    __defenseDatasetCatalog = Array.isArray(payload.datasets) ? payload.datasets : [];
+    renderDefenseDatasetCards();
+  }catch(error){
+    if(requestId !== __defenseDatasetCatalogRequest) return;
+    box.innerHTML = `<div class="active-dataset-empty active-dataset-error">Veri kaynakları yüklenemedi: ${escapeHtml(error?.message || error)}</div>`;
   }
+  renderManualCsvValidation();
 }
 
 function normalizeManualHeaderKeyV92(value){
@@ -6649,17 +6764,21 @@ function renderManualCsvValidation(){
 }
 
 // =========================
-// Aktif dosya tablo görüntüleyici (sunum modu)
+// Savunma veri tablosu görüntüleyici
 // =========================
 let __dataViewerState = {
-  rows: [],
+  datasetId: '',
+  metadata: null,
   headers: [],
-  fileLabel: '',
-  filePath: '',
-  mode: 'preview',
-  filter: '',
-  showAll: false
+  rows: [],
+  headerRows: 0,
+  pageIndex: 0,
+  pageSize: 100,
+  query: '',
+  pagination: null,
+  requestId: 0
 };
+let __dataViewerSearchTimer = null;
 
 function ensureDataTableViewer(){
   if(document.getElementById('dataTableViewerModal')) return;
@@ -6672,61 +6791,70 @@ function ensureDataTableViewer(){
     <div class="data-viewer-dialog" role="dialog" aria-modal="true" aria-labelledby="dataViewerTitle">
       <div class="data-viewer-head">
         <div>
-          <div class="data-viewer-kicker">Aktif veri dosyası</div>
+          <div class="data-viewer-kicker" id="dataViewerKicker">Kaynak veri tablosu</div>
           <h3 id="dataViewerTitle">Veri tablosu</h3>
           <div class="data-viewer-path" id="dataViewerPath">-</div>
         </div>
         <button type="button" class="data-viewer-close" data-data-viewer-close="1" aria-label="Kapat">×</button>
       </div>
+      <div class="data-viewer-meta" id="dataViewerMeta"></div>
       <div class="data-viewer-toolbar">
-        <input type="search" id="dataViewerSearch" class="data-viewer-search" placeholder="Tabloda ara: ürün, parsel, köy, ay..." />
-        <button type="button" id="dataViewerShowAll" class="btn-secondary">Tüm satırları göster</button>
-        <button type="button" id="dataViewerCopyHead" class="btn-secondary">Başlıkları kopyala</button>
+        <input type="search" id="dataViewerSearch" class="data-viewer-search" placeholder="Tabloda ara…" autocomplete="off" />
+        <label class="data-viewer-page-size">Satır
+          <select id="dataViewerPageSize"><option value="100">100</option><option value="200">200</option></select>
+        </label>
+        <button type="button" id="dataViewerPrev" class="btn-secondary">Önceki</button>
+        <span class="data-viewer-page-status" id="dataViewerPageStatus">-</span>
+        <button type="button" id="dataViewerNext" class="btn-secondary">Sonraki</button>
       </div>
-      <div class="data-viewer-summary" id="dataViewerSummary">Dosya seçilmedi.</div>
+      <div class="data-viewer-summary" id="dataViewerSummary">Veri kümesi seçilmedi.</div>
       <div class="data-viewer-table-wrap" id="dataViewerTableWrap"></div>
     </div>`;
   document.body.appendChild(modal);
 
-  modal.addEventListener('click', (ev)=>{
-    const closeEl = ev.target && ev.target.closest ? ev.target.closest('[data-data-viewer-close]') : null;
-    if(closeEl) closeDataTableViewer();
+  modal.addEventListener('click', (event)=>{
+    if(event.target?.closest?.('[data-data-viewer-close]')) closeDataTableViewer();
   });
-  document.addEventListener('keydown', (ev)=>{
-    if(ev.key === 'Escape' && modal.classList.contains('is-open')) closeDataTableViewer();
+  document.addEventListener('keydown', (event)=>{
+    if(event.key === 'Escape' && modal.classList.contains('is-open')) closeDataTableViewer();
+  });
+  document.addEventListener('click', (event)=>{
+    const filterButton = event.target?.closest?.('[data-defense-role-filter]');
+    if(filterButton){
+      event.preventDefault();
+      __defenseDatasetRoleFilter = filterButton.dataset.defenseRoleFilter === 'teknik' ? 'teknik' : 'ana';
+      renderDefenseDatasetCards();
+      return;
+    }
+    const datasetButton = event.target?.closest?.('[data-defense-dataset-id]');
+    if(datasetButton){
+      event.preventDefault();
+      openDefenseDatasetTable(datasetButton.dataset.defenseDatasetId);
+    }
   });
 
-  const search = modal.querySelector('#dataViewerSearch');
-  if(search){
-    search.addEventListener('input', ()=>{
-      __dataViewerState.filter = search.value || '';
-      __dataViewerState.showAll = false;
-      renderDataViewerTable();
-    });
-  }
-  const showAllBtn = modal.querySelector('#dataViewerShowAll');
-  if(showAllBtn){
-    showAllBtn.addEventListener('click', ()=>{
-      __dataViewerState.showAll = !__dataViewerState.showAll;
-      renderDataViewerTable();
-    });
-  }
-  const copyBtn = modal.querySelector('#dataViewerCopyHead');
-  if(copyBtn){
-    copyBtn.addEventListener('click', async ()=>{
-      try{
-        await navigator.clipboard.writeText((__dataViewerState.headers || []).join('\t'));
-        copyBtn.textContent = 'Kopyalandı';
-        setTimeout(()=>{ copyBtn.textContent = 'Başlıkları kopyala'; }, 1200);
-      }catch(_e){}
-    });
-  }
-
-  document.addEventListener('click', (ev)=>{
-    const btn = ev.target && ev.target.closest ? ev.target.closest('[data-file-url]') : null;
-    if(!btn) return;
-    ev.preventDefault();
-    openDataFileViewer(btn.dataset.fileUrl, btn.dataset.fileLabel, btn.dataset.filePath);
+  modal.querySelector('#dataViewerSearch')?.addEventListener('input', (event)=>{
+    clearTimeout(__dataViewerSearchTimer);
+    __dataViewerSearchTimer = setTimeout(()=>{
+      __dataViewerState.query = event.target.value || '';
+      __dataViewerState.pageIndex = 0;
+      fetchDefenseDatasetPage();
+    }, 280);
+  });
+  modal.querySelector('#dataViewerPageSize')?.addEventListener('change', (event)=>{
+    __dataViewerState.pageSize = Number(event.target.value) === 200 ? 200 : 100;
+    __dataViewerState.pageIndex = 0;
+    fetchDefenseDatasetPage();
+  });
+  modal.querySelector('#dataViewerPrev')?.addEventListener('click', ()=>{
+    if(__dataViewerState.pageIndex <= 0) return;
+    __dataViewerState.pageIndex -= 1;
+    fetchDefenseDatasetPage();
+  });
+  modal.querySelector('#dataViewerNext')?.addEventListener('click', ()=>{
+    if(!__dataViewerState.pagination?.has_next) return;
+    __dataViewerState.pageIndex += 1;
+    fetchDefenseDatasetPage();
   });
 }
 
@@ -6735,24 +6863,6 @@ function closeDataTableViewer(){
   if(!modal) return;
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden','true');
-}
-
-async function fetchTextWithFallbackV66(url){
-  const candidates = [];
-  const u = String(url||'').trim();
-  if(!u) throw new Error('Dosya yolu boş.');
-  candidates.push(u);
-  if(u.startsWith('data/')) candidates.push('/' + u);
-  if(u.startsWith('/data/')) candidates.push(u.slice(1));
-  let lastErr = null;
-  for(const c of Array.from(new Set(candidates))){
-    try{
-      const r = await fetch(c, {cache:'no-store'});
-      if(r.ok) return await r.text();
-      lastErr = new Error(`HTTP ${r.status} - ${c}`);
-    }catch(e){ lastErr = e; }
-  }
-  throw lastErr || new Error('Dosya okunamadı.');
 }
 
 function parseCsvRobustV66(text){
@@ -7006,70 +7116,187 @@ function translateHeaderLabelV67(header){
   return label;
 }
 
-async function openDataFileViewer(url, label, path){
+function defenseDatasetFilledCount(row){
+  return Array.isArray(row) ? row.filter(value=>value !== null && value !== undefined && String(value).trim() !== '').length : 0;
+}
+
+function defenseDatasetNumericCount(row){
+  if(!Array.isArray(row)) return 0;
+  return row.filter(value=>{
+    if(typeof value === 'number') return Number.isFinite(value);
+    const text = String(value ?? '').trim().replace(/\s+/g, '').replace(',', '.');
+    return text !== '' && /^[-+]?\d+(?:\.\d+)?$/.test(text);
+  }).length;
+}
+
+function detectDefenseDatasetHeader(rows, columnCount){
+  const sample = Array.isArray(rows) ? rows.slice(0, 15) : [];
+  let bestIndex = 0;
+  let bestScore = -Infinity;
+  sample.forEach((row, index)=>{
+    const filled = defenseDatasetFilledCount(row);
+    if(filled < 2) return;
+    const textCells = row.filter(value=>typeof value === 'string' && value.trim()).length;
+    const numericCells = defenseDatasetNumericCount(row);
+    const next = sample[index + 1] || [];
+    const nextFilled = defenseDatasetFilledCount(next);
+    const nextNumeric = defenseDatasetNumericCount(next);
+    const averageLength = row.reduce((sum, value)=>sum + String(value ?? '').length, 0) / Math.max(1, filled);
+    const score = (filled * 3) + textCells + (nextFilled * 0.4) + (nextNumeric * 2)
+      - (numericCells * 2) - (averageLength > 55 ? 12 : 0);
+    if(score > bestScore){
+      bestScore = score;
+      bestIndex = index;
+    }
+  });
+
+  const width = Math.max(
+    Number(columnCount || 0),
+    ...sample.map(row=>Array.isArray(row) ? row.length : 0),
+    1
+  );
+  const headers = Array.from({length: width}, (_unused, columnIndex)=>{
+    const parts = [];
+    for(let rowIndex = Math.max(0, bestIndex - 2); rowIndex <= bestIndex; rowIndex += 1){
+      const row = sample[rowIndex] || [];
+      if(rowIndex < bestIndex && defenseDatasetFilledCount(row) < 2) continue;
+      const value = row[columnIndex];
+      if(value === null || value === undefined || String(value).trim() === '') continue;
+      const label = String(value).trim();
+      if(!parts.includes(label)) parts.push(label);
+    }
+    return parts.join(' / ') || `Kolon ${columnIndex + 1}`;
+  });
+  return {headerIndex: bestIndex, headerRows: bestIndex + 1, headers};
+}
+
+function renderDefenseDatasetMetadata(){
+  const metadata = __dataViewerState.metadata || {};
+  const title = document.getElementById('dataViewerTitle');
+  const path = document.getElementById('dataViewerPath');
+  const meta = document.getElementById('dataViewerMeta');
+  if(title) title.textContent = metadata.title || metadata.source_sheet || 'Veri tablosu';
+  if(path) path.textContent = __dataViewerState.datasetId || '-';
+  if(!meta) return;
+  const items = [
+    ['Yerleşim', metadata.location],
+    ['Veri türü', metadata.source_type],
+    ['Kaynak dosya', metadata.source_file],
+    ['Çalışma sayfası', metadata.source_sheet],
+    ['Hücre aralığı', metadata.source_range],
+    ['Boyut', `${metadata.row_count ?? 0} satır × ${metadata.column_count ?? 0} sütun`],
+    ['Veri kalitesi', metadata.data_quality]
+  ];
+  const proxyRelated = /parsel|proxy/i.test(`${metadata.title || ''} ${metadata.source_sheet || ''}`);
+  meta.innerHTML = `
+    <dl>${items.map(([label,value])=>`<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value ?? '-')}</dd></div>`).join('')}</dl>
+    ${proxyRelated ? '<div class="data-viewer-proxy-notice">Analiz birimi kimlikleri, kaynak dosyalardaki temsilî/proxy kayıtlardır; hukuki kadastro parseli değildir.</div>' : ''}`;
+}
+
+async function openDefenseDatasetTable(datasetId){
   ensureDataTableViewer();
   const modal = document.getElementById('dataTableViewerModal');
-  const title = document.getElementById('dataViewerTitle');
-  const pathEl = document.getElementById('dataViewerPath');
+  const provisional = __defenseDatasetCatalog.find(item=>item.dataset_id === datasetId) || {};
+  __dataViewerState = {
+    datasetId,
+    metadata: provisional,
+    headers: [],
+    rows: [],
+    headerRows: 0,
+    pageIndex: 0,
+    pageSize: 100,
+    query: '',
+    pagination: null,
+    requestId: __dataViewerState.requestId + 1
+  };
+  const requestId = __dataViewerState.requestId;
+  const search = document.getElementById('dataViewerSearch');
+  const pageSize = document.getElementById('dataViewerPageSize');
+  if(search) search.value = '';
+  if(pageSize) pageSize.value = '100';
+  renderDefenseDatasetMetadata();
   const summary = document.getElementById('dataViewerSummary');
   const wrap = document.getElementById('dataViewerTableWrap');
-  const search = document.getElementById('dataViewerSearch');
-  if(search) search.value = '';
-  __dataViewerState = {rows:[], headers:[], fileLabel:label||'', filePath:path||url||'', mode:'preview', filter:'', showAll:false};
-  if(title) title.textContent = label || 'Veri tablosu';
-  if(pathEl) pathEl.textContent = path || url || '-';
-  if(summary) summary.innerHTML = '<span class="data-viewer-loading">Dosya okunuyor...</span>';
+  if(summary) summary.innerHTML = '<span class="data-viewer-loading">Kaynak tablo yükleniyor…</span>';
   if(wrap) wrap.innerHTML = '';
-  modal.classList.add('is-open');
-  modal.setAttribute('aria-hidden','false');
+  modal?.classList.add('is-open');
+  modal?.setAttribute('aria-hidden','false');
 
   try{
-    const text = await fetchTextWithFallbackV66(url);
-    const lower = String(path || url || '').toLowerCase();
-    let parsed;
-    if(lower.endsWith('.json') || lower.endsWith('.geojson')){
-      parsed = jsonToRowsV66(text);
-    }else{
-      parsed = parseCsvRobustV66(text);
-    }
-    __dataViewerState.rows = parsed.rows || [];
-    __dataViewerState.headers = parsed.headers || [];
-    renderDataViewerTable();
-  }catch(e){
-    if(summary) summary.innerHTML = `<span class="data-viewer-error">Dosya açılamadı: ${escapeHtml(e.message || e)}</span>`;
-    if(wrap) wrap.innerHTML = '<div class="data-viewer-empty">Bu dosya tarayıcıdan okunamadı. Projeyi VS Code Live Server veya Flask ile çalıştırdığından emin ol.</div>';
+    const response = await fetch(`/api/defense-datasets/${encodeURIComponent(datasetId)}?offset=0&limit=100`, {cache:'no-store'});
+    const payload = await response.json();
+    if(!response.ok || payload.status !== 'OK') throw new Error(payload.message || `HTTP ${response.status}`);
+    if(requestId !== __dataViewerState.requestId) return;
+    __dataViewerState.metadata = payload.dataset || provisional;
+    const detected = detectDefenseDatasetHeader(payload.dataset?.values || [], payload.dataset?.column_count || 0);
+    __dataViewerState.headers = detected.headers;
+    __dataViewerState.headerRows = detected.headerRows;
+    renderDefenseDatasetMetadata();
+    await fetchDefenseDatasetPage();
+  }catch(error){
+    if(requestId !== __dataViewerState.requestId) return;
+    if(summary) summary.innerHTML = `<span class="data-viewer-error">Veri tablosu açılamadı: ${escapeHtml(error?.message || error)}</span>`;
+    if(wrap) wrap.innerHTML = '<div class="data-viewer-empty">Kaynak veri servisi yanıt vermedi.</div>';
   }
 }
 
-function renderDataViewerTable(){
+async function fetchDefenseDatasetPage(){
+  if(!__dataViewerState.datasetId) return;
+  const requestId = ++__dataViewerState.requestId;
+  const offset = __dataViewerState.query
+    ? __dataViewerState.pageIndex * __dataViewerState.pageSize
+    : __dataViewerState.headerRows + (__dataViewerState.pageIndex * __dataViewerState.pageSize);
+  const params = new URLSearchParams({
+    offset: String(offset),
+    limit: String(__dataViewerState.pageSize)
+  });
+  if(__dataViewerState.query) params.set('q', __dataViewerState.query);
+  const summary = document.getElementById('dataViewerSummary');
+  if(summary) summary.innerHTML = '<span class="data-viewer-loading">Tablo yükleniyor…</span>';
+  try{
+    const response = await fetch(`/api/defense-datasets/${encodeURIComponent(__dataViewerState.datasetId)}?${params}`, {cache:'no-store'});
+    const payload = await response.json();
+    if(!response.ok || payload.status !== 'OK') throw new Error(payload.message || `HTTP ${response.status}`);
+    if(requestId !== __dataViewerState.requestId) return;
+    __dataViewerState.metadata = payload.dataset || __dataViewerState.metadata;
+    __dataViewerState.rows = Array.isArray(payload.dataset?.values) ? payload.dataset.values : [];
+    __dataViewerState.pagination = payload.pagination || null;
+    renderDefenseDatasetMetadata();
+    renderDefenseDatasetTable();
+  }catch(error){
+    if(requestId !== __dataViewerState.requestId) return;
+    if(summary) summary.innerHTML = `<span class="data-viewer-error">Tablo yüklenemedi: ${escapeHtml(error?.message || error)}</span>`;
+  }
+}
+
+function renderDefenseDatasetTable(){
   const summary = document.getElementById('dataViewerSummary');
   const wrap = document.getElementById('dataViewerTableWrap');
-  const showAllBtn = document.getElementById('dataViewerShowAll');
+  const previous = document.getElementById('dataViewerPrev');
+  const next = document.getElementById('dataViewerNext');
+  const pageStatus = document.getElementById('dataViewerPageStatus');
   if(!wrap) return;
   const rows = __dataViewerState.rows || [];
   const headers = __dataViewerState.headers || [];
-  const q = String(__dataViewerState.filter || '').trim().toLocaleLowerCase('tr-TR');
-  let filtered = rows;
-  if(q){
-    filtered = rows.filter(r=> headers.some(h=> String(r[h] ?? '').toLocaleLowerCase('tr-TR').includes(q)));
-  }
-  const limit = __dataViewerState.showAll ? filtered.length : Math.min(filtered.length, 200);
-  const shown = filtered.slice(0, limit);
-  if(showAllBtn){
-    showAllBtn.style.display = filtered.length > 200 ? '' : 'none';
-    showAllBtn.textContent = __dataViewerState.showAll ? 'İlk 200 satıra dön' : `Tüm satırları göster (${filtered.length})`;
-  }
+  const pagination = __dataViewerState.pagination || {};
+  const totalRows = __dataViewerState.query
+    ? Number(pagination.filtered_rows || 0)
+    : Math.max(0, Number(pagination.total_rows || 0) - __dataViewerState.headerRows);
+  const firstRow = totalRows && rows.length ? (__dataViewerState.pageIndex * __dataViewerState.pageSize) + 1 : 0;
+  const lastRow = firstRow ? firstRow + rows.length - 1 : 0;
+  if(previous) previous.disabled = __dataViewerState.pageIndex <= 0;
+  if(next) next.disabled = !pagination.has_next;
+  if(pageStatus) pageStatus.textContent = `${firstRow}–${lastRow} / ${totalRows}`;
   if(summary){
-    const filterText = q ? ` • filtreli: ${filtered.length}` : '';
-    const shownText = filtered.length > shown.length ? ` • ekranda: ilk ${shown.length}` : ` • ekranda: ${shown.length}`;
-    summary.innerHTML = `<strong>${escapeHtml(__dataViewerState.fileLabel || 'Dosya')}</strong> • ${headers.length} kolon • ${rows.length} satır${filterText}${shownText}`;
+    const queryText = __dataViewerState.query ? ` • arama: “${escapeHtml(__dataViewerState.query)}”` : '';
+    summary.innerHTML = `<strong>${escapeHtml(__dataViewerState.metadata?.title || 'Kaynak tablo')}</strong> • ${totalRows} veri satırı • bu sayfada ${rows.length}${queryText}`;
   }
   if(!headers.length){
     wrap.innerHTML = '<div class="data-viewer-empty">Tabloya dönüştürülebilecek veri bulunamadı.</div>';
     return;
   }
-  const thead = `<thead><tr>${headers.map(h=>`<th title="${escapeHtml(h)}">${escapeHtml(translateHeaderLabelV67(h))}</th>`).join('')}</tr></thead>`;
-  const tbody = `<tbody>${shown.map((r,idx)=>`<tr>${headers.map(h=>`<td>${escapeHtml(r[h] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody>`;
+  const thead = `<thead><tr>${headers.map(header=>`<th title="${escapeHtml(header)}">${escapeHtml(translateHeaderLabelV67(header))}</th>`).join('')}</tr></thead>`;
+  const tbody = `<tbody>${rows.map(row=>`<tr>${headers.map((_header,index)=>`<td>${escapeHtml(Array.isArray(row) ? (row[index] ?? '') : '')}</td>`).join('')}</tr>`).join('')}</tbody>`;
   wrap.innerHTML = `<table class="data-viewer-table">${thead}${tbody}</table>`;
 }
 
@@ -7679,6 +7906,63 @@ function basinCacheKey(scenarioKey, algoKey){
   const w = Math.round(STATE.availableWaterM3 ?? 0);
   const r = Math.round((STATE.droughtRisk ?? 0)*1000);
   return `${scenarioKey}|${algoKey}|Y${y}|S${s}|SS${ss}|CM${cm}|AM${am}|W${w}|R${r}`;
+}
+
+function isCurrentScenarioKeyV151(scenarioKey){
+  const s = String(scenarioKey || '').toLowerCase().trim();
+  return s === 'mevcut' || s === 'current';
+}
+
+function hasFiniteMetricV151(v){
+  if(v === null || v === undefined || v === '') return false;
+  const n = Number(v);
+  return Number.isFinite(n);
+}
+
+function hasPositiveMetricV151(v){
+  if(v === null || v === undefined || v === '') return false;
+  const n = Number(v);
+  return Number.isFinite(n) && n > 0;
+}
+
+function missingMetricSummaryV151(reason='Öneri üretilemedi'){
+  return {
+    water: null,
+    profit: null,
+    eff: null,
+    budget: null,
+    feasible: null,
+    iterations: null,
+    metricsUnavailable: true,
+    noFeasibleRecommendation: true,
+    decisionReason: reason
+  };
+}
+
+function pendingSelectionSummaryV151(reason='Yeni seçim yapıldı. Bu seçim için optimizasyon henüz çalıştırılmadı.'){
+  return {
+    ...missingMetricSummaryV151(reason),
+    pendingRerun: true,
+    noFeasibleRecommendation: false
+  };
+}
+
+function planUnavailableV151(plan){
+  return !plan || !!plan.backendUnavailable || !!plan.metricsUnavailable || !!plan.noFeasibleRecommendation ||
+    plan.recommendationStatus === 'no_feasible_two_crop_plan' || !!plan.noFeasibleTwoCrop;
+}
+
+function currentTotalsForParcelsV151(parcels, algoKey){
+  const list = Array.isArray(parcels) ? parcels : [];
+  let water = 0;
+  let profit = 0;
+  for(const p of list){
+    const cur = runOptimization(p, 'mevcut', algoKey);
+    const t = cur?.totals || {};
+    water += safeNum(t.water, safeNum(p?.water_m3, 0));
+    profit += safeNum(t.profit, safeNum(p?.profit_tl, 0));
+  }
+  return { water, profit, eff: water > 0 ? profit / water : null };
 }
 
 function deepCloneRows(rows){
@@ -8329,17 +8613,32 @@ function renderBenchmarkResultsTo(j, box, patBox, updateCharts = true){
 
   let html = '';
   const benchmarkScopeLabel = window.__lastBenchmarkScopeLabel || '';
+  const methodology = j.methodology || {};
+  const quotaModelLabel = methodology.quota_model_label || methodology.quotaModelLabel || j.quota_model_label || 'Alan-oransal/dekar bazlı kota';
+  const candidateTotal = methodology.candidate_matrix_total_rows ?? j.candidate_matrix_total_rows ?? '';
+  const candidateFeasible = methodology.candidate_matrix_default_feasible_rows ?? j.candidate_matrix_default_feasible_rows ?? '';
+  const selectedCount = j.selected_count ?? methodology.selected_parcel_count ?? '';
   html += `<div class="benchmark-method-card">`+
           `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">`+
           `<span class="benchmark-tag">Backend benchmark</span>`+
+          `<span class="benchmark-tag">Algoritmalar: GA / ABC / ACO</span>`+
           `<span class="benchmark-tag">Hedef: ${escapeHtml(objectiveLabel)}</span>`+
+          `<span class="benchmark-tag">Kota: ${escapeHtml(String(quotaModelLabel))}</span>`+
           `<span class="benchmark-tag">İstenen tekrar: ${escapeHtml(String(Math.max(1, Number(j.repeats || 0))))}</span>`+
+          `${selectedCount !== '' ? `<span class="benchmark-tag">Seçili parsel: ${escapeHtml(String(selectedCount))}</span>` : ''}`+
+          `${candidateTotal !== '' ? `<span class="benchmark-tag">Aday kombinasyon: ${escapeHtml(Number(candidateTotal).toLocaleString('tr-TR'))}</span>` : ''}`+
+          `${candidateFeasible !== '' ? `<span class="benchmark-tag">Uygun aday: ${escapeHtml(Number(candidateFeasible).toLocaleString('tr-TR'))}</span>` : ''}`+
           `${benchmarkScopeLabel ? `<span class="benchmark-tag">Kapsam: ${escapeHtml(benchmarkScopeLabel)}</span>` : ''}`+
           `</div>`+
           `<div><b>Karşılaştırma notu:</b> ${escapeHtml(benchmarkHealth)}</div>`+
           `<div class="small muted" style="margin-top:6px;">Mevcut desen referans sütunu olarak tutulur; algoritmalar aynı veri, aynı aday ürün havuzu ve aynı su bütçesi altında kıyaslanır. Seçili parselde parsel bazlı davranış, tüm parsel görünümünde ise temsilî kurum kapsamı raporlanır.</div><div class="small muted" style="margin-top:6px;"><b>Not:</b> Buradaki başarısız koşu sayısı bir tahmin hatası değildir; yalnızca teknik olarak sonuç üretemeyen veya kısıt nedeniyle geçersiz kalan koşuları gösterir. 0 olması iyi durumdur.</div>`+
           `</div>`;
   html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Ürün çeşitliliği kontrolü:</b> Bu sürümde algoritmalar yalnızca net kâr ve su tüketimine göre değil, ürün deseninin tarımsal uygulanabilirliği açısından da değerlendirilmektedir. Ürün yoğunlaşması göstergeleri, önerilen değişiklik yapılan alanlar üzerinden hesaplanmaktadır. Bu nedenle oranlar toplam havza alanı değil, değişen öneri alanı içindeki dağılımı ifade eder. Öneri planı içinde hesaplanan alan payı ayrıca mevcutsa uyarı içinde gösterilir.</div>`;
+  html += `<details class="benchmark-note low-risk-method-note-v150" style="margin-bottom:10px;" open><summary>Metodoloji ve veri güveni</summary><span>${escapeHtml(LOW_RISK_METHOD_COMPACT_V150)}</span></details>`;
+  html += `<div class="benchmark-note low-risk-method-note-v150" style="margin-bottom:10px;"><b>Sezgisel algoritma uyarısı:</b> GA, ACO ve ABC stokastiktir; seed/tekrar politikasıyla birlikte yorumlanır.</div>`;
+  if(bestAlgo === 'ACO'){
+    html += `<div class="benchmark-note low-risk-method-note-v150" style="margin-bottom:10px;"><b>ACO yorumu:</b> ${escapeHtml(LOW_RISK_ACO_NOTICE_V150)}</div>`;
+  }
   html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Performans notu:</b> Yüksek tekrar sayıları hesaplama süresini artırabilir. Örneğin 100 tekrar, GA/ACO/ABC için toplam 300 koşu anlamına gelir.</div>`;
   html += `<div class="benchmark-note" style="margin-bottom:10px;"><b>Benchmark yorumu:</b> ${escapeHtml(leaderReason)}</div>`;
 
@@ -8888,22 +9187,23 @@ function benchmarkDynamicInterpretation(bestAlgo, algos, rows){
     parts.push(`ABC bazı koşullarda farklı desen üretebilse de ${concentration} ve ${fmtNum(abcCv*100,2)}% CV değeri nedeniyle dikkatli yorumlanmalıdır.`);
   }
   if(bestAlgo === 'ACO' && ga){
-    parts.unshift('ACO, net kâr bakımından güçlü alternatiflere yakın kalırken daha dengeli su kullanımı, TL/m³, düşük değişkenlik ve uygulanabilirlik bileşimiyle seçilmiştir.');
+    parts.unshift('Bu veri seti, kota modeli ve hedef fonksiyonu altında ACO; su kullanımı, TL/m³, değişkenlik ve uygulanabilirlik bileşimiyle daha dengeli sonuç üretmiştir. Bu ifade ACO’nun her veri setinde evrensel olarak en iyi algoritma olduğu anlamına gelmez.');
   }
   return parts.join(' ');
 }
 
 function backendUnavailablePlan(idsForRun, scenarioKey, algoKey, message){
-  const key = basinCacheKey(scenarioKey, algoKey);
   const wanted = new Set((idsForRun || []).map(x => String(x || '').trim()).filter(Boolean));
   const targetParcels = (parcelData || []).filter(p => !wanted.size || wanted.has(String(p?.id || '').trim()));
   const plan = {};
   for(const p of targetParcels){
     plan[p.id] = {
       rows: [],
-      totals: { water:0, profit:0, eff:0 },
+      totals: { water:null, profit:null, eff:null },
       backendUnavailable: true,
       backendOnly: true,
+      metricsUnavailable: true,
+      noFeasibleRecommendation: true,
       decisionReason: message || 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.',
       alternativePatterns: [],
       interrowAlternatives: [],
@@ -8912,15 +9212,16 @@ function backendUnavailablePlan(idsForRun, scenarioKey, algoKey, message){
   }
   const out = {
     plan,
-    budget: 0,
-    totals: { water:0, profit:0, eff:0 },
+    budget: null,
+    totals: { water:null, profit:null, eff:null },
     iterations: 0,
-    feasible: false,
+    feasible: null,
     backendUnavailable: true,
     backendOnly: true,
+    metricsUnavailable: true,
+    noFeasibleRecommendation: true,
     diagnostics: { warnings:[message || 'Backend optimizasyon sonucu alınamadı; tarayıcı içi karar üretilmedi.'] }
   };
-  basinPlanCache[key] = out;
   return out;
 }
 
@@ -8972,6 +9273,12 @@ function backendChartLabelTr(label){
 function backendStandardPlanToPattern(plan, parcelRef, baselineTotals, rank=1, selected=false){
   const crops = Array.isArray(plan?.crops) ? plan.crops : [];
   const rows = crops.map(c=>backendStandardCropToUiRow(c, parcelRef));
+  const metricsUnavailable = !rows.length && (
+    plan?.status === 'no_feasible_two_crop_plan' ||
+    plan?.recommendation_status === 'no_feasible_two_crop_plan' ||
+    plan?.feasible === false ||
+    (!Object.prototype.hasOwnProperty.call(plan || {}, 'total_water_m3') && !Object.prototype.hasOwnProperty.call(plan || {}, 'total_profit_tl'))
+  );
   const totalWater = safeNum(plan?.total_water_m3, rows.reduce((a,r)=>a+safeNum(r.totalWater,0),0));
   const totalProfit = safeNum(plan?.total_profit_tl, rows.reduce((a,r)=>a+safeNum(r.totalProfit,0),0));
   const components = rows.map((r, idx)=>({
@@ -8987,9 +9294,11 @@ function backendStandardPlanToPattern(plan, parcelRef, baselineTotals, rank=1, s
     rank,
     targetOrder: rank,
     selectedRecommendation: !!selected,
+    metricsUnavailable,
+    noFeasibleRecommendation: metricsUnavailable,
     backendOnly: true,
-    patternName: rows.map(r=>r.name).filter(Boolean).join(' + ') || plan?.plan_id || 'Backend plan',
-    mainCrop: rows[0]?.name || '-',
+    patternName: metricsUnavailable ? 'Öneri üretilemedi' : (rows.map(r=>r.name).filter(Boolean).join(' + ') || plan?.plan_id || 'Backend plan'),
+    mainCrop: rows[0]?.name || (metricsUnavailable ? 'Öneri üretilemedi' : '-'),
     secondaryCrop: rows[1]?.name || '-',
     totalWater,
     totalProfit,
@@ -9001,7 +9310,7 @@ function backendStandardPlanToPattern(plan, parcelRef, baselineTotals, rank=1, s
     areaSplit: plan?.pattern_type || 'Backend karar paketi',
     productionWindow: rows.map(r=>r.season).filter(Boolean).join(' / '),
     suitability: (plan?.feasibility_reasons || []).join(' • ') || 'Backend uygunluk kontrolü',
-    note: plan?.explanation || (plan?.warnings || []).join(' '),
+    note: metricsUnavailable ? 'Bu parsel için seçili senaryo/kota/uygunluk filtresi altında güvenli öneri üretilemedi.' : (plan?.explanation || (plan?.warnings || []).join(' ')),
     components,
     source: plan
   };
@@ -10307,7 +10616,43 @@ STATE.selectionDirty = false;
 // Son optimizasyon çalıştırma bağlamı.
 // Parsel veya senaryo/algoritma değiştiğinde öneri/opt sonuçlarının
 // eski seçimden kalmaması için kullanılır.
-let lastOptimizeContext = null; // { parcelId, scenario, algo }
+let lastOptimizeContext = null; // { parcelId, scenario, algo, seasonSource, cropCategoryMode, waterYear, projScenario, waterAllocationModel }
+
+function normalizeOptimizeContextValueV151(v){
+  return String(v ?? '').trim();
+}
+
+function buildOptimizeContextV151(overrides={}){
+  return {
+    parcelId: normalizeOptimizeContextValueV151(overrides.parcelId ?? selectedParcelId),
+    scenario: normalizeOptimizeContextValueV151(overrides.scenario ?? selectedScenario),
+    algo: normalizeOptimizeContextValueV151(overrides.algo ?? selectedAlgo),
+    seasonSource: normalizeOptimizeContextValueV151(overrides.seasonSource ?? STATE.seasonSource ?? 's1'),
+    cropCategoryMode: normalizeOptimizeContextValueV151(overrides.cropCategoryMode ?? STATE.cropCategoryMode ?? currentCropCategoryMode?.() ?? 'same_category'),
+    waterYear: normalizeOptimizeContextValueV151(overrides.waterYear ?? STATE.selectedWaterYear ?? 2024),
+    projScenario: normalizeOptimizeContextValueV151(overrides.projScenario ?? STATE.selectedProjScenario ?? ''),
+    waterAllocationModel: normalizeOptimizeContextValueV151(overrides.waterAllocationModel ?? STATE.waterAllocationModel ?? 'area_fair_per_da')
+  };
+}
+
+function optimizeContextMatchesCurrentV151(ctx){
+  if(!ctx) return false;
+  const now = buildOptimizeContextV151();
+  return [
+    'parcelId',
+    'scenario',
+    'algo',
+    'seasonSource',
+    'cropCategoryMode',
+    'waterYear',
+    'projScenario',
+    'waterAllocationModel'
+  ].every(k => normalizeOptimizeContextValueV151(ctx[k]) === normalizeOptimizeContextValueV151(now[k]));
+}
+
+function markSelectionChangedV151(){
+  STATE.selectionDirty = true;
+}
 
 function getAuthUserByUsername(username){
   const u = normalizeAuthUsername(username);
@@ -12694,7 +13039,7 @@ function decisionReasonV8(candidate, scenarioKey){
     return `Mevcut referans bu hedefte alternatiflerden daha avantajlı bulunduğu için korunmuştur. Mevcut desen ${f1(safeNum(m.candidateWUE,0))} TL/m³ değerindedir ve ${quotaText}.`;
   }
   const orchardWarning = (candidate?.rows || []).some(r=>r?.orchardConversion)
-    ? ' Bu alternatif ana ürün değişimi/bahçe yenileme gerektirir; söküm-yeni tesis kararı uzman onayıyla değerlendirilmelidir.'
+    ? ' Bu alternatif ana ürün dönüşümü/bahçe yenileme gerektirir; söküm-yeni tesis kararı uzman onayıyla değerlendirilmelidir.'
     : '';
   if(obj === 'water_saving'){
     return `Bu aday uygulanabilir ve kota uygun adaylar içinde en düşük toplam su kullanımına sahip olduğu için seçilmiştir. Mevcut desene göre ${safeNum(m.waterSaving,0) >= 0 ? waterText + ' su tasarrufu sağlar' : waterText + ' daha fazla su ister'}; kâr etkisi ${safeNum(m.deltaProfit,0) >= 0 ? '+' : '-'}${profitText} ve ${quotaText}.${orchardWarning}`;
@@ -12765,7 +13110,7 @@ function rankedCandidatesToUiPatternsV8(parcel, currentRows, rankedCandidates, s
     const irrKey = row?.irrigationSuggestedKey || row?.irrigationCurrentKey || irrigationKeysForCrop(crop).suggestedKey || 'sprinkler';
     return {
       crop,
-      role: row?.currentReference ? 'Mevcut referans' : (row?.orchardConversion ? 'Bahçe yenileme - ana ürün değişimi' : (idx === 0 ? 'Ana ürün' : '2. ürün / ara ürün')),
+      role: row?.currentReference ? 'Mevcut referans' : (row?.orchardConversion ? 'Bahçe yenileme - ana ürün dönüşümü' : (idx === 0 ? 'Ana ürün' : '2. ürün / ara ürün')),
       share,
       percent: Math.round(share * 100),
       area,
@@ -12798,9 +13143,9 @@ function rankedCandidatesToUiPatternsV8(parcel, currentRows, rankedCandidates, s
     const totalProfit = safeNum(metrics.candidateProfit, safeNum(candidate.totals?.profit, 0));
     const orchardReplacement = !!metrics.orchardReplacement || rows.some(r=>r?.orchardConversion);
     const note = candidate.type === 'current_reference'
-      ? 'Mevcut referans korundu; bu hedefte ürün değişimi daha avantajlı bulunmadı.'
+      ? 'Mevcut referans korundu; bu hedefte ürün dönüşümü daha avantajlı bulunmadı.'
       : (orchardReplacement
-          ? 'Bahçe yenileme - ana ürün değişimi: söküm/yeni tesis ve uzman onayı gerekir.'
+          ? 'Bahçe yenileme - ana ürün dönüşümü: söküm/yeni tesis ve uzman onayı gerekir.'
           : decisionReasonV8(candidate, scenarioKey));
     return {
       rank: idx + 1,
@@ -13940,7 +14285,7 @@ function runOptimization(p, scenarioKey, algoKey){
     }));
     const totals = sumMetrics(rows);
     const metrics = planDecisionMetricsV8(p, rows, currentTotals, scenarioKey);
-    const reason = 'Bu parsel çok yıllık/bahçe ürünüdür. Tek yıllık ürün önerileri doğrudan ana ürün değişimi olarak uygulanamaz; bahçe yenileme ve uzman onayı gerekir. Bu nedenle ana ürün korunmuştur.';
+    const reason = 'Bu parsel çok yıllık/bahçe ürünüdür. Tek yıllık ürün önerileri doğrudan ana ürün dönüşümü olarak uygulanamaz; bahçe yenileme ve uzman onayı gerekir. Bu nedenle ana ürün korunmuştur.';
     const candidate = {
       type: 'current_reference',
       label: 'Mevcut referans',
@@ -14352,10 +14697,12 @@ function computeCropData(p, scenarioKey, algoKey) {
       current,
       currentTotals,
       rec: [],
-      recTotals: { water:0, profit:0, water_eff:0, water_current_irrig:0, water_saving_m3:0, water_saving_pct:0 },
+      recTotals: null,
       recMeta: {
         backendUnavailable: true,
         backendOnly: true,
+        metricsUnavailable: true,
+        noFeasibleRecommendation: true,
         decisionReason: opt.decisionReason || 'Backend sonucu yok; frontend karar üretmedi.',
         alternativePatterns: [],
         interrowAlternatives: [],
@@ -14366,6 +14713,28 @@ function computeCropData(p, scenarioKey, algoKey) {
   if(opt?.backendOnly || opt?.backendResult){
     const recommendedForUi = Array.isArray(opt.rows) ? opt.rows.map(r=>({ ...r })) : [];
     const recTotalsAdj = opt.totals || sumMetrics(recommendedForUi);
+    const backendNoMetric = planUnavailableV151(opt) || (!recommendedForUi.length && !hasPositiveMetricV151(recTotalsAdj?.water) && !hasPositiveMetricV151(recTotalsAdj?.profit));
+    if(backendNoMetric){
+      return {
+        current,
+        currentTotals,
+        rec: [],
+        recTotals: null,
+        recMeta: {
+          backendOnly: true,
+          metricsUnavailable: true,
+          noFeasibleRecommendation: true,
+          decisionReason: opt.decisionReason || 'Seçili senaryo/kota/uygunluk filtresi altında güvenli öneri üretilemedi.',
+          alternativePatterns: Array.isArray(opt.alternativePatterns) ? opt.alternativePatterns : [],
+          interrowAlternatives: Array.isArray(opt.interrowAlternatives) ? opt.interrowAlternatives : [],
+          conversionWarnings: Array.isArray(opt.conversionWarnings) ? opt.conversionWarnings : [],
+          backendResult: opt.backendResult || null,
+          selectedPlan: opt.backendDecisionPackage?.selected_plan || opt.backendResult?.selected_plan || null,
+          noFeasibleTwoCrop: !!opt.noFeasibleTwoCrop,
+          orchardKeepMainCrop: !!(p?.parcel_type === 'orchard' || p?.is_orchard),
+        }
+      };
+    }
     const recWaterCurrentIrr = recommendedForUi.reduce((acc, rr) => {
       const w = deliveredWaterPerDa(safeNum(rr._baseWaterPerDa, rr.waterPerDa), rr.irrigationCurrentKey);
       return acc + safeNum(rr.area,0) * w;
@@ -14653,67 +15022,88 @@ function orchardAlternativeFallback(currentRows, recRows, recMeta){
 }
 
 function alternativePatternPanelHtmlV94(patterns, metaLabel, scenLabel){
-  const rows = (Array.isArray(patterns) ? patterns : []).slice(0, 8);
+  const rows = Array.isArray(patterns) ? patterns : [];
   if(!rows.length){
     return `<div class="pattern-panel-empty">Alternatif desen üretilemedi.</div>`;
   }
+  const totalCandidateCount = Array.isArray(patterns) ? patterns.length : 0;
+  const shownCandidateCount = rows.length;
+  const eliminatedCandidateCount = Math.max(0, totalCandidateCount - shownCandidateCount);
   const cards = rows.map(x=>{
     window.__patternPickStoreV102 = window.__patternPickStoreV102 || {};
     const pickId = `PAT-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
     window.__patternPickStoreV102[pickId] = x;
-    const water = Math.round(safeNum(x.totalWater,0)).toLocaleString('tr-TR');
-    const profit = Math.round(safeNum(x.totalProfit,0)).toLocaleString('tr-TR');
-    const eff = safeNum(x.tlPerM3,0).toFixed(2);
-    const rank = safeNum(x.rank,0) || '';
-    const targetOrder = safeNum(x.targetOrder, rank) || rank;
-    const split = x.areaSplit || (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Aynı parselde yıllık desen olarak değerlendirilir' : 'Ana ürün %100');
-    const dw = Math.round(safeNum(x.deltaWater,0));
-    const dp = Math.round(safeNum(x.deltaProfit,0));
-    const selectedBadge = x.selectedRecommendation ? '<span class="pattern-selected-badge">Seçilen öneri</span>' : '';
+    const management = lowRiskIsManagementAlternativeV150(x);
+    const water = lowRiskMetricTextV150(x, ['waterPerDa','water_m3_da'], 'm³/da', 1, management ? 'Yönetim alternatifi' : '—');
+    const profit = lowRiskMetricTextV150(x, ['profitPerDa','profit_tl_da'], 'TL/da', 0, management ? 'Yönetim alternatifi' : '—');
+    const eff = lowRiskMetricTextV150(x, ['tlPerM3','efficiency_tl_per_m3'], '', 2, management ? 'Yönetim alternatifi' : '—');
+    const totalWater = lowRiskMetricTextV150(x, ['totalWater','total_water_m3'], 'm³', 0, management ? 'Yönetim alternatifi' : '—');
+    const totalProfit = lowRiskMetricTextV150(x, ['totalProfit','total_profit_tl'], 'TL', 0, management ? 'Yönetim alternatifi' : '—');
+    const targetOrder = safeNum(x.targetOrder, x.rank) || '';
+    const cropLabel = lowRiskCropLabelV150(x);
+    const split = x.areaSplit || (management ? 'Ana ürün korunur; yönetim alternatifi olarak yorumlanır.' : (x.secondaryCrop && x.secondaryCrop !== '-' ? 'Aynı parselde yıllık desen olarak değerlendirilir' : 'Ana ürün %100'));
+    const dw = lowRiskMetricTextV150(x, ['deltaWater'], 'm³', 0, '—');
+    const dp = lowRiskMetricTextV150(x, ['deltaProfit'], 'TL', 0, '—');
     const isSelectable = x.selectable !== false && x.feasible !== false && !x.quotaExceeded;
-    const quotaBadge = x.quotaExceeded || x.feasible === false ? '<span class="pattern-risk-badge">Kota aşımı riski / uzman onayı gerekir</span>' : '<span class="pattern-selected-badge">Kota uygun</span>';
+    const roleBadge = `<span class="pattern-role-badge-v150">${escapeHtml(lowRiskRoleLabelV150(x))}</span>`;
+    const quotaBadge = `<span class="pattern-risk-badge">${escapeHtml(lowRiskQuotaStatusV150(x))}</span>`;
     const scenarioTypeLabel = Array.isArray(x.components) && x.components.length > 1 ? 'Kombinasyon / yüzde dağılımı' : 'Tek ürün';
     const components = Array.isArray(x.components) && x.components.length
       ? `<div class="pattern-component-list">${x.components.map(c=>`<span>${escapeHtml(c.role || 'Ürün')}: <b>${escapeHtml(c.crop || '-')}</b> %${Math.round(safeNum(c.share,0)*100)}</span>`).join('')}</div>`
       : '';
-    return `<article class="pattern-card-v94${x.selectedRecommendation ? ' pattern-card-selected-v149' : ''}">
+    const reasonItems = lowRiskWhyTextV150(x).slice(0,2).map(t=>`<li>${escapeHtml(t)}</li>`).join('');
+    return `<article class="pattern-card-v94 pattern-card-simple-v150${x.selectedRecommendation ? ' pattern-card-selected-v149' : ''}">
       <div class="pattern-card-top">
-        <span class="pattern-rank">#${escapeHtml(rank)}</span>
-        <strong>${escapeHtml(x.patternName || '')}</strong>
-        ${selectedBadge}${quotaBadge}
+        <strong>${escapeHtml(cropLabel)}</strong>
+        ${roleBadge}${quotaBadge}
       </div>
-      <div class="pattern-target-order">Hedef sırası: ${escapeHtml(targetOrder)} • ${escapeHtml(metaLabel || 'Seçili hedef')} • ${escapeHtml(scenarioTypeLabel)}</div>
-      <div class="pattern-card-crops">
-        <span>${escapeHtml(x.mainCrop || '-')}</span>
-        <span>${escapeHtml(x.secondaryCrop || '-')}</span>
+      <div class="pattern-card-metrics pattern-card-metrics-v150 pattern-card-metrics-compact-v150">
+        <div><span>Su</span><b>${escapeHtml(water)}</b></div>
+        <div><span>Kâr</span><b>${escapeHtml(profit)}</b></div>
+        <div><span>TL/m³</span><b>${escapeHtml(eff)}</b></div>
       </div>
-      <div class="pattern-card-metrics">
-        <div><span>Su</span><b>${water} m³</b></div>
-        <div><span>Net kâr</span><b>${profit} TL</b></div>
-        <div><span>TL/m³</span><b>${eff}</b></div>
-      </div>
-      <div class="pattern-card-deltas">
-        <span>Δ su <b>${dw>=0?'+':''}${dw.toLocaleString('tr-TR')} m³</b></span>
-        <span>Δ kâr <b>${dp>=0?'+':''}${dp.toLocaleString('tr-TR')} TL</b></span>
-      </div>
-      <p>${escapeHtml(split)}</p>
-      ${components}
-      <small>Sulama: ${escapeHtml(x.irrigation || '-')}</small>
-      <small>${escapeHtml(x.productionWindow || x.growthDays || 'Takvim kontrolü')} • ${escapeHtml(x.peakMonth || 'Pik ay kontrolü')} • ${escapeHtml(x.suitability || 'Uygunluk kontrolü')}</small>
-      <div class="pattern-card-actions-v102">
-        <button class="btn-link" type="button" data-alt-crop-v101="${escapeHtml(x.patternName || `${x.mainCrop || ''} + ${x.secondaryCrop || ''}`)}">Detay</button>
-        <button class="btn-link" type="button" data-select-pattern-v102="${escapeHtml(pickId)}" ${isSelectable ? '' : 'disabled aria-disabled="true"'}>${isSelectable ? 'Seç' : 'Seçilemez'}</button>
-      </div>
-      <div class="small muted">${escapeHtml(x.note || 'Su, kâr, TL/m³ ve parsel uygunluğu birlikte değerlendirildi.')}</div>
+      <div class="pattern-short-reason-v150"><b>Kısa neden</b><ul>${reasonItems}</ul></div>
+      <details class="pattern-card-details-v150">
+        <summary>Detay</summary>
+        <div class="pattern-target-order">${targetOrder ? `Hedef sırası: ${escapeHtml(targetOrder)} • ` : ''}${escapeHtml(metaLabel || 'Seçili hedef')} • ${escapeHtml(scenarioTypeLabel)}</div>
+        <div class="pattern-card-crops">
+          <span>${escapeHtml(x.mainCrop || (management ? 'Ana ürün korunur' : '-'))}</span>
+          <span>${escapeHtml(x.secondaryCrop || (management ? 'Yönetim alternatifi' : '-'))}</span>
+        </div>
+        <div class="pattern-card-deltas">
+          <span>Δ su <b>${escapeHtml(dw)}</b></span>
+          <span>Δ kâr <b>${escapeHtml(dp)}</b></span>
+          <span>Toplam su <b>${escapeHtml(totalWater)}</b></span>
+          <span>Toplam kâr <b>${escapeHtml(totalProfit)}</b></span>
+        </div>
+        ${lowRiskPatternExplainHtmlV150(x)}
+        <p>${escapeHtml(split)}</p>
+        ${components}
+        <small>Sulama: ${escapeHtml(x.irrigation || '-')}</small>
+        <small>${escapeHtml(x.productionWindow || x.growthDays || 'Takvim kontrolü')} • ${escapeHtml(x.peakMonth || 'Pik ay kontrolü')} • ${escapeHtml(x.suitability || 'Uygunluk kontrolü')}</small>
+        <div class="pattern-card-actions-v102">
+          <button class="btn-link" type="button" data-alt-crop-v101="${escapeHtml(x.patternName || `${x.mainCrop || ''} + ${x.secondaryCrop || ''}`)}">Detay</button>
+          <button class="btn-link" type="button" data-select-pattern-v102="${escapeHtml(pickId)}" ${isSelectable ? '' : 'disabled aria-disabled="true"'}>${isSelectable ? 'Seç' : 'Seçilemez'}</button>
+        </div>
+        <div class="small muted">${escapeHtml(x.note || 'Su, kâr, TL/m³ ve parsel uygunluğu birlikte değerlendirildi.')}</div>
+      </details>
     </article>`;
-  }).join('');
+  });
+  const visibleCards = cards.slice(0,3).join('');
+  const hiddenCards = cards.slice(3).join('');
+  const orchardPanel = rows.some(x => lowRiskIsManagementAlternativeV150(x))
+    ? `<div class="orchard-panel-v150">Bu parsel kurulu meyve bahçesi olarak değerlendirilmiştir. Ana ürün korunur. Gösterilen seçenekler doğrudan ana ürün değişikliği değildir; sulama verimliliği, sıra arası/örtü bitkisi veya yönetim alternatifi olarak yorumlanmalıdır.</div>`
+    : '';
   return `<details class="pattern-panel-v94">
     <summary>
       <span><strong>${escapeHtml(metaLabel)}</strong> • ${escapeHtml(scenLabel)}</span>
-      <em>İlk ${rows.length} alternatifi aç</em>
+      <em>İlk 3 öneri görünür</em>
     </summary>
-    <div class="pattern-panel-note">Desenler su kotası, kâr, TL/m³, dönem-gün sayısı, pik ay, familya/rotasyon ve parsel uygunluğu birlikte okunarak sıralanır. Senaryo 2'de 2. ürün tek başına bağımsız öneri değil, ana ürünle birlikte yıllık desen olarak değerlendirilir.</div>
-    <div class="pattern-card-grid-v94">${cards}</div>
+    ${orchardPanel}
+    <div class="pattern-panel-note low-risk-count-note-v150">Gösterilen alternatifler; seçili senaryo, ürün grubu, kota uygunluğu, rotasyon/ürün ailesi kuralları ve meyve bahçelerinde ana ürün koruma filtresinden sonra listelenmiştir. <span class="pattern-count-badges-v150"><b>Toplam aday: ${escapeHtml(String(totalCandidateCount))}</b><b>Filtre sonrası gösterilen: ${escapeHtml(String(shownCandidateCount))}</b><b>Elenen: ${escapeHtml(String(eliminatedCandidateCount))}</b></span></div>
+    <details class="pattern-panel-note low-risk-method-note-v150"><summary>Metodoloji ve veri güveni</summary><span>${escapeHtml(LOW_RISK_METHOD_COMPACT_V150)}</span></details>
+    <div class="pattern-card-grid-v94">${visibleCards}</div>
+    ${hiddenCards ? `<details class="pattern-extra-v150"><summary>Diğer alternatifleri göster (${cards.length - 3})</summary><div class="pattern-card-grid-v94">${hiddenCards}</div></details>` : ''}
   </details>`;
 }
 
@@ -14988,6 +15378,25 @@ function renderTables() {
     return;
   }
 
+  if (canShowOpt && (recMeta?.metricsUnavailable || recMeta?.noFeasibleRecommendation || recMeta?.backendUnavailable)) {
+    const reason = recMeta?.decisionReason || 'Seçili senaryo/kota/uygunluk filtresi altında güvenli öneri üretilemedi.';
+    tbodyRec.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center; padding:14px; color:#92400e;">
+          Öneri üretilemedi. Uygun aday bulunamadı veya backend karar paketi henüz yüklenmedi.
+        </td>
+      </tr>
+    `;
+    if (footerRec) {
+      footerRec.innerHTML = `<div class="small" style="margin-top:8px; padding:8px 10px; border:1px solid #fde68a; border-radius:10px; background:#fffbeb;"><strong>Öneri üretilemedi:</strong> ${escapeHtml(reason)}</div>`;
+    }
+    const explainBox = document.getElementById("explainBox");
+    if (explainBox) {
+      explainBox.innerHTML = `<div><strong>Seçili senaryo sonucu:</strong> öneri üretilemedi.</div><div style="margin-top:6px;">Sistem bu durumu 0 m³ / 0 TL değerli sahte plan olarak göstermiyor; mevcut desen referans olarak korunur ve karar için uygun aday/karar paketi beklenir.</div>`;
+    }
+    return;
+  }
+
   // Öneri footer ve açıklanabilirlik kutuları sadece optimizasyon sonucu varsa hesaplanmalı.
   if (!canShowOpt || !recTotals) {
     if (footerRec) {
@@ -15093,7 +15502,7 @@ function renderTables() {
       const action = margin >= 0 ? 'Bu öneri mevcut su sınırını aşmadan üretimi sürdürmeye uygundur.' : 'Bu parsel deseni mevcut su sınırını aşıyor; daha az su isteyen ürün veya daha verimli sulama gerekir.';
       explainBox.innerHTML = `<div><strong>Bu yıl parseliniz için karar özeti</strong></div><div>Yaklaşık güvenli su sınırı: <strong>${Math.round(pBudget).toLocaleString("tr-TR")} m³</strong></div><div>Önerilen desen su ihtiyacı: <strong>${Math.round(recTotals.water).toLocaleString("tr-TR")} m³</strong> • Net kâr etkisi: <strong>${Math.round(recTotals.profit).toLocaleString('tr-TR')} TL</strong></div><div>Durum: <strong>${status}</strong>${margin < 0 ? ` • Açık: ${Math.round(Math.abs(margin)).toLocaleString("tr-TR")} m³` : ` • Kalan pay: ${Math.round(margin).toLocaleString("tr-TR")} m³`}</div><div>Kuraklık baskısı: <strong>${risk < 0.33 ? 'Düşük' : (risk < 0.66 ? 'Orta' : 'Yüksek')}</strong> • Mevcut yöntem: <strong>${escapeHtml(curMethod)}</strong> • Önerilen yöntem: <strong>${escapeHtml(recMethod)}</strong></div><div style="margin-top:8px;"><strong>Neden desen değişti?</strong> ${patternWhy}</div><div style="margin-top:8px; opacity:0.92;">${action}</div>`;
     }else{
-      explainBox.innerHTML = `<div><strong>Küresel su bütçesi:</strong> <strong>${Math.round(basin.budget).toLocaleString("tr-TR")} m³</strong> (seçili yıl: ${STATE.selectedWaterYear}, projeksiyon: ${STATE.selectedProjScenario})</div><div><strong>Seçili parsel için ayrılan yaklaşık güvenli pay:</strong> ${Math.round(pBudget).toLocaleString("tr-TR")} m³</div><div><strong>Seçili parsel kullanımı:</strong> ${Math.round(recTotals.water).toLocaleString("tr-TR")} m³ • <strong>Durum:</strong> ${margin>=0 ? "Uygun" : "Aşım"} (${Math.round(Math.abs(margin)).toLocaleString("tr-TR")} m³)</div><div><strong>Kuraklık riski (0-1):</strong> ${risk.toFixed(2)} • <strong>Varsayılan randıman:</strong> ${Math.round((STATE.irrigEfficiency ?? 0.62)*100)}% • <strong>Desen nedeni:</strong> ${patternWhy}</div><div style="margin-top:6px; opacity:0.9;">Aşım varsa sistem havza genelinde su yoğun ürünlerden daha düşük su yoğun ürünlere ve daha verimli sulama yöntemlerine geçerek bütçeyi sağlamaya çalışır. Greedy düzeltme / onarım iterasyonu: ${basin.iterations}.</div>`;
+      explainBox.innerHTML = `<div><strong>Toplam planlama su bütçesi:</strong> <strong>${Math.round(basin.budget).toLocaleString("tr-TR")} m³</strong> <span class="muted">(2024 mevcut ürün deseni su talebi referansı)</span></div><div><strong>Su yılı bağlamı:</strong> ${STATE.selectedWaterYear} • kuraklık/gösterge analizi</div><div><strong>Seçili parsel için ayrılan yaklaşık güvenli pay:</strong> ${Math.round(pBudget).toLocaleString("tr-TR")} m³</div><div><strong>Seçili parsel kullanımı:</strong> ${Math.round(recTotals.water).toLocaleString("tr-TR")} m³ • <strong>Durum:</strong> ${margin>=0 ? "Uygun" : "Aşım"} (${Math.round(Math.abs(margin)).toLocaleString("tr-TR")} m³)</div><div><strong>Kuraklık riski (0-1):</strong> ${risk.toFixed(2)} • <strong>Varsayılan randıman:</strong> ${Math.round((STATE.irrigEfficiency ?? 0.62)*100)}% • <strong>Desen nedeni:</strong> ${patternWhy}</div><div style="margin-top:6px; opacity:0.9;">Aşım varsa sistem havza genelinde su yoğun ürünlerden daha düşük su yoğun ürünlere ve daha verimli sulama yöntemlerine geçerek bütçeyi sağlamaya çalışır. Greedy düzeltme / onarım iterasyonu: ${basin.iterations}.</div>`;
     }
   }
 
@@ -15117,7 +15526,7 @@ function renderTables() {
     const rot = makeRotationSuggestions(main);
     const orchardAlternativeListUi = orchardLockedUi ? orchardAlternativeListFallback(current, rec, recMeta) : [];
     const orchardAlternativeMetricsUi = orchardLockedUi ? (Array.isArray(recMeta?.orchardAlternativeMetrics) && recMeta.orchardAlternativeMetrics.length ? recMeta.orchardAlternativeMetrics : orchardAlternativeScenarioMetrics(main, safeNum(p?.area_da, 0), selectedScenario, rec[0] || current[0], orchardAlternativeListUi)) : [];
-    const altHtml = orchardLockedUi && orchardAlternativeMetricsUi.length ? `<div class="small" style="margin:8px 0 0 0; padding:8px 10px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc;"><strong>Sıra arası alternatifler (ana ürün yerine değil):</strong><table class="data-table" style="margin-top:8px; font-size:12px;"><thead><tr><th>Ürün</th><th>Rol</th><th>Alan</th><th>Su</th><th>Kâr</th><th>TL/m³</th></tr></thead><tbody>${orchardAlternativeMetricsUi.slice(0,4).map(x=>`<tr><td><b>${escapeHtml(prettyCropName(x.name))}</b></td><td>${escapeHtml(x.kind || 'Sıra arası')}</td><td>${safeNum(x.area,0).toFixed(1)} da</td><td>${Math.round(safeNum(x.totalWater,0)).toLocaleString('tr-TR')} m³</td><td>${Math.round(safeNum(x.totalProfit,0)).toLocaleString('tr-TR')} TL</td><td>${safeNum(x.tlPerM3,0).toFixed(2)}</td></tr><tr><td colspan="6" class="muted" style="padding-top:0;">${escapeHtml(x.note || '')}</td></tr>`).join('')}</tbody></table></div>` : '';
+    const altHtml = orchardLockedUi && orchardAlternativeMetricsUi.length ? `<div class="small" style="margin:8px 0 0 0; padding:8px 10px; border:1px dashed #cbd5e1; border-radius:10px; background:#f8fafc;"><strong>Sıra arası alternatifler (ana ürün yerine değil):</strong><table class="data-table" style="margin-top:8px; font-size:12px;"><thead><tr><th>Ürün</th><th>Rol</th><th>Alan</th><th>Su</th><th>Kâr</th><th>TL/m³</th></tr></thead><tbody>${orchardAlternativeMetricsUi.slice(0,4).map(x=>`<tr><td><b>${escapeHtml(prettyCropName(x.name))}</b></td><td>${escapeHtml(x.kind || 'Sıra arası / örtü bitkisi alternatifi')}</td><td>${lowRiskMetricTextV150(x, ['area'], 'da', 1, 'Yönetim alternatifi')}</td><td>${lowRiskMetricTextV150(x, ['totalWater'], 'm³', 0, 'Yönetim alternatifi')}</td><td>${lowRiskMetricTextV150(x, ['totalProfit'], 'TL', 0, 'Yönetim alternatifi')}</td><td>${lowRiskMetricTextV150(x, ['tlPerM3'], '', 2, 'Yönetim alternatifi')}</td></tr><tr><td colspan="6" class="muted" style="padding-top:0;">${escapeHtml(x.note || 'Ana ürün korunur; bu seçenek ana ürün dönüşümü değildir.')}</td></tr>`).join('')}</tbody></table></div>` : '';
     const s2Note = (_seasonModeKey()==='s2')
       ? '<div class="small" style="margin:8px 0; padding:8px 10px; border:1px solid #dbeafe; border-radius:10px; background:#f8fbff;"><strong>2. ürün okuması:</strong> Buradaki 2. ürün ayrı bağımsız öneri değildir; aynı parsel için ana ürünle birlikte yıllık desen/rotasyon olarak test edilir. Uygunluk; dönem-gün sayısı, su kotası, pik ay, ürün familyası ve mevcut toprak sınıfı/proxy verisiyle birlikte değerlendirilir.</div>'
       : '<div class="small" style="margin:8px 0; padding:8px 10px; border:1px solid #e5e7eb; border-radius:10px; background:#fff;"><strong>Tek ürün modu:</strong> Bu modda ana karar tek ürün desenidir; 2. ürün yalnızca literatür/rotasyon notu olarak gösterilir, optimizasyon deseni değildir.</div>';
@@ -15147,8 +15556,15 @@ function totalsAllParcels(scenarioKey, algoKey){
   // Therefore we ALWAYS compute totals via computeBasinPlan() for consistency.
   // If the app is running without enough data to compute a basin plan, computeBasinPlan
   // will throw and the caller can show diagnostics.
-  const basin = computeBasinPlan(scenarioKey, algoKey);
-  return { ...basin.totals, budget: basin.budget, feasible: basin.feasible, iterations: basin.iterations };
+  if(isCurrentScenarioKeyV151(scenarioKey)){
+    const t = currentTotalsForParcelsV151(parcelData || [], algoKey);
+    return { ...t, budget: computeGlobalBudgetM3(), feasible:true, iterations:0, metricsUnavailable:false };
+  }
+  const basin = basinPlanCache[basinCacheKey(scenarioKey, algoKey)] || null;
+  if(planUnavailableV151(basin)){
+    return missingMetricSummaryV151('Backend karar paketi yüklenmedi veya güvenli öneri üretilemedi.');
+  }
+  return { ...basin.totals, budget: basin.budget, feasible: basin.feasible, iterations: basin.iterations, metricsUnavailable:false };
 }
 
 function getScenarioDisplayMeta(scenarioKey){
@@ -15250,12 +15666,11 @@ function summarizePlanShift(currentRows, recRows, seasonSource, objectiveKey){
 
 function renderAllScenarioSummaries(){
   // seçili kapsam / 5 köy parselleri toplamı (gerçek hesap: her parseldeki tablo toplamlarından)
-  // UI seçimleri değişmiş olsa bile, yeni optimizasyon bitene kadar son geçerli sonucu göster.
-  const viewCtx = (
-    (!STATE.isOptimizing && canShowOptimizedForCurrentSelection())
-      ? { scenario: selectedScenario, algo: selectedAlgo }
-      : (lastOptimizeContext ? { scenario: lastOptimizeContext.scenario, algo: lastOptimizeContext.algo } : { scenario: selectedScenario, algo: selectedAlgo })
-  );
+  // Seçim değiştiğinde eski optimizasyonu aktif sonuç gibi göstermeyiz.
+  const hasFreshOptimizedResult = canShowOptimizedForCurrentSelection();
+  const pendingRerun = !isCurrentScenarioKeyV151(selectedScenario) && !hasFreshOptimizedResult;
+  const pendingSummary = pendingSelectionSummaryV151();
+  const viewCtx = { scenario: selectedScenario, algo: selectedAlgo };
 
   // --- v73: Kapsamı doğru hesapla (parsel vs havza) ---
   // Not: Kullanıcı tek parsel seçtiğinde seçili kapsam / 5 köy parselleri toplamını göstermek, "0" ve aşırı büyük
@@ -15267,7 +15682,7 @@ function renderAllScenarioSummaries(){
     const pid = String(selectedParcelId || '').trim();
     const p = parcelData.find(x=>String(x.id)===pid);
     if(!p){
-      return { water:0, profit:0, eff:0, budget:0, feasible:true, iterations:0 };
+      return missingMetricSummaryV151('Seçili parsel bulunamadı.');
     }
     if(String(scenarioKey).toLowerCase() === 'mevcut'){
       const cur = runOptimization(p, 'mevcut', algoKey);
@@ -15275,42 +15690,70 @@ function renderAllScenarioSummaries(){
       return { ...t, budget: computeGlobalBudgetM3(), feasible:true, iterations:0, eff: (t.water>0 ? (t.profit/t.water) : 0) };
     }
     // Senaryo: küresel su bütçesi uygulanmış havza planından parsel payını çek
-    const basin = computeBasinPlan(scenarioKey, algoKey);
-    const pt = basin?.plan?.[pid]?.totals || { water:0, profit:0, area: safeNum(p.area_da,0) };
+    const basin = basinPlanCache[basinCacheKey(scenarioKey, algoKey)] || null;
+    if(planUnavailableV151(basin)){
+      return missingMetricSummaryV151('Backend karar paketi yüklenmedi veya güvenli öneri üretilemedi.');
+    }
+    const parcelPlan = basin?.plan?.[pid] || null;
+    if(planUnavailableV151(parcelPlan)){
+      return missingMetricSummaryV151(parcelPlan?.decisionReason || 'Bu parsel için uygun aday bulunamadı.');
+    }
+    const pt = parcelPlan?.totals || missingMetricSummaryV151('Bu parsel için uygun aday bulunamadı.');
+    if(!hasPositiveMetricV151(pt.water) && !hasPositiveMetricV151(pt.profit)){
+      return missingMetricSummaryV151(parcelPlan?.decisionReason || 'Bu parsel için uygun aday bulunamadı.');
+    }
     return { ...pt, budget: basin.budget, feasible: basin.feasible, iterations: basin.iterations, eff: (pt.water>0 ? (pt.profit/pt.water) : 0) };
   }
 
   const base = totalsForScope('mevcut', viewCtx.algo);
-  const scen = totalsForScope(viewCtx.scenario, viewCtx.algo);
+  const scen = pendingRerun ? pendingSummary : totalsForScope(viewCtx.scenario, viewCtx.algo);
   const basinBase = totalsAllParcels('mevcut', viewCtx.algo);
-  const basinScen = totalsAllParcels(viewCtx.scenario, viewCtx.algo);
+  const basinScen = pendingRerun ? pendingSummary : totalsAllParcels(viewCtx.scenario, viewCtx.algo);
 
   // Küresel su bütçesi rozetleri
   const globalBudgetBadge = document.getElementById("globalBudgetBadge");
   const globalBudgetStatus = document.getElementById("globalBudgetStatus");
   const globalBudgetView = basinScen || scen;
+  const globalBudgetReady = !globalBudgetView?.metricsUnavailable && hasPositiveMetricV151(globalBudgetView?.budget);
+  const globalWaterReady = !globalBudgetView?.metricsUnavailable && hasFiniteMetricV151(globalBudgetView?.water);
   if(globalBudgetBadge){
-    globalBudgetBadge.textContent = `Küresel su bütçesi: ${Math.round(globalBudgetView.budget).toLocaleString("tr-TR")} m³`;
+    globalBudgetBadge.textContent = pendingRerun
+      ? 'Toplam planlama su bütçesi: yeniden çalıştırma gerekli'
+      : globalBudgetReady
+      ? `Toplam planlama su bütçesi: ${Math.round(Number(globalBudgetView.budget)).toLocaleString("tr-TR")} m³`
+      : 'Toplam planlama su bütçesi: veri yok / yüklenmedi';
   }
   if(globalBudgetStatus){
-    const over = globalBudgetView.water - globalBudgetView.budget;
-    if(globalBudgetView.feasible === false){
-      globalBudgetStatus.textContent = `bütçe durumu: UYGUN DEĞİL (aşım: ${Math.round(Math.max(0,over)).toLocaleString("tr-TR")} m³)`;
-      globalBudgetStatus.className = "badge badge-warn";
-    } else if(over <= 0){
-      globalBudgetStatus.textContent = `bütçe durumu: UYGUN (${Math.round(Math.abs(over)).toLocaleString("tr-TR")} m³ boş)`;
-      globalBudgetStatus.className = "badge badge-ok";
+    if(pendingRerun){
+      globalBudgetStatus.textContent = 'bütçe durumu: Beklemede';
+      globalBudgetStatus.className = "badge badge-info";
+    } else if(!globalBudgetReady || !globalWaterReady){
+      globalBudgetStatus.textContent = 'bütçe durumu: veri yok';
+      globalBudgetStatus.className = "badge badge-info";
     } else {
-      globalBudgetStatus.textContent = `bütçe durumu: AŞIM (${Math.round(over).toLocaleString("tr-TR")} m³)`;
-      globalBudgetStatus.className = "badge badge-warn";
+      const over = Number(globalBudgetView.water) - Number(globalBudgetView.budget);
+      if(over > 1e-6){
+        globalBudgetStatus.textContent = `bütçe durumu: AŞIM (${Math.round(over).toLocaleString("tr-TR")} m³)`;
+        globalBudgetStatus.className = "badge badge-warn";
+      } else if(globalBudgetView.feasible === false){
+        globalBudgetStatus.textContent = 'bütçe durumu: UYGUN DEĞİL (öneri üretilemedi)';
+        globalBudgetStatus.className = "badge badge-warn";
+      } else {
+        globalBudgetStatus.textContent = `bütçe durumu: UYGUN (${Math.round(Math.abs(over)).toLocaleString("tr-TR")} m³ boş)`;
+        globalBudgetStatus.className = "badge badge-ok";
+      }
     }
   }
 
-  const fmt = (v) => Math.round(v).toLocaleString("tr-TR");
-  const baseEff = safeNum(base.eff, (base.water>0 ? (base.profit/base.water) : 0));
-  const scenEff = safeNum(scen.eff, (scen.water>0 ? (scen.profit/scen.water) : 0));
+  const fmt = (v) => hasFiniteMetricV151(v) ? Math.round(Number(v)).toLocaleString("tr-TR") : '—';
+  const baseUnavailable = !!base?.metricsUnavailable;
+  const scenUnavailable = !!scen?.metricsUnavailable;
+  const basinBaseUnavailable = !!basinBase?.metricsUnavailable;
+  const basinScenUnavailable = !!basinScen?.metricsUnavailable;
+  const baseEff = baseUnavailable ? NaN : safeNum(base.eff, (base.water>0 ? (base.profit/base.water) : 0));
+  const scenEff = scenUnavailable ? NaN : safeNum(scen.eff, (scen.water>0 ? (scen.profit/scen.water) : NaN));
   const fmtEff = (v)=>{
-    if(!isFinite(v)) return "0";
+    if(!isFinite(v)) return "—";
     if(v < 0) return v.toFixed(2);
     if(v < 1) return v.toFixed(3);
     return v.toFixed(1);
@@ -15327,7 +15770,9 @@ function renderAllScenarioSummaries(){
   const activeObjectiveBadge = document.getElementById('activeObjectiveBadge');
   if(activeObjectiveBadge){
     const objectiveMeta = getScenarioDisplayMeta(viewCtx.scenario);
-    activeObjectiveBadge.textContent = `Aktif hedef: ${objectiveMeta.label}`;
+    activeObjectiveBadge.textContent = pendingRerun
+      ? `Aktif hedef: ${objectiveMeta.label} • Beklemede`
+      : `Aktif hedef: ${objectiveMeta.label}`;
     activeObjectiveBadge.className = 'badge ' + (objectiveMeta.key === 'maks_kar' ? 'badge-profit' : (objectiveMeta.key === 'su_tasarruf' ? 'badge-info' : (objectiveMeta.key === 'balanced' ? 'badge-ok' : 'badge-info')));
   }
 
@@ -15351,8 +15796,14 @@ function renderAllScenarioSummaries(){
   }
   const basinSummaryNote = document.getElementById("basinSummaryNote");
   if(basinSummaryNote){
-    const remaining = safeNum(basinScen.budget, 0) - safeNum(basinScen.water, 0);
-    basinSummaryNote.textContent = `Akkaya Sulama Alanı toplamı • ${remaining >= 0 ? 'Boş bütçe' : 'Aşım'}: ${fmt(Math.abs(remaining))} m³`;
+    if(pendingRerun){
+      basinSummaryNote.textContent = 'Akkaya Sulama Alanı toplamı • yeniden çalıştırma gerekli';
+    } else if(basinScen?.metricsUnavailable || !hasPositiveMetricV151(basinScen?.budget) || !hasFiniteMetricV151(basinScen?.water)){
+      basinSummaryNote.textContent = 'Akkaya Sulama Alanı toplamı • planlama bütçesi yüklenmedi / veri yok';
+    } else {
+      const remaining = Number(basinScen.budget) - Number(basinScen.water);
+      basinSummaryNote.textContent = `Akkaya Sulama Alanı toplamı • ${remaining >= 0 ? 'Boş bütçe' : 'Aşım'}: ${fmt(Math.abs(remaining))} m³`;
+    }
   }
 
   const bWaterCurrent = document.getElementById("bWaterCurrent");
@@ -15373,8 +15824,8 @@ function renderAllScenarioSummaries(){
   if(bWaterScenario) bWaterScenario.textContent = fmt(basinScen.water);
   if(bProfitCurrent) bProfitCurrent.textContent = fmt(basinBase.profit);
   if(bProfitScenario) bProfitScenario.textContent = fmt(basinScen.profit);
-  if(bEffCurrent) bEffCurrent.textContent = fmtEff(safeNum(basinBase.eff, (basinBase.water>0 ? (basinBase.profit/basinBase.water) : 0)));
-  if(bEffScenario) bEffScenario.textContent = fmtEff(safeNum(basinScen.eff, (basinScen.water>0 ? (basinScen.profit/basinScen.water) : 0)));
+  if(bEffCurrent) bEffCurrent.textContent = fmtEff(basinBaseUnavailable ? NaN : safeNum(basinBase.eff, (basinBase.water>0 ? (basinBase.profit/basinBase.water) : NaN)));
+  if(bEffScenario) bEffScenario.textContent = fmtEff(basinScenUnavailable ? NaN : safeNum(basinScen.eff, (basinScen.water>0 ? (basinScen.profit/basinScen.water) : NaN)));
 
   if(mWaterCurrent) mWaterCurrent.textContent = fmt(base.water);
   if(mWaterScenario) mWaterScenario.textContent = fmt(scen.water);
@@ -15395,13 +15846,13 @@ function renderAllScenarioSummaries(){
     return s + Math.round(n).toLocaleString("tr-TR");
   };
 
-  const dWater = scen.water - base.water;
-  const dProfit = scen.profit - base.profit;
+  const dWater = (!scenUnavailable && !baseUnavailable && hasFiniteMetricV151(scen.water) && hasFiniteMetricV151(base.water)) ? Number(scen.water) - Number(base.water) : NaN;
+  const dProfit = (!scenUnavailable && !baseUnavailable && hasFiniteMetricV151(scen.profit) && hasFiniteMetricV151(base.profit)) ? Number(scen.profit) - Number(base.profit) : NaN;
   const dEff = scenEff - baseEff;
-  const basinBaseEff = safeNum(basinBase.eff, (basinBase.water>0 ? (basinBase.profit/basinBase.water) : 0));
-  const basinScenEff = safeNum(basinScen.eff, (basinScen.water>0 ? (basinScen.profit/basinScen.water) : 0));
-  const basinDWater = basinScen.water - basinBase.water;
-  const basinDProfit = basinScen.profit - basinBase.profit;
+  const basinBaseEff = basinBaseUnavailable ? NaN : safeNum(basinBase.eff, (basinBase.water>0 ? (basinBase.profit/basinBase.water) : NaN));
+  const basinScenEff = basinScenUnavailable ? NaN : safeNum(basinScen.eff, (basinScen.water>0 ? (basinScen.profit/basinScen.water) : NaN));
+  const basinDWater = (!basinScenUnavailable && !basinBaseUnavailable && hasFiniteMetricV151(basinScen.water) && hasFiniteMetricV151(basinBase.water)) ? Number(basinScen.water) - Number(basinBase.water) : NaN;
+  const basinDProfit = (!basinScenUnavailable && !basinBaseUnavailable && hasFiniteMetricV151(basinScen.profit) && hasFiniteMetricV151(basinBase.profit)) ? Number(basinScen.profit) - Number(basinBase.profit) : NaN;
   const basinDEff = basinScenEff - basinBaseEff;
 
   // Yüzde gösterimi sadece anlamlı olduğunda (payda > 0) kullan
@@ -15414,31 +15865,71 @@ function renderAllScenarioSummaries(){
   const basinWaterIsGood = (objective === 'su_tasarruf') ? (basinDWater <= 0) : true;
 
   if(basinWaterDiffEl){
-    const pw = pct(basinDWater, basinBase.water);
-    basinWaterDiffEl.textContent = isFinite(pw) ? fmtPct(pw) : (`Δ ${fmtSigned(basinDWater)} m³`);
-    basinWaterDiffEl.className = 'badge ' + (basinWaterIsGood ? 'badge-ok' : 'badge-warn');
+    if(pendingRerun){
+      basinWaterDiffEl.textContent = 'Yeniden çalıştırma gerekli';
+      basinWaterDiffEl.className = 'badge badge-info';
+    } else if(!hasFiniteMetricV151(basinDWater) || basinScenUnavailable){
+      basinWaterDiffEl.textContent = 'Veri yok';
+      basinWaterDiffEl.className = 'badge badge-info';
+    } else {
+      const pw = pct(basinDWater, basinBase.water);
+      basinWaterDiffEl.textContent = isFinite(pw) ? fmtPct(pw) : (`Δ ${fmtSigned(basinDWater)} m³`);
+      basinWaterDiffEl.className = 'badge ' + (basinWaterIsGood ? 'badge-ok' : 'badge-warn');
+    }
   }
   if(basinProfitDiffEl){
-    const pp = pct(basinDProfit, basinBase.profit);
-    basinProfitDiffEl.textContent = isFinite(pp) ? fmtPct(pp) : (`Δ ${fmtSigned(basinDProfit)} TL`);
+    if(pendingRerun){
+      basinProfitDiffEl.textContent = 'Yeniden çalıştırma gerekli';
+    } else if(!hasFiniteMetricV151(basinDProfit) || basinScenUnavailable){
+      basinProfitDiffEl.textContent = 'Veri yok';
+    } else {
+      const pp = pct(basinDProfit, basinBase.profit);
+      basinProfitDiffEl.textContent = isFinite(pp) ? fmtPct(pp) : (`Δ ${fmtSigned(basinDProfit)} TL`);
+    }
   }
   if(basinEffDiffEl){
-    const pe = pct(basinDEff, basinBaseEff);
-    basinEffDiffEl.textContent = isFinite(pe) ? fmtPct(pe) : (`Δ ${basinDEff>=0?'+':''}${basinDEff.toFixed(1)} TL/m³`);
+    if(pendingRerun){
+      basinEffDiffEl.textContent = 'Yeniden çalıştırma gerekli';
+    } else if(!hasFiniteMetricV151(basinDEff) || basinScenUnavailable){
+      basinEffDiffEl.textContent = 'Veri yok';
+    } else {
+      const pe = pct(basinDEff, basinBaseEff);
+      basinEffDiffEl.textContent = isFinite(pe) ? fmtPct(pe) : (`Δ ${basinDEff>=0?'+':''}${basinDEff.toFixed(1)} TL/m³`);
+    }
   }
 
   if(waterDiffEl){
-    const pw = pct(dWater, base.water);
-    waterDiffEl.textContent = isFinite(pw) ? fmtPct(pw) : (`Δ ${fmtSigned(dWater)} m³`);
-    waterDiffEl.className = 'badge ' + (waterIsGood ? 'badge-ok' : 'badge-warn');
+    if(pendingRerun){
+      waterDiffEl.textContent = 'Yeniden çalıştırma gerekli';
+      waterDiffEl.className = 'badge badge-info';
+    } else if(!hasFiniteMetricV151(dWater) || scenUnavailable){
+      waterDiffEl.textContent = 'Öneri üretilemedi';
+      waterDiffEl.className = 'badge badge-warn';
+    } else {
+      const pw = pct(dWater, base.water);
+      waterDiffEl.textContent = isFinite(pw) ? fmtPct(pw) : (`Δ ${fmtSigned(dWater)} m³`);
+      waterDiffEl.className = 'badge ' + (waterIsGood ? 'badge-ok' : 'badge-warn');
+    }
   }
   if(profitDiffEl){
-    const pp = pct(dProfit, base.profit);
-    profitDiffEl.textContent = isFinite(pp) ? fmtPct(pp) : (`Δ ${fmtSigned(dProfit)} TL`);
+    if(pendingRerun){
+      profitDiffEl.textContent = 'Yeniden çalıştırma gerekli';
+    } else if(!hasFiniteMetricV151(dProfit) || scenUnavailable){
+      profitDiffEl.textContent = 'Öneri üretilemedi';
+    } else {
+      const pp = pct(dProfit, base.profit);
+      profitDiffEl.textContent = isFinite(pp) ? fmtPct(pp) : (`Δ ${fmtSigned(dProfit)} TL`);
+    }
   }
   if(effDiffEl){
-    const pe = pct(dEff, baseEff);
-    effDiffEl.textContent = isFinite(pe) ? fmtPct(pe) : (`Δ ${dEff>=0?'+':''}${dEff.toFixed(1)} TL/m³`);
+    if(pendingRerun){
+      effDiffEl.textContent = 'Yeniden çalıştırma gerekli';
+    } else if(!hasFiniteMetricV151(dEff) || scenUnavailable){
+      effDiffEl.textContent = 'Öneri üretilemedi';
+    } else {
+      const pe = pct(dEff, baseEff);
+      effDiffEl.textContent = isFinite(pe) ? fmtPct(pe) : (`Δ ${dEff>=0?'+':''}${dEff.toFixed(1)} TL/m³`);
+    }
   }
 
   // Seçim değiştiğinde özetler canlı hesaplanır; bu rozet yalnız bütçe durumunu göstermeli.
@@ -15456,6 +15947,41 @@ function renderAllScenarioSummaries(){
     const scope = (selectedParcelId === '__ALL__') ? 'Havza (tüm parseller)' : `Parsel ${selectedParcelId}`;
     const algoName2 = viewCtx.algo === 'ga' ? 'GA' : (viewCtx.algo === 'abc' ? 'ABC' : 'ACO');
 
+    if(pendingRerun){
+      const objectiveMeta = getScenarioDisplayMeta(viewCtx.scenario);
+      if(metaEl){
+        metaEl.style.display = 'block';
+        metaEl.innerHTML = `
+          <div class="runmeta-title">Yeniden çalıştırma gerekli</div>
+          <div class="runmeta-tags">
+            <span class="runmeta-tag"><span class="runmeta-ic">&#128205;</span><b>${escapeHtml(scope)}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#129302;</span><b>${escapeHtml(algoName2)}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">${objectiveMeta.icon}</span><b>${escapeHtml(objectiveMeta.label)}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#128197;</span><b>${escapeHtml(String(STATE.selectedWaterYear || '-'))}</b></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#9203;</span><b>Koşu bilgisi: Beklemede</b></span>
+          </div>
+          <div class="benchmark-note" style="margin-top:8px;">Yeni seçim yapıldı. Bu seçim için optimizasyon henüz çalıştırılmadı.</div>
+        `;
+      }
+      if(riskBox){
+        riskBox.style.display = 'block';
+        riskBox.innerHTML = `
+          <div class="runmeta-title">Uygunluk sonucu beklemede</div>
+          <div class="runmeta-tags">
+            <span class="runmeta-tag"><span class="runmeta-ic">&#9878;&#65039;</span><b>Plan uygulanabilirlik riski:</b> <span class="badge badge-info">Beklemede</span></span>
+            <span class="runmeta-tag"><span class="runmeta-ic">&#128167;</span><b>Parsel su kotası durumu:</b> <span class="badge badge-info">Yeniden çalıştırma gerekli</span></span>
+          </div>
+        `;
+      }
+      if(ratEl){
+        ratEl.style.display = 'block';
+        ratEl.innerHTML = `
+          <div class="rationale-title">Yeni seçim yapıldı</div>
+          <div class="rationale-text">Bu seçim için optimizasyon henüz çalıştırılmadı. Sağ paneldeki senaryo sonucu, bütçe ve uygunluk alanları yeni backend sonucu gelene kadar beklemede tutulur.</div>
+          <div class="small muted" style="margin-top:6px;">Mevcut parsel su/kâr değerleri referans olarak gösterilmeye devam eder.</div>
+        `;
+      }
+    }else{
     if(metaEl){
       if(!cached){
         metaEl.style.display = 'none';
@@ -15579,13 +16105,14 @@ function renderAllScenarioSummaries(){
         <div class="small muted" style="margin-top:6px;">${rationale.note}</div>
       `;
     }
+    }
   }catch(_e){ /* noop */ }
 
   // Bar chart güncelle
   // ÖNEMLİ: Grafikler, üstteki metrik kartlarıyla AYNI kapsamı (seçili parsel veya havza)
   // ve AYNI birimleri (m³ / TL) kullanmalı. Aksi hâlde kullanıcıya tutarsız görünür.
   const chartColors = ['rgba(73,126,230,.72)','rgba(40,191,170,.72)','rgba(255,175,91,.78)','rgba(126,92,245,.72)'];
-  const cachedForCharts = basinPlanCache[basinCacheKey(viewCtx.scenario, viewCtx.algo)] || null;
+  const cachedForCharts = pendingRerun ? null : (basinPlanCache[basinCacheKey(viewCtx.scenario, viewCtx.algo)] || null);
   const backendWaterChart = cachedForCharts?.charts?.target_mode_water || null;
   const backendProfitChart = cachedForCharts?.charts?.target_mode_profit || null;
   const rowsFromBackend = (chart)=> Array.isArray(chart?.rows) ? chart.rows.filter(r=>r && String(r.label||'').trim()) : [];
@@ -18845,12 +19372,12 @@ try{ renderInstitutionRequestInbox(); }catch(_e){}
   if (st) {
     // Hesaplama sırasında durum metnini koru (yanıltıcı yeniden yazma olmasın)
     if(!STATE.isOptimizing){
-      const ctx = lastOptimizeContext || { algo: selectedAlgo, scenario: selectedScenario };
+      const ctx = { algo: selectedAlgo, scenario: selectedScenario };
       const algoName = ctx.algo === "ga" ? "GA" : (ctx.algo === "abc" ? "ABC" : "ACO");
       const baseTxt = (ctx.scenario === "mevcut")
         ? ("Hazır • " + algoName)
         : ("Hazır • " + algoName + " • " + ctx.scenario);
-      st.textContent = baseTxt + (STATE.selectionDirty ? " • seçim değişti" : "");
+      st.textContent = baseTxt + (STATE.selectionDirty ? " • yeniden çalıştırma gerekli" : "");
     }
   }
 
@@ -18864,9 +19391,8 @@ try{ renderInstitutionRequestInbox(); }catch(_e){}
 function canShowOptimizedForCurrentSelection(){
   return !!(
     lastOptimizeContext &&
-    lastOptimizeContext.parcelId === selectedParcelId &&
-    lastOptimizeContext.scenario === selectedScenario &&
-    lastOptimizeContext.algo === selectedAlgo
+    !STATE.selectionDirty &&
+    optimizeContextMatchesCurrentV151(lastOptimizeContext)
   );
 }
 
@@ -18874,10 +19400,16 @@ function canShowOptimizedForCurrentSelection(){
 // parcel/senaryo/algoritma. We keep old results visible (so screen doesn't jump),
 // but we clearly mark them as stale.
 function updateStaleUI(){
-  const stale = (!!lastOptimizeContext) && (!STATE.isOptimizing) && (!canShowOptimizedForCurrentSelection()) && !!STATE.selectionDirty;
+  const stale = (!STATE.isOptimizing) && !!STATE.selectionDirty && !isCurrentScenarioKeyV151(selectedScenario);
   document.body.classList.toggle('stale-results', !!stale);
   const banner = document.getElementById('staleBanner');
-  if(banner) banner.style.display = stale ? 'block' : 'none';
+  if(banner){
+    banner.style.display = stale ? 'block' : 'none';
+    const title = banner.querySelector('.stale-banner-title');
+    const body = banner.querySelector('.stale-banner-body');
+    if(title) title.textContent = 'Yeni seçim yapıldı';
+    if(body) body.innerHTML = 'Bu seçim için optimizasyon henüz çalıştırılmadı. Sağ paneldeki senaryo sonucu, bütçe, algoritma koşusu ve uygunluk alanları <b>yeniden çalıştırma gerekli</b> durumunda tutulur.';
+  }
 }
 
 
@@ -19106,7 +19638,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     }
     const prevContext = lastOptimizeContext ? { ...lastOptimizeContext } : null;
     const wantsAutoAlgo = STATE.farmerAlgoModeV7 === 'auto' || selectedAlgo === 'auto';
-    const pendingContext = { parcelId: selectedParcelId, scenario: selectedScenario, algo: wantsAutoAlgo ? 'auto' : selectedAlgo };
+    const pendingContext = buildOptimizeContextV151({ algo: wantsAutoAlgo ? 'auto' : selectedAlgo });
     const idsForRun = getSelectedParcelIdsForRun();
     if(!idsForRun || idsForRun.length === 0){
       if (st) st.textContent = "Bu parsel sadece harita gösterimi için eklendi (demo). Optimizasyon için veri setine dahil değil.";
@@ -19117,7 +19649,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
     if (STATE.isOptimizing) return;
     setOptimizationRunButtonsBusy(true);
     STATE.isOptimizing = true;
-    if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${wantsAutoAlgo ? 'Otomatik en iyi algoritma' : pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
+    if (st) st.textContent = `Hesaplanıyor… (${STATE.manualDataActive ? 'Manuel CSV / yerel' : 'Python'}) • ${wantsAutoAlgo ? 'Otomatik önerilen algoritma' : pendingContext.algo.toUpperCase()} • ${pendingContext.scenario}`;
 
     // Hesaplama bitene kadar ekranda SON geçerli sonuçlar kalsın (yanıltıcı ara görünüm olmasın)
     // refreshUI() çağırmıyoruz; sadece durum metni güncellenir.
@@ -19128,12 +19660,13 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
         const best = await runAutoBestOptimizationV7(idsForRun, selectedScenario);
         out = best.out;
         selectedAlgo = best.algo || 'ga';
-        pendingContext.algo = selectedAlgo;
         const algoSelect = document.getElementById('algoSelect');
         if(algoSelect) algoSelect.value = selectedAlgo;
+        Object.assign(pendingContext, buildOptimizeContextV151({ algo: selectedAlgo }));
       }else{
         STATE.autoAlgoDecisionV7 = null;
         out = await runOptimizationWithFallback(idsForRun, selectedScenario, selectedAlgo);
+        Object.assign(pendingContext, buildOptimizeContextV151({ algo: selectedAlgo }));
       }
 
       if(!out){
@@ -20926,6 +21459,8 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         <b>${esc(isPartial ? 'Ön değerlendirme' : ((s.isTie || backendTie) ? 'Sonuç: eşdeğer bant' : 'Sonuç: ' + (best?.a || '-')))}</b>
         <span>${esc(summary)} ${esc(completionText)} Ham değerler aynıysa grafik çizgileri üst üste binebilir; bu hata değil, aynı optimum davranışıdır.</span>
       </div>
+      <div class="benchmark-note"><b>Sezgisel algoritma uyarısı:</b> ${esc(LOW_RISK_ALGO_NOTICE_V150)}</div>
+      ${best?.a === 'ACO' ? `<div class="benchmark-note"><b>ACO yorumu:</b> ${esc(LOW_RISK_ACO_NOTICE_V150)}</div>` : ''}
       <div class="benchmark-note"><b>${esc(modeLabel)}:</b> ${esc(modeLabel === 'Hızlı ön izleme' ? 'Bu mod düşük tekrar sayısı kullanır; nihai akademik değerlendirme için kararlılık analizi veya 30+ tekrar kullanılmalıdır.' : 'GA, ACO ve ABC aynı veri, aynı su kotası, aynı hedef fonksiyonu ve aynı senaryo altında karşılaştırılır.')}</div>
       <div class="benchmark-table-wrap benchmark-report-table">
         <table class="mini-table pro">
@@ -21446,7 +21981,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
       ? 'Senaryo 2 - ürün kombinasyonu / desen'
       : 'Senaryo 1 - tek ürün';
     const activeAlgo = STATE.farmerAlgoModeV7 === 'auto'
-      ? 'Otomatik en iyi algoritma'
+      ? 'Otomatik önerilen algoritma'
       : String(selectedAlgo || 'GA').toUpperCase();
     const threadId = (typeof parcelThreadKeyFor === 'function') ? parcelThreadKeyFor(p, user.username || '') : '';
     const msgCount = threadId && typeof getParcelThread === 'function' ? getParcelThread(threadId).length : 0;
@@ -21792,7 +22327,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
         </select></label>
         <label><span>Öneri ürün grubu</span><select class="select-input" id="farmerCropCategoryModeV102">${cropCategoryModeOptionsHtml()}</select></label>
         <label><span>Algoritma</span><select class="select-input" id="farmerAlgoSelectV102">
-          <option value="auto">Otomatik en iyi algoritma</option>
+          <option value="auto">Otomatik önerilen algoritma</option>
           <option value="ga">GA</option>
           <option value="aco">ACO</option>
           <option value="abc">ABC</option>

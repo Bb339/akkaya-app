@@ -28,7 +28,7 @@ def add_no_cache_headers(response):
     """Avoid stale JS/GeoJSON/index files while drawing parcels."""
     try:
         path = request.path or ""
-        if path.endswith((".js", ".css", ".json", ".geojson")) or path.startswith("/api/geojson_files") or path.startswith("/api/geojson_bundle") or path.startswith("/data/"):
+        if path.endswith((".js", ".css", ".json", ".geojson")) or path.startswith("/api/geojson_files") or path.startswith("/api/geojson_bundle") or path.startswith("/api/defense-datasets") or path.startswith("/data/"):
             response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
             response.headers["Pragma"] = "no-cache"
             response.headers["Expires"] = "0"
@@ -40,6 +40,123 @@ def add_no_cache_headers(response):
 # Data loading helpers
 # -----------------------------
 _cache: Dict[str, Any] = {}
+
+DEFENSE_DATA_PATH = DATA_DIR / "defense" / "savunma_veri_paketi.json"
+DEFENSE_DATASET_METADATA_FIELDS = (
+    "dataset_id",
+    "title",
+    "location",
+    "source_type",
+    "defense_role",
+    "defense_use",
+    "data_quality",
+    "source_file",
+    "source_sheet",
+    "source_range",
+    "row_count",
+    "column_count",
+)
+DEFENSE_DATA_POLICY_FIELDS = (
+    "no_fabrication",
+    "no_manual_summary_values",
+    "source_files_kept_separate",
+    "personal_data_excluded",
+)
+DEFENSE_ANALYSIS_UNIT_NOTICE = (
+    "Analiz birimi kimlikleri, kaynak dosyalardaki temsilî/proxy kayıtlardır; "
+    "hukuki kadastro parseli değildir."
+)
+_defense_dataset_cache: Dict[str, Any] = {}
+
+
+class DefenseDatasetLoadError(RuntimeError):
+    """Raised when the defense data package cannot be loaded safely."""
+
+
+def _load_defense_dataset_package() -> Dict[str, Any]:
+    """Load and index the defense package, refreshing it when the file changes."""
+    try:
+        stat = DEFENSE_DATA_PATH.stat()
+    except OSError as exc:
+        raise DefenseDatasetLoadError(
+            f"Savunma veri paketi bulunamadı veya okunamıyor: {DEFENSE_DATA_PATH.name}"
+        ) from exc
+
+    signature = (stat.st_mtime_ns, stat.st_size)
+    if _defense_dataset_cache.get("signature") == signature:
+        return _defense_dataset_cache
+
+    try:
+        package = json.loads(DEFENSE_DATA_PATH.read_text(encoding="utf-8-sig"))
+        if not isinstance(package, dict):
+            raise ValueError("Paket kökü JSON nesnesi olmalıdır.")
+        datasets = package.get("datasets")
+        if not isinstance(datasets, list):
+            raise ValueError("'datasets' alanı liste olmalıdır.")
+        policy = package.get("policy")
+        if not isinstance(policy, dict):
+            raise ValueError("'policy' alanı bulunamadı.")
+        disabled_policies = [
+            field for field in DEFENSE_DATA_POLICY_FIELDS if policy.get(field) is not True
+        ]
+        if disabled_policies:
+            raise ValueError(
+                "Zorunlu güvenlik ilkeleri etkin değil: " + ", ".join(disabled_policies)
+            )
+
+        index: Dict[str, Dict[str, Any]] = {}
+        for position, dataset in enumerate(datasets):
+            if not isinstance(dataset, dict):
+                raise ValueError(f"datasets[{position}] geçerli bir nesne değil.")
+            dataset_id = str(dataset.get("dataset_id") or "").strip()
+            if not dataset_id:
+                raise ValueError(f"datasets[{position}] için dataset_id eksik.")
+            if dataset_id in index:
+                raise ValueError(f"Yinelenen dataset_id: {dataset_id}")
+            values = dataset.get("values")
+            if not isinstance(values, list):
+                raise ValueError(f"{dataset_id} için values alanı liste değil.")
+            index[dataset_id] = dataset
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        raise DefenseDatasetLoadError(
+            f"Savunma veri paketi yüklenemedi: {exc}"
+        ) from exc
+
+    refreshed = {
+        "signature": signature,
+        "package": package,
+        "datasets": datasets,
+        "index": index,
+        "loaded_at": datetime.now(timezone.utc).isoformat(),
+    }
+    _defense_dataset_cache.clear()
+    _defense_dataset_cache.update(refreshed)
+    return _defense_dataset_cache
+
+
+def _defense_dataset_metadata(dataset: Dict[str, Any]) -> Dict[str, Any]:
+    return {field: dataset.get(field) for field in DEFENSE_DATASET_METADATA_FIELDS}
+
+
+def _parse_defense_page_arg(
+    name: str,
+    default: int,
+    *,
+    minimum: int,
+    maximum: Optional[int] = None,
+) -> int:
+    raw = request.args.get(name, None)
+    if raw in (None, ""):
+        return default
+    try:
+        value = int(str(raw))
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"'{name}' tam sayı olmalıdır.") from exc
+    if value < minimum:
+        raise ValueError(f"'{name}' en az {minimum} olmalıdır.")
+    if maximum is not None and value > maximum:
+        raise ValueError(f"'{name}' en fazla {maximum} olabilir.")
+    return value
 
 
 def safe_float(x, default: float = 0.0) -> float:
@@ -620,7 +737,7 @@ def _agronomic_reason_bundle(
             reasons.append("Çok yıllık parselde kurulu ana ürün korunuyor.")
             score += 0.30
         else:
-            cautions.append("Bahçe parselinde ana ürün değişimi uygun değildir.")
+            cautions.append("Bahçe parselinde ana ürün dönüşümü uygun değildir.")
             score -= 0.60
     else:
         if cand_fam and cur_fam and cand_fam == cur_fam and cand_key != cur_key:
@@ -3251,7 +3368,7 @@ def candidate_allowed_for_parcel(parcel_type: str, current_crop: str, candidate_
     if ptype == "orchard":
         if cur_canon and cand_canon == cur_canon:
             return True, "kurulu bahçede mevcut ana ürün korunur"
-        return False, "kurulu bahçe/çok yıllık parselde ana ürün değişimi normal optimizasyonda yasak"
+        return False, "kurulu bahçe/çok yıllık parselde ana ürün dönüşümü normal optimizasyonda yasak"
 
     if ptype == "field" and cand_type == "orchard" and cand_canon != cur_canon:
         return False, "tarla parseline bahçe/çok yıllık ürün önerisi ayrı tesis dönüşümü senaryosu gerektirir"
@@ -5898,11 +6015,86 @@ def _quota_column_for_allocation_model(model: Any) -> str:
 def _allocation_model_label(model: Any) -> str:
     m = _normalize_allocation_model(model)
     return {
-        "area_fair_per_da": "Dekar bazlı adil kota: toplam mevcut su / toplam alan; her parsel alanı kadar su hakkı alır.",
+        "area_fair_per_da": "Varsayılan kota modeli alan-oransal/dekar bazlı kotadır. Bu yaklaşım, büyük parsellerin daha yüksek toplam kota almasını; ancak tüm parsellerin aynı m³/da standardı içinde karşılaştırılmasını sağlar.",
         "equal_village_equal_parcel": "Eşit köy + eşit parsel kotası: her köye aynı su, köy içinde her parsele aynı kota.",
         "current_demand_reference": "Mevcut talep referansı: her parselin mevcut ürün desenindeki su tüketimi kadar kota.",
         "hybrid_area70_current30": "Karma kota: %70 alan bazlı adil kota + %30 mevcut talep referansı.",
     }.get(m, "Dekar bazlı adil kota")
+
+
+LOW_RISK_DECISION_SUPPORT_NOTICE = (
+    "Bu çıktı kesin tarımsal reçete değildir. Saha koşulları, toprak analizi, su kalitesi, "
+    "pazar koşulları, üretici tercihi ve ziraat mühendisi değerlendirmesiyle birlikte yorumlanmalıdır."
+)
+LOW_RISK_CROPWAT_FAO56_NOTE = (
+    "CROPWAT/FAO-56 yaklaşımı, ürün su ihtiyacı hesabında ETo-Kc-ETc zincirinin referans "
+    "ve doğrulama çerçevesi olarak kullanılmıştır. Parsel-ürün aday matrisi ve yerleşim/parsel "
+    "toplamları; etkili yağış, sulama randımanı, parsel alanı, net kâr, TL/m³ ve kota göstergeleriyle "
+    "karar destek sistemi içinde hesaplanmıştır."
+)
+LOW_RISK_ETO_ETC_NOTE = (
+    "ETc, ürün katsayısı Kc ile referans evapotranspirasyon ETo'nun çarpılmasıyla hesaplanır. "
+    "Etkili yağış düşüldükten sonra net sulama ihtiyacı elde edilir; sulama randımanı ise net "
+    "ihtiyacı brüt baraj/şebeke su çekişine dönüştürür. Randıman ETc'yi değiştirmez, brüt su "
+    "ihtiyacını etkiler."
+)
+LOW_RISK_ORCHARD_NOTICE = (
+    "Kurulu meyve bahçelerinde öneri, ana ürünün sökülmesi veya kısa dönemli ana ürün dönüşümü "
+    "anlamına gelmez. Ana ürün korunarak sulama verimliliği, kısıntılı sulama, sıra arası/örtü "
+    "bitkisi ve ziraat mühendisi onaylı yönetim alternatifleri değerlendirilmelidir."
+)
+LOW_RISK_STOCHASTIC_ALGO_NOTICE = (
+    "GA, ACO ve ABC sezgisel/stokastik algoritmalardır. Seed sabit değilse aynı koşulda benzer "
+    "kalitede fakat farklı ürün desenleri oluşabilir. Sonuçlar bu veri seti, kota modeli ve hedef "
+    "fonksiyonu bağlamında yorumlanmalıdır."
+)
+LOW_RISK_ACO_NOTICE = (
+    "Bu veri seti, kota modeli ve hedef fonksiyonu altında ACO daha dengeli sonuç üretmiş olabilir. "
+    "Bu sonuç ACO'nun her veri setinde evrensel olarak en iyi algoritma olduğu anlamına gelmez."
+)
+
+
+def _low_risk_data_confidence_legend() -> List[Dict[str, str]]:
+    return [
+        {"label": "Gerçek/kayıt verisi", "meaning": "Resmi/parsel kayıtlarından veya kullanıcı/kaynak dosyadan gelen katman."},
+        {"label": "Türetilmiş hesap", "meaning": "Alan, su, kâr, TL/m³, kota veya fark göstergelerinden hesaplanan katman."},
+        {"label": "Proxy/varsayım", "meaning": "Toprak uygunluğu, su kalitesi, ekonomi/fiyat/kâr, bazı ETo/ETc ve iletim/sulama yöntemi varsayımları uzman kontrolü gerektirir."},
+        {"label": "CROPWAT/FAO-56 referanslı", "meaning": "ETo-Kc-ETc su ihtiyacı zinciri için referans/doğrulama çerçevesi."},
+        {"label": "Excel/model hesap izi", "meaning": "Excel türevi aday matrisi ve kod içi karar destek hesap izi."},
+    ]
+
+
+def _low_risk_methodology_meta(allocation_model: Any = "area_fair_per_da", selected_count: Optional[int] = None) -> Dict[str, Any]:
+    meta = {
+        "decision_support_notice": LOW_RISK_DECISION_SUPPORT_NOTICE,
+        "cropwat_fao56_note": LOW_RISK_CROPWAT_FAO56_NOTE,
+        "eto_etc_note": LOW_RISK_ETO_ETC_NOTE,
+        "orchard_notice": LOW_RISK_ORCHARD_NOTICE,
+        "stochastic_algorithm_notice": LOW_RISK_STOCHASTIC_ALGO_NOTICE,
+        "aco_safe_interpretation": LOW_RISK_ACO_NOTICE,
+        "quota_model": _normalize_allocation_model(allocation_model),
+        "quota_model_label": _allocation_model_label(allocation_model),
+        "candidate_matrix_path": "data/excel_derived/combined_parcel_candidate_matrix_2024.csv",
+        "data_confidence_legend": _low_risk_data_confidence_legend(),
+        "proxy_layers_requiring_expert_review": [
+            "Toprak uygunluğu",
+            "Su kalitesi",
+            "Ekonomi/fiyat/kâr varsayımları",
+            "Bazı ETo/ETc proxy değerleri",
+            "İletim kapasitesi/sulama yöntemi varsayımları",
+        ],
+    }
+    if selected_count is not None:
+        meta["selected_parcel_count"] = int(selected_count)
+    try:
+        mx = load_matrix_candidates()
+        if mx is not None and not mx.empty:
+            meta["candidate_matrix_total_rows"] = int(len(mx))
+            if "is_feasible_under_current_quota" in mx.columns:
+                meta["candidate_matrix_default_feasible_rows"] = int(pd.to_numeric(mx["is_feasible_under_current_quota"], errors="coerce").fillna(0).astype(int).sum())
+    except Exception:
+        pass
+    return meta
 
 def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
                           water_budget_ratio: float, year: Optional[int]=None,
@@ -6788,6 +6980,11 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                     "kind": str(ar.get("kind", "") or "").strip(),
                     "waterLevel": str(ar.get("waterLevel", "") or "").strip(),
                     "decisionNote": str(ar.get("note", "") or "").strip(),
+                    "whyRecommended": "Kurulu bahçede ana ürün korunarak sıra arası/örtü bitkisi veya yönetim alternatifi uzman kontrolüyle değerlendirilebilir.",
+                    "riskLabel": "Uzman onayı gerekir",
+                    "dataConfidenceLevels": ["Türetilmiş hesap", "Proxy/varsayım", "Excel/model hesap izi"],
+                    "expertApprovalNote": LOW_RISK_DECISION_SUPPORT_NOTICE,
+                    "orchardNotice": LOW_RISK_ORCHARD_NOTICE,
                     "isInterrow": True,
                     "lifecycle": "annual_interrow",
                     "cropCategory": "interrow",
@@ -6866,6 +7063,12 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                     "reasonDetails": list(ar.get("reasonDetails", []) or []),
                     "cautionDetails": list(ar.get("cautionDetails", []) or []),
                     "decisionNote": _rank_reason_with_context(ar),
+                    "whyRecommended": _rank_reason_with_context(ar),
+                    "riskLabel": "Kota aşımı riski" if not bool(ar.get("fullFeasible")) else "Karar destek kontrolü",
+                    "quotaStatusLabel": "Kota uygun" if bool(ar.get("fullFeasible")) else "Kota aşımı riski / seçilebilir değil / uzman onayı gerekir",
+                    "dataConfidenceLevels": ["Gerçek/kayıt verisi", "Türetilmiş hesap", "Excel/model hesap izi", "CROPWAT/FAO-56 referanslı", "Proxy/varsayım kontrolü"],
+                    "expertApprovalNote": LOW_RISK_DECISION_SUPPORT_NOTICE,
+                    "methodologyNote": LOW_RISK_CROPWAT_FAO56_NOTE,
                     "irrigationCurrentKey": alt_irr_current,
                     "irrigationSuggestedKey": alt_irr_suggested,
                     **_decision_metrics_for_crop(str(ar.get("name", "") or ""), float(ar.get("area_da", 0.0) or 0.0), float(ar.get("water_m3_da", 0.0) or 0.0), float(ar.get("profit_tl_da", 0.0) or 0.0)),
@@ -6947,7 +7150,15 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "irrigationCurrentKey": irr_current_key,
             "irrigationSuggestedKey": irr_suggested_key,
             **_decision_metrics_for_crop(str(chosen.get("name", "") or ""), float(chosen.get("area_da", 0.0) or 0.0), float(chosen.get("water_m3_da", 0.0) or 0.0), float(chosen.get("profit_tl_da", 0.0) or 0.0)),
-            "decisionNote": ("Kurulu çok yıllık/bahçe parselinde ana ürün korunmuştur; yalnızca ara ürün ve yönetim alternatifleri gösterilir." if is_locked_orchard else _rank_reason_with_context(chosen))
+            "decisionNote": ("Kurulu çok yıllık/bahçe parselinde ana ürün korunmuştur; yalnızca ara ürün ve yönetim alternatifleri gösterilir." if is_locked_orchard else _rank_reason_with_context(chosen)),
+            "whyRecommended": ("Kurulu meyve bahçesinde ana ürün korunur; öneri sulama iyileştirme, kısıntılı sulama ve sıra arası/örtü bitkisi yönetimi olarak yorumlanır." if is_locked_orchard else _rank_reason_with_context(chosen)),
+            "riskLabel": "Kota aşımı riski" if not bool(chosen.get("fullFeasible")) else ("Meyve bahçesi yönetim alternatifi" if is_locked_orchard else "Karar destek kontrolü"),
+            "quotaStatusLabel": "Kota uygun" if bool(chosen.get("fullFeasible")) else "Kota aşımı riski / seçilebilir değil / uzman onayı gerekir",
+            "dataConfidenceLevels": ["Gerçek/kayıt verisi", "Türetilmiş hesap", "Excel/model hesap izi", "CROPWAT/FAO-56 referanslı", "Proxy/varsayım kontrolü"],
+            "expertApprovalNote": LOW_RISK_DECISION_SUPPORT_NOTICE,
+            "methodologyNote": LOW_RISK_CROPWAT_FAO56_NOTE,
+            "etoEtcNote": LOW_RISK_ETO_ETC_NOTE,
+            "orchardNotice": LOW_RISK_ORCHARD_NOTICE if is_locked_orchard else ""
         }
 
         total_water += rec["totalWater"]
@@ -6995,7 +7206,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
             "allocation_model": str(problem.get("allocation_model") or "area_fair_per_da"),
             "cropCategoryMode": str(problem.get("crop_category_mode") or "mixed"),
             "quota_column": str(problem.get("quota_column") or "quota_area_fair_per_da_m3"),
-            "planning_rule": str(problem.get("planning_rule") or "Dekar bazlı adil kota: toplam mevcut su / toplam alan; her parsel alanı kadar su hakkı alır."),
+            "planning_rule": str(problem.get("planning_rule") or _allocation_model_label("area_fair_per_da")),
             "objective_explanation": {
                 "current": "Mevcut desen referanstır; öneri üretmez.",
                 "water_efficiency": "Parsel kotası altında daha düşük/etkin su, alan kapsaması, TL/m³ ve ziraat uygunluğu birlikte puanlanır.",
@@ -7009,6 +7220,7 @@ def _matrix_solution_to_payload(problem: Dict[str, Any], sol: List[int], algorit
                 "mevcut ürün adları kompakt kanonik anahtarla eşleştirilir",
                 "kota yetmezse tam parsel yerine güvenli ekilebilir alan raporlanır"
             ],
+            "low_risk_explainability": _low_risk_methodology_meta(problem.get("allocation_model") or "area_fair_per_da", selected_count=len(parcels_out)),
             "note": "İleri projeksiyon kaldırıldı. Excel türevi parsel×ürün matrisi üzerinde gerçek algoritmik arama çalıştırıldı."
         }
     }
@@ -9203,6 +9415,104 @@ def _standardize_optimize_payload(result: Dict[str, Any], selected_ids: List[str
     return result
 
 
+@app.get("/api/defense-datasets")
+def api_defense_datasets():
+    try:
+        loaded = _load_defense_dataset_package()
+    except DefenseDatasetLoadError as exc:
+        return jsonify({
+            "status": "ERROR",
+            "error": "defense_dataset_load_failed",
+            "message": str(exc),
+        }), 503
+
+    datasets = [
+        _defense_dataset_metadata(dataset) for dataset in loaded["datasets"]
+    ]
+    datasets.sort(key=lambda item: (
+        0 if str(item.get("defense_role") or "").casefold() == "ana" else 1,
+        str(item.get("location") or "").casefold(),
+        str(item.get("title") or "").casefold(),
+    ))
+    policy = loaded["package"].get("policy") or {}
+    return jsonify({
+        "status": "OK",
+        "count": len(datasets),
+        "datasets": datasets,
+        "policy": {field: policy.get(field) for field in DEFENSE_DATA_POLICY_FIELDS},
+        "loaded_at": loaded["loaded_at"],
+    })
+
+
+@app.get("/api/defense-datasets/<dataset_id>")
+def api_defense_dataset_detail(dataset_id: str):
+    try:
+        offset = _parse_defense_page_arg("offset", 0, minimum=0)
+        limit = _parse_defense_page_arg("limit", 100, minimum=1, maximum=200)
+    except ValueError as exc:
+        return jsonify({
+            "status": "ERROR",
+            "error": "invalid_pagination",
+            "message": str(exc),
+        }), 400
+
+    try:
+        loaded = _load_defense_dataset_package()
+    except DefenseDatasetLoadError as exc:
+        return jsonify({
+            "status": "ERROR",
+            "error": "defense_dataset_load_failed",
+            "message": str(exc),
+        }), 503
+
+    dataset = loaded["index"].get(dataset_id)
+    if dataset is None:
+        return jsonify({
+            "status": "ERROR",
+            "error": "dataset_not_found",
+            "message": f"Veri kümesi bulunamadı: {dataset_id}",
+        }), 404
+
+    values = dataset.get("values") or []
+    query = str(request.args.get("q", "") or "").strip()
+    if query:
+        query_folded = query.casefold()
+        filtered_values = [
+            row for row in values
+            if isinstance(row, list)
+            and any(
+                query_folded in str(cell).casefold()
+                for cell in row
+                if cell is not None
+            )
+        ]
+    else:
+        filtered_values = values
+
+    page_values = filtered_values[offset:offset + limit]
+    metadata = _defense_dataset_metadata(dataset)
+    policy = loaded["package"].get("policy") or {}
+    return jsonify({
+        "status": "OK",
+        "dataset": {
+            **metadata,
+            "values": page_values,
+        },
+        "pagination": {
+            "offset": offset,
+            "limit": limit,
+            "returned_rows": len(page_values),
+            "total_rows": len(values),
+            "filtered_rows": len(filtered_values),
+            "has_previous": offset > 0,
+            "has_next": offset + len(page_values) < len(filtered_values),
+        },
+        "query": query,
+        "policy": {field: policy.get(field) for field in DEFENSE_DATA_POLICY_FIELDS},
+        "analysis_unit_notice": DEFENSE_ANALYSIS_UNIT_NOTICE,
+    })
+
+
 @app.get("/")
 def index():
     return send_from_directory(BASE_DIR, "index.html")
@@ -10754,6 +11064,8 @@ def api_benchmark():
             "seed_root": seed_root,
             "selected_count": len(selected),
         }
+        allocation_model_for_notes = base_opts.get("allocationModel") or base_opts.get("waterAllocationModel") or base_opts.get("quotaModel") or "area_fair_per_da"
+        results["methodology"] = _low_risk_methodology_meta(allocation_model_for_notes, selected_count=len(selected))
         started_at = time.perf_counter()
         # Total time budget for the whole benchmark request.
         # Default is intentionally generous so each algorithm gets at least one run.
@@ -11535,7 +11847,10 @@ def api_benchmark():
                     feasible = safe_float(v.get("feasible_rate", 0.0), 0.0)
                     return (mean_profit, feasible, -cv)
                 best_algo, best_metrics = sorted(valid_algos.items(), key=_algo_rank, reverse=True)[0]
-                interpretation = f"Secili kosullarda {best_algo} algoritmasi daha yuksek ortalama kar/uygulanabilirlik ve daha dusuk degiskenlik dengesinde one cikmistir."
+                if best_algo == "ACO":
+                    interpretation = "Bu veri seti, kota modeli ve hedef fonksiyonu altında ACO daha dengeli sonuç üretmiştir. Bu sonuç ACO'nun her veri setinde evrensel olarak en iyi algoritma olduğu anlamına gelmez."
+                else:
+                    interpretation = f"Secili kosullarda {best_algo} algoritmasi daha yuksek ortalama kar/uygulanabilirlik ve daha dusuk degiskenlik dengesinde one cikmistir."
         if results.get("completion_status_kind") == "partial":
             leader = None
             try:
@@ -11569,7 +11884,8 @@ def api_benchmark():
             "scenario_type": scenario_type,
             "warnings": (
                 ["Fast mod aktif; akademik varsayilan 30 kosu yerine hizli kosu ayarlari kullanildi."] if benchmark_mode == "fast" else []
-            ) + ([results["partial_reason"] or "Tum kosular tamamlanmadi; sonuc kismi olarak yorumlanmalidir."] if partial_result else []),
+            ) + ([results["partial_reason"] or "Tum kosular tamamlanmadi; sonuc kismi olarak yorumlanmalidir."] if partial_result else [])
+            + [LOW_RISK_STOCHASTIC_ALGO_NOTICE],
         }
         return jsonify(results)
     except Exception as e:
