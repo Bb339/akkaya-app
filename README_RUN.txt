@@ -2,6 +2,16 @@
 
 Bu paket, gömülü demo parseller yerine varsa `data/` klasöründeki güncel dosyaları otomatik okur.
 
+V2 Project/Data milestone (v2-general-platform)
+- Project/import API: /api/v2/projects
+- CSV/XLSX/GeoJSON: staging, mapping, preview, validation ve açık confirm.
+- Runtime depo: %LOCALAPPDATA%/CropKDS/projects; KDS_PROJECT_STORE ile ayarlanabilir.
+- Demo oluşturma: py -B -m kds seed-demo --source-dir data
+- Bilimsel motor ve ana UI değişmedi; yeni projeler henüz eski optimizer'a bağlanmaz.
+- Dokümanlar: docs/architecture.md, docs/data_model.md, docs/upload_format.md,
+  docs/migration_v1_to_v2.md. Şablonlar: docs/data_templates/ (Data sayfası).
+- Authentication eklenmedi; API yerel geliştirme kapsamındadır.
+
 1) Kurulum (Windows)
    `cd` ile bu klasöre girin
    `py -m venv .venv`
