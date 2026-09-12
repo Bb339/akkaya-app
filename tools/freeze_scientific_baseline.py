@@ -20,7 +20,7 @@ OPTIONS = dict(popSize=8, generations=4, foodSources=8, cycles=4, limit=4,
 def stable(value):
     if isinstance(value, dict):
         return {str(k): stable(v) for k, v in value.items()
-                if not any(word in str(k).lower() for word in ('runtime', 'elapsed', 'timestamp', 'duration'))}
+                if not any(word in str(k).lower() for word in ('runtime', 'elapsed', 'timestamp', 'duration', 'generated_at'))}
     if isinstance(value, (list, tuple)):
         return [stable(v) for v in value]
     if hasattr(value, 'tolist'):

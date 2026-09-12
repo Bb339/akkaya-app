@@ -400,7 +400,6 @@
           "P149",
           "P23"
         ],
-        "generated_at": "2026-09-12T15:37:43.512031+00:00",
         "delivery_report": null,
         "formulas": {
           "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
@@ -802,7 +801,6 @@
           "P149",
           "P23"
         ],
-        "generated_at": "2026-09-12T15:37:53.229359+00:00",
         "delivery_report": null,
         "formulas": {
           "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
@@ -1204,7 +1202,6 @@
           "P149",
           "P23"
         ],
-        "generated_at": "2026-09-12T15:37:57.901772+00:00",
         "delivery_report": null,
         "formulas": {
           "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
