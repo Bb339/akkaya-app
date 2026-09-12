@@ -23,6 +23,9 @@ APP_GENERATED_AT = datetime.now(timezone.utc).isoformat()
 
 app = Flask(__name__, static_folder=None)
 
+from kds.api import register_project_api
+register_project_api(app)
+
 @app.after_request
 def add_no_cache_headers(response):
     """Avoid stale JS/GeoJSON/index files while drawing parcels."""
