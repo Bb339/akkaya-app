@@ -1,0 +1,980 @@
+[
+  {
+    "seed": 123,
+    "selected_ids": [
+      "P1",
+      "P23",
+      "P149"
+    ],
+    "result": {
+      "status": "OK",
+      "algorithm": "GA",
+      "objective": "water_saving",
+      "year": 2024,
+      "water_budget_m3": 1278272.1932623333,
+      "feasible": false,
+      "total_water_m3": 6297855.2912,
+      "total_profit_tl": 59267499.5,
+      "efficiency_tl_per_m3": 9.410743302218224,
+      "baseline": {
+        "total_water_m3": 12374762.5,
+        "total_profit_tl": 172293913.02600002,
+        "efficiency_tl_per_m3": 13.923007655783294
+      },
+      "delta": {
+        "water_m3": -6076907.2088,
+        "profit_tl": -113026413.52600002,
+        "efficiency_tl_per_m3": -4.512264353565071
+      },
+      "parcels": [
+        {
+          "id": "P1",
+          "result": {
+            "parcel": {
+              "id": "P1",
+              "name": "P1",
+              "village": "Sazlıca",
+              "district": "Merkez",
+              "area_da": 2700.0
+            },
+            "recommended": [
+              {
+                "name": "MERCIMEK",
+                "season": "—",
+                "area": 2700.0,
+                "waterPerDa": 110.0,
+                "waterTotal": 297000.0,
+                "profitPerDa": 2337.5,
+                "profitTotal": 6311250.0,
+                "unitType": null,
+                "unitsPerDaEst": 0.0,
+                "estimatedUnitsTotal": 0.0,
+                "spacingNote": null,
+                "yieldPerUnitKgEst": 0.0,
+                "estimatedYieldKg": 0.0,
+                "grossRevenueTl": 0.0,
+                "estimatedCostTl": 0.0,
+                "estimatedNetProfitTl": 6311250.0,
+                "waterTotalM3": 297000.0,
+                "waterLPerUnitEst": 0.0,
+                "waterEfficiencyTlPerM3": 21.25,
+                "decisionGroup": null,
+                "perennialLockRule": null,
+                "managementNote": null,
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": null,
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": null,
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)"
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": null,
+            "orchardAlternatives": []
+          }
+        },
+        {
+          "id": "P149",
+          "result": {
+            "parcel": {
+              "id": "P149",
+              "name": "P149",
+              "village": "Kemerhisar",
+              "district": "Bor",
+              "area_da": 9546.0
+            },
+            "recommended": [
+              {
+                "name": "ELMA",
+                "season": "—",
+                "area": 9546.0,
+                "waterPerDa": 585.3672,
+                "waterTotal": 5587915.2912,
+                "profitPerDa": 4628.25,
+                "profitTotal": 44181274.5,
+                "unitType": "ağaç",
+                "unitsPerDaEst": 28.0,
+                "estimatedUnitsTotal": 267288.0,
+                "spacingNote": "6x6 m bahçe aralığı proxy",
+                "yieldPerUnitKgEst": 69.878571,
+                "estimatedYieldKg": 18677703.599999998,
+                "grossRevenueTl": 148442915.604,
+                "estimatedCostTl": 145008283.896,
+                "estimatedNetProfitTl": 44181274.5,
+                "waterTotalM3": 5587915.2912,
+                "waterLPerUnitEst": 20905.97142857143,
+                "waterEfficiencyTlPerM3": 7.906575564876201,
+                "decisionGroup": "cok_yillik_koru",
+                "perennialLockRule": "Evet",
+                "managementNote": "Excel türevi aday ürün matrisi kullanılır; parsel bazında su kotası aşılmaz.",
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": "drip",
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": "drip",
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Mevcut bahçe ürünü korunur; kayısı/elma/armut gibi kurulmuş bahçelerde mercimek-nohut gibi tek yıllık ürüne geçiş önerilmez. İyileştirme sulama yöntemi, sulama zamanı, kısıntılı sulama ve sıra arası/örtü bitkisi yönetimi üzerinden yapılır.",
+                "interrowAlternatives": [
+                  {
+                    "name": "Mercimek",
+                    "kind": "Sıra arası / baklagil",
+                    "waterLevel": "Düşük su",
+                    "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+                  },
+                  {
+                    "name": "Nohut",
+                    "kind": "Sıra arası / baklagil",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez."
+                  },
+                  {
+                    "name": "Fiğ (Yeşilot)",
+                    "kind": "Örtü bitkisi / yeşil gübre",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır."
+                  },
+                  {
+                    "name": "Arpa (Yeşilot)",
+                    "kind": "Örtü bitkisi / yem",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir."
+                  }
+                ]
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": {
+              "name": "Mercimek",
+              "kind": "Sıra arası / baklagil",
+              "waterLevel": "Düşük su",
+              "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+            },
+            "orchardAlternatives": [
+              {
+                "name": "Mercimek",
+                "kind": "Sıra arası / baklagil",
+                "waterLevel": "Düşük su",
+                "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+              },
+              {
+                "name": "Nohut",
+                "kind": "Sıra arası / baklagil",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez."
+              },
+              {
+                "name": "Fiğ (Yeşilot)",
+                "kind": "Örtü bitkisi / yeşil gübre",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır."
+              },
+              {
+                "name": "Arpa (Yeşilot)",
+                "kind": "Örtü bitkisi / yem",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir."
+              }
+            ]
+          }
+        },
+        {
+          "id": "P23",
+          "result": {
+            "parcel": {
+              "id": "P23",
+              "name": "P23",
+              "village": "Sazlıca",
+              "district": "Merkez",
+              "area_da": 3754.0
+            },
+            "recommended": [
+              {
+                "name": "MERCIMEK",
+                "season": "—",
+                "area": 3754.0,
+                "waterPerDa": 110.0,
+                "waterTotal": 412940.0,
+                "profitPerDa": 2337.5,
+                "profitTotal": 8774975.0,
+                "unitType": null,
+                "unitsPerDaEst": 0.0,
+                "estimatedUnitsTotal": 0.0,
+                "spacingNote": null,
+                "yieldPerUnitKgEst": 0.0,
+                "estimatedYieldKg": 0.0,
+                "grossRevenueTl": 0.0,
+                "estimatedCostTl": 0.0,
+                "estimatedNetProfitTl": 8774975.0,
+                "waterTotalM3": 412940.0,
+                "waterLPerUnitEst": 0.0,
+                "waterEfficiencyTlPerM3": 21.25,
+                "decisionGroup": null,
+                "perennialLockRule": null,
+                "managementNote": null,
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": null,
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": null,
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)"
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": null,
+            "orchardAlternatives": []
+          }
+        }
+      ],
+      "details": [
+        {
+          "parcelId": "P1",
+          "parcelName": "P1",
+          "area_da": 2700.0,
+          "primary": {
+            "crop": "MERCIMEK",
+            "water_m3": 297000.0,
+            "profit_tl": 6311250.0
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          }
+        },
+        {
+          "parcelId": "P149",
+          "parcelName": "P149",
+          "area_da": 9546.0,
+          "primary": {
+            "crop": "ELMA",
+            "water_m3": 5587915.2912,
+            "profit_tl": 44181274.5
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          },
+          "irrigation_plan": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)"
+        },
+        {
+          "parcelId": "P23",
+          "parcelName": "P23",
+          "area_da": 3754.0,
+          "primary": {
+            "crop": "MERCIMEK",
+            "water_m3": 412940.0,
+            "profit_tl": 8774975.0
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          }
+        }
+      ],
+      "meta": {
+        "pop_size": 8,
+        "generations": 4,
+        "cx_rate": 0.7,
+        "mut_rate": 0.08,
+        "season_source": "s2",
+        "rotation_rules_applied": true,
+        "run_params": {
+          "algorithm": "GA",
+          "seed": 123,
+          "twoSeason": true,
+          "generations": 4,
+          "popSize": 8,
+          "cxRate": 0.7,
+          "mutRate": 0.08,
+          "budgetRatio": 1.0,
+          "seasonSource": "s2",
+          "scenarioType": "double",
+          "envFlowRatio": 0.1,
+          "irrigationMethod": null,
+          "waterModel": "calib",
+          "riskMode": "none",
+          "riskLambda": 0.0,
+          "riskSamples": 120
+        },
+        "selected_parcel_ids": [
+          "P1",
+          "P149",
+          "P23"
+        ],
+        "generated_at": "2026-09-12T15:37:29.661860+00:00",
+        "delivery_report": null,
+        "formulas": {
+          "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
+          "profit_tl": "Σ(area_da * profitPerDa) (1. ürün + 2. ürün)",
+          "efficiency": "total_profit_tl / total_water_m3",
+          "score": "alpha*profitPerDa - beta*waterPerDa",
+          "suitability": "profitPerDa = profitPerDa * suitability(LCC, crop)"
+        },
+        "note": "İkinci ürün seçiminde aynı ürün ailesinden (crop_family) kaçınma + baklagil (Fabaceae) küçük teşvik bonusu eklendi."
+      }
+    }
+  },
+  {
+    "seed": 456,
+    "selected_ids": [
+      "P1",
+      "P23",
+      "P149"
+    ],
+    "result": {
+      "status": "OK",
+      "algorithm": "GA",
+      "objective": "water_saving",
+      "year": 2024,
+      "water_budget_m3": 1278272.1932623333,
+      "feasible": false,
+      "total_water_m3": 6297855.2912,
+      "total_profit_tl": 59267499.5,
+      "efficiency_tl_per_m3": 9.410743302218224,
+      "baseline": {
+        "total_water_m3": 12374762.5,
+        "total_profit_tl": 172293913.02600002,
+        "efficiency_tl_per_m3": 13.923007655783294
+      },
+      "delta": {
+        "water_m3": -6076907.2088,
+        "profit_tl": -113026413.52600002,
+        "efficiency_tl_per_m3": -4.512264353565071
+      },
+      "parcels": [
+        {
+          "id": "P1",
+          "result": {
+            "parcel": {
+              "id": "P1",
+              "name": "P1",
+              "village": "Sazlıca",
+              "district": "Merkez",
+              "area_da": 2700.0
+            },
+            "recommended": [
+              {
+                "name": "MERCIMEK",
+                "season": "—",
+                "area": 2700.0,
+                "waterPerDa": 110.0,
+                "waterTotal": 297000.0,
+                "profitPerDa": 2337.5,
+                "profitTotal": 6311250.0,
+                "unitType": null,
+                "unitsPerDaEst": 0.0,
+                "estimatedUnitsTotal": 0.0,
+                "spacingNote": null,
+                "yieldPerUnitKgEst": 0.0,
+                "estimatedYieldKg": 0.0,
+                "grossRevenueTl": 0.0,
+                "estimatedCostTl": 0.0,
+                "estimatedNetProfitTl": 6311250.0,
+                "waterTotalM3": 297000.0,
+                "waterLPerUnitEst": 0.0,
+                "waterEfficiencyTlPerM3": 21.25,
+                "decisionGroup": null,
+                "perennialLockRule": null,
+                "managementNote": null,
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": null,
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": null,
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)"
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": null,
+            "orchardAlternatives": []
+          }
+        },
+        {
+          "id": "P149",
+          "result": {
+            "parcel": {
+              "id": "P149",
+              "name": "P149",
+              "village": "Kemerhisar",
+              "district": "Bor",
+              "area_da": 9546.0
+            },
+            "recommended": [
+              {
+                "name": "ELMA",
+                "season": "—",
+                "area": 9546.0,
+                "waterPerDa": 585.3672,
+                "waterTotal": 5587915.2912,
+                "profitPerDa": 4628.25,
+                "profitTotal": 44181274.5,
+                "unitType": "ağaç",
+                "unitsPerDaEst": 28.0,
+                "estimatedUnitsTotal": 267288.0,
+                "spacingNote": "6x6 m bahçe aralığı proxy",
+                "yieldPerUnitKgEst": 69.878571,
+                "estimatedYieldKg": 18677703.599999998,
+                "grossRevenueTl": 148442915.604,
+                "estimatedCostTl": 145008283.896,
+                "estimatedNetProfitTl": 44181274.5,
+                "waterTotalM3": 5587915.2912,
+                "waterLPerUnitEst": 20905.97142857143,
+                "waterEfficiencyTlPerM3": 7.906575564876201,
+                "decisionGroup": "cok_yillik_koru",
+                "perennialLockRule": "Evet",
+                "managementNote": "Excel türevi aday ürün matrisi kullanılır; parsel bazında su kotası aşılmaz.",
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": "drip",
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": "drip",
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Mevcut bahçe ürünü korunur; kayısı/elma/armut gibi kurulmuş bahçelerde mercimek-nohut gibi tek yıllık ürüne geçiş önerilmez. İyileştirme sulama yöntemi, sulama zamanı, kısıntılı sulama ve sıra arası/örtü bitkisi yönetimi üzerinden yapılır.",
+                "interrowAlternatives": [
+                  {
+                    "name": "Mercimek",
+                    "kind": "Sıra arası / baklagil",
+                    "waterLevel": "Düşük su",
+                    "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+                  },
+                  {
+                    "name": "Nohut",
+                    "kind": "Sıra arası / baklagil",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez."
+                  },
+                  {
+                    "name": "Fiğ (Yeşilot)",
+                    "kind": "Örtü bitkisi / yeşil gübre",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır."
+                  },
+                  {
+                    "name": "Arpa (Yeşilot)",
+                    "kind": "Örtü bitkisi / yem",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir."
+                  }
+                ]
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": {
+              "name": "Mercimek",
+              "kind": "Sıra arası / baklagil",
+              "waterLevel": "Düşük su",
+              "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+            },
+            "orchardAlternatives": [
+              {
+                "name": "Mercimek",
+                "kind": "Sıra arası / baklagil",
+                "waterLevel": "Düşük su",
+                "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+              },
+              {
+                "name": "Nohut",
+                "kind": "Sıra arası / baklagil",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez."
+              },
+              {
+                "name": "Fiğ (Yeşilot)",
+                "kind": "Örtü bitkisi / yeşil gübre",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır."
+              },
+              {
+                "name": "Arpa (Yeşilot)",
+                "kind": "Örtü bitkisi / yem",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir."
+              }
+            ]
+          }
+        },
+        {
+          "id": "P23",
+          "result": {
+            "parcel": {
+              "id": "P23",
+              "name": "P23",
+              "village": "Sazlıca",
+              "district": "Merkez",
+              "area_da": 3754.0
+            },
+            "recommended": [
+              {
+                "name": "MERCIMEK",
+                "season": "—",
+                "area": 3754.0,
+                "waterPerDa": 110.0,
+                "waterTotal": 412940.0,
+                "profitPerDa": 2337.5,
+                "profitTotal": 8774975.0,
+                "unitType": null,
+                "unitsPerDaEst": 0.0,
+                "estimatedUnitsTotal": 0.0,
+                "spacingNote": null,
+                "yieldPerUnitKgEst": 0.0,
+                "estimatedYieldKg": 0.0,
+                "grossRevenueTl": 0.0,
+                "estimatedCostTl": 0.0,
+                "estimatedNetProfitTl": 8774975.0,
+                "waterTotalM3": 412940.0,
+                "waterLPerUnitEst": 0.0,
+                "waterEfficiencyTlPerM3": 21.25,
+                "decisionGroup": null,
+                "perennialLockRule": null,
+                "managementNote": null,
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": null,
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": null,
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)"
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": null,
+            "orchardAlternatives": []
+          }
+        }
+      ],
+      "details": [
+        {
+          "parcelId": "P1",
+          "parcelName": "P1",
+          "area_da": 2700.0,
+          "primary": {
+            "crop": "MERCIMEK",
+            "water_m3": 297000.0,
+            "profit_tl": 6311250.0
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          }
+        },
+        {
+          "parcelId": "P149",
+          "parcelName": "P149",
+          "area_da": 9546.0,
+          "primary": {
+            "crop": "ELMA",
+            "water_m3": 5587915.2912,
+            "profit_tl": 44181274.5
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          },
+          "irrigation_plan": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)"
+        },
+        {
+          "parcelId": "P23",
+          "parcelName": "P23",
+          "area_da": 3754.0,
+          "primary": {
+            "crop": "MERCIMEK",
+            "water_m3": 412940.0,
+            "profit_tl": 8774975.0
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          }
+        }
+      ],
+      "meta": {
+        "pop_size": 8,
+        "generations": 4,
+        "cx_rate": 0.7,
+        "mut_rate": 0.08,
+        "season_source": "s2",
+        "rotation_rules_applied": true,
+        "run_params": {
+          "algorithm": "GA",
+          "seed": 456,
+          "twoSeason": true,
+          "generations": 4,
+          "popSize": 8,
+          "cxRate": 0.7,
+          "mutRate": 0.08,
+          "budgetRatio": 1.0,
+          "seasonSource": "s2",
+          "scenarioType": "double",
+          "envFlowRatio": 0.1,
+          "irrigationMethod": null,
+          "waterModel": "calib",
+          "riskMode": "none",
+          "riskLambda": 0.0,
+          "riskSamples": 120
+        },
+        "selected_parcel_ids": [
+          "P1",
+          "P149",
+          "P23"
+        ],
+        "generated_at": "2026-09-12T15:37:31.751215+00:00",
+        "delivery_report": null,
+        "formulas": {
+          "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
+          "profit_tl": "Σ(area_da * profitPerDa) (1. ürün + 2. ürün)",
+          "efficiency": "total_profit_tl / total_water_m3",
+          "score": "alpha*profitPerDa - beta*waterPerDa",
+          "suitability": "profitPerDa = profitPerDa * suitability(LCC, crop)"
+        },
+        "note": "İkinci ürün seçiminde aynı ürün ailesinden (crop_family) kaçınma + baklagil (Fabaceae) küçük teşvik bonusu eklendi."
+      }
+    }
+  },
+  {
+    "seed": 789,
+    "selected_ids": [
+      "P1",
+      "P23",
+      "P149"
+    ],
+    "result": {
+      "status": "OK",
+      "algorithm": "GA",
+      "objective": "water_saving",
+      "year": 2024,
+      "water_budget_m3": 1278272.1932623333,
+      "feasible": false,
+      "total_water_m3": 5884915.2912,
+      "total_profit_tl": 50492524.5,
+      "efficiency_tl_per_m3": 8.579991724860326,
+      "baseline": {
+        "total_water_m3": 12374762.5,
+        "total_profit_tl": 172293913.02600002,
+        "efficiency_tl_per_m3": 13.923007655783294
+      },
+      "delta": {
+        "water_m3": -6489847.2088,
+        "profit_tl": -121801388.52600002,
+        "efficiency_tl_per_m3": -5.343015930922968
+      },
+      "parcels": [
+        {
+          "id": "P1",
+          "result": {
+            "parcel": {
+              "id": "P1",
+              "name": "P1",
+              "village": "Sazlıca",
+              "district": "Merkez",
+              "area_da": 2700.0
+            },
+            "recommended": [
+              {
+                "name": "MERCIMEK",
+                "season": "—",
+                "area": 2700.0,
+                "waterPerDa": 110.0,
+                "waterTotal": 297000.0,
+                "profitPerDa": 2337.5,
+                "profitTotal": 6311250.0,
+                "unitType": null,
+                "unitsPerDaEst": 0.0,
+                "estimatedUnitsTotal": 0.0,
+                "spacingNote": null,
+                "yieldPerUnitKgEst": 0.0,
+                "estimatedYieldKg": 0.0,
+                "grossRevenueTl": 0.0,
+                "estimatedCostTl": 0.0,
+                "estimatedNetProfitTl": 6311250.0,
+                "waterTotalM3": 297000.0,
+                "waterLPerUnitEst": 0.0,
+                "waterEfficiencyTlPerM3": 21.25,
+                "decisionGroup": null,
+                "perennialLockRule": null,
+                "managementNote": null,
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": null,
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": null,
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)"
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": null,
+            "orchardAlternatives": []
+          }
+        },
+        {
+          "id": "P149",
+          "result": {
+            "parcel": {
+              "id": "P149",
+              "name": "P149",
+              "village": "Kemerhisar",
+              "district": "Bor",
+              "area_da": 9546.0
+            },
+            "recommended": [
+              {
+                "name": "ELMA",
+                "season": "—",
+                "area": 9546.0,
+                "waterPerDa": 585.3672,
+                "waterTotal": 5587915.2912,
+                "profitPerDa": 4628.25,
+                "profitTotal": 44181274.5,
+                "unitType": "ağaç",
+                "unitsPerDaEst": 28.0,
+                "estimatedUnitsTotal": 267288.0,
+                "spacingNote": "6x6 m bahçe aralığı proxy",
+                "yieldPerUnitKgEst": 69.878571,
+                "estimatedYieldKg": 18677703.599999998,
+                "grossRevenueTl": 148442915.604,
+                "estimatedCostTl": 145008283.896,
+                "estimatedNetProfitTl": 44181274.5,
+                "waterTotalM3": 5587915.2912,
+                "waterLPerUnitEst": 20905.97142857143,
+                "waterEfficiencyTlPerM3": 7.906575564876201,
+                "decisionGroup": "cok_yillik_koru",
+                "perennialLockRule": "Evet",
+                "managementNote": "Excel türevi aday ürün matrisi kullanılır; parsel bazında su kotası aşılmaz.",
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": "drip",
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": "drip",
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Mevcut bahçe ürünü korunur; kayısı/elma/armut gibi kurulmuş bahçelerde mercimek-nohut gibi tek yıllık ürüne geçiş önerilmez. İyileştirme sulama yöntemi, sulama zamanı, kısıntılı sulama ve sıra arası/örtü bitkisi yönetimi üzerinden yapılır.",
+                "interrowAlternatives": [
+                  {
+                    "name": "Mercimek",
+                    "kind": "Sıra arası / baklagil",
+                    "waterLevel": "Düşük su",
+                    "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+                  },
+                  {
+                    "name": "Nohut",
+                    "kind": "Sıra arası / baklagil",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez."
+                  },
+                  {
+                    "name": "Fiğ (Yeşilot)",
+                    "kind": "Örtü bitkisi / yeşil gübre",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır."
+                  },
+                  {
+                    "name": "Arpa (Yeşilot)",
+                    "kind": "Örtü bitkisi / yem",
+                    "waterLevel": "Düşük-orta su",
+                    "note": "ELMA bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir."
+                  }
+                ]
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": {
+              "name": "Mercimek",
+              "kind": "Sıra arası / baklagil",
+              "waterLevel": "Düşük su",
+              "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+            },
+            "orchardAlternatives": [
+              {
+                "name": "Mercimek",
+                "kind": "Sıra arası / baklagil",
+                "waterLevel": "Düşük su",
+                "note": "ELMA ana ürün olarak korunur. Mercimek; düşük su tüketimi, baklagil etkisi ve kısa dönemli sıra arası değerlendirme için uygundur. Ana ürün yerine yazılmaz."
+              },
+              {
+                "name": "Nohut",
+                "kind": "Sıra arası / baklagil",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde sıra arası ticari alternatif olarak düşünülebilir. Kök rekabeti ve gölge durumu uygunsa sınırlı alanda uygulanmalıdır; ana ürün yerine geçmez."
+              },
+              {
+                "name": "Fiğ (Yeşilot)",
+                "kind": "Örtü bitkisi / yeşil gübre",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde toprağı örtme, organik maddeyi destekleme ve yeşil gübreleme amacıyla uygundur. Ticari ana ürün değil, yönetim amaçlı ara seçenek olarak ele alınmalıdır."
+              },
+              {
+                "name": "Arpa (Yeşilot)",
+                "kind": "Örtü bitkisi / yem",
+                "waterLevel": "Düşük-orta su",
+                "note": "ELMA bahçesinde erozyon kontrolü ve toprak örtüsü amacıyla düşünülebilir. Su açığı yüksek yıllarda düşük yoğunluklu uygulanmalı; ana ürün yerine değerlendirilmemelidir."
+              }
+            ]
+          }
+        },
+        {
+          "id": "P23",
+          "result": {
+            "parcel": {
+              "id": "P23",
+              "name": "P23",
+              "village": "Sazlıca",
+              "district": "Merkez",
+              "area_da": 3754.0
+            },
+            "recommended": [
+              {
+                "name": "NADAS",
+                "season": "—",
+                "area": 3754.0,
+                "waterPerDa": 0.0,
+                "waterTotal": 0.0,
+                "profitPerDa": 0.0,
+                "profitTotal": 0.0,
+                "unitType": null,
+                "unitsPerDaEst": 0.0,
+                "estimatedUnitsTotal": 0.0,
+                "spacingNote": null,
+                "yieldPerUnitKgEst": 0.0,
+                "estimatedYieldKg": 0.0,
+                "grossRevenueTl": 0.0,
+                "estimatedCostTl": 0.0,
+                "estimatedNetProfitTl": 0.0,
+                "waterTotalM3": 0.0,
+                "waterLPerUnitEst": 0.0,
+                "waterEfficiencyTlPerM3": 0.0,
+                "decisionGroup": null,
+                "perennialLockRule": null,
+                "managementNote": null,
+                "selectionBasis": "alan × verim × fiyat × maliyet × su yoğunluğu × su bütçesi × aylık kapasite",
+                "irrigationCurrent": null,
+                "irrigationRecommended": null,
+                "irrigationCurrentKey": null,
+                "irrigationSuggestedKey": null,
+                "waterSavingPct": 0.0,
+                "waterSavingPerDa": 0.0,
+                "waterSavingTotal": 0.0,
+                "reason": "Ana ürün: iki-sezon çözümü (su bütçesi + parsel uygunluğu + ticari parametreler)"
+              }
+            ],
+            "irrigationLabel": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)",
+            "orchardAlternative": null,
+            "orchardAlternatives": []
+          }
+        }
+      ],
+      "details": [
+        {
+          "parcelId": "P1",
+          "parcelName": "P1",
+          "area_da": 2700.0,
+          "primary": {
+            "crop": "MERCIMEK",
+            "water_m3": 297000.0,
+            "profit_tl": 6311250.0
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          }
+        },
+        {
+          "parcelId": "P149",
+          "parcelName": "P149",
+          "area_da": 9546.0,
+          "primary": {
+            "crop": "ELMA",
+            "water_m3": 5587915.2912,
+            "profit_tl": 44181274.5
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          },
+          "irrigation_plan": "Aynı bahçe ürünü + damla + sıkı kısıntılı sulama (%28)"
+        },
+        {
+          "parcelId": "P23",
+          "parcelName": "P23",
+          "area_da": 3754.0,
+          "primary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          },
+          "secondary": {
+            "crop": "NADAS",
+            "water_m3": 0.0,
+            "profit_tl": 0.0
+          }
+        }
+      ],
+      "meta": {
+        "pop_size": 8,
+        "generations": 4,
+        "cx_rate": 0.7,
+        "mut_rate": 0.08,
+        "season_source": "s2",
+        "rotation_rules_applied": true,
+        "run_params": {
+          "algorithm": "GA",
+          "seed": 789,
+          "twoSeason": true,
+          "generations": 4,
+          "popSize": 8,
+          "cxRate": 0.7,
+          "mutRate": 0.08,
+          "budgetRatio": 1.0,
+          "seasonSource": "s2",
+          "scenarioType": "double",
+          "envFlowRatio": 0.1,
+          "irrigationMethod": null,
+          "waterModel": "calib",
+          "riskMode": "none",
+          "riskLambda": 0.0,
+          "riskSamples": 120
+        },
+        "selected_parcel_ids": [
+          "P1",
+          "P149",
+          "P23"
+        ],
+        "generated_at": "2026-09-12T15:37:33.173194+00:00",
+        "delivery_report": null,
+        "formulas": {
+          "water_m3": "Σ(area_da * waterPerDa) (1. ürün + 2. ürün)",
+          "profit_tl": "Σ(area_da * profitPerDa) (1. ürün + 2. ürün)",
+          "efficiency": "total_profit_tl / total_water_m3",
+          "score": "alpha*profitPerDa - beta*waterPerDa",
+          "suitability": "profitPerDa = profitPerDa * suitability(LCC, crop)"
+        },
+        "note": "İkinci ürün seçiminde aynı ürün ailesinden (crop_family) kaçınma + baklagil (Fabaceae) küçük teşvik bonusu eklendi."
+      }
+    }
+  }
+]
