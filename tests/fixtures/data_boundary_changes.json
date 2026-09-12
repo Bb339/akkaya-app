@@ -1,0 +1,82 @@
+[
+  [
+    "from kds.api import register_project_api",
+    "from kds.science.providers import source, optional_reference\nfrom kds.api import register_project_api"
+  ],
+  [
+    "def load_parcels(",
+    "@source('units')\ndef load_parcels("
+  ],
+  [
+    "def load_parcels_csv(",
+    "@source('unit_summary')\ndef load_parcels_csv("
+  ],
+  [
+    "def load_crop_catalog(",
+    "@source('crop_catalog')\ndef load_crop_catalog("
+  ],
+  [
+    "def load_crops_csv(",
+    "@source('crop_table')\ndef load_crops_csv("
+  ],
+  [
+    "def load_area_overrides(",
+    "@source('area_overrides')\ndef load_area_overrides("
+  ],
+  [
+    "def load_crop_family_map(",
+    "@source('crop_families')\ndef load_crop_family_map("
+  ],
+  [
+    "def load_crop_irrigation_map(",
+    "@source('irrigation_map')\ndef load_crop_irrigation_map("
+  ],
+  [
+    "def load_irrigation_methods(",
+    "@source('irrigation_methods')\ndef load_irrigation_methods("
+  ],
+  [
+    "def load_crop_suitability_map(",
+    "@source('suitability_map')\ndef load_crop_suitability_map("
+  ],
+  [
+    "def load_rotation_rules(",
+    "@source('rotation')\ndef load_rotation_rules("
+  ],
+  [
+    "def load_s1_crop_calendar_rules(",
+    "@source('calendar')\ndef load_s1_crop_calendar_rules("
+  ],
+  [
+    "def load_enhanced_frames(",
+    "@source('environment')\ndef load_enhanced_frames("
+  ],
+  [
+    "def load_matrix_candidates(",
+    "@source('candidate_options')\ndef load_matrix_candidates("
+  ],
+  [
+    "    village_path = DATA_DIR / \"village_crop_patterns.json\"\n    district_path = DATA_DIR / \"district_crop_patterns.json\"\n    village_obj = load_json(village_path) if village_path.exists() else {}\n    district_obj = load_json(district_path) if district_path.exists() else {}",
+    "    village_obj = optional_reference(\"village_patterns\")\n    district_obj = optional_reference(\"district_patterns\")"
+  ],
+  [
+    "    csv_path = DATA_DIR / 'orchard_interrow_alternatives.csv'\n    if csv_path.exists():\n        try:\n            df = pd.read_csv(csv_path)",
+    "    reference_rows = optional_reference('orchard_interrow')\n    if not reference_rows.empty:\n        try:\n            df = reference_rows"
+  ],
+  [
+    "        _p_rules = DATA_DIR / \"s1_crop_calendar_rules.json\"\n        if _p_rules.exists():\n            s1_rules = load_json(_p_rules) or {}",
+    "        s1_rules = optional_reference(\"calendar_annotations\") or {}"
+  ],
+  [
+    "        _p = DATA_DIR / \"crop_irrigation_map.json\"\n        if _p.exists():\n            crop_irrig_map = load_json(_p) or {}",
+    "        crop_irrig_map = optional_reference(\"irrigation_annotations\") or {}"
+  ],
+  [
+    "        _p = DATA_DIR / 'scenario1_crop_calendar.json'\n        if _p.exists():\n            s1_rules = load_json(_p) or {}",
+    "        s1_rules = optional_reference(\"season_annotations\") or {}"
+  ],
+  [
+    "        _p = DATA_DIR / 'crop_irrigation_map.json'\n        if _p.exists():\n            crop_irrig_map = load_json(_p) or {}",
+    "        crop_irrig_map = optional_reference(\"irrigation_annotations\") or {}"
+  ]
+]

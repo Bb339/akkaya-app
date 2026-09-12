@@ -23,6 +23,7 @@ APP_GENERATED_AT = datetime.now(timezone.utc).isoformat()
 
 app = Flask(__name__, static_folder=None)
 
+from kds.science.providers import source, optional_reference
 from kds.api import register_project_api
 register_project_api(app)
 
@@ -247,6 +248,7 @@ def normalize_parcel_id_series(df: pd.DataFrame, cols: Optional[List[str]] = Non
 # Legacy CSV loaders used by baseline/data compatibility helpers
 # -----------------------------
 
+@source('unit_summary')
 def load_parcels_csv() -> pd.DataFrame:
     """Load legacy per-parcel baseline summary.
 
@@ -304,6 +306,7 @@ def load_parcels_csv() -> pd.DataFrame:
     return df[["parsel_id", "alan_da", "mevcut_su_m3", "mevcut_kar_tl"]].copy()
 
 
+@source('crop_table')
 def load_crops_csv() -> pd.DataFrame:
     """Load crop parameter table used for water and profit calculations.
 
@@ -362,6 +365,7 @@ def load_crops_csv() -> pd.DataFrame:
     return df[["urun_adi", "su_tuketimi_m3_da", "beklenen_verim_kg_da", "fiyat_tl_kg", "maliyet_tl_da"]].copy()
 
 
+@source('area_overrides')
 def load_area_overrides() -> Dict[str, Dict[str, float]]:
     """Optional parcel area overrides derived from GeoJSON area calculations.
 
@@ -634,6 +638,7 @@ def catalog_parcel_type(rec: Optional[Dict[str, Any]]) -> str:
     return ""
 
 
+@source('crop_families')
 def load_crop_family_map() -> Dict[str, str]:
     """Map normalized crop_key -> crop_family."""
     key = "crop_family_map"
@@ -798,6 +803,7 @@ def _agronomic_reason_bundle(
     }
 
 
+@source('irrigation_map')
 def load_crop_irrigation_map() -> Dict[str, Dict[str, Any]]:
     """Load crop -> irrigation method mapping from data/crop_irrigation_map.json."""
     key = "crop_irrigation_map"
@@ -829,6 +835,7 @@ def load_crop_irrigation_map() -> Dict[str, Dict[str, Any]]:
     return out
 
 
+@source('irrigation_methods')
 def load_irrigation_methods() -> Dict[str, Dict[str, Any]]:
     """Load irrigation method efficiencies from enhanced_dataset/csv/irrigation_methods_assumed.csv."""
     key = "irrigation_methods_map"
@@ -870,6 +877,7 @@ def load_irrigation_methods() -> Dict[str, Dict[str, Any]]:
     _cache[key] = out
     return out
 
+@source('suitability_map')
 def load_crop_suitability_map() -> Dict[Tuple[str, str], float]:
     """Map (land_capability_class, crop_key) -> suitability_score (0..1).
 
@@ -902,6 +910,7 @@ def load_crop_suitability_map() -> Dict[Tuple[str, str], float]:
     return m
 
 
+@source('rotation')
 def load_rotation_rules() -> pd.DataFrame:
     """Load default crop rotation rules table (CSV)."""
     key = "rotation_rules"
@@ -1343,6 +1352,7 @@ def load_json(path: Path) -> Any:
 
 
 
+@source('units')
 def load_parcels() -> List[Dict[str, Any]]:
     """
     Loads parcel metadata by MERGING:
@@ -1628,6 +1638,7 @@ def merge_frontend_custom_parcels(base_parcels: List[Dict[str, Any]], custom_par
 
 
 
+@source('crop_catalog')
 def load_crop_catalog() -> Dict[str, Dict[str, Any]]:
     """Load Sazlıca crop catalog from CSV.
 
@@ -1715,6 +1726,7 @@ def load_crop_catalog() -> Dict[str, Dict[str, Any]]:
     return _cache[key]
 
 
+@source('calendar')
 def load_s1_crop_calendar_rules() -> dict:
     """Load Senaryo-1 primary->secondary crop calendar & current irrigation rules from disk.
 
@@ -1823,10 +1835,8 @@ def merged_pattern_candidates(village: str, district: str, top_n: int = 12, parc
 
     If parcel_type is provided (field / vegetable / orchard), only that pool is returned.
     """
-    village_path = DATA_DIR / "village_crop_patterns.json"
-    district_path = DATA_DIR / "district_crop_patterns.json"
-    village_obj = load_json(village_path) if village_path.exists() else {}
-    district_obj = load_json(district_path) if district_path.exists() else {}
+    village_obj = optional_reference("village_patterns")
+    district_obj = optional_reference("district_patterns")
 
     merged: Dict[str, float] = {}
     type_label = {"field":"Tarla/Yem","vegetable":"Sebze","orchard":"Meyve/Bağ"}.get(str(parcel_type or "").strip().lower(), "")
@@ -1922,6 +1932,7 @@ def enhanced_paths() -> Dict[str, Path]:
     }
 
 
+@source('environment')
 def load_enhanced_frames() -> Dict[str, pd.DataFrame]:
     """Load packaged CSV frames used by the backend.
 
@@ -3544,10 +3555,10 @@ def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, c
 
 def _orchard_interrow_alternatives(main_crop: str) -> List[Dict[str, Any]]:
     main = str(main_crop or '').strip() or 'Bahçe ürünü'
-    csv_path = DATA_DIR / 'orchard_interrow_alternatives.csv'
-    if csv_path.exists():
+    reference_rows = optional_reference('orchard_interrow')
+    if not reference_rows.empty:
         try:
-            df = pd.read_csv(csv_path)
+            df = reference_rows
             rows: List[Dict[str, Any]] = []
             for _, r in df.iterrows():
                 rows.append({
@@ -3886,17 +3897,13 @@ def _build_two_crop_recommendations(
     # --- Irrigation suggestion + transparent saving ---
     s1_rules = {}
     try:
-        _p_rules = DATA_DIR / "s1_crop_calendar_rules.json"
-        if _p_rules.exists():
-            s1_rules = load_json(_p_rules) or {}
+        s1_rules = optional_reference("calendar_annotations") or {}
     except Exception:
         s1_rules = {}
 
     crop_irrig_map = {}
     try:
-        _p = DATA_DIR / "crop_irrigation_map.json"
-        if _p.exists():
-            crop_irrig_map = load_json(_p) or {}
+        crop_irrig_map = optional_reference("irrigation_annotations") or {}
     except Exception:
         crop_irrig_map = {}
 
@@ -4128,17 +4135,13 @@ def _build_two_season_recommendations(
     # --- Season labels + irrigation suggestion (data-driven, like single-season recommender) ---
     s1_rules = {}
     try:
-        _p = DATA_DIR / 'scenario1_crop_calendar.json'
-        if _p.exists():
-            s1_rules = load_json(_p) or {}
+        s1_rules = optional_reference("season_annotations") or {}
     except Exception:
         s1_rules = {}
 
     crop_irrig_map = {}
     try:
-        _p = DATA_DIR / 'crop_irrigation_map.json'
-        if _p.exists():
-            crop_irrig_map = load_json(_p) or {}
+        crop_irrig_map = optional_reference("irrigation_annotations") or {}
     except Exception:
         crop_irrig_map = {}
 
@@ -5925,6 +5928,7 @@ def aco_optimize(selected_parcels: List[Dict[str, Any]], year: int, objective: s
 
 
 
+@source('candidate_options')
 def load_matrix_candidates() -> pd.DataFrame:
     key = "matrix_candidates_2024"
     if key in _cache:
