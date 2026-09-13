@@ -1,0 +1,9 @@
+crop_name,crop_group,perennial,kc_initial,kc_mid,kc_end,stage_initial_days,stage_development_days,stage_mid_days,stage_late_days,source,confidence_level
+ARPA,field,False,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+NOHUT,field,False,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+MERCIMEK,field,False,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+AYCICEGI,field,False,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+MISIR,field,False,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+BUGDAY,field,False,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+ELMA,orchard,True,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic
+ARMUT,orchard,True,0.35,0.95,0.45,20,30,45,25,synthetic_test_fixture,synthetic

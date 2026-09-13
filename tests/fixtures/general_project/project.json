@@ -1,0 +1,10 @@
+{
+  "id": "synthetic-general",
+  "name": "Synthetic test project",
+  "planning_year": 2025,
+  "annual_water_budget": 0,
+  "water_budget_unit": "m3",
+  "province_or_region": "Synthetic Region",
+  "data_source_notes": "synthetic_test_fixture",
+  "description": "Synthetic test project / Sentetik test verisi"
+}

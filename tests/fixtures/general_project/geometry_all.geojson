@@ -1,0 +1,341 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-001",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.0,
+          39.0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-002",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.01,
+          39.01
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-003",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.02,
+          39.02
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-004",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.03,
+          39.03
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-005",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.04,
+          39.04
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-006",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.05,
+          39.05
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-007",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.06,
+          39.06
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-008",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.07,
+          39.07
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-009",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.08,
+          39.08
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-010",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.09,
+          39.09
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-011",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.1,
+          39.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-012",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.11,
+          39.11
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-013",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.12,
+          39.12
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-014",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.13,
+          39.13
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-015",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.14,
+          39.14
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-016",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.15,
+          39.15
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-017",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.16,
+          39.16
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-018",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.17,
+          39.17
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-019",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.18,
+          39.18
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-020",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.19,
+          39.19
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-021",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.2,
+          39.2
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-022",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.21,
+          39.21
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-023",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.22,
+          39.22
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "GX-024",
+        "source": "synthetic_test_fixture"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.23,
+          39.23
+        ]
+      }
+    }
+  ]
+}

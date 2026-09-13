@@ -1,0 +1,9 @@
+crop_name,year,yield_per_da,net_profit_per_da,currency,source,yield_unit
+ARPA,2025,0.4,650.0,TRY,synthetic_test_fixture,ton/da
+NOHUT,2025,0.5,800.0,TRY,synthetic_test_fixture,ton/da
+MERCIMEK,2025,0.6000000000000001,-50.0,TRY,synthetic_test_fixture,ton/da
+AYCICEGI,2025,0.7000000000000001,920.0,TRY,synthetic_test_fixture,ton/da
+MISIR,2025,0.8,1200.0,TRY,synthetic_test_fixture,ton/da
+BUGDAY,2025,0.9,700.0,TRY,synthetic_test_fixture,ton/da
+ELMA,2025,1.0,1900.0,TRY,synthetic_test_fixture,ton/da
+ARMUT,2025,1.1,1700.0,TRY,synthetic_test_fixture,ton/da
