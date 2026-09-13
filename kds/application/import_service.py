@@ -101,7 +101,10 @@ class ImportService:
             if batch["validation_summary"]["warning"] and acknowledge_warnings is not True:
                 raise ConflictError("Explicitly acknowledge warnings before confirmation.")
             transition(batch, "confirmed")
-            if batch["data_type"] == "geometries":
+            if batch['data_type'] in {'candidates','scientific_inputs','water_budget'}:
+                from kds.imports.scientific_tables import apply_records
+                apply_records(document, batch, records)
+            elif batch["data_type"] == "geometries":
                 features = {r["external_id"]: r["geometry"] for r in records}
                 for unit in document["analysis_units"]:
                     if unit["external_id"] in features:

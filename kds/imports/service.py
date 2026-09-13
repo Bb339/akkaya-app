@@ -27,5 +27,9 @@ def preview(batch: dict[str, Any], document: dict[str, Any], limit: int = 20) ->
         result["normalized_preview"] = []
     result["suggested_mapping"], result["ambiguous_mapping"] = suggest(batch["detected_columns"], batch["data_type"])
     result["replacement_policy"] = "merge_geometry_by_external_id" if batch["data_type"] == "geometries" else "replace_entire_data_type"
+    if batch['data_type']=='scientific_inputs':
+        result['replacement_policy']='replace_supplied_scientific_sections; preserve_other_sections'
+    if batch['data_type']=='candidates':
+        result['replacement_policy']='replace_candidate_options; preserve_other_scientific_sections'
     result["warnings_require_acknowledgment"] = True
     return result

@@ -36,6 +36,10 @@ FIELDS = {
     "economics": ["crop_name", "year", "yield_per_da", "net_profit_per_da", "currency", "source", "yield_unit"],
     "geometries": ["external_id", "geometry"],
 }
+FIELDS.update(
+    candidates=['analysis_unit_id','crop','water_requirement_m3_da','profit_per_da','yield_ton_da','allowed','rotation_status','suitability','risk','source'],
+    scientific_inputs=['section','record_id','field','value_type','value','source'],
+    water_budget=['amount','unit','kind','source'])
 REQUIRED = {"analysis_units": ["external_id", "settlement", "area_da", "current_crop"],
             "crops": ["crop_name"], "economics": ["crop_name", "year", "yield_per_da", "net_profit_per_da"],
             "geometries": ["external_id", "geometry"]}
@@ -58,3 +62,5 @@ def check_mapping(mapping: Any, columns: list[str], data_type: str) -> None:
         raise ValueError("Mapping must associate canonical fields with detected column names.")
     if len(set(mapping.values())) != len(mapping):
         raise ValueError("A source column cannot populate multiple fields.")
+
+REQUIRED.update({name:[field for field in FIELDS[name] if field!='risk'] for name in ('candidates','scientific_inputs','water_budget')})

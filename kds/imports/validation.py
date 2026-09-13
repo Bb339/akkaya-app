@@ -19,6 +19,9 @@ def validate(batch: dict[str, Any], document: dict[str, Any]) -> tuple[list[dict
         issue("ERROR", "missing_column", "Required mapping is missing.", column=field)
     if missing:
         return issues, []
+    if data_type in {'candidates','scientific_inputs','water_budget'}:
+        from .scientific_tables import validate_table
+        return validate_table(batch, document)
     if data_type == "analysis_units" and key(mapping["area_da"]) in {"area", "alan"} and batch["options"].get("area_unit") != "da":
         issue("ERROR", "ambiguous_unit", "Confirm area_unit='da'; no implicit hectare conversion.", column="area_da")
     known_crops = {key(c["name"]) for c in document["crops"]}
