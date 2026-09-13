@@ -87,3 +87,56 @@ Analysis-unit geometry may be absent; geometry-only uploads require geometry.
 docs/data_templates contains four XLSX files. Import Data, read Guide, replace
 the fictional example row. Examples are neither Akkaya requirements nor agronomic
 recommendations. candidate_rules_template is documentation only in this milestone.
+
+
+## Explicit scientific inputs for project analyses
+
+Use POST /api/v2/projects/<id>/scientific-inputs, or the JSON file control on
+/projects. This replaces that project's scientific-input sections atomically
+and increments data_revision. It does not activate CSV imports or fill missing
+values. The returned per-scenario readiness report explains remaining gaps.
+
+The top-level sections are:
+
+- candidates: array with analysis_unit_id (external id), crop, water_requirement_m3_da,
+  profit_per_da (TRY), yield_ton_da, allowed (boolean), suitability (0..1),
+  rotation_status (source statement), optional risk. Every unit needs its
+  approved current option. Other options may be sparse; no regional values
+  are manufactured. All candidate amounts are explicit values.
+- unit_parameters: object keyed by external id; each value includes
+  current_water_m3, current_profit (TRY), soil_class, parcel_type
+  (field/vegetable/orchard).
+- irrigation: object keyed by crop name, with default method, recommended method
+  and efficiency in (0,1].
+- crop_families: crop-name to family-name map, required for S2.
+- rotation_rules: array including type, from_family, to_family, penalty_weight;
+  required for S2. Existing engine rule semantics are retained.
+- calendar: optional presentation/calendar rule map.
+- seasonal_resources: S2 tables, each an array of scalar row objects.
+
+S2 seasonal_resources tables:
+
+| Table | Required columns/coverage |
+|---|---|
+| s2 | parcel_id, crop, year, season (primary/secondary), area_da, water_m3_calib_gross, profit_tl, planting_date, harvest_date, yield_ton, price_tl_ton, variable_cost_tl, irrig_efficiency; complete unit/crop/season coverage |
+| s1 | prior-year parcel_id, crop, year history for every unit |
+| parcels | parcel_id, district, land_capability_class; every project unit |
+| reservoir | month, irrigation_m3_baseline; 12 months, sum equals project water budget |
+| delivery | month, max_delivery_m3_assumed; 12 explicit positive capacities |
+| monthly_climate | parcel_id, month, et0_mm, precip_mm; 12 months per unit |
+| water_quality | month, ec_dS_m_assumed; 12 months |
+| crop_suitability | crop, land_capability_class, suitability_score; complete soil/crop coverage |
+| irrigation_methods | method, typical_total_efficiency |
+| crop_params | existing engine Kc parameter table, supplementary to project crop records |
+| soil_params | explicit source soil-parameter rows |
+
+Dates use ISO YYYY-MM-DD. Nonfinite numbers, nested table cells and unknown
+sections are rejected. Structural validation does not assert agronomic
+correctness. Valid but incomplete inputs remain NOT_READY. The current engine's
+calib/none-risk policy and product classification scope are documented in
+scientific_project_execution.md.
+
+Budget type can be set through POST /api/v2/projects/<id>/water-budget with
+amount, unit (m3/hm3), kind and source. The UI exposes the same operation.
+The four existing XLSX template filenames are unchanged; candidate_rules_template
+remains a rule-schema guide, not an automatic agronomic candidate generator.

@@ -52,3 +52,9 @@ Not:
 - Kuraklık detay paneli varsayılan olarak kapalı açılır; çiftçi görünümünde karmaşık veri seti seçicileri gizlenir.
 - Bu sürümde ana planlama yılı 2024 mevcut desen/kota referansıdır. İleri projeksiyon modülleri aktif karar ekranından çıkarılmıştır; sistem mevcut su kullanımı, parsel kotası, ürün deseni, su/kâr karşılaştırması, tarımsal uygulanabilirlik uyarıları ve algoritma benchmarkı üzerinden çalışır.
 - Paket içinde proxy / assumed veri bulunan katmanlar vardır; bunlar savunma ve sunumda açıkça belirtilmelidir.
+
+V2 PROJECT SCIENTIFIC WORKFLOW
+Local UI: /projects
+Run on a separate local port: py -B -m flask --app app run --host 127.0.0.1 --port 5052 --no-reload
+Execution contract, explicit scientific input format and test commands: docs/scientific_project_execution.md
+58/69 catalog data backlog: docs/scientific_data_quality_backlog.md
