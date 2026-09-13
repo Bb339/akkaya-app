@@ -90,5 +90,9 @@
   [
     "    all_matrix_df = df.copy()",
     "    all_matrix_df = optional_reference(\"regional_candidate_options\")"
+  ],
+  [
+    "def build_water_allocation_logic() -> Dict[str, Any]:",
+    "@source('water_allocation_context')\ndef build_water_allocation_logic() -> Dict[str, Any]:"
   ]
 ]

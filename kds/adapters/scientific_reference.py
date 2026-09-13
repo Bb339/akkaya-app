@@ -14,6 +14,7 @@ READERS = {
     'suitability_map': 'load_crop_suitability_map', 'rotation': 'load_rotation_rules',
     'calendar': 'load_s1_crop_calendar_rules', 'environment': 'load_enhanced_frames',
     'candidate_options': 'load_matrix_candidates',
+    'water_allocation_context': 'build_water_allocation_logic',
 }
 OPTIONAL = {
     'calendar_annotations': 's1_crop_calendar_rules.json',

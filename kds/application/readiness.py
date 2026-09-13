@@ -47,7 +47,9 @@ def readiness(document):
         issue('reference_assumptions', 'Tez referansı proxy Kc/toprak/iklim, bölgesel aday genişletme ve sezon tamamlama kurallarını içerir; davranış eşitliği amacıyla açıkça korunur.', severity='warning')
     else:
         import app
-        unsupported=[c for c in names if not app.is_annual_field_vegetable_candidate(c) and app.canonical_crop_key(c) not in app.PERENNIAL_CROPS]
+        from kds.adapters.project_catalog import project_catalog_scope
+        with project_catalog_scope(crops):
+            unsupported=[c for c in names if not app.is_annual_field_vegetable_candidate(c) and app.canonical_crop_key(c) not in app.PERENNIAL_CROPS]
         if unsupported:
             issue('crop_rules', 'Mevcut motorun ürün grubu kuralları bu adlar için doğrulanmamış: '+', '.join(sorted(unsupported)))
         candidates = extra.get('candidates', [])

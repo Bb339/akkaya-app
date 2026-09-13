@@ -10559,6 +10559,7 @@ def build_validation_report(payload: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+@source('water_allocation_context')
 def build_water_allocation_logic() -> Dict[str, Any]:
     """Expose v42 water-allocation logic.
 

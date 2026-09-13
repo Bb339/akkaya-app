@@ -16,14 +16,14 @@ def verify_reference_document(document):
     reference = build_demo(app.DATA_DIR)
     for key in ('analysis_units', 'crops', 'economics', 'water_budget'):
         if document[key] != reference[key]:
-            raise ValueError(f'Referans proje {key} verisi değişmiş; açık bilimsel girdileri yeniden yükleyin.')
+            raise ValueError(f'Referans proje {key} verisi deÄŸiÅŸmiÅŸ; aÃ§Ä±k bilimsel girdileri yeniden yÃ¼kleyin.')
     if document['project']['planning_year'] != 2024:
-        raise ValueError('Referans ek kaynaklar yalnız 2024 planlama yılı için doğrulanmıştır.')
+        raise ValueError('Referans ek kaynaklar yalnÄ±z 2024 planlama yÄ±lÄ± iÃ§in doÄŸrulanmÄ±ÅŸtÄ±r.')
     metadata = json.loads((Path(__file__).with_name('reference_manifest.json')).read_text(encoding='utf-8'))
     for name, expected in metadata['input_hashes'].items():
         path = Path(app.__file__).parent / name
         if not path.is_file() or sha256(path.read_bytes()).hexdigest() != expected:
-            raise ValueError(f'Referans ek bilimsel kaynak değişmiş: {name}')
+            raise ValueError(f'Referans ek bilimsel kaynak deÄŸiÅŸmiÅŸ: {name}')
 
 
 def candidate_from_row(row):
@@ -68,9 +68,9 @@ def generic_resources(document):
     units = []
     for uid,u in unit_map.items():
         p = extra['unit_parameters'][uid]
-        units.append(dict(id=uid, name=u.get('name') or uid, area_da=u['area_da'], current_crop=u['current_crop'],
+        units.append(dict(id=uid, name=u.get('name_or_code') or uid, area_da=u['area_da'], current_crop=u['current_crop'],
                           water_m3=p['current_water_m3'], profit_tl=p['current_profit'], parcel_type=p['parcel_type'],
-                          village=u.get('village', ''), district=document['project'].get('province_or_region',''),
+                          village=u.get('settlement', ''), district=document['project'].get('province_or_region',''),
                           soil={'class':p['soil_class']}, lcc=p['soil_class']))
     rows, candidates = [], []
     for c in extra['candidates']:
@@ -80,12 +80,12 @@ def generic_resources(document):
                  candidate_crop_norm=app.canonical_crop_key(c['crop']), current_crop=u['current_crop'], area_da=area,
                  water_m3_da=water, profit_tl_da=profit, water_m3_total=water*area, profit_tl_total=profit*area,
                  current_quota_m3=quota, quota_area_fair_per_da_m3=quota, yield_ton_da=c['yield_ton_da'],
-                 is_feasible_under_current_quota=int(water*area<=quota), village=u.get('village',''),
+                 is_feasible_under_current_quota=int(water*area<=quota), village=u.get('settlement',''),
                  irrigation_text=extra['irrigation'][c['crop']]['default'])
         if c['allowed']:
             rows.append(row)
         candidates.append(CandidateOption(u['external_id'],c['crop'],water,profit,profit/water,water*area<=quota,
-                          c['allowed'],c['rotation_status'],c['suitability'],c.get('risk'),FrozenValue.of({'source':'project-explicit'})))
+                          c['allowed'],c['rotation_status'],c['suitability'],c.get('risk'),FrozenValue.of({'source':c.get('source','project-explicit')})))
     env = {k:pd.DataFrame(v) for k,v in extra.get('seasonal_resources',{}).items()}
     env['climate'] = env.get('monthly_climate', pd.DataFrame()).copy()
     catalog = {app.normalize_crop_key(c['name']):dict(name=c['name'],category=c.get('crop_group','')) for c in document['crops']}
@@ -93,6 +93,12 @@ def generic_resources(document):
     values = {k:{} for k in READERS}
     values.update({k:{} for k in OPTIONAL})
     values.update({k:{} for k in PARAMETERS})
+    values['water_allocation_context'] = dict(
+        source='project-explicit', project_id=document['project']['id'],
+        planning_year=document['project']['planning_year'],water_budget=document['water_budget'],
+        total_area_da=total_area, analysis_unit_count=len(units),
+        settlements=sorted({u.get('settlement','') for u in document['analysis_units']}),
+        interpretation='Project-supplied budget and units. Applied analysis budget is reported by the engine.')
     values['candidate_provenance'] = 'project-explicit-candidates'
     values['regional_candidate_options'] = pd.DataFrame()
     values.update(units=units,crop_catalog=catalog,candidate_options=pd.DataFrame(rows),environment=env,
