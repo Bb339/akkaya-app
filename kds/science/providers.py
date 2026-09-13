@@ -17,12 +17,14 @@ class LegacyReferenceProvider:
 
 class ProjectDataProvider:
     def __init__(self, bundle: ScientificInputBundle):
-        self._resources = dict(bundle.resources)
+        # Decode once per execution. These mutable engine views never escape
+        # their process; the canonical bundle remains deeply immutable.
+        self._resources = {name:value.copy() for name,value in bundle.resources}
 
     def read(self, name, legacy_reader):
         if name not in self._resources:
             raise ValueError(f'Missing scientific resource: {name}')
-        return self._resources[name].copy()
+        return self._resources[name]
 
 
 _provider = ContextVar('scientific_provider', default=None)

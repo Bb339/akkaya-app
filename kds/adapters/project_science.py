@@ -17,6 +17,8 @@ def verify_reference_document(document):
     for key in ('analysis_units', 'crops', 'economics', 'water_budget'):
         if document[key] != reference[key]:
             raise ValueError(f'Referans proje {key} verisi değişmiş; açık bilimsel girdileri yeniden yükleyin.')
+    if document['project']['planning_year'] != 2024:
+        raise ValueError('Referans ek kaynaklar yalnız 2024 planlama yılı için doğrulanmıştır.')
     metadata = json.loads((Path(__file__).with_name('reference_manifest.json')).read_text(encoding='utf-8'))
     for name, expected in metadata['input_hashes'].items():
         path = Path(app.__file__).parent / name
@@ -32,6 +34,7 @@ def candidate_from_row(row):
 
 
 def build_bundle(document, configuration):
+    import app
     import pandas as pd
     from .scientific_reference import snapshot
     extra = document.get('scientific_inputs', {})
@@ -44,6 +47,7 @@ def build_bundle(document, configuration):
     env = resources['environment'].copy()
     provenance = dict(source_version=document['metadata'].get('source_version', 'project-explicit'),
                       source_commit=document['metadata'].get('source_commit'),
+                      scientific_engine_hash=sha256(Path(app.__file__).read_bytes()).hexdigest(),
                       resource_hashes={k:v.digest for k,v in resources.items()})
     return ScientificInputBundle(document['project']['id'], document['project']['planning_year'], data_hash(document),
         FrozenValue.of(document['analysis_units']), FrozenValue.of(document['crops']), FrozenValue.of(document['economics']),
@@ -56,7 +60,7 @@ def build_bundle(document, configuration):
 def generic_resources(document):
     import app
     import pandas as pd
-    from .scientific_reference import READERS, OPTIONAL
+    from .scientific_reference import READERS, OPTIONAL, PARAMETERS
     extra = document['scientific_inputs']
     unit_map = {u['external_id']:u for u in document['analysis_units']}
     total_area = sum(u['area_da'] for u in unit_map.values())
@@ -78,18 +82,25 @@ def generic_resources(document):
                  current_quota_m3=quota, quota_area_fair_per_da_m3=quota, yield_ton_da=c['yield_ton_da'],
                  is_feasible_under_current_quota=int(water*area<=quota), village=u.get('village',''),
                  irrigation_text=extra['irrigation'][c['crop']]['default'])
-        rows.append(row)
+        if c['allowed']:
+            rows.append(row)
         candidates.append(CandidateOption(u['external_id'],c['crop'],water,profit,profit/water,water*area<=quota,
                           c['allowed'],c['rotation_status'],c['suitability'],c.get('risk'),FrozenValue.of({'source':'project-explicit'})))
     env = {k:pd.DataFrame(v) for k,v in extra.get('seasonal_resources',{}).items()}
     env['climate'] = env.get('monthly_climate', pd.DataFrame()).copy()
     catalog = {app.normalize_crop_key(c['name']):dict(name=c['name'],category=c.get('crop_group','')) for c in document['crops']}
+    irrigation={**extra['irrigation'],**{app.normalize_crop_key(k):v for k,v in extra['irrigation'].items()}}
     values = {k:{} for k in READERS}
     values.update({k:{} for k in OPTIONAL})
+    values.update({k:{} for k in PARAMETERS})
+    values['candidate_provenance'] = 'project-explicit-candidates'
+    values['regional_candidate_options'] = pd.DataFrame()
     values.update(units=units,crop_catalog=catalog,candidate_options=pd.DataFrame(rows),environment=env,
                   crop_table=pd.DataFrame(document['crops']),unit_summary=pd.DataFrame(),
-                  rotation=pd.DataFrame(extra.get('rotation_rules',[])), crop_families=extra.get('crop_families',{}),
-                  irrigation_map=extra['irrigation'],irrigation_annotations=extra['irrigation'],
+                  rotation=pd.DataFrame(extra.get('rotation_rules',[])), crop_families={app.normalize_crop_key(k):v for k,v in extra.get('crop_families',{}).items()},
+                  irrigation_map=irrigation,irrigation_annotations=irrigation,
                   calendar=extra.get('calendar',{}),calendar_annotations=extra.get('calendar',{}),
-                  orchard_interrow=pd.DataFrame(),suitability_map={})
+                  orchard_interrow=pd.DataFrame(),suitability_map={
+                      (str(r['land_capability_class']).upper(),app.normalize_crop_key(r['crop'])):r['suitability_score']
+                      for r in extra.get('seasonal_resources',{}).get('crop_suitability',[])})
     return {k:FrozenValue.of(v) for k,v in values.items()}, tuple(candidates)

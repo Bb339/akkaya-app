@@ -13,6 +13,14 @@ def test_all_thesis_function_and_class_definitions_unchanged():
     actual = {n.name: hashlib.sha256(ast.dump(n, include_attributes=False).encode()).hexdigest()
               for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
     assert actual == MANIFEST["definitions"]
+    # Relocated default input literals are frozen too; restoring the old AST
+    # alone would not detect an edit to the adapter's data file.
+    changes = json.loads((ROOT / 'tests/fixtures/data_boundary_changes.json').read_text(encoding='utf8'))
+    original = next(before for before, after in changes if before.startswith('default_crop_params ='))
+    values = ast.parse(original).body[0].value
+    expected = {key.args[0].value: ast.literal_eval(value) for key, value in zip(values.keys, values.values)}
+    parameters = json.loads((ROOT / 'kds/adapters/reference_parameters.json').read_text(encoding='utf8'))
+    assert parameters['fallback_crop_parameters'] == expected
 
 
 def test_legacy_frontend_sources_unchanged():

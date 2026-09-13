@@ -10,6 +10,7 @@ from kds.science.execution import execute, stable
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = ROOT/'tests/fixtures/scientific_baseline'
+pytestmark = pytest.mark.scientific_regression
 
 
 def assert_result(actual, expected, path='result'):
@@ -54,3 +55,15 @@ def test_legacy_seeded_reference(document):
     from tools.freeze_scientific_baseline import execute as reference
     case=json.loads((BASELINE/'s2_ga.json').read_text(encoding='utf8'))[0]
     assert_result(stable(reference('S2','GA',case['seed'],case['selected_ids'])),case['result'])
+
+
+def test_reference_preparation_preserves_serving_process_state(document):
+    import pickle
+    import random
+    import numpy as np
+    before=pickle.dumps(app._cache)
+    rng=random.getstate();numpy_state=pickle.dumps(np.random.get_state())
+    build_bundle(document,configuration(dict(scenario='S1',algorithm='GA',seed=123,objective='water_saving',
+        water_budget_ratio=1.,config=dict(popSize=12,generations=10,cxRate=.7,mutRate=.08)),document))
+    assert pickle.dumps(app._cache)==before
+    assert random.getstate()==rng and pickle.dumps(np.random.get_state())==numpy_state

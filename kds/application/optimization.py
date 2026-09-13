@@ -3,10 +3,13 @@ from datetime import datetime, timezone
 from hashlib import sha256
 import json
 from uuid import uuid4
+from dataclasses import asdict
 from kds.adapters.project_science import build_bundle, data_hash
 from kds.application.readiness import readiness
 from kds.data.repositories import NotFoundError
 from kds.science.execution import execute
+from kds.science.results import summarize
+from kds.domain.analysis_run import AnalysisRun
 
 
 def now():
@@ -82,13 +85,23 @@ class OptimizationApplicationService:
                           seed=config['seed'],objective=config['objective'],config_hash=config_hash,
                           cache_key=cache_key,scientific_engine='thesis-engine / provider-boundary-1',
                           weights='Unchanged engine objective formulas', configuration=config)
-        record = dict(id=run_id,project_id=project_id,data_version=bundle.data_version,configuration=config,
+        record = asdict(AnalysisRun(id=run_id,project_id=project_id,data_version=bundle.data_version,configuration=config,
                       scenario=config['scenario'],algorithm=config['algorithm'],seed=config['seed'],
                       started_at=now(),completed_at=None,status='running',result=None,error=None,
-                      provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning'])
+                      provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']))
+        provenance=record['provenance']
+        provenance['run_timestamp']=record['started_at']
         self.repository.update(project_id, lambda d: d.setdefault('runs',{}).__setitem__(run_id,record))
         try:
             record['result'] = self.executor(bundle)
+            record['summary'] = summarize(record['result'],bundle)
+            provenance['effective_run_parameters']=record['summary']['effective_run_parameters']
+            if record['result'].get('feasible') is False:
+                record['warnings'].append('Motorun ürettiği plan mevcut bütçe/kısıtlara uygun değil; tamamlanan çalışma uygulanabilir plan anlamına gelmez.')
+            effective=record['summary']['effective_run_parameters']
+            changed=[k for k,v in config['config'].items() if k in effective and effective[k]!=v]
+            if changed:
+                record['warnings'].append('Motorun mevcut parametre sınırları uygulandı: '+', '.join(changed)+'. Etkin değerler provenance içinde kayıtlıdır.')
             record['status'] = 'completed'
         except Exception as exc:
             # Persist failed runs; callers never receive a fabricated successful result.

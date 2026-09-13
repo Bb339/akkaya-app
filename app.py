@@ -3019,18 +3019,7 @@ def build_candidate_matrix_two_season(
         crop_list = [FALLOW] + crop_list
     
     # Project-aligned low-water crop pool (fallback placeholders)
-    default_crop_params = {
-        normalize_crop_key("ARPA"): {"water_per_da": 180.0, "profit_per_da": 3800.0},
-        normalize_crop_key("BUGDAY"): {"water_per_da": 220.0, "profit_per_da": 4200.0},
-        normalize_crop_key("NOHUT"): {"water_per_da": 120.0, "profit_per_da": 5200.0},
-        normalize_crop_key("MERCIMEK"): {"water_per_da": 110.0, "profit_per_da": 5000.0},
-        normalize_crop_key("KURU_FASULYE"): {"water_per_da": 250.0, "profit_per_da": 6500.0},
-        # Rainfed ("*_KURU") crops should not show 0 water in UI.
-        normalize_crop_key("ARPA_KURU"): {"water_per_da": 220.0, "profit_per_da": 2600.0},
-        normalize_crop_key("BUGDAY_KURU"): {"water_per_da": 250.0, "profit_per_da": 2800.0},
-        normalize_crop_key("NOHUT_KURU"): {"water_per_da": 180.0, "profit_per_da": 3400.0},
-        normalize_crop_key("MERCIMEK_KURU"): {"water_per_da": 160.0, "profit_per_da": 3200.0},
-    }
+    default_crop_params = optional_reference("fallback_crop_parameters")
     for ck in list(default_crop_params.keys()):
         if ck not in crop_list:
             crop_list.append(ck)
@@ -6081,7 +6070,7 @@ def _low_risk_methodology_meta(allocation_model: Any = "area_fair_per_da", selec
         "aco_safe_interpretation": LOW_RISK_ACO_NOTICE,
         "quota_model": _normalize_allocation_model(allocation_model),
         "quota_model_label": _allocation_model_label(allocation_model),
-        "candidate_matrix_path": "data/excel_derived/combined_parcel_candidate_matrix_2024.csv",
+        "candidate_matrix_path": optional_reference("candidate_provenance"),
         "data_confidence_legend": _low_risk_data_confidence_legend(),
         "proxy_layers_requiring_expert_review": [
             "Toprak uygunluğu",
@@ -6109,7 +6098,7 @@ def _matrix_build_problem(selected_parcels: List[Dict[str, Any]], scenario: str,
     df = load_matrix_candidates()
     if df is None or df.empty:
         return None
-    all_matrix_df = df.copy()
+    all_matrix_df = optional_reference("regional_candidate_options")
 
     sel_ids = [normalize_parcel_id(p.get("id")) for p in (selected_parcels or []) if str(p.get("id", "")).strip()]
     if sel_ids:
