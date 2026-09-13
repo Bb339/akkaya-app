@@ -4,19 +4,21 @@
 <body><header><a href="/projects">Crop KDS · Projeler</a><a href="/">Tez karar ekranı</a></header>
 <main><h1>Proje analizi</h1><p>Verilerinizi kontrol edin, bilimsel hazırlığı doğrulayın ve kayıtlı bir analiz çalıştırın.</p>
 <p id="message" role="status" aria-live="polite"></p>
-<section><h2>Projeler</h2><div id="projects"></div>
+<nav class="workflow" aria-label="Proje akışı"><a href="#projects-section">Projeler / Yeni Proje</a><a href="#data-management">Veri Yönetimi</a><a href="#readiness">Readiness</a><a href="#analysis-form">Analiz</a><a href="#result">Sonuç</a><a href="#history-section">Analiz Geçmişi</a></nav>
+<section id="projects-section"><h2>Projeler</h2><div id="projects"></div>
 <details><summary>Yeni proje oluştur</summary><form id="create-project">
 <label>Proje kimliği <input name="id" required pattern="[a-z0-9][a-z0-9_-]*" placeholder="ornek-proje"></label>
 <label>Proje adı <input name="name" required></label><label>Planlama yılı <input name="planning_year" type="number" value="2024" required></label>
+<label>Veri kaynağı <select name="data_source_notes"><option value="user_provided">Kullanıcı tarafından sağlanan saha verisi</option><option value="synthetic_test_fixture">Sentetik test verisi</option></select></label>
 <label>İl / bölge <input name="province_or_region"></label><label>Havza <input name="basin_or_irrigation_area"></label>
 <label>Yıllık su bütçesi (m³) <input name="annual_water_budget" type="number" min="0" step="any"></label>
 <p>Yeni projenin bütçe türü başlangıçta unknown olur. Türü doğrulamak için aşağıdaki bütçe formunu kullanın.</p>
 <button>Proje oluştur</button></form></details></section>
-<section id="detail" hidden><h2 id="project-name"></h2><dl id="facts"></dl>
+<section id="detail" hidden><h2 id="project-name"></h2><p id="synthetic-watermark" class="watermark" hidden>Synthetic test project / Sentetik test verisi</p><p id="reference-label" class="warning" hidden>calculated_reference: hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.</p><dl id="facts"></dl><h3 id="data-management">Veri Yönetimi</h3><p>Uploaded: yeni dosya önizlemede, henüz etkin verilere uygulanmadı. Warning: ayrıntılar readiness ve aktarım kayıtlarında.</p><div id="data-status" class="table-scroll"></div>
 <details><summary>Su bütçesini tanımla</summary><form id="budget-form"><label>Miktar (m³) <input name="amount" type="number" min="0" step="any" required></label>
 <label>Tür <select name="kind"><option>measured</option><option>official_allocation</option><option>calculated_reference</option><option>scenario</option></select></label>
 <label>Kaynak <input name="source" required></label><button>Kaydet</button></form></details>
-<h3>Veri yükleme</h3><form id="upload-form"><label>Veri türü <select name="data_type"><option value="analysis_units">Analiz birimleri</option><option value="crops">Ürün parametreleri</option><option value="economics">Ekonomi</option><option value="geometries">Geometri</option></select></label>
+<h3>Veri yükleme</h3><form id="upload-form"><label>Veri türü <select name="data_type"><option value="analysis_units">Analiz birimleri</option><option value="crops">Ürün parametreleri</option><option value="economics">Ekonomi</option><option value="geometries">Geometri</option><option value="candidates">Candidate Rules / Options</option><option value="scientific_inputs">Scientific Inputs (CSV/XLSX)</option><option value="water_budget">Water Budget</option></select></label>
 <label>CSV / XLSX / GeoJSON <input type="file" name="file" required accept=".csv,.xlsx,.json,.geojson"></label><button>Önizleme oluştur</button></form>
 <div id="import-preview" hidden><h4>Önizleme ve eşleştirme</h4><pre id="preview"></pre>
 <label>Kolon eşleştirmesi (canonical alan → dosya başlığı, JSON)<textarea id="mapping" rows="5">{}</textarea></label>
@@ -34,6 +36,7 @@
 <label>Algoritma parametreleri (JSON) <textarea name="config" rows="4" required></textarea></label>
 <p>Çalışma başına tek seed kullanılır. Çevresel akış payı %10, aylık kapasite denetimi açık, su modeli calib, risk modeli none. Hedef ağırlıkları mevcut bilimsel motorun formülleridir.</p>
 <button id="run-button">Analizi çalıştır ve kaydet</button></form></section>
-<section id="result" hidden><h2>Analiz sonucu</h2><dl id="result-facts"></dl><h3>Uyarılar</h3><ul id="result-warnings"></ul>
+<section id="result" hidden><h2>Analiz sonucu</h2><p id="result-source-label"></p><dl id="result-facts"></dl><h3>Uyarılar</h3><ul id="result-warnings"></ul>
 <h3>Ürün planı</h3><div id="plan" class="table-scroll"></div><details><summary>Provenance ve çalıştırma kaydı</summary><pre id="provenance"></pre></details></section>
+<section id="history-section" hidden><h2>Analiz Geçmişi</h2><p id="history-count"></p><div id="history" class="table-scroll"></div><button id="history-more" hidden type="button">Daha fazla çalışma</button></section>
 </main><script type="module" src="/projects/assets/projects.js"></script></body></html>

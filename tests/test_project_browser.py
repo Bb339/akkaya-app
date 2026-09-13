@@ -28,6 +28,7 @@ def test_project_workflow_in_chromium(tmp_path):
             form=page.locator('#create-project')
             form.locator('[name=id]').fill('browser-created')
             form.locator('[name=name]').fill('Tarayıcı test projesi')
+            form.locator('[name=data_source_notes]').select_option('synthetic_test_fixture')
             form.locator('[name=planning_year]').fill('2025')
             form.locator('[name=annual_water_budget]').fill('10000')
             form.get_by_role('button').click()
@@ -71,6 +72,10 @@ def test_project_workflow_in_chromium(tmp_path):
             expect(page.locator('#provenance')).to_contain_text('cache_key')
             records=repository.get('browser-created')['runs']
             assert len(records)==1 and next(iter(records.values()))['status']=='completed'
+            expect(page.locator('#history')).to_contain_text(next(iter(records)))
+            expect(page.locator('#result-source-label')).to_contain_text('Sentetik test verisi')
+            page.locator('#history button').first.click()
+            expect(page.locator('#provenance')).to_contain_text(next(iter(records)))
             assert not errors
             screenshot=os.environ.get('KDS_BROWSER_SCREENSHOT')
             if screenshot:

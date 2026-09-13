@@ -70,6 +70,16 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
                        data_revision=document["data_revision"], metadata=document["metadata"],
                        counts={name: len(document[name]) for name in ("analysis_units", "crops", "economics", "imports")})
 
+    @blueprint.get("/projects/<project_id>/overview")
+    def project_overview(project_id):
+        from kds.application.project_overview import overview
+        return jsonify(overview(projects.get(project_id)))
+
+    @blueprint.get("/projects/<project_id>/analyses")
+    def list_analyses(project_id):
+        from kds.application.project_overview import history
+        return jsonify(history(projects.get(project_id),int(request.args.get('offset',0)),int(request.args.get('limit',50))))
+
     @blueprint.get("/projects/<project_id>/readiness")
     def scientific_readiness(project_id):
         return jsonify(analysis.readiness(project_id))

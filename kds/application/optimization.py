@@ -91,6 +91,9 @@ class OptimizationApplicationService:
                       provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']))
         provenance=record['provenance']
         provenance['run_timestamp']=record['started_at']
+        provenance['water_budget']=bundle.water_budget.copy()
+        provenance['project_name']=document['project']['name']
+        provenance['data_source_notes']=document['project'].get('data_source_notes','')
         self.repository.update(project_id, lambda d: d.setdefault('runs',{}).__setitem__(run_id,record))
         try:
             record['result'] = self.executor(bundle)
