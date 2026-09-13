@@ -229,3 +229,16 @@ Test verileri sentetiktir ve gerçek kullanıcı AppData store'una yazılmaz.
 - Dört XLSX şablonu mevcut ve ZIP CRC kontrolleri başarılı; değiştirilmedi.
 - V1 HEAD/etiket a49daac1ae6d15d83428565c388bfafb4b6da08a korundu.
   Production yayını ve remote push yapılmadı.
+
+## Generalization and workflow follow-up
+
+See `generalization_acceptance.md` for the independent 24-unit public-import
+fixture, no-reference-file execution guard and three acceptance tiers. Scientific
+CSV/XLSX imports now complement the existing JSON contract. `/projects` includes
+data group status, provenance-aware result detail and paged analysis history.
+
+Readiness classification uses the project's own catalog scope. The descriptive
+water-allocation context also comes from the active provider. The only additional
+legacy app line is a data-provider decorator; no optimization formula changed.
+Reference raw outputs remain covered by small multi-seed and full-project parity.
+New run provenance snapshots budget/source; old missing metadata stays explicit.

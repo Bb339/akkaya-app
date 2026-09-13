@@ -140,3 +140,52 @@ Budget type can be set through POST /api/v2/projects/<id>/water-budget with
 amount, unit (m3/hm3), kind and source. The UI exposes the same operation.
 The four existing XLSX template filenames are unchanged; candidate_rules_template
 remains a rule-schema guide, not an automatic agronomic candidate generator.
+
+## Public CSV/XLSX scientific imports
+
+All paths below use the existing `/imports` upload -> mapping -> preview -> explicit
+confirm transaction. JSON scientific-input POST remains supported for compatibility,
+but the general acceptance fixture does not use it.
+
+| data_type | Required columns | Confirmation policy |
+|---|---|---|
+| candidates | analysis_unit_id, crop, water_requirement_m3_da, profit_per_da, yield_ton_da, allowed, rotation_status, suitability, source | Replace candidates only; optional risk |
+| scientific_inputs | section, record_id, field, value_type, value, source | Replace supplied scientific maps/tables; preserve omitted sections |
+| water_budget | amount, unit, kind, source | Exactly one row; replace budget and project budget fields |
+
+`scientific_inputs` is a typed long table. Rows with the same section/record_id
+form one record; field is a column name inside that record. value_type is exactly
+text, number, integer or boolean. Values must be explicit and finite. Duplicate
+fields, unknown sections and inconsistent sources for one record are errors.
+A blank value never silently becomes zero.
+
+Sections:
+
+- unit_parameters, irrigation, calendar: record_id is the unit/crop key.
+- crop_families: record_id is crop name; field must be family and type text.
+- rotation_rules: record_id identifies one rule; fields include type,
+  from_family, to_family and penalty_weight.
+- seasonal_resources.s1 / s2 / parcels / reservoir / delivery / crop_params /
+  monthly_climate / water_quality / soil_params / crop_suitability /
+  irrigation_methods: record_id groups the scalar columns of one table row.
+
+Example (all values below are synthetic):
+
+```csv
+section,record_id,field,value_type,value,source
+unit_parameters,GX-001,current_water_m3,number,880,synthetic_test_fixture
+unit_parameters,GX-001,current_profit,number,5200,synthetic_test_fixture
+unit_parameters,GX-001,soil_class,text,II,synthetic_test_fixture
+unit_parameters,GX-001,parcel_type,text,field,synthetic_test_fixture
+```
+
+The scientific schema and completeness rules from the JSON section above still
+apply after reconstruction. Successful parsing is not scientific readiness.
+The per-record source is retained in scientific records and the original batch;
+crop-family sources remain traceable through the imported rows and batch hash.
+
+A synthetic project is declared using `data_source_notes=synthetic_test_fixture`
+in project creation, or the corresponding UI source selector. All fixture row
+sources have this value. Genuine user projects must use their actual sources.
+A scenario budget is a user/test scenario; calculated_reference is calculated
+reference demand and must not be labeled measured reservoir water or official allocation.
