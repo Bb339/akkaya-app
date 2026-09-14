@@ -1,5 +1,6 @@
 """Project overview and bounded analysis history projections for the V2 UI."""
 from kds.application.readiness import readiness
+from kds.science.results import present_stored_run
 
 
 def run_summary(run):
@@ -12,7 +13,7 @@ def run_summary(run):
 def history(document,offset=0,limit=50):
     if offset<0 or not 1<=limit<=200:raise ValueError('offset >= 0 and limit in [1,200] required.')
     runs=sorted(document.get('runs',{}).values(),key=lambda r:(r['started_at'],r['id']),reverse=True)
-    return dict(items=[run_summary(r) for r in runs[offset:offset+limit]],count=len(runs),offset=offset,limit=limit)
+    return dict(items=[run_summary(present_stored_run(r,document)) for r in runs[offset:offset+limit]],count=len(runs),offset=offset,limit=limit)
 
 
 def overview(document):

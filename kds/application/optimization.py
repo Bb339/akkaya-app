@@ -8,7 +8,7 @@ from kds.adapters.project_science import build_bundle, data_hash
 from kds.application.readiness import readiness
 from kds.data.repositories import NotFoundError
 from kds.science.execution import execute
-from kds.science.results import summarize
+from kds.science.results import RESULT_CONTRACT_VERSION, present_stored_run, project_result, summarize
 from kds.domain.analysis_run import AnalysisRun
 
 
@@ -63,10 +63,11 @@ class OptimizationApplicationService:
         return readiness(self.repository.get(project_id))
 
     def get(self, project_id, run_id):
-        run = self.repository.get(project_id).get('runs',{}).get(run_id)
+        document = self.repository.get(project_id)
+        run = document.get('runs',{}).get(run_id)
         if run is None:
             raise NotFoundError('Analysis run not found in this project.')
-        return run
+        return present_stored_run(run, document)
 
     def run(self, project_id, payload):
         document = self.repository.get(project_id)
@@ -90,13 +91,16 @@ class OptimizationApplicationService:
                       started_at=now(),completed_at=None,status='running',result=None,error=None,
                       provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']))
         provenance=record['provenance']
+        if config['scenario']=='S2':
+            provenance['result_contract_version']=RESULT_CONTRACT_VERSION
         provenance['run_timestamp']=record['started_at']
         provenance['water_budget']=bundle.water_budget.copy()
         provenance['project_name']=document['project']['name']
         provenance['data_source_notes']=document['project'].get('data_source_notes','')
         self.repository.update(project_id, lambda d: d.setdefault('runs',{}).__setitem__(run_id,record))
         try:
-            record['result'] = self.executor(bundle)
+            engine_result = self.executor(bundle)
+            record['result'] = project_result(engine_result, config, document['analysis_units'])
             record['summary'] = summarize(record['result'],bundle)
             provenance['effective_run_parameters']=record['summary']['effective_run_parameters']
             if record['result'].get('feasible') is False:
