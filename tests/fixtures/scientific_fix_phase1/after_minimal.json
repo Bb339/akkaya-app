@@ -1,0 +1,18 @@
+{
+  "source_commit": "bd5984a",
+  "engine_sha256": "81471ebdf44f8757d9857b94c4ca9736a1f66ccce3bf19034c6d64ba0633515b",
+  "cases": {
+    "BUGDAY": {
+      "lock_index": -1,
+      "locked": false
+    },
+    "ARMUT": {
+      "lock_index": 2,
+      "locked": true
+    },
+    "ELMA": {
+      "lock_index": 3,
+      "locked": true
+    }
+  }
+}

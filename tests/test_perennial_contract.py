@@ -55,6 +55,15 @@ def test_current_crop_spelling_alias_remains_protected():
     assert app._compute_perennial_locks([dict(id='X', current_crop='KAYISI')], 2025, ['NADAS', 'KAYSI'], 's2').tolist() == [1]
 
 
+def test_after_minimal_evidence_matches_current_behavior():
+    import json
+    from pathlib import Path
+    evidence = json.loads((Path(__file__).parent/'fixtures/scientific_fix_phase1/after_minimal.json').read_text())
+    for crop, expected in evidence['cases'].items():
+        assert lock(crop) == expected['lock_index']
+        assert (expected['lock_index'] >= 0) is expected['locked']
+
+
 def test_public_synthetic_units_have_only_six_real_locks(tmp_path):
     from general_project_support import client_for, import_project, config
     from kds.adapters.project_science import build_bundle
