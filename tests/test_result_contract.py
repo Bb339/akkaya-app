@@ -1,5 +1,6 @@
 """S2 optimizer and validated-final stages stay explicit and internally consistent."""
 from copy import deepcopy
+import pytest
 from kds.application.optimization import OptimizationApplicationService, configuration
 from kds.application.project_overview import history
 from kds.data.project_store import FileProjectStore
@@ -122,3 +123,55 @@ def test_contract_exposes_inconsistent_engine_totals_without_using_them_as_final
     projected = project_result(source, configuration(request_body("S2"), document), document["analysis_units"])
     assert projected["total_water_m3"] == 450.0
     assert projected["validated_final_plan"]["validation"]["engine_reported_totals_consistent"] is False
+
+
+def _stable_hash(value):
+    import hashlib
+    import json
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+@pytest.mark.full_project
+def test_full_akkaya_s2_ga_phase1_acceptance():
+    """Optional Tier 2 gate: exactly one full engine execution for this phase."""
+    import json
+    import os
+    from pathlib import Path
+    import app
+    from general_project_support import config
+    from kds.adapters.akkaya_demo import build_demo
+    from kds.adapters.project_science import build_bundle
+    from kds.science.execution import execute
+
+    document = build_demo(app.DATA_DIR)
+    configured = configuration(config("S2", "GA", 123), document)
+    engine = execute(build_bundle(document, configured))
+    result = project_result(engine, configured, document["analysis_units"])
+    final = result["validated_final_plan"]
+    assert len(document["analysis_units"]) == len(final["details"]) == 179
+    assert result["total_water_m3"] == pytest.approx(23933291.2028)
+    assert result["total_profit_tl"] == pytest.approx(188154778.3904635)
+    assert result["feasible"] is False
+    assert final["validation"]["engine_reported_totals_consistent"] is True
+
+    by_unit = {u["external_id"]: u for u in document["analysis_units"]}
+    protected = {uid for uid, unit in by_unit.items()
+                 if app.canonical_crop_key(unit["current_crop"]) in app.PERENNIAL_CROPS}
+    assert len(protected) == 52
+    by_result = {row["parcelId"]: row for row in final["details"]}
+    assert all(app.canonical_crop_key(by_result[uid]["primary"]["crop"]) ==
+               app.canonical_crop_key(by_unit[uid]["current_crop"]) for uid in protected)
+
+    folder = os.environ.get("KDS_FIX1_ACCEPTANCE_OUTPUT")
+    if folder:
+        output = Path(folder)
+        output.mkdir(parents=True, exist_ok=True)
+        (output / "full-Akkaya-S2-GA-123.json").write_text(json.dumps(dict(
+            scenario="S2", algorithm="GA", seed=123, units=179,
+            protected_orchards=52, raw_plan_hash=_stable_hash(result["raw_optimizer_plan"]["details"]),
+            final_plan_hash=_stable_hash(final["details"]),
+            raw_water_m3=result["raw_optimizer_plan"]["metrics"]["total_water_m3"],
+            raw_profit_tl=result["raw_optimizer_plan"]["metrics"]["total_profit_tl"],
+            final_water_m3=result["total_water_m3"], final_profit_tl=result["total_profit_tl"],
+            water_budget_m3=result["water_budget_m3"], feasible=result["feasible"],
+            validation=final["validation"]), indent=2), encoding="utf8")
