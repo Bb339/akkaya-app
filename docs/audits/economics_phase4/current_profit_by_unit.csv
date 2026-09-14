@@ -1,0 +1,180 @@
+﻿analysis_unit_id,settlement,area_da,current_crop,current_profit_total_tl,implied_profit_per_da,source,calculation,authority,notes
+P1,Sazlıca,2700.0,BUĞDAY (Dane),7254999.9,2687.0370000000003,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P2,Sazlıca,1000.0,ARPA (Dane),2600000.0,2600.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P3,Sazlıca,40.0,ÇAVDAR (Dane),100000.0,2500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P4,Sazlıca,70.0,TRTİKALE (Dane),189000.0,2700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P5,Sazlıca,50.0,YULAF (Dane),125000.0,2500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P6,Sazlıca,80.0,KURU FASULYE,440000.0,5500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P7,Sazlıca,80.0,NOHUT,256000.0,3200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P8,Sazlıca,20.0,AYÇİÇEĞİ,84000.0,4200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P9,Sazlıca,475.0,PATATES,1102483.075,2321.017,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P10,Sazlıca,20.0,BUĞDAY (YEŞİLOT),70000.0,3500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P11,Sazlıca,20.0,ARPA (YEŞİLOT),84000.0,4200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P12,Sazlıca,350.0,ÇAVDAR (YEŞİLOT),1365000.0,3900.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P13,Sazlıca,70.0,TRİTİKALE (YEŞİLOT),245000.0,3500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P14,Sazlıca,10.0,YULAF (YEŞİLOT),38000.0,3800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P15,Sazlıca,70.0,FİĞ (YEŞİLOT),315000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P16,Sazlıca,1650.0,YONCA (YEŞİLOT),10725000.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P17,Sazlıca,650.0,SİLAJLIK MISIR,4030000.0,6200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P18,Sazlıca,20.0,SORGUM,76000.0,3800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P19,Sazlıca,2.0,BARBUNYA FASULYE (TAZE),3600.0,1800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P20,Sazlıca,17.0,SİVRİ BİBER,119000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P21,Sazlıca,60.0,SALÇALIK BİBER,549354.06,9155.901000000002,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P22,Sazlıca,1248.0,SOFRALIK DOMATES,10832263.104,8679.698,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P23,Sazlıca,3754.0,SALÇALIK DOMATES,60032913.126,15991.719000000001,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P24,Sazlıca,11.0,FASULYE (TAZE),6331.985,575.635,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P25,Sazlıca,2.0,HIYAR (SOFRALIK),10400.0,5200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P26,Sazlıca,11.0,KABAK (SAKIZ),71500.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P27,Sazlıca,1.0,KABAK (BAL),7000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P28,Sazlıca,9.0,KABAK (ÇEREZLİK),40500.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P29,Sazlıca,106.0,KARPUZ,477000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P30,Sazlıca,90.0,KAVUN,423000.0,4700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P31,Sazlıca,7300.0,LAHANA (BEYAZ),36301060.4,4972.748,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P32,Sazlıca,700.0,LAHANA (KIRMIZI),3640000.0,5200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P33,Sazlıca,67.0,SOĞAN (KURU),856245.662,12779.786,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P34,Sazlıca,1.0,SARIMSAK (KURU),10046.808,10046.808,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P35,Sazlıca,1.0,SOĞAN (TAZE),7000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P36,Sazlıca,63.0,BAĞ,504000.0,8000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P37,Sazlıca,86.0,ARMUT,860000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P38,Sazlıca,3826.0,ELMA,42086000.0,11000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P39,Sazlıca,126.0,ERİK,1134000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P40,Sazlıca,456.0,KAYSI,4332000.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P41,Sazlıca,129.0,KİRAZ,1483500.0,11500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P42,Sazlıca,2525.0,NEKTAR,25250000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P43,Sazlıca,596.0,ŞEFTALİ,5840800.0,9800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P44,Sazlıca,2.0,VİŞNE,19000.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P45,Sazlıca,71.0,BADEM,639000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P46,Sazlıca,251.0,CEVİZ,2510000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P47,Sazlıca,12.0,ÇİLEK,180000.0,15000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P48,Bahçeli,2190.0,BUĞDAY (Dane),5884611.03,2687.0370000000003,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P49,Bahçeli,3380.0,ARPA (Dane),8788000.0,2600.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P50,Bahçeli,170.0,ÇAVDAR (Dane),425000.0,2500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P51,Bahçeli,50.0,KURU FASULYE,275000.0,5500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P52,Bahçeli,360.0,NOHUT,1152000.0,3200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P53,Bahçeli,140.0,PATATES,324942.38,2321.017,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P54,Bahçeli,100.0,YULAF (YEŞİLOT),380000.0,3800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P55,Bahçeli,20.0,FİĞ (YEŞİLOT),90000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P56,Bahçeli,510.0,YONCA (YEŞİLOT),3315000.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P57,Bahçeli,125.0,SİLAJLIK MISIR,775000.0,6200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P58,Bahçeli,2.0,SİVRİ BİBER,14000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P59,Bahçeli,40.0,SALÇALIK BİBER,366236.04,9155.901,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P60,Bahçeli,30.0,SOFRALIK DOMATES,260390.94,8679.698,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P61,Bahçeli,870.0,SALÇALIK DOMATES,13912795.53,15991.719,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P62,Bahçeli,10.0,FASULYE (TAZE),5756.35,575.635,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P63,Bahçeli,16.0,HIYAR (SOFRALIK),83200.0,5200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P64,Bahçeli,10.0,KARPUZ,45000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P65,Bahçeli,120.0,KAVUN,564000.0,4700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P66,Bahçeli,457.0,LAHANA (BEYAZ),2272545.836,4972.7480000000005,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P67,Bahçeli,10.0,SOĞAN (KURU),127797.86,12779.786,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P68,Bahçeli,1500.0,BAĞ,12000000.0,8000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P69,Bahçeli,222.0,ARMUT,2220000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P70,Bahçeli,53.0,AYVA,503500.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P71,Bahçeli,8438.0,ELMA,92818000.0,11000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P72,Bahçeli,41.0,ERİK,369000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P73,Bahçeli,480.0,KAYSI,4560000.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P74,Bahçeli,20.0,KİRAZ,230000.0,11500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P75,Bahçeli,98.0,NEKTAR,980000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P76,Bahçeli,25.0,ŞEFTALİ,245000.0,9800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P77,Bahçeli,2.0,BADEM,18000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P78,Bahçeli,203.0,CEVİZ,2030000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P79,Bor İlçe Merkezi,4441.0,BUĞDAY (Dane),11933131.317,2687.037,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P80,Bor İlçe Merkezi,2540.0,ARPA (Dane),6604000.0,2600.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P81,Bor İlçe Merkezi,85.0,ÇAVDAR (Dane),212500.0,2500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P82,Bor İlçe Merkezi,9.0,MISIR (Dane),36000.0,4000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P83,Bor İlçe Merkezi,50.0,TRTİKALE (Dane),135000.0,2700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P84,Bor İlçe Merkezi,160.0,KURU FASULYE,880000.0,5500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P85,Bor İlçe Merkezi,140.0,NOHUT,448000.0,3200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P86,Bor İlçe Merkezi,250.0,PATATES,580254.25,2321.017,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P87,Bor İlçe Merkezi,2960.0,ŞEKER PANCARI,19240000.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P88,Bor İlçe Merkezi,570.0,ÇAVDAR (YEŞİLOT),2223000.0,3900.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P89,Bor İlçe Merkezi,40.0,TRİTİKALE (YEŞİLOT),140000.0,3500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P90,Bor İlçe Merkezi,900.0,FİĞ (YEŞİLOT),4050000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P91,Bor İlçe Merkezi,2900.0,YONCA (YEŞİLOT),18850000.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P92,Bor İlçe Merkezi,5340.0,SİLAJLIK MISIR,33108000.0,6200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P93,Bor İlçe Merkezi,183.0,SORGUM,695400.0,3800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P94,Bor İlçe Merkezi,16.0,SİVRİ BİBER,112000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P95,Bor İlçe Merkezi,191.0,SALÇALIK BİBER,1748777.091,9155.901,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P96,Bor İlçe Merkezi,180.0,SOFRALIK DOMATES,1562345.64,8679.698,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P97,Bor İlçe Merkezi,4960.0,SALÇALIK DOMATES,79318926.24,15991.719,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P98,Bor İlçe Merkezi,10.0,FASULYE (TAZE),5756.35,575.635,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P99,Bor İlçe Merkezi,12.0,HIYAR (SOFRALIK),62400.0,5200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P100,Bor İlçe Merkezi,7.0,KABAK (SAKIZ),45500.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P101,Bor İlçe Merkezi,50.0,KABAK (ÇEREZLİK),225000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P102,Bor İlçe Merkezi,30.0,ISPANAK,90000.0,3000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P103,Bor İlçe Merkezi,750.0,KARPUZ,3375000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P104,Bor İlçe Merkezi,520.0,KAVUN,2444000.0,4700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P105,Bor İlçe Merkezi,240.0,LAHANA (BEYAZ),1193459.52,4972.7480000000005,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P106,Bor İlçe Merkezi,35.0,MARUL,175000.0,5000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P107,Bor İlçe Merkezi,30.0,PIRASA,135000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P108,Bor İlçe Merkezi,1190.0,SOĞAN (KURU),15207945.34,12779.786,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P109,Bor İlçe Merkezi,30.0,SOĞAN (TAZE),210000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P110,Bor İlçe Merkezi,30.0,TURP (KIRMIZI),120000.0,4000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P111,Bor İlçe Merkezi,40.0,MAYDONOZ,180000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P112,Bor İlçe Merkezi,700.0,BAĞ,5600000.0,8000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P113,Bor İlçe Merkezi,20.0,ARMUT,200000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P114,Bor İlçe Merkezi,4940.0,ELMA,54340000.0,11000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P115,Bor İlçe Merkezi,13.0,ERİK,117000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P116,Bor İlçe Merkezi,170.0,KAYSI,1615000.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P117,Bor İlçe Merkezi,24.0,KİRAZ,276000.0,11500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P118,Bor İlçe Merkezi,4.0,NEKTAR,40000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P119,Bor İlçe Merkezi,15.0,ŞEFTALİ,147000.0,9800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P120,Bor İlçe Merkezi,3.0,BADEM,27000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P121,Bor İlçe Merkezi,258.0,CEVİZ,2580000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P122,Kemerhisar,7110.0,BUĞDAY (Dane),19104833.07,2687.0370000000003,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P123,Kemerhisar,5540.0,ARPA (Dane),14404000.0,2600.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P124,Kemerhisar,40.0,ÇAVDAR (Dane),100000.0,2500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P125,Kemerhisar,11.0,MISIR (Dane),44000.0,4000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P126,Kemerhisar,75.0,KURU FASULYE,412500.0,5500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P127,Kemerhisar,650.0,NOHUT,2080000.0,3200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P128,Kemerhisar,153.0,AYÇİÇEĞİ,642600.0,4200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P129,Kemerhisar,630.0,PATATES,1462240.71,2321.017,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P130,Kemerhisar,2800.0,ŞEKER PANCARI,18200000.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P131,Kemerhisar,130.0,ÇAVDAR (YEŞİLOT),507000.0,3900.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P132,Kemerhisar,350.0,FİĞ (YEŞİLOT),1575000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P133,Kemerhisar,2765.0,YONCA (YEŞİLOT),17972500.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P134,Kemerhisar,850.0,SİLAJLIK MISIR,5270000.0,6200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P135,Kemerhisar,7.0,LAVANTA,49000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P136,Kemerhisar,5.0,SİVRİ BİBER,35000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P137,Kemerhisar,590.0,SALÇALIK BİBER,5401981.59,9155.901,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P138,Kemerhisar,120.0,SOFRALIK DOMATES,1041563.76,8679.698,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P139,Kemerhisar,5400.0,SALÇALIK DOMATES,86355282.6,15991.719,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P140,Kemerhisar,5.0,FASULYE (TAZE),2878.175,575.635,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P141,Kemerhisar,1.0,HIYAR (SOFRALIK),5200.0,5200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P142,Kemerhisar,4.0,KABAK (ÇEREZLİK),18000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P143,Kemerhisar,100.0,KARPUZ,450000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P144,Kemerhisar,200.0,KAVUN,940000.0,4700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P145,Kemerhisar,65.0,LAHANA (BEYAZ),323228.62,4972.748,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P146,Kemerhisar,40.0,SOĞAN (KURU),511191.44,12779.786,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P147,Kemerhisar,2800.0,BAĞ,22400000.0,8000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P148,Kemerhisar,50.0,ARMUT,500000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P149,Kemerhisar,9546.0,ELMA,105006000.0,11000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P150,Kemerhisar,30.0,ERİK,270000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P151,Kemerhisar,356.0,KAYSI,3382000.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P152,Kemerhisar,15.0,KİRAZ,172500.0,11500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P153,Kemerhisar,16.0,NEKTAR,160000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P154,Kemerhisar,8.0,ŞEFTALİ,78400.0,9800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P155,Kemerhisar,43.0,BADEM,387000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P156,Kemerhisar,597.0,CEVİZ,5970000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P157,Kaynarca,725.0,ARPA (Dane),1885000.0,2600.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P158,Kaynarca,878.0,BUĞDAY (Dane),2359218.486,2687.0370000000003,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P159,Kaynarca,25.0,PATATES,58025.425,2321.0170000000003,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P160,Kaynarca,15.0,SORGUM,57000.0,3800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P161,Kaynarca,30.0,SİLAJLIK MISIR,186000.0,6200.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P162,Kaynarca,145.0,YONCA (YEŞİLOT),942500.0,6500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P163,Kaynarca,30.0,ÇAVDAR (YEŞİLOT),117000.0,3900.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P164,Kaynarca,70.0,KARPUZ,315000.0,4500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P165,Kaynarca,250.0,KAVUN,1175000.0,4700.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P166,Kaynarca,5150.0,LAHANA (BEYAZ),25609652.2,4972.748,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P167,Kaynarca,10.0,SALÇALIK BİBER,91559.01,9155.901,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P168,Kaynarca,2148.0,SALÇALIK DOMATES,34350212.412,15991.719000000001,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P169,Kaynarca,60.0,SOFRALIK DOMATES,520781.88,8679.698,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P170,Kaynarca,2.0,SİVRİ BİBER,14000.0,7000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P171,Kaynarca,11.0,ARMUT,110000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P172,Kaynarca,2.0,BADEM,18000.0,9000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P173,Kaynarca,350.0,BAĞ,2800000.0,8000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P174,Kaynarca,79.0,CEVİZ,790000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P175,Kaynarca,130.0,ELMA,1430000.0,11000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P176,Kaynarca,40.0,KAYSI,380000.0,9500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P177,Kaynarca,3.0,KİRAZ,34500.0,11500.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P178,Kaynarca,6.0,NEKTAR,60000.0,10000.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog
+P179,Kaynarca,32.0,ŞEFTALİ,313600.0,9800.0,data/parsel_su_kar_ozet.csv:mevcut_kar_tl,source total; independently checked as area_da × catalog net_kar_tl_da,DERIVED,matches catalog

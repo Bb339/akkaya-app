@@ -1,0 +1,233 @@
+﻿source_a,raw_name_a,canonical_name_a,source_b,raw_name_b,canonical_name_b,match_status,reason,confidence
+crop_catalog,ARMUT,ARMUT,candidate_matrix,ARMUT,ARMUT,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (Dane),ARPADANE,candidate_matrix,ARPA (Dane),ARPADANE,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (YEŞİLOT),ARPAYESILOT,candidate_matrix,ARPA (YEŞİLOT),ARPAYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,AYVA,AYVA,candidate_matrix,AYVA,AYVA,EXACT,raw names identical,HIGH
+crop_catalog,AYÇİÇEĞİ,AYCICEGI,candidate_matrix,AYÇİÇEĞİ,AYCICEGI,EXACT,raw names identical,HIGH
+crop_catalog,BADEM,BADEM,candidate_matrix,BADEM,BADEM,EXACT,raw names identical,HIGH
+crop_catalog,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,candidate_matrix,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,BAĞ,BAG,candidate_matrix,BAĞ,BAG,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (Dane),BUGDAYDANE,candidate_matrix,BUĞDAY (Dane),BUGDAYDANE,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,candidate_matrix,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,CEVİZ,CEVIZ,candidate_matrix,CEVİZ,CEVIZ,EXACT,raw names identical,HIGH
+crop_catalog,DUT,DUT,candidate_matrix,DUT,DUT,EXACT,raw names identical,HIGH
+crop_catalog,ELMA,ELMA,candidate_matrix,ELMA,ELMA,EXACT,raw names identical,HIGH
+crop_catalog,ERİK,ERIK,candidate_matrix,ERİK,ERIK,EXACT,raw names identical,HIGH
+crop_catalog,FASULYE (TAZE),FASULYETAZE,candidate_matrix,FASULYE (TAZE),FASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,FİĞ (YEŞİLOT),FIGYESILOT,candidate_matrix,FİĞ (YEŞİLOT),FIGYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,HIYAR (SOFRALIK),HIYARSOFRALIK,candidate_matrix,HIYAR (SOFRALIK),HIYARSOFRALIK,EXACT,raw names identical,HIGH
+crop_catalog,ISPANAK,ISPANAK,candidate_matrix,ISPANAK,ISPANAK,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (BAL),KABAKBAL,candidate_matrix,KABAK (BAL),KABAKBAL,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (SAKIZ),KABAKSAKIZ,candidate_matrix,KABAK (SAKIZ),KABAKSAKIZ,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (ÇEREZLİK),KABAKCEREZLIK,candidate_matrix,KABAK (ÇEREZLİK),KABAKCEREZLIK,EXACT,raw names identical,HIGH
+crop_catalog,KARPUZ,KARPUZ,candidate_matrix,KARPUZ,KARPUZ,EXACT,raw names identical,HIGH
+crop_catalog,KAVUN,KAVUN,candidate_matrix,KAVUN,KAVUN,EXACT,raw names identical,HIGH
+crop_catalog,KAYSI,KAYSI,candidate_matrix,KAYSI,KAYSI,EXACT,raw names identical,HIGH
+crop_catalog,KURU FASULYE,KURUFASULYE,candidate_matrix,KURU FASULYE,KURUFASULYE,EXACT,raw names identical,HIGH
+crop_catalog,KİMYON,KIMYON,candidate_matrix,,,MISSING_RIGHT,catalog identity absent from comparison source,HIGH
+crop_catalog,KİRAZ,KIRAZ,candidate_matrix,KİRAZ,KIRAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (BEYAZ),LAHANABEYAZ,candidate_matrix,LAHANA (BEYAZ),LAHANABEYAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (KIRMIZI),LAHANAKIRMIZI,candidate_matrix,LAHANA (KIRMIZI),LAHANAKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,LAVANTA,LAVANTA,candidate_matrix,LAVANTA,LAVANTA,EXACT,raw names identical,HIGH
+crop_catalog,MARUL,MARUL,candidate_matrix,MARUL,MARUL,EXACT,raw names identical,HIGH
+crop_catalog,MAYDONOZ,MAYDONOZ,candidate_matrix,MAYDONOZ,MAYDONOZ,EXACT,raw names identical,HIGH
+crop_catalog,MISIR (Dane),MISIRDANE,candidate_matrix,MISIR (Dane),MISIRDANE,EXACT,raw names identical,HIGH
+crop_catalog,NEKTAR,NEKTAR,candidate_matrix,NEKTAR,NEKTAR,EXACT,raw names identical,HIGH
+crop_catalog,NOHUT,NOHUT,candidate_matrix,NOHUT,NOHUT,EXACT,raw names identical,HIGH
+crop_catalog,PATATES,PATATES,candidate_matrix,PATATES,PATATES,EXACT,raw names identical,HIGH
+crop_catalog,PIRASA,PIRASA,candidate_matrix,PIRASA,PIRASA,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK BİBER,SALCALIKBIBER,candidate_matrix,SALÇALIK BİBER,SALCALIKBIBER,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK DOMATES,SALCALIKDOMATES,candidate_matrix,SALÇALIK DOMATES,SALCALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SARIMSAK (KURU),SARIMSAKKURU,candidate_matrix,SARIMSAK (KURU),SARIMSAKKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOFRALIK DOMATES,SOFRALIKDOMATES,candidate_matrix,SOFRALIK DOMATES,SOFRALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SORGUM,SORGUM,candidate_matrix,SORGUM,SORGUM,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (KURU),SOGANKURU,candidate_matrix,SOĞAN (KURU),SOGANKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (TAZE),SOGANTAZE,candidate_matrix,SOĞAN (TAZE),SOGANTAZE,EXACT,raw names identical,HIGH
+crop_catalog,SİLAJLIK MISIR,SILAJLIKMISIR,candidate_matrix,SİLAJLIK MISIR,SILAJLIKMISIR,EXACT,raw names identical,HIGH
+crop_catalog,SİVRİ BİBER,SIVRIBIBER,candidate_matrix,SİVRİ BİBER,SIVRIBIBER,EXACT,raw names identical,HIGH
+crop_catalog,TRTİKALE (Dane),TRTIKALEDANE,candidate_matrix,TRTİKALE (Dane),TRTIKALEDANE,EXACT,raw names identical,HIGH
+crop_catalog,TRİTİKALE  (YEŞİLOT),TRITIKALEYESILOT,candidate_matrix,TRİTİKALE (YEŞİLOT),TRITIKALEYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,TURP (KIRMIZI),TURPKIRMIZI,candidate_matrix,TURP (KIRMIZI),TURPKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,VİŞNE,VISNE,candidate_matrix,VİŞNE,VISNE,EXACT,raw names identical,HIGH
+crop_catalog,YONCA  (YEŞİLOT),YONCAYESILOT,candidate_matrix,YONCA (YEŞİLOT),YONCAYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,YULAF (Dane),YULAFDANE,candidate_matrix,YULAF (Dane),YULAFDANE,EXACT,raw names identical,HIGH
+crop_catalog,YULAF (YEŞİLOT),YULAFYESILOT,candidate_matrix,YULAF (YEŞİLOT),YULAFYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,ÇAVDAR   (YEŞİLOT),CAVDARYESILOT,candidate_matrix,ÇAVDAR (YEŞİLOT),CAVDARYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,ÇAVDAR (Dane),CAVDARDANE,candidate_matrix,ÇAVDAR (Dane),CAVDARDANE,EXACT,raw names identical,HIGH
+crop_catalog,ÇİLEK,CILEK,candidate_matrix,ÇİLEK,CILEK,EXACT,raw names identical,HIGH
+crop_catalog,ŞEFTALİ,SEFTALI,candidate_matrix,ŞEFTALİ,SEFTALI,EXACT,raw names identical,HIGH
+crop_catalog,ŞEKER PANCARI,SEKERPANCARI,candidate_matrix,ŞEKER PANCARI,SEKERPANCARI,EXACT,raw names identical,HIGH
+crop_catalog,ARMUT,ARMUT,cost_breakdown,ARMUT,ARMUT,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (Dane),ARPADANE,cost_breakdown,ARPA (Dane),ARPADANE,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (YEŞİLOT),ARPAYESILOT,cost_breakdown,ARPA (YEŞİLOT),ARPAYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,AYVA,AYVA,cost_breakdown,AYVA,AYVA,EXACT,raw names identical,HIGH
+crop_catalog,AYÇİÇEĞİ,AYCICEGI,cost_breakdown,AYÇİÇEĞİ,AYCICEGI,EXACT,raw names identical,HIGH
+crop_catalog,BADEM,BADEM,cost_breakdown,BADEM,BADEM,EXACT,raw names identical,HIGH
+crop_catalog,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,cost_breakdown,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,BAĞ,BAG,cost_breakdown,BAĞ,BAG,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (Dane),BUGDAYDANE,cost_breakdown,BUĞDAY (Dane),BUGDAYDANE,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,cost_breakdown,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,CEVİZ,CEVIZ,cost_breakdown,CEVİZ,CEVIZ,EXACT,raw names identical,HIGH
+crop_catalog,DUT,DUT,cost_breakdown,,,MISSING_RIGHT,catalog identity absent from comparison source,HIGH
+crop_catalog,ELMA,ELMA,cost_breakdown,ELMA,ELMA,EXACT,raw names identical,HIGH
+crop_catalog,ERİK,ERIK,cost_breakdown,ERİK,ERIK,EXACT,raw names identical,HIGH
+crop_catalog,FASULYE (TAZE),FASULYETAZE,cost_breakdown,FASULYE (TAZE),FASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,FİĞ (YEŞİLOT),FIGYESILOT,cost_breakdown,FİĞ (YEŞİLOT),FIGYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,HIYAR (SOFRALIK),HIYARSOFRALIK,cost_breakdown,HIYAR (SOFRALIK),HIYARSOFRALIK,EXACT,raw names identical,HIGH
+crop_catalog,ISPANAK,ISPANAK,cost_breakdown,ISPANAK,ISPANAK,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (BAL),KABAKBAL,cost_breakdown,KABAK (BAL),KABAKBAL,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (SAKIZ),KABAKSAKIZ,cost_breakdown,KABAK (SAKIZ),KABAKSAKIZ,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (ÇEREZLİK),KABAKCEREZLIK,cost_breakdown,KABAK (ÇEREZLİK),KABAKCEREZLIK,EXACT,raw names identical,HIGH
+crop_catalog,KARPUZ,KARPUZ,cost_breakdown,KARPUZ,KARPUZ,EXACT,raw names identical,HIGH
+crop_catalog,KAVUN,KAVUN,cost_breakdown,KAVUN,KAVUN,EXACT,raw names identical,HIGH
+crop_catalog,KAYSI,KAYSI,cost_breakdown,KAYSI,KAYSI,EXACT,raw names identical,HIGH
+crop_catalog,KURU FASULYE,KURUFASULYE,cost_breakdown,KURU FASULYE,KURUFASULYE,EXACT,raw names identical,HIGH
+crop_catalog,KİMYON,KIMYON,cost_breakdown,KİMYON,KIMYON,EXACT,raw names identical,HIGH
+crop_catalog,KİRAZ,KIRAZ,cost_breakdown,KİRAZ,KIRAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (BEYAZ),LAHANABEYAZ,cost_breakdown,LAHANA (BEYAZ),LAHANABEYAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (KIRMIZI),LAHANAKIRMIZI,cost_breakdown,LAHANA (KIRMIZI),LAHANAKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,LAVANTA,LAVANTA,cost_breakdown,LAVANTA,LAVANTA,EXACT,raw names identical,HIGH
+crop_catalog,MARUL,MARUL,cost_breakdown,MARUL,MARUL,EXACT,raw names identical,HIGH
+crop_catalog,MAYDONOZ,MAYDONOZ,cost_breakdown,MAYDONOZ,MAYDONOZ,EXACT,raw names identical,HIGH
+crop_catalog,MISIR (Dane),MISIRDANE,cost_breakdown,MISIR (Dane),MISIRDANE,EXACT,raw names identical,HIGH
+crop_catalog,NEKTAR,NEKTAR,cost_breakdown,NEKTAR,NEKTAR,EXACT,raw names identical,HIGH
+crop_catalog,NOHUT,NOHUT,cost_breakdown,NOHUT,NOHUT,EXACT,raw names identical,HIGH
+crop_catalog,PATATES,PATATES,cost_breakdown,PATATES,PATATES,EXACT,raw names identical,HIGH
+crop_catalog,PIRASA,PIRASA,cost_breakdown,PIRASA,PIRASA,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK BİBER,SALCALIKBIBER,cost_breakdown,SALÇALIK BİBER,SALCALIKBIBER,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK DOMATES,SALCALIKDOMATES,cost_breakdown,SALÇALIK DOMATES,SALCALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SARIMSAK (KURU),SARIMSAKKURU,cost_breakdown,SARIMSAK (KURU),SARIMSAKKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOFRALIK DOMATES,SOFRALIKDOMATES,cost_breakdown,SOFRALIK DOMATES,SOFRALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SORGUM,SORGUM,cost_breakdown,SORGUM,SORGUM,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (KURU),SOGANKURU,cost_breakdown,SOĞAN (KURU),SOGANKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (TAZE),SOGANTAZE,cost_breakdown,SOĞAN (TAZE),SOGANTAZE,EXACT,raw names identical,HIGH
+crop_catalog,SİLAJLIK MISIR,SILAJLIKMISIR,cost_breakdown,SİLAJLIK MISIR,SILAJLIKMISIR,EXACT,raw names identical,HIGH
+crop_catalog,SİVRİ BİBER,SIVRIBIBER,cost_breakdown,SİVRİ BİBER,SIVRIBIBER,EXACT,raw names identical,HIGH
+crop_catalog,TRTİKALE (Dane),TRTIKALEDANE,cost_breakdown,TRTİKALE (Dane),TRTIKALEDANE,EXACT,raw names identical,HIGH
+crop_catalog,TRİTİKALE  (YEŞİLOT),TRITIKALEYESILOT,cost_breakdown,TRİTİKALE (YEŞİLOT),TRITIKALEYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,TURP (KIRMIZI),TURPKIRMIZI,cost_breakdown,TURP (KIRMIZI),TURPKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,VİŞNE,VISNE,cost_breakdown,VİŞNE,VISNE,EXACT,raw names identical,HIGH
+crop_catalog,YONCA  (YEŞİLOT),YONCAYESILOT,cost_breakdown,YONCA (YEŞİLOT),YONCAYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,YULAF (Dane),YULAFDANE,cost_breakdown,YULAF (Dane),YULAFDANE,EXACT,raw names identical,HIGH
+crop_catalog,YULAF (YEŞİLOT),YULAFYESILOT,cost_breakdown,YULAF (YEŞİLOT),YULAFYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,ÇAVDAR   (YEŞİLOT),CAVDARYESILOT,cost_breakdown,ÇAVDAR (YEŞİLOT),CAVDARYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,ÇAVDAR (Dane),CAVDARDANE,cost_breakdown,ÇAVDAR (Dane),CAVDARDANE,EXACT,raw names identical,HIGH
+crop_catalog,ÇİLEK,CILEK,cost_breakdown,ÇİLEK,CILEK,EXACT,raw names identical,HIGH
+crop_catalog,ŞEFTALİ,SEFTALI,cost_breakdown,ŞEFTALİ,SEFTALI,EXACT,raw names identical,HIGH
+crop_catalog,ŞEKER PANCARI,SEKERPANCARI,cost_breakdown,ŞEKER PANCARI,SEKERPANCARI,EXACT,raw names identical,HIGH
+crop_catalog,ARMUT,ARMUT,s1_seasonal,ARMUT,ARMUT,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (Dane),ARPADANE,s1_seasonal,ARPA (Dane),ARPADANE,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (YEŞİLOT),ARPAYESILOT,s1_seasonal,ARPA (YEŞİLOT),ARPAYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,AYVA,AYVA,s1_seasonal,AYVA,AYVA,EXACT,raw names identical,HIGH
+crop_catalog,AYÇİÇEĞİ,AYCICEGI,s1_seasonal,AYÇİÇEĞİ,AYCICEGI,EXACT,raw names identical,HIGH
+crop_catalog,BADEM,BADEM,s1_seasonal,BADEM,BADEM,EXACT,raw names identical,HIGH
+crop_catalog,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,s1_seasonal,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,BAĞ,BAG,s1_seasonal,BAĞ,BAG,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (Dane),BUGDAYDANE,s1_seasonal,BUĞDAY (Dane),BUGDAYDANE,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,s1_seasonal,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,CEVİZ,CEVIZ,s1_seasonal,CEVİZ,CEVIZ,EXACT,raw names identical,HIGH
+crop_catalog,DUT,DUT,s1_seasonal,,,MISSING_RIGHT,catalog identity absent from comparison source,HIGH
+crop_catalog,ELMA,ELMA,s1_seasonal,ELMA,ELMA,EXACT,raw names identical,HIGH
+crop_catalog,ERİK,ERIK,s1_seasonal,ERİK,ERIK,EXACT,raw names identical,HIGH
+crop_catalog,FASULYE (TAZE),FASULYETAZE,s1_seasonal,FASULYE (TAZE),FASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,FİĞ (YEŞİLOT),FIGYESILOT,s1_seasonal,FİĞ (YEŞİLOT),FIGYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,HIYAR (SOFRALIK),HIYARSOFRALIK,s1_seasonal,HIYAR (SOFRALIK),HIYARSOFRALIK,EXACT,raw names identical,HIGH
+crop_catalog,ISPANAK,ISPANAK,s1_seasonal,ISPANAK,ISPANAK,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (BAL),KABAKBAL,s1_seasonal,KABAK (BAL),KABAKBAL,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (SAKIZ),KABAKSAKIZ,s1_seasonal,KABAK (SAKIZ),KABAKSAKIZ,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (ÇEREZLİK),KABAKCEREZLIK,s1_seasonal,KABAK (ÇEREZLİK),KABAKCEREZLIK,EXACT,raw names identical,HIGH
+crop_catalog,KARPUZ,KARPUZ,s1_seasonal,KARPUZ,KARPUZ,EXACT,raw names identical,HIGH
+crop_catalog,KAVUN,KAVUN,s1_seasonal,KAVUN,KAVUN,EXACT,raw names identical,HIGH
+crop_catalog,KAYSI,KAYSI,s1_seasonal,KAYSI,KAYSI,EXACT,raw names identical,HIGH
+crop_catalog,KURU FASULYE,KURUFASULYE,s1_seasonal,KURU FASULYE,KURUFASULYE,EXACT,raw names identical,HIGH
+crop_catalog,KİMYON,KIMYON,s1_seasonal,,,MISSING_RIGHT,catalog identity absent from comparison source,HIGH
+crop_catalog,KİRAZ,KIRAZ,s1_seasonal,KİRAZ,KIRAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (BEYAZ),LAHANABEYAZ,s1_seasonal,LAHANA (BEYAZ),LAHANABEYAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (KIRMIZI),LAHANAKIRMIZI,s1_seasonal,LAHANA (KIRMIZI),LAHANAKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,LAVANTA,LAVANTA,s1_seasonal,LAVANTA,LAVANTA,EXACT,raw names identical,HIGH
+crop_catalog,MARUL,MARUL,s1_seasonal,MARUL,MARUL,EXACT,raw names identical,HIGH
+crop_catalog,MAYDONOZ,MAYDONOZ,s1_seasonal,MAYDONOZ,MAYDONOZ,EXACT,raw names identical,HIGH
+crop_catalog,MISIR (Dane),MISIRDANE,s1_seasonal,MISIR (Dane),MISIRDANE,EXACT,raw names identical,HIGH
+crop_catalog,NEKTAR,NEKTAR,s1_seasonal,NEKTAR,NEKTAR,EXACT,raw names identical,HIGH
+crop_catalog,NOHUT,NOHUT,s1_seasonal,NOHUT,NOHUT,EXACT,raw names identical,HIGH
+crop_catalog,PATATES,PATATES,s1_seasonal,PATATES,PATATES,EXACT,raw names identical,HIGH
+crop_catalog,PIRASA,PIRASA,s1_seasonal,PIRASA,PIRASA,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK BİBER,SALCALIKBIBER,s1_seasonal,SALÇALIK BİBER,SALCALIKBIBER,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK DOMATES,SALCALIKDOMATES,s1_seasonal,SALÇALIK DOMATES,SALCALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SARIMSAK (KURU),SARIMSAKKURU,s1_seasonal,SARIMSAK (KURU),SARIMSAKKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOFRALIK DOMATES,SOFRALIKDOMATES,s1_seasonal,SOFRALIK DOMATES,SOFRALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SORGUM,SORGUM,s1_seasonal,SORGUM,SORGUM,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (KURU),SOGANKURU,s1_seasonal,SOĞAN (KURU),SOGANKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (TAZE),SOGANTAZE,s1_seasonal,SOĞAN (TAZE),SOGANTAZE,EXACT,raw names identical,HIGH
+crop_catalog,SİLAJLIK MISIR,SILAJLIKMISIR,s1_seasonal,SİLAJLIK MISIR,SILAJLIKMISIR,EXACT,raw names identical,HIGH
+crop_catalog,SİVRİ BİBER,SIVRIBIBER,s1_seasonal,SİVRİ BİBER,SIVRIBIBER,EXACT,raw names identical,HIGH
+crop_catalog,TRTİKALE (Dane),TRTIKALEDANE,s1_seasonal,TRTİKALE (Dane),TRTIKALEDANE,EXACT,raw names identical,HIGH
+crop_catalog,TRİTİKALE  (YEŞİLOT),TRITIKALEYESILOT,s1_seasonal,TRİTİKALE (YEŞİLOT),TRITIKALEYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,TURP (KIRMIZI),TURPKIRMIZI,s1_seasonal,TURP (KIRMIZI),TURPKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,VİŞNE,VISNE,s1_seasonal,VİŞNE,VISNE,EXACT,raw names identical,HIGH
+crop_catalog,YONCA  (YEŞİLOT),YONCAYESILOT,s1_seasonal,YONCA (YEŞİLOT),YONCAYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,YULAF (Dane),YULAFDANE,s1_seasonal,YULAF (Dane),YULAFDANE,EXACT,raw names identical,HIGH
+crop_catalog,YULAF (YEŞİLOT),YULAFYESILOT,s1_seasonal,YULAF (YEŞİLOT),YULAFYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,ÇAVDAR   (YEŞİLOT),CAVDARYESILOT,s1_seasonal,ÇAVDAR (YEŞİLOT),CAVDARYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,ÇAVDAR (Dane),CAVDARDANE,s1_seasonal,ÇAVDAR (Dane),CAVDARDANE,EXACT,raw names identical,HIGH
+crop_catalog,ÇİLEK,CILEK,s1_seasonal,ÇİLEK,CILEK,EXACT,raw names identical,HIGH
+crop_catalog,ŞEFTALİ,SEFTALI,s1_seasonal,ŞEFTALİ,SEFTALI,EXACT,raw names identical,HIGH
+crop_catalog,ŞEKER PANCARI,SEKERPANCARI,s1_seasonal,ŞEKER PANCARI,SEKERPANCARI,EXACT,raw names identical,HIGH
+crop_catalog,ARMUT,ARMUT,s2_seasonal,ARMUT,ARMUT,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (Dane),ARPADANE,s2_seasonal,ARPA (Dane),ARPADANE,EXACT,raw names identical,HIGH
+crop_catalog,ARPA (YEŞİLOT),ARPAYESILOT,s2_seasonal,ARPA (YEŞİLOT),ARPAYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,AYVA,AYVA,s2_seasonal,AYVA,AYVA,EXACT,raw names identical,HIGH
+crop_catalog,AYÇİÇEĞİ,AYCICEGI,s2_seasonal,AYÇİÇEĞİ,AYCICEGI,EXACT,raw names identical,HIGH
+crop_catalog,BADEM,BADEM,s2_seasonal,BADEM,BADEM,EXACT,raw names identical,HIGH
+crop_catalog,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,s2_seasonal,BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,BAĞ,BAG,s2_seasonal,BAĞ,BAG,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (Dane),BUGDAYDANE,s2_seasonal,BUĞDAY (Dane),BUGDAYDANE,EXACT,raw names identical,HIGH
+crop_catalog,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,s2_seasonal,BUĞDAY (YEŞİLOT),BUGDAYYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,CEVİZ,CEVIZ,s2_seasonal,CEVİZ,CEVIZ,EXACT,raw names identical,HIGH
+crop_catalog,DUT,DUT,s2_seasonal,,,MISSING_RIGHT,catalog identity absent from comparison source,HIGH
+crop_catalog,ELMA,ELMA,s2_seasonal,ELMA,ELMA,EXACT,raw names identical,HIGH
+crop_catalog,ERİK,ERIK,s2_seasonal,ERİK,ERIK,EXACT,raw names identical,HIGH
+crop_catalog,FASULYE (TAZE),FASULYETAZE,s2_seasonal,FASULYE (TAZE),FASULYETAZE,EXACT,raw names identical,HIGH
+crop_catalog,FİĞ (YEŞİLOT),FIGYESILOT,s2_seasonal,FİĞ (YEŞİLOT),FIGYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,HIYAR (SOFRALIK),HIYARSOFRALIK,s2_seasonal,HIYAR (SOFRALIK),HIYARSOFRALIK,EXACT,raw names identical,HIGH
+crop_catalog,ISPANAK,ISPANAK,s2_seasonal,ISPANAK,ISPANAK,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (BAL),KABAKBAL,s2_seasonal,KABAK (BAL),KABAKBAL,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (SAKIZ),KABAKSAKIZ,s2_seasonal,KABAK (SAKIZ),KABAKSAKIZ,EXACT,raw names identical,HIGH
+crop_catalog,KABAK (ÇEREZLİK),KABAKCEREZLIK,s2_seasonal,KABAK (ÇEREZLİK),KABAKCEREZLIK,EXACT,raw names identical,HIGH
+crop_catalog,KARPUZ,KARPUZ,s2_seasonal,KARPUZ,KARPUZ,EXACT,raw names identical,HIGH
+crop_catalog,KAVUN,KAVUN,s2_seasonal,KAVUN,KAVUN,EXACT,raw names identical,HIGH
+crop_catalog,KAYSI,KAYSI,s2_seasonal,KAYSI,KAYSI,EXACT,raw names identical,HIGH
+crop_catalog,KURU FASULYE,KURUFASULYE,s2_seasonal,KURU FASULYE,KURUFASULYE,EXACT,raw names identical,HIGH
+crop_catalog,KİMYON,KIMYON,s2_seasonal,,,MISSING_RIGHT,catalog identity absent from comparison source,HIGH
+crop_catalog,KİRAZ,KIRAZ,s2_seasonal,KİRAZ,KIRAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (BEYAZ),LAHANABEYAZ,s2_seasonal,LAHANA (BEYAZ),LAHANABEYAZ,EXACT,raw names identical,HIGH
+crop_catalog,LAHANA (KIRMIZI),LAHANAKIRMIZI,s2_seasonal,LAHANA (KIRMIZI),LAHANAKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,LAVANTA,LAVANTA,s2_seasonal,LAVANTA,LAVANTA,EXACT,raw names identical,HIGH
+crop_catalog,MARUL,MARUL,s2_seasonal,MARUL,MARUL,EXACT,raw names identical,HIGH
+crop_catalog,MAYDONOZ,MAYDONOZ,s2_seasonal,MAYDONOZ,MAYDONOZ,EXACT,raw names identical,HIGH
+crop_catalog,MISIR (Dane),MISIRDANE,s2_seasonal,MISIR (Dane),MISIRDANE,EXACT,raw names identical,HIGH
+crop_catalog,NEKTAR,NEKTAR,s2_seasonal,NEKTAR,NEKTAR,EXACT,raw names identical,HIGH
+crop_catalog,NOHUT,NOHUT,s2_seasonal,NOHUT,NOHUT,EXACT,raw names identical,HIGH
+crop_catalog,PATATES,PATATES,s2_seasonal,PATATES,PATATES,EXACT,raw names identical,HIGH
+crop_catalog,PIRASA,PIRASA,s2_seasonal,PIRASA,PIRASA,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK BİBER,SALCALIKBIBER,s2_seasonal,SALÇALIK BİBER,SALCALIKBIBER,EXACT,raw names identical,HIGH
+crop_catalog,SALÇALIK DOMATES,SALCALIKDOMATES,s2_seasonal,SALÇALIK DOMATES,SALCALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SARIMSAK (KURU),SARIMSAKKURU,s2_seasonal,SARIMSAK (KURU),SARIMSAKKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOFRALIK DOMATES,SOFRALIKDOMATES,s2_seasonal,SOFRALIK DOMATES,SOFRALIKDOMATES,EXACT,raw names identical,HIGH
+crop_catalog,SORGUM,SORGUM,s2_seasonal,SORGUM,SORGUM,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (KURU),SOGANKURU,s2_seasonal,SOĞAN (KURU),SOGANKURU,EXACT,raw names identical,HIGH
+crop_catalog,SOĞAN (TAZE),SOGANTAZE,s2_seasonal,SOĞAN (TAZE),SOGANTAZE,EXACT,raw names identical,HIGH
+crop_catalog,SİLAJLIK MISIR,SILAJLIKMISIR,s2_seasonal,SİLAJLIK MISIR,SILAJLIKMISIR,EXACT,raw names identical,HIGH
+crop_catalog,SİVRİ BİBER,SIVRIBIBER,s2_seasonal,SİVRİ BİBER,SIVRIBIBER,EXACT,raw names identical,HIGH
+crop_catalog,TRTİKALE (Dane),TRTIKALEDANE,s2_seasonal,TRTİKALE (Dane),TRTIKALEDANE,EXACT,raw names identical,HIGH
+crop_catalog,TRİTİKALE  (YEŞİLOT),TRITIKALEYESILOT,s2_seasonal,TRİTİKALE (YEŞİLOT),TRITIKALEYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,TURP (KIRMIZI),TURPKIRMIZI,s2_seasonal,TURP (KIRMIZI),TURPKIRMIZI,EXACT,raw names identical,HIGH
+crop_catalog,VİŞNE,VISNE,s2_seasonal,VİŞNE,VISNE,EXACT,raw names identical,HIGH
+crop_catalog,YONCA  (YEŞİLOT),YONCAYESILOT,s2_seasonal,YONCA (YEŞİLOT),YONCAYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,YULAF (Dane),YULAFDANE,s2_seasonal,YULAF (Dane),YULAFDANE,EXACT,raw names identical,HIGH
+crop_catalog,YULAF (YEŞİLOT),YULAFYESILOT,s2_seasonal,YULAF (YEŞİLOT),YULAFYESILOT,EXACT,raw names identical,HIGH
+crop_catalog,ÇAVDAR   (YEŞİLOT),CAVDARYESILOT,s2_seasonal,ÇAVDAR (YEŞİLOT),CAVDARYESILOT,NORMALIZED_MATCH,spacing/punctuation/diacritic normalization yields same key,HIGH
+crop_catalog,ÇAVDAR (Dane),CAVDARDANE,s2_seasonal,ÇAVDAR (Dane),CAVDARDANE,EXACT,raw names identical,HIGH
+crop_catalog,ÇİLEK,CILEK,s2_seasonal,ÇİLEK,CILEK,EXACT,raw names identical,HIGH
+crop_catalog,ŞEFTALİ,SEFTALI,s2_seasonal,ŞEFTALİ,SEFTALI,EXACT,raw names identical,HIGH
+crop_catalog,ŞEKER PANCARI,SEKERPANCARI,s2_seasonal,ŞEKER PANCARI,SEKERPANCARI,EXACT,raw names identical,HIGH

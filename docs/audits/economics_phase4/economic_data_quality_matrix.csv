@@ -1,0 +1,8 @@
+﻿dataset,variable,coverage,unit,year,authority,direct_count,derived_count,proxy_count,fallback_count,missing_count,used_by_S1,used_by_S2,criticality,recommended_action
+parsel_su_kar_ozet,current_profit_total,179/179,TL/unit,2024,DERIVED,0,179,0,0,0,baseline,baseline,CRITICAL,Validate against farm accounts and document calculation basis.
+urun_parametreleri_demo,net_profit_per_da,58/58,TL/da,2024 label,PROXY,0,0,58,0,0,via matrix,via seasonal,CRITICAL,"Replace/validate with dated yield, price and cost evidence."
+urun_parametreleri_demo,yield/price/gross/cost,58/58,kg/da; TL/kg; TL/da,2024 label,PROXY,0,0,58,0,0,no,no in calibrated risk-none path,HIGH,Document common price basis and reconcile net-profit formula.
+candidate_matrix,candidate profit,6859 rows; 57 crops,TL/da and total TL,2024,DERIVED,0,6859,0,0,0,yes,no,CRITICAL,Attach row-level source and authority to each candidate value.
+senaryo2_backend_seasons,season profit,306 rows; 56 crops; secondary only 4 crops,TL/row,2024,DERIVED,0,306,0,0,54,no,yes,CRITICAL,Replace sparse seasonal observations with explicit unit-crop-season contracts.
+cost_breakdown_rules_2024,cost shares,57/58 crops,fraction,2024 label,PROXY,0,0,57,0,1,no,no,HIGH,Source each component; add separate irrigation and energy fields.
+reference_parameters,fallback profit,9 keys,TL/da,unknown,FALLBACK,0,0,0,9,0,normally bypassed,yes when missing,HIGH,Expose cell-level fallback provenance and eliminate for real pilot.

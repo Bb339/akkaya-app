@@ -1,0 +1,16 @@
+{
+  "canonical_crop": "TURPKIRMIZI",
+  "profit_per_da": 4000.0,
+  "profit_percentile": 29.82456140350877,
+  "water_per_da": 298.87,
+  "water_percentile": 1.7543859649122806,
+  "tl_per_m3": 13.38374544116171,
+  "tl_per_m3_percentile": 87.71929824561404,
+  "candidate_count": 43,
+  "candidate_unit_count": 43,
+  "candidate_area_coverage_da": 35036.0,
+  "candidate_unit_coverage_pct": 24.022346368715084,
+  "runtime_candidate_expansion": "Raw matrix coverage is 43 Bor units / 35,036 da. app._matrix_build_problem may clone the regional median annual-crop row onto other compatible annual parcels, expanding runtime availability without changing the 4,000 TL/da rate.",
+  "optimizer_value": "S1 matrix path uses 4000 TL/da before objective area scaling. S2 source also starts at 4000 TL/da, then model suitability/profit-realism can reduce the effective R value.",
+  "value_6000_verdict": "No 6000 TL/da Turp profit exists in repository economic sources. The Turp catalog contains sale price 6 TL/kg; confusing 6 TL/kg with 6000 TL/da is a unit/interpretation error."
+}

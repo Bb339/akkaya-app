@@ -1,0 +1,11 @@
+{
+  "audit_test_command": "python -B -m pytest -q -p no:cacheprovider tests/test_economics_phase4_audit.py",
+  "audit_test_result": "1 passed in 10.39s (latest run)",
+  "full_suite_command": "python -B -m pytest -q -p no:cacheprovider",
+  "full_suite_result": "237 passed, 1 failed, 7 deselected in 972.75s",
+  "failure_classification": "INHERITED BASELINE FAILURE",
+  "failure_test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+  "failure_assertion": "expected plan status ok; observed no_feasible_two_crop_plan",
+  "baseline_evidence": "Previously reproduced with the same assertion at Phase 3 baseline 3b0847370e8abbb7316d40aa1741d5242d736125 and Water Contract 5018bde15d659e415a106b7b1bae949dc011ccbc.",
+  "new_audit_regressions": 0
+}

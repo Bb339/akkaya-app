@@ -1,0 +1,17 @@
+﻿dataset,authority,evidence,rationale
+data/parsel_su_kar_ozet.csv,DERIVED,A 2024 filename is not treated as official verification.,"179 unit current baseline totals, revenue/cost estimates"
+data/parcel_master.csv,DERIVED,A 2024 filename is not treated as official verification.,duplicate operational view of current totals
+data/urun_parametreleri_demo.csv,PROXY,A 2024 filename is not treated as official verification.,58-crop catalog economics
+data/excel_derived/combined_parcel_candidate_matrix_2024.csv,DERIVED,A 2024 filename is not treated as official verification.,unit x crop candidate economics
+data/enhanced_dataset/csv/senaryo1_backend_seasons.csv,DERIVED,A 2024 filename is not treated as official verification.,current primary-season totals
+data/enhanced_dataset/csv/senaryo2_backend_seasons.csv,DERIVED,A 2024 filename is not treated as official verification.,primary/secondary seasonal totals
+data/cost_breakdown_rules_2024.csv,PROXY,A 2024 filename is not treated as official verification.,cost allocation shares
+data/enhanced_dataset/csv/parcel_assumptions.csv,PROXY,A 2024 filename is not treated as official verification.,parcel economic estimates duplicated from baseline
+kds/adapters/reference_parameters.json,FALLBACK,A 2024 filename is not treated as official verification.,nine fallback crop parameters
+kds/adapters/akkaya_demo.py,DERIVED,A 2024 filename is not treated as official verification.,Project Economics construction
+kds/adapters/project_science.py,CALCULATED_FROM_SOURCE,A 2024 filename is not treated as official verification.,provider translation
+app.py,MODEL ASSUMPTION,A 2024 filename is not treated as official verification.,"loaders, transformations and objective math"
+tests/fixtures/scientific_baseline/*.json,THESIS_REFERENCE,A 2024 filename is not treated as official verification.,frozen expected outputs
+tests/fixtures/general_project/economics*.csv,ASSUMED,A 2024 filename is not treated as official verification.,synthetic import fixtures
+docs/data_templates/economics_template.xlsx,UNKNOWN,A 2024 filename is not treated as official verification.,blank/synthetic import template
+data/presentation_excel_previews/*.csv,DERIVED,A 2024 filename is not treated as official verification.,previews of named 2024 workbooks; originals absent

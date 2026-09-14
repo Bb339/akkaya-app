@@ -1,0 +1,47 @@
+{
+  "source": "kds/adapters/reference_parameters.json",
+  "authority": "FALLBACK",
+  "values": {
+    "ARPA": {
+      "water_per_da": 180.0,
+      "profit_per_da": 3800.0
+    },
+    "BUGDAY": {
+      "water_per_da": 220.0,
+      "profit_per_da": 4200.0
+    },
+    "NOHUT": {
+      "water_per_da": 120.0,
+      "profit_per_da": 5200.0
+    },
+    "MERCIMEK": {
+      "water_per_da": 110.0,
+      "profit_per_da": 5000.0
+    },
+    "KURU_FASULYE": {
+      "water_per_da": 250.0,
+      "profit_per_da": 6500.0
+    },
+    "ARPA_KURU": {
+      "water_per_da": 220.0,
+      "profit_per_da": 2600.0
+    },
+    "BUGDAY_KURU": {
+      "water_per_da": 250.0,
+      "profit_per_da": 2800.0
+    },
+    "NOHUT_KURU": {
+      "water_per_da": 180.0,
+      "profit_per_da": 3400.0
+    },
+    "MERCIMEK_KURU": {
+      "water_per_da": 160.0,
+      "profit_per_da": 3200.0
+    }
+  },
+  "akkaya_reference_path": "S2 builder can use these nine values for missing parcel/crop/season cells; S1 production normally returns the Excel matrix path before legacy builder.",
+  "general_project_path": "Generic project candidates and full S2 seasonal coverage are explicit; readiness fails closed when missing, so hidden regional fallback is not expected.",
+  "project_economics_role": "Required by readiness and retained in bundle metadata, but candidate profit fields drive both optimizers.",
+  "provenance_visibility": "File-level in frozen resource hashes; individual fallback-selected cells are not explicitly marked in result rows.",
+  "risk": "Fallback use in Akkaya is not row-visible."
+}

@@ -1,0 +1,17 @@
+﻿source_file,economic_content,source_columns,authority,used_by,evidence_note
+data/parsel_su_kar_ozet.csv,"179 unit current baseline totals, revenue/cost estimates",mevcut_kar_tl; brut_hasilat_tl_est; toplam_maliyet_tl_est; tl_m3_net_est,DERIVED,S1 baseline; S2 baseline; UI,A 2024 filename is not treated as official verification.
+data/parcel_master.csv,duplicate operational view of current totals,profit_tl_current,DERIVED,parcel loader/UI,A 2024 filename is not treated as official verification.
+data/urun_parametreleri_demo.csv,58-crop catalog economics,"yield, price, gross revenue, total/variable cost, net profit per da",PROXY,catalog/UI; reference Project Economics metadata,A 2024 filename is not treated as official verification.
+data/excel_derived/combined_parcel_candidate_matrix_2024.csv,unit x crop candidate economics,profit_tl_da; profit_tl_total; yield_ton_da,DERIVED,S1 optimizer,A 2024 filename is not treated as official verification.
+data/enhanced_dataset/csv/senaryo1_backend_seasons.csv,current primary-season totals,profit_tl,DERIVED,legacy single-season builder; S2 combined fallback,A 2024 filename is not treated as official verification.
+data/enhanced_dataset/csv/senaryo2_backend_seasons.csv,primary/secondary seasonal totals,profit_tl,DERIVED,S2 optimizer,A 2024 filename is not treated as official verification.
+data/cost_breakdown_rules_2024.csv,cost allocation shares,seed/fertilizer/pesticide/tillage/labor/harvest/other shares,PROXY,UI/explanation; not optimizer objective,A 2024 filename is not treated as official verification.
+data/enhanced_dataset/csv/parcel_assumptions.csv,parcel economic estimates duplicated from baseline,gross/total cost/current profit/TL per m3,PROXY,enhanced parcel metadata,A 2024 filename is not treated as official verification.
+kds/adapters/reference_parameters.json,nine fallback crop parameters,profit_per_da,FALLBACK,S2 missing seasonal cells; legacy single-season builder,A 2024 filename is not treated as official verification.
+kds/adapters/akkaya_demo.py,Project Economics construction,net_profit_per_da from catalog,DERIVED,readiness/metadata; not Akkaya objective input,A 2024 filename is not treated as official verification.
+kds/adapters/project_science.py,provider translation,candidate profit_per_da; unit current_profit,CALCULATED_FROM_SOURCE,generic projects and frozen reference resources,A 2024 filename is not treated as official verification.
+app.py,"loaders, transformations and objective math",profit realism; suitability multiplier; area scaling,MODEL ASSUMPTION,S1/S2 engine,A 2024 filename is not treated as official verification.
+tests/fixtures/scientific_baseline/*.json,frozen expected outputs,profit totals and TL/m3,THESIS_REFERENCE,regression tests only,A 2024 filename is not treated as official verification.
+tests/fixtures/general_project/economics*.csv,synthetic import fixtures,net_profit_per_da,ASSUMED,tests only,A 2024 filename is not treated as official verification.
+docs/data_templates/economics_template.xlsx,blank/synthetic import template,yield and net profit fields,UNKNOWN,user import only,A 2024 filename is not treated as official verification.
+data/presentation_excel_previews/*.csv,previews of named 2024 workbooks; originals absent,parcel totals,DERIVED,presentation/provenance support,A 2024 filename is not treated as official verification.

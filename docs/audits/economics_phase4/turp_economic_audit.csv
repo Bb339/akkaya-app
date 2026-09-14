@@ -1,0 +1,6 @@
+﻿raw_name,canonical_name,profit_per_da,yield_per_da_kg,sale_price_tl_kg,cost_tl_da,water_per_da_m3,tl_per_m3,source,authority,year,notes
+TURP (KIRMIZI),TURPKIRMIZI,4000.0,2500.0,6.0,9000.0,298.87,13.38374544116171,crop catalog,PROXY,2024,manual_proxy; gross revenue 15000 TL/da
+TURP (KIRMIZI),TURPKIRMIZI,4000.0,2500,6,9000,298.87,13.38374544116171,candidate matrix,DERIVED,2024,87 candidate rows
+TURP (KIRMIZI),TURPKIRMIZI,4000.0,2500,6,9000,298.87,13.38374544116171,S1 seasonal,DERIVED,2024,P110 total 120000 / 30 da
+TURP (KIRMIZI),TURPKIRMIZI,4000.0,2500,6,9000,298.87,13.38374544116171,S2 primary,DERIVED,2024,P110 primary total 84000 / 21 da
+TURP (KIRMIZI),TURPKIRMIZI,4000.0,2500,6,2600.0,298.87,13.38374544116171,current unit P110,DERIVED,2024,Unit total source uses 4000 TL/da; unit cost estimate differs from catalog cost

@@ -1,0 +1,128 @@
+{
+  "method": "Catalog is anchor; four identity sets compared after deterministic Unicode/punctuation/spacing normalization. Numeric profit identity compares catalog TL/da with matrix and seasonal profit_tl/area_da at tolerance 0.01 TL/da.",
+  "crosswalk_counts": {
+    "EXACT": 214,
+    "MISSING_RIGHT": 6,
+    "NORMALIZED_MATCH": 12
+  },
+  "raw_identity_comparisons": 232,
+  "unique_catalog_crops": 58,
+  "numeric_profit_conflict_count": 0,
+  "numeric_profit_conflicts": [],
+  "reported_approximately_45_reproduced": false,
+  "corrected_conclusion": "0 numeric crop/profit conflicts; 12 formatting-only normalized matches and 6 dataset-side absences across 232 pairwise catalog comparisons.",
+  "genuine_missing_by_dataset": {
+    "candidate_matrix": [
+      "KIMYON"
+    ],
+    "cost_breakdown": [
+      "DUT"
+    ],
+    "s1_seasonal": [
+      "DUT",
+      "KIMYON"
+    ],
+    "s2_seasonal": [
+      "DUT",
+      "KIMYON"
+    ]
+  },
+  "alias_count": 0,
+  "variant_count": 0,
+  "uncertain_count": 0,
+  "normalization_function_audit": {
+    "normalize_crop_key": "diacritics/punctuation/spacing normalization",
+    "canonical_crop_key": "adds selected perennial/spelling aliases and compact keys",
+    "project_import_key": "Unicode NFKD + punctuation to underscore; exact identity coverage is checked by readiness",
+    "probes": [
+      {
+        "pair": [
+          "BUGDAY",
+          "BUĞDAY"
+        ],
+        "production_canonical": [
+          "BUGDAY",
+          "BUGDAY"
+        ],
+        "verdict": "NORMALIZED_MATCH"
+      },
+      {
+        "pair": [
+          "KAYSI",
+          "KAYISI"
+        ],
+        "production_canonical": [
+          "KAYSI",
+          "KAYSI"
+        ],
+        "verdict": "ALIAS_CANDIDATE implemented as same canonical identity"
+      },
+      {
+        "pair": [
+          "BAG",
+          "BAĞ"
+        ],
+        "production_canonical": [
+          "BAG",
+          "BAG"
+        ],
+        "verdict": "NORMALIZED_MATCH"
+      },
+      {
+        "pair": [
+          "KIRMIZI TURP",
+          "TURP"
+        ],
+        "production_canonical": [
+          "KIRMIZITURP",
+          "TURP"
+        ],
+        "verdict": "DISTINCT; no unsafe conflation"
+      },
+      {
+        "pair": [
+          "TURP (KIRMIZI)",
+          "TURP"
+        ],
+        "production_canonical": [
+          "TURPKIRMIZI",
+          "TURP"
+        ],
+        "verdict": "DISTINCT; alias is not registered"
+      },
+      {
+        "pair": [
+          "MERCIMEK",
+          "MERCİMEK"
+        ],
+        "production_canonical": [
+          "MERCIMEK",
+          "MERCIMEK"
+        ],
+        "verdict": "NORMALIZED_MATCH"
+      },
+      {
+        "pair": [
+          "BUGDAY_KURU",
+          "BUGDAY"
+        ],
+        "production_canonical": [
+          "BUGDAYKURU",
+          "BUGDAY"
+        ],
+        "verdict": "VARIANT kept distinct"
+      },
+      {
+        "pair": [
+          "MISIR (Dane)",
+          "SİLAJLIK MISIR"
+        ],
+        "production_canonical": [
+          "MISIRDANE",
+          "SILAJLIKMISIR"
+        ],
+        "verdict": "VARIANT kept distinct"
+      }
+    ]
+  }
+}
