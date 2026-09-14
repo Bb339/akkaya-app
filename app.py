@@ -3497,46 +3497,27 @@ def annual_category_fit_score(candidate_category: str, mode: str, current_catego
 
 
 def _compute_perennial_locks(selected_parcels: List[Dict[str,Any]], year: int, crop_list: List[str], season_source: str) -> np.ndarray:
-    """For Senaryo-2, if a parcel is a fruit-orchard/perennial in that year, lock crop choice to that crop.
+    """Protect observed current perennial crops, never alternative-season candidates.
 
-    This prevents unrealistic switching of an established orchard to a different product.
+    V2 supplies AnalysisUnit.current_crop through the units data provider. Legacy
+    parcel records use current_crop (or its crop alias). A season table describes
+    alternatives and is not evidence that any of those crops is already planted.
+    year and season_source remain in the signature for existing engine callers.
     """
-    P = len(selected_parcels)
-    locks = np.full(P, -1, dtype=int)
-    src = str(season_source or "both").lower()
-    # Bahçe / çok yıllık parsellerde ana ürün her modda korunur.
-    if P == 0:
-        return locks
-
-    frames = load_enhanced_frames()
-    seasons = frames["s2"].copy()
-    if "year" in seasons.columns:
-        seasons = seasons[seasons["year"].astype(int) == int(year)]
-
-    dom_map = {}
-    if not seasons.empty:
-        seasons["parcel_id"] = seasons["parcel_id"].astype(str)
-        seasons["crop_key"] = seasons["crop"].astype(str).map(normalize_crop_key)
-        # dominant crop by area
-        dom = seasons.groupby(["parcel_id","crop_key"], dropna=False).agg(area=("area_da","sum")).reset_index()
-        dom = dom.sort_values(["parcel_id","area"], ascending=[True, False])
-        dom = dom.drop_duplicates(subset=["parcel_id"], keep="first")
-        dom_map = {str(r["parcel_id"]): str(r["crop_key"]) for _, r in dom.iterrows()}
-
-    idx_crop = {c:i for i,c in enumerate(crop_list)}
-    for i, p in enumerate(selected_parcels):
-        pid = str(p.get("id"))
-        ck = dom_map.get(pid)
-        parcel_type = str(p.get('parcel_type','') or '').strip().lower()
-        current_crop = normalize_crop_key(str(p.get('current_crop') or p.get('crop') or ''))
-        orchard_like = (parcel_type == 'orchard') or (current_crop in PERENNIAL_CROPS)
-        # Eğer parsel bahçe/çok yıllıksa, sezon tablosu eksik olsa bile mevcut ürünü kilitle.
-        if orchard_like and current_crop in idx_crop:
-            ck = current_crop
-        if (not ck) and orchard_like and current_crop in idx_crop:
-            ck = current_crop
-        if ck and (ck in PERENNIAL_CROPS) and (ck in idx_crop):
-            locks[i] = int(idx_crop[ck])
+    locks = np.full(len(selected_parcels), -1, dtype=int)
+    exact_indices = {crop: i for i, crop in enumerate(crop_list)}
+    canonical_indices = {}
+    for i, crop in enumerate(crop_list):
+        canonical_indices.setdefault(canonical_crop_key(crop), i)
+    for i, parcel in enumerate(selected_parcels):
+        current = str(parcel.get("current_crop") or parcel.get("crop") or "")
+        key = canonical_crop_key(current)
+        if key not in PERENNIAL_CROPS:
+            continue
+        crop_index = exact_indices.get(normalize_crop_key(current), canonical_indices.get(key))
+        if crop_index is None:
+            raise ValueError(f"Observed perennial crop {current!r} for unit {parcel.get('id')!r} is missing from scientific candidates.")
+        locks[i] = int(crop_index)
     return locks
 
 

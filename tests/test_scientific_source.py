@@ -41,6 +41,18 @@ def test_only_project_blueprint_registration_added_to_legacy_module():
 
 def legacy_source():
     source = (ROOT / "app.py").read_text(encoding="utf-8-sig")
+    # Phase 1 intentionally changes only the observed-crop lock boundary.
+    # Restore that exact reviewed delta for the original whole-module check;
+    # semantic tests exercise the new function without this restoration.
+    phase1 = json.loads((ROOT / 'tests/fixtures/scientific_fix_phase1/source_boundary.json').read_text(encoding='utf8'))
+    before, after = phase1['before'], phase1['after']
+    for text in (before, after):
+        nodes = ast.parse(text).body
+        assert len(nodes) == 1 and isinstance(nodes[0], ast.FunctionDef)
+        assert nodes[0].name == '_compute_perennial_locks'
+    assert hashlib.sha256(ast.dump(ast.parse(before).body[0], include_attributes=False).encode()).hexdigest() == MANIFEST['definitions']['_compute_perennial_locks']
+    assert source.count(after) == 1
+    source = source.replace(after, before, 1)
     changes = json.loads((ROOT / "tests/fixtures/data_boundary_changes.json").read_text(encoding="utf-8"))
     for before, after in reversed(changes):
         assert after in source
