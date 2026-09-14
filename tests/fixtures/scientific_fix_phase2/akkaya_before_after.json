@@ -1,0 +1,52 @@
+{
+  "scenario": "S2",
+  "algorithm": "GA",
+  "seed": 123,
+  "units": 179,
+  "canonical_unit": "m3/month",
+  "period": "calendar_month",
+  "annual_budget_m3": 10401986.556,
+  "sum_monthly_delivery_raw_m3": 13291427.0,
+  "sum_monthly_delivery_effective_m3": 11962284.3,
+  "sum_monthly_demand_m3": 23933291.2028,
+  "environmental_flow_ratio": 0.1,
+  "conversion_path": "source m3/month * selected-demand share * (1 - environmental reserve)",
+  "before": {
+    "source_commit": "8c77cd0",
+    "engine_report": null,
+    "violating_months_recomputed": 12,
+    "final_water_m3": 23933291.202800002,
+    "final_profit_tl": 188154778.39046353,
+    "feasible": false,
+    "raw_plan_hash": "5d0369a4260e4891871116b859381ea589cf3977af474da8c0fa32aafb79ec90",
+    "final_plan_hash": "12e4192e49023f980863d5e1f52929eaa5661585f78855ff5fc48aa4bb23e824",
+    "protected_perennial_count": 52
+  },
+  "after": {
+    "engine_report_status": "violation",
+    "engine_report_unit": "m3/month",
+    "violating_months": 12,
+    "worst_month": 6,
+    "worst_exceed_m3": 2077209.3527569324,
+    "final_water_m3": 23933291.202800002,
+    "final_profit_tl": 188154778.39046353,
+    "feasible": false,
+    "raw_plan_hash": "5d0369a4260e4891871116b859381ea589cf3977af474da8c0fa32aafb79ec90",
+    "final_plan_hash": "12e4192e49023f980863d5e1f52929eaa5661585f78855ff5fc48aa4bb23e824",
+    "protected_perennial_count": 52
+  },
+  "months": [
+    {"month":"2024-01","delivery_capacity_raw_m3":471457.0,"delivery_capacity_effective_m3":424311.3,"demand_m3":848932.4880138224,"difference_m3":-424621.18801382236,"violation_m3":424621.18801382236,"violation":true},
+    {"month":"2024-02","delivery_capacity_raw_m3":445234.0,"delivery_capacity_effective_m3":400710.60000000003,"demand_m3":801713.3110176143,"difference_m3":-401002.7110176143,"violation_m3":401002.7110176143,"violation":true},
+    {"month":"2024-03","delivery_capacity_raw_m3":788331.0,"delivery_capacity_effective_m3":709497.9,"demand_m3":1419512.2325079902,"difference_m3":-710014.3325079902,"violation_m3":710014.3325079902,"violation":true},
+    {"month":"2024-04","delivery_capacity_raw_m3":791792.0,"delivery_capacity_effective_m3":712612.8,"demand_m3":1425745.5242512499,"difference_m3":-713132.7242512498,"violation_m3":713132.7242512498,"violation":true},
+    {"month":"2024-05","delivery_capacity_raw_m3":1187142.0,"delivery_capacity_effective_m3":1068427.8,"demand_m3":2137635.19000719,"difference_m3":-1069207.3900071902,"violation_m3":1069207.3900071902,"violation":true},
+    {"month":"2024-06","delivery_capacity_raw_m3":2306329.0,"delivery_capacity_effective_m3":2075696.1,"demand_m3":4152905.4527569325,"difference_m3":-2077209.3527569324,"violation_m3":2077209.3527569324,"violation":true},
+    {"month":"2024-07","delivery_capacity_raw_m3":2297254.0,"delivery_capacity_effective_m3":2067528.6,"demand_m3":4136564.412740136,"difference_m3":-2069035.812740136,"violation_m3":2069035.812740136,"violation":true},
+    {"month":"2024-08","delivery_capacity_raw_m3":1742557.0,"delivery_capacity_effective_m3":1568301.3,"demand_m3":3137745.997516761,"difference_m3":-1569444.697516761,"violation_m3":1569444.697516761,"violation":true},
+    {"month":"2024-09","delivery_capacity_raw_m3":1102808.0,"delivery_capacity_effective_m3":992527.2000000001,"demand_m3":1985778.3675632086,"difference_m3":-993251.1675632085,"violation_m3":993251.1675632085,"violation":true},
+    {"month":"2024-10","delivery_capacity_raw_m3":1091672.0,"delivery_capacity_effective_m3":982504.8,"demand_m3":1965725.6269061528,"difference_m3":-983220.8269061528,"violation_m3":983220.8269061528,"violation":true},
+    {"month":"2024-11","delivery_capacity_raw_m3":649934.0,"delivery_capacity_effective_m3":584940.6,"demand_m3":1170308.5778201392,"difference_m3":-585367.9778201393,"violation_m3":585367.9778201393,"violation":true},
+    {"month":"2024-12","delivery_capacity_raw_m3":416917.0,"delivery_capacity_effective_m3":375225.3,"demand_m3":750724.0216988034,"difference_m3":-375498.7216988034,"violation_m3":375498.7216988034,"violation":true}
+  ]
+}

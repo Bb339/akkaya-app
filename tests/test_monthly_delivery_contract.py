@@ -99,3 +99,20 @@ def test_legacy_rows_receive_explicit_readiness_contract_without_migration():
     assert report["scenarios"]["S2"]["status"] == "READY"
     assert contract["delivery_capacity"] == "m3/month; calendar_month"
     assert document == before
+
+
+def test_akkaya_before_after_snapshot_is_dimensionally_consistent():
+    snapshot = json.loads((FIXTURE.parent / "akkaya_before_after.json").read_text())
+    rows = snapshot["months"]
+    assert len(rows) == 12 and all(row["violation"] for row in rows)
+    assert sum(row["delivery_capacity_raw_m3"] for row in rows) == snapshot["sum_monthly_delivery_raw_m3"]
+    assert sum(row["delivery_capacity_effective_m3"] for row in rows) == pytest.approx(snapshot["sum_monthly_delivery_effective_m3"])
+    assert sum(row["demand_m3"] for row in rows) == pytest.approx(snapshot["sum_monthly_demand_m3"])
+    assert all(row["delivery_capacity_effective_m3"] ==
+               pytest.approx(row["delivery_capacity_raw_m3"] * (1-snapshot["environmental_flow_ratio"]))
+               for row in rows)
+    assert snapshot["before"]["engine_report"] is None
+    assert snapshot["after"]["engine_report_status"] == "violation"
+    for field in ("final_water_m3", "final_profit_tl", "feasible",
+                  "raw_plan_hash", "final_plan_hash", "protected_perennial_count"):
+        assert snapshot["before"][field] == snapshot["after"][field]

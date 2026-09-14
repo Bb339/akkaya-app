@@ -176,6 +176,11 @@ def test_full_akkaya_s2_ga_phase1_acceptance():
     assert result["total_profit_tl"] == pytest.approx(188154778.3904635)
     assert result["feasible"] is False
     assert final["validation"]["engine_reported_totals_consistent"] is True
+    monthly = result["monthly_delivery_validation"]
+    assert monthly["status"] == "violation" and monthly["unit"] == "m3/month"
+    assert monthly["months"] == 12 and monthly["violating_months"] == list(range(1, 13))
+    assert monthly["total_capacity_m3"] == pytest.approx(11962284.3)
+    assert monthly["total_demand_m3"] == pytest.approx(result["total_water_m3"])
 
     by_unit = {u["external_id"]: u for u in document["analysis_units"]}
     protected = {uid for uid, unit in by_unit.items()

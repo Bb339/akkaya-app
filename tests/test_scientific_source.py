@@ -8,13 +8,33 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = json.loads((ROOT / "tests/fixtures/thesis_source_manifest.json").read_text(encoding="utf-8"))
 
 
-def test_all_thesis_function_and_class_definitions_unchanged():
-    tree = ast.parse(legacy_source())
+def test_phase2_changes_only_reviewed_delivery_functions():
+    source = (ROOT / "app.py").read_text(encoding="utf-8-sig")
+    tree = ast.parse(source)
+    guard = json.loads((ROOT / 'tests/fixtures/scientific_fix_phase2/source_guard.json').read_text())
+    allowed = set(guard['allowed_changed_functions'])
     actual = {n.name: hashlib.sha256(ast.dump(n, include_attributes=False).encode()).hexdigest()
               for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
-    assert actual == MANIFEST["definitions"]
+    assert {name:actual[name] for name in allowed} == guard['current_function_ast_sha256']
+
+    phase1 = json.loads((ROOT / 'tests/fixtures/scientific_fix_phase1/source_boundary.json').read_text())
+    assert source.count(phase1['after']) == 1
+    perennial = ast.parse(phase1['after']).body[0]
+    assert actual['_compute_perennial_locks'] == hashlib.sha256(
+        ast.dump(perennial, include_attributes=False).encode()).hexdigest()
+
+    normalized = []
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name == '_canonical_monthly_table_values':
+            continue
+        if isinstance(node, ast.FunctionDef) and node.name in allowed:
+            node.body = [ast.Pass()]
+        normalized.append(node)
+    tree.body = normalized
+    assert hashlib.sha256(ast.dump(tree, include_attributes=False).encode()).hexdigest() == guard['phase1_normalized_module_ast_sha256']
+
     # Relocated default input literals are frozen too; restoring the old AST
-    # alone would not detect an edit to the adapter's data file.
+    # alone does not detect an edit to the adapter's data file.
     changes = json.loads((ROOT / 'tests/fixtures/data_boundary_changes.json').read_text(encoding='utf8'))
     original = next(before for before, after in changes if before.startswith('default_crop_params ='))
     values = ast.parse(original).body[0].value
@@ -29,32 +49,12 @@ def test_legacy_frontend_sources_unchanged():
         assert hashlib.sha256(content.encode()).hexdigest() == expected
 
 
-def test_only_project_blueprint_registration_added_to_legacy_module():
-    tree = ast.parse(legacy_source())
-    def integration(node):
-        return (isinstance(node, ast.ImportFrom) and node.module == "kds.api") or (
-            isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
-            and isinstance(node.value.func, ast.Name) and node.value.func.id == "register_project_api")
-    tree.body = [node for node in tree.body if not integration(node)]
-    assert hashlib.sha256(ast.dump(tree, include_attributes=False).encode()).hexdigest() == MANIFEST["module_ast"]
-
-
-def legacy_source():
-    source = (ROOT / "app.py").read_text(encoding="utf-8-sig")
-    # Phase 1 intentionally changes only the observed-crop lock boundary.
-    # Restore that exact reviewed delta for the original whole-module check;
-    # semantic tests exercise the new function without this restoration.
-    phase1 = json.loads((ROOT / 'tests/fixtures/scientific_fix_phase1/source_boundary.json').read_text(encoding='utf8'))
-    before, after = phase1['before'], phase1['after']
-    for text in (before, after):
-        nodes = ast.parse(text).body
-        assert len(nodes) == 1 and isinstance(nodes[0], ast.FunctionDef)
-        assert nodes[0].name == '_compute_perennial_locks'
-    assert hashlib.sha256(ast.dump(ast.parse(before).body[0], include_attributes=False).encode()).hexdigest() == MANIFEST['definitions']['_compute_perennial_locks']
-    assert source.count(after) == 1
-    source = source.replace(after, before, 1)
-    changes = json.loads((ROOT / "tests/fixtures/data_boundary_changes.json").read_text(encoding="utf-8"))
-    for before, after in reversed(changes):
-        assert after in source
-        source = before.join(source.rsplit(after, 1))
-    return source
+def test_ga_aco_abc_and_fitness_definitions_match_phase1():
+    tree = ast.parse((ROOT / 'app.py').read_text(encoding='utf-8-sig'))
+    actual = {n.name: hashlib.sha256(ast.dump(n,include_attributes=False).encode()).hexdigest()
+              for n in tree.body if isinstance(n,ast.FunctionDef)}
+    for name in ('ga_optimize','aco_optimize','abc_optimize',
+                 'ga_optimize_two_season','aco_optimize_two_season','abc_optimize_two_season',
+                 '_score_solution','_score_solution_two_season',
+                 '_matrix_ga_optimize','_matrix_aco_optimize','_matrix_abc_optimize'):
+        assert actual[name] == MANIFEST['definitions'][name]

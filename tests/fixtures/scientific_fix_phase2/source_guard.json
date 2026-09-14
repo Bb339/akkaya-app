@@ -1,0 +1,18 @@
+{
+  "phase1_commit": "8c77cd063ee592680e02bf01d6f83b17aaf030c2",
+  "allowed_changed_functions": [
+    "_basin_month_profile",
+    "_build_two_crop_recommendations",
+    "_canonical_monthly_table_values",
+    "basin_budget_and_delivery_caps",
+    "compute_monthly_delivery_report"
+  ],
+  "phase1_normalized_module_ast_sha256": "f5d2a23d4656e3cd2653ac9e7e33cf06de2c9568d54f29774f9d6cc237d27f57",
+  "current_function_ast_sha256": {
+    "_basin_month_profile": "b695a1b67c8c85187f6258083b2a52ebe0146137fe57ed5b51be6d218d760b13",
+    "_build_two_crop_recommendations": "c152a1c9c0b1d67c7c5b73e80df49821340abfd39db219b10a62ded9dc23894a",
+    "_canonical_monthly_table_values": "8bb2a178ad6154fda0f24cee3ab42246fb83110f228d1ecf918c0c7896ef966f",
+    "basin_budget_and_delivery_caps": "6cfc9232dc8dcf94c1aa2e30164f4e3b086516950a13feb025620f0698a7fc3a",
+    "compute_monthly_delivery_report": "d39811ab7b8489da374df2bfbfccf4142c17261f1deb37ceaf6ff0cd62d606fe"
+  }
+}

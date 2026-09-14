@@ -104,6 +104,9 @@ def test_public_s2_service_exposes_raw_and_validated_contract(imported,algorithm
     assert result['result_contract_version']=='scientific-result-v2'
     assert result['details']==final['details'] and raw['details']
     assert raw['feasibility_status']=='not_validated' and raw['metrics']['feasible'] is None
+    monthly=result['monthly_delivery_validation']
+    assert monthly['status'] in ('pass','violation') and monthly['unit']=='m3/month'
+    assert monthly['months']==12 and monthly['total_capacity_m3']>0
     assert result['total_water_m3']==final['metrics']['total_water_m3']==run['summary']['total_water_m3']
     assert result['total_profit_tl']==final['metrics']['total_profit_tl']==run['summary']['total_profit_tl']
     assert sum((row['primary']['water_m3'] if row['primary'] else 0)+(row['secondary']['water_m3'] if row['secondary'] else 0)
