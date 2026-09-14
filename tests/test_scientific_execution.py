@@ -1,5 +1,6 @@
 import json
 import os
+from copy import deepcopy
 from pathlib import Path
 import pytest
 import app
@@ -28,6 +29,17 @@ def assert_result(actual, expected, path='result'):
         assert actual==expected, path
 
 
+def phase1_compatible(result, scenario):
+    """Remove only the authorized Phase 2 diagnostic for frozen parity."""
+    comparable = deepcopy(result)
+    if scenario == 'S2':
+        report = comparable['meta']['delivery_report']
+        assert report['unit']=='m3/month' and report['period']=='calendar_month'
+        assert len(report['months'])==12 and report['status'] in ('pass','violation')
+        comparable['meta']['delivery_report']=None
+    return comparable
+
+
 @pytest.fixture(scope='module')
 def document():
     return build_demo(app.DATA_DIR)
@@ -48,13 +60,14 @@ def test_project_seeded_reference(document, scenario, algorithm, index):
     assert len(bundle.candidates)==6859
     assert sum(c.quota_compatible for c in bundle.candidates)==3673
     result=execute(bundle)
-    assert_result(result,case['result'])
+    assert_result(phase1_compatible(result,scenario),case['result'])
 
 
 def test_legacy_seeded_reference(document):
     from tools.freeze_scientific_baseline import execute as reference
     case=json.loads((BASELINE/'s2_ga.json').read_text(encoding='utf8'))[0]
-    assert_result(stable(reference('S2','GA',case['seed'],case['selected_ids'])),case['result'])
+    result=stable(reference('S2','GA',case['seed'],case['selected_ids']))
+    assert_result(phase1_compatible(result,'S2'),case['result'])
 
 
 def test_reference_preparation_preserves_serving_process_state(document):
