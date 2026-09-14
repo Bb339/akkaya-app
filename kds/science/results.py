@@ -59,6 +59,28 @@ def _selected_units(config, units):
     return [u for u in units if not selected or u["external_id"] in selected]
 
 
+def _monthly_delivery_validation(report):
+    if not report:
+        return dict(
+            status="not_available", unit=None, period=None, months=None,
+            violating_months=None, max_violation_m3=None,
+            total_capacity_m3=None, total_demand_m3=None)
+    violations = report.get("violating_months")
+    if violations is None:
+        violations = [month for month, exceed in zip(
+            report.get("months", []), report.get("exceed_m3", [])) if float(exceed) > 1e-6]
+    return dict(
+        status=report.get("status") or ("pass" if report.get("feasible_monthly") else "violation"),
+        unit=report.get("unit") or "m3/month",
+        period=report.get("period") or "calendar_month",
+        months=len(report.get("months", [])),
+        violating_months=deepcopy(violations),
+        max_violation_m3=float(report.get("worst_exceed_m3", 0.0) or 0.0),
+        total_capacity_m3=float(report.get("total_capacity_m3", sum(report.get("cap_m3", []))) or 0.0),
+        total_demand_m3=float(report.get("total_demand_m3", sum(report.get("demand_m3", []))) or 0.0),
+    )
+
+
 def _raw_details(result):
     rows = []
     for source in result.get("details", []):
@@ -113,6 +135,9 @@ def project_result(result, config, units):
     if config.get("scenario") != "S2" or not result:
         return projected
     if result.get("result_contract_version") == RESULT_CONTRACT_VERSION:
+        monthly = _monthly_delivery_validation(result.get("meta", {}).get("delivery_report"))
+        projected.setdefault("monthly_delivery_validation", monthly)
+        projected.get("validated_final_plan", {}).setdefault("monthly_delivery_validation", deepcopy(monthly))
         return projected
 
     selected_units = _selected_units(config, units)
@@ -121,6 +146,7 @@ def project_result(result, config, units):
     final_details = _final_details(result)
     raw_metrics = _metrics(raw_details, total_area, feasible=None)
     final_metrics = _metrics(final_details, total_area, feasible=result.get("feasible"))
+    monthly = _monthly_delivery_validation(result.get("meta", {}).get("delivery_report"))
     budget = float(result.get("water_budget_m3", 0.0) or 0.0)
     reported_water = result.get("total_water_m3")
     reported_profit = result.get("total_profit_tl")
@@ -161,8 +187,10 @@ def project_result(result, config, units):
             parcels=deepcopy(result.get("parcels", [])),
             metrics=deepcopy(final_metrics),
             validation=validation,
+            monthly_delivery_validation=deepcopy(monthly),
         ),
         final_metrics=deepcopy(final_metrics),
+        monthly_delivery_validation=deepcopy(monthly),
     )
     return projected
 

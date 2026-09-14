@@ -111,6 +111,7 @@ def test_legacy_s2_get_is_projected_without_store_migration(tmp_path):
     presented = OptimizationApplicationService(repository).get("sample-a", "run-old")
     assert presented["result"]["result_contract_version"] == RESULT_CONTRACT_VERSION
     assert presented["result"]["total_water_m3"] == presented["summary"]["total_water_m3"] == 450.0
+    assert presented["result"]["monthly_delivery_validation"]["status"] == "not_available"
     assert history(repository.get("sample-a"))["items"][0]["water"] == 450.0
     assert repository.get("sample-a") == before
     assert "result_contract_version" not in repository.get("sample-a")["runs"]["run-old"]["result"]
@@ -123,6 +124,28 @@ def test_contract_exposes_inconsistent_engine_totals_without_using_them_as_final
     projected = project_result(source, configuration(request_body("S2"), document), document["analysis_units"])
     assert projected["total_water_m3"] == 450.0
     assert projected["validated_final_plan"]["validation"]["engine_reported_totals_consistent"] is False
+
+
+def test_result_contract_exposes_real_monthly_delivery_validation():
+    document = with_seasons(example())
+    source = engine_result()
+    source["meta"]["delivery_report"] = {
+        "status": "violation", "unit": "m3/month", "period": "calendar_month",
+        "months": list(range(1, 13)), "cap_m3": [30.0] * 12,
+        "demand_m3": [40.0] * 12, "exceed_m3": [10.0] * 12,
+        "feasible_monthly": False, "violating_months": list(range(1, 13)),
+        "worst_exceed_m3": 10.0, "total_capacity_m3": 360.0,
+        "total_demand_m3": 480.0,
+    }
+    projected = project_result(
+        source, configuration(request_body("S2"), document), document["analysis_units"])
+    monthly = projected["monthly_delivery_validation"]
+    assert monthly == projected["validated_final_plan"]["monthly_delivery_validation"]
+    assert monthly["status"] == "violation" and monthly["unit"] == "m3/month"
+    assert monthly["months"] == 12 and monthly["violating_months"] == list(range(1, 13))
+    assert monthly["max_violation_m3"] == 10.0
+    assert monthly["total_capacity_m3"] == 360.0
+    assert monthly["total_demand_m3"] == 480.0
 
 
 def _stable_hash(value):
