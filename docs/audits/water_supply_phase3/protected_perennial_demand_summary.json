@@ -1,0 +1,66 @@
+{
+  "definition": "current-model protected perennial demand floor under S2 water_saving",
+  "protected_units": 52,
+  "protected_area_da": 39486.0,
+  "protected_perennial_current_reference_demand_m3": 31264646.990000002,
+  "protected_perennial_current_reference_profit_tl": 410015800.0,
+  "protected_perennial_model_floor_m3": 22510545.8328,
+  "method": "locked current crop primary calibrated gross intensity × full analysis-unit area × 0.72",
+  "multiplier": 0.72,
+  "multiplier_meaning": "existing water_saving objective irrigation adjustment; model assumption",
+  "crop_counts": {
+    "ARMUT": 5,
+    "AYVA": 1,
+    "BADEM": 5,
+    "BAĞ": 5,
+    "CEVİZ": 5,
+    "ÇİLEK": 1,
+    "ELMA": 5,
+    "ERİK": 4,
+    "KAYSI": 5,
+    "KİRAZ": 5,
+    "NEKTAR": 5,
+    "ŞEFTALİ": 5,
+    "VİŞNE": 1
+  },
+  "by_settlement": [
+    {
+      "settlement": "Bahçeli",
+      "protected_units": 11,
+      "protected_area_da": 11082.0,
+      "current_reference_demand_m3": 8760028.02,
+      "model_floor_m3": 6307220.1744
+    },
+    {
+      "settlement": "Bor İlçe Merkezi",
+      "protected_units": 10,
+      "protected_area_da": 6147.0,
+      "current_reference_demand_m3": 4876562.18,
+      "model_floor_m3": 3511124.7695999998
+    },
+    {
+      "settlement": "Kaynarca",
+      "protected_units": 9,
+      "protected_area_da": 653.0,
+      "current_reference_demand_m3": 472122.67,
+      "model_floor_m3": 339928.3224
+    },
+    {
+      "settlement": "Kemerhisar",
+      "protected_units": 10,
+      "protected_area_da": 13461.0,
+      "current_reference_demand_m3": 10457115.37,
+      "model_floor_m3": 7529123.0664
+    },
+    {
+      "settlement": "Sazlıca",
+      "protected_units": 12,
+      "protected_area_da": 8143.0,
+      "current_reference_demand_m3": 6698818.75,
+      "model_floor_m3": 4823149.5
+    }
+  ],
+  "survival_water_claim_allowed": false,
+  "monthly_floor_available": false,
+  "monthly_floor_reason": "Active calibrated S2 rows contain no planting/harvest dates or crop-specific monthly demand; reservoir-profile allocation would be circular and non-phenological."
+}

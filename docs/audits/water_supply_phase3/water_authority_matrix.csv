@@ -1,0 +1,10 @@
+variable,current_value_source,authority_class,confidence,production_allowed,real_world_claim_allowed,replacement_required,priority
+current_pattern_calculated_gross_demand,100700080.810000 m3; parsel summary,CALCULATED_REFERENCE,medium,comparison only,demand estimate only,yes for observed withdrawals,high
+reservoir_irrigation_baseline,11557762.840000 m3/year; monthly CSV matches 2024 cekis_su_hacmi_hm3 field,UNKNOWN,low; lineage match only,model scenario only,no,yes,critical
+engine_annual_budget,10401986.556000 m3; baseline × 0.90,SCENARIO,high arithmetic/low authority,diagnostic only,no,yes,critical
+raw_delivery_capacity,13291427.000000 m3/year; monthly baseline × 1.15,DERIVED_PROXY,high formula/low capacity,diagnostic only,no,yes,critical
+environmental_flow_ratio,0.10; code default/run option,ASSUMED,low local authority,scenario only,no,yes,high
+effective_delivery_capacity,11962284.300000 m3/year; proxy × 0.90,SCENARIO,high arithmetic/low authority,diagnostic only,no,yes,critical
+protected_perennial_current_reference,31264646.990000 m3; 52 current rows,CALCULATED_REFERENCE,medium,comparison only,reference demand only,yes for measured use,high
+protected_perennial_model_floor,22510545.832800 m3; calibrated rows × 0.72,SCENARIO,high reproduction/low agronomic minimum,model lower-bound diagnostic,no survival/field claim,yes,critical
+official_allocation,not supplied,UNKNOWN,none,no,no,yes,critical

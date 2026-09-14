@@ -1,0 +1,20 @@
+{
+  "planning_year": 2024,
+  "analysis_units": 179,
+  "current_pattern_calculated_gross_demand_m3": 100700080.81,
+  "water_context_reference_m3": 100700080.81,
+  "reservoir_irrigation_baseline_annual_sum_m3": 11557762.839999998,
+  "upstream_2024_withdrawal_named_field_m3": 11557762.839961313,
+  "upstream_annual_match_absolute_difference_m3": 3.8685277104377747e-05,
+  "upstream_unit_label_anomaly": "column suffix is hm3, while numeric magnitude and downstream use are m3-scale",
+  "reservoir_baseline_authority": "UNKNOWN",
+  "environmental_flow_ratio": 0.1,
+  "environmental_flow_authority": "ASSUMED",
+  "engine_annual_budget_m3": 10401986.555999998,
+  "raw_monthly_delivery_sum_m3": 13291427.0,
+  "effective_delivery_sum_m3": 11962284.3,
+  "delivery_authority": "DERIVED_PROXY",
+  "full_s2_ga_seed123_demand_m3": 23933291.2028,
+  "official_annual_allocation_m3": null,
+  "measured_annual_delivery_m3": null
+}

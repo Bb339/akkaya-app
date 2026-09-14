@@ -1,0 +1,10 @@
+step,variable,source,operation,result_m3,authority,evidence
+1,current pattern demand,parsel_su_kar_ozet.csv,sum 179 mevcut_su_m3,100700080.81,CALCULATED_REFERENCE,water_context note and adapter kind
+2,annual withdrawal-named source field,akkaya_baraj_su_bilanco_2000_2025.csv,select 2024 cekis_su_hacmi_hm3,11557762.839961313,UNKNOWN,field label says hm3 but magnitude behaves as m3; no generator or official citation
+3,reservoir irrigation baseline,akkaya_reservoir_monthly_backend.csv,sum 12 rows for 2024; compare annual field,11557762.839999998,UNKNOWN,matches annual withdrawal-named field within 0.001 m3; lineage match does not establish measurement authority
+4,engine annual budget,app.py:basin_budget_and_delivery_caps,reservoir baseline × 0.90,10401986.555999998,SCENARIO,code default envFlowRatio=0.10
+5,raw delivery capacity,delivery_capacity_monthly_assumed.csv,sum rounded monthly baseline × 1.15,13291427.0,DERIVED_PROXY,all 12 ratios approximately 1.15; source note
+6,effective delivery capacity,app.py:basin_budget_and_delivery_caps,raw delivery × 0.90,11962284.3,SCENARIO,dimensionless environmental reserve
+7,protected perennial current reference,52 current rows,sum current reference water,31264646.990000002,CALCULATED_REFERENCE,Phase 1 frozen protected set
+8,protected perennial model floor,primary calibrated current-crop rows + app multiplier,sum full-area primary demand × 0.72,22510545.8328,SCENARIO,water_saving objective adjustment; not survival water
+9,full S2 GA seed123 demand,Phase 2 frozen fixture/test,sum validated final plan,23933291.2028,SCENARIO,deterministic engine output

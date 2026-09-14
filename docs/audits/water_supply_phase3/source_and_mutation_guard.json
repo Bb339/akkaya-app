@@ -1,0 +1,25 @@
+{
+  "baseline_commit": "b2ec7157493943966bee825c14fbc03110e7a204",
+  "production_sha256": {
+    "app.py": "58440036d8cd9c9dc2fc2d871d99e763b7dd11199c8cc8b742e72835932f653d",
+    "kds/science/results.py": "ccef2daa1ab7e12523acff898bde5ec118108278155632643b33908f41d4ebc6",
+    "kds/science/validation.py": "2d6bd291af8febb9b8339439566733c4faad7bf0ead7abafa015aa6739b18e78",
+    "kds/application/readiness.py": "190402b7d108fc86c945e4bea0c4c62edc605c3e48379053032fe8da26623bc1",
+    "index.html": "333a17e699a870deef066eb6fd47c450bdb83d64f701f55f07d27902033f561e",
+    "script.js": "2de5be2590c69e684737af6934b4a70ad14dadccde72a24a8dcb7ddf7f5a3fbf",
+    "style.css": "d8b899f33ef95b051ffa7288a16017986d72f2bee5bb303a4cf904dc8c82ff42"
+  },
+  "input_sha256": {
+    "data/parsel_su_kar_ozet.csv": "3f3f994729f2d79baee9bca3c9663638ee032deb4037fff50fea5f28211839d9",
+    "data/water_context.csv": "322d982476952186a2389e6408494be4c93404144ec94834c992a1353fe1bc67",
+    "data/akkaya_baraj_su_bilanco_2000_2025.csv": "071e743be4a7fda960f494f2a6dfffee2c84af21e05024723e756e16e9f0d518",
+    "data/enhanced_dataset/csv/akkaya_reservoir_monthly_backend.csv": "e9708dcd48999abf259b163be1a8d38dfee454a0bbb8b7dfd8ff44b4b857ce71",
+    "data/enhanced_dataset/csv/delivery_capacity_monthly_assumed.csv": "17c7cb8ba312e5c501060af1c7c09d8e22c787f4c36b5857f3d9f42b5c3d562a",
+    "data/enhanced_dataset/csv/senaryo2_backend_seasons.csv": "4ae365538e3f6a32f7df9581f18333d9701769da4737d9c4b6fe225c0e9c5f3d",
+    "data/excel_derived/combined_parcel_candidate_matrix_2024.csv": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
+    "tests/fixtures/scientific_fix_phase1/akkaya_locks.json": "b58697e0fff0b6df707c950f33bd22ad1f5e487699c39194ab9c436e95574717"
+  },
+  "generator": "tools/scientific_audit/water_supply_phase3.py",
+  "optimizer_executed": false,
+  "project_store_accessed": false
+}

@@ -1,0 +1,16 @@
+{
+  "classification": "STRUCTURAL INFEASIBILITY UNDER CURRENT MODEL INPUTS",
+  "real_world_infeasibility_claim": false,
+  "minimum_annual_budget_to_cover_model_floor_m3": 22510545.8328,
+  "current_engine_budget_m3": 10401986.555999998,
+  "model_floor_minus_engine_budget_m3": 12108559.276800003,
+  "minimum_factor_relative_to_engine_budget": 2.164062192506453,
+  "effective_delivery_sum_m3": 11962284.3,
+  "minimum_factor_relative_to_effective_delivery_sum": 1.8817932485353153,
+  "reservoir_baseline_sum_m3": 11557762.839999998,
+  "minimum_factor_relative_to_reservoir_baseline": 1.9476559732558074,
+  "annual_necessary_condition_met": false,
+  "monthly_necessary_condition_evaluated": false,
+  "monthly_reason": "Active calibrated S2 rows contain no planting/harvest dates or crop-specific monthly demand; reservoir-profile allocation would be circular and non-phenological.",
+  "note": "Ratios are diagnostic lower bounds, not recommended budgets or supply multipliers."
+}
