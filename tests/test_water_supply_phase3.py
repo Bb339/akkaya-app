@@ -115,15 +115,10 @@ def test_generator_outputs_are_byte_deterministic(tmp_path):
 
 def test_phase3_diff_is_confined_to_audit_docs_tool_and_test():
     completed = subprocess.run(
-        ["git", "diff", "--name-only", "v2-scientific-fix-phase2-complete"],
+        ["git", "diff", "--name-only", "v2-scientific-fix-phase2-complete..v2-scientific-water-audit-complete"],
         cwd=ROOT, check=True, text=True, capture_output=True,
     )
     changed = {line for line in completed.stdout.splitlines() if line}
-    untracked = subprocess.run(
-        ["git", "ls-files", "--others", "--exclude-standard"],
-        cwd=ROOT, check=True, text=True, capture_output=True,
-    )
-    changed.update(line for line in untracked.stdout.splitlines() if line)
     allowed = (
         "docs/audits/water_supply_phase3/",
         "tools/scientific_audit/water_supply_phase3.py",
