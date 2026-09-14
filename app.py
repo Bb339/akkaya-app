@@ -2356,6 +2356,38 @@ def _get_irrigation_method_efficiency(method: str) -> float:
         pass
     return float(defaults.get(m, 0.75))
 
+def _canonical_monthly_table_values(frame: pd.DataFrame, year: int, column: str) -> dict:
+    """Return a complete {1..12: value} series for one calendar year.
+
+    Monthly reservoir and delivery values are already physical m³/month at the
+    data boundary. This function normalizes only their period keys; it performs
+    no area, litre, hectare, daily, seasonal, or annual unit conversion.
+    """
+    if frame is None or not len(frame):
+        return {}
+    if 'month' not in frame.columns or column not in frame.columns:
+        raise ValueError(f'Monthly {column} data requires month and {column} columns.')
+    periods = pd.to_datetime(frame['month'], errors='coerce')
+    if periods.isna().any():
+        raise ValueError(f'Monthly {column} data contains an invalid calendar month.')
+    sub = frame.loc[periods.dt.year == int(year)].copy()
+    sub_periods = periods.loc[sub.index]
+    if not len(sub):
+        return {}
+    values = {}
+    for index, row in sub.iterrows():
+        month = int(sub_periods.loc[index].month)
+        value = float(row[column])
+        if month in values:
+            raise ValueError(f'Monthly {column} data contains duplicate month {year}-{month:02}.')
+        if not np.isfinite(value) or value <= 0:
+            raise ValueError(f'Monthly {column} values must be finite and positive m³/month.')
+        values[month] = value
+    if set(values) != set(range(1, 13)):
+        raise ValueError(f'Monthly {column} data requires exactly 12 calendar months for {year}.')
+    return values
+
+
 def _basin_month_profile(year: int) -> dict:
     """Return {month_str: baseline_share} for the given year using reservoir baseline.
 
@@ -2363,21 +2395,13 @@ def _basin_month_profile(year: int) -> dict:
     """
     frames = load_enhanced_frames()
     res = frames.get('reservoir')
-    if res is None or not len(res) or 'month' not in res.columns:
+    monthly = _canonical_monthly_table_values(res, int(year), 'irrigation_m3_baseline')
+    if not monthly:
         return {}
-    tmp = res.copy()
-    tmp['year'] = tmp['month'].astype(str).str.slice(0,4).astype(int)
-    sub = tmp[tmp['year'] == int(year)]
-    if not len(sub) or 'irrigation_m3_baseline' not in sub.columns:
-        return {}
-    total = float(sub['irrigation_m3_baseline'].sum())
+    total = float(sum(monthly.values()))
     if total <= 0:
         return {}
-    out = {}
-    for _, r in sub.iterrows():
-        mo = str(r['month'])[:7]  # YYYY-MM
-        out[mo] = float(r['irrigation_m3_baseline']) / total
-    return out
+    return {month: value / total for month, value in monthly.items()}
 
 def basin_budget_and_delivery_caps(year: int, selected_parcels: list, env_flow_ratio: float = 0.10):
     """Compute (annual_budget_selected, month_weights, month_caps_selected).
@@ -2395,12 +2419,9 @@ def basin_budget_and_delivery_caps(year: int, selected_parcels: list, env_flow_r
     res = frames.get('reservoir')
     basin_annual = None
     month_weights = _basin_month_profile(int(year))
-    if res is not None and len(res) and 'month' in res.columns:
-        tmp = res.copy()
-        tmp['year'] = tmp['month'].astype(str).str.slice(0,4).astype(int)
-        sub = tmp[tmp['year'] == int(year)]
-        if len(sub) and 'irrigation_m3_baseline' in sub.columns:
-            basin_annual = float(sub['irrigation_m3_baseline'].sum())
+    reservoir_monthly = _canonical_monthly_table_values(res, int(year), 'irrigation_m3_baseline')
+    if reservoir_monthly:
+        basin_annual = float(sum(reservoir_monthly.values()))
 
     # scale share to selected parcels
     try:
@@ -2425,17 +2446,11 @@ def basin_budget_and_delivery_caps(year: int, selected_parcels: list, env_flow_r
 
     # delivery caps (monthly)
     caps_selected = {}
-    try:
-        ddf = frames.get('delivery')
-        if ddf is not None and len(ddf) and 'month' in ddf.columns and 'max_delivery_m3_assumed' in ddf.columns:
-            tmp = ddf.copy()
-            tmp['year'] = tmp['month'].astype(str).str.slice(0,4).astype(int)
-            sub = tmp[tmp['year'] == int(year)]
-            for _, r in sub.iterrows():
-                mo = str(r['month'])[:7]
-                caps_selected[mo] = float(r['max_delivery_m3_assumed']) * share * (1.0 - env)
-    except Exception:
-        caps_selected = {}
+    ddf = frames.get('delivery')
+    delivery_monthly = _canonical_monthly_table_values(ddf, int(year), 'max_delivery_m3_assumed')
+    for month, capacity_m3 in delivery_monthly.items():
+        # m³/month × dimensionless selected-demand share × reserve share.
+        caps_selected[month] = capacity_m3 * share * (1.0 - env)
 
         # If delivery caps file is missing, build an assumed monthly capacity profile from month_weights.
     if not caps_selected and month_weights:
@@ -2466,34 +2481,65 @@ def compute_monthly_delivery_report(total_water_m3: float,
     """
     if month_caps is None or month_weights is None:
         return None
-    try:
-        mw = np.array(list(month_weights), dtype=float)
-        mc = np.array(list(month_caps), dtype=float)
-        if mw.size != mc.size or mw.size == 0:
-            return None
-        # Normalize to 12 months if needed
-        if mw.size != months:
-            # simple pad/truncate
-            mw = np.resize(mw, months)
-            mc = np.resize(mc, months)
-        if monthly_demand_override is not None and len(monthly_demand_override) == months:
-            dem = np.array(monthly_demand_override, dtype=float)
+
+    def vector(values, label):
+        if isinstance(values, dict):
+            normalized = {}
+            for raw_month, raw_value in values.items():
+                text = str(raw_month)
+                try:
+                    month = int(text[-2:]) if '-' in text else int(raw_month)
+                except (TypeError, ValueError):
+                    raise ValueError(f'{label} contains invalid month key {raw_month!r}.')
+                if month in normalized:
+                    raise ValueError(f'{label} contains duplicate month {month}.')
+                normalized[month] = raw_value
+            if set(normalized) != set(range(1, months + 1)):
+                raise ValueError(f'{label} requires exactly months 1..{months}.')
+            result = np.array([normalized[month] for month in range(1, months + 1)], dtype=float)
         else:
-            dem = float(total_water_m3) * (mw / max(1e-9, float(mw.sum())))
-        exceed = np.maximum(0.0, dem - mc)
-        feasible_monthly = bool(np.all(exceed <= 1e-6))
-        worst_idx = int(np.argmax(exceed)) if months > 0 else 0
-        return {
-            "months": list(range(1, months + 1)),
-            "demand_m3": [float(x) for x in dem.tolist()],
-            "cap_m3": [float(x) for x in mc.tolist()],
-            "exceed_m3": [float(x) for x in exceed.tolist()],
-            "feasible_monthly": feasible_monthly,
-            "worst_month": int(worst_idx + 1),
-            "worst_exceed_m3": float(exceed[worst_idx]) if months > 0 else 0.0,
-        }
-    except Exception:
-        return None
+            result = np.array(list(values), dtype=float)
+            if result.size != months:
+                raise ValueError(f'{label} requires exactly {months} values.')
+        if not np.all(np.isfinite(result)):
+            raise ValueError(f'{label} values must be finite.')
+        return result
+
+    mw = vector(month_weights, 'month_weights')
+    mc = vector(month_caps, 'month_caps')
+    if np.any(mw < 0) or float(mw.sum()) <= 0:
+        raise ValueError('month_weights must be non-negative with a positive sum.')
+    if np.any(mc <= 0):
+        raise ValueError('month_caps must be positive m³/month.')
+    if monthly_demand_override is not None:
+        dem = vector(monthly_demand_override, 'monthly_demand_override')
+        if np.any(dem < 0):
+            raise ValueError('monthly_demand_override must be non-negative m³/month.')
+        demand_source = 'explicit_monthly_m3'
+    else:
+        dem = float(total_water_m3) * (mw / float(mw.sum()))
+        demand_source = 'annual_m3_distributed_by_reservoir_profile'
+    exceed = np.maximum(0.0, dem - mc)
+    difference = mc - dem
+    feasible_monthly = bool(np.all(exceed <= 1e-6))
+    worst_idx = int(np.argmax(exceed)) if months > 0 else 0
+    return {
+        "status": "pass" if feasible_monthly else "violation",
+        "unit": "m3/month",
+        "period": "calendar_month",
+        "demand_source": demand_source,
+        "months": list(range(1, months + 1)),
+        "demand_m3": [float(x) for x in dem.tolist()],
+        "cap_m3": [float(x) for x in mc.tolist()],
+        "difference_m3": [float(x) for x in difference.tolist()],
+        "exceed_m3": [float(x) for x in exceed.tolist()],
+        "feasible_monthly": feasible_monthly,
+        "violating_months": [int(i + 1) for i, value in enumerate(exceed) if value > 1e-6],
+        "worst_month": int(worst_idx + 1),
+        "worst_exceed_m3": float(exceed[worst_idx]) if months > 0 else 0.0,
+        "total_capacity_m3": float(mc.sum()),
+        "total_demand_m3": float(dem.sum()),
+    }
 
 
 def _monthly_demand_from_mu(areas_da: np.ndarray,
@@ -3854,13 +3900,17 @@ def _build_two_crop_recommendations(
 
     feasible = bool(w_tot <= budget + 1e-6)
 
-    delivery_report = compute_monthly_delivery_report(
-        total_water_m3=float(w_tot),
-        month_weights=month_weights,
-        month_caps=month_caps,
-        months=12,
-        monthly_demand_override=None,
-    )
+    # This post-processor serves both scenario families. Monthly delivery is an
+    # S2 contract; retaining None for S1 preserves its frozen result schema.
+    delivery_report = None
+    if src_norm in ("s2", "senaryo2", "senaryo-2", "scenario2", "2"):
+        delivery_report = compute_monthly_delivery_report(
+            total_water_m3=float(w_tot),
+            month_weights=month_weights,
+            month_caps=month_caps,
+            months=12,
+            monthly_demand_override=None,
+        )
     if delivery_report is not None and (not delivery_report.get("feasible_monthly", True)):
         feasible = False
 

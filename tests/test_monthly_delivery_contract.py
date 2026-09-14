@@ -3,14 +3,18 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
+import pytest
 
 import app
+from kds.application.readiness import readiness
+from test_analysis_workflow import example, with_seasons
 
 
 FIXTURE = Path(__file__).parent / "fixtures/scientific_fix_phase2/minimal_monthly_delivery.json"
 
 
-def test_phase1_date_keyed_dictionary_bug_is_reproduced_before_fix():
+def test_date_keyed_dictionary_is_evaluated_in_canonical_monthly_unit():
     fixture = json.loads(FIXTURE.read_text())
     area = np.array([fixture["analysis_units"][0]["area_da"]])
     monthly_per_da = np.full((1, 1, 12), fixture["monthly_water_m3_da"])
@@ -21,5 +25,77 @@ def test_phase1_date_keyed_dictionary_bug_is_reproduced_before_fix():
     capacities = {row["month"]: row["max_delivery_m3_assumed"] for row in fixture["delivery"]}
 
     assert demand == [fixture["expected_monthly_demand_m3"]] * 12
-    assert app.compute_monthly_delivery_report(
-        sum(demand), weights, capacities, monthly_demand_override=demand) is None
+    report = app.compute_monthly_delivery_report(
+        sum(demand), weights, capacities, monthly_demand_override=demand)
+    assert report["unit"] == "m3/month" and report["period"] == "calendar_month"
+    assert report["status"] == "violation" and report["feasible_monthly"] is False
+    assert report["demand_m3"] == [fixture["expected_monthly_demand_m3"]] * 12
+    assert report["cap_m3"] == [fixture["expected_monthly_capacity_m3"]] * 12
+    assert report["exceed_m3"] == [fixture["expected_violation_m3"]] * 12
+    assert report["violating_months"] == list(range(1, 13))
+    assert report["total_demand_m3"] == 240.0
+    assert report["total_capacity_m3"] == fixture["annual_budget_m3"]
+
+
+def test_monthly_table_normalizes_period_keys_without_volume_conversion():
+    fixture = json.loads(FIXTURE.read_text())
+    frame = pd.DataFrame(fixture["delivery"])
+    values = app._canonical_monthly_table_values(
+        frame, fixture["planning_year"], "max_delivery_m3_assumed")
+    assert values == {month: fixture["expected_monthly_capacity_m3"] for month in range(1, 13)}
+    assert sum(values.values()) == fixture["annual_budget_m3"]
+
+
+def test_mm_m3_per_da_and_area_are_applied_exactly_once():
+    fixture = json.loads(FIXTURE.read_text())
+    area_da = fixture["analysis_units"][0]["area_da"]
+    monthly_m3_da = fixture["monthly_water_m3_da"]
+    demand = app._monthly_demand_from_mu(
+        np.array([area_da]), np.full((1, 1, 12), monthly_m3_da),
+        np.zeros((1, 1, 12)), np.array([0]), np.array([0]))
+    assert demand == [area_da * monthly_m3_da] * 12
+    assert sum(demand) == area_da * monthly_m3_da * 12
+
+
+@pytest.mark.parametrize("mutation, match", [
+    (lambda rows: rows.pop(), "exactly 12"),
+    (lambda rows: rows.__setitem__(1, {**rows[1], "month": rows[0]["month"]}), "duplicate"),
+    (lambda rows: rows[0].__setitem__("max_delivery_m3_assumed", 0), "finite and positive"),
+    (lambda rows: rows[0].__setitem__("max_delivery_m3_assumed", -1), "finite and positive"),
+    (lambda rows: rows[0].__setitem__("max_delivery_m3_assumed", float("nan")), "finite and positive"),
+])
+def test_engine_boundary_rejects_invalid_monthly_capacity(mutation, match):
+    rows = json.loads(FIXTURE.read_text())["delivery"]
+    mutation(rows)
+    with pytest.raises(ValueError, match=match):
+        app._canonical_monthly_table_values(
+            pd.DataFrame(rows), 2025, "max_delivery_m3_assumed")
+
+
+@pytest.mark.parametrize("change", [
+    lambda rows: rows.pop(),
+    lambda rows: rows.__setitem__(1, {**rows[1], "month": rows[0]["month"]}),
+    lambda rows: rows[0].__setitem__("max_delivery_m3_assumed", 0),
+    lambda rows: rows[0].__setitem__("max_delivery_m3_assumed", -1),
+    lambda rows: rows[0].__setitem__("max_delivery_m3_assumed", float("nan")),
+    lambda rows: rows[0].__setitem__("unit", "m3/day"),
+    lambda rows: rows[0].__setitem__("period", "day"),
+])
+def test_s2_readiness_rejects_invalid_delivery_contract(change):
+    document = with_seasons(example())
+    rows = document["scientific_inputs"]["seasonal_resources"]["delivery"]
+    change(rows)
+    report = readiness(document)
+    assert report["scenarios"]["S2"]["status"] == "NOT_READY"
+    assert any(issue["code"] == "seasonal_validation"
+               for issue in report["scenarios"]["S2"]["issues"])
+
+
+def test_legacy_rows_receive_explicit_readiness_contract_without_migration():
+    document = with_seasons(example())
+    before = json.loads(json.dumps(document))
+    report = readiness(document)
+    contract = report["scientific_data"]["unit_contracts"]
+    assert report["scenarios"]["S2"]["status"] == "READY"
+    assert contract["delivery_capacity"] == "m3/month; calendar_month"
+    assert document == before

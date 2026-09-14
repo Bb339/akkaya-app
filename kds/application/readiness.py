@@ -107,7 +107,12 @@ def readiness(document):
                              catalog_phenology_complete=sum(all(positive(c.get(k)) for k in ('stage_initial_days','stage_development_days','stage_mid_days','stage_late_days')) for c in crops),
                              confidence_levels=dict(Counter(c.get('confidence_level') or 'unspecified' for c in crops)),
                              parameter_source='verified supplementary thesis tables' if demo and not extra else 'project-explicit',
-                             raw_candidate_count=document.get('metadata',{}).get('references',{}).get('raw_candidate_rows') if demo and not extra else len(extra.get('candidates',[]))),
+                             raw_candidate_count=document.get('metadata',{}).get('references',{}).get('raw_candidate_rows') if demo and not extra else len(extra.get('candidates',[])),
+                             unit_contracts=dict(
+                                 reservoir_irrigation='m3/month; calendar_month',
+                                 delivery_capacity='m3/month; calendar_month',
+                                 water_quality_ec='dS/m; calendar_month',
+                                 implicit_legacy_units='Missing unit/period fields use the canonical values above; conflicting explicit values are rejected.')),
         counts=dict(
         analysis_units=len(units), crops=len(crops), total_area_da=sum(u['area_da'] for u in units),
         economics_covered=len(names & economic_names), geometry_covered=geometry_count),

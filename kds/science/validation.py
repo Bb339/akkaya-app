@@ -55,12 +55,24 @@ def seasonal_issues(document):
             messages.append(key+': bilimsel sayısal alanlar sonlu ve negatif olmayan değerler içermelidir.')
     if messages:
         return messages
-    for key,field in [('reservoir','irrigation_m3_baseline'),('delivery','max_delivery_m3_assumed'),('water_quality','ec_dS_m_assumed')]:
+    monthly_contracts={
+        'reservoir':('irrigation_m3_baseline','m3/month'),
+        'delivery':('max_delivery_m3_assumed','m3/month'),
+        'water_quality':('ec_dS_m_assumed','dS/m'),
+    }
+    for key,(field,canonical_unit) in monthly_contracts.items():
         rows=env.get(key,[])
         months={str(r.get('month',''))[:7] for r in rows}
         expected={f'{year}-{m:02}' for m in range(1,13)}
-        if months!=expected or len(rows)!=12 or any(type(r.get(field)) not in (int,float) or r[field]<=0 for r in rows):
+        invalid_value=any(type(r.get(field)) not in (int,float) or not math.isfinite(r[field]) or r[field]<=0 for r in rows)
+        if months!=expected or len(rows)!=12 or invalid_value:
             messages.append(f'{key}: planlama yılına ait 12 benzersiz ay ve pozitif {field} gerekli.')
+        explicit_units={str(r.get('unit') or canonical_unit).replace('m³','m3') for r in rows}
+        if explicit_units!={canonical_unit}:
+            messages.append(f'{key}.{field}: birim {canonical_unit} ve dönem calendar_month olmalıdır.')
+        explicit_periods={str(r.get('period') or 'calendar_month') for r in rows}
+        if explicit_periods!={'calendar_month'}:
+            messages.append(f'{key}.{field}: birim {canonical_unit} ve dönem calendar_month olmalıdır.')
     rows=env.get('parcels',[])
     if {r.get('parcel_id') for r in rows}!=ids or len(rows)!=len(ids):
         messages.append('parcels: birim parametre tablosu projenin bütün birimlerini birebir kapsamalıdır.')
