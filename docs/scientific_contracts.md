@@ -20,6 +20,34 @@ crop is perennial but the canonical crop is absent from the scientific
 candidate matrix, execution fails clearly instead of silently removing the
 protection.
 
+## Monthly delivery capacity
+
+The canonical delivery field is
+`seasonal_resources.delivery.max_delivery_m3_assumed`.
+
+- Unit: `m3/month` (physical cubic metres available during one calendar month).
+- Period: `calendar_month`, identified by the row's `month`.
+- Source values are already volumes. The engine performs no litre, `/1000`,
+  area, da/ha, daily, seasonal, or `/12` conversion.
+- Effective selected-project capacity is
+  `source capacity × selected-demand share × (1 - environmental reserve)`.
+  Both factors are dimensionless and the result remains `m3/month`.
+- Engine maps use canonical integer month keys `1..12`. Source
+  `YYYY-MM` values are key-normalized once at the engine boundary.
+
+`reservoir.irrigation_m3_baseline` uses the same `m3/month` and
+`calendar_month` contract. Its 12-month sum is the annual reservoir budget
+before the dimensionless selected-project and environmental-reserve factors.
+`water_quality.ec_dS_m_assumed` is an electrical-conductivity series in
+`dS/m`; it shares the calendar-month period but is never converted to a
+volume.
+
+S2 readiness requires exactly 12 unique planning-year months and finite,
+positive values. Explicit `unit` and `period` values must match the
+canonical contract. Existing import rows that omit them remain compatible:
+the column contract supplies `m3/month` and `calendar_month` without
+rewriting stored rows. Conflicting explicit metadata is rejected.
+
 ## S2 result roles
 
 The scientific engine keeps its existing internal output. The V2 application
@@ -52,9 +80,10 @@ The contract reports:
 - whether the engine supplied a monthly delivery report;
 - whether the engine's reported final totals match the recomputed final rows.
 
-When no delivery report is supplied, monthly feasibility is explicitly marked
-as not evaluated. This phase does not alter the known monthly dictionary
-capacity conversion issue (BUG-01).
+New S2 runs expose `monthly_delivery_validation` with status, unit, period,
+month count, violating months, maximum violation, total capacity and total
+demand. A legacy record without a real report is projected as
+`status: not_available` on a deep copy.
 
 ## Compatibility and history
 
