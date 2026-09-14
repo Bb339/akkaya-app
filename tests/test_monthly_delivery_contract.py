@@ -57,6 +57,43 @@ def test_mm_m3_per_da_and_area_are_applied_exactly_once():
     assert sum(demand) == area_da * monthly_m3_da * 12
 
 
+def test_existing_fao_monthly_constraint_consumes_canonical_month_keys():
+    common = dict(
+        chosen_primary=np.array([0]), chosen_secondary=np.array([0]),
+        areas=np.array([10.0]), W1=np.array([[24.0]]), R1=np.array([[100.0]]),
+        W2=np.array([[0.0]]), R2=np.array([[0.0]]), budget=1000.0,
+        objective="water_saving", crop_list=["ARPA"],
+        crop_family={"ARPA": "poaceae"}, rotation_rules=pd.DataFrame(),
+        month_weights={month: 1/12 for month in range(1, 13)},
+        month_use1=np.full((1, 1, 12), 2.0),
+        month_use2=np.zeros((1, 1, 12)), min_unique_crops=1,
+        max_share_per_crop=None, year=2025, parcel_ids=["UNIT-1"])
+    high = app._score_solution_two_season(
+        month_caps={month: 100.0 for month in range(1, 13)}, **common)
+    low = app._score_solution_two_season(
+        month_caps={month: 10.0 for month in range(1, 13)}, **common)
+    assert high[1:] == low[1:] == (240.0, 1000.0)
+    assert low[0] < high[0]
+
+
+def test_existing_calibrated_proportional_constraint_preserves_m3_values():
+    common = dict(
+        chosen_primary=np.array([0]), chosen_secondary=np.array([0]),
+        areas=np.array([10.0]), W1=np.array([[24.0]]), R1=np.array([[100.0]]),
+        W2=np.array([[0.0]]), R2=np.array([[0.0]]), budget=1000.0,
+        objective="water_saving", crop_list=["ARPA"],
+        crop_family={"ARPA": "poaceae"}, rotation_rules=pd.DataFrame(),
+        month_weights={month: 1/12 for month in range(1, 13)},
+        month_use1=None, month_use2=None, min_unique_crops=1,
+        max_share_per_crop=None, year=2025, parcel_ids=["UNIT-1"])
+    high = app._score_solution_two_season(
+        month_caps={month: 100.0 for month in range(1, 13)}, **common)
+    low = app._score_solution_two_season(
+        month_caps={month: 10.0 for month in range(1, 13)}, **common)
+    assert high[1:] == low[1:] == (240.0, 1000.0)
+    assert low[0] < high[0]
+
+
 @pytest.mark.parametrize("mutation, match", [
     (lambda rows: rows.pop(), "exactly 12"),
     (lambda rows: rows.__setitem__(1, {**rows[1], "month": rows[0]["month"]}), "duplicate"),
