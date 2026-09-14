@@ -87,6 +87,50 @@ def test_general_execution_no_reference_and_repeatable(imported,scenario,algorit
             water=result['total_water_m3'],profit=result['total_profit_tl']),indent=2),encoding='utf8')
 
 
+@pytest.mark.general_execution
+@pytest.mark.parametrize('algorithm',['GA','ACO','ABC'])
+def test_public_s2_service_exposes_raw_and_validated_contract(imported,algorithm):
+    """One seeded run per algorithm exercises the public-project application path."""
+    import hashlib
+    import os
+    from pathlib import Path
+    import app
+    from kds.science.execution import execute
+
+    _,repo,pid=imported
+    run=OptimizationApplicationService(repo,execute).run(pid,config('S2',algorithm))
+    assert run['status']=='completed',run.get('error')
+    result=run['result'];raw=result['raw_optimizer_plan'];final=result['validated_final_plan']
+    assert result['result_contract_version']=='scientific-result-v2'
+    assert result['details']==final['details'] and raw['details']
+    assert raw['feasibility_status']=='not_validated' and raw['metrics']['feasible'] is None
+    assert result['total_water_m3']==final['metrics']['total_water_m3']==run['summary']['total_water_m3']
+    assert result['total_profit_tl']==final['metrics']['total_profit_tl']==run['summary']['total_profit_tl']
+    assert sum((row['primary']['water_m3'] if row['primary'] else 0)+(row['secondary']['water_m3'] if row['secondary'] else 0)
+               for row in final['details'])==pytest.approx(result['total_water_m3'])
+    assert sum((row['primary']['profit_tl'] if row['primary'] else 0)+(row['secondary']['profit_tl'] if row['secondary'] else 0)
+               for row in final['details'])==pytest.approx(result['total_profit_tl'])
+
+    document=repo.get(pid);by_id={u['external_id']:u for u in document['analysis_units']}
+    protected={uid for uid,u in by_id.items() if app.canonical_crop_key(u['current_crop']) in app.PERENNIAL_CROPS}
+    assert len(protected)==6
+    by_result={row['parcelId']:row for row in final['details']}
+    assert all(app.canonical_crop_key(by_result[uid]['primary']['crop'])==
+               app.canonical_crop_key(by_id[uid]['current_crop']) for uid in protected)
+
+    folder=os.environ.get('KDS_GENERAL_ACCEPTANCE_OUTPUT')
+    if folder:
+        stable=lambda value:hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        out=Path(folder);out.mkdir(parents=True,exist_ok=True)
+        (out/f'fix1-S2-{algorithm}.json').write_text(json.dumps(dict(
+            scenario='S2',algorithm=algorithm,seed=2468,units=24,
+            field_units=18,protected_orchards=6,unexpected_field_locks=0,
+            raw_plan_hash=stable(raw['details']),final_plan_hash=stable(final['details']),
+            raw_water_m3=raw['metrics']['total_water_m3'],raw_profit_tl=raw['metrics']['total_profit_tl'],
+            final_water_m3=result['total_water_m3'],final_profit_tl=result['total_profit_tl'],
+            feasible=result['feasible'],validation=final['validation']),indent=2),encoding='utf8')
+
+
 def test_negative_economics_preserved_public_import(tmp_path):
     client,repo=client_for(tmp_path/'projects');pid=import_project(client,seasons=False,geometry=None)
     upload(client,pid,'economics','economics_negative.csv')
