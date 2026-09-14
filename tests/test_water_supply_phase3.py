@@ -1,4 +1,5 @@
 """Light, read-only acceptance tests for the Phase 3 water audit."""
+import ast
 import hashlib
 import importlib.util
 import json
@@ -74,11 +75,32 @@ def test_forbidden_supply_classifications_never_appear(tmp_path):
     result = generated(tmp_path)
     by_name = {r["variable"]: r for r in result["authority"]}
     assert by_name["current_pattern_calculated_gross_demand"]["authority_class"] == "CALCULATED_REFERENCE"
+    assert by_name["current_pattern_calculated_gross_demand"]["real_world_claim_allowed"] == "demand estimate only"
     assert by_name["raw_delivery_capacity"]["authority_class"] == "DERIVED_PROXY"
     assert by_name["reservoir_irrigation_baseline"]["authority_class"] == "UNKNOWN"
     assert all(r["authority_class"] != "MEASURED" for r in result["authority"])
     guard = json.loads((tmp_path / "source_and_mutation_guard.json").read_text(encoding="utf-8"))
     assert guard["optimizer_executed"] is False and guard["project_store_accessed"] is False
+
+
+def test_audit_has_only_standard_library_imports_and_no_store_access():
+    tree = ast.parse(SCRIPT.read_text(encoding="utf-8"))
+    imports = {
+        alias.name.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    imports.update(
+        node.module.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module
+    )
+    assert imports <= {"__future__", "csv", "hashlib", "json", "math", "re", "unicodedata", "pathlib"}
+    assert all(
+        not (isinstance(node, ast.Name) and node.id == "ProjectStore")
+        for node in ast.walk(tree)
+    )
 
 
 def test_generator_outputs_are_byte_deterministic(tmp_path):
