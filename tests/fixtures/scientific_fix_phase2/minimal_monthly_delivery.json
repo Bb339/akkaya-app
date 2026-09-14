@@ -1,0 +1,29 @@
+{
+  "planning_year": 2025,
+  "analysis_units": [
+    {
+      "id": "UNIT-1",
+      "area_da": 10.0
+    }
+  ],
+  "annual_budget_m3": 120.0,
+  "monthly_water_m3_da": 2.0,
+  "expected_monthly_capacity_m3": 10.0,
+  "expected_monthly_demand_m3": 20.0,
+  "expected_violation_m3": 10.0,
+  "expected_violation": true,
+  "delivery": [
+    {"month": "2025-01", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-02", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-03", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-04", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-05", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-06", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-07", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-08", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-09", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-10", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-11", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"},
+    {"month": "2025-12", "max_delivery_m3_assumed": 10.0, "unit": "m3/month"}
+  ]
+}
