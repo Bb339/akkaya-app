@@ -12,6 +12,7 @@ from kds.domain.validation import safe_id, utc_now
 from kds.imports.mapping import FIELDS, suggest, check_mapping
 from kds.imports.parser import parse, ParseError
 from kds.imports.service import refresh, preview
+from kds.domain.water_data import WATER_DATA_TYPES, replacement_preview
 
 
 class ImportService:
@@ -86,7 +87,8 @@ class ImportService:
         document = self.repository.update(project_id, change)
         return preview(document["imports"][batch_id], document)
 
-    def confirm(self, project_id: str, batch_id: str, acknowledge_warnings: bool = False) -> Document:
+    def confirm(self, project_id: str, batch_id: str, acknowledge_warnings: bool = False,
+                acknowledge_authority_override: bool = False, override_reason: str | None = None) -> Document:
         def apply(document: Document) -> None:
             batch = self._batch(document, batch_id)
             if batch["status"] == "applied":
@@ -100,8 +102,17 @@ class ImportService:
                 raise ConflictError("Resolve errors and mapping before confirmation.")
             if batch["validation_summary"]["warning"] and acknowledge_warnings is not True:
                 raise ConflictError("Explicitly acknowledge warnings before confirmation.")
+            if batch["data_type"] in WATER_DATA_TYPES:
+                replacement = replacement_preview(document, batch["data_type"], records)
+                batch["replacement_preview_at_confirmation"] = replacement
+                if replacement["requires_authority_override"]:
+                    if acknowledge_authority_override is not True or not str(override_reason or "").strip():
+                        raise ConflictError("Lower-authority activation requires explicit acknowledgement and a non-empty override reason.")
             transition(batch, "confirmed")
-            if batch['data_type'] in {'candidates','scientific_inputs','water_budget'}:
+            if batch['data_type'] in WATER_DATA_TYPES:
+                from kds.imports.water_tables import apply_water_records
+                apply_water_records(document, batch, records, str(override_reason).strip() if override_reason else None)
+            elif batch['data_type'] in {'candidates','scientific_inputs','water_budget'}:
                 from kds.imports.scientific_tables import apply_records
                 apply_records(document, batch, records)
             elif batch["data_type"] == "geometries":

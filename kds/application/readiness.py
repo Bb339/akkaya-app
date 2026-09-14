@@ -2,6 +2,7 @@
 import math
 from collections import Counter
 from kds.imports.mapping import key as identity_key
+from kds.domain.water_data import authority_snapshot
 
 
 def positive(value):
@@ -116,4 +117,5 @@ def readiness(document):
         counts=dict(
         analysis_units=len(units), crops=len(crops), total_area_da=sum(u['area_da'] for u in units),
         economics_covered=len(names & economic_names), geometry_covered=geometry_count),
-        water_budget=budget, imports=[dict(id=k, status=v.get('status')) for k,v in document['imports'].items()])
+        water_budget=budget, water_data_authority=authority_snapshot(document),
+        imports=[dict(id=k, status=v.get('status')) for k,v in document['imports'].items()])

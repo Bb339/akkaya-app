@@ -3,6 +3,7 @@ from typing import Any
 from kds.data.import_models import transition
 from .mapping import suggest
 from .validation import validate
+from kds.domain.water_data import WATER_DATA_TYPES
 
 
 def refresh(batch: dict[str, Any], document: dict[str, Any]) -> list[dict[str, Any]]:
@@ -31,5 +32,11 @@ def preview(batch: dict[str, Any], document: dict[str, Any], limit: int = 20) ->
         result['replacement_policy']='replace_supplied_scientific_sections; preserve_other_sections'
     if batch['data_type']=='candidates':
         result['replacement_policy']='replace_candidate_options; preserve_other_scientific_sections'
+    if batch['data_type'] in WATER_DATA_TYPES and batch["status"] == "ready" and result["normalized_preview"]:
+        from .water_tables import preview_replacement
+        result["replacement_policy"] = "versioned_active_pointer; retain_history; explicit_confirm"
+        result["replacement_preview"] = preview_replacement(document, batch["data_type"], records)
+        result["synthetic"] = any(record.get("synthetic") for record in records)
+        result["display_label"] = "SYNTHETIC" if result["synthetic"] else None
     result["warnings_require_acknowledgment"] = True
     return result

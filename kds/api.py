@@ -169,7 +169,10 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         payload = body()
         if payload.get("confirm") is not True:
             raise ValueError("Explicit confirm=true is required.")
-        return jsonify(imports.confirm(project_id, batch_id, payload.get("acknowledge_warnings", False)))
+        return jsonify(imports.confirm(
+            project_id, batch_id, payload.get("acknowledge_warnings", False),
+            payload.get("acknowledge_authority_override", False), payload.get("override_reason"),
+        ))
 
     @blueprint.get("/projects/<project_id>/<collection>")
     def get_collection(project_id, collection):

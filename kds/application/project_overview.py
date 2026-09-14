@@ -35,6 +35,9 @@ def overview(document):
     status('scientific_inputs',reference or extra,bool(codes-{'budget','crops','economics','currency','units','area'}))
     status('geometries',counts['geometry_covered'],counts['geometry_covered']<counts['analysis_units'])
     status('water_budget',document['water_budget'].get('amount'), 'budget' in codes or document['water_budget']['kind']=='calculated_reference')
+    for water_type in ('annual_water_supply','monthly_water_supply','delivery_capacity','environmental_release','conveyance_efficiency','perennial_irrigation_requirement'):
+        active=document.get('water_data',{}).get('active',{}).get(water_type)
+        status(water_type,active)
     candidate_units=len({c['analysis_unit_id'] for c in extra.get('candidates',[])}) if not reference else counts['analysis_units']
     return dict(readiness=report,import_status=statuses,candidate_units=candidate_units,
                 last_import_at=max((b.get('uploaded_at','') for b in batches),default=None),

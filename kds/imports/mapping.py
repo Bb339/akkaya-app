@@ -40,6 +40,21 @@ FIELDS.update(
     candidates=['analysis_unit_id','crop','water_requirement_m3_da','profit_per_da','yield_ton_da','allowed','rotation_status','suitability','risk','source'],
     scientific_inputs=['section','record_id','field','value_type','value','source'],
     water_budget=['amount','unit','kind','source'])
+
+WATER_SOURCE_FIELDS = [
+    'authority_class', 'source_authority', 'source_institution', 'source_reference',
+    'source_document', 'source_date', 'data_period', 'measurement_method', 'notes',
+]
+FIELDS.update(
+    annual_water_supply=['planning_year','amount','unit',*WATER_SOURCE_FIELDS],
+    monthly_water_supply=['planning_year','month','amount','unit',*WATER_SOURCE_FIELDS],
+    delivery_capacity=['planning_year','month','capacity','source_unit','canonical_unit','capacity_basis',
+                       'conversion_method','operating_hours_per_day','operating_days_in_month',*WATER_SOURCE_FIELDS],
+    environmental_release=['planning_year','month','release_form','value','source_unit','canonical_unit',*WATER_SOURCE_FIELDS],
+    conveyance_efficiency=['planning_year','period','efficiency','scope',*WATER_SOURCE_FIELDS],
+    perennial_irrigation_requirement=['planning_year','crop','analysis_unit_id','month','value','source_unit',
+                                      'canonical_unit','confidence','method',*WATER_SOURCE_FIELDS],
+)
 REQUIRED = {"analysis_units": ["external_id", "settlement", "area_da", "current_crop"],
             "crops": ["crop_name"], "economics": ["crop_name", "year", "yield_per_da", "net_profit_per_da"],
             "geometries": ["external_id", "geometry"]}
@@ -64,3 +79,11 @@ def check_mapping(mapping: Any, columns: list[str], data_type: str) -> None:
         raise ValueError("A source column cannot populate multiple fields.")
 
 REQUIRED.update({name:[field for field in FIELDS[name] if field!='risk'] for name in ('candidates','scientific_inputs','water_budget')})
+REQUIRED.update({
+    'annual_water_supply':['planning_year','amount','unit','authority_class'],
+    'monthly_water_supply':['planning_year','month','amount','unit','authority_class'],
+    'delivery_capacity':['planning_year','month','capacity','source_unit','canonical_unit','capacity_basis','authority_class'],
+    'environmental_release':['planning_year','release_form','value','source_unit','canonical_unit','authority_class'],
+    'conveyance_efficiency':['planning_year','period','efficiency','scope','authority_class'],
+    'perennial_irrigation_requirement':['planning_year','crop','value','source_unit','canonical_unit','confidence','method','authority_class'],
+})

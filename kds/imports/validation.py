@@ -6,6 +6,7 @@ from kds.domain.validation import ValidationError
 from .mapping import REQUIRED, key
 from .normalization import normalize
 from .geometry import geometry_error
+from kds.domain.water_data import WATER_DATA_TYPES
 
 
 def validate(batch: dict[str, Any], document: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -19,6 +20,9 @@ def validate(batch: dict[str, Any], document: dict[str, Any]) -> tuple[list[dict
         issue("ERROR", "missing_column", "Required mapping is missing.", column=field)
     if missing:
         return issues, []
+    if data_type in WATER_DATA_TYPES:
+        from .water_tables import validate_water_table
+        return validate_water_table(batch, document)
     if data_type in {'candidates','scientific_inputs','water_budget'}:
         from .scientific_tables import validate_table
         return validate_table(batch, document)
