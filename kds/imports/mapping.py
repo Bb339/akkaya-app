@@ -29,6 +29,23 @@ ALIASES = {
     "net_profit_per_da": ["net_kar_tl_da", "net_kâr", "net_kar", "net_profit"],
     "currency": ["para_birimi", "para birimi"], "yield_unit": ["verim_birimi"],
     "active": ["aktif"], "geometry": ["geometri"],
+    "crop_identity": ["urun", "ürün", "bitki", "crop", "crop_name", "urun_adi", "ürün adı"],
+    "applicable_year": ["planning_year", "planlama_yili", "planlama yılı", "uygulama_yili", "yil", "yıl"],
+    "geographic_scope": ["cografi_kapsam", "coğrafi kapsam", "bolge", "bölge", "scope"],
+    "authority_class": ["authority", "source_type", "kaynak_turu", "kaynak türü", "otorite_sinifi"],
+    "source_reference": ["kaynak_referansi", "kaynak referansı", "reference", "document_reference"],
+    "stage_value_mode": ["stage_mode", "evre_deger_turu", "evre değer türü"],
+    "p_ini": ["initial_stage", "baslangic_evresi", "başlangıç evresi"],
+    "p_dev": ["development_stage", "gelisme_evresi", "gelişme evresi"],
+    "p_mid": ["mid_stage", "orta_evre"], "p_late": ["late_stage", "son_evre"],
+    "mode": ["date_mode", "tarih_turu", "tarih türü", "fenoloji_turu"],
+    "season": ["sezon", "donem", "dönem"],
+    "planting_date": ["ekim_tarihi", "ekim tarihi", "dikim_tarihi", "dikim tarihi", "sowing date", "planting date"],
+    "harvest_date": ["hasat_tarihi", "hasat tarihi", "harvest date"],
+    "planting_window_start": ["ekim_penceresi_baslangic", "dikim_penceresi_baslangic", "planting window start"],
+    "planting_window_end": ["ekim_penceresi_bitis", "dikim_penceresi_bitis", "planting window end"],
+    "harvest_window_start": ["hasat_penceresi_baslangic", "harvest window start"],
+    "harvest_window_end": ["hasat_penceresi_bitis", "harvest window end"],
 }
 FIELDS = {
     "analysis_units": ["external_id", "settlement", "area_da", "current_crop", "name_or_code", "irrigation_method", "latitude", "longitude", "geometry", "notes"],
@@ -54,6 +71,14 @@ FIELDS.update(
     conveyance_efficiency=['planning_year','period','efficiency','scope',*WATER_SOURCE_FIELDS],
     perennial_irrigation_requirement=['planning_year','crop','analysis_unit_id','month','value','source_unit',
                                       'canonical_unit','confidence','method',*WATER_SOURCE_FIELDS],
+)
+PARAMETER_SOURCE_FIELDS = ['authority_class', 'source', 'source_reference', 'notes']
+FIELDS.update(
+    crop_water_parameters=['crop_identity','applicable_year','geographic_scope','kc_ini','kc_mid','kc_end',
+                           'stage_value_mode','p_ini','p_dev','p_mid','p_late',*PARAMETER_SOURCE_FIELDS],
+    crop_phenology=['crop_identity','applicable_year','geographic_scope','season','mode',
+                    'planting_date','harvest_date','planting_window_start','planting_window_end',
+                    'harvest_window_start','harvest_window_end',*PARAMETER_SOURCE_FIELDS],
 )
 
 ECONOMIC_SOURCE_FIELDS = [
@@ -107,6 +132,12 @@ REQUIRED.update({
     'environmental_release':['planning_year','release_form','value','source_unit','canonical_unit','authority_class'],
     'conveyance_efficiency':['planning_year','period','efficiency','scope','authority_class'],
     'perennial_irrigation_requirement':['planning_year','crop','value','source_unit','canonical_unit','confidence','method','authority_class'],
+})
+REQUIRED.update({
+    'crop_water_parameters': ['crop_identity','applicable_year','geographic_scope','kc_ini','kc_mid','kc_end',
+                              'stage_value_mode','p_ini','p_dev','p_mid','p_late','authority_class','source','source_reference'],
+    'crop_phenology': ['crop_identity','applicable_year','geographic_scope','season','mode',
+                       'authority_class','source','source_reference'],
 })
 _ECON_REQUIRED = ['crop','planning_year','observation_year','authority_class','currency']
 REQUIRED.update({
