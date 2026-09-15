@@ -20,6 +20,7 @@ from kds.domain.crop_parameters import (
     PARAMETER_ONLY_IDENTITIES, REVIEWED_IDENTITY_RELATIONS,
     textual_equivalence_key,
 )
+from tools.scientific_audit.crop_identity_phenology_phase7 import generate as generate_phase7_evidence
 
 
 @pytest.fixture
@@ -151,6 +152,25 @@ def test_versioning_confirmation_reanalysis_and_project_isolation(services):
     assert store.get("two")["crop_parameter_data"]["datasets"] == {}
 
 
+def test_phenology_replacement_retains_version_history(services):
+    store, service = services
+    v1 = upload(service, "crop_phenology", phenology_csv(harvest="2024-09-15"))
+    confirm(service, v1)
+    pointer = "crop_phenology|2024|synthetic_project"
+    old_id = store.get("one")["crop_parameter_data"]["active"][pointer]
+    v2 = upload(service, "crop_phenology", phenology_csv(harvest="2024-09-20"))
+    assert store.get("one")["crop_parameter_data"]["active"][pointer] == old_id
+    assert v2["replacement_preview"]["changes"][0]["old_values"]["harvest_date"] == "2024-09-15"
+    assert v2["replacement_preview"]["changes"][0]["new_values"]["harvest_date"] == "2024-09-20"
+    confirm(service, v2)
+    document = store.get("one")
+    new_id = document["crop_parameter_data"]["active"][pointer]
+    assert document["crop_parameter_data"]["datasets"][old_id]["status"] == "inactive"
+    assert document["crop_parameter_data"]["datasets"][old_id]["superseded_by"] == new_id
+    assert document["crop_parameter_data"]["datasets"][new_id]["supersedes"] == old_id
+    assert document["crop_parameter_data"]["datasets"][new_id]["version"] == 2
+
+
 def test_current_akkaya_readiness_is_honest_and_engine_disconnected():
     document = build_demo(app.DATA_DIR)
     report = readiness(document)
@@ -189,3 +209,16 @@ def test_phase7_scientific_source_guard():
     ], cwd=root, check=True, text=True, capture_output=True).stdout.strip()
     assert changed == ""
     assert hashlib.sha256((root / "data/excel_derived/combined_parcel_candidate_matrix_2024.csv").read_bytes()).hexdigest()
+
+
+def test_phase7_evidence_is_deterministic_and_matches_contract(tmp_path):
+    output = tmp_path / "evidence"
+    result = generate_phase7_evidence(output)
+    first = {path.name: path.read_bytes() for path in output.iterdir()}
+    assert result["resolution_counts"] == {
+        "EXACT": 45, "REVIEWED_ALIAS": 9, "AMBIGUOUS": 3, "MISSING": 1,
+    }
+    assert result["legacy_fallback_count"] == 13
+    assert result["phenology_verified_count"] == 0
+    generate_phase7_evidence(output)
+    assert first == {path.name: path.read_bytes() for path in output.iterdir()}
