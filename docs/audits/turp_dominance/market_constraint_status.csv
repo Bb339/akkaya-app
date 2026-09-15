@@ -1,0 +1,6 @@
+constraint,status,active_matrix_path_evidence
+market demand cap,ABSENT MODEL CONSTRAINT,not referenced by _matrix_build_problem or _matrix_eval_solution
+sales capacity,ABSENT MODEL CONSTRAINT,not referenced by _matrix_build_problem or _matrix_eval_solution
+regional production ceiling,ABSENT MODEL CONSTRAINT,not referenced by _matrix_build_problem or _matrix_eval_solution
+processing/storage capacity,ABSENT MODEL CONSTRAINT,not referenced by _matrix_build_problem or _matrix_eval_solution
+Turp maximum crop area,ABSENT MODEL CONSTRAINT,not referenced by _matrix_build_problem or _matrix_eval_solution

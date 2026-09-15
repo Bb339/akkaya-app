@@ -1,0 +1,7 @@
+source_name,canonical_identity,presence,raw_source,candidate_count,unique_units,water_m3_da,profit_tl_da,yield_kg_da,price_tl_kg,year,season,source_path
+TURP,TURP,absent,explicit_absence_check,0,0,,,,,,,
+KIRMIZI TURP,KIRMIZITURP,absent,explicit_absence_check,0,0,,,,,,,
+TURP (KIRMIZI),TURPKIRMIZI,present,candidate_matrix,43,43,298.87,4000.0,2500.0,6.0,2024,Yazlık,data/excel_derived/combined_parcel_candidate_matrix_2024.csv
+Turp (Kirmizi),TURPKIRMIZI,present,assumed_crop_parameters,1,,,,,,,,data/enhanced_dataset/csv/crop_params_assumed.csv
+TURP (KIRMIZI),TURPKIRMIZI,present,S1_seasonal,1,1,298.87,4000.0,,,2024,primary,data/enhanced_dataset/csv/senaryo1_backend_seasons.csv
+TURP (KIRMIZI),TURPKIRMIZI,present,S2_seasonal,1,1,298.87,4000.0,,,2024,primary,data/enhanced_dataset/csv/senaryo2_backend_seasons.csv

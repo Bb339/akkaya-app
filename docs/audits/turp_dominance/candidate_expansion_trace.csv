@@ -1,0 +1,7 @@
+stage,path,rule,turp_units,turp_area_da,effect
+1,combined_parcel_candidate_matrix_2024.csv,raw rows,43,35036.0,baseline
+2,load_matrix_candidates,normalize identifiers; retain raw rows,43,35036.0,no expansion
+3,_augment_annual_regional_candidates,regional canonical crop median; no minimum village count; locked units bypass augmentation,127,95433.0,+94 regional options; 33 raw local options retained; net +84 versus 43 raw units
+4,candidate_allowed_for_parcel + annual filter,exclude orchard/perennial; allow annual field/vegetable,127,95433.0,10 raw Turp rows are on locked units; 52 basin units excluded from Turp opportunity
+5,quota + local utility + compact pool,water_saving retained runtime options,127,95433.0,Turp retained for all unlocked units
+6,build_candidate_matrix_two_season(S2),district/season fallback + suitability + realism,101,86329.0,primary only; secondary unavailable

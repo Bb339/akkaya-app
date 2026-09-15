@@ -1,0 +1,12 @@
+filter,mode,units_before,units_after,turp_units_removed,finding
+crop_group,hard class gate,127,127,0,Turp passes annual field/vegetable class
+field_orchard,hard,179,127,10,10 raw Turp rows removed; 52 basin units excluded from opportunity
+perennial,hard; overlaps field_orchard,179,127,10,"52 protected units / 39,486 da; 10 carried raw Turp rows"
+soil_LCC,no explicit hard S1 expansion filter,127,127,0,raw matrix has no suitability field
+rotation,soft local rank penalty,127,127,0,7 same-family units penalized; availability retained
+settlement,not a hard gate after regional aggregation,43,127,0,+84 units outside raw settlement evidence
+region,five-village dataset boundary,127,127,0,confined to loaded basin scope
+season,annual class,127,127,0,summer annual identity passes
+irrigation,compatibility metadata; no hard removal observed,127,127,0,runtime access retained on all unlocked units
+quota,feasible-area calculation,127,127,0,no option removal; raw quota flags all true
+allowed,ABSENT_IN_RAW_MATRIX,43,43,0,PROVENANCE GAP; cannot validate allowed=true count

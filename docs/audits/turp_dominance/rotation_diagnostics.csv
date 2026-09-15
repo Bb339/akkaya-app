@@ -1,0 +1,6 @@
+diagnostic,value,unit_count,effect
+turp_family,brassicaceae,,Brassicaceae identity
+same_family_current_crop,soft local rank penalty,7,0.16 in matrix ranker for non-current same-family option
+field_to_vegetable_transition,soft local rank penalty,81,0.50 where current family is cereal/field and candidate is vegetable
+R4,Brassicaceae sonrası tekrar Brassicaceae önerilmez.,,hard in S2 rotation table; current Brassicaceae blocks repeat
+perennial_lock,hard,52,"Turp unavailable on 39,486 da"

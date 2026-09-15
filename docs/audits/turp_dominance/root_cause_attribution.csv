@@ -1,0 +1,13 @@
+mechanism,classification,behavior_type,evidence
+low water,PRIMARY DRIVER,EXPECTED OPTIMIZATION BEHAVIOR,298.87 m3/da; rank 1/37
+TL/m3,PRIMARY DRIVER,EXPECTED OPTIMIZATION BEHAVIOR,13.383745 TL/m3; rank 3/37
+runtime expansion,PRIMARY DRIVER,MODEL ASSUMPTION,43 raw units to 127 runtime units; 2.953x
+profit,NOT SUPPORTED,DATA ISSUE,4000 TL/da; tied rank range 23-24/37
+market cap absence,AMPLIFIER,MISSING CONSTRAINT,"no demand, sales, production, storage or area ceiling in active matrix evaluation"
+candidate scarcity,SECONDARY DRIVER,MODEL ASSUMPTION,effective competitor counts reported per unit; compact pool retains at most 18 options
+diversity penalty,LIMITER,MODEL ASSUMPTION,soft only; repair disabled; score deduction is 0.12 x penalty
+rotation,LIMITER,MODEL ASSUMPTION,same-family 0.16 and field-to-vegetable 0.50 local penalties; S2 R4 rule
+perennial locks,LIMITER,EXPECTED OPTIMIZATION BEHAVIOR,"52 units / 39,486 da excluded; remaining 95,433 da all runtime-accessible in S1"
+algorithm bias,NOT SUPPORTED,SEARCH BEHAVIOR,GA/ACO/ABC frozen S1 fixtures make identical Turp choices
+seed,NOT SUPPORTED FOR S1; PRESENT FOR S2 MIX,SEARCH BEHAVIOR,S1 identical at seeds 123/456/789; S2 varies but never selects Turp
+S2 transformations,LIMITER,MODEL ASSUMPTION,Turp 4000 source becomes 1870 after 0.85 suitability and 0.55 realism; secondary absent

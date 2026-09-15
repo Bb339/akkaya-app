@@ -1,0 +1,3 @@
+scenario,fixture_run_count,fixture_unit_count_per_run,mean_turp_area_share,mean_turp_unit_share,turp_source_profit_tl_da,turp_source_water_m3_da,turp_runtime_profit_tl_da,runtime_primary_units,post_perennial_lock_units,runtime_secondary_units,mechanism
+S1,9,3,0.424114352,0.666666667,4000.0,298.87,4000.0,127,127,NA,regional five-village median expansion
+S2,9,3,0.0,0.0,4000.0,298.87,1870.0,101,72,0,district fallback + suitability 0.85 + realism 0.55; no secondary Turp
