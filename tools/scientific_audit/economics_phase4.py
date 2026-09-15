@@ -422,7 +422,10 @@ The optimizer may be described as finding Turp economically attractive under the
     protected=["app.py","kds/science","kds/adapters","kds/application/optimization.py","data"]
     diff=subprocess.run(["git","diff","--name-only","HEAD","--",*protected],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
     tracked=subprocess.run(["git","ls-files","app.py","kds/science/**","kds/adapters/**","kds/application/optimization.py","data/**"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
-    write_json("source_and_mutation_guard.json",dict(baseline_commit=subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.strip(),
+    # Downstream milestones must reproduce the frozen audit instead of writing
+    # their current HEAD into an otherwise deterministic audit artifact.
+    frozen_audit = subprocess.run(["git","rev-list","-n","1","v2-scientific-economics-audit-complete"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.strip()
+    write_json("source_and_mutation_guard.json",dict(baseline_commit=frozen_audit,
         protected_diff_files=diff,protected_unchanged=not diff,tracked_file_count=len(tracked),tracked_sha256={p:sha(ROOT/p) for p in tracked},project_store_mutated=False,
         note="Audit script reads repository files and writes only docs/audits/economics_phase4."))
     assert not diff

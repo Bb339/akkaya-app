@@ -38,6 +38,9 @@ def overview(document):
     for water_type in ('annual_water_supply','monthly_water_supply','delivery_capacity','environmental_release','conveyance_efficiency','perennial_irrigation_requirement'):
         active=document.get('water_data',{}).get('active',{}).get(water_type)
         status(water_type,active)
+    for economic_type in ('crop_yield','crop_sale_price','crop_support_payment','crop_cost_components','crop_net_profit','analysis_unit_economics','seasonal_economics'):
+        active=any(key.startswith(economic_type+'|') for key in document.get('economic_data',{}).get('active',{}))
+        status(economic_type,active)
     candidate_units=len({c['analysis_unit_id'] for c in extra.get('candidates',[])}) if not reference else counts['analysis_units']
     return dict(readiness=report,import_status=statuses,candidate_units=candidate_units,
                 last_import_at=max((b.get('uploaded_at','') for b in batches),default=None),

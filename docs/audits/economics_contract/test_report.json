@@ -1,0 +1,19 @@
+{
+  "contract_and_regression_command": "python -m pytest -q -p no:cacheprovider -k \"not test_s2_high_budget_can_return_feasible_two_crop_plan\"",
+  "passed": 261,
+  "deselected": 8,
+  "duration_seconds": 1461.38,
+  "new_failures": 0,
+  "contract_test_command": "python -m pytest -q -p no:cacheprovider tests/test_economic_data_contract.py",
+  "contract_tests_passed": 24,
+  "post_seasonal_unit_hardening_command": "python -m pytest -q -p no:cacheprovider tests/test_economic_data_contract.py tests/test_imports.py tests/test_project_api.py",
+  "post_seasonal_unit_hardening_passed": 76,
+  "phase4_audit_test_command": "python -m pytest -q -p no:cacheprovider tests/test_economics_phase4_audit.py",
+  "phase4_audit_tests_passed": 1,
+  "inherited_baseline_failure": {
+    "test": "test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "observed_status": "no_feasible_two_crop_plan",
+    "expected_status": "ok",
+    "changed_in_this_milestone": false
+  }
+}

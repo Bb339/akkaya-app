@@ -8,7 +8,8 @@ def project_document(project: Project, water_budget: WaterBudget | None = None) 
     budget = water_budget or WaterBudget(project.id, project.annual_water_budget, project.water_budget_unit)
     return {"schema_version": 1, "data_revision": 0, "project": asdict(project),
             "analysis_units": [], "crops": [], "economics": [], "water_budget": asdict(budget),
-            "imports": {}, "water_data": {"datasets": {}, "active": {}}, "metadata": {}}
+            "imports": {}, "water_data": {"datasets": {}, "active": {}},
+            "economic_data": {"datasets": {}, "active": {}, "dependencies": {}, "reanalysis": {}}, "metadata": {}}
 
 
 class ProjectService:

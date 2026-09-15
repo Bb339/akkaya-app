@@ -97,6 +97,11 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
     def scientific_inputs(project_id):
         return jsonify(projects.get(project_id).get('scientific_inputs', {}))
 
+    @blueprint.get("/projects/<project_id>/economic-data")
+    def economic_data(project_id):
+        data = projects.get(project_id).get('economic_data', {})
+        return jsonify({**data, 'engine_connected': False})
+
     @blueprint.post("/projects/<project_id>/water-budget")
     def save_water_budget(project_id):
         from dataclasses import asdict

@@ -1,0 +1,26 @@
+{
+  "baseline_tag": "v2-scientific-economics-audit-complete",
+  "baseline_commit": "2ff32b3b81cb635e1393de5b45f01c11ad2ca195",
+  "protected_diff_files": [],
+  "protected_unchanged": true,
+  "protected_git_objects": {
+    "app.py": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+    "kds/science": "e83726515fef27892991d70fad944327f964121d",
+    "kds/adapters": "876106e6755fb96b13e010de5cb82145cdb73443",
+    "kds/application/optimization.py": "6c7247a2cc1430d82edece5a18bdb1250a460726",
+    "data": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+    "index.html": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac",
+    "script.js": "01b06b33accb4846609436e5a83b274b341b0224",
+    "style.css": "529b260d4e7336a9e3ad39803aeae584ad526d64"
+  },
+  "covers": [
+    "GA/ACO/ABC and optimizer logic",
+    "fitness, scores and objective weights",
+    "candidate and seasonal tables",
+    "fallback parameters and crop catalog",
+    "legacy /#panel assets"
+  ],
+  "engine_connected": false,
+  "remote_push_performed": false,
+  "deployment_performed": false
+}

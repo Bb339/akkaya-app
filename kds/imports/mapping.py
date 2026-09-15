@@ -55,6 +55,27 @@ FIELDS.update(
     perennial_irrigation_requirement=['planning_year','crop','analysis_unit_id','month','value','source_unit',
                                       'canonical_unit','confidence','method',*WATER_SOURCE_FIELDS],
 )
+
+ECONOMIC_SOURCE_FIELDS = [
+    'authority_class', 'source_authority', 'source_institution', 'source_document',
+    'source_reference', 'source_date', 'observation_year', 'price_date',
+    'price_period', 'price_basis', 'geographic_scope', 'crop_scope', 'currency',
+    'measurement_method', 'notes',
+]
+FIELDS.update(
+    crop_yield=['crop','planning_year','yield_value','yield_unit',*ECONOMIC_SOURCE_FIELDS],
+    crop_sale_price=['crop','planning_year','price','price_unit',*ECONOMIC_SOURCE_FIELDS],
+    crop_support_payment=['crop','planning_year','support_type','amount','unit',*ECONOMIC_SOURCE_FIELDS],
+    crop_cost_components=['crop','planning_year','cost_category','amount','unit',*ECONOMIC_SOURCE_FIELDS],
+    crop_net_profit=['crop','planning_year','net_profit_per_da','calculation_method','gross_revenue_per_da',
+                     'total_cost_per_da','support_payment_per_da','calculation_formula','dependency_dataset_ids',
+                     'yield_dataset_id','price_dataset_id','support_dataset_id','cost_dataset_id',*ECONOMIC_SOURCE_FIELDS],
+    analysis_unit_economics=['analysis_unit_id','crop','planning_year','gross_revenue','total_cost','net_profit',
+                             'dependency_dataset_ids',*ECONOMIC_SOURCE_FIELDS],
+    seasonal_economics=['analysis_unit_id','crop','season','planning_year','yield_value','yield_unit','price','price_unit',
+                        'cost','cost_unit','net_profit','net_profit_unit',
+                        'dependency_dataset_ids',*ECONOMIC_SOURCE_FIELDS],
+)
 REQUIRED = {"analysis_units": ["external_id", "settlement", "area_da", "current_crop"],
             "crops": ["crop_name"], "economics": ["crop_name", "year", "yield_per_da", "net_profit_per_da"],
             "geometries": ["external_id", "geometry"]}
@@ -86,4 +107,14 @@ REQUIRED.update({
     'environmental_release':['planning_year','release_form','value','source_unit','canonical_unit','authority_class'],
     'conveyance_efficiency':['planning_year','period','efficiency','scope','authority_class'],
     'perennial_irrigation_requirement':['planning_year','crop','value','source_unit','canonical_unit','confidence','method','authority_class'],
+})
+_ECON_REQUIRED = ['crop','planning_year','observation_year','authority_class','currency']
+REQUIRED.update({
+    'crop_yield': [*_ECON_REQUIRED,'yield_value','yield_unit'],
+    'crop_sale_price': [*_ECON_REQUIRED,'price','price_unit'],
+    'crop_support_payment': [*_ECON_REQUIRED,'support_type','amount','unit'],
+    'crop_cost_components': [*_ECON_REQUIRED,'cost_category','amount','unit'],
+    'crop_net_profit': [*_ECON_REQUIRED,'calculation_method'],
+    'analysis_unit_economics': [*_ECON_REQUIRED,'analysis_unit_id'],
+    'seasonal_economics': [*_ECON_REQUIRED,'season','yield_unit','price_unit','cost_unit','net_profit_unit'],
 })

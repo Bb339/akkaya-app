@@ -7,6 +7,7 @@ from .mapping import REQUIRED, key
 from .normalization import normalize
 from .geometry import geometry_error
 from kds.domain.water_data import WATER_DATA_TYPES
+from kds.domain.economic_data import ECONOMIC_DATA_TYPES
 
 
 def validate(batch: dict[str, Any], document: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -23,6 +24,9 @@ def validate(batch: dict[str, Any], document: dict[str, Any]) -> tuple[list[dict
     if data_type in WATER_DATA_TYPES:
         from .water_tables import validate_water_table
         return validate_water_table(batch, document)
+    if data_type in ECONOMIC_DATA_TYPES:
+        from .economic_tables import validate_economic_table
+        return validate_economic_table(batch, document)
     if data_type in {'candidates','scientific_inputs','water_budget'}:
         from .scientific_tables import validate_table
         return validate_table(batch, document)
