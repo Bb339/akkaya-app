@@ -1,0 +1,11 @@
+left_raw,right_raw,left_canonical,right_canonical,same_production_identity,safety_finding
+BUĞDAY,BUĞDAY_KURU,BUGDAY,BUGDAYKURU,NO,dry/irrigated form remains distinct
+MERCİMEK,MERCİMEK_KURU,MERCIMEK,MERCIMEKKURU,NO,dry/irrigated form remains distinct
+MISIR (Dane),SİLAJLIK MISIR,MISIRDANE,SILAJLIKMISIR,NO,grain/forage form remains distinct
+TURP,TURP (KIRMIZI),TURP,TURPKIRMIZI,NO,plain/red form remains distinct
+KIRMIZI TURP,TURP (KIRMIZI),KIRMIZITURP,TURPKIRMIZI,NO,word order is not an automatic alias
+DOMATES (SALÇALIK),DOMATES (SOFRALIK),DOMATESSALCALIK,DOMATESSOFRALIK,NO,market form remains distinct
+FASULYE (TAZE),KURU FASULYE,FASULYETAZE,KURUFASULYE,NO,fresh/dry form remains distinct
+ARPA (Dane),ARPA (YEŞİLOT),ARPADANE,ARPAYESILOT,NO,grain/green-forage form remains distinct
+KAYISI,KAYSI,KAYSI,KAYSI,YES,explicit production perennial alias resolves together
+NEKTARİN,NEKTAR,NEKTAR,NEKTAR,YES,explicit production perennial alias resolves together

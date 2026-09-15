@@ -1,0 +1,36 @@
+{
+  "conclusion": "69-58=11 is an arithmetic row-count difference, not a list of 11 missing runtime crops.",
+  "definitions": {
+    "58": "rows and unique crop identities in the runtime economic/project crop catalog",
+    "69": "rows and unique crop identities in the assumed Kc/stage-fraction parameter table"
+  },
+  "paired_relationships": {
+    "diacritic": 1,
+    "spelling": 1,
+    "total": 7,
+    "word_order_or_form": 5
+  },
+  "production_canonical": {
+    "catalog": 58,
+    "catalog_only_identities": 11,
+    "intersection": 47,
+    "parameter_only_identities": 22,
+    "parameters": 69,
+    "symmetric_difference_identities": 33
+  },
+  "reconciled_unmatched_identity_rows": {
+    "genuine_runtime_parameter_gap": 1,
+    "kabak_granularity": 4,
+    "paired_naming_defects": 14,
+    "parameter_only_scope": 14,
+    "total": 33
+  },
+  "runtime_direct_coverage": {
+    "calendar_direct_hits": 51,
+    "candidate_matrix_hits": 57,
+    "economics_complete": 57,
+    "generic_kc_fallbacks": 13,
+    "kc_and_stage_fraction_hits": 45,
+    "phenology_date_hits": 0
+  }
+}

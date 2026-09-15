@@ -1,0 +1,59 @@
+raw_name,canonical_name,calendar_rule_direct,calendar_rule_canonical,season_label_present,planting_date_present,harvest_date_present,season_length_present,stage_lengths_present,note
+ARMUT,ARMUT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ARPA (Dane),ARPADANE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ARPA (YEŞİLOT),ARPAYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+AYVA,AYVA,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+AYÇİÇEĞİ,AYCICEGI,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+BADEM,BADEM,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+BAĞ,BAG,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+BUĞDAY (Dane),BUGDAYDANE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+BUĞDAY (YEŞİLOT),BUGDAYYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+CEVİZ,CEVIZ,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+DUT,DUT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ELMA,ELMA,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ERİK,ERIK,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+FASULYE (TAZE),FASULYETAZE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+FİĞ (YEŞİLOT),FIGYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+HIYAR (SOFRALIK),HIYARSOFRALIK,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ISPANAK,ISPANAK,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KABAK (BAL),KABAKBAL,YES,YES,YES,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KABAK (SAKIZ),KABAKSAKIZ,YES,YES,YES,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KABAK (ÇEREZLİK),KABAKCEREZLIK,YES,YES,YES,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KARPUZ,KARPUZ,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KAVUN,KAVUN,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KAYSI,KAYSI,NO,YES,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KURU FASULYE,KURUFASULYE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KİMYON,KIMYON,YES,YES,YES,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+KİRAZ,KIRAZ,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+LAHANA (BEYAZ),LAHANABEYAZ,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+LAHANA (KIRMIZI),LAHANAKIRMIZI,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+LAVANTA,LAVANTA,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+MARUL,MARUL,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+MAYDONOZ,MAYDONOZ,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+MISIR (Dane),MISIRDANE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+NEKTAR,NEKTAR,NO,YES,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+NOHUT,NOHUT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+PATATES,PATATES,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+PIRASA,PIRASA,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SALÇALIK BİBER,SALCALIKBIBER,NO,NO,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SALÇALIK DOMATES,SALCALIKDOMATES,NO,NO,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SARIMSAK (KURU),SARIMSAKKURU,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SOFRALIK DOMATES,SOFRALIKDOMATES,NO,NO,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SORGUM,SORGUM,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SOĞAN (KURU),SOGANKURU,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SOĞAN (TAZE),SOGANTAZE,YES,YES,YES,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SİLAJLIK MISIR,SILAJLIKMISIR,YES,YES,YES,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+SİVRİ BİBER,SIVRIBIBER,NO,NO,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+TRTİKALE (Dane),TRTIKALEDANE,NO,NO,NO,NO,NO,NO,NO,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+TRİTİKALE  (YEŞİLOT),TRITIKALEYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+TURP (KIRMIZI),TURPKIRMIZI,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+VİŞNE,VISNE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+YONCA  (YEŞİLOT),YONCAYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+YULAF (Dane),YULAFDANE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+YULAF (YEŞİLOT),YULAFYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ÇAVDAR   (YEŞİLOT),CAVDARYESILOT,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ÇAVDAR (Dane),CAVDARDANE,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ÇİLEK,CILEK,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ŞEFTALİ,SEFTALI,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns
+ŞEKER PANCARI,SEKERPANCARI,YES,YES,YES,NO,NO,NO,YES,p_* are stage fractions; repository data sources contain no planting/harvest date columns

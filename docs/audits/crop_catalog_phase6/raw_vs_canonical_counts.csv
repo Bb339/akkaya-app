@@ -1,0 +1,17 @@
+source,raw_row_count,raw_unique_crop_names,normalized_unique_crop_count,canonical_unique_crop_count,notes
+runtime crop catalog,58,58,58,58,
+Kc/stage parameter catalog,69,69,69,69,
+candidate matrix,6859,57,57,57,
+S1 seasonal rows,179,56,56,56,
+S2 seasonal rows,306,56,56,56,
+crop family map,58,58,58,58,
+rotation rules,8,NA,NA,NA,
+suitability table,384,45,45,45,
+S1 calendar rules,86,86,79,79,86 JSON keys collapse to 79 production identities
+irrigation map,58,58,58,58,not a crop master
+fallback parameters,9,9,9,9,must not define the 58 or 69 universe
+Project Crop records,58,58,58,58,exactly sourced from urun_parametreleri_demo.csv
+scientific baseline fixtures,NA,11,11,11,chosen and alternative names observed in fixture outputs
+production crop identity helpers,NA,NA,NA,NA,canonical removes underscores after normalization; combining marks and token order are not repaired
+Akkaya project adapter,NA,NA,NA,NA,SOURCE_FILES['crops'] proves the 58 source
+project science adapter,NA,NA,NA,NA,does not require project crop count to equal candidate or parameter count

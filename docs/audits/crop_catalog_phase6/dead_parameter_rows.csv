@@ -1,0 +1,25 @@
+raw_name,normalized_name,canonical_name,catalog_58,direct_runtime_key_match,candidate_matrix,s1,s2_primary,kc_complete,stage_fractions_complete,source_status,classification,dead_unused_status,reason
+Aspi̇r,ASPİR,ASPİR,NO,NO,NO,NO,NO,YES,YES,proxy_tamamlandi,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Bamya,BAMYA,BAMYA,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Bezelye (Taze),BEZELYE_TAZE,BEZELYETAZE,NO,NO,NO,NO,NO,YES,YES,yuksek,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Biber (Salçalık),BIBER_SALCALIK,BIBERSALCALIK,NO,NO,NO,NO,NO,YES,YES,turetilmis,CROP_FORM_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Biber (Sivri),BIBER_SIVRI,BIBERSIVRI,NO,NO,NO,NO,NO,YES,YES,yuksek,CROP_FORM_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Burçak  (Yeşi̇lot),BURCAK_YESİLOT,BURCAKYESİLOT,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Diğer Alan,DIGER_ALAN,DIGERALAN,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Domates (Salçalık),DOMATES_SALCALIK,DOMATESSALCALIK,NO,NO,NO,NO,NO,YES,YES,turetilmis,CROP_FORM_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Domates (Sofralık),DOMATES_SOFRALIK,DOMATESSOFRALIK,NO,NO,NO,NO,NO,YES,YES,yuksek,CROP_FORM_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Hiyar (Turşuluk),HIYAR_TURSULUK,HIYARTURSULUK,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Kabak,KABAK,KABAK,NO,NO,NO,NO,NO,YES,YES,turetilmis,CROP_FORM_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Kayısı,KAYISI,KAYSI,YES,NO,YES,YES,YES,YES,YES,turetilmis,EXACT_MATCH,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Ki̇myon,KİMYON,KİMYON,NO,NO,NO,NO,NO,YES,YES,proxy_tamamlandi,DIACRITIC_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Korunga  (Yeşi̇lot),KORUNGA_YESİLOT,KORUNGAYESİLOT,NO,NO,NO,NO,NO,YES,YES,yuksek,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Mısır (Silajlık),MISIR_SILAJLIK,MISIRSILAJLIK,NO,NO,NO,NO,NO,YES,YES,yuksek,GRAIN_FORAGE_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Nektarin,NEKTARIN,NEKTAR,YES,NO,YES,YES,YES,YES,YES,turetilmis,EXACT_MATCH,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Patlican,PATLICAN,PATLICAN,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Ryegras (Süt Otu),RYEGRAS_SUT_OTU,RYEGRASSUTOTU,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Sarimsak (Taze),SARIMSAK_TAZE,SARIMSAKTAZE,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Tritikale (Dane),TRITIKALE_DANE,TRITIKALEDANE,NO,NO,NO,NO,NO,YES,YES,turetilmis,SPELLING_VARIANT,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Yem Bezelyesi̇,YEM_BEZELYESİ,YEMBEZELYESİ,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Yeşi̇l Merci̇mek,YESİL_MERCİMEK,YESİLMERCİMEK,NO,NO,NO,NO,NO,YES,YES,yuksek,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+Zerdali̇,ZERDALİ,ZERDALİ,NO,NO,NO,NO,NO,YES,YES,turetilmis,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog
+İğde,IGDE,IGDE,NO,NO,NO,NO,NO,YES,YES,proxy_tamamlandi,PARAMETER_ONLY,DEAD_FOR_DIRECT_RUNTIME_KC_LOOKUP,normalized parameter key is absent from the 58 runtime catalog

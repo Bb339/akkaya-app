@@ -1,0 +1,3 @@
+item,exposure_same_family,exposure_field,actual_applied_same_family_turp_options,actual_applied_field_to_vegetable_turp_options,status,phase6_action
+rotation diagnostic exposure vs application,7,81,6,32,BACKLOG_ONLY,none
+test_s2_high_budget_can_return_feasible_two_crop_plan,,,,,INHERITED_FAILURE_BACKLOG,none

@@ -1,0 +1,2 @@
+canonical_name,gap,S1_impact,S2_impact,water_impact,economics_impact,rotation_impact,UI_impact,real_pilot_impact,evidence
+SOGANTAZE,runtime crop lacks a direct or defensible Kc/stage parameter identity,MEDIUM,MEDIUM,HIGH,NONE,LOW,LOW,HIGH,present in catalog/matrix/S1/S2/family; absent from parameter catalog; generic Kc fallback is silent

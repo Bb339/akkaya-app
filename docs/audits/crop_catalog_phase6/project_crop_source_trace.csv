@@ -1,0 +1,6 @@
+step,component,evidence,value
+1,source,akkaya_demo.SOURCE_FILES['crops'],urun_parametreleri_demo.csv (58 rows)
+2,adapter,akkaya_demo.build_demo,one Crop and one Economics record per source row
+3,domain,kds.domain.crop.Crop,58 Project Crop records
+4,project science,project_science.verify_reference_document/build_bundle,frozen document equality plus independent candidate resources
+5,readiness,project document validation,project crops and scientific candidates remain distinct universes
