@@ -66,6 +66,33 @@ def cost_csv(category="seed", amount=1000, authority="DERIVED_PROXY", crop="TURP
             f"{crop},{category},{amount},TL/da,2024,2024,{authority},synthetic_test_fixture,not_official,TRY,project,catalog\n")
 
 
+def confirmed_inputs(service, authority="LOCAL_INSTITUTIONAL_SOURCE"):
+    batches = []
+    for kind, content in (
+        ("crop_yield", yield_csv(authority=authority)),
+        ("crop_sale_price", price_csv(authority=authority)),
+        ("crop_cost_components", cost_csv(amount=11000, authority=authority)),
+    ):
+        batch = upload(service, kind, content)
+        confirm(service, batch)
+        batches.append(batch)
+    return [f"economic-{batch['id']}" for batch in batches]
+
+
+def support_csv(amount=100, authority="LOCAL_INSTITUTIONAL_SOURCE", crop="TURP"):
+    return (f"crop,support_type,amount,unit,{COMMON}\n"
+            f"{crop},test_support,{amount},TL/da,2024,2024,{authority},synthetic_test_fixture,not_official,TRY,project,catalog\n")
+
+
+def calculated_csv(y, p, c, *, authority="CALCULATED_FROM_VERIFIED_INPUTS", method="GROSS_MINUS_TOTAL_COST",
+                   support_value=None, support_id="", crop="TURP"):
+    value = "" if support_value is None else support_value
+    return (f"crop,calculation_method,gross_revenue_per_da,total_cost_per_da,support_payment_per_da,"
+            f"yield_dataset_id,price_dataset_id,cost_dataset_id,support_dataset_id,{COMMON}\n"
+            f"{crop},{method},15000,11000,{value},{y},{p},{c},{support_id},2024,2024,{authority},"
+            "synthetic_test_fixture,not_official,TRY,project,catalog\n")
+
+
 def test_authority_classes_precedence_and_specificity_are_separate():
     assert economic_authority("measured_farm_record") is EconomicAuthorityClass.MEASURED_FARM_RECORD
     assert authority_rank("MEASURED_FARM_RECORD") > authority_rank("OFFICIAL_STATISTICS") > authority_rank("FALLBACK")
@@ -111,9 +138,9 @@ def test_direct_and_calculated_profit_methods(services):
     _, service = services
     direct = upload(service, "crop_net_profit", profit())
     assert direct["status"] == "ready" and direct["normalized_preview"][0]["calculation_formula"] is None
-    dependency = upload(service, "crop_yield", yield_csv()); confirm(service, dependency)
-    calculated = (f"crop,calculation_method,gross_revenue_per_da,total_cost_per_da,dependency_dataset_ids,{COMMON}\n"
-                  f"TURP,GROSS_MINUS_TOTAL_COST,15000,11000,economic-{dependency['id']},2024,2024,CALCULATED_FROM_VERIFIED_INPUTS,synthetic_test_fixture,not_official,TRY,project,catalog\n")
+    y, p, c = confirmed_inputs(service)
+    calculated = (f"crop,calculation_method,gross_revenue_per_da,total_cost_per_da,yield_dataset_id,price_dataset_id,cost_dataset_id,{COMMON}\n"
+                  f"TURP,GROSS_MINUS_TOTAL_COST,15000,11000,{y},{p},{c},2024,2024,CALCULATED_FROM_VERIFIED_INPUTS,synthetic_test_fixture,not_official,TRY,project,catalog\n")
     batch = upload(service, "crop_net_profit", calculated)
     assert batch["normalized_preview"][0]["net_profit_per_da"] == 4000
     assert batch["normalized_preview"][0]["calculation_method"] == "GROSS_MINUS_TOTAL_COST"
@@ -121,9 +148,11 @@ def test_direct_and_calculated_profit_methods(services):
 
 def test_calculation_helper_checks_identity_and_records_lineage():
     base = {"crop": "TURP", "planning_year": 2024, "currency": "TRY"}
-    y = {"dataset_id": "y", "records": [{**base, "yield_ton_da": 2.5}]}
-    p = {"dataset_id": "p", "records": [{**base, "price_tl_ton": 6000}]}
-    c = {"dataset_id": "c", "records": [{**base, "amount_tl_da": 11000}]}
+    common = {"status": "active", "confirmed_at": "2024-01-01", "derivation_status": "CURRENT",
+              "requires_recalculation": False, "authority_class": "LOCAL_INSTITUTIONAL_SOURCE"}
+    y = {"dataset_id": "y", "data_type": "crop_yield", **common, "records": [{**base, "yield_ton_da": 2.5}]}
+    p = {"dataset_id": "p", "data_type": "crop_sale_price", **common, "records": [{**base, "price_tl_ton": 6000}]}
+    c = {"dataset_id": "c", "data_type": "crop_cost_components", **common, "records": [{**base, "amount_tl_da": 11000}]}
     result = calculate_profit_from_verified_inputs(y, p, c)
     assert result["gross_revenue_per_da"] == 15000 and result["net_profit_per_da"] == 4000
     assert result["dependency_dataset_ids"] == ["y", "p", "c"] and result["engine_connected"] is False
@@ -186,11 +215,11 @@ def test_lower_authority_and_same_authority_conflicts(services):
 
 def test_upstream_replacement_marks_derived_profit_stale(services):
     store, service = services
-    y1 = upload(service, "crop_yield", yield_csv()); confirm(service, y1)
-    derived = (f"crop,calculation_method,gross_revenue_per_da,total_cost_per_da,dependency_dataset_ids,{COMMON}\n"
-               f"TURP,GROSS_MINUS_TOTAL_COST,15000,11000,economic-{y1['id']},2024,2024,CALCULATED_FROM_VERIFIED_INPUTS,synthetic_test_fixture,not_official,TRY,project,catalog\n")
+    y, p, c = confirmed_inputs(service)
+    derived = (f"crop,calculation_method,gross_revenue_per_da,total_cost_per_da,yield_dataset_id,price_dataset_id,cost_dataset_id,{COMMON}\n"
+               f"TURP,GROSS_MINUS_TOTAL_COST,15000,11000,{y},{p},{c},2024,2024,CALCULATED_FROM_VERIFIED_INPUTS,synthetic_test_fixture,not_official,TRY,project,catalog\n")
     d = upload(service, "crop_net_profit", derived); confirm(service, d)
-    y2 = upload(service, "crop_yield", yield_csv(2600)); confirm(service, y2)
+    y2 = upload(service, "crop_yield", yield_csv(2600, authority="LOCAL_INSTITUTIONAL_SOURCE")); confirm(service, y2)
     document = store.get("one")
     stale = document["economic_data"]["datasets"][f"economic-{d['id']}"]
     assert stale["derivation_status"] == "STALE" and stale["requires_recalculation"] is True
@@ -235,3 +264,155 @@ def test_synthetic_templates_are_importable(services, kind, filename):
     path = Path(__file__).resolve().parents[1] / "docs" / "data_templates" / filename
     batch = service.upload("one", kind, filename, path.read_bytes(), {})
     assert batch["status"] == "ready" and batch["display_label"] == "SYNTHETIC / not_official"
+
+
+def test_calculated_authority_requires_verified_complete_roles(services):
+    _, service = services
+    proxy_ids = confirmed_inputs(service, authority="DERIVED_PROXY")
+    assert upload(service, "crop_net_profit", calculated_csv(*proxy_ids))["status"] == "invalid"
+
+    # A calculated result cannot claim the authority of a direct measured record.
+    assert upload(service, "crop_net_profit", calculated_csv(*proxy_ids, authority="MEASURED_FARM_RECORD"))["status"] == "invalid"
+
+    verified_ids = confirmed_inputs(service)
+    valid = upload(service, "crop_net_profit", calculated_csv(*verified_ids))
+    assert valid["status"] == "ready"
+    row = valid["normalized_preview"][0]
+    assert row["authority_class"] == "CALCULATED_FROM_VERIFIED_INPUTS"
+    assert [row[name] for name in ("yield_dataset_id", "price_dataset_id", "cost_dataset_id")] == verified_ids
+
+
+def test_calculated_dependency_types_and_completeness_are_enforced(services):
+    store, service = services
+    y, p, c = confirmed_inputs(service)
+    only_yield = calculated_csv(y, "", "")
+    assert upload(service, "crop_net_profit", only_yield)["status"] == "invalid"
+    wrong_role = calculated_csv(p, y, c)
+    assert upload(service, "crop_net_profit", wrong_role)["status"] == "invalid"
+
+    def make_inactive(document):
+        document["economic_data"]["datasets"][y]["status"] = "inactive"
+    store.update("one", make_inactive)
+    assert upload(service, "crop_net_profit", calculated_csv(y, p, c))["status"] == "invalid"
+
+
+@pytest.mark.parametrize("mutation", ["stale", "wrong_year", "wrong_crop", "unknown_authority"])
+def test_calculated_dependency_state_year_crop_and_authority_are_enforced(services, mutation):
+    store, service = services
+    y, p, c = confirmed_inputs(service)
+
+    def alter(document):
+        dataset = document["economic_data"]["datasets"][y]
+        if mutation == "stale":
+            dataset.update(derivation_status="STALE", requires_recalculation=True)
+        elif mutation == "wrong_year":
+            dataset["records"][0]["planning_year"] = 2023
+        elif mutation == "wrong_crop":
+            dataset["records"][0]["crop"] = "KIRMIZI TURP"
+        else:
+            dataset["authority_class"] = "UNKNOWN"
+    store.update("one", alter)
+    assert upload(service, "crop_net_profit", calculated_csv(y, p, c))["status"] == "invalid"
+
+
+def test_support_missing_and_explicit_zero_are_distinct(services):
+    _, service = services
+    y, p, c = confirmed_inputs(service)
+    support = upload(service, "crop_support_payment", support_csv(0)); confirm(service, support)
+    support_id = f"economic-{support['id']}"
+    missing = calculated_csv(y, p, c, method="GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST", support_id=support_id)
+    assert upload(service, "crop_net_profit", missing)["status"] == "invalid"
+    explicit_zero = calculated_csv(y, p, c, method="GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST",
+                                   support_value=0, support_id=support_id)
+    ready = upload(service, "crop_net_profit", explicit_zero)
+    assert ready["status"] == "ready"
+    assert ready["normalized_preview"][0]["support_payment_per_da"] == 0
+    assert upload(service, "crop_net_profit", calculated_csv(y, p, c))["status"] == "ready"
+
+
+@pytest.mark.parametrize("amount,status", [(-1, "invalid"), (0, "ready"), (1, "ready")])
+def test_cost_components_are_nonnegative(services, amount, status):
+    _, service = services
+    assert upload(service, "crop_cost_components", cost_csv(amount=amount))["status"] == status
+
+
+@pytest.mark.parametrize("price_date,observation_year,status", [
+    ("2024-06-01", 2024, "ready"),
+    ("not-a-date", 2024, "invalid"),
+    ("2023-06-01", 2024, "invalid"),
+    ("2023-02-29", 2023, "invalid"),
+    ("2024-02-29", 2024, "ready"),
+])
+def test_price_date_is_iso_calendar_date_aligned_to_observation_year(services, price_date, observation_year, status):
+    _, service = services
+    csv = (f"crop,price,price_unit,price_date,{COMMON}\n"
+           f"TURP,6,TL/kg,{price_date},2024,{observation_year},DERIVED_PROXY,synthetic_test_fixture,not_official,TRY,project,catalog\n")
+    batch = upload(service, "crop_sale_price", csv)
+    assert batch["status"] == status
+    if status == "ready":
+        assert batch["normalized_preview"][0]["price_alignment"] == "CURRENT"
+
+
+def test_price_period_cannot_contradict_price_date(services):
+    _, service = services
+    csv = (f"crop,price,price_unit,price_date,price_period,{COMMON}\n"
+           "TURP,6,TL/kg,2024-06-01,2023 average,2024,2024,DERIVED_PROXY,synthetic_test_fixture,not_official,TRY,project,catalog\n")
+    assert upload(service, "crop_sale_price", csv)["status"] == "invalid"
+
+
+def test_seasonal_replacement_preview_uses_net_profit_per_da_and_unit(services):
+    _, service = services
+    def seasonal(value):
+        return (f"analysis_unit_id,crop,season,yield_value,yield_unit,price,price_unit,cost,cost_unit,net_profit,net_profit_unit,{COMMON}\n"
+                f"P1,TURP,SECONDARY,2.5,ton/da,6000,TL/ton,11000,TL/da,{value},TL/da,2024,2024,DERIVED_PROXY,synthetic_test_fixture,not_official,TRY,project,catalog\n")
+    old = upload(service, "seasonal_economics", seasonal(4000)); confirm(service, old)
+    new = upload(service, "seasonal_economics", seasonal(4500))
+    preview = new["replacement_preview"]
+    assert preview["unit"] == "TL/da" and preview["value_change_count"] == 1
+    assert preview["value_changes"][0] == {
+        "identity": "P1|TURP|SECONDARY", "old_value": 4000.0, "new_value": 4500.0,
+        "absolute_difference": 500.0, "percentage_difference": 12.5,
+    }
+
+
+def test_seasonal_dependencies_must_exist_and_be_active_current_same_year(services):
+    store, service = services
+    source = upload(service, "crop_yield", yield_csv()); confirm(service, source)
+    source_id = f"economic-{source['id']}"
+
+    def seasonal(dependency, net_profit=4000):
+        return (f"analysis_unit_id,crop,season,yield_value,yield_unit,price,price_unit,cost,cost_unit,net_profit,net_profit_unit,dependency_dataset_ids,{COMMON}\n"
+                f"P1,TURP,SECONDARY,2.5,ton/da,6000,TL/ton,11000,TL/da,{net_profit},TL/da,{dependency},2024,2024,DERIVED_PROXY,synthetic_test_fixture,not_official,TRY,project,catalog\n")
+
+    assert upload(service, "seasonal_economics", seasonal(source_id))["status"] == "ready"
+
+    def make_stale(document):
+        document["economic_data"]["datasets"][source_id].update(derivation_status="STALE", requires_recalculation=True)
+    store.update("one", make_stale)
+    assert upload(service, "seasonal_economics", seasonal(source_id, 4100))["status"] == "invalid"
+
+
+def test_verified_helper_rejects_unverified_or_invalid_inputs():
+    base = {"crop": "TURP", "planning_year": 2024, "currency": "TRY"}
+    state = {"status": "active", "confirmed_at": "2024-01-01", "derivation_status": "CURRENT",
+             "requires_recalculation": False, "authority_class": "OFFICIAL_STATISTICS"}
+    y = {"dataset_id": "y", "data_type": "crop_yield", **state, "records": [{**base, "yield_ton_da": 2.5}]}
+    p = {"dataset_id": "p", "data_type": "crop_sale_price", **state, "records": [{**base, "price_tl_ton": 6000}]}
+    c = {"dataset_id": "c", "data_type": "crop_cost_components", **state, "records": [{**base, "amount_tl_da": 1000}]}
+    assert calculate_profit_from_verified_inputs(y, p, c)["net_profit_per_da"] == 14000
+    for authority in ("DERIVED_PROXY", "ASSUMED", "UNKNOWN"):
+        bad = {**y, "authority_class": authority}
+        with pytest.raises(ValueError):
+            calculate_profit_from_verified_inputs(bad, p, c)
+    for changes in (
+        {"status": "inactive"}, {"derivation_status": "STALE"}, {"requires_recalculation": True},
+        {"data_type": "crop_sale_price"},
+    ):
+        with pytest.raises(ValueError):
+            calculate_profit_from_verified_inputs({**y, **changes}, p, c)
+    for row_changes in (
+        {"crop": "KIRMIZI TURP"}, {"planning_year": 2023}, {"currency": "USD"},
+    ):
+        bad = {**y, "records": [{**y["records"][0], **row_changes}]}
+        with pytest.raises(ValueError):
+            calculate_profit_from_verified_inputs(bad, p, c)

@@ -3,13 +3,16 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import asdict
+import math
+import re
 from typing import Any
 
 from kds.data.import_models import Issue
 from kds.domain.economic_data import (
-    CALCULATION_METHODS, COST_CATEGORIES, EconomicAuthorityClass, active_dataset,
+    CALCULATION_METHODS, COST_CATEGORIES, PROFIT_DEPENDENCY_ROLES,
+    VERIFIED_INPUT_AUTHORITIES, EconomicAuthorityClass, active_dataset,
     authority_rank, convert_price, convert_yield, dataset_authority,
-    economic_authority, finite, normalize_unit, replacement_preview, scope_key, year,
+    economic_authority, finite, iso_date, normalize_unit, replacement_preview, scope_key, year,
 )
 from kds.domain.validation import utc_now
 from .mapping import key
@@ -89,6 +92,82 @@ def _dependencies(data: dict[str, Any]) -> list[str]:
     return list(dict.fromkeys(values))
 
 
+def _validate_dependency(dataset: dict[str, Any] | None, dataset_id: str, record: dict[str, Any],
+                         *, expected_type: str | None = None, require_verified: bool = False) -> None:
+    if dataset is None or not dataset.get("confirmed_at"):
+        raise ValueError(f"Dependency {dataset_id} must reference a confirmed project economic dataset.")
+    if expected_type and dataset.get("data_type") != expected_type:
+        raise ValueError(f"Dependency {dataset_id} must have data_type {expected_type}.")
+    if dataset.get("status") != "active":
+        raise ValueError(f"Dependency {dataset_id} must be active.")
+    if dataset.get("derivation_status") != "CURRENT" or dataset.get("requires_recalculation") is True:
+        raise ValueError(f"Dependency {dataset_id} must be current and not require recalculation.")
+    rows = dataset.get("records") or []
+    if not any(row.get("planning_year") == record["planning_year"] for row in rows):
+        raise ValueError(f"Dependency {dataset_id} must match planning year {record['planning_year']}.")
+    crop_rows = [row for row in rows if row.get("crop") == record["crop"]]
+    if expected_type and not crop_rows:
+        raise ValueError(f"Dependency {dataset_id} must contain crop {record['crop']}.")
+    relevant = crop_rows or rows
+    if expected_type and any(row.get("currency", "TRY") != "TRY" for row in relevant):
+        raise ValueError(f"Dependency {dataset_id} must use TRY currency.")
+    if expected_type:
+        expected_scope = (record.get("geographic_scope") or "project", record.get("crop_scope") or "catalog")
+        if any((row.get("geographic_scope") or "project", row.get("crop_scope") or "catalog") != expected_scope for row in relevant):
+            raise ValueError(f"Dependency {dataset_id} must use the same geographic and crop scope.")
+    if require_verified and economic_authority(dataset.get("authority_class")) not in VERIFIED_INPUT_AUTHORITIES:
+        raise ValueError(f"Dependency {dataset_id} authority is not verified input evidence.")
+
+
+def _profit_dependency_roles(data: dict[str, Any], record: dict[str, Any], document: dict[str, Any],
+                             *, include_support: bool) -> dict[str, str]:
+    datasets = document.get("economic_data", {}).get("datasets", {})
+    generic = [v.strip() for v in _text(data, "dependency_dataset_ids").split(",") if v.strip()]
+    roles: dict[str, str] = {}
+    required = {k: v for k, v in PROFIT_DEPENDENCY_ROLES.items() if include_support or k != "support_dataset_id"}
+    for role, expected_type in required.items():
+        explicit = _text(data, role)
+        candidates = [explicit] if explicit else [item for item in generic if datasets.get(item, {}).get("data_type") == expected_type]
+        if len(candidates) != 1:
+            raise ValueError(f"Calculated net profit requires exactly one {role} ({expected_type}).")
+        roles[role] = candidates[0]
+    permitted = set(roles.values())
+    if set(generic) - permitted:
+        raise ValueError("Calculated net profit dependency_dataset_ids contains an unexpected or wrongly typed dataset.")
+    for role, dataset_id in roles.items():
+        _validate_dependency(datasets.get(dataset_id), dataset_id, record,
+                             expected_type=required[role], require_verified=True)
+    return roles
+
+
+def _validate_profit_values(roles: dict[str, str], document: dict[str, Any], record: dict[str, Any],
+                            gross: float, total_cost: float, support: float | None) -> None:
+    datasets = document["economic_data"]["datasets"]
+    crop = record["crop"]
+    yield_row = next(row for row in datasets[roles["yield_dataset_id"]]["records"] if row.get("crop") == crop)
+    price_row = next(row for row in datasets[roles["price_dataset_id"]]["records"] if row.get("crop") == crop)
+    cost_rows = [row for row in datasets[roles["cost_dataset_id"]]["records"] if row.get("crop") == crop]
+    expected_gross = float(yield_row["yield_ton_da"]) * float(price_row["price_tl_ton"])
+    expected_cost = sum(float(row["amount_tl_da"]) for row in cost_rows)
+    if not math.isclose(gross, expected_gross, rel_tol=1e-9, abs_tol=1e-6):
+        raise ValueError("gross_revenue_per_da must equal the referenced yield × sale price.")
+    if not math.isclose(total_cost, expected_cost, rel_tol=1e-9, abs_tol=1e-6):
+        raise ValueError("total_cost_per_da must equal the referenced cost components.")
+    if "support_dataset_id" in roles:
+        support_rows = [row for row in datasets[roles["support_dataset_id"]]["records"] if row.get("crop") == crop]
+        expected_support = sum(float(row["amount_tl_da"]) for row in support_rows)
+        if support is None or not math.isclose(support, expected_support, rel_tol=1e-9, abs_tol=1e-6):
+            raise ValueError("support_payment_per_da must equal the referenced support records, including explicit zero.")
+
+
+def _validate_general_dependencies(data: dict[str, Any], record: dict[str, Any], document: dict[str, Any]) -> list[str]:
+    dependencies = _dependencies(data)
+    datasets = document.get("economic_data", {}).get("datasets", {})
+    for dataset_id in dependencies:
+        _validate_dependency(datasets.get(dataset_id), dataset_id, record)
+    return dependencies
+
+
 def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
     records: list[dict[str, Any]] = []
     issues: list[dict[str, Any]] = []
@@ -118,6 +197,15 @@ def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
                 value, conversion = convert_price(raw, source_unit)
                 if not record["price_date"] and not record["price_period"]:
                     raise ValueError("price_date or price_period is required.")
+                if record["price_date"]:
+                    record["price_date"] = iso_date(record["price_date"])
+                    price_year = int(record["price_date"][:4])
+                    if price_year != record["observation_year"]:
+                        raise ValueError("price_date year must equal observation_year.")
+                    period_years = {int(value) for value in re.findall(r"(?<!\d)(?:19|20|21)\d{2}(?!\d)", record["price_period"] or "")}
+                    if period_years and period_years != {price_year}:
+                        raise ValueError("price_period year conflicts with price_date.")
+                    record["price_alignment"] = record["temporal_alignment"]
                 record.update(price_tl_ton=value, source_value=raw, source_unit=source_unit,
                               canonical_unit="TL/ton", conversion=conversion)
                 identity = (crop, record["price_date"], record["price_period"])
@@ -136,7 +224,10 @@ def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
                     raise ValueError("cost_category is not canonical.")
                 if normalize_unit(data.get("unit")) != "TL/da":
                     raise ValueError("Cost component canonical unit is TL/da.")
-                record.update(cost_category=category, amount_tl_da=finite(_number(data, "amount", batch), "amount"),
+                amount = finite(_number(data, "amount", batch), "amount")
+                if amount < 0:
+                    raise ValueError("Cost component amount_tl_da must be nonnegative.")
+                record.update(cost_category=category, amount_tl_da=amount,
                               source_unit="TL/da", canonical_unit="TL/da", conversion=None)
                 identity = (crop, category)
             elif kind == "crop_net_profit":
@@ -146,7 +237,7 @@ def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
                 direct = _number(data, "net_profit_per_da", batch, optional=True)
                 gross = _number(data, "gross_revenue_per_da", batch, optional=True)
                 total_cost = _number(data, "total_cost_per_da", batch, optional=True)
-                support = _number(data, "support_payment_per_da", batch, optional=True) or 0.0
+                support = _number(data, "support_payment_per_da", batch, optional=True)
                 formula = None
                 if method == "DIRECT_SOURCE":
                     if direct is None:
@@ -156,24 +247,34 @@ def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
                     if gross is None or total_cost is None:
                         raise ValueError("Calculated net profit requires gross_revenue_per_da and total_cost_per_da.")
                     if method == "GROSS_MINUS_TOTAL_COST":
+                        if support is not None:
+                            raise ValueError("GROSS_MINUS_TOTAL_COST must not provide support_payment_per_da.")
                         profit, formula = gross - total_cost, "gross_revenue_per_da - total_cost_per_da"
                     elif method == "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST":
+                        if support is None:
+                            raise ValueError("GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST requires explicit support_payment_per_da, including explicit zero.")
                         profit, formula = gross + support - total_cost, "gross_revenue_per_da + support_payment_per_da - total_cost_per_da"
                     else:
                         if direct is None or not _text(data, "calculation_formula"):
                             raise ValueError("OTHER_DOCUMENTED_METHOD requires a value and documented calculation_formula.")
                         profit, formula = direct, _text(data, "calculation_formula")
-                dependencies = _dependencies(data)
-                if method != "DIRECT_SOURCE" and not dependencies:
-                    raise ValueError("Calculated net profit requires dependency dataset ids.")
-                known = document.get("economic_data", {}).get("datasets", {})
-                if any(dependency not in known for dependency in dependencies):
-                    raise ValueError("Every dependency_dataset_id must reference a confirmed project economic dataset.")
+                roles = {}
+                if method in {"GROSS_MINUS_TOTAL_COST", "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST"}:
+                    if economic_authority(record["authority_class"]) is not EconomicAuthorityClass.CALCULATED_FROM_VERIFIED_INPUTS:
+                        raise ValueError("Calculated net profit authority_class must be CALCULATED_FROM_VERIFIED_INPUTS.")
+                    roles = _profit_dependency_roles(data, record, document,
+                                                     include_support=method == "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST")
+                    _validate_profit_values(roles, document, record, float(gross), float(total_cost), support)
+                    record["authority_class"] = EconomicAuthorityClass.CALCULATED_FROM_VERIFIED_INPUTS.value
+                    dependencies = list(roles.values())
+                else:
+                    dependencies = _validate_general_dependencies(data, record, document)
                 record.update(net_profit_per_da=float(profit), canonical_unit="TL/da", source_unit="TL/da",
                               calculation_method=method, calculation_formula=formula, dependency_dataset_ids=dependencies,
                               gross_revenue_per_da=gross, total_cost_per_da=total_cost,
                               support_payment_per_da=support if method == "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST" else None,
                               conversion=None)
+                record.update(roles)
                 identity = crop
             elif kind == "analysis_unit_economics":
                 unit_id = _text(data, "analysis_unit_id")
@@ -184,7 +285,8 @@ def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
                     raise ValueError("At least one unit-level economic value is required.")
                 record.update(analysis_unit_id=unit_id, gross_revenue_tl=values["gross_revenue"],
                               total_cost_tl=values["total_cost"], net_profit_tl=values["net_profit"],
-                              canonical_unit="TL", source_unit="TL", dependency_dataset_ids=_dependencies(data))
+                              canonical_unit="TL", source_unit="TL",
+                              dependency_dataset_ids=_validate_general_dependencies(data, record, document))
                 identity = (unit_id, crop)
             else:
                 unit_id = _text(data, "analysis_unit_id") or None
@@ -208,7 +310,8 @@ def validate_economic_table(batch: dict[str, Any], document: dict[str, Any]):
                               source_units={"yield": yield_unit, "price": price_unit, "cost": "TL/da", "net_profit": "TL/da"},
                               canonical_units={"yield": "ton/da", "price": "TL/ton", "cost": "TL/da", "net_profit": "TL/da"},
                               conversion={"yield": yield_conversion, "price": price_conversion},
-                              dependency_dataset_ids=_dependencies(data), missing_secondary_fallback_prohibited=True)
+                              dependency_dataset_ids=_validate_general_dependencies(data, record, document),
+                              missing_secondary_fallback_prohibited=True)
                 identity = (unit_id, crop, season)
             if identity in seen:
                 raise ValueError("Duplicate canonical economic record identity in upload.")

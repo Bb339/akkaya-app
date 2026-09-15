@@ -6,6 +6,8 @@ scientific optimizer.  They provide an auditable intake and replacement layer.
 from __future__ import annotations
 
 import math
+import re
+from datetime import date
 from enum import Enum
 from typing import Any
 
@@ -54,6 +56,22 @@ CALCULATION_METHODS = {
     "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST", "OTHER_DOCUMENTED_METHOD",
 }
 
+VERIFIED_INPUT_AUTHORITIES = {
+    EconomicAuthorityClass.MEASURED_FARM_RECORD,
+    EconomicAuthorityClass.OFFICIAL_MARKET_RECORD,
+    EconomicAuthorityClass.LOCAL_INSTITUTIONAL_SOURCE,
+    EconomicAuthorityClass.OFFICIAL_STATISTICS,
+    EconomicAuthorityClass.DOCUMENTED_COMMERCIAL_SOURCE,
+    EconomicAuthorityClass.CALCULATED_FROM_VERIFIED_INPUTS,
+}
+
+PROFIT_DEPENDENCY_ROLES = {
+    "yield_dataset_id": "crop_yield",
+    "price_dataset_id": "crop_sale_price",
+    "cost_dataset_id": "crop_cost_components",
+    "support_dataset_id": "crop_support_payment",
+}
+
 
 def economic_authority(value: Any) -> EconomicAuthorityClass:
     text = str(value or "").strip().upper()
@@ -88,6 +106,17 @@ def year(value: Any, field: str = "planning_year") -> int:
     if not number.is_integer() or not 1900 <= number <= 2200:
         raise ValueError(f"{field} must be an integer between 1900 and 2200.")
     return int(number)
+
+
+def iso_date(value: Any, field: str = "price_date") -> str:
+    text = str(value or "").strip()
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        raise ValueError(f"{field} must use ISO YYYY-MM-DD.")
+    try:
+        date.fromisoformat(text)
+    except ValueError as exc:
+        raise ValueError(f"{field} must be a valid ISO calendar date.") from exc
+    return text
 
 
 def normalize_unit(value: Any) -> str:
@@ -167,7 +196,7 @@ def _value(data_type: str, record: dict[str, Any]) -> float | None:
         "crop_yield": "yield_ton_da", "crop_sale_price": "price_tl_ton",
         "crop_support_payment": "amount_tl_da", "crop_cost_components": "amount_tl_da",
         "crop_net_profit": "net_profit_per_da", "analysis_unit_economics": "net_profit_tl",
-        "seasonal_economics": "net_profit_tl",
+        "seasonal_economics": "net_profit_tl_da",
     }[data_type]
     value = record.get(field)
     return float(value) if value is not None else None
@@ -195,7 +224,10 @@ def replacement_preview(document: dict[str, Any], data_type: str, records: list[
         "scope_key": scope_key(data_type, records), "existing_dataset_id": existing.get("dataset_id") if existing else None,
         "old_authority": old_authority, "new_authority": new_authority,
         "authority_change": "LOWER" if lower else "HIGHER" if existing and authority_rank(new_authority) > authority_rank(old_authority) else "SAME" if existing else "INITIAL",
-        "year": records[0]["planning_year"], "unit": records[0].get("canonical_unit"),
+        "year": records[0]["planning_year"], "unit": (
+            records[0].get("canonical_unit")
+            or records[0].get("canonical_units", {}).get("net_profit")
+        ),
         "value_changes": changes[:100], "value_change_count": len(changes),
         "affected_crops": affected_crops, "affected_analysis_units": affected_units,
         "affected_scenarios": ["S1", "S2"], "requires_reanalysis": existing is not None,
@@ -225,8 +257,24 @@ FUTURE_RESULT_PROVENANCE_FIELDS = (
 
 def calculate_profit_from_verified_inputs(yield_dataset: dict[str, Any], price_dataset: dict[str, Any],
                                           cost_dataset: dict[str, Any], support_dataset: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Build an explicit derived value; callers must import/confirm it separately."""
-    sources = [yield_dataset, price_dataset, cost_dataset] + ([support_dataset] if support_dataset else [])
+    """Build a derived value only from current, active and verified datasets."""
+    roles = {
+        "yield_dataset_id": (yield_dataset, "crop_yield"),
+        "price_dataset_id": (price_dataset, "crop_sale_price"),
+        "cost_dataset_id": (cost_dataset, "crop_cost_components"),
+    }
+    if support_dataset is not None:
+        roles["support_dataset_id"] = (support_dataset, "crop_support_payment")
+    for role, (source, expected_type) in roles.items():
+        if source.get("data_type") != expected_type:
+            raise ValueError(f"{role} must reference {expected_type}.")
+        if not source.get("confirmed_at") or source.get("status") != "active":
+            raise ValueError(f"{role} must reference a confirmed active dataset.")
+        if source.get("derivation_status") != "CURRENT" or source.get("requires_recalculation") is True:
+            raise ValueError(f"{role} must reference a current dataset that does not require recalculation.")
+        if economic_authority(source.get("authority_class")) not in VERIFIED_INPUT_AUTHORITIES:
+            raise ValueError(f"{role} authority is not verified input evidence.")
+    sources = [source for source, _ in roles.values()]
     records = [source["records"] for source in sources]
     if len(records[0]) != 1 or len(records[1]) != 1 or (support_dataset and len(records[-1]) != 1) or not records[2]:
         raise ValueError("Yield, price and optional support require one record; cost requires at least one component.")
@@ -241,7 +289,7 @@ def calculate_profit_from_verified_inputs(yield_dataset: dict[str, Any], price_d
     support = float(records[3][0]["amount_tl_da"]) if support_dataset else 0.0
     total_cost = sum(float(r["amount_tl_da"]) for r in cost_dataset["records"])
     method = "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST" if support_dataset else "GROSS_MINUS_TOTAL_COST"
-    return {
+    result = {
         "crop": yield_row["crop"], "planning_year": yield_row["planning_year"],
         "gross_revenue_per_da": gross, "support_payment_per_da": support,
         "total_cost_per_da": total_cost, "net_profit_per_da": gross + support - total_cost,
@@ -251,3 +299,5 @@ def calculate_profit_from_verified_inputs(yield_dataset: dict[str, Any], price_d
         "authority_class": EconomicAuthorityClass.CALCULATED_FROM_VERIFIED_INPUTS.value,
         "engine_connected": False,
     }
+    result.update({role: source["dataset_id"] for role, (source, _) in roles.items()})
+    return result

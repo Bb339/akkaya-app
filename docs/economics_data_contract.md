@@ -18,9 +18,11 @@ All records carry planning and observation year, authority, provenance, geograph
 
 Yield accepts kg/da and ton/da. kg/da is divided by 1,000 with a stored conversion trace. Price accepts TL/kg and TL/ton. TL/kg is multiplied by 1,000 with a trace. TL/da is rejected as a price unit, so 6 TL/kg can never become 6,000 TL/da profit.
 
-Support remains separate. Cost categories are `seed`, `fertilizer`, `pesticide`, `labor`, `energy`, `irrigation`, `machinery`, `harvest`, `transport`, `storage`, `marketing`, `rent`, and `other`. Missing categories remain listed as missing; a total is never distributed into invented components.
+Support remains separate. For `GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST`, a missing/null support value is an error; an explicitly supplied zero is retained as real zero. `GROSS_MINUS_TOTAL_COST` rejects a supplied support value. Cost categories are `seed`, `fertilizer`, `pesticide`, `labor`, `energy`, `irrigation`, `machinery`, `harvest`, `transport`, `storage`, `marketing`, `rent`, and `other`. Under this contract every cost component is nonnegative; zero is valid and missing remains distinct. Negative rebates or credits require a future explicit adjustment category. Missing categories remain listed as missing; a total is never distributed into invented components.
 
-Net-profit methods are `DIRECT_SOURCE`, `GROSS_MINUS_TOTAL_COST`, `GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST`, and `OTHER_DOCUMENTED_METHOD`. Calculated methods require dependency dataset IDs and store their formula. Yield × price is valid only for matching crop, year and TRY inputs; cross-year combinations require a later explicit scenario contract.
+Net-profit methods are `DIRECT_SOURCE`, `GROSS_MINUS_TOTAL_COST`, `GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST`, and `OTHER_DOCUMENTED_METHOD`. Direct-source profit retains the source's authority. The two standard calculated methods can only have `CALCULATED_FROM_VERIFIED_INPUTS` authority and require typed yield, sale-price and cost roles; the support method also requires a typed support role. Those inputs must be confirmed, active, current, not awaiting recalculation, verified-authority, same-year, same-crop, same-scope TRY datasets. Incoming gross, cost and support values must equal their dependency values. Calculated authority therefore cannot exceed its evidence.
+
+When supplied, `price_date` must be a valid ISO `YYYY-MM-DD` calendar date and its year must equal `observation_year`. A `price_period` containing an explicit year may not contradict that date. Seasonal replacement preview compares `net_profit_tl_da` and reports `TL/da`.
 
 ## Phase 4 source mapping
 
