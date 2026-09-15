@@ -416,3 +416,70 @@ def test_verified_helper_rejects_unverified_or_invalid_inputs():
         bad = {**y, "records": [{**y["records"][0], **row_changes}]}
         with pytest.raises(ValueError):
             calculate_profit_from_verified_inputs(bad, p, c)
+
+
+def scoped_helper_inputs(geographies=("district-a", "district-a", "district-a"),
+                         crop_scopes=("catalog", "catalog", "catalog")):
+    state = {"status": "active", "confirmed_at": "2024-01-01", "derivation_status": "CURRENT",
+             "requires_recalculation": False, "authority_class": "OFFICIAL_STATISTICS"}
+    def record(crop, year, currency, geography, crop_scope, **values):
+        return {"crop": crop, "planning_year": year, "currency": currency,
+                "geographic_scope": geography, "crop_scope": crop_scope, **values}
+    y = {"dataset_id": "y", "data_type": "crop_yield", **state,
+         "records": [record("TURP", 2024, "TRY", geographies[0], crop_scopes[0], yield_ton_da=2.5)]}
+    p = {"dataset_id": "p", "data_type": "crop_sale_price", **state,
+         "records": [record("TURP", 2024, "TRY", geographies[1], crop_scopes[1], price_tl_ton=6000)]}
+    c = {"dataset_id": "c", "data_type": "crop_cost_components", **state,
+         "records": [record("TURP", 2024, "TRY", geographies[2], crop_scopes[2], amount_tl_da=11000)]}
+    return y, p, c
+
+
+def test_verified_helper_rejects_wrong_geographic_scope():
+    y, p, c = scoped_helper_inputs(geographies=("district-a", "district-b", "district-a"))
+    with pytest.raises(ValueError, match="same geographic_scope and crop_scope"):
+        calculate_profit_from_verified_inputs(y, p, c)
+
+
+def test_verified_helper_rejects_wrong_crop_scope():
+    y, p, c = scoped_helper_inputs(crop_scopes=("catalog", "vegetables", "catalog"))
+    with pytest.raises(ValueError, match="same geographic_scope and crop_scope"):
+        calculate_profit_from_verified_inputs(y, p, c)
+
+
+def test_verified_helper_accepts_same_scope_and_preserves_provenance():
+    y, p, c = scoped_helper_inputs()
+    result = calculate_profit_from_verified_inputs(y, p, c)
+    assert result["geographic_scope"] == "district-a"
+    assert result["crop_scope"] == "catalog"
+    assert result["authority_class"] == "CALCULATED_FROM_VERIFIED_INPUTS"
+    assert result["dependency_dataset_ids"] == ["y", "p", "c"]
+    assert [result[name] for name in ("yield_dataset_id", "price_dataset_id", "cost_dataset_id")] == ["y", "p", "c"]
+
+
+def test_verified_helper_rejects_support_scope_mismatch():
+    y, p, c = scoped_helper_inputs()
+    support = {**y, "dataset_id": "s", "data_type": "crop_support_payment",
+               "records": [{**y["records"][0], "geographic_scope": "district-b", "amount_tl_da": 100}]}
+    with pytest.raises(ValueError, match="same geographic_scope and crop_scope"):
+        calculate_profit_from_verified_inputs(y, p, c, support)
+
+
+def test_verified_helper_canonicalizes_missing_and_explicit_default_scopes():
+    y, p, c = scoped_helper_inputs(geographies=(None, "project", ""),
+                                   crop_scopes=(None, "catalog", "   "))
+    result = calculate_profit_from_verified_inputs(y, p, c)
+    assert result["geographic_scope"] == "project"
+    assert result["crop_scope"] == "catalog"
+
+
+def test_verified_helper_default_scope_does_not_match_different_explicit_scope():
+    y, p, c = scoped_helper_inputs(geographies=(None, "district-a", "project"))
+    with pytest.raises(ValueError, match="same geographic_scope and crop_scope"):
+        calculate_profit_from_verified_inputs(y, p, c)
+
+
+def test_verified_helper_rejects_mixed_scope_cost_components():
+    y, p, c = scoped_helper_inputs()
+    c["records"].append({**c["records"][0], "geographic_scope": "district-b", "amount_tl_da": 0})
+    with pytest.raises(ValueError, match="same geographic_scope and crop_scope"):
+        calculate_profit_from_verified_inputs(y, p, c)

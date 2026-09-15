@@ -11,7 +11,8 @@ from kds.data.import_models import Issue
 from kds.domain.economic_data import (
     CALCULATION_METHODS, COST_CATEGORIES, PROFIT_DEPENDENCY_ROLES,
     VERIFIED_INPUT_AUTHORITIES, EconomicAuthorityClass, active_dataset,
-    authority_rank, convert_price, convert_yield, dataset_authority,
+    authority_rank, canonical_crop_scope, canonical_economic_scope,
+    canonical_geographic_scope, convert_price, convert_yield, dataset_authority,
     economic_authority, finite, iso_date, normalize_unit, replacement_preview, scope_key, year,
 )
 from kds.domain.validation import utc_now
@@ -77,8 +78,8 @@ def _common(data: dict[str, Any], document: dict[str, Any], line: int) -> dict[s
         "price_date": _text(data, "price_date") or None,
         "price_period": _text(data, "price_period") or None,
         "price_basis": _text(data, "price_basis") or None,
-        "geographic_scope": _text(data, "geographic_scope") or "project",
-        "crop_scope": _text(data, "crop_scope") or "catalog",
+        "geographic_scope": canonical_geographic_scope(data.get("geographic_scope")),
+        "crop_scope": canonical_crop_scope(data.get("crop_scope")),
         "currency": "TRY", "measurement_method": _text(data, "measurement_method") or None,
         "notes": _text(data, "notes") or None, "source_row": line,
         "synthetic": "synthetic" in source_words or "not_official" in source_words,
@@ -112,8 +113,8 @@ def _validate_dependency(dataset: dict[str, Any] | None, dataset_id: str, record
     if expected_type and any(row.get("currency", "TRY") != "TRY" for row in relevant):
         raise ValueError(f"Dependency {dataset_id} must use TRY currency.")
     if expected_type:
-        expected_scope = (record.get("geographic_scope") or "project", record.get("crop_scope") or "catalog")
-        if any((row.get("geographic_scope") or "project", row.get("crop_scope") or "catalog") != expected_scope for row in relevant):
+        expected_scope = canonical_economic_scope(record)
+        if any(canonical_economic_scope(row) != expected_scope for row in relevant):
             raise ValueError(f"Dependency {dataset_id} must use the same geographic and crop scope.")
     if require_verified and economic_authority(dataset.get("authority_class")) not in VERIFIED_INPUT_AUTHORITIES:
         raise ValueError(f"Dependency {dataset_id} authority is not verified input evidence.")

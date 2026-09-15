@@ -156,10 +156,27 @@ def dataset_authority(records: list[dict[str, Any]]) -> str:
     return next(iter(values))
 
 
+def canonical_geographic_scope(value: Any) -> str:
+    """Resolve absent economic geography to the contract's project default."""
+    return str(value or "").strip() or "project"
+
+
+def canonical_crop_scope(value: Any) -> str:
+    """Resolve absent economic crop coverage to the contract's catalog default."""
+    return str(value or "").strip() or "catalog"
+
+
+def canonical_economic_scope(record: dict[str, Any]) -> tuple[str, str]:
+    return (
+        canonical_geographic_scope(record.get("geographic_scope")),
+        canonical_crop_scope(record.get("crop_scope")),
+    )
+
+
 def scope_key(data_type: str, records: list[dict[str, Any]]) -> str:
     years = {r["planning_year"] for r in records}
-    geographies = {r.get("geographic_scope") or "project" for r in records}
-    crops = {r.get("crop_scope") or "catalog" for r in records}
+    geographies = {canonical_economic_scope(r)[0] for r in records}
+    crops = {canonical_economic_scope(r)[1] for r in records}
     if len(years) != 1 or len(geographies) != 1 or len(crops) != 1:
         raise ValueError("One dataset must use one planning year, geographic_scope and crop_scope.")
     return f"{data_type}|{next(iter(years))}|{next(iter(geographies))}|{next(iter(crops))}"
@@ -284,6 +301,10 @@ def calculate_profit_from_verified_inputs(yield_dataset: dict[str, Any], price_d
     currencies = {row.get("currency", "TRY") for row in rows}
     if len(crop_values) != 1 or len(years) != 1 or currencies != {"TRY"}:
         raise ValueError("Yield, price, support and cost inputs must share crop, year and TRY currency.")
+    scopes = {canonical_economic_scope(row) for row in rows}
+    if len(scopes) != 1:
+        raise ValueError("Yield, price, support and cost inputs must use the same geographic_scope and crop_scope.")
+    geographic_scope, crop_scope = next(iter(scopes))
     yield_row, price_row = records[0][0], records[1][0]
     gross = float(yield_row["yield_ton_da"]) * float(price_row["price_tl_ton"])
     support = float(records[3][0]["amount_tl_da"]) if support_dataset else 0.0
@@ -291,6 +312,7 @@ def calculate_profit_from_verified_inputs(yield_dataset: dict[str, Any], price_d
     method = "GROSS_PLUS_SUPPORT_MINUS_TOTAL_COST" if support_dataset else "GROSS_MINUS_TOTAL_COST"
     result = {
         "crop": yield_row["crop"], "planning_year": yield_row["planning_year"],
+        "geographic_scope": geographic_scope, "crop_scope": crop_scope,
         "gross_revenue_per_da": gross, "support_payment_per_da": support,
         "total_cost_per_da": total_cost, "net_profit_per_da": gross + support - total_cost,
         "currency": "TRY", "canonical_unit": "TL/da", "calculation_method": method,
