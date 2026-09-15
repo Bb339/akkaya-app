@@ -25,6 +25,12 @@ def _parameter_and_phenology_readiness(document, demo):
     import app
     crops = document.get('crops', [])
     runtime = [(app.canonical_crop_key(c['name']), app.normalize_crop_key(c['name'])) for c in crops]
+    legacy_direct_by_crop = {}
+    if demo:
+        legacy_params = app.load_enhanced_frames().get('crop_params')
+        legacy_keys = ({app.normalize_crop_key(v) for v in legacy_params['crop']}
+                       if legacy_params is not None else set())
+        legacy_direct_by_crop = {crop_id: normalized in legacy_keys for crop_id, normalized in runtime}
     active_parameters = _active_contract_datasets(document, 'crop_water_parameters')
     resolutions = []
     if active_parameters:
@@ -35,17 +41,17 @@ def _parameter_and_phenology_readiness(document, demo):
                 'runtime_crop_id': crop_id,
                 'resolution_status': record.get('resolution_status') if record else 'MISSING',
                 'resolved_parameter_identity': record.get('parameter_crop_id') if record else None,
-                'legacy_generic_fallback': True,
+                # Contract imports are deliberately disconnected in Phase 7.  This
+                # flag therefore describes the unchanged legacy engine path.
+                'legacy_generic_fallback': not legacy_direct_by_crop.get(crop_id, False),
                 'verified_parameter_ready': bool(record and record.get('verified_for_pilot')),
                 'engine_connected': False,
             })
     elif demo:
-        params = app.load_enhanced_frames().get('crop_params')
-        parameter_ids = {app.normalize_crop_key(v).replace('_','') for v in params['crop']} if params is not None else set()
-        normalized_parameter_keys = {app.normalize_crop_key(v) for v in params['crop']} if params is not None else set()
+        parameter_ids = {app.normalize_crop_key(v).replace('_','') for v in legacy_params['crop']} if legacy_params is not None else set()
         for crop_id, normalized in runtime:
             resolutions.append(resolution_for(crop_id, parameter_ids,
-                                              legacy_direct_match=normalized in normalized_parameter_keys,
+                                              legacy_direct_match=legacy_direct_by_crop[crop_id],
                                               parameter_authority='ASSUMED'))
     else:
         resolutions = [resolution_for(crop_id, set(), legacy_direct_match=False,
