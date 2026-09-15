@@ -4,10 +4,93 @@ from collections import Counter
 from kds.imports.mapping import key as identity_key
 from kds.domain.water_data import authority_snapshot
 from kds.domain.economic_data import authority_snapshot as economic_authority_snapshot
+from kds.domain.crop_parameters import (
+    CROP_PARAMETER_DATA_TYPES, authority_snapshot as crop_parameter_authority_snapshot,
+    resolution_for,
+)
 
 
 def positive(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
+
+
+def _active_contract_datasets(document, data_type):
+    store = document.get('crop_parameter_data', {})
+    ids = [dataset_id for key,dataset_id in store.get('active', {}).items() if key.startswith(data_type+'|')]
+    return [store.get('datasets', {}).get(dataset_id, {}) for dataset_id in ids]
+
+
+def _parameter_and_phenology_readiness(document, demo):
+    """Expose data-contract truth without connecting new datasets to the engine."""
+    import app
+    crops = document.get('crops', [])
+    runtime = [(app.canonical_crop_key(c['name']), app.normalize_crop_key(c['name'])) for c in crops]
+    active_parameters = _active_contract_datasets(document, 'crop_water_parameters')
+    resolutions = []
+    if active_parameters:
+        records = {r['runtime_crop_id']: r for d in active_parameters for r in d.get('records', [])}
+        for crop_id, normalized in runtime:
+            record = records.get(crop_id)
+            resolutions.append({
+                'runtime_crop_id': crop_id,
+                'resolution_status': record.get('resolution_status') if record else 'MISSING',
+                'resolved_parameter_identity': record.get('parameter_crop_id') if record else None,
+                'legacy_generic_fallback': True,
+                'verified_parameter_ready': bool(record and record.get('verified_for_pilot')),
+                'engine_connected': False,
+            })
+    elif demo:
+        params = app.load_enhanced_frames().get('crop_params')
+        parameter_ids = {app.normalize_crop_key(v).replace('_','') for v in params['crop']} if params is not None else set()
+        normalized_parameter_keys = {app.normalize_crop_key(v) for v in params['crop']} if params is not None else set()
+        for crop_id, normalized in runtime:
+            resolutions.append(resolution_for(crop_id, parameter_ids,
+                                              legacy_direct_match=normalized in normalized_parameter_keys,
+                                              parameter_authority='ASSUMED'))
+    else:
+        resolutions = [resolution_for(crop_id, set(), legacy_direct_match=False,
+                                      parameter_authority='UNKNOWN') for crop_id,_ in runtime]
+    parameter = {
+        'runtime_crop_count': len(runtime),
+        'exact_parameter_count': sum(r['resolution_status']=='EXACT' for r in resolutions),
+        'reviewed_alias_count': sum(r['resolution_status']=='REVIEWED_ALIAS' for r in resolutions),
+        'legacy_fallback_count': sum(bool(r['legacy_generic_fallback']) for r in resolutions),
+        'ambiguous_count': sum(r['resolution_status']=='AMBIGUOUS' for r in resolutions),
+        'missing_count': sum(r['resolution_status']=='MISSING' for r in resolutions),
+        'verified_parameter_count': sum(bool(r['verified_parameter_ready']) for r in resolutions),
+        'identity_resolved_count': sum(r['resolution_status'] in {'EXACT','REVIEWED_ALIAS'} for r in resolutions),
+        'engine_connected': False,
+        'resolutions': resolutions,
+    }
+    active_phenology = _active_contract_datasets(document, 'crop_phenology')
+    phenology_records = [r for d in active_phenology for r in d.get('records', [])]
+    verified = {r['runtime_crop_id'] for r in phenology_records if r.get('verified_for_pilot') and
+                ((r.get('mode')=='YEAR_SPECIFIC' and r.get('planting_date') and r.get('harvest_date')) or
+                 (r.get('mode')=='CLIMATOLOGICAL_WINDOW' and r.get('planting_window_start') and r.get('planting_window_end') and r.get('harvest_window_start') and r.get('harvest_window_end')))}
+    planting = {r['runtime_crop_id'] for r in phenology_records if r.get('verified_for_pilot') and (r.get('planting_date') or (r.get('planting_window_start') and r.get('planting_window_end')))}
+    harvest = {r['runtime_crop_id'] for r in phenology_records if r.get('verified_for_pilot') and (r.get('harvest_date') or (r.get('harvest_window_start') and r.get('harvest_window_end')))}
+    phenology = {
+        'runtime_crop_count': len(runtime),
+        'verified_planting_count': len(planting), 'verified_harvest_count': len(harvest),
+        'verified_complete_count': len(verified),
+        'assumed_count': len({r['runtime_crop_id'] for r in phenology_records if not r.get('verified_for_pilot')}),
+        'missing_count': len(runtime)-len(verified), 'engine_connected': False,
+        'source_fact': 'Frozen Akkaya runtime/project source data contains no sourced planting or harvest values.' if demo else None,
+    }
+    pilot_ready = (parameter['ambiguous_count']==0 and parameter['missing_count']==0 and
+                   parameter['verified_parameter_count']==len(runtime) and phenology['verified_complete_count']==len(runtime))
+    pilot = {
+        'status': 'PILOT_READY' if pilot_ready else 'PILOT_DATA_NOT_READY',
+        'demo_status': 'DEMO_READY' if demo else 'PROJECT_DATA_REVIEW_REQUIRED',
+        'blocking_reasons': ([] if pilot_ready else [
+            reason for condition,reason in (
+                (parameter['ambiguous_count']>0, 'ambiguous crop parameter resolution'),
+                (parameter['missing_count']>0, 'missing crop parameter resolution'),
+                (parameter['verified_parameter_count']<len(runtime), 'verified parameter coverage incomplete'),
+                (phenology['verified_complete_count']<len(runtime), 'verified phenology coverage incomplete')) if condition]),
+        'engine_connected': False,
+    }
+    return parameter, phenology, pilot
 
 
 def readiness(document):
@@ -32,6 +115,9 @@ def readiness(document):
         issue('economics', 'Planlama yılı ekonomik verisi eksik: ' + ', '.join(sorted(names-economic_names)))
     if any(e.get('currency')!='TRY' for e in economics if e['year']==year):
         issue('currency', 'Mevcut bilimsel motor TRY/TL kullanır; başka para birimi veya belirsiz para birimi sessizce dönüştürülmez.')
+    incomplete_economics = sorted(e['crop_name'] for e in economics if e.get('year')==year and e.get('yield_per_da') is None)
+    if incomplete_economics:
+        issue('economic_completeness', 'Verim/brüt hasılat tamamlığı eksik ürünler: '+', '.join(incomplete_economics), severity='warning')
     if not positive(budget.get('amount')) or budget.get('kind') == 'unknown':
         issue('budget', 'Miktarı ve türü belirlenmiş su bütçesi gerekli.')
     if budget.get('kind') == 'calculated_reference':
@@ -104,6 +190,7 @@ def readiness(document):
         relevant = [i for i in issues if scenario in i['scenarios']]
         status = 'NOT_READY' if any(i['severity']=='error' for i in relevant) else 'READY_WITH_WARNINGS' if relevant else 'READY'
         scenarios[scenario] = dict(status=status, issues=relevant)
+    parameter_readiness, phenology_readiness, pilot_readiness = _parameter_and_phenology_readiness(document, demo)
     return dict(project_id=document['project']['id'], scenarios=scenarios,
         scientific_data=dict(catalog_kc_complete=sum(all(positive(c.get(k)) for k in ('kc_initial','kc_mid','kc_end')) for c in crops),
                              catalog_phenology_complete=sum(all(positive(c.get(k)) for k in ('stage_initial_days','stage_development_days','stage_mid_days','stage_late_days')) for c in crops),
@@ -121,4 +208,9 @@ def readiness(document):
         water_budget=budget, water_data_authority=authority_snapshot(document),
         economic_data_authority=economic_authority_snapshot(document),
         economic_data_reanalysis=document.get('economic_data',{}).get('reanalysis',{}),
+        crop_parameter_readiness=parameter_readiness,
+        phenology_readiness=phenology_readiness,
+        pilot_readiness=pilot_readiness,
+        crop_parameter_data_authority=crop_parameter_authority_snapshot(document),
+        crop_parameter_reanalysis=document.get('crop_parameter_data',{}).get('reanalysis',{}),
         imports=[dict(id=k, status=v.get('status')) for k,v in document['imports'].items()])

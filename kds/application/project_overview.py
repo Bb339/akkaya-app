@@ -41,6 +41,9 @@ def overview(document):
     for economic_type in ('crop_yield','crop_sale_price','crop_support_payment','crop_cost_components','crop_net_profit','analysis_unit_economics','seasonal_economics'):
         active=any(key.startswith(economic_type+'|') for key in document.get('economic_data',{}).get('active',{}))
         status(economic_type,active)
+    for parameter_type in ('crop_water_parameters','crop_phenology'):
+        active=any(key.startswith(parameter_type+'|') for key in document.get('crop_parameter_data',{}).get('active',{}))
+        status(parameter_type,active)
     candidate_units=len({c['analysis_unit_id'] for c in extra.get('candidates',[])}) if not reference else counts['analysis_units']
     return dict(readiness=report,import_status=statuses,candidate_units=candidate_units,
                 last_import_at=max((b.get('uploaded_at','') for b in batches),default=None),
