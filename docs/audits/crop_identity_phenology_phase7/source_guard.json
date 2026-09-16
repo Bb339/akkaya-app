@@ -1,0 +1,15 @@
+{
+  "baseline_commit": "38f8c89d4ab14de6868dcd84f017e6e5378353aa",
+  "candidate_matrix_changed": false,
+  "changed_protected_paths": [],
+  "engine_connected": false,
+  "legacy_app_changed": false,
+  "optimizer_changed": false,
+  "protected_paths": [
+    "app.py",
+    "kds/science",
+    "kds/application/optimization.py",
+    "data"
+  ],
+  "protected_tree_sha256": "4b7da0b2cba2c1af7679b1f930bfa284203d26efffef781d15e4d20df5403573"
+}

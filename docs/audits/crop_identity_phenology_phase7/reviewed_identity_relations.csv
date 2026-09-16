@@ -1,0 +1,10 @@
+runtime_crop_id,parameter_crop_id,relation_type,status,evidence,source,review_note
+KIMYON,KİMYON,UNICODE_EQUIVALENT,REVIEWED,U+0130 and i+U+0307 are textual Unicode forms of KİMYON.,Phase 6 independent validation,Parameter resolution only; global crop ids are unchanged.
+TRTIKALEDANE,TRITIKALEDANE,SPELLING_EQUIVALENT,REVIEWED,Catalog TRTİKALE and parameter TRİTİKALE identify the same grain form.,Phase 6 independent validation,Reviewed spelling relation.
+SALCALIKDOMATES,DOMATESSALCALIK,WORD_ORDER_EQUIVALENT,REVIEWED,Both labels explicitly identify salçalık domates.,Phase 6 independent validation,Explicit relation; no token-sort inference.
+SOFRALIKDOMATES,DOMATESSOFRALIK,WORD_ORDER_EQUIVALENT,REVIEWED,Both labels explicitly identify sofralık domates.,Phase 6 independent validation,Explicit relation; no token-sort inference.
+SIVRIBIBER,BIBERSIVRI,WORD_ORDER_EQUIVALENT,REVIEWED,Both labels explicitly identify sivri biber.,Phase 6 independent validation,Explicit relation; no token-sort inference.
+SALCALIKBIBER,BIBERSALCALIK,WORD_ORDER_EQUIVALENT,REVIEWED,Both labels explicitly identify salçalık biber.,Phase 6 independent validation,Explicit relation; no token-sort inference.
+SILAJLIKMISIR,MISIRSILAJLIK,WORD_ORDER_EQUIVALENT,REVIEWED,Both labels explicitly identify silajlık mısır.,Phase 6 independent validation,The grain identity remains separate.
+KAYSI,KAYISI,REVIEWED_ALIAS,REVIEWED,Existing production canonical alias maps KAYISI to KAYSI.,app.py canonical_crop_key + Phase 6 validation,Parameter resolution only.
+NEKTAR,NEKTARIN,REVIEWED_ALIAS,REVIEWED,Existing production canonical alias maps NEKTARIN to NEKTAR.,app.py canonical_crop_key + Phase 6 validation,Parameter resolution only.

@@ -1,0 +1,45 @@
+{
+  "baseline_commit": "38f8c89d4ab14de6868dcd84f017e6e5378353aa",
+  "candidate_coverage_gap": {
+    "candidate_rows_added": false,
+    "runtime_crop_id": "KIMYON"
+  },
+  "crop_parameter_readiness": {
+    "ambiguous_count": 3,
+    "engine_connected": false,
+    "exact_parameter_count": 45,
+    "identity_resolved_count": 54,
+    "legacy_fallback_count": 13,
+    "missing_count": 1,
+    "reviewed_alias_count": 9,
+    "runtime_crop_count": 58,
+    "verified_parameter_count": 0
+  },
+  "economic_completeness_gap": {
+    "changed": false,
+    "runtime_crop_id": "DUT"
+  },
+  "engine_connected": false,
+  "parameter_only_identity_count": 14,
+  "phenology_readiness": {
+    "assumed_count": 0,
+    "engine_connected": false,
+    "missing_count": 58,
+    "runtime_crop_count": 58,
+    "source_fact": "Frozen Akkaya runtime/project source data contains no sourced planting or harvest values.",
+    "verified_complete_count": 0,
+    "verified_harvest_count": 0,
+    "verified_planting_count": 0
+  },
+  "pilot_readiness": {
+    "blocking_reasons": [
+      "ambiguous crop parameter resolution",
+      "missing crop parameter resolution",
+      "verified parameter coverage incomplete",
+      "verified phenology coverage incomplete"
+    ],
+    "demo_status": "DEMO_READY",
+    "engine_connected": false,
+    "status": "PILOT_DATA_NOT_READY"
+  }
+}

@@ -1,0 +1,5 @@
+runtime_crop_id,status,reason,required_action,verified_for_pilot
+KABAKBAL,AMBIGUOUS,One generic parameter row cannot prove crop-form equivalence.,crop-form-specific external parameter evidence,False
+KABAKCEREZLIK,AMBIGUOUS,One generic parameter row cannot prove crop-form equivalence.,crop-form-specific external parameter evidence,False
+KABAKSAKIZ,AMBIGUOUS,One generic parameter row cannot prove crop-form equivalence.,crop-form-specific external parameter evidence,False
+SOGANTAZE,MISSING,No defensible parameter identity exists.,defensible external crop parameter record,False

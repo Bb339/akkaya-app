@@ -1,0 +1,59 @@
+runtime_crop_name,runtime_crop_id,resolution_status,resolved_parameter_identity,resolution_method,resolution_evidence,parameter_authority,identity_resolution_reviewed,verified_parameter_ready,legacy_generic_fallback,engine_connected
+ARMUT,ARMUT,EXACT,ARMUT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ARPA (Dane),ARPADANE,EXACT,ARPADANE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ARPA (YEŞİLOT),ARPAYESILOT,EXACT,ARPAYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+AYÇİÇEĞİ,AYCICEGI,EXACT,AYCICEGI,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+AYVA,AYVA,EXACT,AYVA,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+BADEM,BADEM,EXACT,BADEM,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+BAĞ,BAG,EXACT,BAG,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+BARBUNYA FASULYE (TAZE),BARBUNYAFASULYETAZE,EXACT,BARBUNYAFASULYETAZE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+BUĞDAY (Dane),BUGDAYDANE,EXACT,BUGDAYDANE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+BUĞDAY (YEŞİLOT),BUGDAYYESILOT,EXACT,BUGDAYYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ÇAVDAR (Dane),CAVDARDANE,EXACT,CAVDARDANE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ÇAVDAR   (YEŞİLOT),CAVDARYESILOT,EXACT,CAVDARYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+CEVİZ,CEVIZ,EXACT,CEVIZ,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ÇİLEK,CILEK,EXACT,CILEK,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+DUT,DUT,EXACT,DUT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ELMA,ELMA,EXACT,ELMA,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ERİK,ERIK,EXACT,ERIK,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+FASULYE (TAZE),FASULYETAZE,EXACT,FASULYETAZE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+FİĞ (YEŞİLOT),FIGYESILOT,EXACT,FIGYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+HIYAR (SOFRALIK),HIYARSOFRALIK,EXACT,HIYARSOFRALIK,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ISPANAK,ISPANAK,EXACT,ISPANAK,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+KABAK (BAL),KABAKBAL,AMBIGUOUS,,AMBIGUOUS_GRANULARITY,One generic parameter row cannot prove crop-form equivalence.,ASSUMED,False,False,True,False
+KABAK (ÇEREZLİK),KABAKCEREZLIK,AMBIGUOUS,,AMBIGUOUS_GRANULARITY,One generic parameter row cannot prove crop-form equivalence.,ASSUMED,False,False,True,False
+KABAK (SAKIZ),KABAKSAKIZ,AMBIGUOUS,,AMBIGUOUS_GRANULARITY,One generic parameter row cannot prove crop-form equivalence.,ASSUMED,False,False,True,False
+KARPUZ,KARPUZ,EXACT,KARPUZ,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+KAVUN,KAVUN,EXACT,KAVUN,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+KAYSI,KAYSI,REVIEWED_ALIAS,KAYISI,REVIEWED_ALIAS,Existing production canonical alias maps KAYISI to KAYSI.,ASSUMED,True,False,True,False
+KİMYON,KIMYON,REVIEWED_ALIAS,KİMYON,UNICODE_EQUIVALENT,U+0130 and i+U+0307 are textual Unicode forms of KİMYON.,ASSUMED,True,False,True,False
+KİRAZ,KIRAZ,EXACT,KIRAZ,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+KURU FASULYE,KURUFASULYE,EXACT,KURUFASULYE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+LAHANA (BEYAZ),LAHANABEYAZ,EXACT,LAHANABEYAZ,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+LAHANA (KIRMIZI),LAHANAKIRMIZI,EXACT,LAHANAKIRMIZI,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+LAVANTA,LAVANTA,EXACT,LAVANTA,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+MARUL,MARUL,EXACT,MARUL,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+MAYDONOZ,MAYDONOZ,EXACT,MAYDONOZ,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+MISIR (Dane),MISIRDANE,EXACT,MISIRDANE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+NEKTAR,NEKTAR,REVIEWED_ALIAS,NEKTARIN,REVIEWED_ALIAS,Existing production canonical alias maps NEKTARIN to NEKTAR.,ASSUMED,True,False,True,False
+NOHUT,NOHUT,EXACT,NOHUT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+PATATES,PATATES,EXACT,PATATES,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+PIRASA,PIRASA,EXACT,PIRASA,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+SALÇALIK BİBER,SALCALIKBIBER,REVIEWED_ALIAS,BIBERSALCALIK,WORD_ORDER_EQUIVALENT,Both labels explicitly identify salçalık biber.,ASSUMED,True,False,True,False
+SALÇALIK DOMATES,SALCALIKDOMATES,REVIEWED_ALIAS,DOMATESSALCALIK,WORD_ORDER_EQUIVALENT,Both labels explicitly identify salçalık domates.,ASSUMED,True,False,True,False
+SARIMSAK (KURU),SARIMSAKKURU,EXACT,SARIMSAKKURU,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ŞEFTALİ,SEFTALI,EXACT,SEFTALI,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+ŞEKER PANCARI,SEKERPANCARI,EXACT,SEKERPANCARI,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+SİLAJLIK MISIR,SILAJLIKMISIR,REVIEWED_ALIAS,MISIRSILAJLIK,WORD_ORDER_EQUIVALENT,Both labels explicitly identify silajlık mısır.,ASSUMED,True,False,True,False
+SİVRİ BİBER,SIVRIBIBER,REVIEWED_ALIAS,BIBERSIVRI,WORD_ORDER_EQUIVALENT,Both labels explicitly identify sivri biber.,ASSUMED,True,False,True,False
+SOFRALIK DOMATES,SOFRALIKDOMATES,REVIEWED_ALIAS,DOMATESSOFRALIK,WORD_ORDER_EQUIVALENT,Both labels explicitly identify sofralık domates.,ASSUMED,True,False,True,False
+SOĞAN (KURU),SOGANKURU,EXACT,SOGANKURU,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+SOĞAN (TAZE),SOGANTAZE,MISSING,,MISSING_PARAMETER,No defensible parameter identity exists.,ASSUMED,False,False,True,False
+SORGUM,SORGUM,EXACT,SORGUM,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+TRİTİKALE  (YEŞİLOT),TRITIKALEYESILOT,EXACT,TRITIKALEYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+TRTİKALE (Dane),TRTIKALEDANE,REVIEWED_ALIAS,TRITIKALEDANE,SPELLING_EQUIVALENT,Catalog TRTİKALE and parameter TRİTİKALE identify the same grain form.,ASSUMED,True,False,True,False
+TURP (KIRMIZI),TURPKIRMIZI,EXACT,TURPKIRMIZI,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+VİŞNE,VISNE,EXACT,VISNE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+YONCA  (YEŞİLOT),YONCAYESILOT,EXACT,YONCAYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+YULAF (Dane),YULAFDANE,EXACT,YULAFDANE,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
+YULAF (YEŞİLOT),YULAFYESILOT,EXACT,YULAFYESILOT,exact_parameter_identity,Exact parameter identity exists.,ASSUMED,True,False,False,False
