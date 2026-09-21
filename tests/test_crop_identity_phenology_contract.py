@@ -108,7 +108,7 @@ def test_days_and_reviewed_parameter_identity_are_preserved(services):
 @pytest.mark.parametrize("content", [
     phenology_csv(planting="not-a-date"),
     phenology_csv(planting="2024-10-01", harvest="2024-09-01"),
-    phenology_csv(planting="2023-04-01"),
+    phenology_csv(planting="2022-04-01"),
     phenology_csv(year=2023, planting="2023-04-01", harvest="2023-09-01"),
     phenology_csv(crop="UNKNOWN"),
     phenology_csv(reference=""),
