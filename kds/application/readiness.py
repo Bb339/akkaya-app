@@ -20,6 +20,45 @@ def _active_contract_datasets(document, data_type):
     return [store.get('datasets', {}).get(dataset_id, {}) for dataset_id in ids]
 
 
+def _readiness_dataset_selection(document, data_type):
+    """Select one explicit planning-year/project scope; otherwise fail closed."""
+    planning_year = int(document['project']['planning_year'])
+    candidates = []
+    for dataset in _active_contract_datasets(document, data_type):
+        records = dataset.get('records', [])
+        years = {int(record['applicable_year']) for record in records if record.get('applicable_year') is not None}
+        if years == {planning_year}:
+            candidates.append(dataset)
+    scopes = sorted({record.get('geographic_scope') for dataset in candidates
+                     for record in dataset.get('records', []) if record.get('geographic_scope')})
+    configured_scope = (document.get('project', {}).get('pilot_geographic_scope') or
+                        document.get('metadata', {}).get('pilot_geographic_scope'))
+    if configured_scope:
+        selected = [dataset for dataset in candidates if
+                    {record.get('geographic_scope') for record in dataset.get('records', [])} == {configured_scope}]
+        status = 'SELECTED' if len(selected) == 1 else 'MISSING_CONFIGURED_SCOPE' if not selected else 'AMBIGUOUS_CONFIGURED_SCOPE'
+        return selected if status == 'SELECTED' else [], {
+            'status': status, 'planning_year': planning_year, 'required_scope': configured_scope,
+            'available_scopes': scopes,
+        }
+    if len(scopes) > 1:
+        return [], {'status': 'AMBIGUOUS_SCOPE', 'planning_year': planning_year,
+                    'required_scope': None, 'available_scopes': scopes}
+    if not scopes:
+        return [], {'status': 'MISSING_PLANNING_YEAR_DATASET', 'planning_year': planning_year,
+                    'required_scope': None, 'available_scopes': []}
+    if scopes[0].strip().casefold() != 'project':
+        return [], {'status': 'NON_PROJECT_SCOPE_REQUIRES_EXPLICIT_SELECTION', 'planning_year': planning_year,
+                    'required_scope': None, 'available_scopes': scopes}
+    selected = [dataset for dataset in candidates if
+                {record.get('geographic_scope') for record in dataset.get('records', [])} == {scopes[0]}]
+    status = 'SELECTED' if len(selected) == 1 else 'AMBIGUOUS_PROJECT_SCOPE'
+    return selected if status == 'SELECTED' else [], {
+        'status': status, 'planning_year': planning_year, 'required_scope': 'project',
+        'available_scopes': scopes,
+    }
+
+
 def _parameter_and_phenology_readiness(document, demo):
     """Expose data-contract truth without connecting new datasets to the engine."""
     import app
@@ -31,7 +70,7 @@ def _parameter_and_phenology_readiness(document, demo):
         legacy_keys = ({app.normalize_crop_key(v) for v in legacy_params['crop']}
                        if legacy_params is not None else set())
         legacy_direct_by_crop = {crop_id: normalized in legacy_keys for crop_id, normalized in runtime}
-    active_parameters = _active_contract_datasets(document, 'crop_water_parameters')
+    active_parameters, parameter_selection = _readiness_dataset_selection(document, 'crop_water_parameters')
     resolutions = []
     if active_parameters:
         records = {r['runtime_crop_id']: r for d in active_parameters for r in d.get('records', [])}
@@ -44,7 +83,8 @@ def _parameter_and_phenology_readiness(document, demo):
                 # Contract imports are deliberately disconnected in Phase 7.  This
                 # flag therefore describes the unchanged legacy engine path.
                 'legacy_generic_fallback': not legacy_direct_by_crop.get(crop_id, False),
-                'verified_parameter_ready': bool(record and record.get('verified_for_pilot')),
+                'verified_parameter_evidence': bool(record and (record.get('verified_parameter_evidence') or record.get('verified_for_pilot'))),
+                'verified_parameter_ready': False,
                 'engine_connected': False,
             })
     elif demo:
@@ -64,11 +104,13 @@ def _parameter_and_phenology_readiness(document, demo):
         'ambiguous_count': sum(r['resolution_status']=='AMBIGUOUS' for r in resolutions),
         'missing_count': sum(r['resolution_status']=='MISSING' for r in resolutions),
         'verified_parameter_count': sum(bool(r['verified_parameter_ready']) for r in resolutions),
+        'verified_parameter_evidence_count': sum(bool(r.get('verified_parameter_evidence')) for r in resolutions),
         'identity_resolved_count': sum(r['resolution_status'] in {'EXACT','REVIEWED_ALIAS'} for r in resolutions),
         'engine_connected': False,
+        'dataset_selection': parameter_selection,
         'resolutions': resolutions,
     }
-    active_phenology = _active_contract_datasets(document, 'crop_phenology')
+    active_phenology, phenology_selection = _readiness_dataset_selection(document, 'crop_phenology')
     phenology_records = [r for d in active_phenology for r in d.get('records', [])]
     verified = {r['runtime_crop_id'] for r in phenology_records if r.get('verified_for_pilot') and
                 ((r.get('mode')=='YEAR_SPECIFIC' and r.get('planting_date') and r.get('harvest_date')) or
@@ -81,19 +123,26 @@ def _parameter_and_phenology_readiness(document, demo):
         'verified_complete_count': len(verified),
         'assumed_count': len({r['runtime_crop_id'] for r in phenology_records if not r.get('verified_for_pilot')}),
         'missing_count': len(runtime)-len(verified), 'engine_connected': False,
+        'dataset_selection': phenology_selection,
         'source_fact': 'Frozen Akkaya runtime/project source data contains no sourced planting or harvest values.' if demo else None,
     }
-    pilot_ready = (parameter['ambiguous_count']==0 and parameter['missing_count']==0 and
+    pilot_ready = (len(runtime)>0 and parameter_selection['status']=='SELECTED' and
+                   phenology_selection['status']=='SELECTED' and
+                   parameter['ambiguous_count']==0 and parameter['missing_count']==0 and
                    parameter['verified_parameter_count']==len(runtime) and phenology['verified_complete_count']==len(runtime))
     pilot = {
         'status': 'PILOT_READY' if pilot_ready else 'PILOT_DATA_NOT_READY',
         'demo_status': 'DEMO_READY' if demo else 'PROJECT_DATA_REVIEW_REQUIRED',
         'blocking_reasons': ([] if pilot_ready else [
             reason for condition,reason in (
+                (len(runtime)==0, 'runtime crop catalog is empty'),
+                (parameter_selection['status']!='SELECTED', 'no unambiguous verified parameter dataset for project planning year and pilot geographic scope'),
+                (phenology_selection['status']!='SELECTED', 'no unambiguous verified phenology dataset for project planning year and pilot geographic scope'),
                 (parameter['ambiguous_count']>0, 'ambiguous crop parameter resolution'),
                 (parameter['missing_count']>0, 'missing crop parameter resolution'),
                 (parameter['verified_parameter_count']<len(runtime), 'verified parameter coverage incomplete'),
-                (phenology['verified_complete_count']<len(runtime), 'verified phenology coverage incomplete')) if condition]),
+                (phenology['verified_complete_count']<len(runtime), 'verified phenology coverage incomplete'),
+                (True, 'crop parameter and phenology datasets are not connected to the scientific engine')) if condition]),
         'engine_connected': False,
     }
     return parameter, phenology, pilot
