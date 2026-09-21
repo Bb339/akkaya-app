@@ -67,7 +67,9 @@ def _common(data: dict[str, Any], document: dict[str, Any], batch: dict[str, Any
         **identity, "applicable_year": int(year_value), "geographic_scope": scope,
         "authority_class": cls.value, "source": source, "source_reference": reference,
         "notes": _text(data, "notes") or None, "source_row": line, "synthetic": synthetic,
-        "verified_for_pilot": bool(is_verified_authority(cls) and not synthetic), "engine_connected": False,
+        "verified_for_pilot": bool(is_verified_authority(cls) and not synthetic),
+        "verified_parameter_evidence": bool(is_verified_authority(cls) and not synthetic),
+        "engine_connected": False,
     }
 
 
@@ -113,7 +115,10 @@ def validate_crop_parameter_table(batch: dict[str, Any], document: dict[str, Any
                     raise ValueError("DAYS stage durations must have a positive total.")
                 record["stage_value_mode"] = mode
                 record["stage_total"] = sum(stages)
-                if max(record["kc_ini"], record["kc_mid"], record["kc_end"]) > 2.0:
+                maximum_kc = max(record["kc_ini"], record["kc_mid"], record["kc_end"])
+                if maximum_kc > 3.0:
+                    raise ValueError("Kc greater than 3.0 is not accepted.")
+                if maximum_kc > 2.0:
                     issue("WARNING", "unusual_kc", "Kc above 2.0 exceeds the repository's documented review threshold; confirmation requires acknowledgment.", line)
             else:
                 mode = _text(data, "mode").upper()
@@ -122,25 +127,38 @@ def validate_crop_parameter_table(batch: dict[str, Any], document: dict[str, Any
                     raise ValueError("season must be PRIMARY, SECONDARY or PERENNIAL.")
                 record.update(mode=mode, season=season, planting_date=None, harvest_date=None,
                               planting_window_start=None, planting_window_end=None,
-                              harvest_window_start=None, harvest_window_end=None)
+                              harvest_window_start=None, harvest_window_end=None,
+                              season_year_semantics=None)
                 if mode == "YEAR_SPECIFIC":
+                    window_fields = ("planting_window_start", "planting_window_end", "harvest_window_start", "harvest_window_end")
+                    if any(_text(data, field) for field in window_fields):
+                        raise ValueError("YEAR_SPECIFIC records must not contain climatological window fields.")
                     planting = _iso_date(data.get("planting_date"), "planting_date")
                     harvest = _iso_date(data.get("harvest_date"), "harvest_date")
-                    if int(planting[:4]) != record["applicable_year"] or int(harvest[:4]) != record["applicable_year"]:
-                        raise ValueError("YEAR_SPECIFIC dates must match applicable_year.")
+                    planting_year, harvest_year = int(planting[:4]), int(harvest[:4])
+                    if harvest_year != record["applicable_year"] or planting_year not in {record["applicable_year"] - 1, record["applicable_year"]}:
+                        raise ValueError("Harvest year must equal applicable_year; planting year must be applicable_year or the previous year.")
                     if planting >= harvest:
                         raise ValueError("planting_date must be before harvest_date.")
-                    record.update(planting_date=planting, harvest_date=harvest)
+                    semantics = "CROSSES_CALENDAR_YEAR" if planting_year < harvest_year else "SAME_CALENDAR_YEAR"
+                    record.update(planting_date=planting, harvest_date=harvest,
+                                  season_year_semantics=semantics)
                 elif mode == "CLIMATOLOGICAL_WINDOW":
+                    if _text(data, "planting_date") or _text(data, "harvest_date"):
+                        raise ValueError("CLIMATOLOGICAL_WINDOW records must not contain ISO date fields.")
                     fields = ("planting_window_start", "planting_window_end", "harvest_window_start", "harvest_window_end")
                     values = {field: _month_day(data.get(field), field) for field in fields}
                     if values["planting_window_start"] > values["planting_window_end"]:
                         raise ValueError("planting window start must not follow its end.")
                     if values["harvest_window_start"] > values["harvest_window_end"]:
                         raise ValueError("harvest window start must not follow its end.")
-                    if values["planting_window_end"] >= values["harvest_window_start"]:
-                        raise ValueError("planting window must precede harvest window for the declared season.")
-                    record.update(values)
+                    if values["planting_window_end"] < values["harvest_window_start"]:
+                        semantics = "SAME_CALENDAR_YEAR"
+                    elif values["planting_window_start"] > values["harvest_window_end"]:
+                        semantics = "CROSSES_CALENDAR_YEAR"
+                    else:
+                        raise ValueError("Planting and harvest windows overlap or have an impossible seasonal chronology.")
+                    record.update(values, season_year_semantics=semantics)
                 else:
                     raise ValueError("mode must be YEAR_SPECIFIC or CLIMATOLOGICAL_WINDOW.")
             identity = record["runtime_crop_id"]
