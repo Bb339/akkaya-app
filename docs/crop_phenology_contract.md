@@ -4,10 +4,10 @@
 
 Two modes are supported:
 
-- `YEAR_SPECIFIC` requires full ISO dates (`YYYY-MM-DD`) for planting and harvest. Both dates must use the project's planning year, and planting must precede harvest.
-- `CLIMATOLOGICAL_WINDOW` requires separate month-day (`MM-DD`) start and end values for planting and harvest windows. Each value must be a valid calendar month/day; each window must be ordered and the planting window must precede the harvest window.
+- `YEAR_SPECIFIC` requires full ISO dates (`YYYY-MM-DD`). `applicable_year` is the planning/harvest-season year: harvest must occur in that year, while planting may occur in that year or the immediately preceding year. Planting must precede harvest.
+- `CLIMATOLOGICAL_WINDOW` requires separate month-day (`MM-DD`) start and end values for planting and harvest windows. Each window must be internally ordered. A spring-to-autumn sequence is `SAME_CALENDAR_YEAR`; an autumn-to-next-summer sequence is `CROSSES_CALENDAR_YEAR`. Overlapping/interleaved windows are invalid.
 
-Mode-specific fields cannot be mixed. The crop must exist in the project's runtime catalog, the scope must be present, the season must be explicit, and source plus source reference are mandatory. Invalid dates are errors. `OFFICIAL`, `LOCAL_INSTITUTIONAL`, `PEER_REVIEWED`, and `EXPERT_VALIDATED` can qualify as verified authority; `ASSUMED`, `UNKNOWN`, synthetic, and `not_official` records cannot count as verified pilot data.
+Mode-specific fields cannot be mixed and are rejected rather than ignored. Every normalized and persisted record carries `season_year_semantics` as `SAME_CALENDAR_YEAR` or `CROSSES_CALENDAR_YEAR`. The crop must exist in the project's runtime catalog, the scope must be present, the season must be explicit, and source plus source reference are mandatory. Invalid dates are errors. `OFFICIAL`, `LOCAL_INSTITUTIONAL`, `PEER_REVIEWED`, and `EXPERT_VALIDATED` can qualify as verified evidence; `ASSUMED`, `UNKNOWN`, synthetic, and `not_official` records cannot.
 
 The frozen Akkaya runtime/project source data contains no sourced planting or harvest values. Current verified completeness is therefore 0/58. The schema's ability to import dates does not imply that those values currently exist.
 
