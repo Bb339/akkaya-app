@@ -201,6 +201,24 @@ def test_stage_mode_only_change_is_visible():
     assert preview["changes"][0]["new_values"]["stage_value_mode"] == "FRACTIONS"
 
 
+def test_phenology_semantic_changes_are_visible_in_preview():
+    old = dict(runtime_crop_id="TURPKIRMIZI", applicable_year=2024,
+               geographic_scope="project", authority_class="ASSUMED", mode="YEAR_SPECIFIC",
+               season="PRIMARY", season_year_semantics="SAME_CALENDAR_YEAR",
+               planting_date="2024-04-15", harvest_date="2024-09-01",
+               planting_window_start=None, planting_window_end=None,
+               harvest_window_start=None, harvest_window_end=None)
+    document = {"crop_parameter_data": {"active": {"crop_phenology|2024|project": "old"},
+        "datasets": {"old": {"dataset_id": "old", "authority_class": "ASSUMED",
+                               "records": [old]}}}}
+    incoming = [{**old, "season_year_semantics": "CROSSES_CALENDAR_YEAR",
+                 "planting_date": "2023-10-15", "harvest_date": "2024-06-15"}]
+    preview = replacement_preview(document, "crop_phenology", incoming)
+    assert preview["change_count"] == 1
+    assert preview["changes"][0]["old_values"]["season_year_semantics"] == "SAME_CALENDAR_YEAR"
+    assert preview["changes"][0]["new_values"]["season_year_semantics"] == "CROSSES_CALENDAR_YEAR"
+
+
 def test_kc_limits_and_stage_modes(contract):
     _, service = contract
     assert upload(service, "crop_water_parameters", parameters(kc_mid=3.01))["status"] == "invalid"

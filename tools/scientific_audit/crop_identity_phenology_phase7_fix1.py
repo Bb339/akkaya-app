@@ -102,8 +102,22 @@ def generate(output: Path = OUTPUT, test_report: dict[str, Any] | None = None):
            "p_ini": .2, "p_dev": .3, "p_mid": .3, "p_late": .2, "stage_total": 1.0}
     document = {"crop_parameter_data": {"active": {"crop_water_parameters|2024|project": "old"},
                 "datasets": {"old": {"dataset_id": "old", "authority_class": "ASSUMED", "records": [old]}}}}
-    semantic_preview = preview(document, "crop_water_parameters", [{**old, "stage_value_mode": "FRACTIONS"}])
-    _write(output / "preview_semantic_cases.json", semantic_preview)
+    stage_preview = preview(document, "crop_water_parameters", [{**old, "stage_value_mode": "FRACTIONS"}])
+    old_phenology = {"runtime_crop_id": "TURPKIRMIZI", "applicable_year": 2024,
+                     "geographic_scope": "project", "authority_class": "ASSUMED",
+                     "mode": "YEAR_SPECIFIC", "season": "PRIMARY",
+                     "season_year_semantics": "SAME_CALENDAR_YEAR", "planting_date": "2024-04-15",
+                     "harvest_date": "2024-09-01", "planting_window_start": None,
+                     "planting_window_end": None, "harvest_window_start": None, "harvest_window_end": None}
+    phenology_document = {"crop_parameter_data": {"active": {"crop_phenology|2024|project": "old"},
+                          "datasets": {"old": {"dataset_id": "old", "authority_class": "ASSUMED",
+                                                "records": [old_phenology]}}}}
+    phenology_preview = preview(phenology_document, "crop_phenology", [{**old_phenology,
+        "season_year_semantics": "CROSSES_CALENDAR_YEAR", "planting_date": "2023-10-15",
+        "harvest_date": "2024-06-15"}])
+    semantic_previews = {"stage_value_mode_change": stage_preview,
+                         "phenology_season_year_change": phenology_preview}
+    _write(output / "preview_semantic_cases.json", semantic_previews)
     changed = subprocess.run(["git", "diff", "--name-only", BASELINE, "--", *PROTECTED],
                              cwd=ROOT, check=True, text=True, capture_output=True).stdout.splitlines()
     guard = {"baseline_commit": BASELINE, "protected_paths": list(PROTECTED),
@@ -124,7 +138,7 @@ The scientific engine remains disconnected. No crop, Kc value, date, candidate r
     assert seasons["climatological_cross_year"]["season_year_semantics"] == "CROSSES_CALENDAR_YEAR"
     assert all(case["pilot_status"] == "PILOT_DATA_NOT_READY" for case in readiness_cases.values())
     assert fallback["verified_parameter_evidence"] and not fallback["verified_parameter_ready"]
-    assert semantic_preview["change_count"] == 1
+    assert stage_preview["change_count"] == 1 and phenology_preview["change_count"] == 1
     return {"season_cases": len(seasons), "readiness_cases": len(readiness_cases),
             "protected_changes": changed}
 
