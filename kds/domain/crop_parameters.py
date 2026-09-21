@@ -171,7 +171,7 @@ def finite_nonnegative(value: Any, name: str) -> float:
 
 
 def resolution_for(runtime_crop_id: str, parameter_ids: Iterable[str], *, legacy_direct_match: bool,
-                   parameter_authority: str = "ASSUMED") -> dict[str, Any]:
+                   parameter_authority: str = "ASSUMED", engine_connected: bool = False) -> dict[str, Any]:
     available = set(parameter_ids)
     reviewed = {r.runtime_crop_id: r for r in REVIEWED_IDENTITY_RELATIONS if r.status is RelationStatus.REVIEWED}
     ambiguous = {r.runtime_crop_id: r for r in AMBIGUOUS_GRANULARITY_RELATIONS}
@@ -186,6 +186,8 @@ def resolution_for(runtime_crop_id: str, parameter_ids: Iterable[str], *, legacy
     else:
         status, resolved, method, evidence = ResolutionStatus.MISSING, None, "MISSING_PARAMETER", "No defensible parameter identity exists."
     identity_verified = status in {ResolutionStatus.EXACT, ResolutionStatus.REVIEWED_ALIAS}
+    evidence_verified = bool(identity_verified and is_verified_authority(parameter_authority))
+    legacy_fallback = not legacy_direct_match
     return {
         "runtime_crop_id": runtime_crop_id,
         "resolution_status": status.value,
@@ -193,11 +195,13 @@ def resolution_for(runtime_crop_id: str, parameter_ids: Iterable[str], *, legacy
         "resolution_method": method,
         "resolution_evidence": evidence,
         "identity_resolution_reviewed": identity_verified,
-        "legacy_generic_fallback": not legacy_direct_match,
-        "legacy_fallback_status": ResolutionStatus.LEGACY_GENERIC_FALLBACK.value if not legacy_direct_match else None,
+        "legacy_generic_fallback": legacy_fallback,
+        "legacy_engine_uses_fallback": legacy_fallback,
+        "legacy_fallback_status": ResolutionStatus.LEGACY_GENERIC_FALLBACK.value if legacy_fallback else None,
         "parameter_authority": authority(parameter_authority).value,
-        "verified_parameter_ready": bool(identity_verified and is_verified_authority(parameter_authority)),
-        "engine_connected": False,
+        "verified_parameter_evidence": evidence_verified,
+        "verified_parameter_ready": bool(evidence_verified and not legacy_fallback and engine_connected),
+        "engine_connected": bool(engine_connected),
         "identity_resolution_revision": IDENTITY_RESOLUTION_REVISION,
     }
 
@@ -230,9 +234,9 @@ def dataset_authority(records: list[dict[str, Any]]) -> str:
 def _record_values(data_type: str, record: dict[str, Any] | None) -> dict[str, Any] | None:
     if record is None:
         return None
-    fields = (("kc_ini", "kc_mid", "kc_end", "p_ini", "p_dev", "p_mid", "p_late")
+    fields = (("kc_ini", "kc_mid", "kc_end", "stage_value_mode", "p_ini", "p_dev", "p_mid", "p_late", "stage_total")
               if data_type == "crop_water_parameters" else
-              ("mode", "season", "planting_date", "harvest_date", "planting_window_start",
+              ("mode", "season", "season_year_semantics", "planting_date", "harvest_date", "planting_window_start",
                "planting_window_end", "harvest_window_start", "harvest_window_end"))
     return {field: record.get(field) for field in fields}
 
