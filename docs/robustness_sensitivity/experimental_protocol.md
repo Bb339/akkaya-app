@@ -59,6 +59,10 @@ The computational pilot consists of one S1 baseline scenario, objective `water_s
 
 Candidate seeds are fixed in advance as `101, 211, 307, 401, 503, 601, 701, 809, 907, 1009`. Let `T` be the median elapsed seconds of the three algorithm pilot runs. Use ten seeds when the projected algorithm/seed core (`3 algorithms × 2 scenarios × 10 seeds × T`) is at most 3,600 seconds; otherwise use the first five seeds. The selected count and pilot evidence must be committed to this protocol before result-bearing runs.
 
+### Pilot decision recorded before result-bearing runs
+
+The three pilot runtimes were GA 52.0874868 s, ACO 64.0110012 s and ABC 86.2592738 s. The median was 64.0110012 s, giving a preregistered ten-seed core projection of 3,840.660072 s. Because this exceeds 3,600 s, the fixed experimental seed set is **101, 211, 307, 401 and 503**. The GA same-input repeat was identical after excluding timestamp/runtime metadata. Full machine-readable evidence is stored in `docs/experiments/robustness_sensitivity/pilot_evidence.json`.
+
 Accepted algorithm controls are fixed:
 
 - GA: population 12, generations 10, crossover 0.70, mutation 0.08

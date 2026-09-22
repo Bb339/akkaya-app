@@ -1,0 +1,32 @@
+{
+  "decision_threshold_seconds": 3600,
+  "determinism_repeat_run_id": "bd65a34ee3afe427aaf9",
+  "median_runtime_seconds": 64.01100120000046,
+  "pilot_runs": [
+    {
+      "algorithm": "GA",
+      "run_id": "8c3e56bc42a2698ab561",
+      "runtime_seconds": 52.08748680000281
+    },
+    {
+      "algorithm": "ACO",
+      "run_id": "6c33db42b9c4e9816fc5",
+      "runtime_seconds": 64.01100120000046
+    },
+    {
+      "algorithm": "ABC",
+      "run_id": "103af6718b94e5207d9c",
+      "runtime_seconds": 86.25927379999848
+    }
+  ],
+  "projected_ten_seed_core_seconds": 3840.660072000028,
+  "same_seed_deterministic": true,
+  "selected_seed_count": 5,
+  "selected_seeds": [
+    101,
+    211,
+    307,
+    401,
+    503
+  ]
+}
