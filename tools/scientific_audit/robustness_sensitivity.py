@@ -263,13 +263,15 @@ def plan() -> list[dict[str, Any]]:
     return list(unique.values())
 
 
-def run_all() -> None:
+def run_all(shard_index: int = 0, shard_count: int = 1) -> None:
     app, build_demo = imports()
     document = build_demo(app.DATA_DIR)
-    rows = plan()
-    write_csv(OUT / "scenario_grid.csv", [{**r, "scenario_hash": digest(r)} for r in rows])
+    all_rows = plan()
+    if shard_index == 0:
+        write_csv(OUT / "scenario_grid.csv", [{**r, "scenario_hash": digest(r)} for r in all_rows])
+    rows = [row for index, row in enumerate(all_rows) if index % shard_count == shard_index]
     for index, spec in enumerate(rows, 1):
-        print(f"[{index}/{len(rows)}] {spec['family']} {spec['scenario']} {spec['algorithm']} seed={spec['seed']} ratio={spec['water_budget_ratio']:.9g} shock={spec['economic_shock']:+.0%}", flush=True)
+        print(f"[shard {shard_index + 1}/{shard_count}; {index}/{len(rows)}] {spec['family']} {spec['scenario']} {spec['algorithm']} seed={spec['seed']} ratio={spec['water_budget_ratio']:.9g} shock={spec['economic_shock']:+.0%}", flush=True)
         run_spec(document, spec)
 
 
@@ -409,12 +411,15 @@ def build_publication_docs(records, summaries, seed_rows, agreement, water, econ
 
 
 def main() -> None:
-    parser=argparse.ArgumentParser(); parser.add_argument("command",choices=("guard","pilot","grid","run","build")); args=parser.parse_args()
+    parser=argparse.ArgumentParser(); parser.add_argument("command",choices=("guard","pilot","grid","run","build")); parser.add_argument("--shard-index",type=int,default=0); parser.add_argument("--shard-count",type=int,default=1); args=parser.parse_args()
     OUT.mkdir(parents=True,exist_ok=True)
     if args.command=="guard": write_json(OUT/"source_guard_before.json",source_hashes())
     elif args.command=="pilot": pilot()
     elif args.command=="grid": write_csv(OUT/"scenario_grid.csv",[{**r,"scenario_hash":digest(r)} for r in plan()])
-    elif args.command=="run": run_all()
+    elif args.command=="run":
+        if args.shard_count < 1 or not 0 <= args.shard_index < args.shard_count:
+            parser.error("shard index must be in [0, shard count)")
+        run_all(args.shard_index,args.shard_count)
     elif args.command=="build": build_outputs()
 
 
