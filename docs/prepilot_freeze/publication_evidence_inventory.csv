@@ -1,0 +1,13 @@
+table_figure_candidate,source_file,source_commit,generation_method,unit,scenario_population,frozen,publication_safe
+Scientific lineage table,docs/prepilot_freeze/scientific_lineage.csv,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Git tag/object resolution,commit,accepted V1/V2 lineage,YES,YES
+Akkaya reference-value table,docs/prepilot_freeze/reference_values.json,bb0c6ff516a7d995c2894ee66285ebf124ac9340,read-only adapter plus frozen audits,da; m3; TL; count,179-unit Akkaya reference,YES,YES WITH CLAIM BOUNDARY
+Water reconciliation table,docs/audits/water_supply_phase3/annual_water_reconciliation.json,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Phase 3 deterministic audit,m3/year,2024 model inputs,YES,YES WITH AUTHORITY LABELS
+Protected perennial floor,docs/audits/water_supply_phase3/protected_perennial_demand_summary.json,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Phase 3 model-floor calculation,m3; da; units,52 protected units,YES,YES AS MODEL FLOOR
+Economics reconciliation,docs/audits/economics_phase4/cost_breakdown_reconciliation.csv,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Phase 4 deterministic audit,TL/da,58-crop catalog,YES,YES AS PROXY AUDIT
+Crop-catalog reconciliation,docs/audits/crop_catalog_phase6/root_cause_breakdown.json,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Phase 6 identity audit,crop identities,58 runtime / 69 parameter,YES,YES
+Phenology contract cases,docs/audits/crop_identity_phenology_phase7_fix1/season_year_cases.json,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Phase 7 corrective generator,date/window semantics,synthetic contract cases,YES,YES AS CONTRACT EVIDENCE
+Turp root-cause tables,docs/audits/turp_dominance/root_cause_attribution.csv,bb0c6ff516a7d995c2894ee66285ebf124ac9340,Phase 5 read-only audit,rank; units; da; TL/m3,Akkaya model and frozen fixtures,YES,YES WITH FIXTURE SCOPE
+Generalization acceptance,docs/generalization_acceptance.md,bb0c6ff516a7d995c2894ee66285ebf124ac9340,public-import 24-unit synthetic tests,units; candidates,synthetic project,YES,YES AS SOFTWARE EVIDENCE
+Seeded algorithm fixtures,tests/fixtures/scientific_baseline,bb0c6ff516a7d995c2894ee66285ebf124ac9340,GA/ACO/ABC seeded parity,model outputs,full Akkaya fixtures at seeds 123/456/789,YES,YES AS REPRODUCIBILITY EVIDENCE
+Pilot readiness snapshot,docs/prepilot_freeze/pilot_readiness_snapshot.json,bb0c6ff516a7d995c2894ee66285ebf124ac9340,read-only readiness evaluation,counts/status,Akkaya 2024,YES,YES
+Publication limitation matrix,docs/prepilot_freeze/publication_limitation_matrix.csv,bb0c6ff516a7d995c2894ee66285ebf124ac9340,claim-boundary synthesis,n/a,manuscript scope,YES,YES
