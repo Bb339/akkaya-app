@@ -423,13 +423,24 @@ def build_active_records() -> None:
         result = source["result"]
         unit_ids = sorted(str(row["id"]) for row in result.get("parcels", []))
         active = {k: deepcopy(v) for k, v in source.items() if k != "result"}
+        definition = source["definition"]
         active.update(
+            scenario=definition["scenario"],
+            algorithm=definition["algorithm"],
+            seed=definition["seed"],
+            objective=definition["objective"],
+            family=definition["family"],
+            economic_shock=definition["economic_shock"],
+            water_budget_ratio=definition["water_budget_ratio"],
             population=POPULATION,
             analysis_units=ANALYSIS_UNITS,
             analysis_unit_ids=unit_ids,
             area_da=AREA_DA,
             planning_year=PLANNING_YEAR,
             classification=classify_record(source),
+            candidate_raw_csv_sha256=CANDIDATE_RAW_CSV_SHA256,
+            candidate_canonical_resource_sha256=CANDIDATE_CANONICAL_RESOURCE_SHA256,
+            candidate_git_blob_id=CANDIDATE_GIT_BLOB_ID,
             active_record_version=CORRECTION_VERSION,
             source_raw_path=source_path.relative_to(ROOT).as_posix(),
             source_raw_sha256=file_hash(source_path),
@@ -620,20 +631,22 @@ def build_outputs() -> None:
         previous=row
     write_csv(OUT / "water_threshold_analysis.csv", water)
     economic=[flatten(r) for r in records if "ECONOMIC" in r["definition"]["family"]]
-    baselines = {
-        scenario: next(
-            float(r["total_profit_tl"]) for r in economic
-            if r["scenario"] == scenario and float(r["economic_shock"]) == 0.0
-        )
-        for scenario in ("S1", "S2")
-    }
+    baselines = {scenario: next(r for r in economic if r["scenario"] == scenario and float(r["economic_shock"]) == 0.0)
+                 for scenario in ("S1", "S2")}
     for row in economic:
         row["factor"]="net_profit_per_da"; row["price_status"]="PRICE_SENSITIVITY_NOT_EXECUTABLE_ON_FROZEN_ENGINE"; row["yield_status"]="YIELD_SENSITIVITY_NOT_EXECUTABLE_ON_FROZEN_ENGINE"
-        row["expected_linear_profit_tl"] = baselines[row["scenario"]] * (1.0 + float(row["economic_shock"]))
-        row["linear_scaling_residual_tl"] = float(row["total_profit_tl"]) - row["expected_linear_profit_tl"]
-        row["linear_scaling_tolerance_tl"] = max(1e-6, abs(row["expected_linear_profit_tl"]) * 1e-12)
-        peers=[r for r in economic if r["scenario"]==row["scenario"]]
-        row["composition_response"]="UNIFORM_SHOCK_INVARIANT_OBSERVED" if len({(r["top1_crop"],r["hhi"],r["crop_shares"]) for r in peers})==1 else "COMPOSITION_CHANGED"
+        baseline = baselines[row["scenario"]]
+        row["input_multiplier"] = 1.0 + float(row["economic_shock"])
+        baseline_profit = float(baseline["total_profit_tl"])
+        row["output_profit_ratio_to_baseline"] = float(row["total_profit_tl"]) / baseline_profit if baseline_profit else 0.0
+        comparison = distances(json.loads(baseline["crop_areas_da"]), json.loads(row["crop_areas_da"]))
+        row.update(comparison)
+        row["hhi_difference"] = float(row["hhi"]) - float(baseline["hhi"])
+        row["top1_agreement"] = row["top1_crop"] == baseline["top1_crop"]
+        base_top3, row_top3 = set(json.loads(baseline["top3_crops"])), set(json.loads(row["top3_crops"]))
+        row["top3_jaccard"] = len(base_top3 & row_top3) / max(1, len(base_top3 | row_top3))
+        invariant = all(abs(float(row[key])) <= 1e-12 for key in ("l1_share_distance", "bray_curtis", "hhi_difference")) and bool(row["top1_agreement"]) and float(row["top3_jaccard"]) == 1.0
+        row["composition_response"] = "UNIFORM_INPUT_SHOCK_COMPOSITION_INVARIANT_OBSERVED" if invariant else "COMPOSITION_RESPONSE_OBSERVED"
     write_csv(OUT / "economic_sensitivity.csv", economic)
 
     source_before=json.loads((OUT/"source_guard_before.json").read_text(encoding="utf-8")) if (OUT/"source_guard_before.json").exists() else source_hashes()
@@ -642,21 +655,27 @@ def build_outputs() -> None:
     manifest={"baseline_tag":BASELINE_TAG,"baseline_commit":BASELINE_COMMIT,"scientific_source_commit":SCIENTIFIC_COMMIT,
               "correction_version":CORRECTION_VERSION,
               "economic_overlay_contract":"all_connected_runtime_net_profit_inputs",
-              "nonlinear_transform_policy":"evaluate_frozen_profit_realism_in_baseline_domain_then_scale_output",
+              "nonlinear_transform_policy":"scaled_inputs_pass_through_unchanged_frozen_engine",
               "population":{"label":"FULL_REFERENCE_PROJECT_EXPERIMENT","analysis_units":179,"area_da":134919},
-              "scenario_grid_hash":file_hash(OUT/"scenario_grid.csv"),"selected_seeds":list(selected_seeds()),"algorithms":list(ALGORITHMS),
+              "scenario_grid_canonical_sha256":scenario_grid_canonical_sha256(plan()),
+              "scenario_grid_file_sha256":file_hash(OUT/"scenario_grid.csv"),
+              "scenario_grid_hash_alias_semantics":"backward-compatible alias of scenario_grid_canonical_sha256",
+              "selected_seeds":list(selected_seeds()),"algorithms":list(ALGORITHMS),
               "objectives":{"water_and_robustness":"water_saving","economic":"max_profit","excluded":["water_efficiency"]},
               "scenarios":["S1","S2"],"formulas":{"critical_multiplier":"protected_perennial_floor_m3 / base_engine_budget_m3","hhi":"sum(crop_share^2)","l1":"sum(abs(p-q))","bray_curtis":"sum(abs(a-b))/sum(a+b)","weighted_jaccard":"sum(min(a,b))/sum(max(a,b))"},
               "excluded_factors":{"price":"not independently connected","yield":"not independently connected","combined_stress":"requires new preregistration"},
               "excluded_runs":["price shocks: connected=false","yield shocks: connected=false","water_efficiency objective: preregistered computational exclusion","combined stress: requires new preregistration"],
               "failed_runs":[],"active_publication_runs":len(records),
-              "original_scientific_runs":len(_load_records(RAW,"scientific")),
-              "corrective_reexecuted_runs":sum(
+              "original_scientific_raw_runs":len(_load_records(RAW,"scientific")),
+              "phase1_corrective_raw_runs":len(_load_records(PHASE1_CORRECTIVE_RAW,"scientific-corrective")),
+              "phase2_corrective_raw_runs":sum(
                   r.get("experiment_version")==CORRECTION_VERSION
                   for r in _load_records(CORRECTIVE_RAW,"scientific-corrective")
               ),
-              "superseded_runs":len(corrective_specs()),
+              "superseded_raw_run_versions":2*len(corrective_specs()),
+              "superseded_logical_scenarios":len(corrective_specs()),
               "raw_run_count":len(records),
+              "raw_run_count_semantics":"active publication run count",
               "software":{"python":platform.python_version(),"platform":platform.platform(),"numpy":importlib.metadata.version("numpy"),"pandas":importlib.metadata.version("pandas")},
               "dataset_hashes":{},
               "candidate_hash_domains":{
@@ -670,18 +689,39 @@ def build_outputs() -> None:
     app,build_demo=imports(); document=build_demo(app.DATA_DIR); from kds.adapters.project_science import build_bundle
     from kds.application.optimization import configuration
     b=build_bundle(document,configuration(payload("S1","GA",selected_seeds()[0],"water_saving",1.0),document)); resources=dict(b.resources)
-    manifest["dataset_hashes"]={k:v.digest for k,v in resources.items()}
+    manifest["dataset_hashes"]={k:portable_resource_digest(k,v) for k,v in resources.items()}
+    manifest["dataset_hash_domains"]={
+        k:{
+            "portable_resource_sha256":portable_resource_digest(k,v),
+            "runtime_digest":v.digest,
+            "runtime_digest_classification":("HOST_PATH_DEPENDENT_DEBUG_DIGEST" if k=="calendar" else "PORTABLE_RESOURCE_DIGEST"),
+        }
+        for k,v in resources.items()
+    }
+    calendar_path=ROOT/"data"/"s1_crop_calendar_rules.json"
+    manifest["calendar_hash_domains"]={
+        "calendar_raw_source_path":"data/s1_crop_calendar_rules.json",
+        "calendar_raw_source_sha256":file_hash(calendar_path),
+        "calendar_portable_resource_sha256":portable_resource_digest("calendar",resources["calendar"]),
+        "calendar_runtime_digest":resources["calendar"].digest,
+        "calendar_runtime_digest_classification":"HOST_PATH_DEPENDENT_DEBUG_DIGEST",
+        "portable_normalization":{"_derived._rules_file":"data/s1_crop_calendar_rules.json"},
+    }
+    manifest["scenario_grid_hash"]=manifest["scenario_grid_canonical_sha256"]
     if resources["candidate_options"].digest != CANDIDATE_CANONICAL_RESOURCE_SHA256:
         raise RuntimeError("Canonical candidate resource hash changed")
     candidate_path=ROOT/"data"/"excel_derived"/"combined_parcel_candidate_matrix_2024.csv"
     if file_hash(candidate_path) != CANDIDATE_RAW_CSV_SHA256:
         raise RuntimeError("Raw candidate CSV hash changed")
-    superseded = sorted(
+    original_superseded = sorted(
         r["run_id"] for r in _load_records(RAW,"scientific")
         if r["definition"]["scenario"]=="S2" and r["definition"]["family"]=="ECONOMIC"
     )
+    phase1_superseded = sorted(r["run_id"] for r in _load_records(PHASE1_CORRECTIVE_RAW,"scientific-corrective"))
     active_ids={r["run_id"] for r in records}
-    manifest["superseded_experiment_runs"]=superseded
+    manifest["superseded_original_s2_economic_run_ids"]=original_superseded
+    manifest["superseded_phase1_s2_economic_run_ids"]=phase1_superseded
+    manifest["superseded_experiment_runs"]=sorted(original_superseded+phase1_superseded)
     manifest["active_run_ids"]=sorted(active_ids)
     manifest["baseline_reproduction"]={"analysis_units":len(document["analysis_units"]),"area_da":sum(u["area_da"] for u in document["analysis_units"]),"candidate_rows":len(resources["candidate_options"].copy()),"crop_count":len(document["crops"]),"current_pattern_calculated_gross_demand_m3":document["water_budget"]["amount"],"catalog_derived_current_pattern_profit_tl":sum(float(u["metadata"]["current_profit_tl"]) for u in document["analysis_units"])}
     write_json(OUT/"experiment_manifest.json",manifest)
