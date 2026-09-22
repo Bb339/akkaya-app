@@ -4,6 +4,9 @@ import math
 import csv
 from pathlib import Path
 
+import pandas as pd
+
+from kds.science.contract import FrozenValue
 from tools.scientific_audit import robustness_sensitivity as rs
 
 
@@ -42,13 +45,18 @@ def test_stability_formulas_have_explicit_zero_behavior():
 
 def test_raw_scientific_runs_are_complete_and_identity_safe():
     records = []
-    for path in (OUT / "raw_runs").glob("*.json"):
+    for path in (OUT / "active_run_records").glob("*.json"):
         value = json.loads(path.read_text(encoding="utf-8"))
-        if value.get("role") == "scientific":
-            assert path.stem == value["run_id"]
-            assert value["scenario_hash"]
-            assert value["input_overlay_hash"]
-            records.append(value)
+        assert path.stem == value["run_id"]
+        assert value["scenario_hash"]
+        assert value["input_overlay_hash"]
+        assert value["population"] == rs.POPULATION
+        assert value["analysis_units"] == rs.ANALYSIS_UNITS
+        assert value["area_da"] == rs.AREA_DA
+        assert value["planning_year"] == rs.PLANNING_YEAR
+        assert len(value["analysis_unit_ids"]) == rs.ANALYSIS_UNITS
+        assert value["classification"] in {"SAFE WITH LIMITATION", "DIAGNOSTIC ONLY"}
+        records.append(value)
     assert len(records) == 54
     assert len({row["run_id"] for row in records}) == 54
     assert all(row["definition"]["scenario"] in {"S1", "S2"} for row in records)
@@ -104,3 +112,91 @@ def test_publication_boundary_rejects_field_and_official_claims():
     assert "do not establish official water allocation" in text
     assert "real-farm profitability" in text
     assert "real-world feasibility" in text
+
+
+def _record(scenario, feasible, annual=True, monthly="ok"):
+    return {
+        "definition": {"scenario": scenario},
+        "metrics": {
+            "feasible": feasible,
+            "annual_budget_feasible": annual,
+            "monthly_delivery_status": monthly,
+        },
+    }
+
+
+def test_s2_infeasible_is_diagnostic_even_when_annual_budget_is_feasible():
+    assert rs.classify_record(_record("S2", False, False, "violation")) == "DIAGNOSTIC ONLY"
+    assert rs.classify_record(_record("S2", False, True, "violation")) == "DIAGNOSTIC ONLY"
+
+
+def test_s1_feasible_remains_safe_with_limitation():
+    assert rs.classify_record(_record("S1", True)) == "SAFE WITH LIMITATION"
+
+
+def test_uniform_overlay_scales_all_connected_profit_sources_without_mutation():
+    resources = {
+        "candidate_options": FrozenValue.of(pd.DataFrame([{"profit_tl_da": 10., "profit_tl_total": 20., "yield_ton_da": 3.}])),
+        "regional_candidate_options": FrozenValue.of(pd.DataFrame([{"profit_tl_da": 11., "profit_tl_total": 22.}])),
+        "environment": FrozenValue.of({"s1": pd.DataFrame([{"profit_tl": 12., "price": 4., "yield": 5.}]),
+                                        "s2": pd.DataFrame([{"profit_tl": 13.}])}),
+        "crop_catalog": FrozenValue.of({"A": {"profitPerDa": 14., "price": 6., "yield": 7.}}),
+        "fallback_crop_parameters": FrozenValue.of({"A": {"profit_per_da": 15., "water_per_da": 8.}}),
+        "crop_table": FrozenValue.of(pd.DataFrame([{"net_kar_tl_da": 16., "yield_ton_da": 9.}])),
+        "units": FrozenValue.of([{"profit_tl": 17., "water_m3": 10.}]),
+        "unit_summary": FrozenValue.of(pd.DataFrame([{"current_profit_tl": 18.}])),
+    }
+    original = {name: value.digest for name, value in resources.items()}
+    scaled, changed = rs.apply_uniform_profit_overlay(resources, .8)
+    assert scaled["candidate_options"].copy().iloc[0]["profit_tl_da"] == 8.
+    assert math.isclose(scaled["environment"].copy()["s1"].iloc[0]["profit_tl"], 9.6)
+    assert math.isclose(scaled["crop_catalog"].copy()["A"]["profitPerDa"], 11.2)
+    assert scaled["fallback_crop_parameters"].copy()["A"]["profit_per_da"] == 12.
+    assert math.isclose(scaled["crop_table"].copy().iloc[0]["net_kar_tl_da"], 12.8)
+    assert math.isclose(scaled["units"].copy()[0]["profit_tl"], 13.6)
+    assert math.isclose(scaled["unit_summary"].copy().iloc[0]["current_profit_tl"], 14.4)
+    assert scaled["environment"].copy()["s1"].iloc[0]["price"] == 4.
+    assert scaled["environment"].copy()["s1"].iloc[0]["yield"] == 5.
+    assert scaled["crop_catalog"].copy()["A"]["price"] == 6.
+    assert scaled["crop_catalog"].copy()["A"]["yield"] == 7.
+    assert {name: value.digest for name, value in resources.items()} == original
+    assert "crop_catalog.profitPerDa" in changed
+
+
+def test_candidate_hash_domains_are_explicit_and_unchanged():
+    manifest = json.loads((OUT / "experiment_manifest.json").read_text(encoding="utf-8"))
+    domains = manifest["candidate_hash_domains"]
+    assert domains["candidate_raw_csv_sha256"] == rs.CANDIDATE_RAW_CSV_SHA256
+    assert domains["candidate_canonical_resource_sha256"] == rs.CANDIDATE_CANONICAL_RESOURCE_SHA256
+    assert domains["candidate_git_blob_id"] == rs.CANDIDATE_GIT_BLOB_ID
+    assert domains["candidate_raw_csv_sha256"] != domains["candidate_canonical_resource_sha256"]
+
+
+def test_corrected_s2_economic_scaling_and_composition_invariance():
+    rows = list(csv.DictReader((OUT / "economic_sensitivity.csv").read_text(encoding="utf-8").splitlines()))
+    s2 = sorted((r for r in rows if r["scenario"] == "S2"), key=lambda r: float(r["economic_shock"]))
+    assert len(s2) == 5
+    for row in s2:
+        assert abs(float(row["linear_scaling_residual_tl"])) <= float(row["linear_scaling_tolerance_tl"])
+        assert row["composition_response"] == "UNIFORM_SHOCK_INVARIANT_OBSERVED"
+        assert row["claim_classification"] == "DIAGNOSTIC ONLY"
+    for field in ("total_water_m3", "hhi", "crop_areas_da", "crop_shares"):
+        assert len({row[field] for row in s2}) == 1
+    assert {row["price_status"] for row in s2} == {"PRICE_SENSITIVITY_NOT_EXECUTABLE_ON_FROZEN_ENGINE"}
+    assert {row["yield_status"] for row in s2} == {"YIELD_SENSITIVITY_NOT_EXECUTABLE_ON_FROZEN_ENGINE"}
+
+
+def test_superseded_s2_economic_runs_are_excluded_from_active_publication():
+    manifest = json.loads((OUT / "experiment_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["original_scientific_runs"] == 54
+    assert manifest["corrective_reexecuted_runs"] == 5
+    assert manifest["superseded_runs"] == 5
+    assert manifest["active_publication_runs"] == 54
+    assert set(manifest["superseded_experiment_runs"]).isdisjoint(manifest["active_run_ids"])
+
+
+def test_corrective_economic_fresh_process_repeat_is_deterministic():
+    evidence = json.loads((OUT / "corrective_determinism.json").read_text(encoding="utf-8"))
+    assert evidence["timestamp_runtime_excluded"] is True
+    assert evidence["same_result"] is True
+    assert evidence["original_result_sha256"] == evidence["repeat_result_sha256"]
