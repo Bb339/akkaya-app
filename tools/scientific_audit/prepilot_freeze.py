@@ -44,6 +44,21 @@ def _git(*args: str) -> str:
     ).stdout.strip()
 
 
+def _artifact_introduction_commit(source_file: str) -> str:
+    """Return the oldest commit that added the inventory path."""
+    additions = _git("log", "--diff-filter=A", "--format=%H", "--", source_file).splitlines()
+    if not additions:
+        raise RuntimeError(f"No Git introduction commit found for {source_file}")
+    introduction = additions[-1]
+    if _git("cat-file", "-t", introduction) != "commit":
+        raise RuntimeError(f"Artifact introduction is not a commit: {introduction}")
+    subprocess.run(
+        ["git", "cat-file", "-e", f"{introduction}:{source_file}"],
+        cwd=ROOT, check=True, capture_output=True,
+    )
+    return introduction
+
+
 def _json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -311,23 +326,32 @@ def _limitation_rows() -> list[dict[str, str]]:
 
 
 def _evidence_rows() -> list[dict[str, str]]:
-    commit = SCIENTIFIC_FREEZE_COMMIT
     rows = [
-        ("Scientific lineage table", "docs/prepilot_freeze/scientific_lineage.csv", "Git tag/object resolution", "commit", "accepted V1/V2 lineage", "YES", "YES"),
-        ("Akkaya reference-value table", "docs/prepilot_freeze/reference_values.json", "read-only adapter plus frozen audits", "da; m3; TL; count", "179-unit Akkaya reference", "YES", "YES WITH CLAIM BOUNDARY"),
-        ("Water reconciliation table", "docs/audits/water_supply_phase3/annual_water_reconciliation.json", "Phase 3 deterministic audit", "m3/year", "2024 model inputs", "YES", "YES WITH AUTHORITY LABELS"),
-        ("Protected perennial floor", "docs/audits/water_supply_phase3/protected_perennial_demand_summary.json", "Phase 3 model-floor calculation", "m3; da; units", "52 protected units", "YES", "YES AS MODEL FLOOR"),
-        ("Economics reconciliation", "docs/audits/economics_phase4/cost_breakdown_reconciliation.csv", "Phase 4 deterministic audit", "TL/da", "58-crop catalog", "YES", "YES AS PROXY AUDIT"),
-        ("Crop-catalog reconciliation", "docs/audits/crop_catalog_phase6/root_cause_breakdown.json", "Phase 6 identity audit", "crop identities", "58 runtime / 69 parameter", "YES", "YES"),
-        ("Phenology contract cases", "docs/audits/crop_identity_phenology_phase7_fix1/season_year_cases.json", "Phase 7 corrective generator", "date/window semantics", "synthetic contract cases", "YES", "YES AS CONTRACT EVIDENCE"),
-        ("Turp root-cause tables", "docs/audits/turp_dominance/root_cause_attribution.csv", "Phase 5 read-only audit", "rank; units; da; TL/m3", "Akkaya model and frozen fixtures", "YES", "YES WITH FIXTURE SCOPE"),
-        ("Generalization acceptance", "docs/generalization_acceptance.md", "public-import 24-unit synthetic tests", "units; candidates", "synthetic project", "YES", "YES AS SOFTWARE EVIDENCE"),
-        ("Seeded algorithm fixtures", "tests/fixtures/scientific_baseline", "GA/ACO/ABC seeded parity", "model outputs", "full Akkaya fixtures at seeds 123/456/789", "YES", "YES AS REPRODUCIBILITY EVIDENCE"),
-        ("Pilot readiness snapshot", "docs/prepilot_freeze/pilot_readiness_snapshot.json", "read-only readiness evaluation", "counts/status", "Akkaya 2024", "YES", "YES"),
-        ("Publication limitation matrix", "docs/prepilot_freeze/publication_limitation_matrix.csv", "claim-boundary synthesis", "n/a", "manuscript scope", "YES", "YES"),
+        ("Scientific lineage table", "docs/prepilot_freeze/scientific_lineage.csv", "Git tag/object resolution", "commit", "accepted V1/V2 lineage", "SCIENTIFIC_LINEAGE", "", "YES", "YES", "PROVENANCE_ONLY"),
+        ("Akkaya reference-value table", "docs/prepilot_freeze/reference_values.json", "read-only adapter plus frozen audits", "da; m3; TL; count", "Akkaya 2024 reference project (179 analysis units)", "REFERENCE_PROJECT", "179", "YES", "YES WITH CLAIM BOUNDARY", "REFERENCE_MODEL_ONLY"),
+        ("Water reconciliation table", "docs/audits/water_supply_phase3/annual_water_reconciliation.json", "Phase 3 deterministic audit", "m3/year", "Akkaya 2024 model inputs (179 analysis units)", "REFERENCE_PROJECT", "179", "YES", "YES WITH AUTHORITY LABELS", "MODEL_INPUT_RECONCILIATION_ONLY"),
+        ("Protected perennial floor", "docs/audits/water_supply_phase3/protected_perennial_demand_summary.json", "Phase 3 model-floor calculation", "m3; da; units", "52 protected units within the Akkaya reference project", "REFERENCE_PROJECT_SUBSET", "52", "YES", "YES AS MODEL FLOOR", "MODEL_FLOOR_ONLY"),
+        ("Economics reconciliation", "docs/audits/economics_phase4/cost_breakdown_reconciliation.csv", "Phase 4 deterministic audit", "TL/da", "58-crop Akkaya runtime catalog", "REFERENCE_CROP_CATALOG", "58", "YES", "YES AS PROXY AUDIT", "PROXY_AUDIT_ONLY"),
+        ("Crop-catalog reconciliation", "docs/audits/crop_catalog_phase6/root_cause_breakdown.json", "Phase 6 identity audit", "crop identities", "58 runtime / 69 parameter crop catalogs", "REFERENCE_CROP_CATALOG", "58", "YES", "YES", "IDENTITY_RECONCILIATION_ONLY"),
+        ("Phenology contract cases", "docs/audits/crop_identity_phenology_phase7_fix1/season_year_cases.json", "Phase 7 corrective generator", "date/window semantics", "synthetic season-year contract cases", "SYNTHETIC_CONTRACT_CASES", "", "YES", "YES AS CONTRACT EVIDENCE", "CONTRACT_EVIDENCE_ONLY"),
+        ("Turp root-cause tables", "docs/audits/turp_dominance/root_cause_attribution.csv", "Phase 5 read-only audit", "rank; units; da; TL/m3", "Akkaya reference model plus 3-unit regression fixture", "MIXED_REFERENCE_AND_REGRESSION", "179 reference / 3 fixture", "YES", "YES WITH FIXTURE SCOPE", "ROOT_CAUSE_WITH_FIXTURE_BOUNDARY"),
+        ("Generalization acceptance", "docs/generalization_acceptance.md", "public-import 24-unit synthetic tests", "units; candidates", "24-unit synthetic project, seed 2468, 192 candidates", "SYNTHETIC_GENERALIZATION_PROJECT", "24", "YES", "YES AS SOFTWARE EVIDENCE", "SOFTWARE_ARCHITECTURE_ONLY"),
+        ("Seeded algorithm fixtures", "tests/fixtures/scientific_baseline", "GA/ACO/ABC seeded parity", "model outputs", "3-unit regression fixture (P1, P23, P149), S1/S2 × GA/ACO/ABC, seeds 123/456/789", "REGRESSION_FIXTURE", "3", "YES", "YES AS REPRODUCIBILITY EVIDENCE", "REPRODUCIBILITY_ONLY"),
+        ("Pilot readiness snapshot", "docs/prepilot_freeze/pilot_readiness_snapshot.json", "read-only readiness evaluation", "counts/status", "Akkaya 2024 reference project (179 analysis units)", "REFERENCE_PROJECT", "179", "YES", "YES", "READINESS_ONLY"),
+        ("Publication limitation matrix", "docs/prepilot_freeze/publication_limitation_matrix.csv", "claim-boundary synthesis", "n/a", "manuscript claim scope", "MANUSCRIPT_SCOPE", "", "YES", "YES", "CLAIM_BOUNDARY_ONLY"),
     ]
-    fields = ["table_figure_candidate", "source_file", "generation_method", "unit", "scenario_population", "frozen", "publication_safe"]
-    return [{**dict(zip(fields, row)), "source_commit": commit} for row in rows]
+    fields = [
+        "table_figure_candidate", "source_file", "generation_method", "unit",
+        "scenario_population", "population_type", "analysis_unit_count", "frozen",
+        "publication_safe", "publication_scope",
+    ]
+    evidence = []
+    for row in rows:
+        item = dict(zip(fields, row))
+        item["scientific_source_commit"] = SCIENTIFIC_FREEZE_COMMIT
+        item["artifact_introduction_commit"] = _artifact_introduction_commit(item["source_file"])
+        evidence.append(item)
+    return evidence
 
 
 def _dataset_hashes() -> dict[str, str]:
@@ -384,7 +408,12 @@ def generate(output: Path = OUTPUT, test_report: dict[str, Any] | None = None) -
     _write_csv(output / "official_data_gaps.csv", gaps, ["gap", "domain", "priority", "required_evidence", "current_state"])
     _write_csv(output / "reviewer_response_matrix.csv", reviewers, ["reviewer_issue", "previous_weakness", "current_v2_improvement", "fully_resolved", "partially_resolved", "not_resolved", "evidence", "publication_action"])
     _write_csv(output / "publication_limitation_matrix.csv", limitations, ["limitation", "current_status", "what_v2_solved", "what_remains_unresolved", "safe_manuscript_wording", "unsafe_manuscript_wording", "future_validation_requirement"])
-    _write_csv(output / "publication_evidence_inventory.csv", evidence, ["table_figure_candidate", "source_file", "source_commit", "generation_method", "unit", "scenario_population", "frozen", "publication_safe"])
+    _write_csv(output / "publication_evidence_inventory.csv", evidence, [
+        "table_figure_candidate", "source_file", "scientific_source_commit",
+        "artifact_introduction_commit", "generation_method", "unit",
+        "scenario_population", "population_type", "analysis_unit_count", "frozen",
+        "publication_safe", "publication_scope",
+    ])
     _write_json(output / "source_guard.json", guard)
 
     dependencies = {
@@ -392,7 +421,8 @@ def generate(output: Path = OUTPUT, test_report: dict[str, Any] | None = None) -
         for name in ("Flask", "pandas", "openpyxl", "numpy", "python-dateutil", "pytest")
     }
     manifest = {
-        "manifest_schema": "v2-scientific-prepilot-freeze-v1",
+        "manifest_schema": "v2-scientific-prepilot-freeze-v1.1",
+        "manifest_schema_change": "v1.1 separates evidence populations and distinguishes the frozen scientific source commit from each artifact introduction commit.",
         "scientific_freeze_commit": SCIENTIFIC_FREEZE_COMMIT,
         "scientific_freeze_commit_semantics": "Immutable accepted scientific source/data commit; evidence-only commits follow it.",
         "parent_tag": PARENT_TAG,
@@ -437,10 +467,56 @@ def generate(output: Path = OUTPUT, test_report: dict[str, Any] | None = None) -
             "akkaya_source_access": False,
             "external_agronomic_field_validation": False,
         },
+        "evidence_populations": {
+            "reference_project": {
+                "name": "Akkaya",
+                "population_type": "REFERENCE_PROJECT",
+                "analysis_unit_count": 179,
+                "seeded_full_project_fixture": "NOT_AVAILABLE_IN_FROZEN_SCIENTIFIC_BASELINE",
+            },
+            "regression_fixture": {
+                "population_type": "REGRESSION_FIXTURE",
+                "analysis_unit_count": 3,
+                "analysis_units": ["P1", "P23", "P149"],
+                "scenarios": ["S1", "S2"],
+                "algorithms": ["GA", "ACO", "ABC"],
+                "seeds": [123, 456, 789],
+                "publication_scope": "REPRODUCIBILITY_ONLY",
+                "basin_level_result": False,
+                "turp_42_4_percent_scope": "REGRESSION_FIXTURE_ONLY",
+            },
+            "synthetic_generalization_project": {
+                "population_type": "SYNTHETIC_GENERALIZATION_PROJECT",
+                "analysis_unit_count": 24,
+                "candidate_count": 192,
+                "seed": 2468,
+                "publication_scope": "SOFTWARE_ARCHITECTURE_ONLY",
+                "external_agronomic_field_validation": False,
+            },
+        },
         "algorithm_reproducibility": {
-            "full_akkaya": "Frozen seeded fixtures cover S1/S2 × GA/ACO/ABC; default tests use seed 123 and extended fixtures contain 123/456/789.",
-            "synthetic_project": "24-unit public-import fixture repeats S1/S2 × GA/ACO/ABC with seed 2468.",
-            "small_regression_fixture": "Phase 5 seed diagnostics are fixture-scoped; the 42.4% Turp share is not a basin result.",
+            "three_unit_regression_fixture": {
+                "analysis_unit_count": 3,
+                "analysis_units": ["P1", "P23", "P149"],
+                "scenarios": ["S1", "S2"],
+                "algorithms": ["GA", "ACO", "ABC"],
+                "seeds": [123, 456, 789],
+                "scope": "REGRESSION_FIXTURE",
+                "publication_scope": "REPRODUCIBILITY_ONLY",
+                "basin_level_result": False,
+            },
+            "synthetic_generalization_project": {
+                "analysis_unit_count": 24,
+                "candidate_count": 192,
+                "seed": 2468,
+                "scope": "SOFTWARE_ARCHITECTURE_ONLY",
+                "external_agronomic_field_validation": False,
+            },
+            "reference_project": {
+                "name": "Akkaya",
+                "analysis_unit_count": 179,
+                "seeded_fixture_status": "NOT_AVAILABLE_IN_FROZEN_SCIENTIFIC_BASELINE",
+            },
         },
         "robustness_experiments_run": False,
     }
@@ -503,7 +579,11 @@ The frozen Akkaya state contains {reference['analysis_units']} analysis units, {
 
 ## Reproducibility scope
 
-GA, ACO and ABC have seeded frozen artifacts. The 24-unit synthetic project demonstrates software and architectural generalization for S1/S2 without Akkaya sources. Neither result establishes external agronomic field validation. No robustness or sensitivity experiment was run in this milestone.
+GA, ACO and ABC have seeded frozen artifacts for a three-unit regression fixture containing P1, P23 and P149. These artifacts cover S1/S2 and seeds 123/456/789, and are reproducibility evidence only; they are not basin-level or 179-unit performance evidence. The separate 24-unit synthetic project demonstrates software and architectural generalization for S1/S2 without Akkaya sources. Neither fixture establishes external agronomic field validation. No robustness or sensitivity experiment was run in this milestone.
+
+## Evidence provenance schema
+
+Manifest schema v1.1 and `publication_evidence_inventory.csv` distinguish `scientific_source_commit` (the accepted frozen scientific source/data baseline) from `artifact_introduction_commit` (the first Git commit containing that evidence artifact). The inventory also records population type, analysis-unit count and publication scope.
 
 ## Publication use
 
