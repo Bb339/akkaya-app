@@ -116,8 +116,7 @@ def _lineage_rows() -> list[dict[str, Any]]:
                 "Crop identity and phenology contract": "Reviewed identity resolution, agricultural season semantics and fail-closed readiness.",
             }.get(milestone, "Reference baseline."),
         })
-    tagged = [row for row in rows if row["git_object_type"] == "tag"]
-    for earlier, later in zip(tagged, tagged[1:]):
+    for earlier, later in zip(rows, rows[1:]):
         subprocess.run(
             ["git", "merge-base", "--is-ancestor", earlier["commit"], later["commit"]],
             cwd=ROOT, check=True, capture_output=True,
