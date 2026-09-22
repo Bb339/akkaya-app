@@ -1,0 +1,17 @@
+{
+  "original_result_sha256": "c91027f034c5ebbbe07b31cba0ea9ca257eb557b3816c73eb2621555ab438b15",
+  "original_run_id": "a3f8c023f944e6e3171a",
+  "repeat_result_sha256": "c91027f034c5ebbbe07b31cba0ea9ca257eb557b3816c73eb2621555ab438b15",
+  "repeat_run_id": "c62b2ccef1df2b2b27b5",
+  "same_result": true,
+  "scenario": {
+    "algorithm": "GA",
+    "economic_shock": -0.2,
+    "family": "ECONOMIC",
+    "objective": "max_profit",
+    "scenario": "S2",
+    "seed": 101,
+    "water_budget_ratio": 1.0
+  },
+  "timestamp_runtime_excluded": true
+}

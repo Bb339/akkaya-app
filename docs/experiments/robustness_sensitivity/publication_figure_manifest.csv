@@ -1,6 +1,6 @@
-figure_id,group,source,status,title,x,y
-F1,scenario,water_threshold_analysis.csv,DATA_READY,Annual water feasibility across budget multipliers,water_budget_ratio,total_water_m3 and water_budget_m3
-F2,scenario,algorithm_agreement.csv,DATA_READY,Algorithm agreement in crop shares,algorithm pair,weighted_jaccard
-F3,scenario,seed_variability.csv,DATA_READY,Seed variability of water and profit,algorithm,coefficient of variation
-F4,scenario,economic_sensitivity.csv,DATA_READY,Net-profit sensitivity,economic_shock,total_profit_tl
-F5,scenario,crop_share_stability.csv,DATA_READY,Crop-share stability by scenario,comparison,weighted_jaccard and Bray-Curtis
+figure_id,group,s1_use,s2_use,source,status,title,x,y
+F1,scenario,SAFE WITH LIMITATION,ANNUAL THRESHOLD SAFE WITH LIMITATION; PLAN OUTPUT DIAGNOSTIC ONLY,water_threshold_analysis.csv,DATA_READY,Annual water feasibility across budget multipliers,water_budget_ratio,total_water_m3 and water_budget_m3
+F2,scenario,SAFE WITH LIMITATION,DIAGNOSTIC ONLY,algorithm_agreement.csv,DATA_READY,Algorithm agreement in crop shares,algorithm pair,weighted_jaccard
+F3,scenario,SAFE WITH LIMITATION,DIAGNOSTIC ONLY,seed_variability.csv,DATA_READY,Seed variability of water and profit,algorithm,coefficient of variation
+F4,scenario,SAFE WITH LIMITATION,DIAGNOSTIC ONLY,economic_sensitivity.csv,DATA_READY,Net-profit sensitivity,economic_shock,total_profit_tl
+F5,scenario,SAFE WITH LIMITATION,DIAGNOSTIC ONLY,crop_share_stability.csv,DATA_READY,Crop-share stability by scenario,comparison,weighted_jaccard and Bray-Curtis

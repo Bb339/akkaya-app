@@ -1,4 +1,61 @@
 {
+  "active_publication_runs": 54,
+  "active_run_ids": [
+    "0c00ac6a301df0e3d5a4",
+    "0cc8e095065edafb4ba5",
+    "0d9527df2aabfdb7c76c",
+    "0dcc856e2447ab1d6608",
+    "109369861afa79288dba",
+    "15ebca641d48c1188d0c",
+    "1bd8c980a85fb148f42a",
+    "1e889da4a8bec18fd30e",
+    "2844ed05b14029c053b8",
+    "305c60c7dc616501a647",
+    "3735c19aea2f381af5e0",
+    "3dd7cd8c1e263f39bbb9",
+    "444e86c492e3ccc3809f",
+    "53e613e87b8565ad884a",
+    "59fa0f923b8ad10643d6",
+    "5d7159c92df89a3bc4fe",
+    "6aaf84a773bc7c32e5e7",
+    "713d1e4d2ad23aa53b2b",
+    "737c93d1216d6f455430",
+    "750e67236b494b02a2d4",
+    "848c10e34d86ec9e27de",
+    "86e0f97f2744ce6873b6",
+    "87527d3a08871850f927",
+    "878a28e80b702f34fef5",
+    "87d943b7a790cb29a5a9",
+    "8c43a5de4a5ff968da36",
+    "92f57d6671ab4ab82e3f",
+    "9ba3ed1f4717d9f7d83f",
+    "9dabde5c178eef6b7c80",
+    "9e091a1ff5896595dc8d",
+    "9f9289b2214081e976fe",
+    "a3f8c023f944e6e3171a",
+    "b19d396df2cb14a2e811",
+    "b1b304f201d7f16c7048",
+    "b2920608927e8271156a",
+    "b82de3498bd95685900d",
+    "b9be7f4fb3d95534279d",
+    "be0cabe575251d2b278a",
+    "c33cf81e7ed0ea0026cd",
+    "c475926e9e6e13533ed8",
+    "c568cd6739edbed0f4c7",
+    "c5f2f308852443079ae6",
+    "c7f842e9e7cb61a7f34a",
+    "c87b227111f707be64b2",
+    "ccbdf5cd11eeb1a8b793",
+    "d14ef1e4ec9bfb15e327",
+    "d3099ee59b3d7c456c2a",
+    "e34baae3e90a1f48c82d",
+    "ec1f2537b6ff0ca3ca88",
+    "ee16e710749f37178b1e",
+    "ee7621de364dc55e6ff6",
+    "f5053363cf7600152719",
+    "f8775ef3b29eb52da748",
+    "fdc9e8dd293c962431bc"
+  ],
   "algorithms": [
     "GA",
     "ACO",
@@ -15,9 +72,16 @@
   },
   "baseline_tag": "refs/tags/v2-scientific-prepilot-freeze",
   "candidate_hash": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+  "candidate_hash_alias_semantics": "backward-compatible alias of candidate_canonical_resource_sha256",
+  "candidate_hash_domains": {
+    "candidate_canonical_resource_sha256": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+    "candidate_git_blob_id": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
+    "candidate_raw_csv_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b"
+  },
+  "corrective_reexecuted_runs": 5,
   "dataset_hashes": {
     "area_overrides": "01f586ca453f641d0b6c1a5b29ab3e44f673d0fa2b9cf0b105b1a45866a9eb52",
-    "calendar": "3b1efc652b31e32e385e0162fc1fc7bc344a47ff95c5eec30de8f71644039508",
+    "calendar": "31217df2549b4ba3d2f35f7a6fcdf245cdb0f4b3cd392526778a1ec5f405c984",
     "calendar_annotations": "475b73215bc129bfc441c99d615bf2a83a313a0cd3d129b51ccaa0e3db406be0",
     "candidate_options": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
     "candidate_provenance": "a5a524fceb47414f65bbf323fdff6334d39dbf9b107dfdad697220274c8d5eba",
@@ -66,13 +130,14 @@
     ],
     "water_and_robustness": "water_saving"
   },
+  "original_scientific_runs": 54,
   "population": {
     "analysis_units": 179,
     "area_da": 134919,
     "label": "FULL_REFERENCE_PROJECT_EXPERIMENT"
   },
   "raw_run_count": 54,
-  "scenario_grid_hash": "586665ee0f4ff45b0865d7d9e2fdc3074232602c097f1d35291b29e9c7a28003",
+  "scenario_grid_hash": "3aa2bb309cf8d4a78930173356a76b14339ba504cab9942e4c3f9aa2ff67e60e",
   "scenarios": [
     "S1",
     "S2"
@@ -91,5 +156,13 @@
     "platform": "Windows-10-10.0.26200-SP0",
     "python": "3.11.9"
   },
-  "source_guard_unchanged": true
+  "source_guard_unchanged": true,
+  "superseded_experiment_runs": [
+    "02f784a7baede02646e1",
+    "08530fbe4cda76bc1d56",
+    "53570566aec21ed465db",
+    "65f80ffc691ca2378b3e",
+    "9fd74cb68235acd6f7bc"
+  ],
+  "superseded_runs": 5
 }
