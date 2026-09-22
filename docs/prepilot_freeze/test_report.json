@@ -2,21 +2,34 @@
   "broad_suite": {
     "command": "python -m pytest -p no:cacheprovider -q --deselect tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
     "deselected": 8,
-    "duration_seconds": 974.22,
-    "passed": 322
+    "duration_seconds": 945.5,
+    "passed": 326
+  },
+  "deterministic_generator": {
+    "files_compared": 14,
+    "independent_temp_outputs": 2,
+    "sha256_differences": 0
   },
   "focused_freeze": {
-    "command": "python -m pytest -p no:cacheprovider -q tests/test_prepilot_freeze.py",
-    "duration_seconds": 46.17,
-    "passed": 4
+    "command": "python -m pytest tests/test_prepilot_freeze.py -q",
+    "duration_seconds": 185.95,
+    "passed": 8
   },
   "inherited_failure_excluded": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
   "robustness_experiments_run": false,
   "status": "PASS",
   "targeted_scientific_reproducibility": {
-    "duration_seconds": 810.83,
-    "passed": 155,
-    "scope": "Phase 3/5/6/7, contracts, Akkaya, source guard, generalization, seeded parity"
+    "broad_suite_confirmation": "The same Phase 5 test and all targeted tests passed in the subsequent 326-test broad suite.",
+    "duration_seconds": 944.54,
+    "initial_deselected": 1,
+    "initial_failed": 1,
+    "initial_passed": 196,
+    "phase5_confirmation": {
+      "duration_seconds": 184.09,
+      "passed": 1
+    },
+    "phase5_initial_failure": "Order-dependent test-harness artifact: the legacy protected-file hash included a newly created kds __pycache__ file. No tracked or protected Git object changed.",
+    "scope": "Pre-pilot freeze; Phase 3/5/6/7; water/economics/monthly/perennial contracts; Akkaya adapter; source guard; generalization; seeded parity"
   },
   "tier2_full_project": "default deselected",
   "tier3_multi_seed": "not run"

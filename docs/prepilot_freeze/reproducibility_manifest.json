@@ -1,8 +1,42 @@
 {
   "algorithm_reproducibility": {
-    "full_akkaya": "Frozen seeded fixtures cover S1/S2 × GA/ACO/ABC; default tests use seed 123 and extended fixtures contain 123/456/789.",
-    "small_regression_fixture": "Phase 5 seed diagnostics are fixture-scoped; the 42.4% Turp share is not a basin result.",
-    "synthetic_project": "24-unit public-import fixture repeats S1/S2 × GA/ACO/ABC with seed 2468."
+    "reference_project": {
+      "analysis_unit_count": 179,
+      "name": "Akkaya",
+      "seeded_fixture_status": "NOT_AVAILABLE_IN_FROZEN_SCIENTIFIC_BASELINE"
+    },
+    "synthetic_generalization_project": {
+      "analysis_unit_count": 24,
+      "candidate_count": 192,
+      "external_agronomic_field_validation": false,
+      "scope": "SOFTWARE_ARCHITECTURE_ONLY",
+      "seed": 2468
+    },
+    "three_unit_regression_fixture": {
+      "algorithms": [
+        "GA",
+        "ACO",
+        "ABC"
+      ],
+      "analysis_unit_count": 3,
+      "analysis_units": [
+        "P1",
+        "P23",
+        "P149"
+      ],
+      "basin_level_result": false,
+      "publication_scope": "REPRODUCIBILITY_ONLY",
+      "scenarios": [
+        "S1",
+        "S2"
+      ],
+      "scope": "REGRESSION_FIXTURE",
+      "seeds": [
+        123,
+        456,
+        789
+      ]
+    }
   },
   "critical_dependencies": {
     "Flask": "3.0.3",
@@ -50,6 +84,48 @@
     "phenology_datasets": false,
     "water_replacement_datasets": false
   },
+  "evidence_populations": {
+    "reference_project": {
+      "analysis_unit_count": 179,
+      "name": "Akkaya",
+      "population_type": "REFERENCE_PROJECT",
+      "seeded_full_project_fixture": "NOT_AVAILABLE_IN_FROZEN_SCIENTIFIC_BASELINE"
+    },
+    "regression_fixture": {
+      "algorithms": [
+        "GA",
+        "ACO",
+        "ABC"
+      ],
+      "analysis_unit_count": 3,
+      "analysis_units": [
+        "P1",
+        "P23",
+        "P149"
+      ],
+      "basin_level_result": false,
+      "population_type": "REGRESSION_FIXTURE",
+      "publication_scope": "REPRODUCIBILITY_ONLY",
+      "scenarios": [
+        "S1",
+        "S2"
+      ],
+      "seeds": [
+        123,
+        456,
+        789
+      ],
+      "turp_42_4_percent_scope": "REGRESSION_FIXTURE_ONLY"
+    },
+    "synthetic_generalization_project": {
+      "analysis_unit_count": 24,
+      "candidate_count": 192,
+      "external_agronomic_field_validation": false,
+      "population_type": "SYNTHETIC_GENERALIZATION_PROJECT",
+      "publication_scope": "SOFTWARE_ARCHITECTURE_ONLY",
+      "seed": 2468
+    }
+  },
   "generalization_evidence": {
     "akkaya_source_access": false,
     "algorithms": [
@@ -77,7 +153,8 @@
       "test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan"
     }
   ],
-  "manifest_schema": "v2-scientific-prepilot-freeze-v1",
+  "manifest_schema": "v2-scientific-prepilot-freeze-v1.1",
+  "manifest_schema_change": "v1.1 separates evidence populations and distinguishes the frozen scientific source commit from each artifact introduction commit.",
   "parent_tag": "v2-crop-identity-phenology-contract-complete",
   "parent_tag_target": "bb0c6ff516a7d995c2894ee66285ebf124ac9340",
   "project_reference_values": {
