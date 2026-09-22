@@ -1,0 +1,15 @@
+concept,source,planning_year,unit,authority_provenance,engine_role,verified,limitation
+current water demand,Akkaya project adapter / current pattern,2024,m3,CALCULATED_REFERENCE,current-pattern reference,NO,"Not allocation, measured use or available supply."
+reservoir baseline,data/enhanced_dataset/csv/akkaya_reservoir_monthly_backend.csv,2024,m3/year,UNKNOWN upstream authority,annual baseline before environmental-flow deduction,NO,Official allocation is absent.
+annual scenario budget,reservoir baseline × (1-assumed environmental flow),2024,m3/year,DERIVED from UNKNOWN + ASSUMED,scenario constraint,NO,Not an official operating allocation.
+monthly delivery,data/enhanced_dataset/csv/delivery_capacity_monthly_assumed.csv,2024,m3/month,DERIVED_PROXY,monthly delivery ceiling,NO,Measured delivery and channel capacity are absent.
+environmental flow ratio,water audit / decision policy,2024,ratio,ASSUMED,annual budget deduction,NO,No official release rule integrated.
+crop water requirement,data/urun_parametreleri_demo.csv and candidate matrix,2024,m3/da,Excel-derived / proxy,candidate water coefficient,NO,Crop-specific verified irrigation requirements are incomplete.
+Kc and stage,data/enhanced_dataset/csv/crop_params_assumed.csv,2024,Kc; fraction,ASSUMED with legacy fallback,legacy calibrated path,NO,45 direct identities; 13 fallback; verified ready 0.
+phenology,no frozen Akkaya planting/harvest source,2024,date/window,MISSING,not connected,NO,Verified coverage 0/58; no dates invented.
+yield,data/urun_parametreleri_demo.csv,2024,kg/da,catalog-derived proxy,economics/reference output,NO,Local dated yield evidence incomplete; DUT gap.
+sale price,data/urun_parametreleri_demo.csv,2024,TL/kg,catalog proxy,gross-revenue source,NO,Not a dated verified market series.
+cost,data/cost_breakdown_rules_2024.csv,2024,TL/da,PROXY allocation rules,audit/reconciliation,NO,"7 match, 50 mismatch, 1 DUT missing rule."
+net profit,catalog and seasonal tables,2024,TL/da,catalog-derived baseline,optimization value,NO,Not independent farm accounting.
+candidate eligibility,data/excel_derived/combined_parcel_candidate_matrix_2024.csv,2024,row/flag,Excel-derived,candidate universe and quota compatibility,NO,Runtime expansion broadens annual-crop availability; market caps absent.
+perennial lock,observed current_crop plus accepted Phase 1 rule,2024,unit/da,observed project state for model locking,hard protection of current perennial pattern,YES FOR FROZEN MODEL STATE,Not an external agronomic recommendation.

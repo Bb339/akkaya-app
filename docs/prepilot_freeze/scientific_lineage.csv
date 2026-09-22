@@ -1,0 +1,12 @@
+milestone,tag_or_reference,commit,git_object_type,accepted_fix
+V1 thesis reference,v1.0.0-thesis-final,a49daac1ae6d15d83428565c388bfafb4b6da08a,tag,Reference baseline.
+Main generalized V2 baseline,commit-only generalized baseline,3d12895a80bc6c964b72e81d65577dd502a5402c,commit,Reference baseline.
+Scientific Fix Phase 1,v2-scientific-fix-phase1-complete,8c77cd063ee592680e02bf01d6f83b17aaf030c2,tag,Observed current_crop authority for perennial locks.
+Scientific Fix Phase 2,v2-scientific-fix-phase2-complete,b2ec7157493943966bee825c14fbc03110e7a204,tag,Canonical monthly delivery contract and YYYY-MM to calendar-month correction.
+Water authority audit,v2-scientific-water-audit-complete,3b0847370e8abbb7316d40aa1741d5242d736125,tag,"Water authority, perennial-demand floor and real-world claim boundary."
+Water data contract,v2-water-data-contract-complete,5018bde15d659e415a106b7b1bae949dc011ccbc,tag,"Authority, versioning, preview and official-data import boundary."
+Economics provenance audit,v2-scientific-economics-audit-complete,2ff32b3b81cb635e1393de5b45f01c11ad2ca195,tag,"Profit lineage, proxy interpretation and Turp economics."
+Economics data contract,v2-economics-data-contract-complete,62a88bda787f1b3ce7c7a3b01c3d7c8022474096,tag,"Verified dependency graph, scope and authority safety, and versioning."
+Turp dominance audit,v2-scientific-turp-dominance-audit-complete,444092c7bcd721870f3e02157a9398ec0af925e0,tag,"Low-water, TL/m3 and runtime-expansion root-cause diagnosis."
+Crop catalog audit,v2-scientific-crop-catalog-audit-complete,38f8c89d4ab14de6868dcd84f017e6e5378353aa,tag,58/69 crop-catalog reconciliation without invented data.
+Crop identity and phenology contract,v2-crop-identity-phenology-contract-complete,bb0c6ff516a7d995c2894ee66285ebf124ac9340,tag,"Reviewed identity resolution, agricultural season semantics and fail-closed readiness."

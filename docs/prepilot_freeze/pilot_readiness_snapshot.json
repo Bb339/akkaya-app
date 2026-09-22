@@ -1,0 +1,21 @@
+{
+  "ambiguous_parameter_identities": 3,
+  "blocking_reasons": [
+    "verified parameter ready = 0",
+    "verified phenology = 0/58",
+    "three ambiguous crop-parameter identities",
+    "one missing crop parameter identity",
+    "official annual/monthly water supply is missing",
+    "verified economic inputs are incomplete",
+    "verified replacement datasets are disconnected from the scientific engine"
+  ],
+  "classification": "Scientific readiness boundary, not a software failure.",
+  "demo_status": "DEMO_READY",
+  "engine_connected": false,
+  "missing_parameter_identities": 1,
+  "phenology_population": 58,
+  "pilot_status": "PILOT_DATA_NOT_READY",
+  "runtime_crop_count": 58,
+  "verified_parameter_ready": 0,
+  "verified_phenology_count": 0
+}

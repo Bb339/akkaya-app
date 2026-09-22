@@ -1,0 +1,16 @@
+gap,domain,priority,required_evidence,current_state
+official annual allocation,WATER,PILOT BLOCKER,authorized annual volume and validity period,NOT INTEGRATED
+official monthly allocation,WATER,PILOT BLOCKER,authorized calendar-month volumes,NOT INTEGRATED
+measured/operational delivery,WATER,PILOT BLOCKER,dated delivered-flow observations,NOT INTEGRATED
+channel capacity,WATER,MAJOR,measured or officially documented capacity by period,NOT INTEGRATED
+conveyance efficiency,WATER,MAJOR,system-specific measured efficiency,NOT INTEGRATED
+crop-specific irrigation requirement,PARAMETER,PILOT BLOCKER,local verified m3/da or ET-based requirement,NOT INTEGRATED
+crop-specific Kc/stage,PARAMETER,PILOT BLOCKER,verified evidence for unresolved/fallback crops,NOT INTEGRATED
+planting/harvest phenology,PHENOLOGY,PILOT BLOCKER,local dates or climatological windows for 58 crops,NOT INTEGRATED
+local dated yield,ECONOMICS,MAJOR,crop/year/scope-specific observed yield,NOT INTEGRATED
+local dated prices,ECONOMICS,MAJOR,crop/year/scope-specific farm-gate prices,NOT INTEGRATED
+itemized production cost,ECONOMICS,MAJOR,auditable cost components including DUT,NOT INTEGRATED
+support payments,ECONOMICS,MAJOR,dated crop-specific support records or explicit zero,NOT INTEGRATED
+market capacity,MARKET,MAJOR,"demand, sales, processing, storage and crop-area ceilings",NOT INTEGRATED
+farmer preference/behavior,BEHAVIOR,MAJOR,survey or revealed-preference evidence,NOT INTEGRATED
+rotation history,AGRONOMY,MAJOR,field-level prior crop sequence where required,NOT INTEGRATED

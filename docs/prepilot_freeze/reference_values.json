@@ -1,0 +1,78 @@
+{
+  "analysis_units": 179,
+  "area_da": 134919.0,
+  "candidate_rows": 6859,
+  "crop_parameter_boundary": {
+    "ambiguous_parameter_identities": 3,
+    "canonical_intersection": 47,
+    "legacy_direct_parameter_lookup": 45,
+    "legacy_fallback_inventory": 13,
+    "missing_parameter_identities": 1,
+    "parameter_catalog": 69,
+    "phenology_population": 58,
+    "reviewed_parameter_aliases": 9,
+    "runtime_catalog": 58,
+    "symmetric_difference": 33,
+    "verified_parameter_ready": 0,
+    "verified_phenology": 0
+  },
+  "current_calculated_profit_tl": 1041499119.212,
+  "current_pattern_calculated_gross_irrigation_demand_m3": 100700080.81,
+  "economics_boundary": {
+    "cost_reconciliation": {
+      "match": 7,
+      "mismatch": 50,
+      "missing_cost_rule": 1
+    },
+    "current_profit_interpretation": "catalog-derived baseline",
+    "dut_gap": "Yield/gross revenue and itemized cost evidence remain incomplete.",
+    "independent_farm_accounting": false,
+    "turp_catalog_cost_tl_da": 9000.0,
+    "turp_gross_revenue_tl_da": 15000.0,
+    "turp_profit_tl_da": 4000.0,
+    "turp_sale_price_tl_kg": 6.0,
+    "turp_water_m3_da": 298.87,
+    "turp_yield_kg_da": 2500.0,
+    "verified_real_farm_economics_integrated": false
+  },
+  "planning_year": 2024,
+  "project_crop_catalog": 58,
+  "protected_perennial_area_da": 39486.0,
+  "protected_perennial_units": 52,
+  "raw_quota_flagged_rows": 3673,
+  "semantics": {
+    "candidate_rows": "Raw candidate-matrix rows; not recommendations.",
+    "current_calculated_profit_tl": "Catalog-derived current-pattern baseline; not independent farm accounting.",
+    "current_pattern_calculated_gross_irrigation_demand_m3": "Calculated current-pattern gross irrigation demand; not official allocation, measured use or available reservoir supply."
+  },
+  "turp_boundary": {
+    "fixture_scope_note": "The frozen 42.4% value belongs to a small regression fixture.",
+    "forbidden_claims": [
+      "Turp should be planted on 95433 da.",
+      "42.4% is the full 179-unit basin recommendation."
+    ],
+    "market_capacity_constraint": "ABSENT",
+    "primary_drivers": [
+      "low water",
+      "high TL/m3",
+      "runtime candidate expansion"
+    ],
+    "raw_coverage_area_da": 35036.0,
+    "raw_coverage_units": 43,
+    "s1_runtime_availability_area_da": 95433.0,
+    "s1_runtime_availability_units": 127,
+    "tl_per_m3": 13.38374544116171,
+    "tl_per_m3_rank": "3/37",
+    "water_rank_comparable_annual_crops": "1/37"
+  },
+  "water_boundary": {
+    "delivery_authority": "DERIVED_PROXY",
+    "engine_annual_scenario_budget_m3": 10401986.555999998,
+    "environmental_flow_authority": "ASSUMED",
+    "environmental_flow_ratio": 0.1,
+    "interpretation": "STRUCTURAL INFEASIBILITY UNDER CURRENT MODEL INPUTS",
+    "not_a_claim": "REAL-WORLD INFEASIBILITY",
+    "protected_perennial_current_model_floor_m3": 22510545.8328,
+    "reservoir_irrigation_baseline_annual_sum_m3": 11557762.839999998
+  }
+}

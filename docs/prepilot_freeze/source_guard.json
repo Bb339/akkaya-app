@@ -1,0 +1,63 @@
+{
+  "candidate_matrix_changed": false,
+  "candidate_matrix_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
+  "changed_protected_paths": [],
+  "comparison_base": "bb0c6ff516a7d995c2894ee66285ebf124ac9340",
+  "git_objects": {
+    "app.py": {
+      "current_head_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "freeze_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "identical": true
+    },
+    "data": {
+      "current_head_object": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "freeze_object": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "identical": true
+    },
+    "index.html": {
+      "current_head_object": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac",
+      "freeze_object": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac",
+      "identical": true
+    },
+    "kds/application/optimization.py": {
+      "current_head_object": "6c7247a2cc1430d82edece5a18bdb1250a460726",
+      "freeze_object": "6c7247a2cc1430d82edece5a18bdb1250a460726",
+      "identical": true
+    },
+    "kds/science": {
+      "current_head_object": "e83726515fef27892991d70fad944327f964121d",
+      "freeze_object": "e83726515fef27892991d70fad944327f964121d",
+      "identical": true
+    },
+    "script.js": {
+      "current_head_object": "01b06b33accb4846609436e5a83b274b341b0224",
+      "freeze_object": "01b06b33accb4846609436e5a83b274b341b0224",
+      "identical": true
+    },
+    "style.css": {
+      "current_head_object": "529b260d4e7336a9e3ad39803aeae584ad526d64",
+      "freeze_object": "529b260d4e7336a9e3ad39803aeae584ad526d64",
+      "identical": true
+    }
+  },
+  "optimizer_changed": false,
+  "protected_paths": [
+    "app.py",
+    "kds/science",
+    "kds/application/optimization.py",
+    "data",
+    "index.html",
+    "script.js",
+    "style.css"
+  ],
+  "protected_worktree_sha256": {
+    "app.py": "58440036d8cd9c9dc2fc2d871d99e763b7dd11199c8cc8b742e72835932f653d",
+    "data": "3107a5d0693b579271af208398fcb8b1cfd9f8bb11f57e9a9ff8c19952f79b65",
+    "index.html": "333a17e699a870deef066eb6fd47c450bdb83d64f701f55f07d27902033f561e",
+    "kds/application/optimization.py": "35462253f6fbeaf157b6c4e8fab5cf29a7ad4b96668a681a27e5a5e87cc8a4c4",
+    "kds/science": "db3e29aa21f2ca790be4c5ce06a279ee7a1774623c8f640bb9a718eb5a3896a7",
+    "script.js": "2de5be2590c69e684737af6934b4a70ad14dadccde72a24a8dcb7ddf7f5a3fbf",
+    "style.css": "d8b899f33ef95b051ffa7288a16017986d72f2bee5bb303a4cf904dc8c82ff42"
+  },
+  "scientific_behavior_changed": false
+}

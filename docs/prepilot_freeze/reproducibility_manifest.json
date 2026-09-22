@@ -1,0 +1,292 @@
+{
+  "algorithm_reproducibility": {
+    "full_akkaya": "Frozen seeded fixtures cover S1/S2 × GA/ACO/ABC; default tests use seed 123 and extended fixtures contain 123/456/789.",
+    "small_regression_fixture": "Phase 5 seed diagnostics are fixture-scoped; the 42.4% Turp share is not a basin result.",
+    "synthetic_project": "24-unit public-import fixture repeats S1/S2 × GA/ACO/ABC with seed 2468."
+  },
+  "critical_dependencies": {
+    "Flask": "3.0.3",
+    "numpy": "2.1.3",
+    "openpyxl": "3.1.5",
+    "pandas": "2.2.3",
+    "pytest": "8.4.1",
+    "python-dateutil": "2.9.0.post0"
+  },
+  "current_readiness": {
+    "ambiguous_parameter_identities": 3,
+    "blocking_reasons": [
+      "verified parameter ready = 0",
+      "verified phenology = 0/58",
+      "three ambiguous crop-parameter identities",
+      "one missing crop parameter identity",
+      "official annual/monthly water supply is missing",
+      "verified economic inputs are incomplete",
+      "verified replacement datasets are disconnected from the scientific engine"
+    ],
+    "classification": "Scientific readiness boundary, not a software failure.",
+    "demo_status": "DEMO_READY",
+    "engine_connected": false,
+    "missing_parameter_identities": 1,
+    "phenology_population": 58,
+    "pilot_status": "PILOT_DATA_NOT_READY",
+    "runtime_crop_count": 58,
+    "verified_parameter_ready": 0,
+    "verified_phenology_count": 0
+  },
+  "dataset_sha256": {
+    "data/cost_breakdown_rules_2024.csv": "b88010c3755106a4715d080f7f0014a931bf88b5f51a56d7c6a4dbe13803228d",
+    "data/enhanced_dataset/csv/akkaya_reservoir_monthly_backend.csv": "e9708dcd48999abf259b163be1a8d38dfee454a0bbb8b7dfd8ff44b4b857ce71",
+    "data/enhanced_dataset/csv/crop_params_assumed.csv": "dc6bacdc142aee6e01e867b42baa74043597a2b4843638935fba1d1068b81ead",
+    "data/enhanced_dataset/csv/delivery_capacity_monthly_assumed.csv": "17c7cb8ba312e5c501060af1c7c09d8e22c787f4c36b5857f3d9f42b5c3d562a",
+    "data/excel_derived/combined_parcel_candidate_matrix_2024.csv": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
+    "data/urun_parametreleri_demo.csv": "42e8c0711b1f16abe2e36c5ed28e971bd21e05c1e9a3ab98e672cd68bb583c19",
+    "tests/fixtures/scientific_baseline/baseline_metadata.json": "4d639fd8db8a91b2ea741c154a629445ef0b3e31e28465b4a4c325d642decdfb"
+  },
+  "default_deselection": "Tier 2/full-project cases; Tier 3 multi-seed profile is manual/nightly.",
+  "engine_connection_states": {
+    "crop_water_parameter_datasets": false,
+    "economics_replacement_datasets": false,
+    "execution_path": "frozen legacy/calibrated path",
+    "phenology_datasets": false,
+    "water_replacement_datasets": false
+  },
+  "generalization_evidence": {
+    "akkaya_source_access": false,
+    "algorithms": [
+      "GA",
+      "ACO",
+      "ABC"
+    ],
+    "classification": "SOFTWARE / ARCHITECTURAL GENERALIZATION",
+    "external_agronomic_field_validation": false,
+    "project_isolation": true,
+    "scenarios": [
+      "S1",
+      "S2"
+    ],
+    "seeded_reproducibility": true,
+    "synthetic_analysis_units": 24,
+    "synthetic_candidate_rows": 192
+  },
+  "known_test_exclusions": [
+    {
+      "actual": "no_feasible_two_crop_plan",
+      "classification": "INHERITED BASELINE FAILURE / SEPARATE BACKLOG",
+      "expected": "ok / feasible two-crop plan",
+      "publication_use": "EXCLUDED",
+      "test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan"
+    }
+  ],
+  "manifest_schema": "v2-scientific-prepilot-freeze-v1",
+  "parent_tag": "v2-crop-identity-phenology-contract-complete",
+  "parent_tag_target": "bb0c6ff516a7d995c2894ee66285ebf124ac9340",
+  "project_reference_values": {
+    "analysis_units": 179,
+    "area_da": 134919.0,
+    "candidate_rows": 6859,
+    "crop_parameter_boundary": {
+      "ambiguous_parameter_identities": 3,
+      "canonical_intersection": 47,
+      "legacy_direct_parameter_lookup": 45,
+      "legacy_fallback_inventory": 13,
+      "missing_parameter_identities": 1,
+      "parameter_catalog": 69,
+      "phenology_population": 58,
+      "reviewed_parameter_aliases": 9,
+      "runtime_catalog": 58,
+      "symmetric_difference": 33,
+      "verified_parameter_ready": 0,
+      "verified_phenology": 0
+    },
+    "current_calculated_profit_tl": 1041499119.212,
+    "current_pattern_calculated_gross_irrigation_demand_m3": 100700080.81,
+    "economics_boundary": {
+      "cost_reconciliation": {
+        "match": 7,
+        "mismatch": 50,
+        "missing_cost_rule": 1
+      },
+      "current_profit_interpretation": "catalog-derived baseline",
+      "dut_gap": "Yield/gross revenue and itemized cost evidence remain incomplete.",
+      "independent_farm_accounting": false,
+      "turp_catalog_cost_tl_da": 9000.0,
+      "turp_gross_revenue_tl_da": 15000.0,
+      "turp_profit_tl_da": 4000.0,
+      "turp_sale_price_tl_kg": 6.0,
+      "turp_water_m3_da": 298.87,
+      "turp_yield_kg_da": 2500.0,
+      "verified_real_farm_economics_integrated": false
+    },
+    "planning_year": 2024,
+    "project_crop_catalog": 58,
+    "protected_perennial_area_da": 39486.0,
+    "protected_perennial_units": 52,
+    "raw_quota_flagged_rows": 3673,
+    "semantics": {
+      "candidate_rows": "Raw candidate-matrix rows; not recommendations.",
+      "current_calculated_profit_tl": "Catalog-derived current-pattern baseline; not independent farm accounting.",
+      "current_pattern_calculated_gross_irrigation_demand_m3": "Calculated current-pattern gross irrigation demand; not official allocation, measured use or available reservoir supply."
+    },
+    "turp_boundary": {
+      "fixture_scope_note": "The frozen 42.4% value belongs to a small regression fixture.",
+      "forbidden_claims": [
+        "Turp should be planted on 95433 da.",
+        "42.4% is the full 179-unit basin recommendation."
+      ],
+      "market_capacity_constraint": "ABSENT",
+      "primary_drivers": [
+        "low water",
+        "high TL/m3",
+        "runtime candidate expansion"
+      ],
+      "raw_coverage_area_da": 35036.0,
+      "raw_coverage_units": 43,
+      "s1_runtime_availability_area_da": 95433.0,
+      "s1_runtime_availability_units": 127,
+      "tl_per_m3": 13.38374544116171,
+      "tl_per_m3_rank": "3/37",
+      "water_rank_comparable_annual_crops": "1/37"
+    },
+    "water_boundary": {
+      "delivery_authority": "DERIVED_PROXY",
+      "engine_annual_scenario_budget_m3": 10401986.555999998,
+      "environmental_flow_authority": "ASSUMED",
+      "environmental_flow_ratio": 0.1,
+      "interpretation": "STRUCTURAL INFEASIBILITY UNDER CURRENT MODEL INPUTS",
+      "not_a_claim": "REAL-WORLD INFEASIBILITY",
+      "protected_perennial_current_model_floor_m3": 22510545.8328,
+      "reservoir_irrigation_baseline_annual_sum_m3": 11557762.839999998
+    }
+  },
+  "proposed_completion_tag": "v2-scientific-prepilot-freeze",
+  "protected_code_git_objects": {
+    "app.py": {
+      "current_head_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "freeze_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "identical": true
+    },
+    "data": {
+      "current_head_object": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "freeze_object": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "identical": true
+    },
+    "index.html": {
+      "current_head_object": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac",
+      "freeze_object": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac",
+      "identical": true
+    },
+    "kds/application/optimization.py": {
+      "current_head_object": "6c7247a2cc1430d82edece5a18bdb1250a460726",
+      "freeze_object": "6c7247a2cc1430d82edece5a18bdb1250a460726",
+      "identical": true
+    },
+    "kds/science": {
+      "current_head_object": "e83726515fef27892991d70fad944327f964121d",
+      "freeze_object": "e83726515fef27892991d70fad944327f964121d",
+      "identical": true
+    },
+    "script.js": {
+      "current_head_object": "01b06b33accb4846609436e5a83b274b341b0224",
+      "freeze_object": "01b06b33accb4846609436e5a83b274b341b0224",
+      "identical": true
+    },
+    "style.css": {
+      "current_head_object": "529b260d4e7336a9e3ad39803aeae584ad526d64",
+      "freeze_object": "529b260d4e7336a9e3ad39803aeae584ad526d64",
+      "identical": true
+    }
+  },
+  "python_implementation": "CPython",
+  "python_version": "3.11.9",
+  "random_seed_policy": {
+    "generalization_fixture": 2468,
+    "policy": "Explicit seeded engine runs; no HTTP repeat or algorithm seed offsets.",
+    "reference_fixtures": [
+      123,
+      456,
+      789
+    ]
+  },
+  "robustness_experiments_run": false,
+  "scientific_freeze_commit": "bb0c6ff516a7d995c2894ee66285ebf124ac9340",
+  "scientific_freeze_commit_semantics": "Immutable accepted scientific source/data commit; evidence-only commits follow it.",
+  "scientific_tag_lineage": [
+    {
+      "accepted_fix": "Reference baseline.",
+      "commit": "a49daac1ae6d15d83428565c388bfafb4b6da08a",
+      "git_object_type": "tag",
+      "milestone": "V1 thesis reference",
+      "tag_or_reference": "v1.0.0-thesis-final"
+    },
+    {
+      "accepted_fix": "Reference baseline.",
+      "commit": "3d12895a80bc6c964b72e81d65577dd502a5402c",
+      "git_object_type": "commit",
+      "milestone": "Main generalized V2 baseline",
+      "tag_or_reference": "commit-only generalized baseline"
+    },
+    {
+      "accepted_fix": "Observed current_crop authority for perennial locks.",
+      "commit": "8c77cd063ee592680e02bf01d6f83b17aaf030c2",
+      "git_object_type": "tag",
+      "milestone": "Scientific Fix Phase 1",
+      "tag_or_reference": "v2-scientific-fix-phase1-complete"
+    },
+    {
+      "accepted_fix": "Canonical monthly delivery contract and YYYY-MM to calendar-month correction.",
+      "commit": "b2ec7157493943966bee825c14fbc03110e7a204",
+      "git_object_type": "tag",
+      "milestone": "Scientific Fix Phase 2",
+      "tag_or_reference": "v2-scientific-fix-phase2-complete"
+    },
+    {
+      "accepted_fix": "Water authority, perennial-demand floor and real-world claim boundary.",
+      "commit": "3b0847370e8abbb7316d40aa1741d5242d736125",
+      "git_object_type": "tag",
+      "milestone": "Water authority audit",
+      "tag_or_reference": "v2-scientific-water-audit-complete"
+    },
+    {
+      "accepted_fix": "Authority, versioning, preview and official-data import boundary.",
+      "commit": "5018bde15d659e415a106b7b1bae949dc011ccbc",
+      "git_object_type": "tag",
+      "milestone": "Water data contract",
+      "tag_or_reference": "v2-water-data-contract-complete"
+    },
+    {
+      "accepted_fix": "Profit lineage, proxy interpretation and Turp economics.",
+      "commit": "2ff32b3b81cb635e1393de5b45f01c11ad2ca195",
+      "git_object_type": "tag",
+      "milestone": "Economics provenance audit",
+      "tag_or_reference": "v2-scientific-economics-audit-complete"
+    },
+    {
+      "accepted_fix": "Verified dependency graph, scope and authority safety, and versioning.",
+      "commit": "62a88bda787f1b3ce7c7a3b01c3d7c8022474096",
+      "git_object_type": "tag",
+      "milestone": "Economics data contract",
+      "tag_or_reference": "v2-economics-data-contract-complete"
+    },
+    {
+      "accepted_fix": "Low-water, TL/m3 and runtime-expansion root-cause diagnosis.",
+      "commit": "444092c7bcd721870f3e02157a9398ec0af925e0",
+      "git_object_type": "tag",
+      "milestone": "Turp dominance audit",
+      "tag_or_reference": "v2-scientific-turp-dominance-audit-complete"
+    },
+    {
+      "accepted_fix": "58/69 crop-catalog reconciliation without invented data.",
+      "commit": "38f8c89d4ab14de6868dcd84f017e6e5378353aa",
+      "git_object_type": "tag",
+      "milestone": "Crop catalog audit",
+      "tag_or_reference": "v2-scientific-crop-catalog-audit-complete"
+    },
+    {
+      "accepted_fix": "Reviewed identity resolution, agricultural season semantics and fail-closed readiness.",
+      "commit": "bb0c6ff516a7d995c2894ee66285ebf124ac9340",
+      "git_object_type": "tag",
+      "milestone": "Crop identity and phenology contract",
+      "tag_or_reference": "v2-crop-identity-phenology-contract-complete"
+    }
+  ]
+}

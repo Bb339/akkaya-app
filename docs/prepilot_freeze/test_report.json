@@ -1,0 +1,23 @@
+{
+  "broad_suite": {
+    "command": "python -m pytest -p no:cacheprovider -q --deselect tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "deselected": 8,
+    "duration_seconds": 974.22,
+    "passed": 322
+  },
+  "focused_freeze": {
+    "command": "python -m pytest -p no:cacheprovider -q tests/test_prepilot_freeze.py",
+    "duration_seconds": 46.17,
+    "passed": 4
+  },
+  "inherited_failure_excluded": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+  "robustness_experiments_run": false,
+  "status": "PASS",
+  "targeted_scientific_reproducibility": {
+    "duration_seconds": 810.83,
+    "passed": 155,
+    "scope": "Phase 3/5/6/7, contracts, Akkaya, source guard, generalization, seeded parity"
+  },
+  "tier2_full_project": "default deselected",
+  "tier3_multi_seed": "not run"
+}
