@@ -78,6 +78,7 @@
     "candidate_git_blob_id": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
     "candidate_raw_csv_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b"
   },
+  "correction_version": "corrective-phase-1b",
   "corrective_reexecuted_runs": 5,
   "dataset_hashes": {
     "area_overrides": "01f586ca453f641d0b6c1a5b29ab3e44f673d0fa2b9cf0b105b1a45866a9eb52",
@@ -104,6 +105,7 @@
     "village_patterns": "866124b7175d9da012e939a0124ffd2e36e6d7cc0e64fc0b9d0aac3c1822e928",
     "water_allocation_context": "e5cd928032db79fe1b0682b30643fc9a8faddc7d07c156e5723e6a3665e57e0c"
   },
+  "economic_overlay_contract": "all_connected_runtime_net_profit_inputs",
   "excluded_factors": {
     "combined_stress": "requires new preregistration",
     "price": "not independently connected",
@@ -123,6 +125,7 @@
     "l1": "sum(abs(p-q))",
     "weighted_jaccard": "sum(min(a,b))/sum(max(a,b))"
   },
+  "nonlinear_transform_policy": "evaluate_frozen_profit_realism_in_baseline_domain_then_scale_output",
   "objectives": {
     "economic": "max_profit",
     "excluded": [

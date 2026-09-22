@@ -2,6 +2,8 @@
 
 The corrective overlay implements the original preregistered uniform net-profit shock. It changes copied values inside a disposable scientific bundle; production files and frozen sources remain byte-identical.
 
+The frozen `_apply_profit_realism` operation contains thresholds and caps, so applying a multiplier before it is not mathematically uniform. The corrective disposable worker therefore evaluates that unchanged transform in the baseline profit domain and applies the same multiplier to its output. This preserves the frozen transform while making the preregistered global scale contract exact.
+
 | Source object | Profit field | Frozen consumer | Overlay transformation | Result contribution |
 |---|---|---|---|---|
 | candidate_options / regional_candidate_options | profit_tl_da, profit_tl_total | S1 matrix and candidate selection | × (1 + shock) | objective profit and projected crop profit |

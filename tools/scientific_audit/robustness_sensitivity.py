@@ -671,6 +671,9 @@ def build_outputs() -> None:
     source_after=source_hashes(); guard={"protected_paths":list(PROTECTED),"before":source_before,"after":source_after,"unchanged":source_before==source_after}
     write_json(OUT/"source_guard.json",guard)
     manifest={"baseline_tag":BASELINE_TAG,"baseline_commit":BASELINE_COMMIT,"scientific_source_commit":SCIENTIFIC_COMMIT,
+              "correction_version":CORRECTION_VERSION,
+              "economic_overlay_contract":"all_connected_runtime_net_profit_inputs",
+              "nonlinear_transform_policy":"evaluate_frozen_profit_realism_in_baseline_domain_then_scale_output",
               "population":{"label":"FULL_REFERENCE_PROJECT_EXPERIMENT","analysis_units":179,"area_da":134919},
               "scenario_grid_hash":file_hash(OUT/"scenario_grid.csv"),"selected_seeds":list(selected_seeds()),"algorithms":list(ALGORITHMS),
               "objectives":{"water_and_robustness":"water_saving","economic":"max_profit","excluded":["water_efficiency"]},
@@ -771,6 +774,8 @@ S1 reports the current-pattern calculated gross-demand budget (100,700,080.81 m3
     lineage="""# Economic overlay lineage
 
 The corrective overlay implements the original preregistered uniform net-profit shock. It changes copied values inside a disposable scientific bundle; production files and frozen sources remain byte-identical.
+
+The frozen `_apply_profit_realism` operation contains thresholds and caps, so applying a multiplier before it is not mathematically uniform. The corrective disposable worker therefore evaluates that unchanged transform in the baseline profit domain and applies the same multiplier to its output. This preserves the frozen transform while making the preregistered global scale contract exact.
 
 | Source object | Profit field | Frozen consumer | Overlay transformation | Result contribution |
 |---|---|---|---|---|
