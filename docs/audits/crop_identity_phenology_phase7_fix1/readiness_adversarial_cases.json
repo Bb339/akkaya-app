@@ -1,0 +1,104 @@
+{
+  "empty_catalog": {
+    "blocking_reasons": [
+      "runtime crop catalog is empty",
+      "crop parameter and phenology datasets are not connected to the scientific engine"
+    ],
+    "parameter_selection": {
+      "available_scopes": [
+        "project"
+      ],
+      "planning_year": 2024,
+      "required_scope": "project",
+      "status": "SELECTED"
+    },
+    "phenology_selection": {
+      "available_scopes": [
+        "project"
+      ],
+      "planning_year": 2024,
+      "required_scope": "project",
+      "status": "SELECTED"
+    },
+    "pilot_status": "PILOT_DATA_NOT_READY"
+  },
+  "multiple_scopes": {
+    "blocking_reasons": [
+      "no unambiguous verified parameter dataset for project planning year and pilot geographic scope",
+      "no unambiguous verified phenology dataset for project planning year and pilot geographic scope",
+      "missing crop parameter resolution",
+      "verified parameter coverage incomplete",
+      "verified phenology coverage incomplete",
+      "crop parameter and phenology datasets are not connected to the scientific engine"
+    ],
+    "parameter_selection": {
+      "available_scopes": [
+        "district-a",
+        "project"
+      ],
+      "planning_year": 2024,
+      "required_scope": null,
+      "status": "AMBIGUOUS_SCOPE"
+    },
+    "phenology_selection": {
+      "available_scopes": [
+        "district-a",
+        "project"
+      ],
+      "planning_year": 2024,
+      "required_scope": null,
+      "status": "AMBIGUOUS_SCOPE"
+    },
+    "pilot_status": "PILOT_DATA_NOT_READY"
+  },
+  "non_project_scope": {
+    "blocking_reasons": [
+      "no unambiguous verified parameter dataset for project planning year and pilot geographic scope",
+      "no unambiguous verified phenology dataset for project planning year and pilot geographic scope",
+      "missing crop parameter resolution",
+      "verified parameter coverage incomplete",
+      "verified phenology coverage incomplete",
+      "crop parameter and phenology datasets are not connected to the scientific engine"
+    ],
+    "parameter_selection": {
+      "available_scopes": [
+        "district-a"
+      ],
+      "planning_year": 2024,
+      "required_scope": null,
+      "status": "NON_PROJECT_SCOPE_REQUIRES_EXPLICIT_SELECTION"
+    },
+    "phenology_selection": {
+      "available_scopes": [
+        "district-a"
+      ],
+      "planning_year": 2024,
+      "required_scope": null,
+      "status": "NON_PROJECT_SCOPE_REQUIRES_EXPLICIT_SELECTION"
+    },
+    "pilot_status": "PILOT_DATA_NOT_READY"
+  },
+  "wrong_year_only": {
+    "blocking_reasons": [
+      "no unambiguous verified parameter dataset for project planning year and pilot geographic scope",
+      "no unambiguous verified phenology dataset for project planning year and pilot geographic scope",
+      "missing crop parameter resolution",
+      "verified parameter coverage incomplete",
+      "verified phenology coverage incomplete",
+      "crop parameter and phenology datasets are not connected to the scientific engine"
+    ],
+    "parameter_selection": {
+      "available_scopes": [],
+      "planning_year": 2024,
+      "required_scope": null,
+      "status": "MISSING_PLANNING_YEAR_DATASET"
+    },
+    "phenology_selection": {
+      "available_scopes": [],
+      "planning_year": 2024,
+      "required_scope": null,
+      "status": "MISSING_PLANNING_YEAR_DATASET"
+    },
+    "pilot_status": "PILOT_DATA_NOT_READY"
+  }
+}

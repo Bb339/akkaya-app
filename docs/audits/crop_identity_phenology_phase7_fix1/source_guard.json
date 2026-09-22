@@ -1,0 +1,12 @@
+{
+  "baseline_commit": "19366a7f1a551704c143caa38d9228396dce9f30",
+  "candidate_matrix_changed": false,
+  "changed_protected_paths": [],
+  "engine_connected": false,
+  "protected_paths": [
+    "app.py",
+    "kds/science",
+    "kds/application/optimization.py",
+    "data"
+  ]
+}

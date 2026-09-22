@@ -1,0 +1,19 @@
+{
+  "corrective_suite": {
+    "command": "python -m pytest -p no:cacheprovider -q tests/test_crop_identity_phenology_fix1.py",
+    "duration_seconds": 22.81,
+    "passed": 12
+  },
+  "explicit_exclusion": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+  "full_regression": {
+    "command": "python -m pytest -p no:cacheprovider -q --deselect tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "deselected": 8,
+    "duration_seconds": 929.89,
+    "passed": 318
+  },
+  "status": "PASS",
+  "targeted_scientific_suite": {
+    "duration_seconds": 533.89,
+    "passed": 109
+  }
+}

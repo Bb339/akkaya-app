@@ -1,0 +1,16 @@
+{
+  "engine_connected": false,
+  "identity_resolution_reviewed": true,
+  "identity_resolution_revision": "phase7-reviewed-relations-v1",
+  "legacy_engine_uses_fallback": true,
+  "legacy_fallback_status": "LEGACY_GENERIC_FALLBACK",
+  "legacy_generic_fallback": true,
+  "parameter_authority": "OFFICIAL",
+  "resolution_evidence": "U+0130 and i+U+0307 are textual Unicode forms of KİMYON.",
+  "resolution_method": "UNICODE_EQUIVALENT",
+  "resolution_status": "REVIEWED_ALIAS",
+  "resolved_parameter_identity": "KİMYON",
+  "runtime_crop_id": "KIMYON",
+  "verified_parameter_evidence": true,
+  "verified_parameter_ready": false
+}

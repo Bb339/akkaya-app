@@ -1,0 +1,43 @@
+{
+  "climatological_cross_year": {
+    "errors": [],
+    "season_year_semantics": "CROSSES_CALENDAR_YEAR",
+    "status": "ready"
+  },
+  "climatological_mixed": {
+    "errors": [
+      "CLIMATOLOGICAL_WINDOW records must not contain ISO date fields."
+    ],
+    "season_year_semantics": null,
+    "status": "invalid"
+  },
+  "climatological_same_year": {
+    "errors": [],
+    "season_year_semantics": "SAME_CALENDAR_YEAR",
+    "status": "ready"
+  },
+  "year_specific_cross_year": {
+    "errors": [],
+    "season_year_semantics": "CROSSES_CALENDAR_YEAR",
+    "status": "ready"
+  },
+  "year_specific_impossible": {
+    "errors": [
+      "planting_date must be before harvest_date."
+    ],
+    "season_year_semantics": null,
+    "status": "invalid"
+  },
+  "year_specific_mixed": {
+    "errors": [
+      "YEAR_SPECIFIC records must not contain climatological window fields."
+    ],
+    "season_year_semantics": null,
+    "status": "invalid"
+  },
+  "year_specific_same_year": {
+    "errors": [],
+    "season_year_semantics": "SAME_CALENDAR_YEAR",
+    "status": "ready"
+  }
+}
