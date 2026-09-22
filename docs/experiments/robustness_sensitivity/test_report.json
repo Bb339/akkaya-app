@@ -2,35 +2,35 @@
   "status": "PASS_WITH_INHERITED_BACKLOG",
   "experiment_tests": {
     "command": "python -m pytest -q tests/test_robustness_sensitivity.py",
-    "passed": 15,
+    "passed": 18,
     "failed": 0,
-    "duration_seconds": 4.64
+    "duration_seconds": 34.65
   },
   "targeted_contract_tests": {
     "scope": [
+      "robustness and Phase 2 corrective guards",
       "prepilot freeze",
-      "Phase 7 identity and phenology corrective tests",
+      "Phase 7 identity and phenology contract and corrective tests",
       "Phase 5 Turp audit",
       "Phase 6 crop catalog audit",
       "Akkaya adapter",
       "scientific execution and source isolation",
-      "water contracts",
-      "economics contracts",
-      "robustness evidence contracts"
+      "water supply, delivery and perennial contracts",
+      "economics contracts"
     ],
-    "passed": 160,
+    "passed": 184,
     "failed": 0,
     "skipped": 0,
-    "duration_seconds": 290.763,
+    "duration_seconds": 375.91,
     "junit_evidence": "targeted_test_results.xml"
   },
   "broad_suite": {
     "command": "python -m pytest -q",
-    "passed": 341,
+    "passed": 344,
     "failed": 1,
-    "deselected": 0,
+    "deselected": 7,
     "skipped": 0,
-    "duration_seconds": 922.131,
+    "duration_seconds": 826.56,
     "junit_evidence": "broad_test_results.xml"
   },
   "inherited_failure": {
@@ -38,12 +38,13 @@
     "observed": "selected_plan.status == no_feasible_two_crop_plan",
     "expected_by_test": "ok",
     "classification": "INHERITED_S2_BACKLOG",
-    "corrective_branch_recheck": "FAILED_IDENTICALLY",
-    "rejected_baseline_prior_evidence": "FAILED_IDENTICALLY",
+    "corrective_phase2_branch_recheck": "FAILED_IDENTICALLY",
+    "rejected_phase1_prior_evidence": "FAILED_IDENTICALLY",
     "scientific_behavior_changed_to_fix": false
   },
   "determinism": {
     "same_scenario_algorithm_seed_overlay_repeat": true,
+    "phase2_result_sha256": "105c37abbe44cda998bfe8971927aa4183d56695edadd865b37bc79589eac41f",
     "comparison_excluded_fields": [
       "timestamp metadata",
       "runtime metadata"

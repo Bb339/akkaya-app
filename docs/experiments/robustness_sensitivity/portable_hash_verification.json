@@ -1,0 +1,19 @@
+{
+  "calendar_raw_source_sha256": "23e4e8aff5e6e804820b1b10f1bd0ac8e8488e7c3018e70b132c7dcf350691ef",
+  "calendar_portable_resource_sha256": "a283c471ed73a77779c9d739fddad776172c67e490f026b477dc6fddad173170",
+  "root_a": {
+    "label": "rejected_phase1_worktree",
+    "calendar_runtime_digest": "31217df2549b4ba3d2f35f7a6fcdf245cdb0f4b3cd392526778a1ec5f405c984"
+  },
+  "root_b": {
+    "label": "corrective_phase2_worktree",
+    "calendar_runtime_digest": "b3130963c207579fc812aa509fdeb9a24c4d590d37fb5b48f7999f0de78033e1"
+  },
+  "runtime_digests_differ_as_expected": true,
+  "raw_source_hashes_equal": true,
+  "portable_resource_hashes_equal": true,
+  "normalization": {
+    "_derived._rules_file": "data/s1_crop_calendar_rules.json"
+  },
+  "status": "PASS"
+}

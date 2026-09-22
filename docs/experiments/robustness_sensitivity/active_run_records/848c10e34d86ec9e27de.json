@@ -1,5 +1,6 @@
 {
-  "active_record_version": "corrective-phase-1b",
+  "active_record_version": "corrective-phase-2",
+  "algorithm": "ABC",
   "algorithm_config": {
     "cycles": 10,
     "foodSources": 10,
@@ -188,6 +189,9 @@
   ],
   "analysis_units": 179,
   "area_da": 134919,
+  "candidate_canonical_resource_sha256": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+  "candidate_git_blob_id": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
+  "candidate_raw_csv_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
   "classification": "SAFE WITH LIMITATION",
   "definition": {
     "algorithm": "ABC",
@@ -198,8 +202,10 @@
     "seed": 101,
     "water_budget_ratio": 1.0
   },
+  "economic_shock": 0.0,
   "executed_at_utc": "2026-09-22T14:41:55.337813+00:00",
   "execution_status": "UNCHANGED_ORIGINAL_EXECUTION",
+  "family": "ALGORITHM_SEED",
   "input_overlay_hash": "cba24092bef97bba82cb4603e3f6b2f0a9aaac9a5ffc167835f9aff672c5372b",
   "metrics": {
     "annual_budget_feasible": true,
@@ -259,13 +265,17 @@
     "total_water_m3": 58264320.74940418,
     "water_budget_m3": 100700080.81
   },
+  "objective": "water_saving",
   "planning_year": 2024,
   "population": "FULL_REFERENCE_PROJECT_EXPERIMENT",
   "result_sha256": "8f7984ae7807fd2cb68a906c45c10ca7fc46b7d2811895a5b720dd357215016c",
   "role": "scientific",
   "run_id": "848c10e34d86ec9e27de",
   "runtime_seconds": 123.49030820000189,
+  "scenario": "S1",
   "scenario_hash": "1f778c9774fd1f173b311d2f1d29803d24b0f6986f7399f7eea221c71b8b5f49",
+  "seed": 101,
   "source_raw_path": "docs/experiments/robustness_sensitivity/raw_runs/848c10e34d86ec9e27de.json",
-  "source_raw_sha256": "c3d32fb6d63a43f829e82b006af832ba26e8c40aa450bc1cc034914a2edb798e"
+  "source_raw_sha256": "c3d32fb6d63a43f829e82b006af832ba26e8c40aa450bc1cc034914a2edb798e",
+  "water_budget_ratio": 1.0
 }

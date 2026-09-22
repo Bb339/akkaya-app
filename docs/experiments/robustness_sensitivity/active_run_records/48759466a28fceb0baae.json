@@ -1,5 +1,6 @@
 {
-  "active_record_version": "corrective-phase-1b",
+  "active_record_version": "corrective-phase-2",
+  "algorithm": "GA",
   "algorithm_config": {
     "cxRate": 0.7,
     "generations": 10,
@@ -189,6 +190,9 @@
   ],
   "analysis_units": 179,
   "area_da": 134919,
+  "candidate_canonical_resource_sha256": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+  "candidate_git_blob_id": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
+  "candidate_raw_csv_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
   "classification": "DIAGNOSTIC ONLY",
   "definition": {
     "algorithm": "GA",
@@ -199,10 +203,12 @@
     "seed": 101,
     "water_budget_ratio": 1.0
   },
-  "executed_at_utc": "2026-09-22T17:41:17.615785+00:00",
+  "economic_shock": -0.1,
+  "executed_at_utc": "2026-09-22T21:54:29.742791+00:00",
   "execution_status": "CORRECTIVE_REEXECUTION",
-  "experiment_version": "corrective-phase-1b",
-  "input_overlay_hash": "ac6114f99a8488ccb4442792eacbaeb531888c3609d2af09ee3a41a5781e276d",
+  "experiment_version": "corrective-phase-2",
+  "family": "ECONOMIC",
+  "input_overlay_hash": "04badd38e3e643fe4ed8f0d9f487186e14db2a107bd35322c27d832c2f9e31a6",
   "metrics": {
     "annual_budget_feasible": false,
     "crop_areas_da": {
@@ -308,7 +314,7 @@
       "YONCA_YESILOT": 0.000577503047932753,
       "YULAF_DANE": 0.0010694500887643574
     },
-    "efficiency_tl_per_m3": 6.2843021969850605,
+    "efficiency_tl_per_m3": 6.284683698669237,
     "feasible": false,
     "hhi": 0.36043871392229526,
     "monthly_delivery_status": "violation",
@@ -334,17 +340,21 @@
       "MERCIMEK"
     ],
     "top3_share": 0.7943447479306142,
-    "total_profit_tl": 198360116.91119403,
+    "total_profit_tl": 198372158.776194,
     "total_water_m3": 31564382.2804,
     "water_budget_m3": 10401986.556
   },
+  "objective": "max_profit",
   "planning_year": 2024,
   "population": "FULL_REFERENCE_PROJECT_EXPERIMENT",
-  "result_sha256": "f87b4dabebf62be48b289692bc5b8cb15fc38fab8caf24599a36e9e151e34d71",
+  "result_sha256": "98e34cc62092eddfec44849c8824cb6be401e442c011b2fcad38204fefbdccf7",
   "role": "scientific-corrective",
-  "run_id": "b1b304f201d7f16c7048",
-  "runtime_seconds": 32.57478229999833,
+  "run_id": "48759466a28fceb0baae",
+  "runtime_seconds": 35.997826600003464,
+  "scenario": "S2",
   "scenario_hash": "dbec41af786b5c51a56fce710079daa83156b7b94172c590ac6118e3f2c0af9f",
-  "source_raw_path": "docs/experiments/robustness_sensitivity/raw_runs_corrective/b1b304f201d7f16c7048.json",
-  "source_raw_sha256": "d97ffa89254391a39c77d27c20c06f7a7b043b1a0ad88373562bc5d2c690eead"
+  "seed": 101,
+  "source_raw_path": "docs/experiments/robustness_sensitivity/raw_runs_corrective_phase2/48759466a28fceb0baae.json",
+  "source_raw_sha256": "6a720d730d23b890e2c9c626b841c87fd7b5637c25719b10c0c6b8e546bc24c9",
+  "water_budget_ratio": 1.0
 }

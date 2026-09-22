@@ -37,12 +37,14 @@ S2 first becomes annually feasible at the tested 2.5 multiplier, while monthly d
 | S2 | ACO | 0.0217705 | 0.0357461 | 0.0813244 | DIAGNOSTIC ONLY |
 | S2 | GA | 0.00381203 | 0.00243575 | 0.00782539 | DIAGNOSTIC ONLY |
 
-## Table 5. Economic robustness
+## Table 5. Economic input-shock response
+
+The economic family perturbs connected direct net-profit inputs while preserving the frozen engine unchanged. Output response is observed, not forced to be linear.
 
 | Scenario | Profit at -20% | Profit at baseline | Profit at +20% | Composition response | Classification |
 |---|---:|---:|---:|---|---|
-| S1 | 1226517731.380 | 1533147164.226 | 1839776597.071 | UNIFORM_SHOCK_INVARIANT_OBSERVED | SAFE WITH LIMITATION |
-| S2 | 176320103.921 | 220400129.901 | 264480155.882 | UNIFORM_SHOCK_INVARIANT_OBSERVED | DIAGNOSTIC ONLY |
+| S1 | 1226517731.380 | 1533147164.226 | 1839776597.071 | UNIFORM_INPUT_SHOCK_COMPOSITION_INVARIANT_OBSERVED | SAFE WITH LIMITATION |
+| S2 | 176330807.801 | 220400129.901 | 264467572.138 | UNIFORM_INPUT_SHOCK_COMPOSITION_INVARIANT_OBSERVED | DIAGNOSTIC ONLY |
 
 S2 economic values show only the uniform profit-scale response of infeasible S2 search outputs.
 

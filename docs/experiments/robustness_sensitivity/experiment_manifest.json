@@ -7,13 +7,13 @@
     "0dcc856e2447ab1d6608",
     "109369861afa79288dba",
     "15ebca641d48c1188d0c",
-    "1bd8c980a85fb148f42a",
     "1e889da4a8bec18fd30e",
     "2844ed05b14029c053b8",
     "305c60c7dc616501a647",
     "3735c19aea2f381af5e0",
-    "3dd7cd8c1e263f39bbb9",
     "444e86c492e3ccc3809f",
+    "47686459949347f6b842",
+    "48759466a28fceb0baae",
     "53e613e87b8565ad884a",
     "59fa0f923b8ad10643d6",
     "5d7159c92df89a3bc4fe",
@@ -26,15 +26,15 @@
     "87527d3a08871850f927",
     "878a28e80b702f34fef5",
     "87d943b7a790cb29a5a9",
+    "88235f336055fc31f4a8",
     "8c43a5de4a5ff968da36",
+    "90e9af14e6e30aafc50f",
     "92f57d6671ab4ab82e3f",
     "9ba3ed1f4717d9f7d83f",
-    "9dabde5c178eef6b7c80",
     "9e091a1ff5896595dc8d",
     "9f9289b2214081e976fe",
-    "a3f8c023f944e6e3171a",
     "b19d396df2cb14a2e811",
-    "b1b304f201d7f16c7048",
+    "b1e21d30de36b25f24d3",
     "b2920608927e8271156a",
     "b82de3498bd95685900d",
     "b9be7f4fb3d95534279d",
@@ -71,6 +71,16 @@
     "current_pattern_calculated_gross_demand_m3": 100700080.81
   },
   "baseline_tag": "refs/tags/v2-scientific-prepilot-freeze",
+  "calendar_hash_domains": {
+    "calendar_portable_resource_sha256": "a283c471ed73a77779c9d739fddad776172c67e490f026b477dc6fddad173170",
+    "calendar_raw_source_path": "data/s1_crop_calendar_rules.json",
+    "calendar_raw_source_sha256": "23e4e8aff5e6e804820b1b10f1bd0ac8e8488e7c3018e70b132c7dcf350691ef",
+    "calendar_runtime_digest": "b3130963c207579fc812aa509fdeb9a24c4d590d37fb5b48f7999f0de78033e1",
+    "calendar_runtime_digest_classification": "HOST_PATH_DEPENDENT_DEBUG_DIGEST",
+    "portable_normalization": {
+      "_derived._rules_file": "data/s1_crop_calendar_rules.json"
+    }
+  },
   "candidate_hash": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
   "candidate_hash_alias_semantics": "backward-compatible alias of candidate_canonical_resource_sha256",
   "candidate_hash_domains": {
@@ -78,11 +88,127 @@
     "candidate_git_blob_id": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
     "candidate_raw_csv_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b"
   },
-  "correction_version": "corrective-phase-1b",
-  "corrective_reexecuted_runs": 5,
+  "correction_version": "corrective-phase-2",
+  "dataset_hash_domains": {
+    "area_overrides": {
+      "portable_resource_sha256": "01f586ca453f641d0b6c1a5b29ab3e44f673d0fa2b9cf0b105b1a45866a9eb52",
+      "runtime_digest": "01f586ca453f641d0b6c1a5b29ab3e44f673d0fa2b9cf0b105b1a45866a9eb52",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "calendar": {
+      "portable_resource_sha256": "a283c471ed73a77779c9d739fddad776172c67e490f026b477dc6fddad173170",
+      "runtime_digest": "b3130963c207579fc812aa509fdeb9a24c4d590d37fb5b48f7999f0de78033e1",
+      "runtime_digest_classification": "HOST_PATH_DEPENDENT_DEBUG_DIGEST"
+    },
+    "calendar_annotations": {
+      "portable_resource_sha256": "475b73215bc129bfc441c99d615bf2a83a313a0cd3d129b51ccaa0e3db406be0",
+      "runtime_digest": "475b73215bc129bfc441c99d615bf2a83a313a0cd3d129b51ccaa0e3db406be0",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "candidate_options": {
+      "portable_resource_sha256": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+      "runtime_digest": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "candidate_provenance": {
+      "portable_resource_sha256": "a5a524fceb47414f65bbf323fdff6334d39dbf9b107dfdad697220274c8d5eba",
+      "runtime_digest": "a5a524fceb47414f65bbf323fdff6334d39dbf9b107dfdad697220274c8d5eba",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "crop_catalog": {
+      "portable_resource_sha256": "807037cb6445292964406ac15cb1e624ee3986d20bcf87d8e8b798f58bb3a8d0",
+      "runtime_digest": "807037cb6445292964406ac15cb1e624ee3986d20bcf87d8e8b798f58bb3a8d0",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "crop_families": {
+      "portable_resource_sha256": "386de55fa63ad68e566648f07271ffa8b9e4f372bb0c19d413057ed712b08962",
+      "runtime_digest": "386de55fa63ad68e566648f07271ffa8b9e4f372bb0c19d413057ed712b08962",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "crop_table": {
+      "portable_resource_sha256": "872b1127795659beca490618b9942ac6acf5d7f804d5adc6a609223f0413fac8",
+      "runtime_digest": "872b1127795659beca490618b9942ac6acf5d7f804d5adc6a609223f0413fac8",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "district_patterns": {
+      "portable_resource_sha256": "4784e9e86e80b4d9014869bd404f7af48b4493dc871ce7b437fd26451ecb6ed8",
+      "runtime_digest": "4784e9e86e80b4d9014869bd404f7af48b4493dc871ce7b437fd26451ecb6ed8",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "environment": {
+      "portable_resource_sha256": "b77fa3353aaa390f29494a40627b3550bc4988dc6273fd134442f1a9a064a885",
+      "runtime_digest": "b77fa3353aaa390f29494a40627b3550bc4988dc6273fd134442f1a9a064a885",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "fallback_crop_parameters": {
+      "portable_resource_sha256": "1d32f88badc61e598157c3fdd97ba6f34ac96a1e5111a1210b932b52b30b54b3",
+      "runtime_digest": "1d32f88badc61e598157c3fdd97ba6f34ac96a1e5111a1210b932b52b30b54b3",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "irrigation_annotations": {
+      "portable_resource_sha256": "92a6334180a71a77814d631f21959e6e47a6b107ace0757093000dc9366244e7",
+      "runtime_digest": "92a6334180a71a77814d631f21959e6e47a6b107ace0757093000dc9366244e7",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "irrigation_map": {
+      "portable_resource_sha256": "dd67dd9c2a7dd40c23dc5d4126471fa3c50d056cd5be6e44e375d25d084db78a",
+      "runtime_digest": "dd67dd9c2a7dd40c23dc5d4126471fa3c50d056cd5be6e44e375d25d084db78a",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "irrigation_methods": {
+      "portable_resource_sha256": "9f0c24291010fe7544312d77211e2765089d748b29a7c0531ec4f44e6d994ace",
+      "runtime_digest": "9f0c24291010fe7544312d77211e2765089d748b29a7c0531ec4f44e6d994ace",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "orchard_interrow": {
+      "portable_resource_sha256": "97e419bdd36201aac2c1a7df69069bec536eee4479188bbc2ca7bf72bb5da9e0",
+      "runtime_digest": "97e419bdd36201aac2c1a7df69069bec536eee4479188bbc2ca7bf72bb5da9e0",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "regional_candidate_options": {
+      "portable_resource_sha256": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+      "runtime_digest": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "rotation": {
+      "portable_resource_sha256": "7eb25c634a6dc926c93a45acb9de017a830f299b306c9dc49a60f614f6d0da85",
+      "runtime_digest": "7eb25c634a6dc926c93a45acb9de017a830f299b306c9dc49a60f614f6d0da85",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "season_annotations": {
+      "portable_resource_sha256": "5c80091b8d37df60ea1985001a1d892f5abdc528680fc11148ce70852fe2d03e",
+      "runtime_digest": "5c80091b8d37df60ea1985001a1d892f5abdc528680fc11148ce70852fe2d03e",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "suitability_map": {
+      "portable_resource_sha256": "7b208762a2c6befdb0a5060b64a3ee0d6280da34af01b6135f364ba09ae66d8d",
+      "runtime_digest": "7b208762a2c6befdb0a5060b64a3ee0d6280da34af01b6135f364ba09ae66d8d",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "unit_summary": {
+      "portable_resource_sha256": "1427f795d0fd5600737a0c35a8957f2383514737b99bd5ebdc37aa8e78765e8c",
+      "runtime_digest": "1427f795d0fd5600737a0c35a8957f2383514737b99bd5ebdc37aa8e78765e8c",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "units": {
+      "portable_resource_sha256": "34018624ff398ccf3835e9b16679b6e4a342fe8e6d4d864c23ba7c2dbe94c3ad",
+      "runtime_digest": "34018624ff398ccf3835e9b16679b6e4a342fe8e6d4d864c23ba7c2dbe94c3ad",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "village_patterns": {
+      "portable_resource_sha256": "866124b7175d9da012e939a0124ffd2e36e6d7cc0e64fc0b9d0aac3c1822e928",
+      "runtime_digest": "866124b7175d9da012e939a0124ffd2e36e6d7cc0e64fc0b9d0aac3c1822e928",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    },
+    "water_allocation_context": {
+      "portable_resource_sha256": "e5cd928032db79fe1b0682b30643fc9a8faddc7d07c156e5723e6a3665e57e0c",
+      "runtime_digest": "e5cd928032db79fe1b0682b30643fc9a8faddc7d07c156e5723e6a3665e57e0c",
+      "runtime_digest_classification": "PORTABLE_RESOURCE_DIGEST"
+    }
+  },
   "dataset_hashes": {
     "area_overrides": "01f586ca453f641d0b6c1a5b29ab3e44f673d0fa2b9cf0b105b1a45866a9eb52",
-    "calendar": "31217df2549b4ba3d2f35f7a6fcdf245cdb0f4b3cd392526778a1ec5f405c984",
+    "calendar": "a283c471ed73a77779c9d739fddad776172c67e490f026b477dc6fddad173170",
     "calendar_annotations": "475b73215bc129bfc441c99d615bf2a83a313a0cd3d129b51ccaa0e3db406be0",
     "candidate_options": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
     "candidate_provenance": "a5a524fceb47414f65bbf323fdff6334d39dbf9b107dfdad697220274c8d5eba",
@@ -125,7 +251,7 @@
     "l1": "sum(abs(p-q))",
     "weighted_jaccard": "sum(min(a,b))/sum(max(a,b))"
   },
-  "nonlinear_transform_policy": "evaluate_frozen_profit_realism_in_baseline_domain_then_scale_output",
+  "nonlinear_transform_policy": "scaled_inputs_pass_through_unchanged_frozen_engine",
   "objectives": {
     "economic": "max_profit",
     "excluded": [
@@ -133,14 +259,39 @@
     ],
     "water_and_robustness": "water_saving"
   },
-  "original_scientific_runs": 54,
+  "original_scientific_raw_runs": 54,
+  "phase1_corrective_raw_runs": 5,
+  "phase2_corrective_raw_runs": 5,
   "population": {
     "analysis_units": 179,
     "area_da": 134919,
     "label": "FULL_REFERENCE_PROJECT_EXPERIMENT"
   },
+  "portable_cross_root_verification": {
+    "calendar_portable_resource_sha256": "a283c471ed73a77779c9d739fddad776172c67e490f026b477dc6fddad173170",
+    "calendar_raw_source_sha256": "23e4e8aff5e6e804820b1b10f1bd0ac8e8488e7c3018e70b132c7dcf350691ef",
+    "normalization": {
+      "_derived._rules_file": "data/s1_crop_calendar_rules.json"
+    },
+    "portable_resource_hashes_equal": true,
+    "raw_source_hashes_equal": true,
+    "root_a": {
+      "calendar_runtime_digest": "31217df2549b4ba3d2f35f7a6fcdf245cdb0f4b3cd392526778a1ec5f405c984",
+      "label": "rejected_phase1_worktree"
+    },
+    "root_b": {
+      "calendar_runtime_digest": "b3130963c207579fc812aa509fdeb9a24c4d590d37fb5b48f7999f0de78033e1",
+      "label": "corrective_phase2_worktree"
+    },
+    "runtime_digests_differ_as_expected": true,
+    "status": "PASS"
+  },
   "raw_run_count": 54,
-  "scenario_grid_hash": "3aa2bb309cf8d4a78930173356a76b14339ba504cab9942e4c3f9aa2ff67e60e",
+  "raw_run_count_semantics": "active publication run count",
+  "scenario_grid_canonical_sha256": "90c8f04d887be371e73738ce4f3a3933a110db139f72e64dc3fb7920edb1a4d6",
+  "scenario_grid_file_sha256": "3aa2bb309cf8d4a78930173356a76b14339ba504cab9942e4c3f9aa2ff67e60e",
+  "scenario_grid_hash": "90c8f04d887be371e73738ce4f3a3933a110db139f72e64dc3fb7920edb1a4d6",
+  "scenario_grid_hash_alias_semantics": "backward-compatible alias of scenario_grid_canonical_sha256",
   "scenarios": [
     "S1",
     "S2"
@@ -163,9 +314,29 @@
   "superseded_experiment_runs": [
     "02f784a7baede02646e1",
     "08530fbe4cda76bc1d56",
+    "1bd8c980a85fb148f42a",
+    "3dd7cd8c1e263f39bbb9",
+    "53570566aec21ed465db",
+    "65f80ffc691ca2378b3e",
+    "9dabde5c178eef6b7c80",
+    "9fd74cb68235acd6f7bc",
+    "a3f8c023f944e6e3171a",
+    "b1b304f201d7f16c7048"
+  ],
+  "superseded_logical_scenarios": 5,
+  "superseded_original_s2_economic_run_ids": [
+    "02f784a7baede02646e1",
+    "08530fbe4cda76bc1d56",
     "53570566aec21ed465db",
     "65f80ffc691ca2378b3e",
     "9fd74cb68235acd6f7bc"
   ],
-  "superseded_runs": 5
+  "superseded_phase1_s2_economic_run_ids": [
+    "1bd8c980a85fb148f42a",
+    "3dd7cd8c1e263f39bbb9",
+    "9dabde5c178eef6b7c80",
+    "a3f8c023f944e6e3171a",
+    "b1b304f201d7f16c7048"
+  ],
+  "superseded_raw_run_versions": 10
 }

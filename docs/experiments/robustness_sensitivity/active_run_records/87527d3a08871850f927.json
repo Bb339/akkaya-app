@@ -1,5 +1,6 @@
 {
-  "active_record_version": "corrective-phase-1b",
+  "active_record_version": "corrective-phase-2",
+  "algorithm": "GA",
   "algorithm_config": {
     "cxRate": 0.7,
     "generations": 10,
@@ -189,6 +190,9 @@
   ],
   "analysis_units": 179,
   "area_da": 134919,
+  "candidate_canonical_resource_sha256": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+  "candidate_git_blob_id": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
+  "candidate_raw_csv_sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
   "classification": "DIAGNOSTIC ONLY",
   "definition": {
     "algorithm": "GA",
@@ -199,8 +203,10 @@
     "seed": 101,
     "water_budget_ratio": 2.05585908288113
   },
+  "economic_shock": 0.0,
   "executed_at_utc": "2026-09-22T14:32:56.157463+00:00",
   "execution_status": "UNCHANGED_ORIGINAL_EXECUTION",
+  "family": "WATER_THRESHOLD",
   "input_overlay_hash": "a91a89d37b5f020cf210e932da3e6c38f80ac435f4c0aded270489f386e04bb6",
   "metrics": {
     "annual_budget_feasible": false,
@@ -337,13 +343,17 @@
     "total_water_m3": 23849199.0028,
     "water_budget_m3": 21385018.541160002
   },
+  "objective": "water_saving",
   "planning_year": 2024,
   "population": "FULL_REFERENCE_PROJECT_EXPERIMENT",
   "result_sha256": "e537f37ed72ad276958429a4207f9511dbb883475f4c7209d00d08d005e81a17",
   "role": "scientific",
   "run_id": "87527d3a08871850f927",
   "runtime_seconds": 40.94150549999904,
+  "scenario": "S2",
   "scenario_hash": "55f52461d778b19b8e792e06a10a4827644179aa118ddc6cdbee12ec857c8465",
+  "seed": 101,
   "source_raw_path": "docs/experiments/robustness_sensitivity/raw_runs/87527d3a08871850f927.json",
-  "source_raw_sha256": "8df6d5877096581553112ed48b4a9b3429a12156731bce3ed91fa2bb9e308864"
+  "source_raw_sha256": "8df6d5877096581553112ed48b4a9b3429a12156731bce3ed91fa2bb9e308864",
+  "water_budget_ratio": 2.05585908288113
 }

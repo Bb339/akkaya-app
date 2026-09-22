@@ -708,6 +708,9 @@ def build_outputs() -> None:
         "portable_normalization":{"_derived._rules_file":"data/s1_crop_calendar_rules.json"},
     }
     manifest["scenario_grid_hash"]=manifest["scenario_grid_canonical_sha256"]
+    portable_verification = OUT / "portable_hash_verification.json"
+    if portable_verification.exists():
+        manifest["portable_cross_root_verification"] = json.loads(portable_verification.read_text(encoding="utf-8"))
     if resources["candidate_options"].digest != CANDIDATE_CANONICAL_RESOURCE_SHA256:
         raise RuntimeError("Canonical candidate resource hash changed")
     candidate_path=ROOT/"data"/"excel_derived"/"combined_parcel_candidate_matrix_2024.csv"
@@ -734,7 +737,7 @@ def build_publication_docs(records, summaries, seed_rows, agreement, water, econ
 
 S1 is full-project computational robustness evidence classified **SAFE WITH LIMITATION**. S2 plan outputs are infeasible-search diagnostics classified **DIAGNOSTIC ONLY** under the current constraints. An annually feasible S2 row remains diagnostic when monthly delivery is violated and overall feasibility is false.
 
-The S2 annual threshold is only a model annual-budget threshold. The economic experiment tests a uniform scale change across connected net-profit inputs; it does not test price or yield independently.
+The S2 annual threshold is only a model annual-budget threshold. The economic family perturbs connected direct net-profit inputs while preserving the frozen engine unchanged. Output response is observed, not forced to be linear. It does not test price or yield independently.
 
 These outputs do not establish official water allocation, measured water use, field validation, multi-year validation, real-world feasibility, market feasibility, real-farm profitability or income, farmer behavior, or external agronomic validity. The single-year reviewer issue and economic uncertainty are only partially improved; field validation, multi-year behavior, market capacity, farmer behavior, and external agronomic validity remain unresolved.
 """
@@ -750,7 +753,7 @@ These outputs do not establish official water allocation, measured water use, fi
         rr=[r for r in agreement if r["scenario"]==scenario]; lines.append(f"| {scenario} | {statistics.fmean(r['weighted_jaccard'] for r in rr):.6f} | {statistics.fmean(bool(r['top1_agreement']) for r in rr):.6f} | {statistics.fmean(bool(r['feasible_agreement']) for r in rr):.6f} | {rr[0]['claim_classification']} |")
     lines += ["","## Table 4. Seed variability","","| Scenario | Algorithm | Water CV | Profit CV | HHI CV | Classification |","|---|---|---:|---:|---:|---|"]
     for r in seed_rows: lines.append(f"| {r['scenario']} | {r['algorithm']} | {r['total_water_m3_cv']:.6g} | {r['total_profit_tl_cv']:.6g} | {r['hhi_cv']:.6g} | {r['claim_classification']} |")
-    lines += ["","## Table 5. Economic robustness","","| Scenario | Profit at -20% | Profit at baseline | Profit at +20% | Composition response | Classification |","|---|---:|---:|---:|---|---|"]
+    lines += ["","## Table 5. Economic input-shock response","","The economic family perturbs connected direct net-profit inputs while preserving the frozen engine unchanged. Output response is observed, not forced to be linear.","","| Scenario | Profit at -20% | Profit at baseline | Profit at +20% | Composition response | Classification |","|---|---:|---:|---:|---|---|"]
     for scenario in ("S1","S2"):
         rr=sorted([r for r in economic if r["scenario"]==scenario],key=lambda r:float(r["economic_shock"])); lines.append(f"| {scenario} | {float(rr[0]['total_profit_tl']):.3f} | {float(rr[2]['total_profit_tl']):.3f} | {float(rr[4]['total_profit_tl']):.3f} | {rr[0]['composition_response']} | {rr[0]['claim_classification']} |")
     lines += ["","S2 economic values show only the uniform profit-scale response of infeasible S2 search outputs.","","## Table 6. Crop-pattern stability","","| Scenario | Mean algorithm weighted Jaccard | Mean algorithm Bray-Curtis | Mean top-3 Jaccard | Classification |","|---|---:|---:|---:|---|"]
@@ -762,7 +765,7 @@ These outputs do not establish official water allocation, measured water use, fi
       {"figure_id":"F1","title":"Annual water feasibility across budget multipliers","source":"water_threshold_analysis.csv","x":"water_budget_ratio","y":"total_water_m3 and water_budget_m3","group":"scenario","s1_use":"SAFE WITH LIMITATION","s2_use":"ANNUAL THRESHOLD SAFE WITH LIMITATION; PLAN OUTPUT DIAGNOSTIC ONLY","status":"DATA_READY"},
       {"figure_id":"F2","title":"Algorithm agreement in crop shares","source":"algorithm_agreement.csv","x":"algorithm pair","y":"weighted_jaccard","group":"scenario","s1_use":"SAFE WITH LIMITATION","s2_use":"DIAGNOSTIC ONLY","status":"DATA_READY"},
       {"figure_id":"F3","title":"Seed variability of water and profit","source":"seed_variability.csv","x":"algorithm","y":"coefficient of variation","group":"scenario","s1_use":"SAFE WITH LIMITATION","s2_use":"DIAGNOSTIC ONLY","status":"DATA_READY"},
-      {"figure_id":"F4","title":"Net-profit sensitivity","source":"economic_sensitivity.csv","x":"economic_shock","y":"total_profit_tl","group":"scenario","s1_use":"SAFE WITH LIMITATION","s2_use":"DIAGNOSTIC ONLY","status":"DATA_READY"},
+      {"figure_id":"F4","title":"Net-profit input-shock response","source":"economic_sensitivity.csv","x":"economic_shock","y":"total_profit_tl","group":"scenario","s1_use":"SAFE WITH LIMITATION","s2_use":"DIAGNOSTIC ONLY","status":"DATA_READY","evidence_version":"corrective-phase-2","execution_semantics":"standard frozen execute; output response observed"},
       {"figure_id":"F5","title":"Crop-share stability by scenario","source":"crop_share_stability.csv","x":"comparison","y":"weighted_jaccard and Bray-Curtis","group":"scenario","s1_use":"SAFE WITH LIMITATION","s2_use":"DIAGNOSTIC ONLY","status":"DATA_READY"},
     ]
     write_csv(OUT/"publication_figure_manifest.csv",figures)
@@ -778,22 +781,25 @@ These outputs do not establish official water allocation, measured water use, fi
 | Yield | descriptive source columns | no independent accepted-path consumer | none | none | none | false |
 
 S1 reports the current-pattern calculated gross-demand budget (100,700,080.81 m3 at ratio 1.0), whereas S2 reports the reservoir-derived engine scenario budget (10,401,986.556 m3 at ratio 1.0). The protected-perennial critical multiplier therefore applies only to the S2 annual-budget boundary.
+
+The economic family perturbs connected direct net-profit inputs while preserving the frozen engine unchanged. Every Phase 2 run uses `kds.science.execution.execute`; output response is observed, not forced to be linear.
 """
     (OUT/"data_flow_audit.md").write_text(audit,encoding="utf-8")
     lineage="""# Economic overlay lineage
 
-The corrective overlay implements the original preregistered uniform net-profit shock. It changes copied values inside a disposable scientific bundle; production files and frozen sources remain byte-identical.
+The Phase 2 overlay implements the original preregistered uniform direct-input net-profit shock. It changes copied values inside a disposable scientific bundle; production files and frozen sources remain byte-identical.
 
-The frozen `_apply_profit_realism` operation contains thresholds and caps, so applying a multiplier before it is not mathematically uniform. The corrective disposable worker therefore evaluates that unchanged transform in the baseline profit domain and applies the same multiplier to its output. This preserves the frozen transform while making the preregistered global scale contract exact.
+The economic family perturbs connected direct net-profit inputs while preserving the frozen engine unchanged. Each scaled bundle is passed directly to `kds.science.execution.execute`. The frozen `_apply_profit_realism` thresholds and caps receive the scaled inputs under normal production semantics. Output response is observed, not forced to be linear.
 
 | Source object | Profit field | Frozen consumer | Overlay transformation | Result contribution |
 |---|---|---|---|---|
 | candidate_options / regional_candidate_options | profit_tl_da, profit_tl_total | S1 matrix and candidate selection | × (1 + shock) | objective profit and projected crop profit |
 | environment.s1 / environment.s2 | profit_tl, profit_per_da, profit_tl_da | primary and secondary seasonal matrices | × (1 + shock) | seasonal objective and plan rows |
-| crop_catalog | profitPerDa, profit_per_da, net_profit_tl_da | S2 perennial locks, fallbacks and final-plan projection | × (1 + shock) | locked/final crop profit |
-| fallback_crop_parameters | profit_per_da aliases | missing seasonal-cell fallback | × (1 + shock) | fallback candidate profit |
+| crop_catalog | profitPerDa | S2 perennial locks, fallbacks and final-plan projection | × (1 + shock) | locked/final crop profit |
+| fallback_crop_parameters | profit_per_da | missing seasonal-cell fallback | × (1 + shock) | fallback candidate profit |
 | crop_table | direct net-profit aliases | catalog/table fallback paths | × (1 + shock) | fallback plan profit |
-| units / unit_summary | current direct-profit fields | baseline/final projection paths | × (1 + shock) | baseline and projected profit |
+| units | profit_tl | scientific unit resource consumer | × (1 + shock) | connected unit profit input |
+| unit_summary | mevcut_kar_tl | not consumed on the scientific decision path | not perturbed | none |
 | ScientificInputBundle.candidates | CandidateOption.profit_per_da and derived water_productivity | canonical candidate consumer | × (1 + shock) | candidate objective inputs |
 
 Price and yield remain disconnected from the independent perturbation contract:
@@ -802,7 +808,7 @@ Price and yield remain disconnected from the independent perturbation contract:
 
 ## Superseded evidence
 
-The rejected S2 implementation omitted `crop_catalog.profitPerDa` and related direct paths. Historical residuals were approximately +2,739,224.62 TL at −20%, +1,376,302.23 TL at −10%, −1,375,045.47 TL at +10%, and −2,741,104.48 TL at +20%. Those five original run identities remain immutable historical evidence and are excluded from active summaries.
+The five original S2 economic runs and the five Phase 1 monkeypatch runs remain immutable historical evidence. Phase 1 runs are classified `HISTORICAL_INVALID_FOR_ACTIVE_PUBLICATION`. Neither version contributes to active summaries, tables, or figures; the five Phase 2 frozen-engine executions replace the same logical scenarios.
 """
     (OUT/"economic_overlay_lineage.md").write_text(lineage,encoding="utf-8")
 

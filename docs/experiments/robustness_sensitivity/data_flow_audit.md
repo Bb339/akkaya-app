@@ -8,3 +8,5 @@
 | Yield | descriptive source columns | no independent accepted-path consumer | none | none | none | false |
 
 S1 reports the current-pattern calculated gross-demand budget (100,700,080.81 m3 at ratio 1.0), whereas S2 reports the reservoir-derived engine scenario budget (10,401,986.556 m3 at ratio 1.0). The protected-perennial critical multiplier therefore applies only to the S2 annual-budget boundary.
+
+The economic family perturbs connected direct net-profit inputs while preserving the frozen engine unchanged. Every Phase 2 run uses `kds.science.execution.execute`; output response is observed, not forced to be linear.
