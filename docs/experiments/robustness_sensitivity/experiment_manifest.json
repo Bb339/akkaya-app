@@ -1,0 +1,95 @@
+{
+  "algorithms": [
+    "GA",
+    "ACO",
+    "ABC"
+  ],
+  "baseline_commit": "ac02f4dc9e984438696f7da31b8d2a5841711c9e",
+  "baseline_reproduction": {
+    "analysis_units": 179,
+    "area_da": 134919.0,
+    "candidate_rows": 6859,
+    "catalog_derived_current_pattern_profit_tl": 1041499119.212,
+    "crop_count": 58,
+    "current_pattern_calculated_gross_demand_m3": 100700080.81
+  },
+  "baseline_tag": "refs/tags/v2-scientific-prepilot-freeze",
+  "candidate_hash": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+  "dataset_hashes": {
+    "area_overrides": "01f586ca453f641d0b6c1a5b29ab3e44f673d0fa2b9cf0b105b1a45866a9eb52",
+    "calendar": "3b1efc652b31e32e385e0162fc1fc7bc344a47ff95c5eec30de8f71644039508",
+    "calendar_annotations": "475b73215bc129bfc441c99d615bf2a83a313a0cd3d129b51ccaa0e3db406be0",
+    "candidate_options": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+    "candidate_provenance": "a5a524fceb47414f65bbf323fdff6334d39dbf9b107dfdad697220274c8d5eba",
+    "crop_catalog": "807037cb6445292964406ac15cb1e624ee3986d20bcf87d8e8b798f58bb3a8d0",
+    "crop_families": "386de55fa63ad68e566648f07271ffa8b9e4f372bb0c19d413057ed712b08962",
+    "crop_table": "872b1127795659beca490618b9942ac6acf5d7f804d5adc6a609223f0413fac8",
+    "district_patterns": "4784e9e86e80b4d9014869bd404f7af48b4493dc871ce7b437fd26451ecb6ed8",
+    "environment": "b77fa3353aaa390f29494a40627b3550bc4988dc6273fd134442f1a9a064a885",
+    "fallback_crop_parameters": "1d32f88badc61e598157c3fdd97ba6f34ac96a1e5111a1210b932b52b30b54b3",
+    "irrigation_annotations": "92a6334180a71a77814d631f21959e6e47a6b107ace0757093000dc9366244e7",
+    "irrigation_map": "dd67dd9c2a7dd40c23dc5d4126471fa3c50d056cd5be6e44e375d25d084db78a",
+    "irrigation_methods": "9f0c24291010fe7544312d77211e2765089d748b29a7c0531ec4f44e6d994ace",
+    "orchard_interrow": "97e419bdd36201aac2c1a7df69069bec536eee4479188bbc2ca7bf72bb5da9e0",
+    "regional_candidate_options": "d2ee606c03709af66dc6a9e708d85a9e749e40795c052e22a0a24b43839786bd",
+    "rotation": "7eb25c634a6dc926c93a45acb9de017a830f299b306c9dc49a60f614f6d0da85",
+    "season_annotations": "5c80091b8d37df60ea1985001a1d892f5abdc528680fc11148ce70852fe2d03e",
+    "suitability_map": "7b208762a2c6befdb0a5060b64a3ee0d6280da34af01b6135f364ba09ae66d8d",
+    "unit_summary": "1427f795d0fd5600737a0c35a8957f2383514737b99bd5ebdc37aa8e78765e8c",
+    "units": "34018624ff398ccf3835e9b16679b6e4a342fe8e6d4d864c23ba7c2dbe94c3ad",
+    "village_patterns": "866124b7175d9da012e939a0124ffd2e36e6d7cc0e64fc0b9d0aac3c1822e928",
+    "water_allocation_context": "e5cd928032db79fe1b0682b30643fc9a8faddc7d07c156e5723e6a3665e57e0c"
+  },
+  "excluded_factors": {
+    "combined_stress": "requires new preregistration",
+    "price": "not independently connected",
+    "yield": "not independently connected"
+  },
+  "excluded_runs": [
+    "price shocks: connected=false",
+    "yield shocks: connected=false",
+    "water_efficiency objective: preregistered computational exclusion",
+    "combined stress: requires new preregistration"
+  ],
+  "failed_runs": [],
+  "formulas": {
+    "bray_curtis": "sum(abs(a-b))/sum(a+b)",
+    "critical_multiplier": "protected_perennial_floor_m3 / base_engine_budget_m3",
+    "hhi": "sum(crop_share^2)",
+    "l1": "sum(abs(p-q))",
+    "weighted_jaccard": "sum(min(a,b))/sum(max(a,b))"
+  },
+  "objectives": {
+    "economic": "max_profit",
+    "excluded": [
+      "water_efficiency"
+    ],
+    "water_and_robustness": "water_saving"
+  },
+  "population": {
+    "analysis_units": 179,
+    "area_da": 134919,
+    "label": "FULL_REFERENCE_PROJECT_EXPERIMENT"
+  },
+  "raw_run_count": 54,
+  "scenario_grid_hash": "586665ee0f4ff45b0865d7d9e2fdc3074232602c097f1d35291b29e9c7a28003",
+  "scenarios": [
+    "S1",
+    "S2"
+  ],
+  "scientific_source_commit": "bb0c6ff516a7d995c2894ee66285ebf124ac9340",
+  "selected_seeds": [
+    101,
+    211,
+    307,
+    401,
+    503
+  ],
+  "software": {
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.11.9"
+  },
+  "source_guard_unchanged": true
+}

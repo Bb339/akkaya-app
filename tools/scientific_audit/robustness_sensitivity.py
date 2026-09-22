@@ -278,7 +278,8 @@ def run_all(shard_index: int = 0, shard_count: int = 1) -> None:
 def numeric_stats(values: list[float], prefix: str) -> dict[str, float]:
     mean = statistics.fmean(values) if values else 0.0
     sd = statistics.stdev(values) if len(values) > 1 else 0.0
-    return {f"{prefix}_mean": mean, f"{prefix}_sd": sd, f"{prefix}_cv": sd / abs(mean) if mean else 0.0,
+    return {f"{prefix}_mean": mean, f"{prefix}_median": statistics.median(values) if values else 0.0,
+            f"{prefix}_sd": sd, f"{prefix}_cv": sd / abs(mean) if mean else 0.0,
             f"{prefix}_min": min(values) if values else 0.0, f"{prefix}_max": max(values) if values else 0.0}
 
 
@@ -295,7 +296,9 @@ def distances(a: dict[str, float], b: dict[str, float]) -> dict[str, float]:
 
 def flatten(record: dict[str, Any]) -> dict[str, Any]:
     d, m = record["definition"], record["metrics"]
-    return {**d, "run_id": record["run_id"], "scenario_hash": record["scenario_hash"],
+    return {**d, "scenario_id": "SCN-" + record["scenario_hash"][:12],
+            "population": "FULL_REFERENCE_PROJECT_EXPERIMENT", "analysis_units": 179, "area_da": 134919,
+            "claim_classification": "SAFE WITH LIMITATION", "run_id": record["run_id"], "scenario_hash": record["scenario_hash"],
             "input_overlay_hash": record["input_overlay_hash"], "runtime_seconds": record["runtime_seconds"],
             **{k: (canonical(v) if isinstance(v, (dict, list)) else v) for k, v in m.items()}}
 
@@ -343,28 +346,40 @@ def build_outputs() -> None:
                 dist=distances(a["metrics"]["crop_areas_da"],b["metrics"]["crop_areas_da"])
                 row={"scenario":scenario,"seed":seed,"algorithm_a":aa,"algorithm_b":bb,**dist,
                      "top1_agreement":a["metrics"]["top1_crop"]==b["metrics"]["top1_crop"],
-                     "top3_jaccard":len(set(a["metrics"]["top3_crops"])&set(b["metrics"]["top3_crops"]))/max(1,len(set(a["metrics"]["top3_crops"])|set(b["metrics"]["top3_crops"]))) }
+                     "top3_jaccard":len(set(a["metrics"]["top3_crops"])&set(b["metrics"]["top3_crops"]))/max(1,len(set(a["metrics"]["top3_crops"])|set(b["metrics"]["top3_crops"]))),
+                     "water_difference_pct":100*(a["metrics"]["total_water_m3"]-b["metrics"]["total_water_m3"])/max(abs(b["metrics"]["total_water_m3"]),1e-12),
+                     "profit_difference_pct":100*(a["metrics"]["total_profit_tl"]-b["metrics"]["total_profit_tl"])/max(abs(b["metrics"]["total_profit_tl"]),1e-12),
+                     "efficiency_difference_pct":100*(a["metrics"]["efficiency_tl_per_m3"]-b["metrics"]["efficiency_tl_per_m3"])/max(abs(b["metrics"]["efficiency_tl_per_m3"]),1e-12),
+                     "feasible_agreement":a["metrics"]["feasible"]==b["metrics"]["feasible"]}
                 agreement.append(row); stability.append({**row,"comparison_type":"algorithm_matched_seed"})
     write_csv(OUT / "algorithm_agreement.csv", agreement)
     for scenario,algorithm in itertools.product(("S1","S2"),ALGORITHMS):
-        base=index[(scenario,algorithm,selected_seeds()[0])]
-        for seed in selected_seeds()[1:]:
-            other=index[(scenario,algorithm,seed)]; dist=distances(base["metrics"]["crop_areas_da"],other["metrics"]["crop_areas_da"])
-            stability.append({"comparison_type":"seed_vs_first_seed","scenario":scenario,"seed":seed,"algorithm_a":algorithm,"algorithm_b":algorithm,**dist,
+        for seed_a,seed_b in itertools.combinations(selected_seeds(),2):
+            base=index[(scenario,algorithm,seed_a)]; other=index[(scenario,algorithm,seed_b)]; dist=distances(base["metrics"]["crop_areas_da"],other["metrics"]["crop_areas_da"])
+            stability.append({"comparison_type":"seed_pair","scenario":scenario,"seed":seed_b,"seed_a":seed_a,"seed_b":seed_b,"algorithm_a":algorithm,"algorithm_b":algorithm,**dist,
                               "top1_agreement":base["metrics"]["top1_crop"]==other["metrics"]["top1_crop"],
                               "top3_jaccard":len(set(base["metrics"]["top3_crops"])&set(other["metrics"]["top3_crops"]))/max(1,len(set(base["metrics"]["top3_crops"])|set(other["metrics"]["top3_crops"])))})
     write_csv(OUT / "crop_share_stability.csv", stability)
 
     water=[flatten(r) for r in records if "WATER_THRESHOLD" in r["definition"]["family"]]
     water.sort(key=lambda r:(r["scenario"],float(r["water_budget_ratio"])))
-    for row in water:
+    for scenario in ("S1","S2"):
+      scenario_rows=[r for r in water if r["scenario"]==scenario]
+      previous=None
+      for row in scenario_rows:
         row["critical_multiplier"] = CRITICAL
         row["distance_from_critical"] = float(row["water_budget_ratio"])-CRITICAL
         row["threshold_interpretation"] = "STRUCTURAL_MODEL_OUTPUT_NOT_REAL_WORLD_AVAILABILITY"
+        row["annual_feasibility_transition_from_previous"] = bool(previous is not None and str(previous["annual_budget_feasible"]).lower()!=str(row["annual_budget_feasible"]).lower())
+        row["transition_interval_lower"] = previous["water_budget_ratio"] if row["annual_feasibility_transition_from_previous"] else ""
+        row["transition_interval_upper"] = row["water_budget_ratio"] if row["annual_feasibility_transition_from_previous"] else ""
+        previous=row
     write_csv(OUT / "water_threshold_analysis.csv", water)
     economic=[flatten(r) for r in records if "ECONOMIC" in r["definition"]["family"]]
     for row in economic:
         row["factor"]="net_profit_per_da"; row["price_status"]="PRICE_SENSITIVITY_NOT_EXECUTABLE_ON_FROZEN_ENGINE"; row["yield_status"]="YIELD_SENSITIVITY_NOT_EXECUTABLE_ON_FROZEN_ENGINE"
+        peers=[r for r in economic if r["scenario"]==row["scenario"]]
+        row["composition_response"]="UNIFORM_SHOCK_INVARIANT_OBSERVED" if len({(r["top1_crop"],r["hhi"],r["crop_shares"]) for r in peers})==1 else "COMPOSITION_CHANGED"
     write_csv(OUT / "economic_sensitivity.csv", economic)
 
     source_before=json.loads((OUT/"source_guard_before.json").read_text(encoding="utf-8")) if (OUT/"source_guard_before.json").exists() else source_hashes()
@@ -376,6 +391,7 @@ def build_outputs() -> None:
               "objectives":{"water_and_robustness":"water_saving","economic":"max_profit","excluded":["water_efficiency"]},
               "scenarios":["S1","S2"],"formulas":{"critical_multiplier":"protected_perennial_floor_m3 / base_engine_budget_m3","hhi":"sum(crop_share^2)","l1":"sum(abs(p-q))","bray_curtis":"sum(abs(a-b))/sum(a+b)","weighted_jaccard":"sum(min(a,b))/sum(max(a,b))"},
               "excluded_factors":{"price":"not independently connected","yield":"not independently connected","combined_stress":"requires new preregistration"},
+              "excluded_runs":["price shocks: connected=false","yield shocks: connected=false","water_efficiency objective: preregistered computational exclusion","combined stress: requires new preregistration"],
               "failed_runs":[],"raw_run_count":len(records),"software":{"python":platform.python_version(),"platform":platform.platform(),"numpy":importlib.metadata.version("numpy"),"pandas":importlib.metadata.version("pandas")},
               "dataset_hashes":dict(next(iter(records))["result"].get("input_provenance",{}).get("resource_hashes",{})) if records else {},
               "candidate_hash":None,"source_guard_unchanged":guard["unchanged"]}
@@ -383,6 +399,7 @@ def build_outputs() -> None:
     from kds.application.optimization import configuration
     b=build_bundle(document,configuration(payload("S1","GA",selected_seeds()[0],"water_saving",1.0),document)); resources=dict(b.resources)
     manifest["dataset_hashes"]={k:v.digest for k,v in resources.items()}; manifest["candidate_hash"]=resources["candidate_options"].digest
+    manifest["baseline_reproduction"]={"analysis_units":len(document["analysis_units"]),"area_da":sum(u["area_da"] for u in document["analysis_units"]),"candidate_rows":len(resources["candidate_options"].copy()),"crop_count":len(document["crops"]),"current_pattern_calculated_gross_demand_m3":document["water_budget"]["amount"],"catalog_derived_current_pattern_profit_tl":sum(float(u["metadata"]["current_profit_tl"]) for u in document["analysis_units"])}
     write_json(OUT/"experiment_manifest.json",manifest)
     protocol_text=PROTOCOL.read_text(encoding="utf-8"); (OUT/"experimental_protocol.md").write_text(protocol_text,encoding="utf-8")
     build_publication_docs(records, summary_rows, seed_rows, agreement, water, economic, manifest)
@@ -392,11 +409,20 @@ def build_publication_docs(records, summaries, seed_rows, agreement, water, econ
     claim = """# Claim boundary\n\nThe tables in this package describe outputs of the frozen V2 scientific engine for the frozen 179-unit reference project under preregistered input perturbations. They establish computational behavior and sensitivity inside that model.\n\nThey do not establish official water allocation, measured water use, reservoir availability, real-farm profitability, market absorption, agronomic prescriptions, policy recommendations or real-world feasibility. The critical water multiplier is a structural threshold derived from the model's protected-perennial floor and engine budget. Price and yield sensitivity are not claimed because those fields are not independent decision inputs on the frozen execution path.\n"""
     (OUT/"claim_boundary.md").write_text(claim,encoding="utf-8")
     water_transitions={s:[r for r in water if r["scenario"]==s and str(r["annual_budget_feasible"]).lower()=="true"] for s in ("S1","S2")}
-    lines=["# Publication tables","","## Experiment scope","",f"- Runs: {len(records)}",f"- Seeds: {', '.join(map(str,manifest['selected_seeds']))}","- Population: 179 units / 134,919 da","","## Water threshold","", "| Scenario | First tested annual-feasible multiplier | Engine feasibility at that row |","|---|---:|---|"]
+    lines=["# Publication tables","","All tables are frozen-model evidence classified **SAFE WITH LIMITATION**.","","## Table 1. Experimental design","","| Population | Scenarios | Algorithms | Seeds | Scientific runs |","|---|---|---|---|---:|",f"| 179 units / 134,919 da | S1, S2 | GA, ACO, ABC | {', '.join(map(str,manifest['selected_seeds']))} | {len(records)} |","","## Table 2. Water-budget sensitivity","", "| Scenario | First tested annual-feasible multiplier | Engine feasibility at that row |","|---|---:|---|"]
     for scenario,rows in water_transitions.items():
         first=rows[0] if rows else None; lines.append(f"| {scenario} | {first['water_budget_ratio'] if first else 'none'} | {first['feasible'] if first else 'n/a'} |")
-    lines += ["","## Seed variability","","| Scenario | Algorithm | Water CV | Profit CV | HHI CV |","|---|---|---:|---:|---:|"]
+    lines += ["","## Table 3. Algorithm agreement","","| Scenario | Mean weighted Jaccard | Top-1 agreement rate | Feasibility agreement rate |","|---|---:|---:|---:|"]
+    for scenario in ("S1","S2"):
+        rr=[r for r in agreement if r["scenario"]==scenario]; lines.append(f"| {scenario} | {statistics.fmean(r['weighted_jaccard'] for r in rr):.6f} | {statistics.fmean(bool(r['top1_agreement']) for r in rr):.6f} | {statistics.fmean(bool(r['feasible_agreement']) for r in rr):.6f} |")
+    lines += ["","## Table 4. Seed variability","","| Scenario | Algorithm | Water CV | Profit CV | HHI CV |","|---|---|---:|---:|---:|"]
     for r in seed_rows: lines.append(f"| {r['scenario']} | {r['algorithm']} | {r['total_water_m3_cv']:.6g} | {r['total_profit_tl_cv']:.6g} | {r['hhi_cv']:.6g} |")
+    lines += ["","## Table 5. Economic robustness","","| Scenario | Profit at -20% | Profit at baseline | Profit at +20% | Composition response |","|---|---:|---:|---:|---|"]
+    for scenario in ("S1","S2"):
+        rr=sorted([r for r in economic if r["scenario"]==scenario],key=lambda r:float(r["economic_shock"])); lines.append(f"| {scenario} | {float(rr[0]['total_profit_tl']):.3f} | {float(rr[2]['total_profit_tl']):.3f} | {float(rr[4]['total_profit_tl']):.3f} | {rr[0]['composition_response']} |")
+    lines += ["","## Table 6. Crop-pattern stability","","| Scenario | Mean algorithm weighted Jaccard | Mean algorithm Bray-Curtis | Mean top-3 Jaccard |","|---|---:|---:|---:|"]
+    for scenario in ("S1","S2"):
+        rr=[r for r in agreement if r["scenario"]==scenario]; lines.append(f"| {scenario} | {statistics.fmean(r['weighted_jaccard'] for r in rr):.6f} | {statistics.fmean(r['bray_curtis'] for r in rr):.6f} | {statistics.fmean(r['top3_jaccard'] for r in rr):.6f} |")
     lines += ["","See the CSV files for complete precision and every run. Values are frozen-model outputs within the claim boundary.",""]
     (OUT/"publication_tables.md").write_text("\n".join(lines),encoding="utf-8")
     figures=[
@@ -404,10 +430,13 @@ def build_publication_docs(records, summaries, seed_rows, agreement, water, econ
       {"figure_id":"F2","title":"Algorithm agreement in crop shares","source":"algorithm_agreement.csv","x":"algorithm pair","y":"weighted_jaccard","group":"scenario","status":"DATA_READY"},
       {"figure_id":"F3","title":"Seed variability of water and profit","source":"seed_variability.csv","x":"algorithm","y":"coefficient of variation","group":"scenario","status":"DATA_READY"},
       {"figure_id":"F4","title":"Net-profit sensitivity","source":"economic_sensitivity.csv","x":"economic_shock","y":"total_profit_tl","group":"scenario","status":"DATA_READY"},
+      {"figure_id":"F5","title":"Crop-share stability by scenario","source":"crop_share_stability.csv","x":"comparison","y":"weighted_jaccard and Bray-Curtis","group":"scenario","status":"DATA_READY"},
     ]
     write_csv(OUT/"publication_figure_manifest.csv",figures)
     follow="""# Minor pre-pilot follow-ups\n\nThese inherited items remain non-blocking and did not alter the experiment: the freeze helper has no `--follow` mode, Git reports platform EOL normalization warnings, and a historical Phase 5 inventory can flag `__pycache__` artifacts. Scientific sources and engine behavior remain unchanged.\n"""
     (OUT/"minor_prepilot_followups.md").write_text(follow,encoding="utf-8")
+    audit="""# Experimental data-flow audit\n\n+| Factor | Source value | Runtime consumer | Transformation | Objective effect | Result field | Connected |\n+|---|---|---|---|---|---|---|\n+| Annual water budget | Project water budget / frozen reservoir delivery resources | `configuration` → frozen optimizer budget handling | Explicit `water_budget_ratio` | Feasibility penalties and guards | `water_budget_m3`, `feasible`, total water | true |\n+| Net profit per da | `candidate_options.profit_tl_da`; seasonal `environment.s1/s2.profit_tl` | S1 candidate matrix; S2 seasonal candidate matrix | In-memory uniform multiplier on copied immutable bundle | Profit score and reported profit | `total_profit_tl`, TL/m3, crop composition | true |\n+| Sale price | Frozen descriptive candidate/seasonal columns | No independent consumer on accepted execution path | none | none | none | false |\n+| Yield | Frozen descriptive candidate/seasonal columns | No independent consumer on accepted execution path | none | none | none | false |\n+| Cost | Embedded upstream in catalog-derived direct net profit | No independent runtime cost perturbation consumer | none | none | none | false |\n+\n+S1 reports the current-pattern calculated gross-demand budget (100,700,080.81 m3 at ratio 1.0), whereas S2 reports the reservoir-derived engine scenario budget (10,401,986.556 m3 at ratio 1.0). The protected-perennial critical multiplier therefore applies to the S2 annual-budget boundary.\n+"""
+    (OUT/"data_flow_audit.md").write_text(audit,encoding="utf-8")
 
 
 def main() -> None:
