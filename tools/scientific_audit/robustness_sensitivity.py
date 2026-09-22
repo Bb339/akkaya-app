@@ -8,13 +8,11 @@ import importlib.metadata
 import itertools
 import json
 import math
-import multiprocessing
 import platform
 import statistics
 import subprocess
 import sys
 import time
-import traceback
 from copy import deepcopy
 from dataclasses import replace
 from datetime import datetime, timezone
@@ -25,10 +23,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "experiments" / "robustness_sensitivity"
 RAW = OUT / "raw_runs"
-CORRECTIVE_RAW = OUT / "raw_runs_corrective"
+PHASE1_CORRECTIVE_RAW = OUT / "raw_runs_corrective"
+CORRECTIVE_RAW = OUT / "raw_runs_corrective_phase2"
 ACTIVE_RAW = OUT / "active_run_records"
 REPEAT_RAW = OUT / "determinism_repeat"
-CORRECTION_VERSION = "corrective-phase-1b"
+CORRECTION_VERSION = "corrective-phase-2"
 POPULATION = "FULL_REFERENCE_PROJECT_EXPERIMENT"
 ANALYSIS_UNITS = 179
 AREA_DA = 134919
@@ -71,6 +70,33 @@ def file_hash(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def portable_resource_value(name: str, value: Any) -> Any:
+    """Normalize host-only provenance without changing scientific values."""
+    copied = deepcopy(value)
+    if name == "calendar" and isinstance(copied, dict):
+        derived = copied.get("_derived")
+        if isinstance(derived, dict) and "_rules_file" in derived:
+            derived["_rules_file"] = "data/s1_crop_calendar_rules.json"
+    return copied
+
+
+def portable_resource_digest(name: str, value: Any) -> str:
+    from kds.science.contract import FrozenValue
+    copied = value.copy() if isinstance(value, FrozenValue) else deepcopy(value)
+    return FrozenValue.of(portable_resource_value(name, copied)).digest
+
+
+def scenario_grid_canonical_sha256(rows: list[dict[str, Any]]) -> str:
+    normalized = [
+        {key: row[key] for key in (
+            "family", "scenario", "objective", "algorithm", "seed",
+            "water_budget_ratio", "economic_shock",
+        )}
+        for row in rows
+    ]
+    return digest(sorted(normalized, key=canonical))
 
 
 def tree_hash(path: Path) -> str:
@@ -141,7 +167,7 @@ def make_bundle(document: dict[str, Any], spec: dict[str, Any]):
         "contract": "all_connected_runtime_net_profit_inputs",
         "correction_version": CORRECTION_VERSION,
         "factor": "net_profit_per_da", "shock": shock, "multiplier": factor,
-        "nonlinear_transform_policy": "evaluate_frozen_profit_realism_in_baseline_domain_then_scale_output",
+        "nonlinear_transform_policy": "scaled_inputs_pass_through_unchanged_frozen_engine",
         "changed_resources": changed, "source_data_mutated": False,
     }
     bundle = replace(bundle, candidates=candidates, resources=tuple(resources.items()),
@@ -182,7 +208,6 @@ def apply_uniform_profit_overlay(resources: dict[str, Any], factor: float):
         "candidate_options": ("profit_tl_da", "profit_tl_total"),
         "regional_candidate_options": ("profit_tl_da", "profit_tl_total"),
         "crop_table": ("profit_tl_da", "profit_tl_total", "net_kar_tl_da", "net_profit_tl_da"),
-        "unit_summary": ("profit_tl", "profit_tl_total", "current_profit_tl"),
     }
     for name, fields in frame_fields.items():
         if name not in output:
@@ -203,8 +228,11 @@ def apply_uniform_profit_overlay(resources: dict[str, Any], factor: float):
             changed.extend(f"environment.{season}.{column}" for column in columns)
         output["environment"] = FrozenValue.of(environment)
 
-    mapping_fields = ("profitPerDa", "profit_per_da", "net_profit_tl_da")
-    for name in ("crop_catalog", "fallback_crop_parameters"):
+    mapping_fields_by_resource = {
+        "crop_catalog": ("profitPerDa",),
+        "fallback_crop_parameters": ("profit_per_da",),
+    }
+    for name, mapping_fields in mapping_fields_by_resource.items():
         if name not in output:
             continue
         value, fields = _scale_mapping_rows(output[name].copy(), mapping_fields, factor)
@@ -224,61 +252,6 @@ def classify_record(record: dict[str, Any]) -> str:
     if definition["scenario"] == "S2" and not feasible:
         return "DIAGNOSTIC ONLY"
     return "SAFE WITH LIMITATION" if feasible else "DIAGNOSTIC ONLY"
-
-
-def _uniform_economic_worker(bundle, factor: float, connection) -> None:
-    """Run the frozen engine while preserving a globally linear profit scale.
-
-    The engine's realism transform contains thresholds and caps. Feeding scaled
-    inputs directly through that nonlinear transform breaks a uniform-scale
-    experiment. The disposable worker evaluates that frozen transform in the
-    baseline domain and applies the preregistered multiplier to its output.
-    """
-    try:
-        import app
-        from kds.science.execution import stable
-        from kds.science.providers import ProjectDataProvider, using_provider
-        original = app._apply_profit_realism
-
-        def uniform_transform(matrix, crop_list):
-            return original(matrix / factor, crop_list) * factor
-
-        app._apply_profit_realism = uniform_transform
-        config = bundle.algorithm_configuration.copy()
-        with using_provider(ProjectDataProvider(bundle)):
-            result = app.optimize(
-                config["selected_ids"], config["algorithm"], config["objective"],
-                config["water_budget_ratio"], year=bundle.planning_year,
-                options=config["options"],
-            )
-        connection.send(("ok", stable(result)))
-    except Exception as exc:
-        connection.send(("error", f"{type(exc).__name__}: {exc}\n{traceback.format_exc()}"))
-    finally:
-        connection.close()
-
-
-def execute_uniform_economic(bundle, factor: float, timeout: int = 600):
-    context = multiprocessing.get_context("spawn")
-    receiving, sending = context.Pipe(duplex=False)
-    process = context.Process(
-        target=_uniform_economic_worker, args=(bundle, factor, sending), daemon=True
-    )
-    process.start()
-    sending.close()
-    try:
-        if not receiving.poll(timeout):
-            raise TimeoutError("Scientific analysis exceeded the execution limit")
-        status, value = receiving.recv()
-        if status != "ok":
-            raise RuntimeError(value)
-        return value
-    finally:
-        receiving.close()
-        process.join(timeout=2)
-        if process.is_alive():
-            process.terminate()
-            process.join(timeout=5)
 
 
 def crop_metrics(distribution: dict[str, Any]) -> dict[str, Any]:
@@ -329,11 +302,7 @@ def run_spec(
     bundle, config = make_bundle(document, spec)
     started = time.perf_counter()
     executed_at = datetime.now(timezone.utc).isoformat()
-    shock = float(spec.get("economic_shock", 0.0))
-    if correction_version and spec["family"] == "ECONOMIC" and shock:
-        result = execute_uniform_economic(bundle, 1.0 + shock, timeout=600)
-    else:
-        result = execute(bundle, timeout=600)
+    result = execute(bundle, timeout=600)
     elapsed = time.perf_counter() - started
     projected = project_result(result, config, document["analysis_units"])
     summary = summarize(projected, bundle)
