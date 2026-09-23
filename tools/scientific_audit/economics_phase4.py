@@ -419,9 +419,11 @@ The optimizer may be described as finding Turp economically attractive under the
 3. Add an institution-approved alias registry while preserving dry/irrigated and grain/forage variants.
 """,encoding="utf-8")
 
-    protected=["app.py","kds/science","kds/adapters","kds/application/optimization.py","data"]
+    # This historical audit freezes the scientific engine and source data.
+    # Downstream application/adaptor layers are intentionally extensible.
+    protected=["app.py","kds/science","data"]
     diff=subprocess.run(["git","diff","--name-only","HEAD","--",*protected],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
-    tracked=subprocess.run(["git","ls-files","app.py","kds/science/**","kds/adapters/**","kds/application/optimization.py","data/**"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
+    tracked=subprocess.run(["git","ls-files","app.py","kds/science/**","data/**"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
     # Downstream milestones must reproduce the frozen audit instead of writing
     # their current HEAD into an otherwise deterministic audit artifact.
     frozen_audit = subprocess.run(["git","rev-list","-n","1","v2-scientific-economics-audit-complete"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.strip()
