@@ -1,0 +1,8 @@
+metric,value,unit,scope
+optimizer_water_m3,90,m3,FULL_SELECTED_SEASON
+verified_profile_water_m3,90,m3,FULL_SELECTED_SEASON
+planning_year_profile_water_m3,60,m3,PLANNING_CALENDAR_YEAR
+authoritative_water_m3,90,m3,FULL_SELECTED_SEASON
+annual_budget_validation.demand_m3,60,m3,PLANNING_CALENDAR_YEAR
+unit_results.total_water_m3,90,m3,FULL_SELECTED_SEASON
+efficiency_tl_per_m3,10,TL/m3,AUTHORITATIVE_VERIFIED_FULL_SEASON_WATER

@@ -1,0 +1,17 @@
+{
+  "source_tests": ["test_readiness_one_broken_domain_does_not_copy_failure_globally", "test_climate_readiness_modes_coverage_scope_and_source", "test_physical_release_is_selected_but_not_executable"],
+  "cases": [
+    {"broken":"annual_water","broken_state":"MISSING_DATASET","unrelated_monthly_supply":"CONNECTED","unrelated_climate":"CONNECTED"},
+    {"broken":"monthly_supply","broken_state":"MISSING_DATASET","unrelated_annual_water":"CONNECTED","unrelated_climate":"CONNECTED"},
+    {"broken":"delivery","broken_state":"MISSING_DATASET","unrelated_monthly_supply":"CONNECTED"},
+    {"broken":"environmental_release_physical","dataset_selected":true,"broken_state":"NOT_EXECUTABLE_WITH_CURRENT_MODE"},
+    {"broken":"conveyance","broken_state":"MISSING_DATASET","unrelated_monthly_supply":"CONNECTED"},
+    {"broken":"economics","broken_state":"INVALID_OR_UNAVAILABLE","unrelated_monthly_supply":"CONNECTED"},
+    {"broken":"crop_parameters","broken_state":"INVALID_OR_UNAVAILABLE","unrelated_climate":"CONNECTED"},
+    {"broken":"phenology","broken_state":"INVALID_OR_UNAVAILABLE","unrelated_monthly_supply":"CONNECTED"},
+    {"broken":"climate_absent","broken_state":"MISSING_DATASET","unrelated_annual_water":"CONNECTED"},
+    {"broken":"climate_exact_or_normal_coverage_scope_source","broken_state":"INVALID","unrelated_annual_water":"CONNECTED"},
+    {"broken":"candidates","broken_state":"INVALID_OR_UNAVAILABLE","unrelated_current_pattern":"CONNECTED"},
+    {"broken":"current_pattern_provenance","broken_state":"INVALID_OR_UNAVAILABLE","unrelated_candidates":"CONNECTED"}
+  ]
+}

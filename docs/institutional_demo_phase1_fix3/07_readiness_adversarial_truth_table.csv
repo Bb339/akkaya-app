@@ -1,0 +1,13 @@
+broken_domain,dataset_selected,engine_connected,connection_state,unrelated_domain,unrelated_state
+annual_water,false,false,MISSING_DATASET,monthly_supply,CONNECTED
+monthly_supply,false,false,MISSING_DATASET,annual_water,CONNECTED
+delivery,false,false,MISSING_DATASET,monthly_supply,CONNECTED
+environmental_release_physical,true,false,NOT_EXECUTABLE_WITH_CURRENT_MODE,annual_water,CONNECTED
+conveyance,false,false,MISSING_DATASET,monthly_supply,CONNECTED
+economics,false,false,INVALID_OR_UNAVAILABLE,monthly_supply,CONNECTED
+crop_parameters,false,false,INVALID_OR_UNAVAILABLE,climate,CONNECTED
+phenology,false,false,INVALID_OR_UNAVAILABLE,monthly_supply,CONNECTED
+climate_absent,false,false,MISSING_DATASET,annual_water,CONNECTED
+climate_invalid,true,false,INVALID,annual_water,CONNECTED
+candidates,false,false,INVALID_OR_UNAVAILABLE,current_pattern,CONNECTED
+current_pattern_provenance,true,false,INVALID_OR_UNAVAILABLE,candidates,CONNECTED

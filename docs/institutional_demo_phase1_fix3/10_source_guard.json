@@ -1,0 +1,8 @@
+{
+  "baseline": "c838a2f244f27b47d52a7e23131df3d610b557b3",
+  "unchanged": ["app.py","data/","candidate matrix","GA/ACO/ABC implementation","docs/experiments/robustness_sensitivity","reference scientific sources"],
+  "changed_runtime_files": ["kds/application/optimization.py","kds/adapters/institutional.py","kds/science/institutional_water.py"],
+  "institutional_water_change": "aggregation and equality metadata only; accepted SCS, Kc, and FAO56 formulas unchanged",
+  "robustness_tag": "v2-scientific-robustness-sensitivity-complete",
+  "robustness_target": "028f231eb774eafb53a9a76db370b663d561ce1b"
+}

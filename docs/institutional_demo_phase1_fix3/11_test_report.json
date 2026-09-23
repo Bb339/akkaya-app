@@ -1,0 +1,18 @@
+{
+  "status": "FIX3_PASS_WITH_ONE_INHERITED_BROAD_FAILURE",
+  "focused": {"accounting":"2 passed","readiness_annual":"1 passed","readiness_matrix":"1 passed","climate_matrix":"1 passed","s1_e2e":"1 passed","s2_cross_year_e2e":"1 passed"},
+  "regression_groups": {"phase1":"18 passed in 979.12s","water_economics_phase7":"105 passed in 57.68s","prepilot_robustness_general_reference":"52 passed, 6 deselected in 504.05s"},
+  "final": {
+    "command": "python -m pytest -q",
+    "passed": 389,
+    "failed": 1,
+    "deselected": 7,
+    "skipped": 0,
+    "duration_seconds": 2405.80,
+    "failure": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "fix2_reproduction": "1 failed in 20.47s with actual no_feasible_two_crop_plan versus expected ok",
+    "fix3_reproduction": "1 failed in 20.27s with the identical assertion",
+    "classification": "INHERITED_UNCHANGED",
+    "new_fix3_regressions": 0
+  }
+}

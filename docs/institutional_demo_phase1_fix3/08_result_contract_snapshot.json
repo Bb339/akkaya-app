@@ -1,0 +1,10 @@
+{
+  "water_fields": ["optimizer_water_m3","verified_profile_water_m3","planning_year_profile_water_m3","authoritative_water_m3","water_accounting_difference_m3","water_accounting_difference_pct","water_reconciliation"],
+  "period_fields": ["verified_profile_water_scope","planning_year_water_scope","profile_period_start","profile_period_end","annual_budget_period_start","annual_budget_period_end"],
+  "verified_profile_water_scope": "FULL_SELECTED_SEASON",
+  "planning_year_water_scope": "PLANNING_CALENDAR_YEAR",
+  "efficiency_tl_per_m3_denominator": "AUTHORITATIVE_VERIFIED_FULL_SEASON_WATER",
+  "reconciliation_comparison_scope": "FULL_SELECTED_SEASON",
+  "canonical_diversity_field": "hhi",
+  "compatibility_alias": "HHI"
+}

@@ -1,0 +1,17 @@
+{
+  "source": "test_cross_year_authoritative_water_is_full_selected_season",
+  "planning_year": 2025,
+  "profile_period_start": "2024-10",
+  "profile_period_end": "2025-06",
+  "monthly_values_m3": {"2024-10":10,"2024-11":10,"2024-12":10,"2025-01":10,"2025-02":10,"2025-03":10,"2025-04":10,"2025-05":10,"2025-06":10},
+  "optimizer_water_m3": 90,
+  "verified_profile_water_m3": 90,
+  "planning_year_profile_water_m3": 60,
+  "authoritative_water_m3": 90,
+  "annual_budget_validation_demand_m3": 60,
+  "unit_results_total_water_m3": 90,
+  "total_profit_tl": 900,
+  "efficiency_tl_per_m3": 10,
+  "comparison_scope": "FULL_SELECTED_SEASON",
+  "status": "PASS"
+}
