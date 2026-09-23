@@ -29,6 +29,7 @@
 <form id="scientific-form"><input name="file" type="file" accept=".json" required aria-label="Bilimsel girdiler JSON"><button>Bilimsel girdileri kaydet</button></form></details>
 <h3>Analiz hazırlık durumu</h3><div id="readiness"></div><h3>Aktarım kayıtları</h3><pre id="imports"></pre>
 <h3>Analiz ayarları</h3><form id="analysis-form">
+<label>Execution profile <select name="execution_profile"><option value="REFERENCE_DEMO">REFERENCE_DEMO</option><option value="VERIFIED_INSTITUTIONAL">VERIFIED_INSTITUTIONAL</option></select></label>
 <label>Senaryo <select name="scenario"><option>S1</option><option>S2</option></select></label>
 <label>Algoritma <select name="algorithm"><option>GA</option><option>ACO</option><option>ABC</option></select></label>
 <label>Seed <input name="seed" type="number" min="0" value="123" required></label>
@@ -36,7 +37,8 @@
 <label>Bütçe oranı <input name="water_budget_ratio" type="number" min="0.01" max="10" step="0.01" value="1" required></label>
 <label>Algoritma parametreleri (JSON) <textarea name="config" rows="4" required></textarea></label>
 <p>Çalışma başına tek seed kullanılır. Çevresel akış payı %10, aylık kapasite denetimi açık, su modeli calib, risk modeli none. Hedef ağırlıkları mevcut bilimsel motorun formülleridir.</p>
-<button id="run-button">Analizi çalıştır ve kaydet</button></form></section>
+<button id="preview-analysis" type="button">Dry-run / execution preview</button>
+<button id="run-button">Analizi çalıştır ve kaydet</button></form><pre id="analysis-preview" hidden></pre></section>
 <section id="result" hidden><h2>Analiz sonucu</h2><p id="result-source-label"></p><dl id="result-facts"></dl><h3>Uyarılar</h3><ul id="result-warnings"></ul>
 <h3>Ürün planı</h3><div id="plan" class="table-scroll"></div><details><summary>Provenance ve çalıştırma kaydı</summary><pre id="provenance"></pre></details></section>
 <section id="history-section" hidden><h2>Analiz Geçmişi</h2><p id="history-count"></p><div id="history" class="table-scroll"></div><button id="history-more" hidden type="button">Daha fazla çalışma</button></section>
