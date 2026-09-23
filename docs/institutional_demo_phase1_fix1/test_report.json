@@ -1,0 +1,12 @@
+{
+  "phase1": "18 passed in 706.42s",
+  "targeted_guard_and_contract": "22 passed, 1 deselected in 9.88s",
+  "prepilot_and_economics_guard": "9 passed in 189.43s",
+  "broad_first_run": "353 passed, 10 failed, 7 deselected in 1783.60s; nine guard failures corrected; one inherited S2 failure",
+  "broad_final": "362 passed, 8 deselected in 2211.05s",
+  "inherited_test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+  "inherited_signature": "expected ok, observed no_feasible_two_crop_plan",
+  "fix_head_reproduction": "1 failed in 10.32s",
+  "rejected_head_reproduction": "1 failed in 11.52s",
+  "new_failures": 0
+}

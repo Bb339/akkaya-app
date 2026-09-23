@@ -1,0 +1,92 @@
+[
+  {
+    "input": "annual_supply",
+    "v1": "20000 m3/year",
+    "v2": "60000 m3/year",
+    "bundle_difference": "annual_supply_m3; usable water_budget_m3 18000 -> 54000 at release ratio 0.10",
+    "consumer": "materialize_verified_document annual usable-budget calculation",
+    "expected_result_field": "water_budget_m3; annual_budget_validation",
+    "observed_difference": "usable optimizer budget changed to 54000 m3",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "monthly_supply",
+    "v1": "5000 m3/month",
+    "v2": "1 m3/month",
+    "bundle_difference": "monthly_supply_m3 changed for all 12 months",
+    "consumer": "validate_verified_result monthly supply constraint",
+    "expected_result_field": "monthly_supply_validation; overall_feasible",
+    "observed_difference": "validation object changed and insufficient months fail",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "delivery_capacity",
+    "v1": "5000 m3/month",
+    "v2": "1 m3/month",
+    "bundle_difference": "monthly_delivery_capacity_m3 changed for all 12 months",
+    "consumer": "validate_verified_result delivery constraint",
+    "expected_result_field": "monthly_delivery_validation; overall_feasible",
+    "observed_difference": "status became FAIL and overall_feasible false",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "environmental_release",
+    "v1": "ratio 0.10",
+    "v2": "ratio 0.50",
+    "bundle_difference": "usable annual budget 54000 -> 30000 m3 from the same 60000 m3 supply",
+    "consumer": "materialize_verified_document single release deduction",
+    "expected_result_field": "water_budget_m3; annual/monthly validation",
+    "observed_difference": "budget became 30000 m3; deduction applied once",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "conveyance_efficiency",
+    "v1": "0.83",
+    "v2": "0.45",
+    "bundle_difference": "verified candidate gross irrigation demand increased",
+    "consumer": "monthly_gross_demand_m3_da gross/net conversion",
+    "expected_result_field": "candidate water requirement; feasibility",
+    "observed_difference": "candidate water_requirement_m3_da increased",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "net_profit",
+    "v1": "1000..1700 TL/da",
+    "v2": "6000..6700 TL/da",
+    "bundle_difference": "candidate profit_per_da changed",
+    "consumer": "verified candidate economics materialization and optimizer objective",
+    "expected_result_field": "candidate profit; total_profit_tl",
+    "observed_difference": "first candidate profit_per_da changed",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "crop_Kc_stage",
+    "v1": "Kc 0.4/1.0/0.5; days 20/30/40/20",
+    "v2": "Kc 0.9/1.4/0.8; same stages",
+    "bundle_difference": "verified FAO56 monthly profile and candidate water changed",
+    "consumer": "monthly_gross_demand_m3_da and _kc",
+    "expected_result_field": "candidate water requirement; monthly demand",
+    "observed_difference": "candidate water_requirement_m3_da changed",
+    "connection_verdict": "CONNECTED"
+  },
+  {
+    "input": "phenology",
+    "v1": "2025-03-01..2025-06-30",
+    "v2": "2025-04-01..2025-08-31",
+    "bundle_difference": "active dates and monthly distribution changed",
+    "consumer": "monthly_gross_demand_m3_da and _dates",
+    "expected_result_field": "candidate water requirement; monthly demand",
+    "observed_difference": "candidate water_requirement_m3_da changed; cross-year 2024-10-01..2025-06-30 preserved in S2",
+    "connection_verdict": "CONNECTED_FOR_S1_AND_S2"
+  },
+  {
+    "input": "perennial_requirement",
+    "v1": "ELMA crop default 120 m3/da",
+    "v2": "GX-001 exact override 900 m3/da",
+    "bundle_difference": "S2 seasonal resource uses exact unit row before crop default",
+    "consumer": "select_perennial_requirement",
+    "expected_result_field": "S2 unit crop gross water",
+    "observed_difference": "GX-001 used 900 m3/da while another ELMA unit used 120 m3/da; duplicates rejected",
+    "connection_verdict": "CONNECTED_FOR_S2"
+  }
+]

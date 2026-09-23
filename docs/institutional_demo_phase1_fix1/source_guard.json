@@ -1,0 +1,22 @@
+{
+  "rejected_baseline": "d0d79482be47a6554ad7878ac9bba237c40bc414",
+  "robustness_parent": "028f231eb774eafb53a9a76db370b663d561ce1b",
+  "unchanged": [
+    "app.py",
+    "data/",
+    "candidate matrix",
+    "pre-existing kds/science files",
+    "GA/ACO/ABC implementation"
+  ],
+  "new_scientific_file": "kds/science/institutional_water.py",
+  "changed_functions": [
+    "_dates",
+    "_kc",
+    "monthly_gross_demand_m3_da",
+    "select_perennial_requirement",
+    "validate_verified_result"
+  ],
+  "reason": "Provider-bound, project-agnostic consumers were required to give verified Kc/phenology/conveyance/monthly constraints observable effects without changing the reference engine or optimizer math.",
+  "reference_fallback_in_verified_profile": false,
+  "completion_tag_created": false
+}
