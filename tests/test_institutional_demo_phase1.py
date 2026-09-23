@@ -184,7 +184,10 @@ def test_verified_institutional_end_to_end_and_explicit_result_contract(institut
     client, repo, project_id = institutional
     ready = client.get(f"/api/v2/projects/{project_id}/readiness").json
     assert ready["execution_profiles"]["VERIFIED_INSTITUTIONAL"]["ready"]["S1"] is True
-    assert all(domain["engine_connected"] for domain in ready["domains"].values())
+    assert all(domain["engine_connected"] for name, domain in ready["domains"].items()
+               if name != "perennial_requirement")
+    assert ready["domains"]["perennial_requirement"]["connection_state"] == "NOT_REQUIRED_FOR_SCENARIO"
+    assert ready["domains"]["climate"]["engine_connected"] is True
     preview = client.post(f"/api/v2/projects/{project_id}/analysis-preview", json=payload()).json
     assert preview["ready"] is True and preview["execution_profile"] == "VERIFIED_INSTITUTIONAL"
     assert preview["result_authority_label"] == "SYNTHETIC / NOT_OFFICIAL"
@@ -197,7 +200,8 @@ def test_verified_institutional_end_to_end_and_explicit_result_contract(institut
     assert result["classification"] == "SYNTHETIC_TEST_OUTPUT"
     assert {"status", "execution_profile", "classification", "project_id", "planning_year",
             "scenario", "algorithm", "seed", "objective", "optimizer_water_m3",
-            "verified_profile_water_m3", "authoritative_water_m3", "water_reconciliation",
+            "verified_profile_water_m3", "planning_year_profile_water_m3",
+            "authoritative_water_m3", "water_reconciliation",
             "total_profit_tl", "efficiency_tl_per_m3", "hhi", "top_crops", "crop_shares",
             "unit_results", "annual_budget_validation", "monthly_supply_validation",
             "monthly_delivery_validation", "overall_feasible", "warnings", "input_provenance",
@@ -483,6 +487,24 @@ def test_verified_s2_e2e_and_perennial_specificity(institutional):
     calendar_months = {month for row in cross_result["unit_results"]
                        for month in row["monthly_water_demand_m3"]}
     assert {"2024-10", "2024-11", "2024-12"} <= calendar_months
+    full_from_units = sum(row["total_water_m3"] for row in cross_result["unit_results"])
+    planning_from_units = sum(
+        value for row in cross_result["unit_results"]
+        for month, value in row["monthly_water_demand_m3"].items() if month.startswith("2025-")
+    )
+    preceding_water = sum(
+        value for row in cross_result["unit_results"]
+        for month, value in row["monthly_water_demand_m3"].items() if month.startswith("2024-")
+    )
+    assert preceding_water > 0 and planning_from_units > 0
+    assert full_from_units > planning_from_units
+    assert cross_result["verified_profile_water_m3"] == pytest.approx(full_from_units)
+    assert cross_result["authoritative_water_m3"] == pytest.approx(full_from_units)
+    assert cross_result["planning_year_profile_water_m3"] == pytest.approx(planning_from_units)
+    assert cross_result["annual_budget_validation"]["demand_m3"] == pytest.approx(planning_from_units)
+    assert cross_result["efficiency_tl_per_m3"] == pytest.approx(
+        cross_result["total_profit_tl"] / full_from_units)
+    assert cross_result["efficiency_tl_per_m3_denominator"] == "AUTHORITATIVE_VERIFIED_FULL_SEASON_WATER"
 
     duplicate = header + "\n" + "\n".join([
         f"2025,ELMA,GX-001,900,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
