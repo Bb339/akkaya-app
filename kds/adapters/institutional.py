@@ -65,11 +65,15 @@ def _dataset_fact(dataset: dict[str, Any]) -> dict[str, Any]:
                 "canonical_unit": record.get("canonical_unit"),
                 "conversion": deepcopy(record.get("conversion")),
             })
+    scopes = sorted({str(record.get("geographic_scope") or record.get("scope"))
+                     for record in dataset.get("records", [])
+                     if record.get("geographic_scope") or record.get("scope")})
     return {
-        "dataset_id": dataset["dataset_id"], "data_type": dataset["data_type"],
-        "version": dataset["version"], "authority_class": dataset["authority_class"],
-        "confirmed_at": dataset["confirmed_at"], "source": deepcopy(dataset.get("source", {})),
+        "dataset_id": dataset.get("dataset_id"), "data_type": dataset.get("data_type"),
+        "version": dataset.get("version"), "authority_class": dataset.get("authority_class"),
+        "confirmed_at": dataset.get("confirmed_at"), "source": deepcopy(dataset.get("source", {})),
         "scope_key": dataset.get("scope_key"),
+        "geographic_scope": scopes[0] if len(scopes) == 1 else scopes,
         "conversion_provenance": conversions,
     }
 
@@ -81,6 +85,64 @@ def _active_water(document: dict[str, Any], data_type: str) -> dict[str, Any]:
     if not dataset:
         raise ValueError(f"VERIFIED_INSTITUTIONAL requires active {data_type}.")
     return dataset
+
+
+def _selected_water_dataset(document: dict[str, Any], data_type: str) -> dict[str, Any] | None:
+    """Return the pointer-selected resource without asserting that it is valid."""
+    store = document.get("water_data", {})
+    dataset_id = store.get("active", {}).get(data_type)
+    return store.get("datasets", {}).get(dataset_id)
+
+
+def _selected_economic_datasets(document: dict[str, Any], scenario: str) -> tuple[list[dict[str, Any]], bool]:
+    """Snapshot exact resolver pointers before strict economic validation."""
+    year = int(document["project"]["planning_year"])
+    required_scope = (document.get("project", {}).get("pilot_geographic_scope") or
+                      document.get("metadata", {}).get("pilot_geographic_scope") or "project")
+    store = document.get("economic_data", {})
+    active = store.get("active", {})
+    datasets_store = store.get("datasets", {})
+    selected: list[dict[str, Any]] = []
+    selected_types: set[str] = set()
+    for data_type in ECONOMIC_TYPES:
+        pointer = f"{data_type}|{year}|{required_scope}|catalog"
+        dataset = datasets_store.get(active.get(pointer))
+        if dataset:
+            selected.append(dataset)
+            selected_types.add(data_type)
+    required_types = {"crop_net_profit"}
+    if scenario == "S2":
+        required_types.add("seasonal_economics")
+    return selected, required_types <= selected_types
+
+
+def _selected_crop_contract_datasets(document: dict[str, Any], data_type: str) -> list[dict[str, Any]]:
+    """Return resources named by active contract pointers, regardless of validity."""
+    store = document.get("crop_parameter_data", {})
+    dataset_ids = [dataset_id for key, dataset_id in store.get("active", {}).items()
+                   if key.startswith(data_type + "|")]
+    return [store["datasets"][dataset_id] for dataset_id in dataset_ids
+            if dataset_id in store.get("datasets", {})]
+
+
+def _invalid_connection_state(reason: str, selected: bool) -> str:
+    """Classify a strict resolver error without inventing unsupported precision."""
+    if not selected:
+        return "MISSING_DATASET"
+    normalized = reason.casefold()
+    if "stale" in normalized or "requires recalculation" in normalized:
+        return "STALE"
+    if "geographic scope" in normalized or "configured_scope" in normalized or "scope" in normalized:
+        return "INVALID_SCOPE"
+    if "planning year" in normalized or "planning_year" in normalized:
+        return "INVALID_YEAR"
+    if "authority" in normalized or "synthetic" in normalized:
+        return "INVALID_AUTHORITY"
+    if "ambiguous" in normalized:
+        return "AMBIGUOUS_OR_INCOMPLETE"
+    if "coverage" in normalized or "no records" in normalized or "all planning-year months" in normalized:
+        return "INCOMPLETE_COVERAGE"
+    return "INVALID"
 
 
 def _active_by_type(document: dict[str, Any], store_name: str, data_type: str) -> list[dict[str, Any]]:
@@ -357,9 +419,11 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
     domains: dict[str, dict[str, Any]] = {}
     blockers: list[str] = []
 
-    def state(*, status="READY", selected=True, connected=True, connection="CONNECTED",
-              role="OPTIMIZER_INPUT", scope="S1_AND_S2", consumer="", reason=None, **facts):
-        return {"status": status, "consumer_available": True, "dataset_selected": selected,
+    def state(*, status="READY", selected=True, valid=True, connected=True, connection="CONNECTED",
+              role="OPTIMIZER_INPUT", scope="S1_AND_S2", consumer="", reason=None,
+              consumer_available=True, **facts):
+        return {"status": status, "consumer_available": consumer_available,
+                "dataset_selected": selected, "dataset_valid": valid if selected else False,
                 "engine_connected": connected, "connection_state": connection,
                 "consumer_role": role, "execution_scope": scope, "consumer": consumer,
                 "blocking_reason": reason, "blocking_reasons": ([reason] if reason else []), **facts}
@@ -374,49 +438,63 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
     }
     for name, (data_type, consumer, role, scope) in water_specs.items():
         required = name != "perennial_requirement" or scenario == "S2"
+        dataset = _selected_water_dataset(document, data_type)
+        selected = dataset is not None
+        dataset_facts = ({"dataset": _dataset_fact(dataset)} if dataset else {})
         try:
-            dataset = _active_water(document, data_type)
+            if dataset is None:
+                raise ValueError(f"VERIFIED_INSTITUTIONAL requires active {data_type}.")
             _validate_dataset(dataset, year, synthetic_allowed=synthetic,
                               authorities=VERIFIED_WATER_AUTHORITIES, required_scope=required_scope)
             if not required:
-                domains[name] = state(status="NOT_REQUIRED_FOR_SCENARIO", selected=True, connected=False,
+                domains[name] = state(status="NOT_REQUIRED_FOR_SCENARIO", selected=True, valid=True, connected=False,
                                       connection="NOT_REQUIRED_FOR_SCENARIO", role="NOT_CONNECTED",
-                                      scope=scope, consumer=consumer, dataset=_dataset_fact(dataset))
+                                      scope=scope, consumer=consumer, **dataset_facts)
             elif name == "environmental_release" and dataset["records"][0]["release_form"] != "ratio":
                 reason = "Physical environmental release is contract-valid but NOT_EXECUTABLE_WITH_CURRENT_MODE."
-                domains[name] = state(status="NOT_READY", selected=True, connected=False,
+                domains[name] = state(status="NOT_READY", selected=True, valid=True, connected=False,
                                       connection="NOT_EXECUTABLE_WITH_CURRENT_MODE", role=role, scope=scope,
-                                      consumer=consumer, reason=reason, dataset=_dataset_fact(dataset))
+                                      consumer=consumer, reason=reason, **dataset_facts)
                 blockers.append(reason)
             else:
                 domains[name] = state(role=role, scope=scope, consumer=consumer,
-                                      dataset=_dataset_fact(dataset))
+                                      **dataset_facts)
         except ValueError as exc:
             reason = str(exc)
             if not required:
-                domains[name] = state(status="NOT_REQUIRED_FOR_SCENARIO", selected=False, connected=False,
+                domains[name] = state(status="NOT_REQUIRED_FOR_SCENARIO", selected=selected, valid=False,
+                                      connected=False,
                                       connection="NOT_REQUIRED_FOR_SCENARIO", role="NOT_CONNECTED",
-                                      scope=scope, consumer=consumer)
+                                      scope=scope, consumer=consumer, reason=reason, **dataset_facts)
             else:
                 blockers.append(reason)
-                domains[name] = state(status="NOT_READY", selected=False, connected=False,
-                                      connection="MISSING_DATASET" if "requires active" in reason else "INVALID",
-                                      role=role, scope=scope, consumer=consumer, reason=reason)
+                domains[name] = state(status="NOT_READY", selected=selected, valid=False, connected=False,
+                                      connection=_invalid_connection_state(reason, selected),
+                                      role=role, scope=scope, consumer=consumer, reason=reason, **dataset_facts)
 
     economics = None
+    selected_economics, required_economics_selected = _selected_economic_datasets(document, scenario)
+    economics_facts = {"datasets": [_dataset_fact(dataset) for dataset in selected_economics]}
     try:
         economics = resolve_verified_economics(document, scenario)
         domains["economics"] = state(consumer="candidate/seasonal optimizer profit",
                                       datasets=list(economics.datasets))
     except ValueError as exc:
         reason = str(exc); blockers.append(reason)
-        domains["economics"] = state(status="NOT_READY", selected=False, connected=False,
-                                      connection="INVALID_OR_UNAVAILABLE", consumer="candidate/seasonal optimizer profit",
-                                      reason=reason)
+        domains["economics"] = state(status="NOT_READY", selected=required_economics_selected,
+                                      valid=False, connected=False,
+                                      connection=_invalid_connection_state(reason, required_economics_selected),
+                                      consumer="candidate/seasonal optimizer profit", reason=reason,
+                                      **economics_facts)
 
     resolved_contracts: dict[str, dict[str, Any]] = {}
     for name, data_type, consumer in (("crop_parameters", "crop_water_parameters", "verified FAO56 project water calculator"),
                                       ("phenology", "crop_phenology", "verified monthly crop-water calendar")):
+        selected_contracts = _selected_crop_contract_datasets(document, data_type)
+        contract_selected = bool(selected_contracts)
+        contract_facts = {"datasets": [_dataset_fact(dataset) for dataset in selected_contracts]}
+        if len(selected_contracts) == 1:
+            contract_facts["dataset"] = contract_facts["datasets"][0]
         try:
             dataset = _resolve_crop_contract(document, data_type)
             if name == "phenology" and scenario == "S2":
@@ -430,8 +508,9 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
             domains[name] = state(consumer=consumer, dataset=_dataset_fact(dataset))
         except ValueError as exc:
             reason = str(exc); blockers.append(reason)
-            domains[name] = state(status="NOT_READY", selected=False, connected=False,
-                                  connection="INVALID_OR_UNAVAILABLE", consumer=consumer, reason=reason)
+            domains[name] = state(status="NOT_READY", selected=contract_selected, valid=False,
+                                  connected=False, connection=_invalid_connection_state(reason, contract_selected),
+                                  consumer=consumer, reason=reason, **contract_facts)
 
     extra = document.get("scientific_inputs", {})
     applied = _applied_imports(document, {"candidates", "scientific_inputs"})
@@ -443,7 +522,7 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
     else:
         reason = "Verified candidate matrix requires data and applied import provenance."
         blockers.append(reason); domains["candidates"] = state(
-            status="NOT_READY", selected=bool(extra.get("candidates")), connected=False,
+            status="NOT_READY", selected=bool(extra.get("candidates")), valid=False, connected=False,
             connection="INVALID_OR_UNAVAILABLE", consumer="optimizer candidate matrix", reason=reason)
     current_valid = bool(extra.get("unit_parameters") and current_imports and
                          (scenario != "S2" or extra.get("seasonal_resources", {}).get("s2")))
@@ -456,7 +535,7 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
     else:
         reason = "Verified current pattern requires unit parameters, scenario resources, and applied import provenance."
         blockers.append(reason); domains["current_pattern"] = state(
-            status="NOT_READY", selected=bool(extra.get("unit_parameters")), connected=False,
+            status="NOT_READY", selected=bool(extra.get("unit_parameters")), valid=False, connected=False,
             connection="INVALID_OR_UNAVAILABLE", consumer="unit baseline and perennial locks", reason=reason)
 
     climate_consumer = "verified FAO56 project climate"
@@ -504,8 +583,8 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
     except ValueError as exc:
         reason = str(exc); blockers.append(reason)
         selected = bool(document.get("scientific_inputs", {}).get("seasonal_resources", {}).get("monthly_climate"))
-        domains["climate"] = state(status="NOT_READY", selected=selected, connected=False,
-                                    connection="INVALID" if selected else "MISSING_DATASET",
+        domains["climate"] = state(status="NOT_READY", selected=selected, valid=False, connected=False,
+                                    connection=_invalid_connection_state(reason, selected),
                                     consumer=climate_consumer, reason=reason)
 
     # Cross-domain water reconciliation remains fail-closed without falsifying other domains.
