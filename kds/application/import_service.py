@@ -149,6 +149,14 @@ class ImportService:
             document["data_revision"] += 1
             document["project"]["updated_at"] = utc_now()
             batch["applied_revision"] = document["data_revision"]
+            if any(run.get("status") == "completed" for run in document.get("runs", {}).values()):
+                previous = document.get("analysis_state", {})
+                document["analysis_state"] = {
+                    **previous, "requires_reanalysis": True,
+                    "trigger_import_batch_id": batch_id,
+                    "trigger_data_type": batch["data_type"],
+                    "triggered_at": document["project"]["updated_at"],
+                }
             batch["warnings_acknowledged"] = acknowledge_warnings is True
             transition(batch, "applied")
         document = self.repository.update(project_id, apply)

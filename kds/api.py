@@ -89,9 +89,18 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         result = analysis.run(project_id, body())
         return jsonify(result), 201 if result['status']=='completed' else 422
 
+    @blueprint.post("/projects/<project_id>/analysis-preview")
+    def analysis_preview(project_id):
+        return jsonify(analysis.preview(project_id, body()))
+
     @blueprint.get("/projects/<project_id>/analyses/<run_id>")
     def analysis_result(project_id, run_id):
         return jsonify(analysis.get(project_id, run_id))
+
+    @blueprint.get("/projects/<project_id>/analyses/<run_id>/provenance")
+    def analysis_provenance(project_id, run_id):
+        run = analysis.get(project_id, run_id)
+        return jsonify(run.get('provenance', {}))
 
     @blueprint.get("/projects/<project_id>/scientific-inputs")
     def scientific_inputs(project_id):

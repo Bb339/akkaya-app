@@ -12,6 +12,8 @@ class AnalysisRun:
     scenario: str
     algorithm: str
     seed: int
+    execution_profile: str
+    result_authority_label: str
     configuration: dict[str, Any]
     started_at: str
     provenance: dict[str, Any]
@@ -27,3 +29,5 @@ class AnalysisRun:
         safe_id(self.project_id)
         if self.scenario not in ('S1','S2') or self.algorithm not in ('GA','ACO','ABC'):
             raise ValueError('Invalid scientific run identity.')
+        if self.execution_profile not in ('REFERENCE_DEMO','VERIFIED_INSTITUTIONAL'):
+            raise ValueError('Invalid execution profile.')

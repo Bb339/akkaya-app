@@ -4,12 +4,17 @@ from hashlib import sha256
 import json
 from uuid import uuid4
 from dataclasses import asdict
+from pathlib import Path
+import subprocess
 from kds.adapters.project_science import build_bundle, data_hash
 from kds.application.readiness import readiness
 from kds.data.repositories import NotFoundError
 from kds.science.execution import execute
 from kds.science.results import RESULT_CONTRACT_VERSION, present_stored_run, project_result, summarize
 from kds.domain.analysis_run import AnalysisRun
+from kds.domain.execution_profile import (
+    ExecutionProfile, authority_label, execution_profile, result_classification,
+)
 
 
 def now():
@@ -18,7 +23,7 @@ def now():
 
 def configuration(payload, document):
     required = {'scenario','algorithm','seed','objective','water_budget_ratio','config'}
-    if not isinstance(payload,dict) or not required <= payload.keys() or payload.keys() - (required | {'selected_ids'}):
+    if not isinstance(payload,dict) or not required <= payload.keys() or payload.keys() - (required | {'selected_ids','execution_profile'}):
         raise ValueError('Explicit scenario, algorithm, seed, objective, water_budget_ratio and config are required.')
     if payload['scenario'] not in ('S1','S2') or payload['algorithm'] not in ('GA','ACO','ABC'):
         raise ValueError('Use S1/S2 and GA/ACO/ABC.')
@@ -52,7 +57,15 @@ def configuration(payload, document):
                    scenarioType='single' if scenario=='S1' else 'double', twoSeason=scenario=='S2',
                    simpleMode=False, envFlowRatio=.10, enforceDeliveryCaps=True,
                    waterModel='calib', riskMode='none', riskLambda=0., riskSamples=120, waterQualityFilter=True)
-    return {**payload, 'selected_ids':ids, 'options':options}
+    profile = execution_profile(payload.get('execution_profile', ExecutionProfile.REFERENCE_DEMO.value))
+    return {**payload, 'execution_profile': profile.value, 'selected_ids':ids, 'options':options}
+
+
+def engine_commit():
+    root = Path(__file__).resolve().parents[2]
+    completed = subprocess.run(['git','rev-parse','HEAD'], cwd=root, text=True,
+                               capture_output=True, check=False)
+    return completed.stdout.strip() if completed.returncode == 0 else None
 
 
 class OptimizationApplicationService:
@@ -69,25 +82,79 @@ class OptimizationApplicationService:
             raise NotFoundError('Analysis run not found in this project.')
         return present_stored_run(run, document)
 
+    def preview(self, project_id, payload):
+        document = self.repository.get(project_id)
+        config = configuration(payload, document)
+        profile = execution_profile(config['execution_profile'])
+        report = readiness(document)
+        if profile is ExecutionProfile.REFERENCE_DEMO:
+            state = report['scenarios'][config['scenario']]
+            return {
+                'execution_profile': profile.value, 'result_authority_label': authority_label(profile, synthetic=False),
+                'project_id': project_id, 'planning_year': document['project']['planning_year'],
+                'ready': state['status'] != 'NOT_READY',
+                'blocking_reasons': [i['message'] for i in state['issues'] if i['severity']=='error'],
+                'warnings': [i['message'] for i in state['issues'] if i['severity']=='warning'],
+                'datasets': [], 'candidate_source': {'source': 'accepted reference/project-explicit demo path',
+                    'candidate_count': report['scientific_data']['raw_candidate_count'],
+                    'analysis_unit_count': report['counts']['analysis_units']},
+                'algorithm': config['algorithm'], 'objective': config['objective'], 'scenario': config['scenario'],
+            }
+        from kds.adapters.institutional import verified_execution_plan
+        try:
+            plan = verified_execution_plan(document, config)
+            plan['result_authority_label'] = authority_label(profile, synthetic=plan['synthetic'])
+            return plan
+        except ValueError as exc:
+            return {
+                'execution_profile': profile.value, 'project_id': project_id,
+                'planning_year': document['project']['planning_year'], 'ready': False,
+                'blocking_reasons': [str(exc)], 'warnings': [], 'datasets': [],
+                'algorithm': config['algorithm'], 'objective': config['objective'], 'scenario': config['scenario'],
+            }
+
     def run(self, project_id, payload):
         document = self.repository.get(project_id)
         config = configuration(payload, document)
+        profile = execution_profile(config['execution_profile'])
         report = readiness(document)
         state = report['scenarios'][config['scenario']]
-        if state['status']=='NOT_READY':
-            raise ValueError('NOT_READY: '+'; '.join(i['message'] for i in state['issues'] if i['severity']=='error'))
-        bundle = build_bundle(document, config)
+        if profile is ExecutionProfile.REFERENCE_DEMO:
+            if state['status']=='NOT_READY':
+                raise ValueError('NOT_READY: '+'; '.join(i['message'] for i in state['issues'] if i['severity']=='error'))
+            bundle = build_bundle(document, config)
+            execution_plan = self.preview(project_id, payload)
+            effective_config = config
+            synthetic = False
+        else:
+            from kds.adapters.institutional import build_verified_bundle
+            bundle, effective_config, execution_plan = build_verified_bundle(document, config)
+            synthetic = bool(execution_plan['synthetic'])
         config_hash = sha256(json.dumps(config,sort_keys=True).encode()).hexdigest()
         cache_key = sha256(json.dumps([project_id,bundle.data_version,bundle.planning_year,config['scenario'],
                                       config['objective'],config['algorithm'],config_hash]).encode()).hexdigest()
         run_id = 'run-'+uuid4().hex
+        input_snapshot = {
+            'execution_profile': profile.value, 'planning_year': bundle.planning_year,
+            'project_id': project_id, 'input_datasets': deepcopy_json(execution_plan.get('datasets', [])),
+            'candidate_source': deepcopy_json(execution_plan.get('candidate_source', {})),
+            'engine_commit': engine_commit(), 'algorithm': config['algorithm'], 'seed': config['seed'],
+            'objective': config['objective'], 'scenario': config['scenario'],
+            'created_at': now(), 'readiness_snapshot': deepcopy_json(execution_plan),
+            'result_classification': result_classification(profile, synthetic=synthetic),
+        }
         provenance = dict(bundle.provenance.copy(), project_id=project_id, data_version=bundle.data_version,
                           planning_year=bundle.planning_year, scenario=config['scenario'],algorithm=config['algorithm'],
                           seed=config['seed'],objective=config['objective'],config_hash=config_hash,
                           cache_key=cache_key,scientific_engine='thesis-engine / provider-boundary-1',
-                          weights='Unchanged engine objective formulas', configuration=config)
+                          weights='Unchanged engine objective formulas', configuration=effective_config,
+                          execution_profile=profile.value,
+                          result_authority_label=authority_label(profile, synthetic=synthetic),
+                          input_snapshot=input_snapshot)
         record = asdict(AnalysisRun(id=run_id,project_id=project_id,data_version=bundle.data_version,configuration=config,
                       scenario=config['scenario'],algorithm=config['algorithm'],seed=config['seed'],
+                      execution_profile=profile.value,
+                      result_authority_label=authority_label(profile, synthetic=synthetic),
                       started_at=now(),completed_at=None,status='running',result=None,error=None,
                       provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']))
         provenance=record['provenance']
@@ -100,7 +167,14 @@ class OptimizationApplicationService:
         self.repository.update(project_id, lambda d: d.setdefault('runs',{}).__setitem__(run_id,record))
         try:
             engine_result = self.executor(bundle)
-            record['result'] = project_result(engine_result, config, document['analysis_units'])
+            record['result'] = project_result(engine_result, effective_config, document['analysis_units'])
+            record['result'].update(
+                execution_profile=profile.value, project_id=project_id, planning_year=bundle.planning_year,
+                scenario=config['scenario'], algorithm=config['algorithm'], seed=config['seed'],
+                objective=config['objective'], result_authority_label=authority_label(profile, synthetic=synthetic),
+                classification=result_classification(profile, synthetic=synthetic),
+                input_provenance=deepcopy_json(input_snapshot),
+            )
             record['summary'] = summarize(record['result'],bundle)
             provenance['effective_run_parameters']=record['summary']['effective_run_parameters']
             if record['result'].get('feasible') is False:
@@ -115,5 +189,15 @@ class OptimizationApplicationService:
             record['status']='failed'
             record['error']=str(exc)
         record['completed_at']=now()
-        self.repository.update(project_id, lambda d: d['runs'].__setitem__(run_id,record))
+        def finish(d):
+            d['runs'][run_id] = record
+            if record['status'] == 'completed':
+                d['analysis_state'] = {'requires_reanalysis': False, 'latest_run_id': run_id,
+                                       'resolved_data_revision': d['data_revision'],
+                                       'resolved_at': record['completed_at']}
+        self.repository.update(project_id, finish)
         return record
+
+
+def deepcopy_json(value):
+    return json.loads(json.dumps(value, ensure_ascii=False, allow_nan=False))
