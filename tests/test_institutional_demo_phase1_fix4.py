@@ -67,6 +67,21 @@ def test_missing_required_dataset_remains_unselected(institutional, domain, remo
     assert broken["connection_state"] == "MISSING_DATASET"
 
 
+@pytest.mark.parametrize("mutation,connection", [
+    (lambda d: d["project"].update(planning_year=2026), "INVALID_YEAR"),
+    (lambda d: d["project"].update(pilot_geographic_scope="district-x"), "INVALID_SCOPE"),
+])
+def test_economics_active_pointer_survives_year_or_scope_mismatch(institutional, mutation, connection):
+    document = _baseline(institutional)
+    mutation(document)
+    economics = verified_readiness(document, "S1")["domains"]["economics"]
+    assert economics["dataset_selected"] is True
+    assert economics["dataset_valid"] is False
+    assert economics["engine_connected"] is False
+    assert economics["connection_state"] == connection
+    assert economics["datasets"]
+
+
 def test_domain_contract_and_physical_release_keep_independent_axes(institutional):
     document = _baseline(institutional)
     release = document["water_data"]["datasets"][

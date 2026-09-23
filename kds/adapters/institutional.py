@@ -94,26 +94,45 @@ def _selected_water_dataset(document: dict[str, Any], data_type: str) -> dict[st
     return store.get("datasets", {}).get(dataset_id)
 
 
-def _selected_economic_datasets(document: dict[str, Any], scenario: str) -> tuple[list[dict[str, Any]], bool]:
-    """Snapshot exact resolver pointers before strict economic validation."""
-    year = int(document["project"]["planning_year"])
-    required_scope = (document.get("project", {}).get("pilot_geographic_scope") or
-                      document.get("metadata", {}).get("pilot_geographic_scope") or "project")
+def _selected_economic_datasets(
+        document: dict[str, Any], scenario: str,
+) -> tuple[list[dict[str, Any]], bool, str | None]:
+    """Snapshot active pointers before strict economic validation."""
     store = document.get("economic_data", {})
     active = store.get("active", {})
     datasets_store = store.get("datasets", {})
     selected: list[dict[str, Any]] = []
     selected_types: set[str] = set()
+    seen: set[str] = set()
     for data_type in ECONOMIC_TYPES:
-        pointer = f"{data_type}|{year}|{required_scope}|catalog"
-        dataset = datasets_store.get(active.get(pointer))
-        if dataset:
-            selected.append(dataset)
+        dataset_ids = [dataset_id for key, dataset_id in active.items()
+                       if key.startswith(data_type + "|")]
+        datasets = [datasets_store[dataset_id] for dataset_id in dataset_ids
+                    if dataset_id in datasets_store]
+        if datasets:
             selected_types.add(data_type)
+        for dataset in datasets:
+            identity = str(dataset.get("dataset_id") or id(dataset))
+            if identity not in seen:
+                selected.append(dataset)
+                seen.add(identity)
     required_types = {"crop_net_profit"}
     if scenario == "S2":
         required_types.add("seasonal_economics")
-    return selected, required_types <= selected_types
+    required_selected = required_types <= selected_types
+    if not required_selected:
+        return selected, False, "MISSING_DATASET"
+    year = int(document["project"]["planning_year"])
+    required_scope = (document.get("project", {}).get("pilot_geographic_scope") or
+                      document.get("metadata", {}).get("pilot_geographic_scope") or "project")
+    for data_type in required_types:
+        keys = [key for key, dataset_id in active.items()
+                if key.startswith(data_type + "|") and dataset_id in datasets_store]
+        if not any(key.startswith(f"{data_type}|{year}|") for key in keys):
+            return selected, True, "INVALID_YEAR"
+        if f"{data_type}|{year}|{required_scope}|catalog" not in keys:
+            return selected, True, "INVALID_SCOPE"
+    return selected, True, None
 
 
 def _selected_crop_contract_datasets(document: dict[str, Any], data_type: str) -> list[dict[str, Any]]:
@@ -422,6 +441,11 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
     def state(*, status="READY", selected=True, valid=True, connected=True, connection="CONNECTED",
               role="OPTIMIZER_INPUT", scope="S1_AND_S2", consumer="", reason=None,
               consumer_available=True, **facts):
+        dataset = facts.get("dataset")
+        if isinstance(dataset, dict):
+            for key in ("dataset_id", "version", "data_type", "authority_class", "confirmed_at",
+                        "scope_key", "geographic_scope", "source"):
+                facts.setdefault(key, deepcopy(dataset.get(key)))
         return {"status": status, "consumer_available": consumer_available,
                 "dataset_selected": selected, "dataset_valid": valid if selected else False,
                 "engine_connected": connected, "connection_state": connection,
@@ -473,7 +497,8 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
                                       role=role, scope=scope, consumer=consumer, reason=reason, **dataset_facts)
 
     economics = None
-    selected_economics, required_economics_selected = _selected_economic_datasets(document, scenario)
+    selected_economics, required_economics_selected, economics_selection_issue = (
+        _selected_economic_datasets(document, scenario))
     economics_facts = {"datasets": [_dataset_fact(dataset) for dataset in selected_economics]}
     try:
         economics = resolve_verified_economics(document, scenario)
@@ -483,7 +508,8 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
         reason = str(exc); blockers.append(reason)
         domains["economics"] = state(status="NOT_READY", selected=required_economics_selected,
                                       valid=False, connected=False,
-                                      connection=_invalid_connection_state(reason, required_economics_selected),
+                                      connection=(economics_selection_issue or
+                                                  _invalid_connection_state(reason, required_economics_selected)),
                                       consumer="candidate/seasonal optimizer profit", reason=reason,
                                       **economics_facts)
 
