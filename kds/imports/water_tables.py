@@ -42,9 +42,7 @@ def _common(data: dict[str, Any], batch: dict[str, Any], line: int) -> dict[str,
         "data_period": _text(data, "data_period") or None,
         "measurement_method": _text(data, "measurement_method") or None,
         "notes": _text(data, "notes") or None,
-        # Historical water contracts were project-scoped by construction.
-        # Preserve that compatibility while allowing an explicit scope column.
-        "geographic_scope": _text(data, "geographic_scope") or "project",
+        "geographic_scope": _text(data, "geographic_scope") or None,
         "source_row": line,
         "synthetic": synthetic,
     }
@@ -96,15 +94,15 @@ def validate_water_table(batch: dict[str, Any], document: dict[str, Any]):
                 identity = year_value
             elif kind == "monthly_water_supply":
                 month = calendar_month(data.get("month"))
-                if int(month[:4]) != year_value:
-                    raise ValueError("month year must match planning_year.")
+                if int(month[:4]) not in {year_value - 1, year_value}:
+                    raise ValueError("monthly supply month must be in the planning year or immediately preceding year.")
                 amount, conversion = _volume(data, "amount", "unit", None, "m3/month", batch, allow_zero=True)
                 record.update(month=month, amount_m3=amount, source_unit=normalize_unit(data["unit"]), canonical_unit="m3/month", conversion=conversion)
                 identity = month
             elif kind == "delivery_capacity":
                 month = calendar_month(data.get("month"))
-                if int(month[:4]) != year_value:
-                    raise ValueError("month year must match planning_year.")
+                if int(month[:4]) not in {year_value - 1, year_value}:
+                    raise ValueError("delivery month must be in the planning year or immediately preceding year.")
                 capacity, conversion = _volume(data, "capacity", "source_unit", "canonical_unit", "m3/month", batch, allow_zero=True)
                 basis = _text(data, "capacity_basis").lower()
                 if basis not in CAPACITY_BASES:
@@ -176,8 +174,8 @@ def validate_water_table(batch: dict[str, Any], document: dict[str, Any]):
             if kind in {"monthly_water_supply", "delivery_capacity"}:
                 months = {r["month"] for r in records}
                 expected = {f"{project_year}-{month:02d}" for month in range(1, 13)}
-                if months != expected:
-                    raise ValueError("A complete annual monthly series must contain exactly 12 unique project-year months.")
+                if not expected <= months:
+                    raise ValueError("A monthly series must contain all 12 unique planning-year months; preceding-year season months may be added.")
             if kind == "annual_water_supply" and len(records) != 1:
                 raise ValueError("Annual water supply must contain exactly one project-year record.")
             if kind == "environmental_release":

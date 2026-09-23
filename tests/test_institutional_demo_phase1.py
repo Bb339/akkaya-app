@@ -46,8 +46,8 @@ def source_fields(authority):
 
 
 def annual(amount):
-    return ("planning_year,amount,unit,authority_class,source_institution,source_reference\n"
-            f"2025,{amount},m3/year,{source_fields('MEASURED')}\n")
+    return ("planning_year,amount,unit,geographic_scope,authority_class,source_institution,source_reference\n"
+            f"2025,{amount},m3/year,project,{source_fields('MEASURED')}\n")
 
 
 def monthly(kind):
@@ -57,20 +57,20 @@ def monthly(kind):
         headers += ["unit"]
     else:
         headers += ["source_unit", "canonical_unit", "capacity_basis"]
-    headers += ["authority_class", "source_institution", "source_reference"]
+    headers += ["geographic_scope", "authority_class", "source_institution", "source_reference"]
     rows = [",".join(headers)]
     for month in range(1, 13):
         row = ["2025", f"2025-{month:02d}", "5000"]
         row += (["m3/month"] if kind == "monthly_water_supply" else
                 ["m3/month", "m3/month", "measured_delivery"])
-        row += source_fields("MEASURED").split(",")
+        row += ["project", *source_fields("MEASURED").split(",")]
         rows.append(",".join(row))
     return "\n".join(rows) + "\n"
 
 
 def environmental():
-    return ("planning_year,release_form,value,source_unit,canonical_unit,authority_class,source_institution,source_reference\n"
-            f"2025,ratio,0.10,ratio,ratio,{source_fields('MEASURED')}\n")
+    return ("planning_year,release_form,value,source_unit,canonical_unit,geographic_scope,authority_class,source_institution,source_reference\n"
+            f"2025,ratio,0.10,ratio,ratio,project,{source_fields('MEASURED')}\n")
 
 
 def conveyance():
@@ -79,9 +79,9 @@ def conveyance():
 
 
 def perennial():
-    header = "planning_year,crop,value,source_unit,canonical_unit,confidence,method,authority_class,source_institution,source_reference"
+    header = "planning_year,crop,value,source_unit,canonical_unit,geographic_scope,confidence,method,authority_class,source_institution,source_reference"
     return header + "\n" + "\n".join(
-        f"2025,{crop},120,m3/da,m3/da,verified,synthetic_contract,{source_fields('MEASURED')}"
+        f"2025,{crop},120,m3/da,m3/da,project,verified,synthetic_contract,{source_fields('MEASURED')}"
         for crop in CROPS) + "\n"
 
 
@@ -163,7 +163,7 @@ def institutional(tmp_path):
                        ("candidates", "candidates.csv"), ("scientific_inputs", "scientific_s1.csv"),
                        ("scientific_inputs", "scientific_s2.csv")):
         upload(client, project_id, kind, (base / name).read_bytes(), name)
-    for kind, content in (("annual_water_supply", annual(20000)),
+    for kind, content in (("annual_water_supply", annual(60000)),
                           ("monthly_water_supply", monthly("monthly_water_supply")),
                           ("delivery_capacity", monthly("delivery_capacity")),
                           ("environmental_release", environmental()),
@@ -198,12 +198,19 @@ def test_verified_institutional_end_to_end_and_explicit_result_contract(institut
     assert result["result_authority_label"] == "SYNTHETIC / NOT_OFFICIAL"
     assert result["input_provenance"]["input_datasets"]
     assert result["HHI"] >= 0 and result["top_crops"] and result["crop_shares"]
+    assert result["hhi"] == result["HHI"]
+    assert result["authoritative_water_m3"] == result["verified_profile_water_m3"]
+    assert result["total_water_m3"] == result["authoritative_water_m3"]
+    assert result["water_reconciliation"]["optimizer_water_m3"] == result["optimizer_water_m3"]
+    assert result["water_reconciliation"]["status"] in {"PASS", "DIFFERENT_DEFINITIONS"}
     assert result["unit_results"]
     assert result["annual_budget_validation"]["status"] in {"PASS", "FAIL"}
     assert result["monthly_supply_validation"]["status"] in {"PASS", "FAIL"}
     assert result["monthly_delivery_validation"]["status"] in {"PASS", "FAIL"}
     assert isinstance(result["overall_feasible"], bool)
     assert result["result_provenance"]["selection_hash"]
+    assert result["result_provenance"]["consumer_roles"]["monthly_supply"] == "POST_RUN_VALIDATION"
+    assert run["provenance"]["input_snapshot"]["climate_source"]["mode"] == "CLIMATOLOGICAL_NORMAL"
     assert run["provenance"]["input_snapshot"]["current_pattern_source"]["file_hash"]
     provenance = client.get(f"/api/v2/projects/{project_id}/analyses/{run['id']}/provenance").json
     assert provenance["input_snapshot"]["engine_commit"]
@@ -216,7 +223,10 @@ def test_replacement_pins_history_marks_reanalysis_and_changes_connected_output(
     old_result = deepcopy(first["result"])
     old_dataset = next(d for d in first["provenance"]["input_snapshot"]["input_datasets"]
                        if d["data_type"] == "annual_water_supply")
-    upload(client, project_id, "annual_water_supply", annual(60000), "annual-water-v2.csv")
+    upload(client, project_id, "annual_water_supply", annual(120000), "annual-water-v2.csv")
+    upload(client, project_id, "monthly_water_supply",
+           monthly("monthly_water_supply").replace(",5000,m3/month,", ",10000,m3/month,"),
+           "monthly-water-v2.csv")
     state = repo.get(project_id)
     assert state["analysis_state"]["requires_reanalysis"] is True
     second = client.post(f"/api/v2/projects/{project_id}/analyses", json=execution_payload(client, project_id)).json
@@ -259,7 +269,7 @@ def test_reference_demo_remains_available_and_verified_materialization_is_projec
     materialized, _, plan = materialize_verified_document(document, configuration(payload(), document))
     assert document == before
     assert materialized["project"]["id"] == project_id
-    assert materialized["water_budget"]["amount"] == 18000
+    assert materialized["water_budget"]["amount"] == 54000
     assert plan["candidate_source"]["analysis_unit_count"] == 24
 
 
@@ -320,7 +330,7 @@ def test_stale_preview_is_rejected_and_explicit_profile_is_required(institutiona
     assert missing.status_code == 400
     preview = client.post(f"/api/v2/projects/{project_id}/analysis-preview", json=payload()).json
     stale = {**payload(), **{key: preview[key] for key in ("preview_token", "preview_revision", "selection_hash")}}
-    upload(client, project_id, "annual_water_supply", annual(60000), "annual-after-preview.csv")
+    upload(client, project_id, "annual_water_supply", annual(60001), "annual-after-preview.csv")
     response = client.post(f"/api/v2/projects/{project_id}/analyses", json=stale)
     assert response.status_code == 400
     assert "STALE_PREVIEW / REVISION_CONFLICT" in response.json["error"]
@@ -328,17 +338,15 @@ def test_stale_preview_is_rejected_and_explicit_profile_is_required(institutiona
 
 def test_water_scope_and_physical_release_fail_closed(institutional):
     client, repo, project_id = institutional
-    scoped = annual(20000).replace("planning_year,amount,unit,authority_class",
-        "planning_year,amount,unit,geographic_scope,authority_class").replace("2025,20000,m3/year,MEASURED",
-        "2025,20000,m3/year,other-basin,MEASURED")
+    scoped = annual(60000).replace(",project,MEASURED", ",other-basin,MEASURED")
     upload(client, project_id, "annual_water_supply", scoped, "wrong-scope.csv")
     assert "geographic scope" in verified_readiness(repo.get(project_id), "S1")["blocking_reasons"][0]
 
     # Restore project scope, then activate a contract-valid physical release.
-    upload(client, project_id, "annual_water_supply", annual(20001), "project-scope.csv")
-    header = "planning_year,month,release_form,value,source_unit,canonical_unit,authority_class,source_institution,source_reference"
+    upload(client, project_id, "annual_water_supply", annual(60001), "project-scope.csv")
+    header = "planning_year,month,release_form,value,source_unit,canonical_unit,geographic_scope,authority_class,source_institution,source_reference"
     physical = header + "\n" + "\n".join(
-        f"2025,2025-{month:02d},monthly_release,10,m3/month,m3/month,MEASURED,Synthetic Institute,{NOT_OFFICIAL}"
+        f"2025,2025-{month:02d},monthly_release,10,m3/month,m3/month,project,MEASURED,Synthetic Institute,{NOT_OFFICIAL}"
         for month in range(1, 13)) + "\n"
     upload(client, project_id, "environmental_release", physical, "physical-release.csv")
     state = verified_readiness(repo.get(project_id), "S1")
@@ -392,12 +400,15 @@ def test_controlled_verified_inputs_reach_scientific_consumers(institutional):
     assert candidate_water(conveyance_doc) > before_water
 
     # Annual supply and environmental release change the optimizer budget exactly once.
-    upload(client, project_id, "annual_water_supply", annual(60000), "annual-effect.csv")
+    upload(client, project_id, "annual_water_supply", annual(120000), "annual-effect.csv")
+    upload(client, project_id, "monthly_water_supply",
+           monthly("monthly_water_supply").replace(",5000,m3/month,", ",10000,m3/month,"),
+           "monthly-effect.csv")
     annual_doc, _, _, _, _ = _context(repo.get(project_id))
-    assert annual_doc["water_budget"]["amount"] == pytest.approx(54000)
+    assert annual_doc["water_budget"]["amount"] == pytest.approx(108000)
     upload(client, project_id, "environmental_release", environmental().replace("0.10", "0.50"), "release-effect.csv")
     release_doc, _, _, _, release_context = _context(repo.get(project_id))
-    assert release_doc["water_budget"]["amount"] == pytest.approx(30000)
+    assert release_doc["water_budget"]["amount"] == pytest.approx(60000)
 
     result = _one_unit_result(repo.get(project_id))
     high = validate_verified_result(result, "S1", release_context["monthly_profiles"],
@@ -429,10 +440,10 @@ def test_verified_s2_e2e_and_perennial_specificity(institutional):
     assert response.json["result"]["scenario"] == "S2"
     assert response.json["result"]["unit_results"]
 
-    header = "planning_year,crop,analysis_unit_id,value,source_unit,canonical_unit,confidence,method,authority_class,source_institution,source_reference"
+    header = "planning_year,crop,analysis_unit_id,value,source_unit,canonical_unit,geographic_scope,confidence,method,authority_class,source_institution,source_reference"
     content = header + "\n" + "\n".join([
-        f"2025,ELMA,,120,m3/da,m3/da,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
-        f"2025,ELMA,GX-001,900,m3/da,m3/da,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
+        f"2025,ELMA,,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
+        f"2025,ELMA,GX-001,900,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
     ]) + "\n"
     upload(client, project_id, "perennial_irrigation_requirement", content, "perennial-specific.csv")
     materialized, _, _ = materialize_verified_document(repo.get(project_id), configuration(body, repo.get(project_id)))
@@ -444,14 +455,31 @@ def test_verified_s2_e2e_and_perennial_specificity(institutional):
 
     cross_year = phenology().replace("2025-03-01,2025-06-30", "2024-10-01,2025-06-30")
     upload(client, project_id, "crop_phenology", cross_year, "cross-year-phenology.csv")
+    for kind, field, units in (("monthly_water_supply", "amount", "unit"),
+                               ("delivery_capacity", "capacity", "source_unit,canonical_unit,capacity_basis")):
+        content = monthly(kind).rstrip("\n")
+        for month in (10, 11, 12):
+            tail = ("5000,m3/month,project" if kind == "monthly_water_supply" else
+                    "5000,m3/month,m3/month,measured_delivery,project")
+            content += f"\n2025,2024-{month:02d},{tail},{source_fields('MEASURED')}"
+        upload(client, project_id, kind, content + "\n", f"cross-year-{kind}.csv")
     crossed, _, _ = materialize_verified_document(repo.get(project_id), configuration(body, repo.get(project_id)))
     arpa = next(row for row in crossed["scientific_inputs"]["seasonal_resources"]["s2"]
                 if row["parcel_id"] == "GX-001" and row["crop"] == "ARPA" and row["season"] == "primary")
     assert arpa["planting_date"] == "2024-10-01" and arpa["harvest_date"] == "2025-06-30"
+    cross_response = client.post(f"/api/v2/projects/{project_id}/analyses",
+                                 json=execution_payload(client, project_id, body))
+    assert cross_response.status_code == 201, cross_response.json
+    cross_result = cross_response.json["result"]
+    assert cross_result["result_provenance"]["consumer_roles"]["monthly_supply"] == "POST_RUN_VALIDATION"
+    assert cross_result["result_provenance"]["consumer_roles"]["approximate_s2_monthly_optimizer"] == "OPTIMIZER_CONSTRAINT"
+    calendar_months = {month for row in cross_result["unit_results"]
+                       for month in row["monthly_water_demand_m3"]}
+    assert {"2024-10", "2024-11", "2024-12"} <= calendar_months
 
     duplicate = header + "\n" + "\n".join([
-        f"2025,ELMA,GX-001,900,m3/da,m3/da,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
-        f"2025,ELMA,GX-001,901,m3/da,m3/da,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
+        f"2025,ELMA,GX-001,900,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
+        f"2025,ELMA,GX-001,901,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,{NOT_OFFICIAL}",
     ]) + "\n"
     root = f"/api/v2/projects/{project_id}/imports"
     uploaded = client.post(root, data={"data_type": "perennial_irrigation_requirement",

@@ -81,6 +81,7 @@ def _selection_contract(document, config, plan):
         'project_id': document['project']['id'], 'data_revision': document['data_revision'],
         'datasets': plan.get('datasets', []), 'candidate_source': plan.get('candidate_source', {}),
         'current_pattern_source': plan.get('current_pattern_source', {}),
+        'climate_source': plan.get('climate_source', {}),
         'configuration': {key: value for key, value in config.items() if key not in PREVIEW_FIELDS},
     }
     selection_hash = stable_hash(selected)
@@ -190,6 +191,7 @@ class OptimizationApplicationService:
             'project_id': project_id, 'input_datasets': deepcopy_json(execution_plan.get('datasets', [])),
             'candidate_source': deepcopy_json(execution_plan.get('candidate_source', {})),
             'current_pattern_source': deepcopy_json(execution_plan.get('current_pattern_source', {})),
+            'climate_source': deepcopy_json(execution_plan.get('climate_source', {})),
             'engine_commit': engine_commit(), 'algorithm': config['algorithm'], 'seed': config['seed'],
             'objective': config['objective'], 'scenario': config['scenario'],
             'created_at': now(), 'readiness_snapshot': deepcopy_json(_without_private(execution_plan)),
@@ -290,12 +292,39 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
     result['crop_shares'] = shares
     result['top_crops'] = top
     result['HHI'] = sum(share * share for share in shares.values())
+    result['hhi'] = result['HHI']
     if execution_context is not None:
+        optimizer_water = float(result.get('total_water_m3', 0.0) or 0.0)
         validation = validate_verified_result(
             result, scenario, execution_context['monthly_profiles'],
             execution_context['annual_supply_m3'], execution_context['monthly_supply_m3'],
-            execution_context['monthly_delivery_capacity_m3'], execution_context['environmental_release'])
+            execution_context['monthly_delivery_capacity_m3'], execution_context['environmental_release'],
+            execution_context['planning_year'])
         result.update(validation)
+        verified_water = float(validation['annual_budget_validation']['demand_m3'])
+        difference = optimizer_water - verified_water
+        tolerance = max(1.0, verified_water * 0.001)
+        result.update(
+            optimizer_water_m3=optimizer_water,
+            verified_profile_water_m3=verified_water,
+            authoritative_water_m3=verified_water,
+            total_water_m3=verified_water,
+            water_accounting_difference_m3=difference,
+            water_accounting_difference_pct=(difference / verified_water * 100.0 if verified_water else 0.0),
+            water_reconciliation={
+                'optimizer_water_m3': optimizer_water,
+                'verified_profile_water_m3': verified_water,
+                'difference_m3': difference,
+                'difference_pct': difference / verified_water * 100.0 if verified_water else 0.0,
+                'tolerance_m3': tolerance,
+                'status': 'PASS' if abs(difference) <= tolerance else 'DIFFERENT_DEFINITIONS',
+                'explanation': ('Optimizer aggregate and verified calendar-profile accounting agree within tolerance.'
+                                if abs(difference) <= tolerance else
+                                'Optimizer internal aggregate differs from authoritative verified calendar-profile accounting.'),
+            },
+        )
+        result['efficiency_tl_per_m3'] = (float(result.get('total_profit_tl', 0.0)) / verified_water
+                                          if verified_water else 0.0)
         result['engine_feasible'] = bool(result.get('feasible'))
         result['feasible'] = result['overall_feasible']
     else:
@@ -311,6 +340,15 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
                 'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
         result['overall_feasible'] = bool(result.get('feasible'))
         result['unit_results'] = fallback_units
+        optimizer_water = float(result.get('total_water_m3', 0.0) or 0.0)
+        result.update(optimizer_water_m3=optimizer_water, verified_profile_water_m3=None,
+                      authoritative_water_m3=optimizer_water,
+                      water_accounting_difference_m3=0.0, water_accounting_difference_pct=0.0,
+                      water_reconciliation={'optimizer_water_m3': optimizer_water,
+                          'verified_profile_water_m3': None, 'difference_m3': 0.0,
+                          'difference_pct': 0.0, 'tolerance_m3': None,
+                          'status': 'NOT_APPLICABLE',
+                          'explanation': 'REFERENCE_DEMO preserves the accepted reference water semantics.'})
     result['warnings'] = list(warnings or [])
     result['result_provenance'] = {
         'engine_commit': result.get('input_provenance', {}).get('engine_commit'),
@@ -318,6 +356,7 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
         'preview_revision': execution_plan.get('preview_revision'),
         'result_classification': result.get('classification'),
         'scientific_consumer': execution_plan.get('verified_water_model', 'frozen_reference'),
+        'consumer_roles': deepcopy_json(execution_plan.get('consumer_roles', {})),
     }
     return result
 

@@ -21,23 +21,18 @@ def _dates(record: dict[str, Any], planning_year: int) -> tuple[date, date]:
     return date(planting_year, planting_month, planting_day), date(planning_year, harvest_month, harvest_day)
 
 
-def _kc(day_index: int, total_days: int, parameter: dict[str, Any]) -> float:
-    stages = [float(parameter[name]) for name in ("p_ini", "p_dev", "p_mid", "p_late")]
-    if parameter["stage_value_mode"] == "DAYS":
-        weights = stages
-    else:
-        weights = [value * total_days for value in stages]
-    scale = total_days / max(sum(weights), 1.0)
-    ini, dev, mid, late = [value * scale for value in weights]
-    if day_index < ini:
-        return float(parameter["kc_ini"])
-    if day_index < ini + dev:
-        progress = (day_index - ini) / max(dev, 1.0)
-        return float(parameter["kc_ini"]) + progress * (float(parameter["kc_mid"]) - float(parameter["kc_ini"]))
-    if day_index < ini + dev + mid:
-        return float(parameter["kc_mid"])
-    progress = min(1.0, (day_index - ini - dev - mid) / max(late, 1.0))
-    return float(parameter["kc_mid"]) + progress * (float(parameter["kc_end"]) - float(parameter["kc_mid"]))
+def effective_rain_scs_mm(precip_mm: float) -> float:
+    """Use the accepted reference implementation; never fork its formula."""
+    import app
+    return app._effective_rain_scs_mm(precip_mm)
+
+
+def kc_curve_daily(total_days: int, parameter: dict[str, Any]) -> list[float]:
+    """Use the accepted reference stage scaling and interpolation exactly."""
+    import app
+    return app._kc_curve_daily(
+        total_days, parameter["kc_ini"], parameter["kc_mid"], parameter["kc_end"],
+        parameter["p_ini"], parameter["p_dev"], parameter["p_mid"], parameter["p_late"])
 
 
 def monthly_gross_demand_m3_da(parameter: dict[str, Any], phenology: dict[str, Any],
@@ -49,18 +44,29 @@ def monthly_gross_demand_m3_da(parameter: dict[str, Any], phenology: dict[str, A
     start, end = _dates(phenology, planning_year)
     if end < start:
         raise ValueError("Verified phenology harvest must not precede planting.")
+    modes = {str(row.get("climate_mode") or "") for row in climate}
+    if modes not in ({"YEAR_SPECIFIC"}, {"CLIMATOLOGICAL_NORMAL"}):
+        raise ValueError("Verified climate requires one explicit YEAR_SPECIFIC or CLIMATOLOGICAL_NORMAL mode.")
+    mode = next(iter(modes))
+    if any(not row.get("source") or not row.get("geographic_scope") for row in climate):
+        raise ValueError("Verified climate requires explicit source and geographic_scope.")
+    by_period = {str(row["month"])[:7]: row for row in climate}
     by_month = {int(str(row["month"])[5:7]): row for row in climate}
-    if set(by_month) != set(range(1, 13)):
-        raise ValueError("Verified crop-water execution requires 12 project climate months per analysis unit.")
+    if mode == "CLIMATOLOGICAL_NORMAL" and set(by_month) != set(range(1, 13)):
+        raise ValueError("Climatological climate requires months 1..12.")
     total_days = (end - start).days + 1
+    kc_daily = kc_curve_daily(total_days, parameter)
     demand: dict[str, float] = defaultdict(float)
     current = start
     while current <= end:
-        row = by_month[current.month]  # planning-year monthly normals also support cross-year seasons
+        key = f"{current.year}-{current.month:02d}"
+        row = by_period.get(key) if mode == "YEAR_SPECIFIC" else by_month.get(current.month)
+        if row is None:
+            raise ValueError(f"Verified climate is missing required calendar month {key}.")
         days_in_month = monthrange(current.year, current.month)[1]
-        etc = float(row["et0_mm"]) * _kc((current - start).days, total_days, parameter) / days_in_month
-        effective_rain = float(row["precip_mm"]) * 0.80 / days_in_month
-        demand[f"{planning_year}-{current.month:02d}"] += max(0.0, etc - effective_rain) / efficiency
+        etc = float(row["et0_mm"]) * kc_daily[(current - start).days] / days_in_month
+        effective_rain = effective_rain_scs_mm(float(row["precip_mm"])) / days_in_month
+        demand[key] += max(0.0, etc - effective_rain) / efficiency
         current += timedelta(days=1)
     return {month: float(value) for month, value in sorted(demand.items())}
 
@@ -80,7 +86,8 @@ def select_perennial_requirement(records: list[dict[str, Any]], crop: str,
 def validate_verified_result(result: dict[str, Any], scenario: str,
                              profiles: dict[tuple[str, str, str], dict[str, float]],
                              annual_supply_m3: float, monthly_supply_m3: dict[str, float],
-                             monthly_delivery_m3: dict[str, float], release: dict[str, Any]) -> dict[str, Any]:
+                             monthly_delivery_m3: dict[str, float], release: dict[str, Any],
+                             planning_year: int | None = None) -> dict[str, Any]:
     ratios = release.get("values", {}) if release.get("form") == "ratio" else {}
     physical = release.get("values", {}) if release.get("form") == "monthly_release" else {}
 
@@ -110,6 +117,9 @@ def validate_verified_result(result: dict[str, Any], scenario: str,
             profile = profiles.get((unit_id, crop, season))
             if profile is None:
                 raise ValueError(f"Missing verified monthly demand profile for {unit_id}/{crop}/{season}.")
+            uncovered = sorted(set(profile) - set(monthly_demand))
+            if uncovered:
+                raise ValueError("Verified supply/delivery is missing demand calendar months: " + ", ".join(uncovered))
             for month, value in profile.items():
                 if month in monthly_demand:
                     unit_monthly[month] += float(value) * area
@@ -121,12 +131,14 @@ def validate_verified_result(result: dict[str, Any], scenario: str,
     usable_monthly = {month: usable(month, float(value)) for month, value in monthly_supply_m3.items()}
     supply_violations = [month for month in monthly_demand if monthly_demand[month] > usable_monthly[month] + 1e-6]
     delivery_violations = [month for month in monthly_demand if monthly_demand[month] > float(monthly_delivery_m3[month]) + 1e-6]
-    annual_usable = math.fsum(usable_monthly.values())
+    annual_months = ({month for month in monthly_demand if month.startswith(f"{planning_year}-")}
+                     if planning_year is not None else set(monthly_demand))
+    annual_usable = math.fsum(usable_monthly[month] for month in annual_months)
     if release.get("form") == "ratio" and len(ratios) == 1:
         annual_usable = annual_supply_m3 * (1.0 - float(next(iter(ratios.values()))))
     elif release.get("form") == "monthly_release":
         annual_usable = max(0.0, annual_supply_m3 - math.fsum(float(v) for v in physical.values()))
-    annual_demand = math.fsum(monthly_demand.values())
+    annual_demand = math.fsum(monthly_demand[month] for month in annual_months)
     annual = {"status": "PASS" if annual_demand <= annual_usable + 1e-6 else "FAIL",
               "demand_m3": annual_demand, "usable_supply_m3": annual_usable,
               "unit": "m3/year", "environmental_release_applied_once": True}
