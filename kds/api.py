@@ -51,6 +51,15 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
             raise ValueError("Expected a JSON object.")
         return value
 
+    def analysis_body(project_id: str) -> dict:
+        value = body()
+        document = projects.get(project_id)
+        institutional = any(document.get(store, {}).get("datasets")
+                            for store in ("water_data", "economic_data", "crop_parameter_data"))
+        if institutional and "execution_profile" not in value:
+            raise ValueError("execution_profile is required for institutional project analysis.")
+        return value
+
     @blueprint.get("/projects")
     def list_projects():
         return jsonify(projects=projects.list())
@@ -86,12 +95,12 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
 
     @blueprint.post("/projects/<project_id>/analyses")
     def run_analysis(project_id):
-        result = analysis.run(project_id, body())
+        result = analysis.run(project_id, analysis_body(project_id))
         return jsonify(result), 201 if result['status']=='completed' else 422
 
     @blueprint.post("/projects/<project_id>/analysis-preview")
     def analysis_preview(project_id):
-        return jsonify(analysis.preview(project_id, body()))
+        return jsonify(analysis.preview(project_id, analysis_body(project_id)))
 
     @blueprint.get("/projects/<project_id>/analyses/<run_id>")
     def analysis_result(project_id, run_id):

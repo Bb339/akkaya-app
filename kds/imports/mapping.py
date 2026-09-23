@@ -63,13 +63,13 @@ WATER_SOURCE_FIELDS = [
     'source_document', 'source_date', 'data_period', 'measurement_method', 'notes',
 ]
 FIELDS.update(
-    annual_water_supply=['planning_year','amount','unit',*WATER_SOURCE_FIELDS],
-    monthly_water_supply=['planning_year','month','amount','unit',*WATER_SOURCE_FIELDS],
+    annual_water_supply=['planning_year','amount','unit','geographic_scope',*WATER_SOURCE_FIELDS],
+    monthly_water_supply=['planning_year','month','amount','unit','geographic_scope',*WATER_SOURCE_FIELDS],
     delivery_capacity=['planning_year','month','capacity','source_unit','canonical_unit','capacity_basis',
-                       'conversion_method','operating_hours_per_day','operating_days_in_month',*WATER_SOURCE_FIELDS],
-    environmental_release=['planning_year','month','release_form','value','source_unit','canonical_unit',*WATER_SOURCE_FIELDS],
+                       'conversion_method','operating_hours_per_day','operating_days_in_month','geographic_scope',*WATER_SOURCE_FIELDS],
+    environmental_release=['planning_year','month','release_form','value','source_unit','canonical_unit','geographic_scope',*WATER_SOURCE_FIELDS],
     conveyance_efficiency=['planning_year','period','efficiency','scope',*WATER_SOURCE_FIELDS],
-    perennial_irrigation_requirement=['planning_year','crop','analysis_unit_id','month','value','source_unit',
+    perennial_irrigation_requirement=['planning_year','crop','analysis_unit_id','month','value','source_unit','geographic_scope',
                                       'canonical_unit','confidence','method',*WATER_SOURCE_FIELDS],
 )
 PARAMETER_SOURCE_FIELDS = ['authority_class', 'source', 'source_reference', 'notes']

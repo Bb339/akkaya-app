@@ -42,6 +42,9 @@ def _common(data: dict[str, Any], batch: dict[str, Any], line: int) -> dict[str,
         "data_period": _text(data, "data_period") or None,
         "measurement_method": _text(data, "measurement_method") or None,
         "notes": _text(data, "notes") or None,
+        # Historical water contracts were project-scoped by construction.
+        # Preserve that compatibility while allowing an explicit scope column.
+        "geographic_scope": _text(data, "geographic_scope") or "project",
         "source_row": line,
         "synthetic": synthetic,
     }

@@ -15,6 +15,10 @@ from kds.domain.analysis_run import AnalysisRun
 from kds.domain.execution_profile import (
     ExecutionProfile, authority_label, execution_profile, result_classification,
 )
+from kds.science.institutional_water import validate_verified_result
+
+
+PREVIEW_FIELDS = {'preview_token', 'preview_revision', 'selection_hash'}
 
 
 def now():
@@ -23,7 +27,7 @@ def now():
 
 def configuration(payload, document):
     required = {'scenario','algorithm','seed','objective','water_budget_ratio','config'}
-    if not isinstance(payload,dict) or not required <= payload.keys() or payload.keys() - (required | {'selected_ids','execution_profile'}):
+    if not isinstance(payload,dict) or not required <= payload.keys() or payload.keys() - (required | {'selected_ids','execution_profile'} | PREVIEW_FIELDS):
         raise ValueError('Explicit scenario, algorithm, seed, objective, water_budget_ratio and config are required.')
     if payload['scenario'] not in ('S1','S2') or payload['algorithm'] not in ('GA','ACO','ABC'):
         raise ValueError('Use S1/S2 and GA/ACO/ABC.')
@@ -68,6 +72,35 @@ def engine_commit():
     return completed.stdout.strip() if completed.returncode == 0 else None
 
 
+def stable_hash(value):
+    return sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False).encode()).hexdigest()
+
+
+def _selection_contract(document, config, plan):
+    selected = {
+        'project_id': document['project']['id'], 'data_revision': document['data_revision'],
+        'datasets': plan.get('datasets', []), 'candidate_source': plan.get('candidate_source', {}),
+        'current_pattern_source': plan.get('current_pattern_source', {}),
+        'configuration': {key: value for key, value in config.items() if key not in PREVIEW_FIELDS},
+    }
+    selection_hash = stable_hash(selected)
+    return {
+        'data_revision': document['data_revision'], 'selection_hash': selection_hash,
+        'preview_revision': document['data_revision'],
+        'preview_token': stable_hash({'project_id': document['project']['id'],
+                                      'data_revision': document['data_revision'],
+                                      'selection_hash': selection_hash}),
+    }
+
+
+def _without_private(value):
+    if isinstance(value, dict):
+        return {key: _without_private(item) for key, item in value.items() if not str(key).startswith('_')}
+    if isinstance(value, list):
+        return [_without_private(item) for item in value]
+    return value
+
+
 class OptimizationApplicationService:
     def __init__(self, repository, executor=execute):
         self.repository, self.executor = repository, executor
@@ -89,7 +122,7 @@ class OptimizationApplicationService:
         report = readiness(document)
         if profile is ExecutionProfile.REFERENCE_DEMO:
             state = report['scenarios'][config['scenario']]
-            return {
+            response = {
                 'execution_profile': profile.value, 'result_authority_label': authority_label(profile, synthetic=False),
                 'project_id': project_id, 'planning_year': document['project']['planning_year'],
                 'ready': state['status'] != 'NOT_READY',
@@ -100,16 +133,24 @@ class OptimizationApplicationService:
                     'analysis_unit_count': report['counts']['analysis_units']},
                 'algorithm': config['algorithm'], 'objective': config['objective'], 'scenario': config['scenario'],
             }
+            response.update(_selection_contract(document, config, response))
+            return response
         from kds.adapters.institutional import verified_execution_plan
         try:
             plan = verified_execution_plan(document, config)
             plan['result_authority_label'] = authority_label(profile, synthetic=plan['synthetic'])
-            return plan
+            plan.update(_selection_contract(document, config, plan))
+            return _without_private(plan)
         except ValueError as exc:
+            synthetic = bool(document.get('metadata', {}).get('synthetic_institutional_test')
+                             and document.get('metadata', {}).get('not_official'))
             return {
                 'execution_profile': profile.value, 'project_id': project_id,
                 'planning_year': document['project']['planning_year'], 'ready': False,
                 'blocking_reasons': [str(exc)], 'warnings': [], 'datasets': [],
+                'data_revision': document['data_revision'],
+                'result_authority_label': authority_label(profile, synthetic=synthetic),
+                'synthetic': synthetic, 'not_official': synthetic,
                 'algorithm': config['algorithm'], 'objective': config['objective'], 'scenario': config['scenario'],
             }
 
@@ -126,11 +167,21 @@ class OptimizationApplicationService:
             execution_plan = self.preview(project_id, payload)
             effective_config = config
             synthetic = False
+            execution_context = None
         else:
-            from kds.adapters.institutional import build_verified_bundle
-            bundle, effective_config, execution_plan = build_verified_bundle(document, config)
+            from kds.adapters.institutional import build_verified_bundle, verified_execution_plan
+            current_plan = verified_execution_plan(document, config)
+            current_plan.update(_selection_contract(document, config, current_plan))
+            if not all(key in payload for key in PREVIEW_FIELDS):
+                raise ValueError('VERIFIED_INSTITUTIONAL execution requires preview_token, preview_revision and selection_hash.')
+            if (int(payload['preview_revision']) != document['data_revision'] or
+                    payload['selection_hash'] != current_plan['selection_hash'] or
+                    payload['preview_token'] != current_plan['preview_token']):
+                raise ValueError('STALE_PREVIEW / REVISION_CONFLICT: obtain a new analysis preview.')
+            bundle, effective_config, execution_plan, execution_context = build_verified_bundle(document, config)
+            execution_plan.update({key: current_plan[key] for key in PREVIEW_FIELDS | {'data_revision'}})
             synthetic = bool(execution_plan['synthetic'])
-        config_hash = sha256(json.dumps(config,sort_keys=True).encode()).hexdigest()
+        config_hash = stable_hash({key: value for key, value in config.items() if key not in PREVIEW_FIELDS})
         cache_key = sha256(json.dumps([project_id,bundle.data_version,bundle.planning_year,config['scenario'],
                                       config['objective'],config['algorithm'],config_hash]).encode()).hexdigest()
         run_id = 'run-'+uuid4().hex
@@ -138,10 +189,14 @@ class OptimizationApplicationService:
             'execution_profile': profile.value, 'planning_year': bundle.planning_year,
             'project_id': project_id, 'input_datasets': deepcopy_json(execution_plan.get('datasets', [])),
             'candidate_source': deepcopy_json(execution_plan.get('candidate_source', {})),
+            'current_pattern_source': deepcopy_json(execution_plan.get('current_pattern_source', {})),
             'engine_commit': engine_commit(), 'algorithm': config['algorithm'], 'seed': config['seed'],
             'objective': config['objective'], 'scenario': config['scenario'],
-            'created_at': now(), 'readiness_snapshot': deepcopy_json(execution_plan),
+            'created_at': now(), 'readiness_snapshot': deepcopy_json(_without_private(execution_plan)),
             'result_classification': result_classification(profile, synthetic=synthetic),
+            'preview_revision': execution_plan.get('preview_revision'),
+            'preview_token': execution_plan.get('preview_token'),
+            'selection_hash': execution_plan.get('selection_hash'),
         }
         provenance = dict(bundle.provenance.copy(), project_id=project_id, data_version=bundle.data_version,
                           planning_year=bundle.planning_year, scenario=config['scenario'],algorithm=config['algorithm'],
@@ -156,7 +211,8 @@ class OptimizationApplicationService:
                       execution_profile=profile.value,
                       result_authority_label=authority_label(profile, synthetic=synthetic),
                       started_at=now(),completed_at=None,status='running',result=None,error=None,
-                      provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']))
+                      provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']
+                      + list(execution_plan.get('warnings', []))))
         provenance=record['provenance']
         if config['scenario']=='S2':
             provenance['result_contract_version']=RESULT_CONTRACT_VERSION
@@ -175,6 +231,8 @@ class OptimizationApplicationService:
                 classification=result_classification(profile, synthetic=synthetic),
                 input_provenance=deepcopy_json(input_snapshot),
             )
+            record['result'] = complete_result_contract(record['result'], bundle, execution_plan,
+                                                        execution_context, record['warnings'])
             record['summary'] = summarize(record['result'],bundle)
             provenance['effective_run_parameters']=record['summary']['effective_run_parameters']
             if record['result'].get('feasible') is False:
@@ -197,6 +255,70 @@ class OptimizationApplicationService:
                                        'resolved_at': record['completed_at']}
         self.repository.update(project_id, finish)
         return record
+
+
+def _distribution_and_units(result, scenario):
+    areas = {}
+    units = []
+    for row in result.get('details', []):
+        unit_id = str(row.get('parcelId') or row.get('analysis_unit_id') or '')
+        area = float(row.get('area_da', 0.0) or 0.0)
+        selections = []
+        if scenario == 'S1':
+            crop = row.get('chosenCrop') or row.get('crop')
+            if crop and str(crop).upper() not in {'NADAS', 'FALLOW'}:
+                selections.append({'crop': str(crop), 'season': 'PRIMARY'})
+                areas[str(crop)] = areas.get(str(crop), 0.0) + area
+        else:
+            for name, season in (('primary', 'PRIMARY'), ('secondary', 'SECONDARY')):
+                crop = row.get(name)
+                if crop and crop.get('crop') and str(crop['crop']).upper() not in {'NADAS', 'FALLOW'}:
+                    crop_area = float(crop.get('area_da', area) or area)
+                    selections.append({'crop': str(crop['crop']), 'season': season})
+                    areas[str(crop['crop'])] = areas.get(str(crop['crop']), 0.0) + crop_area
+        units.append({'analysis_unit_id': unit_id, 'area_da': area, 'selected_crops': selections})
+    total = sum(areas.values())
+    shares = {crop: value / total for crop, value in sorted(areas.items())} if total else {}
+    top = [{'crop': crop, 'area_da': areas[crop], 'share': share}
+           for crop, share in sorted(shares.items(), key=lambda item: (-item[1], item[0]))[:10]]
+    return shares, top, units
+
+
+def complete_result_contract(result, bundle, execution_plan, execution_context, warnings):
+    scenario = result.get('scenario') or bundle.algorithm_configuration.copy().get('scenario')
+    shares, top, fallback_units = _distribution_and_units(result, scenario)
+    result['crop_shares'] = shares
+    result['top_crops'] = top
+    result['HHI'] = sum(share * share for share in shares.values())
+    if execution_context is not None:
+        validation = validate_verified_result(
+            result, scenario, execution_context['monthly_profiles'],
+            execution_context['annual_supply_m3'], execution_context['monthly_supply_m3'],
+            execution_context['monthly_delivery_capacity_m3'], execution_context['environmental_release'])
+        result.update(validation)
+        result['engine_feasible'] = bool(result.get('feasible'))
+        result['feasible'] = result['overall_feasible']
+    else:
+        budget = float(result.get('water_budget_m3', 0.0) or 0.0)
+        demand = float(result.get('total_water_m3', 0.0) or 0.0)
+        result['annual_budget_validation'] = {
+            'status': 'PASS' if budget and demand <= budget + 1e-6 else 'FAIL',
+            'demand_m3': demand, 'usable_supply_m3': budget, 'unit': 'm3/year'}
+        result['monthly_supply_validation'] = {
+            'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
+        result['monthly_delivery_validation'] = {
+            'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
+        result['overall_feasible'] = bool(result.get('feasible'))
+        result['unit_results'] = fallback_units
+    result['warnings'] = list(warnings or [])
+    result['result_provenance'] = {
+        'engine_commit': result.get('input_provenance', {}).get('engine_commit'),
+        'selection_hash': execution_plan.get('selection_hash'),
+        'preview_revision': execution_plan.get('preview_revision'),
+        'result_classification': result.get('classification'),
+        'scientific_consumer': execution_plan.get('verified_water_model', 'frozen_reference'),
+    }
+    return result
 
 
 def deepcopy_json(value):
