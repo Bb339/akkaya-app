@@ -4,6 +4,8 @@ from __future__ import annotations
 from copy import deepcopy
 import io
 import json
+from pathlib import Path
+import subprocess
 
 import pytest
 from flask import Flask
@@ -265,6 +267,22 @@ def test_reference_demo_regression_values_and_authority_label():
     })
     assert preview["ready"] is True
     assert preview["result_authority_label"] == "REFERENCE MODEL / DEMO DATA"
+
+
+def test_frozen_scientific_sources_and_akkaya_data_match_accepted_baseline():
+    root = Path(__file__).resolve().parents[1]
+
+    def git(*args):
+        return subprocess.run(
+            ["git", *args], cwd=root, check=True, text=True, capture_output=True
+        ).stdout.strip()
+
+    baseline = "v2-scientific-robustness-sensitivity-complete^{}"
+    assert git("rev-parse", f"{baseline}:kds/science") == git(
+        "rev-parse", "HEAD:kds/science"
+    )
+    assert git("rev-parse", f"{baseline}:data") == git("rev-parse", "HEAD:data")
+    assert git("diff", "--name-only", baseline, "HEAD", "--", "kds/science", "data") == ""
 
 
 class _MemoryRepository:

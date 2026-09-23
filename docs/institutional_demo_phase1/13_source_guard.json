@@ -1,0 +1,26 @@
+{
+  "accepted_baseline_ref": "refs/tags/v2-scientific-robustness-sensitivity-complete^{}",
+  "accepted_baseline_commit": "028f231eb774eafb53a9a76db370b663d561ce1b",
+  "evidence_commit": "e47048407ad3a0713548a7e2e403bf2c754fa808",
+  "protected_paths": {
+    "app.py": {
+      "baseline_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "evidence_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "unchanged": true
+    },
+    "kds/science": {
+      "baseline_tree": "e83726515fef27892991d70fad944327f964121d",
+      "evidence_tree": "e83726515fef27892991d70fad944327f964121d",
+      "unchanged": true
+    },
+    "data": {
+      "baseline_tree": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "evidence_tree": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "unchanged": true
+    }
+  },
+  "changed_protected_files": [],
+  "scientific_algorithm_source_unchanged": true,
+  "frozen_akkaya_data_unchanged": true,
+  "verification": "git object identity and empty path-restricted diff"
+}
