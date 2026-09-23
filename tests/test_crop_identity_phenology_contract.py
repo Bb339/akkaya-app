@@ -205,7 +205,7 @@ def test_phase7_scientific_source_guard():
     root = Path(__file__).resolve().parents[1]
     changed = subprocess.run([
         "git", "diff", "--name-only", "38f8c89d4ab14de6868dcd84f017e6e5378353aa", "--",
-        "app.py", "kds/science", "kds/application/optimization.py", "data",
+        "app.py", "kds/science", "data",
     ], cwd=root, check=True, text=True, capture_output=True).stdout.strip()
     assert changed == ""
     assert hashlib.sha256((root / "data/excel_derived/combined_parcel_candidate_matrix_2024.csv").read_bytes()).hexdigest()

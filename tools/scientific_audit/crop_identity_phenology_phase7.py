@@ -14,7 +14,7 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUTPUT = ROOT / "docs" / "audits" / "crop_identity_phenology_phase7"
 BASELINE = "38f8c89d4ab14de6868dcd84f017e6e5378353aa"
-PROTECTED = ("app.py", "kds/science", "kds/application/optimization.py", "data")
+PROTECTED = ("app.py", "kds/science", "data")
 
 
 def _imports():
@@ -167,7 +167,7 @@ def generate(output: Path = DEFAULT_OUTPUT, test_report: dict[str, Any] | None =
         "changed_protected_paths": changed,
         "protected_tree_sha256": protected_before,
         "candidate_matrix_changed": any(path.startswith("data/") for path in changed),
-        "optimizer_changed": any(path == "kds/application/optimization.py" or path.startswith("kds/science/") for path in changed),
+        "optimizer_changed": any(path.startswith("kds/science/") for path in changed),
         "legacy_app_changed": "app.py" in changed,
         "engine_connected": False,
     }

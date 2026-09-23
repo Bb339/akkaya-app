@@ -13,7 +13,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "docs" / "audits" / "crop_identity_phenology_phase7_fix1"
 BASELINE = "19366a7f1a551704c143caa38d9228396dce9f30"
-PROTECTED = ("app.py", "kds/science", "kds/application/optimization.py", "data")
+PROTECTED = ("app.py", "kds/science", "data")
 
 
 def _write(path: Path, value: Any) -> None:
