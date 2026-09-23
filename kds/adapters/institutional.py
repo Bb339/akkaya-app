@@ -159,7 +159,9 @@ def _invalid_connection_state(reason: str, selected: bool) -> str:
         return "INVALID_AUTHORITY"
     if "ambiguous" in normalized:
         return "AMBIGUOUS_OR_INCOMPLETE"
-    if "coverage" in normalized or "no records" in normalized or "all planning-year months" in normalized:
+    if ("coverage" in normalized or "no records" in normalized or
+            "all planning-year months" in normalized or "months 1..12" in normalized or
+            "missing required calendar months" in normalized):
         return "INCOMPLETE_COVERAGE"
     return "INVALID"
 
@@ -608,9 +610,16 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
         domains["climate"] = state(consumer=climate_consumer, **facts)
     except ValueError as exc:
         reason = str(exc); blockers.append(reason)
-        selected = bool(document.get("scientific_inputs", {}).get("seasonal_resources", {}).get("monthly_climate"))
+        climate_rows = document.get("scientific_inputs", {}).get("seasonal_resources", {}).get("monthly_climate", [])
+        selected = bool(climate_rows)
+        if selected and any(row.get("geographic_scope") != required_scope for row in climate_rows):
+            connection = "INVALID_SCOPE"
+        elif selected and any(not row.get("source") for row in climate_rows):
+            connection = "INVALID"
+        else:
+            connection = _invalid_connection_state(reason, selected)
         domains["climate"] = state(status="NOT_READY", selected=selected, valid=False, connected=False,
-                                    connection=_invalid_connection_state(reason, selected),
+                                    connection=connection,
                                     consumer=climate_consumer, reason=reason)
 
     # Cross-domain water reconciliation remains fail-closed without falsifying other domains.

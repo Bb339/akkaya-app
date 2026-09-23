@@ -82,6 +82,23 @@ def test_economics_active_pointer_survives_year_or_scope_mismatch(institutional,
     assert economics["datasets"]
 
 
+@pytest.mark.parametrize("mutation,connection", [
+    (lambda rows: rows[0].update(geographic_scope="wrong-scope"), "INVALID_SCOPE"),
+    (lambda rows: rows[0].update(source=None), "INVALID"),
+    (lambda rows: rows.pop(0), "INCOMPLETE_COVERAGE"),
+])
+def test_climate_invalid_states_do_not_conflate_scope_source_or_coverage(
+        institutional, mutation, connection):
+    document = _baseline(institutional)
+    rows = document["scientific_inputs"]["seasonal_resources"]["monthly_climate"]
+    mutation(rows)
+    climate = verified_readiness(document, "S1")["domains"]["climate"]
+    assert climate["dataset_selected"] is True
+    assert climate["dataset_valid"] is False
+    assert climate["engine_connected"] is False
+    assert climate["connection_state"] == connection
+
+
 def test_domain_contract_and_physical_release_keep_independent_axes(institutional):
     document = _baseline(institutional)
     release = document["water_data"]["datasets"][
