@@ -35,7 +35,7 @@ export function renderRun(run){
   const label=document.getElementById('result-source-label');
   const synthetic=run.result_authority_label==='SYNTHETIC / NOT_OFFICIAL' || run.provenance.data_source_notes==='synthetic_test_fixture';
   label.className=synthetic?'watermark':'warning';
-  label.textContent=run.result_authority_label || (synthetic?'Synthetic test project / Sentetik test verisi':run.provenance.water_budget?.kind==='calculated_reference'?'calculated_reference: hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.':'');
+  label.textContent=synthetic?`${run.result_authority_label || 'SYNTHETIC'} · Synthetic test project / Sentetik test verisi`:(run.result_authority_label || (run.provenance.water_budget?.kind==='calculated_reference'?'calculated_reference: hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.':''));
       document.getElementById('result').hidden=false;
       facts('result-facts',[['Execution profile',run.execution_profile],['Result authority',run.result_authority_label],['Classification',result.classification],['Proje',run.provenance.project_name || run.project_id],['Proje kimliği',run.project_id],['Algoritma',run.algorithm],['Senaryo',run.scenario],['Seed',run.seed],['Toplam brüt su (m³)',result.total_water_m3],
         ['Uygulanan analiz bütçesi (m³)',result.water_budget_m3],['Su bütçesi türü',run.provenance.water_budget?.kind ?? 'Kayıtta yok'],['Toplam net kâr (TL)',result.total_profit_tl],['TL/m³',result.efficiency_tl_per_m3],['Uygunluk',result.feasible===true?'Uygun':result.feasible===false?'Uygun değil':'Motor bu metrik için değer üretmedi'],
