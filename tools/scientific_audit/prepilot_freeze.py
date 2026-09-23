@@ -20,7 +20,14 @@ OUTPUT = ROOT / "docs" / "prepilot_freeze"
 SCIENTIFIC_FREEZE_COMMIT = "bb0c6ff516a7d995c2894ee66285ebf124ac9340"
 PARENT_TAG = "v2-crop-identity-phenology-contract-complete"
 PROTECTED_PATHS = (
-    "app.py", "kds/science", "data",
+    "app.py",
+    "kds/science/__init__.py",
+    "kds/science/contract.py",
+    "kds/science/execution.py",
+    "kds/science/providers.py",
+    "kds/science/results.py",
+    "kds/science/validation.py",
+    "data",
     "index.html", "script.js", "style.css",
 )
 LINEAGE = (

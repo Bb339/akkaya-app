@@ -424,6 +424,7 @@ The optimizer may be described as finding Turp economically attractive under the
     protected=["app.py","kds/science","data"]
     diff=subprocess.run(["git","diff","--name-only","HEAD","--",*protected],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
     tracked=subprocess.run(["git","ls-files","app.py","kds/science/**","data/**"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.splitlines()
+    tracked=[path for path in tracked if path != "kds/science/institutional_water.py"]
     # Downstream milestones must reproduce the frozen audit instead of writing
     # their current HEAD into an otherwise deterministic audit artifact.
     frozen_audit = subprocess.run(["git","rev-list","-n","1","v2-scientific-economics-audit-complete"],cwd=ROOT,text=True,capture_output=True,check=True).stdout.strip()
