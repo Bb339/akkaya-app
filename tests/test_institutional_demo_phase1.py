@@ -195,6 +195,13 @@ def test_verified_institutional_end_to_end_and_explicit_result_contract(institut
     assert result["status"] == "OK"
     assert result["execution_profile"] == "VERIFIED_INSTITUTIONAL"
     assert result["classification"] == "SYNTHETIC_TEST_OUTPUT"
+    assert {"status", "execution_profile", "classification", "project_id", "planning_year",
+            "scenario", "algorithm", "seed", "objective", "optimizer_water_m3",
+            "verified_profile_water_m3", "authoritative_water_m3", "water_reconciliation",
+            "total_profit_tl", "efficiency_tl_per_m3", "hhi", "top_crops", "crop_shares",
+            "unit_results", "annual_budget_validation", "monthly_supply_validation",
+            "monthly_delivery_validation", "overall_feasible", "warnings", "input_provenance",
+            "result_provenance"} <= result.keys()
     assert result["result_authority_label"] == "SYNTHETIC / NOT_OFFICIAL"
     assert result["input_provenance"]["input_datasets"]
     assert result["HHI"] >= 0 and result["top_crops"] and result["crop_shares"]

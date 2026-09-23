@@ -1,0 +1,15 @@
+{
+  "status": "PENDING_FINAL_FULL_SUITE",
+  "targeted": {
+    "fix2": "18 passed plus corrected role guard 1 passed",
+    "water_contract": "25 passed",
+    "phase7": "29 passed",
+    "prepilot": "8 passed",
+    "economics": "51 passed",
+    "robustness": "18 passed",
+    "general_reference_group": "26 passed, 6 deselected",
+    "s1_e2e": "1 passed",
+    "s2_cross_year_e2e": "1 passed"
+  },
+  "final": null
+}

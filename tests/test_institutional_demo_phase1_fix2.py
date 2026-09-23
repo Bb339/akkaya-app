@@ -8,6 +8,7 @@ from kds.adapters.institutional import resolve_verified_water, verified_executio
 from kds.application.optimization import configuration
 from kds.science.institutional_water import (
     effective_rain_scs_mm, kc_curve_daily, monthly_gross_demand_m3_da,
+    validate_verified_result,
 )
 
 
@@ -52,6 +53,23 @@ def test_year_specific_climate_never_reuses_another_year():
                     geographic_scope="project") for month in range(1, 13)]
     with pytest.raises(ValueError, match="2024-10"):
         monthly_gross_demand_m3_da(_parameter(), phenology, climate, .83, 2025)
+
+
+def test_exact_july_capacity_is_post_run_validation_not_a_claimed_exact_optimizer_constraint():
+    result = {"feasible": True, "details": [{"parcelId": "U1", "area_da": 1,
+                                                "chosenCrop": "PREFERRED"}]}
+    supply = {f"2025-{month:02d}": 1000.0 for month in range(1, 13)}
+    delivery = dict(supply, **{"2025-07": 50.0})
+    preferred = {("U1", "PREFERRED", "PRIMARY"): {"2025-07": 100.0}}
+    alternative = {("U1", "PREFERRED", "PRIMARY"): {"2025-07": 40.0}}
+    release = {"form": "ratio", "values": {"2025": 0.0}}
+    rejected = validate_verified_result(result, "S1", preferred, 12000.0, supply,
+                                        delivery, release, 2025)
+    accepted = validate_verified_result(result, "S1", alternative, 12000.0, supply,
+                                        delivery, release, 2025)
+    assert rejected["monthly_delivery_validation"]["status"] == "FAIL"
+    assert accepted["monthly_delivery_validation"]["status"] == "PASS"
+    assert rejected["unit_results"][0]["selected_crops"] == accepted["unit_results"][0]["selected_crops"]
 
 
 def test_missing_domain_is_not_reported_connected(institutional):

@@ -1,0 +1,20 @@
+{
+  "baseline": "451bbb06c1d38fe2e1a6a5cceb594d2517b06229",
+  "scientific_commit": "397693a",
+  "protected": {
+    "app.py": "UNCHANGED",
+    "data": "UNCHANGED_TREE_b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+    "ga_aco_abc_math": "UNCHANGED_IN_APP_PY",
+    "candidate_matrix": "UNCHANGED_IN_DATA_TREE",
+    "reference_demo_data": "UNCHANGED_IN_DATA_TREE",
+    "accepted_robustness_raw_evidence": "UNCHANGED"
+  },
+  "changed_scientific_files": {
+    "kds/science/institutional_water.py": "accepted SCS/Kc delegation, explicit climate modes, true YYYY-MM profiles, exact post-run validation",
+    "kds/adapters/institutional.py": "verified dataset reconciliation, roles, scope, provenance, materialization",
+    "kds/application/optimization.py": "stable result/reconciliation fields and provenance",
+    "kds/imports/water_tables.py": "cross-year monthly coverage without weakening planning-year completeness"
+  },
+  "robustness_tag": "v2-scientific-robustness-sensitivity-complete",
+  "robustness_tag_commit": "028f231eb774eafb53a9a76db370b663d561ce1b"
+}

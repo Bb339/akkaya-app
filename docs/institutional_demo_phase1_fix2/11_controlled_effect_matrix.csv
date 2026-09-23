@@ -1,0 +1,11 @@
+domain,dataset_version,consumer,consumer_role,old_value,new_value,bundle_difference,optimizer_effect,validation_effect,result_field,classification
+annual_supply,v1_to_v2,annual usable-water budget,OPTIMIZER_INPUT,60000,120000,water_budget 54000 to 108000,annual feasible region expands,annual threshold expands,water_budget_m3,CONNECTED
+monthly_supply,v1_to_v2,exact monthly supply validator,POST_RUN_VALIDATION,5000/month,10000/month,monthly validation resource changes,none in S1; separate approximate mechanism in S2,monthly threshold changes,monthly_supply_validation,CONNECTED
+delivery,v1,exact monthly delivery validator,POST_RUN_VALIDATION,5000/month,1/month,no accepted engine-math change,selected plan unchanged,validation becomes FAIL,monthly_delivery_validation,CONNECTED
+environmental_release,v1_to_v2,usable-water calculation,OPTIMIZER_INPUT,0.10,0.50,annual budget 108000 to 60000,annual feasible region contracts,monthly usable supply deducted once,annual_budget_validation,CONNECTED
+conveyance,v1_to_v2,verified FAO56 gross demand,OPTIMIZER_INPUT,0.83,0.45,candidate gross demand rises,internal candidate water rises,profile demand rises,verified_profile_water_m3,CONNECTED
+net_profit,v1_to_v2,candidate and seasonal profit,OPTIMIZER_INPUT,base,+5000 TL/da,candidate profits change,objective coefficients change,none,total_profit_tl,CONNECTED
+kc_stages,v1_to_v2,accepted daily Kc curve,OPTIMIZER_INPUT,0.4/1.0/0.5,0.9/1.4/0.8,candidate demand changes,internal candidate water changes,profile demand changes,unit_results,CONNECTED
+phenology,v1_to_v2,calendar water profile,OPTIMIZER_INPUT,2025-03..06,2024-10..2025-06,full YYYY-MM profile changes,candidate annual aggregate changes,cross-year monthly comparison changes,unit_results,CONNECTED
+perennial_requirement,v2,S2 perennial water override,OPTIMIZER_INPUT,120 m3/da,900 m3/da GX-001,unit-specific value overrides default,S2 row water changes,profile scale changes,unit_results,CONNECTED
+climate,fixture_v2,verified FAO56 climate,OPTIMIZER_INPUT,implicit month,CLIMATOLOGICAL_NORMAL explicit,authority metadata and lookup contract change,no algorithm math change,profile calculation is authorized,climate_source,CONNECTED
