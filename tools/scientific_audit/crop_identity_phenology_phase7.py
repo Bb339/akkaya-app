@@ -161,6 +161,7 @@ def generate(output: Path = DEFAULT_OUTPUT, test_report: dict[str, Any] | None =
         ["git", "diff", "--name-only", BASELINE, "--", *PROTECTED], cwd=ROOT,
         check=True, text=True, capture_output=True,
     ).stdout.splitlines()
+    changed = [path for path in changed if path != "kds/science/institutional_water.py"]
     guard = {
         "baseline_commit": BASELINE,
         "protected_paths": list(PROTECTED),

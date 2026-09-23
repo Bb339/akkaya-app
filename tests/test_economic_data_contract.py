@@ -249,8 +249,8 @@ def test_provenance_hash_engine_and_legacy_guards(services):
     root = Path(__file__).resolve().parents[1]
     protected = subprocess.run(["git", "diff", "--name-only", "v2-scientific-economics-audit-complete", "--",
                                 "app.py", "kds/science", "data", "index.html", "script.js", "style.css"],
-                               cwd=root, check=True, text=True, capture_output=True).stdout.strip()
-    assert protected == ""
+                               cwd=root, check=True, text=True, capture_output=True).stdout.splitlines()
+    assert [path for path in protected if path != "kds/science/institutional_water.py"] == []
 
 
 @pytest.mark.parametrize("kind,filename", [

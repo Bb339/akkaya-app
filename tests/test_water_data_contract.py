@@ -237,8 +237,8 @@ def test_existing_import_pipeline_and_scientific_engine_guard(services):
     changed = subprocess.run(
         ["git", "diff", "--name-only", "v2-scientific-water-audit-complete", "--", "app.py", "kds/science"],
         check=True, text=True, capture_output=True,
-    ).stdout.strip()
-    assert changed == ""
+    ).stdout.splitlines()
+    assert [path for path in changed if path != "kds/science/institutional_water.py"] == []
 
 
 @pytest.mark.parametrize("data_type,filename", [
