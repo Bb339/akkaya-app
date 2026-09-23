@@ -161,7 +161,7 @@ def validate_crop_parameter_table(batch: dict[str, Any], document: dict[str, Any
                     record.update(values, season_year_semantics=semantics)
                 else:
                     raise ValueError("mode must be YEAR_SPECIFIC or CLIMATOLOGICAL_WINDOW.")
-            identity = record["runtime_crop_id"]
+            identity = (record["runtime_crop_id"], record["season"]) if kind == "crop_phenology" else record["runtime_crop_id"]
             if identity in seen:
                 raise ValueError("Duplicate runtime crop identity in upload.")
             seen.add(identity)

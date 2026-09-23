@@ -246,7 +246,25 @@ def readiness(document):
         status = 'NOT_READY' if any(i['severity']=='error' for i in relevant) else 'READY_WITH_WARNINGS' if relevant else 'READY'
         scenarios[scenario] = dict(status=status, issues=relevant)
     parameter_readiness, phenology_readiness, pilot_readiness = _parameter_and_phenology_readiness(document, demo)
-    return dict(project_id=document['project']['id'], scenarios=scenarios,
+    from kds.adapters.institutional import verified_readiness
+    verified = {scenario: verified_readiness(document, scenario) for scenario in ('S1', 'S2')}
+    reference_available = {scenario: state['status'] != 'NOT_READY' for scenario,state in scenarios.items()}
+    selected_verified = verified['S1']
+    return dict(project_id=document['project']['id'], planning_year=year, scenarios=scenarios,
+        execution_profiles={
+            'REFERENCE_DEMO': {
+                'available': any(reference_available.values()),
+                'scenario_availability': reference_available,
+                'warnings': ['REFERENCE MODEL / DEMO DATA; not official or verified institutional evidence.'],
+            },
+            'VERIFIED_INSTITUTIONAL': {
+                'ready': {scenario: value['ready'] for scenario,value in verified.items()},
+                'blocking_reasons': {scenario: value['blocking_reasons'] for scenario,value in verified.items()},
+                'warnings': sorted({warning for value in verified.values() for warning in value['warnings']}),
+            },
+        },
+        domains=selected_verified.get('domains', {}),
+        requires_reanalysis=bool(document.get('analysis_state', {}).get('requires_reanalysis', False)),
         scientific_data=dict(catalog_kc_complete=sum(all(positive(c.get(k)) for k in ('kc_initial','kc_mid','kc_end')) for c in crops),
                              catalog_phenology_complete=sum(all(positive(c.get(k)) for k in ('stage_initial_days','stage_development_days','stage_mid_days','stage_late_days')) for c in crops),
                              confidence_levels=dict(Counter(c.get('confidence_level') or 'unspecified' for c in crops)),

@@ -6,13 +6,20 @@ from kds.domain.water_budget import WaterBudget
 
 def project_document(project: Project, water_budget: WaterBudget | None = None) -> Document:
     budget = water_budget or WaterBudget(project.id, project.annual_water_budget, project.water_budget_unit)
+    synthetic_institutional = (
+        project.name == "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT"
+        and "not_official" in project.data_source_notes.casefold()
+    )
     return {"schema_version": 1, "data_revision": 0, "project": asdict(project),
             "analysis_units": [], "crops": [], "economics": [], "water_budget": asdict(budget),
             "imports": {}, "water_data": {"datasets": {}, "active": {}},
             "economic_data": {"datasets": {}, "active": {}, "dependencies": {}, "reanalysis": {}},
             "crop_parameter_data": {"datasets": {}, "active": {}, "reanalysis": {},
                                     "identity_resolution_revision": "phase7-reviewed-relations-v1"},
-            "metadata": {}}
+            "analysis_state": {"requires_reanalysis": False}, "runs": {},
+            "metadata": ({"synthetic_institutional_test": True, "not_official": True,
+                          "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"]}
+                         if synthetic_institutional else {})}
 
 
 class ProjectService:
