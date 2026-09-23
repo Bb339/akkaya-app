@@ -1,7 +1,8 @@
 {
-  "status": "PENDING_FINAL_FULL_SUITE",
+  "status": "FIX2_PASS_WITH_ONE_BASELINE_INHERITED_BROAD_FAILURE",
   "targeted": {
-    "fix2": "18 passed plus corrected role guard 1 passed",
+    "fix2": "20 guards collected; 18 passed in combined run, corrected role guard and added July adversarial guard each passed separately; all are included in the final broad run",
+    "phase1": "18 passed in 819.94s",
     "water_contract": "25 passed",
     "phase7": "29 passed",
     "prepilot": "8 passed",
@@ -11,5 +12,16 @@
     "s1_e2e": "1 passed",
     "s2_cross_year_e2e": "1 passed"
   },
-  "final": null
+  "final": {
+    "command": "python -m pytest -q",
+    "passed": 382,
+    "failed": 1,
+    "deselected": 7,
+    "skipped": 0,
+    "duration_seconds": 1699.66,
+    "failure": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "classification": "INHERITED_FROM_REJECTED_BASELINE",
+    "baseline_reproduction": "The identical test fails on rejected worktree HEAD 451bbb06c1d38fe2e1a6a5cceb594d2517b06229 with the same expected status ok versus actual no_feasible_two_crop_plan assertion.",
+    "new_fix2_regressions": 0
+  }
 }
