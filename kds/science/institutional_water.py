@@ -98,6 +98,7 @@ def validate_verified_result(result: dict[str, Any], scenario: str,
         return max(0.0, supply - float(physical.get(month, 0.0)))
 
     monthly_demand = {month: 0.0 for month in sorted(monthly_supply_m3)}
+    profile_periods: set[str] = set()
     unit_results = []
     for row in result.get("details", []):
         unit_id = str(row.get("parcelId") or row.get("analysis_unit_id") or "")
@@ -120,6 +121,7 @@ def validate_verified_result(result: dict[str, Any], scenario: str,
             uncovered = sorted(set(profile) - set(monthly_demand))
             if uncovered:
                 raise ValueError("Verified supply/delivery is missing demand calendar months: " + ", ".join(uncovered))
+            profile_periods.update(profile)
             for month, value in profile.items():
                 if month in monthly_demand:
                     unit_monthly[month] += float(value) * area
@@ -139,6 +141,11 @@ def validate_verified_result(result: dict[str, Any], scenario: str,
     elif release.get("form") == "monthly_release":
         annual_usable = max(0.0, annual_supply_m3 - math.fsum(float(v) for v in physical.values()))
     annual_demand = math.fsum(monthly_demand[month] for month in annual_months)
+    full_profile_demand = math.fsum(monthly_demand.values())
+    unit_profile_demand = math.fsum(row["total_water_m3"] for row in unit_results)
+    profile_tolerance = max(1e-6, abs(full_profile_demand) * 1e-9)
+    if abs(full_profile_demand - unit_profile_demand) > profile_tolerance:
+        raise ValueError("Verified monthly and unit full-profile water totals do not reconcile.")
     annual = {"status": "PASS" if annual_demand <= annual_usable + 1e-6 else "FAIL",
               "demand_m3": annual_demand, "usable_supply_m3": annual_usable,
               "unit": "m3/year", "environmental_release_applied_once": True}
@@ -150,6 +157,16 @@ def validate_verified_result(result: dict[str, Any], scenario: str,
                 "violating_months": delivery_violations}
     return {"annual_budget_validation": annual, "monthly_supply_validation": supply,
             "monthly_delivery_validation": delivery,
+            "water_profile_accounting": {
+                "full_profile_water_m3": full_profile_demand,
+                "planning_year_profile_water_m3": annual_demand,
+                "unit_profile_water_m3": unit_profile_demand,
+                "equality_tolerance_m3": profile_tolerance,
+                "profile_period_start": min(profile_periods) if profile_periods else None,
+                "profile_period_end": max(profile_periods) if profile_periods else None,
+                "annual_budget_period_start": f"{planning_year}-01" if planning_year is not None else None,
+                "annual_budget_period_end": f"{planning_year}-12" if planning_year is not None else None,
+            },
             "overall_feasible": bool(result.get("feasible", False) and not supply_violations
                                      and not delivery_violations and annual["status"] == "PASS"),
             "unit_results": unit_results}

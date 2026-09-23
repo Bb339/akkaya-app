@@ -301,12 +301,15 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
             execution_context['monthly_delivery_capacity_m3'], execution_context['environmental_release'],
             execution_context['planning_year'])
         result.update(validation)
-        verified_water = float(validation['annual_budget_validation']['demand_m3'])
+        accounting = validation['water_profile_accounting']
+        verified_water = float(accounting['full_profile_water_m3'])
+        planning_year_water = float(accounting['planning_year_profile_water_m3'])
         difference = optimizer_water - verified_water
         tolerance = max(1.0, verified_water * 0.001)
         result.update(
             optimizer_water_m3=optimizer_water,
             verified_profile_water_m3=verified_water,
+            planning_year_profile_water_m3=planning_year_water,
             authoritative_water_m3=verified_water,
             total_water_m3=verified_water,
             water_accounting_difference_m3=difference,
@@ -314,14 +317,23 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
             water_reconciliation={
                 'optimizer_water_m3': optimizer_water,
                 'verified_profile_water_m3': verified_water,
+                'planning_year_profile_water_m3': planning_year_water,
                 'difference_m3': difference,
                 'difference_pct': difference / verified_water * 100.0 if verified_water else 0.0,
                 'tolerance_m3': tolerance,
+                'comparison_scope': 'FULL_SELECTED_SEASON',
                 'status': 'PASS' if abs(difference) <= tolerance else 'DIFFERENT_DEFINITIONS',
                 'explanation': ('Optimizer aggregate and verified calendar-profile accounting agree within tolerance.'
                                 if abs(difference) <= tolerance else
                                 'Optimizer internal aggregate differs from authoritative verified calendar-profile accounting.'),
             },
+            verified_profile_water_scope='FULL_SELECTED_SEASON',
+            planning_year_water_scope='PLANNING_CALENDAR_YEAR',
+            profile_period_start=accounting['profile_period_start'],
+            profile_period_end=accounting['profile_period_end'],
+            annual_budget_period_start=accounting['annual_budget_period_start'],
+            annual_budget_period_end=accounting['annual_budget_period_end'],
+            efficiency_tl_per_m3_denominator='AUTHORITATIVE_VERIFIED_FULL_SEASON_WATER',
         )
         result['efficiency_tl_per_m3'] = (float(result.get('total_profit_tl', 0.0)) / verified_water
                                           if verified_water else 0.0)
@@ -342,13 +354,19 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
         result['unit_results'] = fallback_units
         optimizer_water = float(result.get('total_water_m3', 0.0) or 0.0)
         result.update(optimizer_water_m3=optimizer_water, verified_profile_water_m3=None,
+                      planning_year_profile_water_m3=None,
                       authoritative_water_m3=optimizer_water,
                       water_accounting_difference_m3=0.0, water_accounting_difference_pct=0.0,
                       water_reconciliation={'optimizer_water_m3': optimizer_water,
                           'verified_profile_water_m3': None, 'difference_m3': 0.0,
+                          'planning_year_profile_water_m3': None,
                           'difference_pct': 0.0, 'tolerance_m3': None,
                           'status': 'NOT_APPLICABLE',
+                          'comparison_scope': 'NOT_APPLICABLE',
                           'explanation': 'REFERENCE_DEMO preserves the accepted reference water semantics.'})
+        result['verified_profile_water_scope'] = 'NOT_APPLICABLE'
+        result['planning_year_water_scope'] = 'NOT_APPLICABLE'
+        result['efficiency_tl_per_m3_denominator'] = 'REFERENCE_DEMO_ACCEPTED_WATER'
     result['warnings'] = list(warnings or [])
     result['result_provenance'] = {
         'engine_commit': result.get('input_provenance', {}).get('engine_commit'),
@@ -357,6 +375,15 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
         'result_classification': result.get('classification'),
         'scientific_consumer': execution_plan.get('verified_water_model', 'frozen_reference'),
         'consumer_roles': deepcopy_json(execution_plan.get('consumer_roles', {})),
+        'water_accounting': {
+            'verified_profile_water_scope': result.get('verified_profile_water_scope'),
+            'planning_year_water_scope': result.get('planning_year_water_scope'),
+            'profile_period_start': result.get('profile_period_start'),
+            'profile_period_end': result.get('profile_period_end'),
+            'annual_budget_period_start': result.get('annual_budget_period_start'),
+            'annual_budget_period_end': result.get('annual_budget_period_end'),
+            'efficiency_tl_per_m3_denominator': result.get('efficiency_tl_per_m3_denominator'),
+        },
     }
     return result
 
