@@ -306,8 +306,9 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
             'demand_m3': demand, 'usable_supply_m3': budget, 'unit': 'm3/year'}
         result['monthly_supply_validation'] = {
             'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
-        result['monthly_delivery_validation'] = {
-            'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
+        if not isinstance(result.get('monthly_delivery_validation'), dict):
+            result['monthly_delivery_validation'] = {
+                'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
         result['overall_feasible'] = bool(result.get('feasible'))
         result['unit_results'] = fallback_units
     result['warnings'] = list(warnings or [])
