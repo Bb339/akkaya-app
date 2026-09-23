@@ -120,13 +120,15 @@ def _synthetic_project(document: dict[str, Any]) -> bool:
     return bool(metadata.get("synthetic_institutional_test") and metadata.get("not_official"))
 
 
-def resolve_verified_water(document: dict[str, Any]) -> VerifiedWaterContext:
+def resolve_verified_water(document: dict[str, Any], *, require_perennial: bool = True) -> VerifiedWaterContext:
     year = int(document["project"]["planning_year"])
     synthetic = _synthetic_project(document)
     required_scope = (document.get("project", {}).get("pilot_geographic_scope") or
                       document.get("metadata", {}).get("pilot_geographic_scope") or "project")
     selected = {}
-    for data_type in WATER_TYPES:
+    required_water_types = tuple(t for t in WATER_TYPES
+                                 if require_perennial or t != "perennial_irrigation_requirement")
+    for data_type in required_water_types:
         dataset = _active_water(document, data_type)
         _validate_dataset(dataset, year, synthetic_allowed=synthetic,
                           authorities=VERIFIED_WATER_AUTHORITIES, required_scope=required_scope)
@@ -162,8 +164,8 @@ def resolve_verified_water(document: dict[str, Any]) -> VerifiedWaterContext:
         monthly_delivery_capacity_m3={r["month"]: float(r["capacity_m3"]) for r in delivery},
         environmental_release=release,
         conveyance_efficiency=float(efficiencies[0]["efficiency"]),
-        perennial_requirements=tuple(deepcopy(selected["perennial_irrigation_requirement"]["records"])),
-        datasets=tuple(_dataset_fact(selected[k]) for k in WATER_TYPES),
+        perennial_requirements=tuple(deepcopy(selected.get("perennial_irrigation_requirement", {}).get("records", []))),
+        datasets=tuple(_dataset_fact(selected[k]) for k in required_water_types),
     )
 
 
@@ -264,7 +266,7 @@ def _candidate_snapshot(document: dict[str, Any], scenario: str) -> dict[str, An
 
 
 def verified_execution_plan(document: dict[str, Any], configuration: dict[str, Any]) -> dict[str, Any]:
-    water = resolve_verified_water(document)
+    water = resolve_verified_water(document, require_perennial=configuration["scenario"] == "S2")
     economics = resolve_verified_economics(document, configuration["scenario"])
     parameters = _resolve_crop_contract(document, "crop_water_parameters")
     phenology = _resolve_crop_contract(document, "crop_phenology")
@@ -348,59 +350,181 @@ def verified_execution_plan(document: dict[str, Any], configuration: dict[str, A
 
 def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[str, Any]:
     minimal = {"scenario": scenario, "algorithm": "GA", "objective": "water_saving"}
+    year = int(document["project"]["planning_year"])
+    synthetic = _synthetic_project(document)
+    required_scope = (document.get("project", {}).get("pilot_geographic_scope") or
+                      document.get("metadata", {}).get("pilot_geographic_scope") or "project")
+    domains: dict[str, dict[str, Any]] = {}
+    blockers: list[str] = []
+
+    def state(*, status="READY", selected=True, connected=True, connection="CONNECTED",
+              role="OPTIMIZER_INPUT", scope="S1_AND_S2", consumer="", reason=None, **facts):
+        return {"status": status, "consumer_available": True, "dataset_selected": selected,
+                "engine_connected": connected, "connection_state": connection,
+                "consumer_role": role, "execution_scope": scope, "consumer": consumer,
+                "blocking_reason": reason, "blocking_reasons": ([reason] if reason else []), **facts}
+
+    water_specs = {
+        "annual_water": ("annual_water_supply", "optimizer annual usable-water budget", "OPTIMIZER_INPUT", "S1_AND_S2"),
+        "monthly_supply": ("monthly_water_supply", "exact verified monthly supply validation", "POST_RUN_VALIDATION", "S1_AND_S2"),
+        "delivery": ("delivery_capacity", "exact verified monthly delivery validation", "POST_RUN_VALIDATION", "S1_AND_S2"),
+        "environmental_release": ("environmental_release", "single-deduction usable-water calculation", "OPTIMIZER_INPUT", "S1_AND_S2"),
+        "conveyance": ("conveyance_efficiency", "gross crop-water demand calculation", "OPTIMIZER_INPUT", "S1_AND_S2"),
+        "perennial_requirement": ("perennial_irrigation_requirement", "S2 perennial exact/default water override", "OPTIMIZER_INPUT", "S2"),
+    }
+    for name, (data_type, consumer, role, scope) in water_specs.items():
+        required = name != "perennial_requirement" or scenario == "S2"
+        try:
+            dataset = _active_water(document, data_type)
+            _validate_dataset(dataset, year, synthetic_allowed=synthetic,
+                              authorities=VERIFIED_WATER_AUTHORITIES, required_scope=required_scope)
+            if not required:
+                domains[name] = state(status="NOT_REQUIRED_FOR_SCENARIO", selected=True, connected=False,
+                                      connection="NOT_REQUIRED_FOR_SCENARIO", role="NOT_CONNECTED",
+                                      scope=scope, consumer=consumer, dataset=_dataset_fact(dataset))
+            elif name == "environmental_release" and dataset["records"][0]["release_form"] != "ratio":
+                reason = "Physical environmental release is contract-valid but NOT_EXECUTABLE_WITH_CURRENT_MODE."
+                domains[name] = state(status="NOT_READY", selected=True, connected=False,
+                                      connection="NOT_EXECUTABLE_WITH_CURRENT_MODE", role=role, scope=scope,
+                                      consumer=consumer, reason=reason, dataset=_dataset_fact(dataset))
+                blockers.append(reason)
+            else:
+                domains[name] = state(role=role, scope=scope, consumer=consumer,
+                                      dataset=_dataset_fact(dataset))
+        except ValueError as exc:
+            reason = str(exc)
+            if not required:
+                domains[name] = state(status="NOT_REQUIRED_FOR_SCENARIO", selected=False, connected=False,
+                                      connection="NOT_REQUIRED_FOR_SCENARIO", role="NOT_CONNECTED",
+                                      scope=scope, consumer=consumer)
+            else:
+                blockers.append(reason)
+                domains[name] = state(status="NOT_READY", selected=False, connected=False,
+                                      connection="MISSING_DATASET" if "requires active" in reason else "INVALID",
+                                      role=role, scope=scope, consumer=consumer, reason=reason)
+
+    economics = None
     try:
-        plan = verified_execution_plan(document, minimal)
-        datasets = plan["datasets"]
-        by_type = {d["data_type"]: d for d in datasets}
-        def connected(data_type, consumer, scope="S1_AND_S2", role="OPTIMIZER_INPUT"):
-            return {"status": "READY", "engine_connected": True, "connection_state": "CONNECTED",
-                    "consumer_available": True, "dataset_selected": True, "consumer_role": role,
-                    "execution_scope": scope, "consumer": consumer, "dataset": by_type[data_type]}
-        domains = {
-            "annual_water": connected("annual_water_supply", "optimizer annual usable-water budget"),
-            "monthly_supply": connected("monthly_water_supply", "verified monthly supply validation",
-                                         role="POST_RUN_VALIDATION"),
-            "delivery": connected("delivery_capacity", "verified monthly delivery validation",
-                                   role="POST_RUN_VALIDATION"),
-            "environmental_release": connected("environmental_release", "single-deduction usable-water calculation"),
-            "conveyance": connected("conveyance_efficiency", "gross crop-water demand calculation"),
-            "perennial_requirement": connected("perennial_irrigation_requirement", "S2 perennial exact/default water override", "S2"),
-            "economics": {"status": "READY", "engine_connected": True, "connection_state": "CONNECTED",
-                          "execution_scope": "S1_AND_S2", "consumer": "candidate/seasonal optimizer profit",
-                          "datasets": [d for d in datasets if d["data_type"] in ECONOMIC_TYPES]},
-            "crop_parameters": connected("crop_water_parameters", "verified FAO56 project water calculator"),
-            "phenology": connected("crop_phenology", "verified monthly crop-water calendar"),
-            "candidates": {"status": "READY", "engine_connected": True, "connection_state": "CONNECTED",
-                           "execution_scope": "S1_AND_S2", "consumer": "optimizer candidate matrix", **plan["candidate_source"]},
-            "current_pattern": {"status": "READY", "engine_connected": True, "connection_state": "CONNECTED",
-                                "execution_scope": "S1_AND_S2", "consumer": "unit baseline and perennial locks",
-                                **plan["current_pattern_source"]},
-        }
-        return {"ready": True, "blocking_reasons": [], "warnings": plan["warnings"], "domains": domains}
+        economics = resolve_verified_economics(document, scenario)
+        domains["economics"] = state(consumer="candidate/seasonal optimizer profit",
+                                      datasets=list(economics.datasets))
     except ValueError as exc:
-        message = str(exc)
-        consumers = {
-            "annual_water": ("S1_AND_S2", "optimizer annual usable-water budget"),
-            "monthly_supply": ("S1_AND_S2", "verified monthly supply validation"),
-            "delivery": ("S1_AND_S2", "verified monthly delivery validation"),
-            "environmental_release": ("S1_AND_S2", "single-deduction usable-water calculation"),
-            "conveyance": ("S1_AND_S2", "gross crop-water demand calculation"),
-            "perennial_requirement": ("S2", "S2 perennial exact/default water override"),
-            "economics": ("S1_AND_S2", "candidate/seasonal optimizer profit"),
-            "crop_parameters": ("S1_AND_S2", "verified FAO56 project water calculator"),
-            "phenology": ("S1_AND_S2", "verified monthly crop-water calendar"),
-            "candidates": ("S1_AND_S2", "optimizer candidate matrix"),
-            "current_pattern": ("S1_AND_S2", "unit baseline and perennial locks"),
-        }
-        domains = {name: {"status": "NOT_READY", "engine_connected": False,
-                          "connection_state": "INVALID_OR_UNAVAILABLE", "consumer_available": True,
-                          "dataset_selected": False, "consumer_role": ("POST_RUN_VALIDATION" if name in {"monthly_supply", "delivery"} else "OPTIMIZER_INPUT"),
-                          "execution_scope": scope, "consumer": consumer, "blocking_reason": message}
-                   for name, (scope, consumer) in consumers.items()}
-        if "NOT_EXECUTABLE_WITH_CURRENT_MODE" in message:
-            domains["environmental_release"].update(engine_connected=False,
-                connection_state="NOT_EXECUTABLE_WITH_CURRENT_MODE")
-        return {"ready": False, "blocking_reasons": [message], "warnings": [], "domains": domains}
+        reason = str(exc); blockers.append(reason)
+        domains["economics"] = state(status="NOT_READY", selected=False, connected=False,
+                                      connection="INVALID_OR_UNAVAILABLE", consumer="candidate/seasonal optimizer profit",
+                                      reason=reason)
+
+    resolved_contracts: dict[str, dict[str, Any]] = {}
+    for name, data_type, consumer in (("crop_parameters", "crop_water_parameters", "verified FAO56 project water calculator"),
+                                      ("phenology", "crop_phenology", "verified monthly crop-water calendar")):
+        try:
+            dataset = _resolve_crop_contract(document, data_type)
+            if name == "phenology" and scenario == "S2":
+                by_crop: dict[str, set[str]] = {}
+                for record in dataset["records"]:
+                    by_crop.setdefault(record["runtime_crop_id"], set()).add(record["season"])
+                missing = sorted(crop for crop in by_crop if not {"PRIMARY", "SECONDARY"} <= by_crop[crop])
+                if missing:
+                    raise ValueError("S2 verified phenology requires PRIMARY and SECONDARY records for every runtime crop: " + ", ".join(missing))
+            resolved_contracts[name] = dataset
+            domains[name] = state(consumer=consumer, dataset=_dataset_fact(dataset))
+        except ValueError as exc:
+            reason = str(exc); blockers.append(reason)
+            domains[name] = state(status="NOT_READY", selected=False, connected=False,
+                                  connection="INVALID_OR_UNAVAILABLE", consumer=consumer, reason=reason)
+
+    extra = document.get("scientific_inputs", {})
+    applied = _applied_imports(document, {"candidates", "scientific_inputs"})
+    candidate_imports = [item for item in applied if item["data_type"] == "candidates"]
+    current_imports = [item for item in applied if item["data_type"] == "scientific_inputs"]
+    if extra.get("candidates") and candidate_imports:
+        domains["candidates"] = state(consumer="optimizer candidate matrix",
+            source="confirmed project import", candidate_count=len(extra["candidates"]), imports=candidate_imports)
+    else:
+        reason = "Verified candidate matrix requires data and applied import provenance."
+        blockers.append(reason); domains["candidates"] = state(
+            status="NOT_READY", selected=bool(extra.get("candidates")), connected=False,
+            connection="INVALID_OR_UNAVAILABLE", consumer="optimizer candidate matrix", reason=reason)
+    current_valid = bool(extra.get("unit_parameters") and current_imports and
+                         (scenario != "S2" or extra.get("seasonal_resources", {}).get("s2")))
+    if current_valid:
+        latest = max(current_imports, key=lambda item: item.get("applied_revision") or 0)
+        domains["current_pattern"] = state(consumer="unit baseline and perennial locks",
+            source="confirmed project scientific_inputs import", import_batch_id=latest["import_batch_id"],
+            file_hash=latest["file_hash"], applied_revision=latest.get("applied_revision"),
+            analysis_unit_count=len(extra["unit_parameters"]))
+    else:
+        reason = "Verified current pattern requires unit parameters, scenario resources, and applied import provenance."
+        blockers.append(reason); domains["current_pattern"] = state(
+            status="NOT_READY", selected=bool(extra.get("unit_parameters")), connected=False,
+            connection="INVALID_OR_UNAVAILABLE", consumer="unit baseline and perennial locks", reason=reason)
+
+    climate_consumer = "verified FAO56 project climate"
+    try:
+        climate = document.get("scientific_inputs", {}).get("seasonal_resources", {}).get("monthly_climate", [])
+        if not climate:
+            raise ValueError("VERIFIED_INSTITUTIONAL requires project monthly climate.")
+        modes = {str(row.get("climate_mode") or "") for row in climate}
+        if modes not in ({"YEAR_SPECIFIC"}, {"CLIMATOLOGICAL_NORMAL"}):
+            raise ValueError("Verified climate requires one explicit YEAR_SPECIFIC or CLIMATOLOGICAL_NORMAL mode.")
+        if any(row.get("geographic_scope") != required_scope or not row.get("source") for row in climate):
+            raise ValueError("Verified climate source/geographic scope is missing or does not match the project.")
+        periods: dict[str, set[str]] = {}
+        for row in climate:
+            periods.setdefault(str(row.get("parcel_id")), set()).add(str(row.get("month"))[:7])
+        units = {str(unit["external_id"]) for unit in document.get("analysis_units", [])}
+        if set(periods) != units:
+            raise ValueError("Verified crop-water execution requires project climate for every analysis unit.")
+        mode = next(iter(modes))
+        if mode == "CLIMATOLOGICAL_NORMAL":
+            if any({int(p[5:7]) for p in values} != set(range(1, 13)) for values in periods.values()):
+                raise ValueError("Climatological climate requires months 1..12 for every analysis unit.")
+        else:
+            phenology = resolved_contracts.get("phenology")
+            if phenology is None:
+                raise ValueError("YEAR_SPECIFIC climate coverage cannot be connected without valid phenology.")
+            required_periods: set[str] = set()
+            for record in phenology["records"]:
+                if scenario == "S1" and record["season"] != "PRIMARY": continue
+                start_text, end_text = _phenology_dates(record, year)
+                cursor, end = date.fromisoformat(start_text), date.fromisoformat(end_text)
+                while cursor <= end:
+                    required_periods.add(f"{cursor.year}-{cursor.month:02d}")
+                    cursor = date(cursor.year + (cursor.month == 12), cursor.month % 12 + 1, 1)
+            missing = sorted((unit, period) for unit, values in periods.items()
+                             for period in required_periods - values)
+            if missing:
+                raise ValueError("YEAR_SPECIFIC climate is missing required calendar months: " +
+                                 ", ".join(f"{unit}/{period}" for unit, period in missing[:12]))
+        facts = {"mode": mode, "source": sorted({str(r["source"]) for r in climate}),
+                 "geographic_scope": required_scope,
+                 "coverage": sorted({str(r["month"])[:7] for r in climate}),
+                 "imports": _applied_imports(document, {"scientific_inputs"})}
+        domains["climate"] = state(consumer=climate_consumer, **facts)
+    except ValueError as exc:
+        reason = str(exc); blockers.append(reason)
+        selected = bool(document.get("scientific_inputs", {}).get("seasonal_resources", {}).get("monthly_climate"))
+        domains["climate"] = state(status="NOT_READY", selected=selected, connected=False,
+                                    connection="INVALID" if selected else "MISSING_DATASET",
+                                    consumer=climate_consumer, reason=reason)
+
+    # Cross-domain water reconciliation remains fail-closed without falsifying other domains.
+    if all(domains[name]["status"] == "READY" for name in
+           ("annual_water", "monthly_supply", "delivery", "environmental_release", "conveyance")):
+        try:
+            resolve_verified_water(document, require_perennial=scenario == "S2")
+        except ValueError as exc:
+            reason = str(exc); blockers.append(reason)
+            affected = ("annual_water", "monthly_supply") if "Annual/monthly" in reason else ("annual_water",)
+            for name in affected:
+                domains[name].update(status="NOT_READY", engine_connected=False,
+                                     connection_state="INCONSISTENT", blocking_reason=reason,
+                                     blocking_reasons=[reason])
+
+    ready = not blockers
+    warnings = ["SYNTHETIC_INSTITUTIONAL_TEST_PROJECT; NOT_OFFICIAL"] if synthetic else []
+    return {"ready": ready, "blocking_reasons": list(dict.fromkeys(blockers)),
+            "warnings": warnings, "domains": domains}
 
 
 def _phenology_dates(record: dict[str, Any], year: int) -> tuple[str, str]:
