@@ -96,7 +96,7 @@ def _selected_water_dataset(document: dict[str, Any], data_type: str) -> dict[st
 
 def _selected_economic_datasets(
         document: dict[str, Any], scenario: str,
-) -> tuple[list[dict[str, Any]], bool, str | None]:
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Snapshot active pointers before strict economic validation."""
     store = document.get("economic_data", {})
     active = store.get("active", {})
@@ -119,9 +119,17 @@ def _selected_economic_datasets(
     required_types = {"crop_net_profit"}
     if scenario == "S2":
         required_types.add("seasonal_economics")
-    required_selected = required_types <= selected_types
-    if not required_selected:
-        return selected, False, "MISSING_DATASET"
+    missing_required = required_types - selected_types
+    selection = {
+        "dataset_selected": bool(selected),
+        "selection_complete": not missing_required,
+        "selected_dataset_types": sorted(selected_types),
+        "required_dataset_types": sorted(required_types),
+        "missing_required_datasets": sorted(missing_required),
+        "selection_issue": "MISSING_DATASET" if missing_required else None,
+    }
+    if missing_required:
+        return selected, selection
     year = int(document["project"]["planning_year"])
     required_scope = (document.get("project", {}).get("pilot_geographic_scope") or
                       document.get("metadata", {}).get("pilot_geographic_scope") or "project")
@@ -129,10 +137,12 @@ def _selected_economic_datasets(
         keys = [key for key, dataset_id in active.items()
                 if key.startswith(data_type + "|") and dataset_id in datasets_store]
         if not any(key.startswith(f"{data_type}|{year}|") for key in keys):
-            return selected, True, "INVALID_YEAR"
+            selection["selection_issue"] = "INVALID_YEAR"
+            return selected, selection
         if f"{data_type}|{year}|{required_scope}|catalog" not in keys:
-            return selected, True, "INVALID_SCOPE"
-    return selected, True, None
+            selection["selection_issue"] = "INVALID_SCOPE"
+            return selected, selection
+    return selected, selection
 
 
 def _selected_crop_contract_datasets(document: dict[str, Any], data_type: str) -> list[dict[str, Any]]:
@@ -499,21 +509,27 @@ def verified_readiness(document: dict[str, Any], scenario: str = "S1") -> dict[s
                                       role=role, scope=scope, consumer=consumer, reason=reason, **dataset_facts)
 
     economics = None
-    selected_economics, required_economics_selected, economics_selection_issue = (
-        _selected_economic_datasets(document, scenario))
-    economics_facts = {"datasets": [_dataset_fact(dataset) for dataset in selected_economics]}
+    selected_economics, economics_selection = _selected_economic_datasets(document, scenario)
+    economics_facts = {
+        "datasets": [_dataset_fact(dataset) for dataset in selected_economics],
+        "selection_complete": economics_selection["selection_complete"],
+        "selected_dataset_types": economics_selection["selected_dataset_types"],
+        "required_dataset_types": economics_selection["required_dataset_types"],
+        "missing_required_datasets": economics_selection["missing_required_datasets"],
+    }
     try:
         economics = resolve_verified_economics(document, scenario)
-        domains["economics"] = state(consumer="candidate/seasonal optimizer profit",
-                                      datasets=list(economics.datasets))
+        domains["economics"] = state(
+            selected=economics_selection["dataset_selected"],
+            consumer="candidate/seasonal optimizer profit", **economics_facts)
     except ValueError as exc:
         reason = str(exc); blockers.append(reason)
-        domains["economics"] = state(status="NOT_READY", selected=required_economics_selected,
-                                      valid=False, connected=False,
-                                      connection=(economics_selection_issue or
-                                                  _invalid_connection_state(reason, required_economics_selected)),
-                                      consumer="candidate/seasonal optimizer profit", reason=reason,
-                                      **economics_facts)
+        domains["economics"] = state(
+            status="NOT_READY", selected=economics_selection["dataset_selected"],
+            valid=False, connected=False,
+            connection=(economics_selection["selection_issue"] or
+                        _invalid_connection_state(reason, economics_selection["dataset_selected"])),
+            consumer="candidate/seasonal optimizer profit", reason=reason, **economics_facts)
 
     resolved_contracts: dict[str, dict[str, Any]] = {}
     for name, data_type, consumer in (("crop_parameters", "crop_water_parameters", "verified FAO56 project water calculator"),
