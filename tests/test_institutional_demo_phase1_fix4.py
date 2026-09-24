@@ -49,19 +49,19 @@ def test_active_invalid_dataset_retains_selection_truth_and_fails_closed(
         }, document))
 
 
-@pytest.mark.parametrize("domain,remove", [
-    ("annual_water", lambda d: d["water_data"]["active"].pop("annual_water_supply")),
+@pytest.mark.parametrize("domain,remove,selected", [
+    ("annual_water", lambda d: d["water_data"]["active"].pop("annual_water_supply"), False),
     ("economics", lambda d: d["economic_data"]["active"].pop(
-        "crop_net_profit|2025|project|catalog")),
+        "crop_net_profit|2025|project|catalog"), True),
     ("crop_parameters", lambda d: d["crop_parameter_data"]["active"].pop(
-        "crop_water_parameters|2025|project")),
+        "crop_water_parameters|2025|project"), False),
 ])
-def test_missing_required_dataset_remains_unselected(institutional, domain, remove):
+def test_missing_required_dataset_preserves_actual_selection(institutional, domain, remove, selected):
     document = _baseline(institutional)
     remove(document)
     broken = verified_readiness(document, "S1")["domains"][domain]
     assert broken["status"] == "NOT_READY"
-    assert broken["dataset_selected"] is False
+    assert broken["dataset_selected"] is selected
     assert broken["dataset_valid"] is False
     assert broken["engine_connected"] is False
     assert broken["connection_state"] == "MISSING_DATASET"
