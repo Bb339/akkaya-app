@@ -1,46 +1,13 @@
-import {post,facts,showJSON,message} from './api.js';
-function renderPlan(result,scenario){
-  const container=document.getElementById('plan');container.replaceChildren();
-  const table=document.createElement('table'),head=document.createElement('tr');
-  for(const label of ['Birim','Sezon','Ürün','Alan (da)','Su (m³)','Net kâr (TL)']){const th=document.createElement('th');th.textContent=label;head.append(th);}table.append(head);
-  for(const row of result.details||[]){
-    const seasons=scenario==='S1'?[["Tek ürün",{crop:row.chosenCrop,water_m3:row.water_m3,profit_tl:row.profit_tl}]]:[['Ana',row.primary],['İkinci',row.secondary]];
-    for(const [season,crop] of seasons){if(!crop)continue;const tr=document.createElement('tr');
-      for(const value of [row.parcelId,season,crop.crop,crop.area_da ?? row.area_da,crop.water_m3,crop.profit_tl]){const td=document.createElement('td');td.textContent=typeof value==='number'?new Intl.NumberFormat('tr-TR',{maximumFractionDigits:2}).format(value):value;tr.append(td);}table.append(tr);
-    }
-  }container.append(table);
-}
-export function wireAnalysis(root,safe,refresh){
-  const form=document.getElementById('analysis-form');
-  const defaults={GA:{popSize:12,generations:10,cxRate:.7,mutRate:.08},ACO:{ants:10,iterations:10,rho:.25,q:1},ABC:{foodSources:10,cycles:10,limit:4}};
-  const config=()=>{form.elements.config.value=JSON.stringify(defaults[form.elements.algorithm.value],null,2);};config();form.elements.algorithm.onchange=config;
-  const payload=()=>{const value=Object.fromEntries(new FormData(form));value.seed=Number(value.seed);value.water_budget_ratio=Number(value.water_budget_ratio);value.config=JSON.parse(value.config);return value;};
-  document.getElementById('preview-analysis').onclick=()=>safe(async()=>{
-    const preview=await post(root()+'/analysis-preview',payload()),target=document.getElementById('analysis-preview');
-    target.hidden=false;target.textContent=JSON.stringify(preview,null,2);
-    message(preview.ready?'Execution preview hazır.':'Execution blocked: '+preview.blocking_reasons.join('; '),!preview.ready);
-  });
-  form.onsubmit=e=>{e.preventDefault();safe(async()=>{
-    const request=payload();
-    const button=document.getElementById('run-button');button.disabled=true;message('Analiz ayrı süreçte çalışıyor; sonuç kaydediliyor…');
-    try{
-      const run=await post(root()+'/analyses',request),result=run.result,summary=run.summary;
-      renderRun(run);await refresh();
-    }finally{button.disabled=false;}
-  });};
-}
-
-export function renderRun(run){
-  const result=run.result || {},summary=run.summary || {};
-  const label=document.getElementById('result-source-label');
-  const synthetic=run.result_authority_label==='SYNTHETIC / NOT_OFFICIAL' || run.provenance.data_source_notes==='synthetic_test_fixture';
-  label.className=synthetic?'watermark':'warning';
-  label.textContent=synthetic?`${run.result_authority_label || 'SYNTHETIC'} · Synthetic test project / Sentetik test verisi`:(run.result_authority_label || (run.provenance.water_budget?.kind==='calculated_reference'?'calculated_reference: hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.':''));
-      document.getElementById('result').hidden=false;
-      facts('result-facts',[['Execution profile',run.execution_profile],['Result authority',run.result_authority_label],['Classification',result.classification],['Proje',run.provenance.project_name || run.project_id],['Proje kimliği',run.project_id],['Algoritma',run.algorithm],['Senaryo',run.scenario],['Seed',run.seed],['Toplam brüt su (m³)',result.total_water_m3],
-        ['Uygulanan analiz bütçesi (m³)',result.water_budget_m3],['Su bütçesi türü',run.provenance.water_budget?.kind ?? 'Kayıtta yok'],['Toplam net kâr (TL)',result.total_profit_tl],['TL/m³',result.efficiency_tl_per_m3],['Uygunluk',result.feasible===true?'Uygun':result.feasible===false?'Uygun değil':'Motor bu metrik için değer üretmedi'],
-        ['Skor',summary.score ?? 'Motor bu senaryo çıktısında skoru raporlamıyor'],['Toplam alan (da)',summary.total_area_da],['Aktif alan (da)',summary.active_area_da],['Nadas / boş alan (da)',summary.fallow_area_da],['Plan farkı',result.delta?JSON.stringify(result.delta):'Motor bu metrik için değer üretmedi']]);
-      const list=document.getElementById('result-warnings');list.replaceChildren();for(const warning of run.warnings.length?run.warnings:['Ek veri uyarısı yok.']){const li=document.createElement('li');li.textContent=warning;list.append(li);}
-      renderPlan(result.validated_final_plan || result,run.scenario);showJSON('provenance',{id:run.id,started_at:run.started_at,completed_at:run.completed_at,...run.provenance});message(run.status==='completed'?'Kayıtlı analiz sonucu gösteriliyor.':`Çalışma durumu: ${run.status}. ${run.error || ''}`,run.status==='failed');
-
-}
+import {facts,message,post,showJSON,table} from './api.js';
+import {renderRun} from './results.js';
+let previewEvidence=null, readinessReport=null;
+const defaults={GA:{popSize:12,generations:10,cxRate:.7,mutRate:.08},ACO:{ants:10,iterations:10,rho:.25,q:1},ABC:{foodSources:10,cycles:10,limit:4}};
+function formPayload(form){const value=Object.fromEntries(new FormData(form));value.seed=Number(value.seed);value.water_budget_ratio=Number(value.water_budget_ratio);value.config=JSON.parse(value.config);return value;}
+function setState(text,kind=''){const chip=document.getElementById('execution-state');chip.textContent=text;chip.className=`state-chip ${kind}`;}
+function updateMode(){const form=document.getElementById('analysis-form'),profile=form.elements.execution_profile.value,scenario=form.elements.scenario.value,badge=document.getElementById('global-mode-badge'),warning=document.getElementById('mode-warning');const verified=profile==='VERIFIED_INSTITUTIONAL';badge.textContent=verified?'VERIFIED INSTITUTIONAL':'REFERENCE MODEL / DEMO DATA';badge.className=`mode-badge ${verified?'verified':'reference'}`;warning.hidden=verified;const ready=verified?readinessReport?.execution_profiles?.VERIFIED_INSTITUTIONAL?.ready?.[scenario]:readinessReport?.scenarios?.[scenario]?.status!=='NOT_READY';document.getElementById('run-button').disabled=verified?!previewEvidence?.ready:!ready;setState(ready?'READY':'BLOCKED',ready?'ready':'blocked');}
+export function invalidatePreview(reason='Yapılandırma veya proje verisi değişti.') {if(previewEvidence){previewEvidence=null;document.getElementById('stale-preview-alert').hidden=false;message(reason,true);}document.getElementById('analysis-preview-card').hidden=true;updateMode();}
+export function setReadiness(report){readinessReport=report;updateMode();}
+export function wireAnalysis(root,safe,refresh){const form=document.getElementById('analysis-form');const config=()=>{form.elements.config.value=JSON.stringify(defaults[form.elements.algorithm.value],null,2);invalidatePreview('Algoritma yapılandırması değişti; yeni önizleme gerekli.');};form.elements.algorithm.onchange=config;form.elements.execution_profile.onchange=()=>{invalidatePreview('Çalışma modu değişti; yeni önizleme gerekli.');updateMode();};form.elements.scenario.onchange=()=>{invalidatePreview('Senaryo değişti; yeni önizleme gerekli.');updateMode();};for(const input of form.querySelectorAll('input,textarea,select[name=objective]'))input.addEventListener('change',()=>invalidatePreview());config();
+ document.getElementById('preview-analysis').onclick=()=>safe(async()=>{setState('PREVIEWING','running');const preview=await post(root()+'/analysis-preview',formPayload(form));previewEvidence=preview.ready?preview:null;document.getElementById('analysis-preview-card').hidden=false;document.getElementById('stale-preview-alert').hidden=true;showJSON('analysis-preview',preview);const ready=document.getElementById('preview-ready-badge');ready.textContent=preview.ready?'ÇALIŞTIRILABİLİR':'ENGELLENDİ';ready.className=`state-chip ${preview.ready?'ready':'blocked'}`;facts('preview-facts',[['Profil',preview.execution_profile],['Sonuç otoritesi',preview.result_authority_label],['Senaryo',preview.scenario],['Algoritma',preview.algorithm],['Hedef',preview.objective],['Planlama yılı',preview.planning_year],['Veri revizyonu',preview.preview_revision??preview.data_revision],['Aday sayısı',preview.candidate_source?.candidate_count],['Birim sayısı',preview.candidate_source?.analysis_unit_count],['Selection hash',preview.selection_hash]]);const rows=(preview.datasets||[]).map(d=>[d.data_type||d.role,d.dataset_id||d.id||d.version,d.authority_class||d.source?.authority_class||'—',d.consumer_role||d.role||'—']);document.getElementById('preview-datasets').replaceChildren(rows.length?table(['Veri','Sürüm / ID','Otorite','Tüketim rolü'],rows):document.createTextNode('Bu çalışma yolunda sürümlenmiş dataset seçimi yok.'));const blockers=document.getElementById('preview-blockers');blockers.replaceChildren();for(const value of preview.blocking_reasons||[]){const p=document.createElement('p');p.className='error';p.textContent=value;blockers.append(p);}for(const value of preview.warnings||[]){const p=document.createElement('p');p.className='warning';p.textContent=value;blockers.append(p);}updateMode();message(preview.ready?'Doğrulanmış çalıştırma önizlemesi hazır.':`Çalıştırma engellendi: ${(preview.blocking_reasons||[]).join('; ')}`,!preview.ready);});
+ form.onsubmit=e=>{e.preventDefault();safe(async()=>{const request=formPayload(form),verified=request.execution_profile==='VERIFIED_INSTITUTIONAL';if(verified&&!previewEvidence?.ready){message('VERIFIED INSTITUTIONAL çalışma için önce güncel ve başarılı önizleme oluşturun.',true);return;}if(previewEvidence)Object.assign(request,{preview_token:previewEvidence.preview_token,preview_revision:previewEvidence.preview_revision,selection_hash:previewEvidence.selection_hash});const button=document.getElementById('run-button');button.disabled=true;setState('RUNNING','running');message('Analiz ayrı süreçte çalışıyor; değiştirilemez sonuç kaydı hazırlanıyor…');try{const run=await post(root()+'/analyses',request);setState(run.status==='completed'?'COMPLETED':'FAILED',run.status==='completed'?'ready':'blocked');renderRun(run);await refresh();document.getElementById('result').scrollIntoView({behavior:'smooth'});message(run.status==='completed'?'Analiz tamamlandı ve kayıtlı sonuç gösteriliyor.':`Çalışma başarısız: ${run.error}`,run.status!=='completed');}catch(error){if(/preview|revision|selection/i.test(error.message)){document.getElementById('stale-preview-alert').hidden=false;previewEvidence=null;setState('STALE PREVIEW','blocked');}throw error;}finally{updateMode();}});};}
+export {renderRun};

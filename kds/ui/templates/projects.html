@@ -1,45 +1,172 @@
 <!doctype html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Proje analizi · Crop KDS</title><link rel="stylesheet" href="/projects/assets/projects.css"></head>
-<body><header><a href="/projects">Crop KDS · Projeler</a><a href="/">Tez karar ekranı</a></header>
-<main><h1>Proje analizi</h1><p>Verilerinizi kontrol edin, bilimsel hazırlığı doğrulayın ve kayıtlı bir analiz çalıştırın.</p>
-<p id="message" role="status" aria-live="polite"></p>
-<nav class="workflow" aria-label="Proje akışı"><a href="#projects-section">Projeler / Yeni Proje</a><a href="#data-management">Veri Yönetimi</a><a href="#readiness">Readiness</a><a href="#analysis-form">Analiz</a><a href="#result">Sonuç</a><a href="#history-section">Analiz Geçmişi</a></nav>
-<section id="projects-section"><h2>Projeler</h2><div id="projects"></div>
-<details><summary>Yeni proje oluştur</summary><form id="create-project">
-<label>Proje kimliği <input name="id" required pattern="[a-z0-9][a-z0-9_-]*" placeholder="ornek-proje"></label>
-<label>Proje adı <input name="name" required></label><label>Planlama yılı <input name="planning_year" type="number" value="2024" required></label>
-<label>Veri kaynağı <select name="data_source_notes"><option value="user_provided">Kullanıcı tarafından sağlanan saha verisi</option><option value="synthetic_test_fixture">Sentetik test verisi</option></select></label>
-<label>İl / bölge <input name="province_or_region"></label><label>Havza <input name="basin_or_irrigation_area"></label>
-<label>Yıllık su bütçesi (m³) <input name="annual_water_budget" type="number" min="0" step="any"></label>
-<p>Yeni projenin bütçe türü başlangıçta unknown olur. Türü doğrulamak için aşağıdaki bütçe formunu kullanın.</p>
-<button>Proje oluştur</button></form></details></section>
-<section id="detail" hidden><h2 id="project-name"></h2><p id="synthetic-watermark" class="watermark" hidden>Synthetic test project / Sentetik test verisi</p><p id="reference-label" class="warning" hidden>calculated_reference: hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.</p><dl id="facts"></dl><h3 id="data-management">Veri Yönetimi</h3><p>Uploaded: yeni dosya önizlemede, henüz etkin verilere uygulanmadı. Warning: ayrıntılar readiness ve aktarım kayıtlarında.</p><div id="data-status" class="table-scroll"></div>
-<details><summary>Su bütçesini tanımla</summary><form id="budget-form"><label>Miktar (m³) <input name="amount" type="number" min="0" step="any" required></label>
-<label>Tür <select name="kind"><option>measured</option><option>official_allocation</option><option>calculated_reference</option><option>scenario</option></select></label>
-<label>Kaynak <input name="source" required></label><button>Kaydet</button></form></details>
-<h3>Veri yükleme</h3><form id="upload-form"><label>Veri türü <select name="data_type"><option value="analysis_units">Analiz birimleri</option><option value="crops">Ürün parametreleri</option><option value="economics">Ekonomi</option><option value="geometries">Geometri</option><option value="candidates">Candidate Rules / Options</option><option value="scientific_inputs">Scientific Inputs (CSV/XLSX)</option><option value="water_budget">Water Budget</option><option value="annual_water_supply">Annual Water Supply</option><option value="monthly_water_supply">Monthly Water Supply</option><option value="delivery_capacity">Delivery Capacity</option><option value="environmental_release">Environmental Release</option><option value="conveyance_efficiency">Conveyance Efficiency</option><option value="perennial_irrigation_requirement">Perennial Irrigation Requirement</option><option value="crop_yield">Crop Yield</option><option value="crop_sale_price">Crop Sale Price</option><option value="crop_support_payment">Crop Support Payment</option><option value="crop_cost_components">Crop Cost Components</option><option value="crop_net_profit">Crop Net Profit</option><option value="analysis_unit_economics">Analysis-unit Economics</option><option value="seasonal_economics">Seasonal Economics</option><option value="crop_water_parameters">Crop Water Parameters</option><option value="crop_phenology">Crop Phenology</option></select></label>
-<label>CSV / XLSX / GeoJSON <input type="file" name="file" required accept=".csv,.xlsx,.json,.geojson"></label><button>Önizleme oluştur</button></form>
-<div id="import-preview" hidden><h4>Önizleme ve eşleştirme</h4><pre id="preview"></pre>
-<label>Kolon eşleştirmesi (canonical alan → dosya başlığı, JSON)<textarea id="mapping" rows="5">{}</textarea></label>
-<button id="map-import" type="button">Eşleştirmeyi doğrula</button><label><input id="acknowledge" type="checkbox">Görünen uyarıları okudum ve kabul ediyorum.</label>
-<label><input id="authority-override" type="checkbox">Daha düşük otoriteli veriyi etkinleştirme uyarısını kabul ediyorum.</label><label>Override gerekçesi <input id="override-reason"></label>
-<button id="confirm-import" type="button">Bu aktarımı onayla</button></div>
-<details><summary>Açık bilimsel aday ve sezon girdileri</summary><p>Birim × ürün adayları, sulama ve birim parametreleri içeren JSON. Eksik girdiler hazırlık raporunda görünür.</p>
-<form id="scientific-form"><input name="file" type="file" accept=".json" required aria-label="Bilimsel girdiler JSON"><button>Bilimsel girdileri kaydet</button></form></details>
-<h3>Analiz hazırlık durumu</h3><div id="readiness"></div><h3>Aktarım kayıtları</h3><pre id="imports"></pre>
-<h3>Analiz ayarları</h3><form id="analysis-form">
-<label>Execution profile <select name="execution_profile"><option value="REFERENCE_DEMO">REFERENCE_DEMO</option><option value="VERIFIED_INSTITUTIONAL">VERIFIED_INSTITUTIONAL</option></select></label>
-<label>Senaryo <select name="scenario"><option>S1</option><option>S2</option></select></label>
-<label>Algoritma <select name="algorithm"><option>GA</option><option>ACO</option><option>ABC</option></select></label>
-<label>Seed <input name="seed" type="number" min="0" value="123" required></label>
-<label>Hedef <select name="objective"><option value="water_saving">Su tasarrufu</option><option value="water_efficiency">Su verimliliği</option><option value="max_profit">Net kâr</option></select></label>
-<label>Bütçe oranı <input name="water_budget_ratio" type="number" min="0.01" max="10" step="0.01" value="1" required></label>
-<label>Algoritma parametreleri (JSON) <textarea name="config" rows="4" required></textarea></label>
-<p>Çalışma başına tek seed kullanılır. Çevresel akış payı %10, aylık kapasite denetimi açık, su modeli calib, risk modeli none. Hedef ağırlıkları mevcut bilimsel motorun formülleridir.</p>
-<button id="preview-analysis" type="button">Dry-run / execution preview</button>
-<button id="run-button">Analizi çalıştır ve kaydet</button></form><pre id="analysis-preview" hidden></pre></section>
-<section id="result" hidden><h2>Analiz sonucu</h2><p id="result-source-label"></p><dl id="result-facts"></dl><h3>Uyarılar</h3><ul id="result-warnings"></ul>
-<h3>Ürün planı</h3><div id="plan" class="table-scroll"></div><details><summary>Provenance ve çalıştırma kaydı</summary><pre id="provenance"></pre></details></section>
-<section id="history-section" hidden><h2>Analiz Geçmişi</h2><p id="history-count"></p><div id="history" class="table-scroll"></div><button id="history-more" hidden type="button">Daha fazla çalışma</button></section>
-</main><script type="module" src="/projects/assets/projects.js"></script></body></html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kurumsal Karar Merkezi · Crop KDS</title>
+  <link rel="stylesheet" href="/projects/assets/projects.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Ana içeriğe geç</a>
+<header class="topbar">
+  <a class="brand" href="/projects"><span class="brand-mark">KDS</span><span><strong>Kurumsal Karar Merkezi</strong><small>Bilimsel tarımsal planlama</small></span></a>
+  <div class="topbar-actions">
+    <a class="button ghost" href="/" id="open-reference-demo">Referans Akkaya Demosunu Aç</a>
+    <span class="mode-badge reference" id="global-mode-badge">REFERENCE MODEL / DEMO DATA</span>
+  </div>
+</header>
+
+<div class="mode-warning reference" id="mode-warning" role="status">
+  <strong>REFERENCE MODEL / DEMO DATA</strong>
+  <span>RESMÎ SU TAHSİSİ VEYA SAHA DOĞRULAMASI DEĞİLDİR.</span>
+</div>
+<div class="mode-warning synthetic" id="synthetic-watermark" hidden>
+  <strong>SYNTHETIC TEST DATA · NOT OFFICIAL</strong>
+  <span>Bu proje yalnız otomatik kabul ve demonstrasyon geliştirmesi içindir.</span>
+</div>
+
+<div class="app-frame">
+  <aside class="side-nav" aria-label="Kurumsal iş akışı">
+    <div class="nav-eyebrow">İŞ AKIŞI</div>
+    <nav class="workflow">
+      <a href="#projects-section"><span>01</span> Proje</a>
+      <a href="#data-management"><span>02</span> Veri Yönetimi</a>
+      <a href="#readiness-section"><span>03</span> Hazırlık</a>
+      <a href="#analysis-section"><span>04</span> Analiz</a>
+      <a href="#result"><span>05</span> Sonuçlar</a>
+      <a href="#provenance-section"><span>06</span> Kaynak & Provenance</a>
+      <a href="#reference-demo"><span>07</span> Referans Demo</a>
+    </nav>
+    <div class="side-note"><strong>Bilimsel sınır</strong><p>Arayüz yalnız backend sözleşmelerini gösterir; bilimsel değerleri yeniden hesaplamaz.</p></div>
+  </aside>
+
+  <main id="main-content">
+    <p id="message" role="status" aria-live="polite"></p>
+
+    <section class="hero screen-anchor" id="projects-section" data-screen="1">
+      <div>
+        <p class="eyebrow">PROJE PORTFÖYÜ</p>
+        <h1>Kurumsal tarımsal karar akışı</h1>
+        <p class="lead">Doğrulanmış veri, açık hazırlık denetimi ve sürümlenmiş analiz sonuçları için tek çalışma alanı.</p>
+      </div>
+      <div class="hero-summary">
+        <span class="summary-label">Aktif proje</span>
+        <strong id="hero-project-name">Proje seçilmedi</strong>
+        <span id="hero-project-meta">Başlamak için aşağıdan bir proje seçin.</span>
+      </div>
+    </section>
+
+    <section class="panel project-portfolio">
+      <div class="section-heading"><div><p class="eyebrow">PROJE</p><h2>Proje seçimi ve oluşturma</h2></div><span class="section-help">Profil seçimi proje değiştirildiğinde korunur.</span></div>
+      <div id="projects" class="project-grid"></div>
+      <details class="form-drawer"><summary>Yeni proje oluştur</summary>
+        <form id="create-project" class="form-grid">
+          <label>Proje kimliği<input name="id" required pattern="[a-z0-9][a-z0-9_-]*" placeholder="ornek-proje"></label>
+          <label>Proje adı<input name="name" required></label>
+          <label>Kurum / kuruluş<input name="owner_id" placeholder="İl Müdürlüğü / Sulama Birliği"></label>
+          <label>Planlama yılı<input name="planning_year" type="number" value="2025" required></label>
+          <label>İl / bölge<input name="province_or_region" placeholder="Niğde"></label>
+          <label>Coğrafi kapsam / havza<input name="basin_or_irrigation_area" placeholder="Akkaya Sulama Alanı"></label>
+          <label class="span-2">Açıklama<textarea name="description" rows="2"></textarea></label>
+          <label>Veri sınıfı<select name="data_source_notes"><option value="user_provided">Kurum tarafından sağlanan veri</option><option value="synthetic_test_fixture">SYNTHETIC TEST DATA / NOT OFFICIAL</option></select></label>
+          <label>Başlangıç su bütçesi (m³)<input name="annual_water_budget" type="number" min="0" step="any" value="0"></label>
+          <button class="button primary">Proje oluştur</button>
+        </form>
+      </details>
+    </section>
+
+    <section id="detail" hidden>
+      <section class="project-context panel">
+        <div class="project-title-row"><div><p class="eyebrow">AKTİF PROJE</p><h2 id="project-name"></h2><p id="project-description" class="muted"></p></div><div id="project-status-badges" class="badge-row"></div></div>
+        <dl id="facts" class="context-grid"></dl>
+        <div id="reanalysis-banner" class="alert warning" hidden><strong>YENİDEN ANALİZ GEREKİYOR</strong><span>Bu proje için daha yeni doğrulanmış veri bulunmaktadır. Mevcut sonuç önceki veri sürümüne aittir.</span><div><a href="#history-section" class="button ghost">Eski sonucu görüntüle</a><a href="#analysis-section" class="button secondary">Güncel veriyle yeni analiz hazırla</a></div></div>
+        <p id="reference-label" class="alert warning" hidden><strong>REFERENCE MODEL / DEMO DATA</strong> Hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.</p>
+      </section>
+
+      <section class="panel screen-anchor" id="data-management" data-screen="2">
+        <div class="section-heading"><div><p class="eyebrow">VERİ YÖNETİMİ</p><h2>Kurumsal veri merkezi</h2></div><span class="section-help">Seçim, bütünlük, geçerlilik ve motor bağlantısı ayrı değerlendirilir.</span></div>
+        <div id="data-status" class="domain-groups"></div>
+        <details class="form-drawer" id="version-history"><summary>Veri sürüm geçmişi</summary><div id="dataset-history" class="table-scroll"></div></details>
+        <details class="form-drawer"><summary>Su bütçesini tanımla</summary>
+          <form id="budget-form" class="form-grid"><label>Miktar (m³)<input name="amount" type="number" min="0" step="any" required></label><label>Tür<select name="kind"><option>measured</option><option>official_allocation</option><option>calculated_reference</option><option>scenario</option></select></label><label>Kaynak<input name="source" required></label><button class="button primary">Kaydet</button></form>
+        </details>
+
+        <div class="upload-layout">
+          <div>
+            <h3>Doğrulanmış veri yükleme</h3>
+            <ol class="stepper" aria-label="Veri yükleme adımları"><li class="active">Dosya yükle</li><li>Sütun eşleştir</li><li>Doğrula</li><li>Önizle</li><li>Onayla</li><li>Aktif sürüm</li></ol>
+            <form id="upload-form" class="upload-form">
+              <label>Veri türü<select name="data_type">
+                <optgroup label="Proje girdileri"><option value="analysis_units">Analiz birimleri</option><option value="crops">Ürün kataloğu</option><option value="economics">Genel ekonomi</option><option value="geometries">Geometri</option><option value="candidates">Aday matrisi</option><option value="scientific_inputs">Mevcut desen / iklim</option></optgroup>
+                <optgroup label="Su"><option value="annual_water_supply">Yıllık su tahsisi</option><option value="monthly_water_supply">Aylık su arzı</option><option value="delivery_capacity">Teslim kapasitesi</option><option value="environmental_release">Çevresel akış</option><option value="conveyance_efficiency">İletim randımanı</option><option value="perennial_irrigation_requirement">Çok yıllık bitki su ihtiyacı</option></optgroup>
+                <optgroup label="Ekonomi"><option value="crop_yield">Ürün verimi</option><option value="crop_sale_price">Satış fiyatı</option><option value="crop_support_payment">Destek ödemesi</option><option value="crop_cost_components">Maliyet bileşenleri</option><option value="crop_net_profit">Net kâr</option><option value="analysis_unit_economics">Birim ekonomisi</option><option value="seasonal_economics">Mevsimsel ekonomi</option></optgroup>
+                <optgroup label="Agronomi"><option value="crop_water_parameters">Ürün su parametreleri</option><option value="crop_phenology">Fenoloji</option></optgroup>
+              </select></label>
+              <label>CSV / XLSX / GeoJSON<input type="file" name="file" required accept=".csv,.xlsx,.json,.geojson"></label>
+              <button class="button primary">Önizleme oluştur</button>
+            </form>
+            <div id="import-preview" class="import-preview" hidden><h4>Aktarım önizlemesi</h4><div id="import-summary"></div><details><summary>Teknik aktarım kaydı</summary><pre id="preview"></pre></details><label>Kolon eşleştirmesi (canonical alan → dosya başlığı)<textarea id="mapping" rows="5">{}</textarea></label><div class="action-row"><button id="map-import" type="button" class="button secondary">Eşleştirmeyi doğrula</button></div><label class="check"><input id="acknowledge" type="checkbox"> Görünen uyarıları okudum.</label><label class="check"><input id="authority-override" type="checkbox"> Daha düşük otoriteli sürümü etkinleştirme uyarısını kabul ediyorum.</label><label>Override gerekçesi<input id="override-reason"></label><button id="confirm-import" type="button" class="button primary">Bu aktarımı onayla</button></div>
+          </div>
+          <aside class="template-library"><h3>Veri şablonları</h3><p class="template-warning">ÖRNEK / ŞABLON VERİ — RESMÎ VERİ DEĞİLDİR</p><div id="template-links"></div></aside>
+        </div>
+        <details class="form-drawer"><summary>Açık bilimsel aday ve sezon girdileri</summary><p>Birim × ürün adayları, iklim ve mevcut desen girdileri. Yalnız proje kapsamındaki doğrulanmış JSON kullanılmalıdır.</p><form id="scientific-form"><label>Bilimsel girdiler JSON<input name="file" type="file" accept=".json" required></label><button class="button primary">Bilimsel girdileri kaydet</button></form></details>
+        <details><summary>Aktarım kayıtları</summary><pre id="imports"></pre></details>
+      </section>
+
+      <section class="panel screen-anchor" id="readiness-section" data-screen="3">
+        <div class="section-heading"><div><p class="eyebrow">HAZIRLIK / READINESS</p><h2>Analiz hazırlık denetimi</h2></div><span id="readiness-verdict" class="verdict blocked">PROJE SEÇİN</span></div>
+        <div id="blocking-summary" class="blocking-summary"></div>
+        <div id="readiness" class="readiness-grid"></div>
+        <details><summary>Senaryo ve makine durumları</summary><div id="scenario-readiness"></div></details>
+      </section>
+
+      <section class="panel screen-anchor" id="analysis-section" data-screen="4">
+        <div class="section-heading"><div><p class="eyebrow">ANALİZ</p><h2>Yapılandırma ve doğrulanmış önizleme</h2></div><span id="execution-state" class="state-chip">READY</span></div>
+        <form id="analysis-form" class="form-grid analysis-form">
+          <label>Çalışma modu<select name="execution_profile"><option value="REFERENCE_DEMO">REFERENCE DEMO — model gösterimi</option><option value="VERIFIED_INSTITUTIONAL">VERIFIED INSTITUTIONAL — doğrulanmış proje verisi</option></select></label>
+          <label>Senaryo<select name="scenario"><option value="S1">S1 — Tek Ürün Deseni</option><option value="S2">S2 — Mevsimsel / Çoklu Ürün Senaryosu</option></select></label>
+          <label>Algoritma<select name="algorithm"><option value="GA">GA — Genetik Algoritma</option><option value="ACO">ACO — Karınca Kolonisi Optimizasyonu</option><option value="ABC">ABC — Yapay Arı Kolonisi</option></select></label>
+          <label>Hedef<select name="objective"><option value="water_saving">Su Tasarrufu</option><option value="max_profit">Kâr Odaklı</option><option value="water_efficiency">Su Etkin Kullanım</option></select></label>
+          <label>Seed<input name="seed" type="number" min="0" value="123" required></label>
+          <label>Su bütçe oranı<input name="water_budget_ratio" type="number" min="0.01" max="10" step="0.01" value="1" required></label>
+          <label class="span-2 advanced-config">Algoritma parametreleri<textarea name="config" rows="4" required></textarea></label>
+          <div class="span-2 action-row"><button id="preview-analysis" class="button secondary" type="button">Önizleme oluştur</button><button id="run-button" class="button primary" disabled>Analizi çalıştır ve kaydet</button></div>
+        </form>
+        <div id="stale-preview-alert" class="alert danger" hidden><strong>ÖNİZLEME GÜNCEL DEĞİL</strong><span>Analiz önizlemesinden sonra proje verileri değişti. Güncel verilerle yeniden önizleme oluşturmanız gerekiyor.</span></div>
+        <div id="analysis-preview-card" class="preview-card" hidden><div class="section-heading compact"><h3>Çalıştırma öncesi kanıt özeti</h3><span id="preview-ready-badge" class="state-chip"></span></div><dl id="preview-facts" class="context-grid"></dl><div id="preview-datasets" class="table-scroll"></div><div id="preview-blockers"></div><details><summary>Revision, selection hash ve teknik ayrıntılar</summary><pre id="analysis-preview"></pre></details></div>
+      </section>
+
+      <section id="result" class="panel screen-anchor" data-screen="5" hidden>
+        <div class="section-heading"><div><p class="eyebrow">SONUÇLAR</p><h2>Yönetici özeti</h2></div><span id="result-status" class="verdict"></span></div>
+        <p id="result-source-label"></p>
+        <div id="result-kpis" class="kpi-grid"></div>
+        <dl id="result-facts" class="context-grid compact-facts"></dl>
+        <div id="infeasible-banner" class="alert danger" hidden><strong>DIAGNOSTIC / UYGULANABİLİR PLAN DEĞİL</strong><span>Bu çıktı karar önerisi olarak kullanılmamalıdır.</span></div>
+        <div id="result-warnings-wrap"><h3>Uyarılar</h3><ul id="result-warnings"></ul></div>
+
+        <section class="result-subsection screen-anchor" id="water-results" data-screen="7"><div class="section-heading compact"><div><p class="eyebrow">SU MUHASEBESİ</p><h3>Doğrulanmış su sonuçları</h3></div></div><div id="water-kpis" class="kpi-grid water"></div><p class="footnote">Kurumsal TL/m³ paydası: <strong id="efficiency-denominator">—</strong>. Tam sezon ve planlama takvim yılı değerleri birleştirilmez.</p><div id="water-validation" class="validation-grid"></div></section>
+        <section class="result-subsection"><div class="section-heading compact"><h3>Aylık talep, arz ve teslim kapasitesi</h3><span class="section-help">Post-run doğrulama; optimizer kısıtı olarak sunulmaz.</span></div><div id="monthly-chart" class="monthly-chart" role="img" aria-label="Aylık doğrulanmış talep, kullanılabilir arz ve teslim kapasitesi grafiği"></div><div id="monthly-table" class="table-scroll"></div></section>
+        <section class="result-subsection screen-anchor" id="crop-results" data-screen="8"><div class="section-heading compact"><h3>Ürün deseni ve yoğunlaşma</h3><span id="concentration-badge" class="state-chip"></span></div><div id="crop-summary" class="crop-grid"></div><div id="plan" class="table-scroll"></div></section>
+        <section class="result-subsection screen-anchor" id="unit-explorer" data-screen="6"><div class="section-heading compact"><h3>Harita ve analiz birimi keşfi</h3><span class="section-help">Harita seçimi ↔ birim detayı</span></div><div class="map-layout"><div id="institutional-map" class="institutional-map" aria-label="Analiz birimleri haritası"></div><div><div id="unit-list" class="unit-list"></div><div id="unit-detail" class="unit-detail">Bir analiz birimi seçin.</div></div></div></section>
+        <section class="result-subsection" id="economic-results"><div class="section-heading compact"><h3>Ekonomik sonuçlar</h3><span id="economics-label" class="mode-badge"></span></div><div id="economics-kpis" class="kpi-grid"></div></section>
+      </section>
+
+      <section class="panel screen-anchor" id="provenance-section" data-screen="9">
+        <div class="section-heading"><div><p class="eyebrow">KAYNAK & PROVENANCE</p><h2>Veri ve Hesaplama Kaynakları</h2></div></div>
+        <div id="provenance-summary" class="context-grid empty-state">Kayıtlı bir analiz seçildiğinde kaynak özeti burada gösterilir.</div>
+        <details><summary>Teknik provenance ve hash ayrıntıları</summary><pre id="provenance">Henüz kayıtlı analiz seçilmedi.</pre></details>
+      </section>
+
+      <section id="history-section" class="panel" hidden><div class="section-heading"><div><p class="eyebrow">SÜRÜM GEÇMİŞİ</p><h2>Değiştirilemez analiz kayıtları</h2></div><span id="history-count"></span></div><div id="history" class="table-scroll"></div><button id="history-more" hidden type="button" class="button secondary">Daha fazla çalışma</button></section>
+    </section>
+
+    <section class="panel reference-panel screen-anchor" id="reference-demo" data-screen="10">
+      <div><p class="eyebrow">REFERANS DEMO</p><h2>Akkaya kabul edilmiş referans modeli</h2><p>Resmî kurum verileri gelmeden önce eğitim, ekran görüntüsü ve bilimsel model gösterimi için kullanılabilir.</p><div class="alert warning"><strong>REFERENCE MODEL / DEMO DATA</strong><span>RESMÎ SU TAHSİSİ VEYA SAHA DOĞRULAMASI DEĞİLDİR.</span></div></div>
+      <div class="reference-values"><div><span>Analiz birimi</span><strong>179</strong></div><div><span>Toplam alan</span><strong>134.919 da</strong></div><div><span>Aday satırı</span><strong>6.859</strong></div><div><span>Ürün</span><strong>58</strong></div><div><span>Referans su</span><strong>100.700.080,81 m³</strong></div><div><span>Katalog türevi kâr</span><strong>1.041.499.119,212 TL</strong></div><a class="button primary" href="/">Referans Akkaya Demosunu Aç</a></div>
+    </section>
+  </main>
+</div>
+<script type="module" src="/projects/assets/projects.js"></script>
+</body></html>

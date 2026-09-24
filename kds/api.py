@@ -84,6 +84,11 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         from kds.application.project_overview import overview
         return jsonify(overview(projects.get(project_id)))
 
+    @blueprint.get("/projects/<project_id>/data-catalog")
+    def project_data_catalog(project_id):
+        from kds.application.project_overview import data_catalog
+        return jsonify(data_catalog(projects.get(project_id)))
+
     @blueprint.get("/projects/<project_id>/analyses")
     def list_analyses(project_id):
         from kds.application.project_overview import history

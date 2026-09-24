@@ -50,3 +50,66 @@ def overview(document):
                 last_run=next(iter(history(document,limit=1)['items']),None),
                 synthetic=document['project'].get('data_source_notes')=='synthetic_test_fixture',
                 project_kind='reference' if reference else 'synthetic_test' if document['project'].get('data_source_notes')=='synthetic_test_fixture' else 'user_provided')
+
+
+def data_catalog(document):
+    """Project-scoped metadata projection for the institutional UI.
+
+    This deliberately exposes identifiers and provenance only.  Scientific
+    records stay behind their accepted import/readiness boundaries.
+    """
+    datasets = []
+    for store_name in ('water_data', 'economic_data', 'crop_parameter_data'):
+        store = document.get(store_name, {})
+        active_ids = set(store.get('active', {}).values())
+        for dataset_id, dataset in store.get('datasets', {}).items():
+            source = dataset.get('source') or {}
+            records = dataset.get('records') or []
+            scopes = sorted({str(row.get('geographic_scope') or row.get('scope'))
+                             for row in records
+                             if row.get('geographic_scope') or row.get('scope')})
+            years = sorted({int(row['planning_year']) for row in records
+                            if row.get('planning_year') is not None})
+            datasets.append({
+                'store': store_name,
+                'dataset_id': dataset.get('dataset_id') or dataset_id,
+                'data_type': dataset.get('data_type'),
+                'version': dataset.get('version'),
+                'status': dataset.get('status'),
+                'selected': dataset_id in active_ids,
+                'authority_class': dataset.get('authority_class'),
+                'confirmed_at': dataset.get('confirmed_at'),
+                'created_at': dataset.get('created_at'),
+                'source': source,
+                'scope_key': dataset.get('scope_key'),
+                'geographic_scope': scopes,
+                'planning_years': years,
+                'supersedes': dataset.get('supersedes'),
+                'derivation_status': dataset.get('derivation_status'),
+                'requires_recalculation': bool(dataset.get('requires_recalculation', False)),
+                'record_count': len(records),
+            })
+    imports = []
+    for batch_id, batch in document.get('imports', {}).items():
+        imports.append({key: batch.get(key) for key in (
+            'data_type', 'filename', 'status', 'uploaded_at', 'confirmed_at',
+            'file_hash', 'applied_revision', 'row_count', 'supersedes',
+        )} | {'id': batch_id})
+    imports.sort(key=lambda item: (item.get('uploaded_at') or '', item['id']), reverse=True)
+    datasets.sort(key=lambda item: (str(item.get('data_type') or ''),
+                                    str(item.get('version') or ''),
+                                    str(item.get('dataset_id') or '')))
+    return {
+        'project_id': document['project']['id'],
+        'data_revision': document.get('data_revision', 0),
+        'analysis_state': document.get('analysis_state', {}),
+        'datasets': datasets,
+        'imports': imports,
+        'project_inputs': {
+            'analysis_units': len(document.get('analysis_units', [])),
+            'crops': len(document.get('crops', [])),
+            'economics': len(document.get('economics', [])),
+            'candidates': len(document.get('scientific_inputs', {}).get('candidates', [])),
+            'climate_rows': len(document.get('scientific_inputs', {}).get('seasonal_resources', {}).get('monthly_climate', [])),
+        },
+    }
