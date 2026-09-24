@@ -1,0 +1,16 @@
+{
+  "source_test": "test_active_invalid_dataset_retains_selection_truth_and_fails_closed",
+  "broken_domains": ["annual_water", "economics", "crop_parameters"],
+  "assertions_for_each_case": {
+    "broken_domain_selected_from_pointer_truth": true,
+    "broken_domain_valid": false,
+    "broken_domain_connected": false,
+    "monthly_supply_dataset_valid": true,
+    "monthly_supply_engine_connected": true,
+    "climate_dataset_valid": true,
+    "climate_engine_connected": true,
+    "overall_ready": false
+  },
+  "global_failure_copying_observed": false
+}
+

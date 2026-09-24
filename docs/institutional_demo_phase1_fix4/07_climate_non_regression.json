@@ -1,0 +1,20 @@
+{
+  "source_test": "test_climate_readiness_modes_coverage_scope_and_source",
+  "validated_cases": [
+    "valid YEAR_SPECIFIC",
+    "YEAR_SPECIFIC missing required calendar month",
+    "valid CLIMATOLOGICAL_NORMAL",
+    "CLIMATOLOGICAL_NORMAL missing month",
+    "wrong geographic scope",
+    "missing source metadata",
+    "no climate resource"
+  ],
+  "independent_domain_preserved": true,
+  "unrelated_annual_water_remains_connected_on_climate_failure": true,
+  "common_schema_includes_dataset_valid": true,
+  "connection_state_controls": {
+    "wrong_scope": "INVALID_SCOPE",
+    "missing_source": "INVALID",
+    "missing_month": "INCOMPLETE_COVERAGE"
+  }
+}

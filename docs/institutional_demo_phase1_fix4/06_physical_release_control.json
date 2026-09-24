@@ -1,0 +1,11 @@
+{
+  "source_test": "test_domain_contract_and_physical_release_keep_independent_axes",
+  "condition": "selected contract-valid monthly physical release in a ratio-only execution mode",
+  "status": "NOT_READY",
+  "dataset_selected": true,
+  "dataset_valid": true,
+  "consumer_available": true,
+  "engine_connected": false,
+  "connection_state": "NOT_EXECUTABLE_WITH_CURRENT_MODE"
+}
+

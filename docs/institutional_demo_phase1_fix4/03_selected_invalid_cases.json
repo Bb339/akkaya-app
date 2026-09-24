@@ -1,0 +1,54 @@
+{
+  "source_test": "test_active_invalid_dataset_retains_selection_truth_and_fails_closed",
+  "cases": [
+    {
+      "domain": "economics",
+      "condition": "active crop_net_profit derivation_status=STALE",
+      "status": "NOT_READY",
+      "dataset_selected": true,
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "STALE",
+      "execution_fails_closed": true
+    },
+    {
+      "domain": "crop_parameters",
+      "condition": "active crop parameter record resolution_status=AMBIGUOUS",
+      "status": "NOT_READY",
+      "dataset_selected": true,
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "AMBIGUOUS_OR_INCOMPLETE",
+      "execution_fails_closed": true
+    },
+    {
+      "domain": "annual_water",
+      "condition": "active annual water record has wrong geographic scope",
+      "status": "NOT_READY",
+      "dataset_selected": true,
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "INVALID_SCOPE",
+      "execution_fails_closed": true
+    },
+    {
+      "domain": "economics",
+      "condition": "active economics pointer exists for a different planning year",
+      "dataset_selected": true,
+      "dataset_valid": false,
+      "engine_connected": false,
+      "connection_state": "INVALID_YEAR"
+    },
+    {
+      "domain": "economics",
+      "condition": "active economics pointer exists for a different geographic scope",
+      "dataset_selected": true,
+      "dataset_valid": false,
+      "engine_connected": false,
+      "connection_state": "INVALID_SCOPE"
+    }
+  ]
+}

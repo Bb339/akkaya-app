@@ -1,0 +1,30 @@
+{
+  "baseline": "9312dfa91b7b8125259d012cd9d26ffcb4e9d29e",
+  "runtime_files_changed": ["kds/adapters/institutional.py"],
+  "runtime_change_scope": "readiness selection, validity, connection state, and selected dataset metadata only",
+  "tests_added": ["tests/test_institutional_demo_phase1_fix4.py"],
+  "unchanged": [
+    "app.py",
+    "data/",
+    "candidate matrix",
+    "GA implementation",
+    "ACO implementation",
+    "ABC implementation",
+    "kds/science/",
+    "kds/application/optimization.py",
+    "reference project values",
+    "docs/experiments/robustness_sensitivity/"
+  ],
+  "strict_execution_resolvers_changed": false,
+  "scientific_formulas_changed": false,
+  "reference_outputs": {
+    "analysis_units": 179,
+    "area_da": 134919,
+    "candidate_rows": 6859,
+    "crops": 58,
+    "water_m3": 100700080.81,
+    "profit_tl": 1041499119.212
+  },
+  "robustness_tag": "v2-scientific-robustness-sensitivity-complete",
+  "robustness_target": "028f231eb774eafb53a9a76db370b663d561ce1b"
+}

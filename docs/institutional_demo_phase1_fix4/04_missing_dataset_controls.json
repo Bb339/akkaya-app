@@ -1,0 +1,30 @@
+{
+  "source_test": "test_missing_required_dataset_remains_unselected",
+  "cases": [
+    {
+      "domain": "annual_water",
+      "active_pointer_removed": true,
+      "dataset_selected": false,
+      "dataset_valid": false,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET"
+    },
+    {
+      "domain": "economics",
+      "active_crop_net_profit_pointer_removed": true,
+      "dataset_selected": false,
+      "dataset_valid": false,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET"
+    },
+    {
+      "domain": "crop_parameters",
+      "active_pointer_removed": true,
+      "dataset_selected": false,
+      "dataset_valid": false,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET"
+    }
+  ]
+}
+

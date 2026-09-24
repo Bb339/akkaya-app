@@ -1,0 +1,44 @@
+{
+  "targeted": [
+    {
+      "scope": "Fix4 selection/validity/connection regression tests",
+      "result": "13 passed",
+      "duration_seconds": 607.94
+    },
+    {
+      "scope": "Fix3 scientific and readiness non-regression suite",
+      "result": "27 passed",
+      "duration_seconds": 414.33
+    },
+    {
+      "scope": "Phase 1 fail-closed, preview, reference, S1/S2 selected tests",
+      "result": "12 passed",
+      "duration_seconds": 568.84
+    },
+    {
+      "scope": "Final-HEAD climate, physical release, and cross-year water non-regression",
+      "result": "7 passed, 20 deselected",
+      "duration_seconds": 199.75
+    }
+  ],
+  "targeted_total_passed": 59,
+  "broad": {
+    "command": "python -m pytest -q",
+    "status": "PASS_WITH_ONE_INHERITED_FAILURE",
+    "passed": 402,
+    "failed": 1,
+    "deselected": 7,
+    "skipped": 0,
+    "duration_seconds": 2130.35,
+    "failure": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan"
+  },
+  "inherited_s2_reproduction": {
+    "fix4": "1 failed in 17.60s",
+    "fix3": "1 failed in 19.42s",
+    "location": "tests/test_decision_pipeline.py:323",
+    "assertion": "plan['status'] == 'ok'",
+    "expected": "ok",
+    "actual": "no_feasible_two_crop_plan",
+    "classification": "INHERITED_UNCHANGED"
+  }
+}

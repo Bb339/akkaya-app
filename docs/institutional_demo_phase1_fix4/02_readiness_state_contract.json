@@ -1,0 +1,39 @@
+{
+  "required_fields": [
+    "status",
+    "dataset_selected",
+    "dataset_valid",
+    "consumer_available",
+    "engine_connected",
+    "connection_state",
+    "consumer_role",
+    "execution_scope",
+    "blocking_reason",
+    "blocking_reasons"
+  ],
+  "connection_states": [
+    "MISSING_DATASET",
+    "INVALID_SCOPE",
+    "INVALID_YEAR",
+    "INVALID_AUTHORITY",
+    "STALE",
+    "INCOMPLETE_COVERAGE",
+    "AMBIGUOUS_OR_INCOMPLETE",
+    "NOT_EXECUTABLE_WITH_CURRENT_MODE",
+    "NOT_REQUIRED_FOR_SCENARIO",
+    "CONNECTED",
+    "INVALID"
+  ],
+  "selected_dataset_facts": [
+    "dataset_id",
+    "version",
+    "data_type",
+    "authority_class",
+    "confirmed_at",
+    "scope_key",
+    "geographic_scope",
+    "source"
+  ],
+  "selection_does_not_imply_execution": true
+}
+
