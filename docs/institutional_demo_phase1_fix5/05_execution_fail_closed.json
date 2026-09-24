@@ -1,0 +1,66 @@
+{
+  "strict_functions_changed": false,
+  "resolve_verified_economics_changed": false,
+  "verified_execution_plan_changed": false,
+  "incomplete_selection_cases": [
+    {
+      "case": "S2_CROP_NET_ONLY",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "missing_required_datasets": [
+        "seasonal_economics"
+      ],
+      "strict_execution_rejected": true,
+      "strict_execution_error": "S2 VERIFIED_INSTITUTIONAL requires active verified seasonal_economics."
+    },
+    {
+      "case": "S2_SEASONAL_ONLY",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "missing_required_datasets": [
+        "crop_net_profit"
+      ],
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S2_NO_ECONOMICS_RESOURCES",
+      "scenario": "S2",
+      "dataset_selected": false,
+      "selection_complete": false,
+      "missing_required_datasets": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S2_OPTIONAL_ONLY",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "missing_required_datasets": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S1_OPTIONAL_ONLY",
+      "scenario": "S1",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "missing_required_datasets": [
+        "crop_net_profit"
+      ],
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    }
+  ],
+  "all_incomplete_cases_rejected": true,
+  "stale_year_scope_rejection_test": "test_invalid_selected_economics_preserves_completeness_and_selection"
+}

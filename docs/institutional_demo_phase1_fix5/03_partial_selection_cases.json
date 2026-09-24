@@ -1,0 +1,463 @@
+{
+  "source": "direct final-HEAD runtime observation plus tests/test_institutional_demo_phase1_fix5.py",
+  "cases": [
+    {
+      "case": "S2_CROP_NET_ONLY",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_net_profit",
+        "crop_sale_price",
+        "crop_yield"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "missing_required_datasets": [
+        "seasonal_economics"
+      ],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET",
+      "dataset_count": 4,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      },
+      "strict_execution_rejected": true,
+      "strict_execution_error": "S2 VERIFIED_INSTITUTIONAL requires active verified seasonal_economics."
+    },
+    {
+      "case": "S2_SEASONAL_ONLY",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_sale_price",
+        "crop_yield",
+        "seasonal_economics"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "missing_required_datasets": [
+        "crop_net_profit"
+      ],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET",
+      "dataset_count": 4,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      },
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S2_BOTH_REQUIRED",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": true,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_net_profit",
+        "crop_sale_price",
+        "crop_yield",
+        "seasonal_economics"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "missing_required_datasets": [],
+      "dataset_valid": true,
+      "consumer_available": true,
+      "engine_connected": true,
+      "connection_state": "CONNECTED",
+      "dataset_count": 5,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      }
+    },
+    {
+      "case": "S2_NO_ECONOMICS_RESOURCES",
+      "scenario": "S2",
+      "dataset_selected": false,
+      "selection_complete": false,
+      "selected_dataset_types": [],
+      "required_dataset_types": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "missing_required_datasets": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET",
+      "dataset_count": 0,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      },
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S2_OPTIONAL_ONLY",
+      "scenario": "S2",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_sale_price",
+        "crop_yield"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "missing_required_datasets": [
+        "crop_net_profit",
+        "seasonal_economics"
+      ],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET",
+      "dataset_count": 3,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      },
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S1_OPTIONAL_ONLY",
+      "scenario": "S1",
+      "dataset_selected": true,
+      "selection_complete": false,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_sale_price",
+        "crop_yield",
+        "seasonal_economics"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit"
+      ],
+      "missing_required_datasets": [
+        "crop_net_profit"
+      ],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "MISSING_DATASET",
+      "dataset_count": 4,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      },
+      "strict_execution_rejected": true,
+      "strict_execution_error": "VERIFIED_INSTITUTIONAL requires active verified crop_net_profit."
+    },
+    {
+      "case": "S1_STALE_CROP_NET",
+      "scenario": "S1",
+      "dataset_selected": true,
+      "selection_complete": true,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_net_profit",
+        "crop_sale_price",
+        "crop_yield",
+        "seasonal_economics"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit"
+      ],
+      "missing_required_datasets": [],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "STALE",
+      "dataset_count": 5,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        }
+      }
+    },
+    {
+      "case": "S1_WRONG_YEAR",
+      "scenario": "S1",
+      "dataset_selected": true,
+      "selection_complete": true,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_net_profit",
+        "crop_sale_price",
+        "crop_yield",
+        "seasonal_economics"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit"
+      ],
+      "missing_required_datasets": [],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "INVALID_YEAR",
+      "dataset_count": 5,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_YEAR"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": true,
+          "engine_connected": true,
+          "connection_state": "CONNECTED"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_YEAR"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_YEAR"
+        }
+      }
+    },
+    {
+      "case": "S1_WRONG_SCOPE",
+      "scenario": "S1",
+      "dataset_selected": true,
+      "selection_complete": true,
+      "selected_dataset_types": [
+        "crop_cost_components",
+        "crop_net_profit",
+        "crop_sale_price",
+        "crop_yield",
+        "seasonal_economics"
+      ],
+      "required_dataset_types": [
+        "crop_net_profit"
+      ],
+      "missing_required_datasets": [],
+      "dataset_valid": false,
+      "consumer_available": true,
+      "engine_connected": false,
+      "connection_state": "INVALID_SCOPE",
+      "dataset_count": 5,
+      "list_selection_invariant": true,
+      "cross_domain": {
+        "monthly_supply": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_SCOPE"
+        },
+        "climate": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_SCOPE"
+        },
+        "annual_water": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_SCOPE"
+        },
+        "crop_parameters": {
+          "dataset_selected": true,
+          "dataset_valid": false,
+          "engine_connected": false,
+          "connection_state": "INVALID_SCOPE"
+        }
+      }
+    }
+  ],
+  "all_list_selection_invariants_pass": true
+}

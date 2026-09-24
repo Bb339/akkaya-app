@@ -1,0 +1,30 @@
+{
+  "baseline": "5391b266531fe098ebf03a8fd313c159575e6ad6",
+  "runtime_files_changed": [
+    "kds/adapters/institutional.py"
+  ],
+  "test_files_changed": [
+    "tests/test_institutional_demo_phase1_fix4.py",
+    "tests/test_institutional_demo_phase1_fix5.py"
+  ],
+  "runtime_change_scope": "economics readiness selection metadata only",
+  "unchanged": [
+    "app.py",
+    "data/",
+    "candidate matrix",
+    "GA",
+    "ACO",
+    "ABC",
+    "kds/science/",
+    "kds/application/optimization.py",
+    "institutional water formulas",
+    "reference data",
+    "docs/experiments/robustness_sensitivity/"
+  ],
+  "resolve_verified_economics_changed": false,
+  "verified_execution_plan_changed": false,
+  "scientific_formulas_changed": false,
+  "optimizer_mathematics_changed": false,
+  "robustness_tag": "v2-scientific-robustness-sensitivity-complete",
+  "robustness_target": "028f231eb774eafb53a9a76db370b663d561ce1b"
+}

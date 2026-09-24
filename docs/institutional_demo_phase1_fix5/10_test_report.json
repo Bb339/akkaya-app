@@ -1,0 +1,41 @@
+{
+  "focused_fix5": {
+    "command": "python -m pytest -q tests/test_institutional_demo_phase1_fix5.py",
+    "passed": 3,
+    "failed": 0,
+    "deselected": 0,
+    "skipped": 0,
+    "duration_seconds": 142.63
+  },
+  "relevant_initial": {
+    "command": "python -m pytest -q tests/test_institutional_demo_phase1.py tests/test_institutional_demo_phase1_fix2.py tests/test_institutional_demo_phase1_fix4.py",
+    "passed": 57,
+    "failed": 1,
+    "duration_seconds": 1838.88,
+    "failure": "obsolete Fix4 economics dataset_selected=false expectation; corrected in test commit"
+  },
+  "corrected_fix4_isolated": {
+    "passed": 3,
+    "failed": 0,
+    "duration_seconds": 118.54
+  },
+  "final_head_broad": {
+    "command": "python -m pytest -q",
+    "passed": 405,
+    "failed": 1,
+    "deselected": 7,
+    "skipped": 0,
+    "duration_seconds": 2226.59,
+    "failure": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan"
+  },
+  "inherited_s2_reproduction": {
+    "fix5_head": "1 failed in 3.10s",
+    "fix4_head": "1 failed in 3.10s",
+    "location": "tests/test_decision_pipeline.py:323",
+    "assertion": "plan['status'] == 'ok'",
+    "expected": "ok",
+    "actual": "no_feasible_two_crop_plan",
+    "classification": "INHERITED_UNCHANGED"
+  },
+  "new_regressions": 0
+}

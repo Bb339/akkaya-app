@@ -1,0 +1,10 @@
+case,scenario,dataset_selected,selection_complete,selected_dataset_types,required_dataset_types,missing_required_datasets,dataset_valid,consumer_available,engine_connected,connection_state,dataset_count,list_selection_invariant,strict_execution_rejected
+S2_CROP_NET_ONLY,S2,True,False,crop_cost_components|crop_net_profit|crop_sale_price|crop_yield,crop_net_profit|seasonal_economics,seasonal_economics,False,True,False,MISSING_DATASET,4,True,True
+S2_SEASONAL_ONLY,S2,True,False,crop_cost_components|crop_sale_price|crop_yield|seasonal_economics,crop_net_profit|seasonal_economics,crop_net_profit,False,True,False,MISSING_DATASET,4,True,True
+S2_BOTH_REQUIRED,S2,True,True,crop_cost_components|crop_net_profit|crop_sale_price|crop_yield|seasonal_economics,crop_net_profit|seasonal_economics,,True,True,True,CONNECTED,5,True,
+S2_NO_ECONOMICS_RESOURCES,S2,False,False,,crop_net_profit|seasonal_economics,crop_net_profit|seasonal_economics,False,True,False,MISSING_DATASET,0,True,True
+S2_OPTIONAL_ONLY,S2,True,False,crop_cost_components|crop_sale_price|crop_yield,crop_net_profit|seasonal_economics,crop_net_profit|seasonal_economics,False,True,False,MISSING_DATASET,3,True,True
+S1_OPTIONAL_ONLY,S1,True,False,crop_cost_components|crop_sale_price|crop_yield|seasonal_economics,crop_net_profit,crop_net_profit,False,True,False,MISSING_DATASET,4,True,True
+S1_STALE_CROP_NET,S1,True,True,crop_cost_components|crop_net_profit|crop_sale_price|crop_yield|seasonal_economics,crop_net_profit,,False,True,False,STALE,5,True,
+S1_WRONG_YEAR,S1,True,True,crop_cost_components|crop_net_profit|crop_sale_price|crop_yield|seasonal_economics,crop_net_profit,,False,True,False,INVALID_YEAR,5,True,
+S1_WRONG_SCOPE,S1,True,True,crop_cost_components|crop_net_profit|crop_sale_price|crop_yield|seasonal_economics,crop_net_profit,,False,True,False,INVALID_SCOPE,5,True,

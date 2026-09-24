@@ -1,0 +1,15 @@
+{
+  "source_tests": [
+    "tests/test_institutional_demo_phase1.py::test_reference_demo_regression_values_and_authority_label",
+    "tests/test_akkaya_adapter.py"
+  ],
+  "included_in_broad_run": true,
+  "status": "PASS",
+  "semantics": "REFERENCE_DEMO unchanged",
+  "analysis_units": 179,
+  "area_da": 134919,
+  "candidate_rows": 6859,
+  "crops": 58,
+  "water_m3": 100700080.81,
+  "profit_tl": 1041499119.212
+}
