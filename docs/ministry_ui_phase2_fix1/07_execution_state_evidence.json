@@ -1,12 +1,23 @@
 {
-  "corrective_final_head": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "implementation_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
+  "previous_evidence_head": "6ee38399c55ea242919e7f3586810435b604f746",
+  "previous_evidence_packaging_commit": "6ee38399c55ea242919e7f3586810435b604f746",
+  "provenance_normalization_parent": "6ee38399c55ea242919e7f3586810435b604f746",
+  "provenance_normalization_commit_semantics": "The commit containing this normalized file is documentation-only and is not claimed as a tested commit.",
   "rejected_parent_head": "0eab17ef37a2fdb7e5806be35ebf38d88971023c",
   "phase1_baseline": "04a4bce0db31db41813cfcfd253d9c6794f252bc",
   "robustness_baseline": "028f231eb774eafb53a9a76db370b663d561ce1b",
-  "implementation_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
-  "evidence_commit": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
   "test": "tests/test_ministry_ui_phase2_fix1_browser.py::test_execution_states_persist_after_async_refresh_and_errors",
-  "verified_states": ["READY", "BLOCKED", "PREVIEWING", "RUNNING", "COMPLETED", "COMPLETED WITH WARNINGS", "FAILED", "STALE PREVIEW"],
+  "verified_states": [
+    "READY",
+    "BLOCKED",
+    "PREVIEWING",
+    "RUNNING",
+    "COMPLETED",
+    "COMPLETED WITH WARNINGS",
+    "FAILED",
+    "STALE PREVIEW"
+  ],
   "verified_transitions": [
     "successful completion survived refresh",
     "completion with warnings survived refresh",
