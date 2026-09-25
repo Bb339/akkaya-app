@@ -1,0 +1,43 @@
+{
+  "milestone": "V2_MINISTRY_FINAL_DEMO_PRESENTATION_FREEZE",
+  "runtime_tested_commit": "36e70970bcbe636d47b95044345f4541552c316d",
+  "later_demo_package_commit": "d2bf166da81904e2783da36c2bd3e8b3e655cb37",
+  "later_commit_semantics": "Documentation, evidence, and real screenshots only; runtime/test/source Git objects are identical to the tested baseline.",
+  "command": "python -m pytest -q tests/test_ministry_ui_phase2_fix1_browser.py",
+  "passed": 3,
+  "failed": 0,
+  "deselected": 0,
+  "skipped": 0,
+  "duration_seconds": 29.28,
+  "status": "PASS",
+  "covered": [
+    "marker/list/detail synchronization",
+    "geometry-free and offline fallback",
+    "synthetic warning visibility",
+    "persistent execution states",
+    "stale-preview protection and recovery"
+  ],
+  "live_demo_capture": {
+    "viewport": "1366x900",
+    "screenshots": 10,
+    "verified_preview": "READY",
+    "verified_run": "COMPLETED WITH WARNINGS",
+    "result_authority_label": "SYNTHETIC / NOT_OFFICIAL"
+  },
+  "accepted_broad_evidence_not_rerun": [
+    {
+      "tested_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
+      "passed": 436,
+      "failed": 1,
+      "deselected": 7,
+      "classification": "INHERITED_UNCHANGED"
+    },
+    {
+      "tested_commit": "6ee38399c55ea242919e7f3586810435b604f746",
+      "passed": 436,
+      "failed": 1,
+      "deselected": 7,
+      "classification": "INHERITED_UNCHANGED"
+    }
+  ]
+}

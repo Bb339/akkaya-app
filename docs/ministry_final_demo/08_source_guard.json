@@ -1,0 +1,58 @@
+{
+  "milestone": "V2_MINISTRY_FINAL_DEMO_PRESENTATION_FREEZE",
+  "accepted_phase2_baseline": "36e70970bcbe636d47b95044345f4541552c316d",
+  "demo_package_commit": "d2bf166da81904e2783da36c2bd3e8b3e655cb37",
+  "evidence_commit_semantics": "The commit containing this guard is documentation/evidence-only and is not represented as runtime-tested.",
+  "outside_demo_docs_diff": [],
+  "protected_object_checks": [
+    {
+      "path": "app.py",
+      "baseline_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "package_object": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+      "equal": true
+    },
+    {
+      "path": "kds/science",
+      "baseline_object": "bc57e1a1242a72940e5f6c9930a29d1af7684715",
+      "package_object": "bc57e1a1242a72940e5f6c9930a29d1af7684715",
+      "equal": true
+    },
+    {
+      "path": "kds/application/optimization.py",
+      "baseline_object": "871fb26ec9b408ba1315ef952c2138b7e781c7c1",
+      "package_object": "871fb26ec9b408ba1315ef952c2138b7e781c7c1",
+      "equal": true
+    },
+    {
+      "path": "kds/application/readiness.py",
+      "baseline_object": "fc775a437ff491d24fa1492452818b9df2981df6",
+      "package_object": "fc775a437ff491d24fa1492452818b9df2981df6",
+      "equal": true
+    },
+    {
+      "path": "kds/adapters/institutional.py",
+      "baseline_object": "0311d405976f76a2de01d46a7afb6275acd34d95",
+      "package_object": "0311d405976f76a2de01d46a7afb6275acd34d95",
+      "equal": true
+    },
+    {
+      "path": "data",
+      "baseline_object": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "package_object": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+      "equal": true
+    },
+    {
+      "path": "docs/experiments/robustness_sensitivity",
+      "baseline_object": "f31ed96576c8cfabdd39f578cfe74e5ed6276513",
+      "package_object": "f31ed96576c8cfabdd39f578cfe74e5ed6276513",
+      "equal": true
+    }
+  ],
+  "scientific_behavior": "UNCHANGED",
+  "runtime_changes": [],
+  "test_changes": [],
+  "data_changes": [],
+  "completion_tag_created": false,
+  "push_performed": false,
+  "deployment_performed": false
+}
