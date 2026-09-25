@@ -1,0 +1,1172 @@
+{
+  "milestone": "V2_MINISTRY_FINAL_DEMO_PRESENTATION_FREEZE",
+  "accepted_phase2_head": "36e70970bcbe636d47b95044345f4541552c316d",
+  "fixture": "accepted synthetic institutional fixture and labeling used by existing Phase 1/FIX1 browser tests",
+  "synthetic": true,
+  "not_official": true,
+  "project_id": "institutional-synthetic",
+  "project_name": "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT",
+  "run_id": "run-5051bf07a5ae46599a296fe908a48db0",
+  "execution_profile": "VERIFIED_INSTITUTIONAL",
+  "result_authority_label": "SYNTHETIC / NOT_OFFICIAL",
+  "scenario": "S1",
+  "algorithm": "GA",
+  "objective": "water_saving",
+  "seed": 123,
+  "started_at": "2026-09-25T11:01:19.115010+00:00",
+  "completed_at": "2026-09-25T11:01:24.902172+00:00",
+  "input_snapshot": {
+    "execution_profile": "VERIFIED_INSTITUTIONAL",
+    "planning_year": 2025,
+    "project_id": "institutional-synthetic",
+    "input_datasets": [
+      {
+        "dataset_id": "water-d1b4d200b2f04bed96bbc3b4f669fcee",
+        "data_type": "annual_water_supply",
+        "version": 1,
+        "authority_class": "MEASURED",
+        "confirmed_at": "2026-09-25T11:00:30.795184+00:00",
+        "source": {
+          "uploaded_filename": "annual_water_supply.csv",
+          "file_hash": "a62dd8a701c34d4b78ac906ddbfc54dd1e60824ec371ca507da26f158db3266f",
+          "import_batch_id": "d1b4d200b2f04bed96bbc3b4f669fcee",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": null,
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "water-e27ff6969569430ebb0c2c33f12cede7",
+        "data_type": "monthly_water_supply",
+        "version": 1,
+        "authority_class": "MEASURED",
+        "confirmed_at": "2026-09-25T11:00:31.761129+00:00",
+        "source": {
+          "uploaded_filename": "monthly_water_supply.csv",
+          "file_hash": "eb68a9c2bf5bb6efd18b29a90fb0e44f13720539065e3e054b8a08d892dccc0d",
+          "import_batch_id": "e27ff6969569430ebb0c2c33f12cede7",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": null,
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "water-38bb845cc9ef47f0a324fe6ba5ac8764",
+        "data_type": "delivery_capacity",
+        "version": 1,
+        "authority_class": "MEASURED",
+        "confirmed_at": "2026-09-25T11:00:32.896093+00:00",
+        "source": {
+          "uploaded_filename": "delivery_capacity.csv",
+          "file_hash": "49d4dcadf3699418b59bb73f445693eef90ce5abae6910b0e4c1fb0bdee73c24",
+          "import_batch_id": "38bb845cc9ef47f0a324fe6ba5ac8764",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": null,
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "water-d6f7311bb68044999433b9125edabcfc",
+        "data_type": "environmental_release",
+        "version": 1,
+        "authority_class": "MEASURED",
+        "confirmed_at": "2026-09-25T11:00:37.178133+00:00",
+        "source": {
+          "uploaded_filename": "environmental_release.csv",
+          "file_hash": "ddc600c2437f4adcde6c9b57cacca0921830ac871f3097fd041eb641b518682b",
+          "import_batch_id": "d6f7311bb68044999433b9125edabcfc",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": null,
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "water-931937b67b1f488cb18e54a02c8931a9",
+        "data_type": "conveyance_efficiency",
+        "version": 1,
+        "authority_class": "MEASURED",
+        "confirmed_at": "2026-09-25T11:00:40.680201+00:00",
+        "source": {
+          "uploaded_filename": "conveyance_efficiency.csv",
+          "file_hash": "3ceb27347b48aa87fe2821a6f4c0466b50f4ac0498c4c0d09badedda93385856",
+          "import_batch_id": "931937b67b1f488cb18e54a02c8931a9",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": null,
+        "geographic_scope": "project",
+        "conversion_provenance": [
+          {
+            "source_row": 2,
+            "source_unit": null,
+            "canonical_unit": "ratio",
+            "conversion": null
+          }
+        ]
+      },
+      {
+        "dataset_id": "economic-8167e763ad7f442686d2afaa44e1cd78",
+        "data_type": "crop_yield",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+        "confirmed_at": "2026-09-25T11:00:45.625406+00:00",
+        "source": {
+          "uploaded_filename": "crop_yield.csv",
+          "file_hash": "0fd7260696c83020b8c853ffc0aa72bf0e14bd4485b1a525b74eba2a6bf816ac",
+          "import_batch_id": "8167e763ad7f442686d2afaa44e1cd78",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": "crop_yield|2025|project|catalog",
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "economic-6928094a2f8a4e15be4bf0fca23d82ef",
+        "data_type": "crop_sale_price",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+        "confirmed_at": "2026-09-25T11:00:48.133501+00:00",
+        "source": {
+          "uploaded_filename": "crop_sale_price.csv",
+          "file_hash": "78265ec56801c85bb2fb92c4ea1cedf3e0157e9057e5829543a6d256fe5242c9",
+          "import_batch_id": "6928094a2f8a4e15be4bf0fca23d82ef",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": "crop_sale_price|2025|project|catalog",
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "economic-04d5acf5afa14840af9f4319a68d74dc",
+        "data_type": "crop_cost_components",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+        "confirmed_at": "2026-09-25T11:00:50.624884+00:00",
+        "source": {
+          "uploaded_filename": "crop_cost_components.csv",
+          "file_hash": "ab6e536642390ddbd2c67a185289d43803e4bfd43b413e1c13095c580adb79bd",
+          "import_batch_id": "04d5acf5afa14840af9f4319a68d74dc",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": "crop_cost_components|2025|project|catalog",
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "economic-8eb565966e2c43ee883e433fb399f6ef",
+        "data_type": "crop_net_profit",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+        "confirmed_at": "2026-09-25T11:00:53.170784+00:00",
+        "source": {
+          "uploaded_filename": "crop_net_profit.csv",
+          "file_hash": "03821188949ab9d26238a5c9cdda538a557785d268934e8f6cde33ddb7166220",
+          "import_batch_id": "8eb565966e2c43ee883e433fb399f6ef",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": "crop_net_profit|2025|project|catalog",
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "economic-21700790310f4941bb15654150fa10da",
+        "data_type": "seasonal_economics",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+        "confirmed_at": "2026-09-25T11:00:54.877366+00:00",
+        "source": {
+          "uploaded_filename": "seasonal_economics.csv",
+          "file_hash": "156b729dfbab3ee6c69038db99e9eb8745289d6813060d55c7c9c51ed4688bbb",
+          "import_batch_id": "21700790310f4941bb15654150fa10da",
+          "synthetic": true,
+          "institutions": [
+            "Synthetic Institute"
+          ],
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "documents": []
+        },
+        "scope_key": "seasonal_economics|2025|project|catalog",
+        "geographic_scope": "project",
+        "conversion_provenance": [
+          {
+            "source_row": 2,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 3,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 4,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 5,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 6,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 7,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 8,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 9,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 10,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 11,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 12,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 13,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 14,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 15,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 16,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          },
+          {
+            "source_row": 17,
+            "source_unit": null,
+            "canonical_unit": null,
+            "conversion": {
+              "yield": null,
+              "price": null
+            }
+          }
+        ]
+      },
+      {
+        "dataset_id": "crop-parameter-6ceabea163ab48a5ae6b20a6f0eed32d",
+        "data_type": "crop_water_parameters",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL",
+        "confirmed_at": "2026-09-25T11:00:58.325955+00:00",
+        "source": {
+          "uploaded_filename": "crop_water_parameters.csv",
+          "file_hash": "90c3e11918d568d1ca6f2ee451703581538d42d6fbe9565afd355866154458eb",
+          "import_batch_id": "6ceabea163ab48a5ae6b20a6f0eed32d",
+          "synthetic": true,
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "sources": [
+            "Synthetic Institute"
+          ]
+        },
+        "scope_key": "crop_water_parameters|2025|project",
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      },
+      {
+        "dataset_id": "crop-parameter-6fe98f836ae741faba32502734cf1302",
+        "data_type": "crop_phenology",
+        "version": 1,
+        "authority_class": "LOCAL_INSTITUTIONAL",
+        "confirmed_at": "2026-09-25T11:01:01.105086+00:00",
+        "source": {
+          "uploaded_filename": "crop_phenology.csv",
+          "file_hash": "3bb34704da047b1dfa67555e11eda1e6244e50ecf1080fd034067f3027dae5cd",
+          "import_batch_id": "6fe98f836ae741faba32502734cf1302",
+          "synthetic": true,
+          "references": [
+            "synthetic not_official institutional integration fixture"
+          ],
+          "sources": [
+            "Synthetic Institute"
+          ]
+        },
+        "scope_key": "crop_phenology|2025|project",
+        "geographic_scope": "project",
+        "conversion_provenance": []
+      }
+    ],
+    "candidate_source": {
+      "candidate_source": "confirmed project import",
+      "candidate_count": 192,
+      "analysis_unit_count": 24,
+      "imports": [
+        {
+          "import_batch_id": "03ff0660010246f2a4eff384766988fd",
+          "data_type": "candidates",
+          "file_hash": "1cd8a6bb291b46ff18e34c2c4032e0f6f1a6de32ddef66bbf044bb3f547b5faa",
+          "applied_revision": 5,
+          "filename": "candidates.csv"
+        }
+      ]
+    },
+    "current_pattern_source": {
+      "source": "confirmed project scientific_inputs import",
+      "import_batch_id": "93d6b411f08b4643880b7da32c42d73c",
+      "file_hash": "25104174618780cad7b4cddcdcf2d4ac84dd0c9962db3a3c8cc1d6bba9b910c3",
+      "applied_revision": 7,
+      "filename": "scientific_s2.csv",
+      "analysis_unit_count": 24,
+      "planning_year": 2025,
+      "geographic_scope": "project"
+    },
+    "climate_source": {
+      "mode": "CLIMATOLOGICAL_NORMAL",
+      "geographic_scope": "project",
+      "sources": [
+        "synthetic_test_fixture"
+      ],
+      "coverage": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ],
+      "imports": [
+        {
+          "import_batch_id": "ddc5b9d63bec4277801ab852660a2584",
+          "data_type": "scientific_inputs",
+          "file_hash": "5c9a53c370048128786b9398f097751f66c690e4744e2a98eca71001c891bae8",
+          "applied_revision": 6,
+          "filename": "scientific_s1.csv"
+        },
+        {
+          "import_batch_id": "93d6b411f08b4643880b7da32c42d73c",
+          "data_type": "scientific_inputs",
+          "file_hash": "25104174618780cad7b4cddcdcf2d4ac84dd0c9962db3a3c8cc1d6bba9b910c3",
+          "applied_revision": 7,
+          "filename": "scientific_s2.csv"
+        }
+      ]
+    },
+    "engine_commit": "36e70970bcbe636d47b95044345f4541552c316d",
+    "algorithm": "GA",
+    "seed": 123,
+    "objective": "water_saving",
+    "scenario": "S1",
+    "created_at": "2026-09-25T11:01:19.112703+00:00",
+    "readiness_snapshot": {
+      "execution_profile": "VERIFIED_INSTITUTIONAL",
+      "project_id": "institutional-synthetic",
+      "planning_year": 2025,
+      "ready": true,
+      "blocking_reasons": [],
+      "warnings": [
+        "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT; NOT_OFFICIAL"
+      ],
+      "datasets": [
+        {
+          "dataset_id": "water-d1b4d200b2f04bed96bbc3b4f669fcee",
+          "data_type": "annual_water_supply",
+          "version": 1,
+          "authority_class": "MEASURED",
+          "confirmed_at": "2026-09-25T11:00:30.795184+00:00",
+          "source": {
+            "uploaded_filename": "annual_water_supply.csv",
+            "file_hash": "a62dd8a701c34d4b78ac906ddbfc54dd1e60824ec371ca507da26f158db3266f",
+            "import_batch_id": "d1b4d200b2f04bed96bbc3b4f669fcee",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": null,
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "water-e27ff6969569430ebb0c2c33f12cede7",
+          "data_type": "monthly_water_supply",
+          "version": 1,
+          "authority_class": "MEASURED",
+          "confirmed_at": "2026-09-25T11:00:31.761129+00:00",
+          "source": {
+            "uploaded_filename": "monthly_water_supply.csv",
+            "file_hash": "eb68a9c2bf5bb6efd18b29a90fb0e44f13720539065e3e054b8a08d892dccc0d",
+            "import_batch_id": "e27ff6969569430ebb0c2c33f12cede7",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": null,
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "water-38bb845cc9ef47f0a324fe6ba5ac8764",
+          "data_type": "delivery_capacity",
+          "version": 1,
+          "authority_class": "MEASURED",
+          "confirmed_at": "2026-09-25T11:00:32.896093+00:00",
+          "source": {
+            "uploaded_filename": "delivery_capacity.csv",
+            "file_hash": "49d4dcadf3699418b59bb73f445693eef90ce5abae6910b0e4c1fb0bdee73c24",
+            "import_batch_id": "38bb845cc9ef47f0a324fe6ba5ac8764",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": null,
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "water-d6f7311bb68044999433b9125edabcfc",
+          "data_type": "environmental_release",
+          "version": 1,
+          "authority_class": "MEASURED",
+          "confirmed_at": "2026-09-25T11:00:37.178133+00:00",
+          "source": {
+            "uploaded_filename": "environmental_release.csv",
+            "file_hash": "ddc600c2437f4adcde6c9b57cacca0921830ac871f3097fd041eb641b518682b",
+            "import_batch_id": "d6f7311bb68044999433b9125edabcfc",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": null,
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "water-931937b67b1f488cb18e54a02c8931a9",
+          "data_type": "conveyance_efficiency",
+          "version": 1,
+          "authority_class": "MEASURED",
+          "confirmed_at": "2026-09-25T11:00:40.680201+00:00",
+          "source": {
+            "uploaded_filename": "conveyance_efficiency.csv",
+            "file_hash": "3ceb27347b48aa87fe2821a6f4c0466b50f4ac0498c4c0d09badedda93385856",
+            "import_batch_id": "931937b67b1f488cb18e54a02c8931a9",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": null,
+          "geographic_scope": "project",
+          "conversion_provenance": [
+            {
+              "source_row": 2,
+              "source_unit": null,
+              "canonical_unit": "ratio",
+              "conversion": null
+            }
+          ]
+        },
+        {
+          "dataset_id": "economic-8167e763ad7f442686d2afaa44e1cd78",
+          "data_type": "crop_yield",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+          "confirmed_at": "2026-09-25T11:00:45.625406+00:00",
+          "source": {
+            "uploaded_filename": "crop_yield.csv",
+            "file_hash": "0fd7260696c83020b8c853ffc0aa72bf0e14bd4485b1a525b74eba2a6bf816ac",
+            "import_batch_id": "8167e763ad7f442686d2afaa44e1cd78",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": "crop_yield|2025|project|catalog",
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "economic-6928094a2f8a4e15be4bf0fca23d82ef",
+          "data_type": "crop_sale_price",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+          "confirmed_at": "2026-09-25T11:00:48.133501+00:00",
+          "source": {
+            "uploaded_filename": "crop_sale_price.csv",
+            "file_hash": "78265ec56801c85bb2fb92c4ea1cedf3e0157e9057e5829543a6d256fe5242c9",
+            "import_batch_id": "6928094a2f8a4e15be4bf0fca23d82ef",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": "crop_sale_price|2025|project|catalog",
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "economic-04d5acf5afa14840af9f4319a68d74dc",
+          "data_type": "crop_cost_components",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+          "confirmed_at": "2026-09-25T11:00:50.624884+00:00",
+          "source": {
+            "uploaded_filename": "crop_cost_components.csv",
+            "file_hash": "ab6e536642390ddbd2c67a185289d43803e4bfd43b413e1c13095c580adb79bd",
+            "import_batch_id": "04d5acf5afa14840af9f4319a68d74dc",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": "crop_cost_components|2025|project|catalog",
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "economic-8eb565966e2c43ee883e433fb399f6ef",
+          "data_type": "crop_net_profit",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+          "confirmed_at": "2026-09-25T11:00:53.170784+00:00",
+          "source": {
+            "uploaded_filename": "crop_net_profit.csv",
+            "file_hash": "03821188949ab9d26238a5c9cdda538a557785d268934e8f6cde33ddb7166220",
+            "import_batch_id": "8eb565966e2c43ee883e433fb399f6ef",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": "crop_net_profit|2025|project|catalog",
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "economic-21700790310f4941bb15654150fa10da",
+          "data_type": "seasonal_economics",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL_SOURCE",
+          "confirmed_at": "2026-09-25T11:00:54.877366+00:00",
+          "source": {
+            "uploaded_filename": "seasonal_economics.csv",
+            "file_hash": "156b729dfbab3ee6c69038db99e9eb8745289d6813060d55c7c9c51ed4688bbb",
+            "import_batch_id": "21700790310f4941bb15654150fa10da",
+            "synthetic": true,
+            "institutions": [
+              "Synthetic Institute"
+            ],
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "documents": []
+          },
+          "scope_key": "seasonal_economics|2025|project|catalog",
+          "geographic_scope": "project",
+          "conversion_provenance": [
+            {
+              "source_row": 2,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 3,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 4,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 5,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 6,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 7,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 8,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 9,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 10,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 11,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 12,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 13,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 14,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 15,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 16,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            },
+            {
+              "source_row": 17,
+              "source_unit": null,
+              "canonical_unit": null,
+              "conversion": {
+                "yield": null,
+                "price": null
+              }
+            }
+          ]
+        },
+        {
+          "dataset_id": "crop-parameter-6ceabea163ab48a5ae6b20a6f0eed32d",
+          "data_type": "crop_water_parameters",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL",
+          "confirmed_at": "2026-09-25T11:00:58.325955+00:00",
+          "source": {
+            "uploaded_filename": "crop_water_parameters.csv",
+            "file_hash": "90c3e11918d568d1ca6f2ee451703581538d42d6fbe9565afd355866154458eb",
+            "import_batch_id": "6ceabea163ab48a5ae6b20a6f0eed32d",
+            "synthetic": true,
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "sources": [
+              "Synthetic Institute"
+            ]
+          },
+          "scope_key": "crop_water_parameters|2025|project",
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        },
+        {
+          "dataset_id": "crop-parameter-6fe98f836ae741faba32502734cf1302",
+          "data_type": "crop_phenology",
+          "version": 1,
+          "authority_class": "LOCAL_INSTITUTIONAL",
+          "confirmed_at": "2026-09-25T11:01:01.105086+00:00",
+          "source": {
+            "uploaded_filename": "crop_phenology.csv",
+            "file_hash": "3bb34704da047b1dfa67555e11eda1e6244e50ecf1080fd034067f3027dae5cd",
+            "import_batch_id": "6fe98f836ae741faba32502734cf1302",
+            "synthetic": true,
+            "references": [
+              "synthetic not_official institutional integration fixture"
+            ],
+            "sources": [
+              "Synthetic Institute"
+            ]
+          },
+          "scope_key": "crop_phenology|2025|project",
+          "geographic_scope": "project",
+          "conversion_provenance": []
+        }
+      ],
+      "candidate_source": {
+        "candidate_source": "confirmed project import",
+        "candidate_count": 192,
+        "analysis_unit_count": 24,
+        "imports": [
+          {
+            "import_batch_id": "03ff0660010246f2a4eff384766988fd",
+            "data_type": "candidates",
+            "file_hash": "1cd8a6bb291b46ff18e34c2c4032e0f6f1a6de32ddef66bbf044bb3f547b5faa",
+            "applied_revision": 5,
+            "filename": "candidates.csv"
+          }
+        ]
+      },
+      "current_pattern_source": {
+        "source": "confirmed project scientific_inputs import",
+        "import_batch_id": "93d6b411f08b4643880b7da32c42d73c",
+        "file_hash": "25104174618780cad7b4cddcdcf2d4ac84dd0c9962db3a3c8cc1d6bba9b910c3",
+        "applied_revision": 7,
+        "filename": "scientific_s2.csv",
+        "analysis_unit_count": 24,
+        "planning_year": 2025,
+        "geographic_scope": "project"
+      },
+      "climate_source": {
+        "mode": "CLIMATOLOGICAL_NORMAL",
+        "geographic_scope": "project",
+        "sources": [
+          "synthetic_test_fixture"
+        ],
+        "coverage": [
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12"
+        ],
+        "imports": [
+          {
+            "import_batch_id": "ddc5b9d63bec4277801ab852660a2584",
+            "data_type": "scientific_inputs",
+            "file_hash": "5c9a53c370048128786b9398f097751f66c690e4744e2a98eca71001c891bae8",
+            "applied_revision": 6,
+            "filename": "scientific_s1.csv"
+          },
+          {
+            "import_batch_id": "93d6b411f08b4643880b7da32c42d73c",
+            "data_type": "scientific_inputs",
+            "file_hash": "25104174618780cad7b4cddcdcf2d4ac84dd0c9962db3a3c8cc1d6bba9b910c3",
+            "applied_revision": 7,
+            "filename": "scientific_s2.csv"
+          }
+        ]
+      },
+      "environmental_release_form": "ratio",
+      "conveyance_efficiency": 0.83,
+      "geographic_scope": "project",
+      "algorithm": "GA",
+      "objective": "water_saving",
+      "scenario": "S1",
+      "consumer_roles": {
+        "annual_water": "OPTIMIZER_INPUT",
+        "monthly_supply": "POST_RUN_VALIDATION",
+        "delivery": "POST_RUN_VALIDATION",
+        "environmental_release": "OPTIMIZER_INPUT",
+        "conveyance": "OPTIMIZER_INPUT",
+        "economics": "OPTIMIZER_INPUT",
+        "crop_parameters": "OPTIMIZER_INPUT",
+        "phenology": "OPTIMIZER_INPUT",
+        "perennial_requirement": "NOT_CONNECTED",
+        "approximate_s2_monthly_optimizer": "NOT_CONNECTED"
+      },
+      "synthetic": true,
+      "not_official": true,
+      "verified_water_model": "FAO56_PROJECT_INPUTS_PRECOMPUTED",
+      "water_constraints": {
+        "annual_supply_m3": 60000.0,
+        "monthly_supply_m3": {
+          "2025-01": 5000.0,
+          "2025-02": 5000.0,
+          "2025-03": 5000.0,
+          "2025-04": 5000.0,
+          "2025-05": 5000.0,
+          "2025-06": 5000.0,
+          "2025-07": 5000.0,
+          "2025-08": 5000.0,
+          "2025-09": 5000.0,
+          "2025-10": 5000.0,
+          "2025-11": 5000.0,
+          "2025-12": 5000.0
+        },
+        "monthly_delivery_capacity_m3": {
+          "2025-01": 5000.0,
+          "2025-02": 5000.0,
+          "2025-03": 5000.0,
+          "2025-04": 5000.0,
+          "2025-05": 5000.0,
+          "2025-06": 5000.0,
+          "2025-07": 5000.0,
+          "2025-08": 5000.0,
+          "2025-09": 5000.0,
+          "2025-10": 5000.0,
+          "2025-11": 5000.0,
+          "2025-12": 5000.0
+        },
+        "environmental_release": {
+          "form": "ratio",
+          "values": {
+            "2025": 0.1
+          }
+        },
+        "conveyance_efficiency": 0.83
+      },
+      "preview_token": "47995c700c55446777abb98115881910a24a25b06b2e89f171a6294e782ab23a",
+      "selection_hash": "100f9708fd577635e7802945965d69d226acdde0128ad39089aac4b0750e741e",
+      "data_revision": 20,
+      "preview_revision": 20
+    },
+    "result_classification": "SYNTHETIC_TEST_OUTPUT",
+    "preview_revision": 20,
+    "preview_token": "47995c700c55446777abb98115881910a24a25b06b2e89f171a6294e782ab23a",
+    "selection_hash": "100f9708fd577635e7802945965d69d226acdde0128ad39089aac4b0750e741e"
+  },
+  "result_provenance": {
+    "engine_commit": "36e70970bcbe636d47b95044345f4541552c316d",
+    "selection_hash": "100f9708fd577635e7802945965d69d226acdde0128ad39089aac4b0750e741e",
+    "preview_revision": 20,
+    "result_classification": "SYNTHETIC_TEST_OUTPUT",
+    "scientific_consumer": "FAO56_PROJECT_INPUTS_PRECOMPUTED",
+    "consumer_roles": {
+      "annual_water": "OPTIMIZER_INPUT",
+      "monthly_supply": "POST_RUN_VALIDATION",
+      "delivery": "POST_RUN_VALIDATION",
+      "environmental_release": "OPTIMIZER_INPUT",
+      "conveyance": "OPTIMIZER_INPUT",
+      "economics": "OPTIMIZER_INPUT",
+      "crop_parameters": "OPTIMIZER_INPUT",
+      "phenology": "OPTIMIZER_INPUT",
+      "perennial_requirement": "NOT_CONNECTED",
+      "approximate_s2_monthly_optimizer": "NOT_CONNECTED"
+    },
+    "water_accounting": {
+      "verified_profile_water_scope": "FULL_SELECTED_SEASON",
+      "planning_year_water_scope": "PLANNING_CALENDAR_YEAR",
+      "profile_period_start": "2025-03",
+      "profile_period_end": "2025-06",
+      "annual_budget_period_start": "2025-01",
+      "annual_budget_period_end": "2025-12",
+      "efficiency_tl_per_m3_denominator": "AUTHORITATIVE_VERIFIED_FULL_SEASON_WATER"
+    }
+  },
+  "presentation_context": {
+    "current_project_revision": 20,
+    "latest_run_id": "run-5051bf07a5ae46599a296fe908a48db0",
+    "pinned_to_older_input_snapshot": false,
+    "requires_reanalysis": false,
+    "revision_relationship": "SAME_REVISION",
+    "run_project_revision": 20
+  },
+  "screenshots": [
+    {
+      "filename": "01_project_profile.png",
+      "sha256": "d47aae412420e38235b2abff1157cb5e5b0b24ce3e65418f93b88c6527cdd3a2",
+      "bytes": 453575
+    },
+    {
+      "filename": "02_data_management.png",
+      "sha256": "d47aae412420e38235b2abff1157cb5e5b0b24ce3e65418f93b88c6527cdd3a2",
+      "bytes": 453575
+    },
+    {
+      "filename": "03_readiness.png",
+      "sha256": "d47aae412420e38235b2abff1157cb5e5b0b24ce3e65418f93b88c6527cdd3a2",
+      "bytes": 453575
+    },
+    {
+      "filename": "04_analysis_preview.png",
+      "sha256": "acce0ed7f15d1ff99a3d28f524ea4ff45f612de5b377a75768961eb59baa6efc",
+      "bytes": 551891
+    },
+    {
+      "filename": "05_executive_result.png",
+      "sha256": "bfe2460ea0471cc9897c472e01ef7a6d68a6df265c331a0c3b2e296b6156edbd",
+      "bytes": 885187
+    },
+    {
+      "filename": "06_map_unit_detail.png",
+      "sha256": "ecd12914ca3600b252a0a0be07fa011aed1e89716c2c04b776d9c721daf1d46a",
+      "bytes": 884010
+    },
+    {
+      "filename": "07_monthly_water.png",
+      "sha256": "ecd12914ca3600b252a0a0be07fa011aed1e89716c2c04b776d9c721daf1d46a",
+      "bytes": 884010
+    },
+    {
+      "filename": "08_crop_pattern.png",
+      "sha256": "9f22a31613c845e1089e352c3ead705584ee48bbe718c315eb8cb82cd010f48a",
+      "bytes": 879318
+    },
+    {
+      "filename": "09_provenance.png",
+      "sha256": "9f22a31613c845e1089e352c3ead705584ee48bbe718c315eb8cb82cd010f48a",
+      "bytes": 879318
+    },
+    {
+      "filename": "10_reference_demo.png",
+      "sha256": "f5313af8e75b1cf0f5937635e99a860c0b08feb440cd3b9c31be8985da0b1785",
+      "bytes": 796827
+    }
+  ]
+}
