@@ -1,0 +1,26 @@
+{
+  "corrective_final_head": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "rejected_parent_head": "0eab17ef37a2fdb7e5806be35ebf38d88971023c",
+  "phase1_baseline": "04a4bce0db31db41813cfcfd253d9c6794f252bc",
+  "robustness_baseline": "028f231eb774eafb53a9a76db370b663d561ce1b",
+  "implementation_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
+  "evidence_commit": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "targeted_suite": {
+    "command": "python -m pytest -q tests/test_ministry_ui_phase2_fix1.py tests/test_ministry_ui_phase2_fix1_browser.py tests/test_ministry_ui_phase2.py tests/test_ministry_ui_phase2_browser.py tests/test_project_browser.py tests/test_general_browser.py tests/test_water_data_contract.py tests/test_project_api.py tests/test_imports.py tests/test_result_contract.py tests/test_institutional_demo_phase1_fix5.py tests/test_institutional_demo_phase1.py",
+    "passed": 137, "failed": 0, "deselected": 1, "skipped": 0,
+    "duration_seconds": 869.48, "status": "PASS"
+  },
+  "fresh_broad_suite": {
+    "tested_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
+    "command": "python -m pytest -q",
+    "passed": 436, "failed": 1, "deselected": 7, "skipped": 0,
+    "duration_seconds": 2519.79,
+    "failure": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "classification": "INHERITED_UNCHANGED"
+  },
+  "inherited_reproduction": {
+    "rejected_parent": "1 failed in 21.83s; expected ok; observed no_feasible_two_crop_plan",
+    "corrective": "1 failed in 18.19s; expected ok; observed no_feasible_two_crop_plan",
+    "test_unchanged": true, "app_unchanged": true, "data_unchanged": true, "optimizer_search_unchanged": true
+  }
+}

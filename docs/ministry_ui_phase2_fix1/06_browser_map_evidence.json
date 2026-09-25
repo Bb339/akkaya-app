@@ -1,0 +1,21 @@
+{
+  "corrective_final_head": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "rejected_parent_head": "0eab17ef37a2fdb7e5806be35ebf38d88971023c",
+  "phase1_baseline": "04a4bce0db31db41813cfcfd253d9c6794f252bc",
+  "robustness_baseline": "028f231eb774eafb53a9a76db370b663d561ce1b",
+  "implementation_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
+  "evidence_commit": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "test": "tests/test_ministry_ui_phase2_fix1_browser.py::test_verified_map_list_crop_shares_and_reanalysis_in_real_chromium",
+  "browser": "Chromium",
+  "verified": [
+    "two coordinate markers rendered for a realistic VERIFIED payload",
+    "marker P2 click selected P2 list/detail",
+    "list P1 click selected the P1 marker and map target",
+    "current crop, selected crop, unit profit, authoritative unit water and warning rendered",
+    "P3 without geometry remained usable and explicitly reported GEOMETRI YOK",
+    "canonical crop_shares included crops outside top_crops",
+    "reanalysis revision relationship rendered from backend context",
+    "synthetic warning remained visible"
+  ],
+  "browser_suite_result": "3 passed in 29.33s"
+}

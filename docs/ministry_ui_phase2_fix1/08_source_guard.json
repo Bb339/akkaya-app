@@ -1,0 +1,21 @@
+{
+  "corrective_final_head": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "rejected_parent_head": "0eab17ef37a2fdb7e5806be35ebf38d88971023c",
+  "phase1_baseline": "04a4bce0db31db41813cfcfd253d9c6794f252bc",
+  "robustness_baseline": "028f231eb774eafb53a9a76db370b663d561ce1b",
+  "implementation_commit": "f26020c9aabdefd2c0a200ec2e8ca05bcee6c8cd",
+  "evidence_commit": "refs/heads/v2-institutional-demo-ministry-ui-phase2-fix1",
+  "protected_diff": [],
+  "blob_checks": [
+    {"file":"app.py","parent":"b61dd6fc0904a069af3a8c5620b3e73f13b5da02","corrective":"b61dd6fc0904a069af3a8c5620b3e73f13b5da02","equal":true},
+    {"file":"kds/application/optimization.py","parent":"871fb26ec9b408ba1315ef952c2138b7e781c7c1","corrective":"871fb26ec9b408ba1315ef952c2138b7e781c7c1","equal":true},
+    {"file":"kds/application/readiness.py","parent":"fc775a437ff491d24fa1492452818b9df2981df6","corrective":"fc775a437ff491d24fa1492452818b9df2981df6","equal":true},
+    {"file":"kds/adapters/institutional.py","parent":"0311d405976f76a2de01d46a7afb6275acd34d95","corrective":"0311d405976f76a2de01d46a7afb6275acd34d95","equal":true},
+    {"file":"data/candidate_patterns_single.csv","parent":"cf18e9b1dc6b6985207b473faffa6e2dcd5def55","corrective":"cf18e9b1dc6b6985207b473faffa6e2dcd5def55","equal":true},
+    {"file":"data/candidate_patterns_double.csv","parent":"736d61a1787e6f9ed3cab71cb63818f078e911d2","corrective":"736d61a1787e6f9ed3cab71cb63818f078e911d2","equal":true},
+    {"file":"docs/prepilot_freeze/reference_values.json","parent":"2016c107a5b9f2fcae657e29fa33bd7890390b90","corrective":"2016c107a5b9f2fcae657e29fa33bd7890390b90","equal":true},
+    {"file":"docs/experiments/robustness_sensitivity/experiment_manifest.json","parent":"b9fe02adcd2f5a737a096a5407dc8541b85cbcc9","corrective":"b9fe02adcd2f5a737a096a5407dc8541b85cbcc9","equal":true}
+  ],
+  "scientific_behavior": "UNCHANGED",
+  "presentation_helper_scope": "kds/application/result_presentation.py; API-only disposable composition"
+}
