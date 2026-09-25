@@ -101,7 +101,9 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
     @blueprint.post("/projects/<project_id>/analyses")
     def run_analysis(project_id):
         result = analysis.run(project_id, analysis_body(project_id))
-        return jsonify(result), 201 if result['status']=='completed' else 422
+        from kds.application.result_presentation import present_run_for_ui
+        presented = present_run_for_ui(result, projects.get(project_id))
+        return jsonify(presented), 201 if result['status']=='completed' else 422
 
     @blueprint.post("/projects/<project_id>/analysis-preview")
     def analysis_preview(project_id):
@@ -109,7 +111,9 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
 
     @blueprint.get("/projects/<project_id>/analyses/<run_id>")
     def analysis_result(project_id, run_id):
-        return jsonify(analysis.get(project_id, run_id))
+        from kds.application.result_presentation import present_run_for_ui
+        document = projects.get(project_id)
+        return jsonify(present_run_for_ui(analysis.get(project_id, run_id), document))
 
     @blueprint.get("/projects/<project_id>/analyses/<run_id>/provenance")
     def analysis_provenance(project_id, run_id):

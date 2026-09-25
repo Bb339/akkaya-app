@@ -1,13 +1,111 @@
 import {facts,message,post,showJSON,table} from './api.js';
 import {renderRun} from './results.js';
-let previewEvidence=null, readinessReport=null;
+
+let previewEvidence=null, readinessReport=null, executionState=null;
 const defaults={GA:{popSize:12,generations:10,cxRate:.7,mutRate:.08},ACO:{ants:10,iterations:10,rho:.25,q:1},ABC:{foodSources:10,cycles:10,limit:4}};
-function formPayload(form){const value=Object.fromEntries(new FormData(form));value.seed=Number(value.seed);value.water_budget_ratio=Number(value.water_budget_ratio);value.config=JSON.parse(value.config);return value;}
-function setState(text,kind=''){const chip=document.getElementById('execution-state');chip.textContent=text;chip.className=`state-chip ${kind}`;}
-function updateMode(){const form=document.getElementById('analysis-form'),profile=form.elements.execution_profile.value,scenario=form.elements.scenario.value,badge=document.getElementById('global-mode-badge'),warning=document.getElementById('mode-warning');const verified=profile==='VERIFIED_INSTITUTIONAL';badge.textContent=verified?'VERIFIED INSTITUTIONAL':'REFERENCE MODEL / DEMO DATA';badge.className=`mode-badge ${verified?'verified':'reference'}`;warning.hidden=verified;const ready=verified?readinessReport?.execution_profiles?.VERIFIED_INSTITUTIONAL?.ready?.[scenario]:readinessReport?.scenarios?.[scenario]?.status!=='NOT_READY';document.getElementById('run-button').disabled=verified?!previewEvidence?.ready:!ready;setState(ready?'READY':'BLOCKED',ready?'ready':'blocked');}
-export function invalidatePreview(reason='Yapılandırma veya proje verisi değişti.') {if(previewEvidence){previewEvidence=null;document.getElementById('stale-preview-alert').hidden=false;message(reason,true);}document.getElementById('analysis-preview-card').hidden=true;updateMode();}
+const protectedStates=new Set(['PREVIEWING','RUNNING','COMPLETED','COMPLETED WITH WARNINGS','FAILED','STALE PREVIEW']);
+
+function formPayload(form){
+  const value=Object.fromEntries(new FormData(form));
+  value.seed=Number(value.seed);value.water_budget_ratio=Number(value.water_budget_ratio);value.config=JSON.parse(value.config);
+  return value;
+}
+
+function setState(text,kind=''){
+  executionState=text;
+  const chip=document.getElementById('execution-state');
+  chip.textContent=text;chip.className=`state-chip ${kind}`;
+}
+
+function readinessState(){
+  const form=document.getElementById('analysis-form');
+  const verified=form.elements.execution_profile.value==='VERIFIED_INSTITUTIONAL';
+  const scenario=form.elements.scenario.value;
+  return verified?Boolean(readinessReport?.execution_profiles?.VERIFIED_INSTITUTIONAL?.ready?.[scenario]):readinessReport?.scenarios?.[scenario]?.status!=='NOT_READY';
+}
+
+function syncReadinessState(force=false){
+  const ready=readinessState();
+  if(force||!protectedStates.has(executionState))setState(ready?'READY':'BLOCKED',ready?'ready':'blocked');
+  return ready;
+}
+
+function updateMode({resetState=false}={}){
+  const form=document.getElementById('analysis-form'),profile=form.elements.execution_profile.value;
+  const badge=document.getElementById('global-mode-badge'),warning=document.getElementById('mode-warning');
+  const verified=profile==='VERIFIED_INSTITUTIONAL';
+  badge.textContent=verified?'VERIFIED INSTITUTIONAL':'REFERENCE MODEL / DEMO DATA';
+  badge.className=`mode-badge ${verified?'verified':'reference'}`;warning.hidden=verified;
+  if(resetState)executionState=null;
+  const ready=syncReadinessState(resetState);
+  document.getElementById('run-button').disabled=verified?!previewEvidence?.ready:!ready;
+}
+
+export function invalidatePreview(reason='Yapılandırma veya proje verisi değişti.'){
+  const wasPinned=Boolean(previewEvidence);
+  previewEvidence=null;
+  document.getElementById('analysis-preview-card').hidden=true;
+  if(wasPinned){
+    document.getElementById('stale-preview-alert').hidden=false;
+    setState('STALE PREVIEW','blocked');message(reason,true);
+  }else updateMode({resetState:true});
+  document.getElementById('run-button').disabled=document.querySelector('#analysis-form [name="execution_profile"]').value==='VERIFIED_INSTITUTIONAL'||!readinessState();
+}
+
 export function setReadiness(report){readinessReport=report;updateMode();}
-export function wireAnalysis(root,safe,refresh){const form=document.getElementById('analysis-form');const config=()=>{form.elements.config.value=JSON.stringify(defaults[form.elements.algorithm.value],null,2);invalidatePreview('Algoritma yapılandırması değişti; yeni önizleme gerekli.');};form.elements.algorithm.onchange=config;form.elements.execution_profile.onchange=()=>{invalidatePreview('Çalışma modu değişti; yeni önizleme gerekli.');updateMode();};form.elements.scenario.onchange=()=>{invalidatePreview('Senaryo değişti; yeni önizleme gerekli.');updateMode();};for(const input of form.querySelectorAll('input,textarea,select[name=objective]'))input.addEventListener('change',()=>invalidatePreview());config();
- document.getElementById('preview-analysis').onclick=()=>safe(async()=>{setState('PREVIEWING','running');const preview=await post(root()+'/analysis-preview',formPayload(form));previewEvidence=preview.ready?preview:null;document.getElementById('analysis-preview-card').hidden=false;document.getElementById('stale-preview-alert').hidden=true;showJSON('analysis-preview',preview);const ready=document.getElementById('preview-ready-badge');ready.textContent=preview.ready?'ÇALIŞTIRILABİLİR':'ENGELLENDİ';ready.className=`state-chip ${preview.ready?'ready':'blocked'}`;facts('preview-facts',[['Proje',preview.project_id],['Profil',preview.execution_profile],['Sonuç otoritesi',preview.result_authority_label],['Senaryo',preview.scenario],['Algoritma',preview.algorithm],['Hedef',preview.objective],['Planlama yılı',preview.planning_year],['Coğrafi kapsam',preview.geographic_scope],['İklim modu/kaynağı',preview.climate_source?.mode||preview.climate_source?.source],['Çevresel akış',preview.environmental_release?.form||preview.environmental_release_form],['İletim randımanı',preview.conveyance_efficiency],['Mevcut desen kaynağı',preview.current_pattern_source?.source],['Veri revizyonu',preview.preview_revision??preview.data_revision],['Aday sayısı',preview.candidate_source?.candidate_count],['Birim sayısı',preview.candidate_source?.analysis_unit_count],['Selection hash',preview.selection_hash]]);const rows=(preview.datasets||[]).map(d=>[d.data_type||d.role,d.dataset_id||d.id||d.version,d.authority_class||d.source?.authority_class||'—',d.consumer_role||d.role||'—']);document.getElementById('preview-datasets').replaceChildren(rows.length?table(['Veri','Sürüm / ID','Otorite','Tüketim rolü'],rows):document.createTextNode('Bu çalışma yolunda sürümlenmiş dataset seçimi yok.'));const blockers=document.getElementById('preview-blockers');blockers.replaceChildren();for(const value of preview.blocking_reasons||[]){const p=document.createElement('p');p.className='error';p.textContent=value;blockers.append(p);}for(const value of preview.warnings||[]){const p=document.createElement('p');p.className='warning';p.textContent=value;blockers.append(p);}updateMode();message(preview.ready?'Doğrulanmış çalıştırma önizlemesi hazır.':`Çalıştırma engellendi: ${(preview.blocking_reasons||[]).join('; ')}`,!preview.ready);});
- form.onsubmit=e=>{e.preventDefault();safe(async()=>{const request=formPayload(form),verified=request.execution_profile==='VERIFIED_INSTITUTIONAL';if(verified&&!previewEvidence?.ready){message('VERIFIED INSTITUTIONAL çalışma için önce güncel ve başarılı önizleme oluşturun.',true);return;}if(previewEvidence)Object.assign(request,{preview_token:previewEvidence.preview_token,preview_revision:previewEvidence.preview_revision,selection_hash:previewEvidence.selection_hash});const button=document.getElementById('run-button');button.disabled=true;setState('RUNNING','running');message('Analiz ayrı süreçte çalışıyor; değiştirilemez sonuç kaydı hazırlanıyor…');try{const run=await post(root()+'/analyses',request),hasWarnings=(run.warnings||[]).length>0;setState(run.status==='completed'?(hasWarnings?'COMPLETED WITH WARNINGS':'COMPLETED'):'FAILED',run.status==='completed'?'ready':'blocked');renderRun(run);await refresh();document.getElementById('result').scrollIntoView({behavior:'smooth'});message(run.status==='completed'?'Analiz tamamlandı ve kayıtlı sonuç gösteriliyor.':`Çalışma başarısız: ${run.error}`,run.status!=='completed');}catch(error){if(/preview|revision|selection/i.test(error.message)){document.getElementById('stale-preview-alert').hidden=false;previewEvidence=null;setState('STALE PREVIEW','blocked');}throw error;}finally{updateMode();}});};}
+
+export function wireAnalysis(root,safe,refresh){
+  const form=document.getElementById('analysis-form');
+  const config=()=>{
+    form.elements.config.value=JSON.stringify(defaults[form.elements.algorithm.value],null,2);
+    invalidatePreview('Algoritma yapılandırması değişti; yeni önizleme gerekli.');
+  };
+  form.elements.algorithm.onchange=config;
+  form.elements.execution_profile.onchange=()=>{invalidatePreview('Çalışma modu değişti; yeni önizleme gerekli.');updateMode();};
+  form.elements.scenario.onchange=()=>{invalidatePreview('Senaryo değişti; yeni önizleme gerekli.');updateMode();};
+  for(const input of form.querySelectorAll('input,textarea,select[name=objective]'))input.addEventListener('change',()=>invalidatePreview());
+  config();
+
+  document.getElementById('preview-analysis').onclick=()=>safe(async()=>{
+    setState('PREVIEWING','running');
+    try{
+      const preview=await post(root()+'/analysis-preview',formPayload(form));
+      previewEvidence=preview.ready?preview:null;
+      document.getElementById('analysis-preview-card').hidden=false;
+      document.getElementById('stale-preview-alert').hidden=true;
+      showJSON('analysis-preview',preview);
+      const ready=document.getElementById('preview-ready-badge');
+      ready.textContent=preview.ready?'ÇALIŞTIRILABİLİR':'ENGELLENDİ';ready.className=`state-chip ${preview.ready?'ready':'blocked'}`;
+      facts('preview-facts',[['Proje',preview.project_id],['Profil',preview.execution_profile],['Sonuç otoritesi',preview.result_authority_label],['Senaryo',preview.scenario],['Algoritma',preview.algorithm],['Hedef',preview.objective],['Planlama yılı',preview.planning_year],['Coğrafi kapsam',preview.geographic_scope],['İklim modu/kaynağı',preview.climate_source?.mode||preview.climate_source?.source],['Çevresel akış',preview.environmental_release?.form||preview.environmental_release_form],['İletim randımanı',preview.conveyance_efficiency],['Mevcut desen kaynağı',preview.current_pattern_source?.source],['Veri revizyonu',preview.preview_revision??preview.data_revision],['Aday sayısı',preview.candidate_source?.candidate_count],['Birim sayısı',preview.candidate_source?.analysis_unit_count],['Selection hash',preview.selection_hash]]);
+      const rows=(preview.datasets||[]).map(d=>[d.data_type||d.role,d.dataset_id||d.id||d.version,d.authority_class||d.source?.authority_class||'—',d.consumer_role||d.role||'—']);
+      document.getElementById('preview-datasets').replaceChildren(rows.length?table(['Veri','Sürüm / ID','Otorite','Tüketim rolü'],rows):document.createTextNode('Bu çalışma yolunda sürümlenmiş dataset seçimi yok.'));
+      const blockers=document.getElementById('preview-blockers');blockers.replaceChildren();
+      for(const value of preview.blocking_reasons||[]){const p=document.createElement('p');p.className='error';p.textContent=value;blockers.append(p);}
+      for(const value of preview.warnings||[]){const p=document.createElement('p');p.className='warning';p.textContent=value;blockers.append(p);}
+      setState(preview.ready?'READY':'BLOCKED',preview.ready?'ready':'blocked');
+      updateMode();
+      message(preview.ready?'Doğrulanmış çalıştırma önizlemesi hazır.':`Çalıştırma engellendi: ${(preview.blocking_reasons||[]).join('; ')}`,!preview.ready);
+    }catch(error){setState('FAILED','blocked');throw error;}
+  });
+
+  form.onsubmit=e=>{e.preventDefault();safe(async()=>{
+    const request=formPayload(form),verified=request.execution_profile==='VERIFIED_INSTITUTIONAL';
+    if(verified&&!previewEvidence?.ready){message('VERIFIED INSTITUTIONAL çalışma için önce güncel ve başarılı önizleme oluşturun.',true);return;}
+    if(previewEvidence)Object.assign(request,{preview_token:previewEvidence.preview_token,preview_revision:previewEvidence.preview_revision,selection_hash:previewEvidence.selection_hash});
+    const button=document.getElementById('run-button');button.disabled=true;setState('RUNNING','running');
+    message('Analiz ayrı süreçte çalışıyor; değiştirilemez sonuç kaydı hazırlanıyor…');
+    try{
+      const run=await post(root()+'/analyses',request),hasWarnings=(run.warnings||[]).length>0;
+      setState(run.status==='completed'?(hasWarnings?'COMPLETED WITH WARNINGS':'COMPLETED'):'FAILED',run.status==='completed'?'ready':'blocked');
+      renderRun(run);await refresh();document.getElementById('result').scrollIntoView({behavior:'smooth'});
+      message(run.status==='completed'?'Analiz tamamlandı ve kayıtlı sonuç gösteriliyor.':`Çalışma başarısız: ${run.error}`,run.status!=='completed');
+    }catch(error){
+      if(/preview|revision|selection/i.test(error.message)){
+        document.getElementById('stale-preview-alert').hidden=false;previewEvidence=null;setState('STALE PREVIEW','blocked');
+      }else setState('FAILED','blocked');
+      throw error;
+    }finally{updateMode();}
+  });};
+}
+
 export {renderRun};

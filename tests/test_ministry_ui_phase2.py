@@ -93,13 +93,15 @@ def test_11_monthly_supply_and_delivery_are_labeled_post_run():
 def test_12_crop_concentration_uses_backend_hhi_and_shares():
     results = (ROOT / "kds/ui/static/results.js").read_text(encoding="utf8")
     assert "result.top_crops" in results and "result.hhi??result.HHI" in results
-    assert "crop_shares" not in results  # UI must not recompute scientific shares.
+    assert "Object.entries(result.crop_shares)" in results
+    assert "top_crops üzerinden türetilmedi" in results
 
 
 def test_13_map_has_list_detail_fallback_and_bidirectional_selection():
     results = (ROOT / "kds/ui/static/results.js").read_text(encoding="utf8")
     assert "Harita kitaplığı çevrimdışı" in results
-    assert "marker.on('click',()=>select(row,index))" in results
+    assert "result.presentation_units" in results
+    assert "layer.on('click',()=>select(row,index))" in results
     assert "button.onclick=()=>select(row,index)" in results
 
 
