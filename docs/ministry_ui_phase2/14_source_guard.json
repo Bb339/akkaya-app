@@ -1,0 +1,54 @@
+{
+  "milestone": "V2_INSTITUTIONAL_DEMO_MINISTRY_UI_PHASE2",
+  "generated_at": "2026-09-25T00:00:00+03:00",
+  "baseline": {
+    "tag": "v2-institutional-demo-integration-phase1-complete",
+    "tag_object_type": "tag",
+    "commit": "04a4bce0db31db41813cfcfd253d9c6794f252bc",
+    "source_worktree_clean": true,
+    "robustness_tag_commit": "028f231eb774eafb53a9a76db370b663d561ce1b"
+  },
+  "implementation_head": "86d4ee48933c5650e7d9b1b23bb1759938a6ba69",
+  "protected_scope": {
+    "ga_math": "UNCHANGED",
+    "aco_math": "UNCHANGED",
+    "abc_math": "UNCHANGED",
+    "optimization_scoring": "UNCHANGED",
+    "repair_and_crop_selection": "UNCHANGED",
+    "accepted_scientific_calculations": "UNCHANGED",
+    "institutional_water_and_economics_semantics": "UNCHANGED",
+    "readiness_meaning": "UNCHANGED",
+    "reference_data": "UNCHANGED",
+    "candidate_matrix": "UNCHANGED",
+    "robustness_evidence": "UNCHANGED"
+  },
+  "blob_checks": [
+    {"file":"app.py","baseline":"b61dd6fc0904a069af3a8c5620b3e73f13b5da02","head":"b61dd6fc0904a069af3a8c5620b3e73f13b5da02","equal":true},
+    {"file":"kds/application/optimization.py","baseline":"871fb26ec9b408ba1315ef952c2138b7e781c7c1","head":"871fb26ec9b408ba1315ef952c2138b7e781c7c1","equal":true},
+    {"file":"kds/application/readiness.py","baseline":"fc775a437ff491d24fa1492452818b9df2981df6","head":"fc775a437ff491d24fa1492452818b9df2981df6","equal":true},
+    {"file":"kds/adapters/institutional.py","baseline":"0311d405976f76a2de01d46a7afb6275acd34d95","head":"0311d405976f76a2de01d46a7afb6275acd34d95","equal":true},
+    {"file":"data/candidate_patterns_single.csv","baseline":"cf18e9b1dc6b6985207b473faffa6e2dcd5def55","head":"cf18e9b1dc6b6985207b473faffa6e2dcd5def55","equal":true},
+    {"file":"data/candidate_patterns_double.csv","baseline":"736d61a1787e6f9ed3cab71cb63818f078e911d2","head":"736d61a1787e6f9ed3cab71cb63818f078e911d2","equal":true},
+    {"file":"docs/prepilot_freeze/reference_values.json","baseline":"2016c107a5b9f2fcae657e29fa33bd7890390b90","head":"2016c107a5b9f2fcae657e29fa33bd7890390b90","equal":true},
+    {"file":"docs/experiments/robustness_sensitivity/experiment_manifest.json","baseline":"b9fe02adcd2f5a737a096a5407dc8541b85cbcc9","head":"b9fe02adcd2f5a737a096a5407dc8541b85cbcc9","equal":true}
+  ],
+  "reference_values": {
+    "analysis_units": 179,
+    "area_da": 134919,
+    "raw_candidate_rows": 6859,
+    "crops": 58,
+    "calculated_reference_water_m3": 100700080.81,
+    "catalog_derived_reference_profit_tl": 1041499119.212,
+    "status": "UNCHANGED"
+  },
+  "allowed_runtime_changes": [
+    "kds/api.py",
+    "kds/application/project_overview.py",
+    "kds/ui/**"
+  ],
+  "deployment_files_changed": false,
+  "remote_branch_contains_implementation_head": false,
+  "completion_tag_created": false,
+  "push_performed": false,
+  "deployment_performed": false
+}

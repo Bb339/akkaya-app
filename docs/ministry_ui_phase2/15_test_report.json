@@ -1,0 +1,44 @@
+{
+  "milestone": "V2_INSTITUTIONAL_DEMO_MINISTRY_UI_PHASE2",
+  "generated_at": "2026-09-25T00:00:00+03:00",
+  "phase2_contract_tests": {
+    "command": "python -m pytest tests/test_ministry_ui_phase2.py tests/test_ministry_ui_phase2_browser.py -q",
+    "result": "19 passed",
+    "status": "PASS"
+  },
+  "final_focused_regression": {
+    "command": "python -m pytest -q tests/test_ministry_ui_phase2.py tests/test_ministry_ui_phase2_browser.py tests/test_project_browser.py tests/test_general_browser.py tests/test_water_data_contract.py tests/test_project_api.py tests/test_imports.py tests/test_result_contract.py",
+    "result": "104 passed, 1 deselected in 43.26s",
+    "browser_coverage": [
+      "Ministry workspace profile/readiness/template/mobile flow",
+      "Create/import/preview/run/stored-result flow",
+      "General CSV/XLSX/GeoJSON/import/history/reload flow"
+    ],
+    "status": "PASS"
+  },
+  "broad_default_run": {
+    "command": "python -m pytest -q",
+    "result": "422 passed, 3 failed, 7 deselected in 2142.92s",
+    "phase2_regressions_found": [
+      "tests/test_general_browser.py::test_general_import_analysis_history_in_browser",
+      "tests/test_water_data_contract.py::test_projects_ui_exposes_water_authority_without_changing_legacy_panel"
+    ],
+    "phase2_regressions_corrected": true,
+    "correction_revalidation": "PASS in final focused regression"
+  },
+  "inherited_failure": {
+    "test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "expected": "ok",
+    "observed": "no_feasible_two_crop_plan",
+    "classification": "INHERITED_UNCHANGED",
+    "baseline_evidence": [
+      "docs/institutional_demo_phase1_fix5/10_test_report.json",
+      "docs/institutional_demo_phase1_fix5/11_fix5_summary.md",
+      "docs/prepilot_freeze/known_backlog.md"
+    ],
+    "test_file_changed_in_phase2": false,
+    "scientific_engine_changed_in_phase2": false
+  },
+  "default_full_project_policy": "7 full_project cases deselected unless KDS_FULL_PROJECT=1",
+  "overall_phase2_test_status": "PASS_WITH_DOCUMENTED_INHERITED_FAILURE"
+}
