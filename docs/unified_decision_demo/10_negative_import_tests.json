@@ -1,0 +1,22 @@
+{
+  "result": "PASS",
+  "cases": {
+    "ambiguous_header": "AMBIGUOUS",
+    "missing_required_field": "REVIEW_REQUIRED",
+    "wrong_planning_year": "REVIEW_REQUIRED",
+    "wrong_geographic_scope": "REVIEW_REQUIRED",
+    "unsupported_docx": "UNSUPPORTED",
+    "malformed_xlsx": "INVALID",
+    "duplicate_file_hash": "AMBIGUOUS",
+    "incomplete_project_readiness": "NOT_READY",
+    "run_without_preview": "HTTP 400",
+    "stale_preview_after_replacement": "HTTP 400 / STALE_PREVIEW",
+    "attempted_project_to_reference_fallback": "fail-closed decision page; no /api/parcels or /api/optimize request"
+  },
+  "activation_before_explicit_confirmation": false,
+  "tests": [
+    "tests/test_unified_decision_demo.py::test_detection_negative_states_are_fail_closed",
+    "tests/test_unified_decision_demo.py::test_duplicate_incomplete_stale_and_no_preview_fail_closed",
+    "tests/test_unified_decision_demo_browser.py::test_missing_project_run_fails_closed_without_reference_requests"
+  ]
+}

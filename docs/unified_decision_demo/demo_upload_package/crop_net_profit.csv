@@ -1,0 +1,9 @@
+crop,net_profit_per_da,calculation_method,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARPA,1000,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+NOHUT,1100,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MERCIMEK,1200,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+AYCICEGI,1300,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MISIR,1400,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+BUGDAY,1500,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ELMA,1600,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARMUT,1700,DIRECT_SOURCE,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog

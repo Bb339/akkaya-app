@@ -1,0 +1,9 @@
+planning_year,crop,value,source_unit,canonical_unit,geographic_scope,confidence,method,authority_class,source_institution,source_reference
+2025,ARPA,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,NOHUT,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,MERCIMEK,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,AYCICEGI,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,MISIR,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,BUGDAY,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,ELMA,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture
+2025,ARMUT,120,m3/da,m3/da,project,verified,synthetic_contract,MEASURED,Synthetic Institute,synthetic not_official institutional integration fixture

@@ -70,7 +70,7 @@
           <label>İl / bölge<input name="province_or_region" placeholder="Niğde"></label>
           <label>Coğrafi kapsam / havza<input name="basin_or_irrigation_area" placeholder="Akkaya Sulama Alanı"></label>
           <label class="span-2">Açıklama<textarea name="description" rows="2"></textarea></label>
-          <label>Veri sınıfı<select name="data_source_notes"><option value="user_provided">Kurum tarafından sağlanan veri</option><option value="synthetic_test_fixture">SYNTHETIC TEST DATA / NOT OFFICIAL</option></select></label>
+          <label>Veri sınıfı<select name="data_source_notes"><option value="user_provided">Kurum tarafından sağlanan veri</option><option value="synthetic_test_fixture">Sentetik genel proje</option><option value="synthetic not_official institutional integration fixture">SYNTHETIC TEST DATA / NOT OFFICIAL</option></select></label>
           <label>Başlangıç su bütçesi (m³)<input name="annual_water_budget" type="number" min="0" step="any" value="0"></label>
           <button class="button primary">Proje oluştur</button>
         </form>
@@ -95,6 +95,19 @@
 
         <div class="upload-layout">
           <div>
+            <details class="form-drawer bulk-import" open>
+              <summary>Toplu veri yükle</summary>
+              <p>Sistem dosya yapısını ve kolon semantiğini otomatik analiz ederek veri türünü ve alan eşleştirmelerini belirler. Belirsiz veya eksik eşleşmeler fail-closed kalır.</p>
+              <form id="bulk-upload-form" class="upload-form">
+                <label>CSV / XLSX / GeoJSON dosyaları<input type="file" name="files" multiple required accept=".csv,.xlsx,.geojson"></label>
+                <button class="button secondary" type="submit">Doğrula ve önizle</button>
+              </form>
+              <div id="bulk-import-results" hidden>
+                <div class="table-scroll"><table class="bulk-import-table"><thead><tr><th>Dosya</th><th>Algılanan alan</th><th>Yıl</th><th>Kapsam</th><th>Satır</th><th>Eşleşme</th><th>Otorite</th><th>Doğrulama</th></tr></thead><tbody id="bulk-import-body"></tbody></table></div>
+                <p id="bulk-import-note" class="muted"></p>
+                <button id="bulk-confirm" class="button primary" type="button" disabled>Açıkça onayla ve projeye uygula</button>
+              </div>
+            </details>
             <h3>Doğrulanmış veri yükleme</h3>
             <ol class="stepper" aria-label="Veri yükleme adımları"><li class="active">Dosya yükle</li><li>Sütun eşleştir</li><li>Doğrula</li><li>Önizle</li><li>Onayla</li><li>Aktif sürüm</li></ol>
             <form id="upload-form" class="upload-form">
@@ -139,7 +152,7 @@
       </section>
 
       <section id="result" class="panel screen-anchor" data-screen="5" hidden>
-        <div class="section-heading"><div><p class="eyebrow">SONUÇLAR</p><h2>Yönetici özeti</h2></div><span id="result-status" class="verdict"></span></div>
+        <div class="section-heading"><div><p class="eyebrow">SONUÇLAR</p><h2>Yönetici özeti</h2></div><div class="action-row"><a id="open-decision-screen" class="button primary" hidden>KARAR EKRANINDA AÇ</a><span id="result-status" class="verdict"></span></div></div>
         <p id="result-source-label"></p>
         <div id="result-kpis" class="kpi-grid"></div>
         <dl id="result-facts" class="context-grid compact-facts"></dl>

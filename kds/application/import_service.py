@@ -15,11 +15,17 @@ from kds.imports.service import refresh, preview
 from kds.domain.water_data import WATER_DATA_TYPES, replacement_preview
 from kds.domain.economic_data import ECONOMIC_DATA_TYPES, replacement_preview as economic_replacement_preview
 from kds.domain.crop_parameters import CROP_PARAMETER_DATA_TYPES, replacement_preview as crop_parameter_replacement_preview
+from kds.imports.detection import detect as detect_file
 
 
 class ImportService:
     def __init__(self, repository: ProjectRepository):
         self.repository = repository
+
+    def detect(self, project_id: str, filename: str, content: bytes,
+               options: dict[str, Any] | None = None) -> Document:
+        document = self.repository.get(project_id)
+        return detect_file(content, secure_filename(filename), options, document.get("project", {}))
 
     @staticmethod
     def _batch(document: Document, batch_id: str) -> Document:

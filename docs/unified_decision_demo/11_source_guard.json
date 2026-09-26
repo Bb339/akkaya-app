@@ -1,0 +1,30 @@
+{
+  "milestone": "V2_UNIFIED_DECISION_SCREEN_SMART_IMPORT",
+  "baseline": "a6d36d099544776d0610b3c868a3675b12da5b0e",
+  "before": {
+    "app.py": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+    "kds/science": "bc57e1a1242a72940e5f6c9930a29d1af7684715",
+    "kds/application/optimization.py": "871fb26ec9b408ba1315ef952c2138b7e781c7c1",
+    "kds/application/readiness.py": "fc775a437ff491d24fa1492452818b9df2981df6",
+    "kds/adapters/institutional.py": "0311d405976f76a2de01d46a7afb6275acd34d95",
+    "data": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+    "data/candidate_patterns_single.csv": "cf18e9b1dc6b6985207b473faffa6e2dcd5def55",
+    "data/candidate_patterns_double.csv": "736d61a1787e6f9ed3cab71cb63818f078e911d2",
+    "data/excel_derived/combined_parcel_candidate_matrix_2024.csv": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
+    "docs/experiments/robustness_sensitivity": "f31ed96576c8cfabdd39f578cfe74e5ed6276513"
+  },
+  "after": {
+    "app.py": "b61dd6fc0904a069af3a8c5620b3e73f13b5da02",
+    "kds/science": "bc57e1a1242a72940e5f6c9930a29d1af7684715",
+    "kds/application/optimization.py": "871fb26ec9b408ba1315ef952c2138b7e781c7c1",
+    "kds/application/readiness.py": "fc775a437ff491d24fa1492452818b9df2981df6",
+    "kds/adapters/institutional.py": "0311d405976f76a2de01d46a7afb6275acd34d95",
+    "data": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+    "data/candidate_patterns_single.csv": "cf18e9b1dc6b6985207b473faffa6e2dcd5def55",
+    "data/candidate_patterns_double.csv": "736d61a1787e6f9ed3cab71cb63818f078e911d2",
+    "data/excel_derived/combined_parcel_candidate_matrix_2024.csv": "2f1a53607673126bd9436cbcdcdcf6b57000f198",
+    "docs/experiments/robustness_sensitivity": "f31ed96576c8cfabdd39f578cfe74e5ed6276513"
+  },
+  "equal": true,
+  "scientific_engine_mutation_prohibited": true
+}

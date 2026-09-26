@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Proje Karar Ekranı · Crop KDS</title>
+  <link rel="stylesheet" href="/projects/assets/projects.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="decision-page">
+<a class="skip-link" href="#decision-main">Ana içeriğe geç</a>
+<header class="topbar decision-topbar">
+  <a class="brand" href="/"><span class="brand-mark">KDS</span><span><strong>Tez Karar Destek Ekranı</strong><small>Stored project/run presentation</small></span></a>
+  <div class="topbar-actions">
+    <a class="button ghost" id="back-to-project" href="/projects">Projeye geri dön</a>
+    <a class="button ghost" href="/">AKKAYA REFERENCE</a>
+    <span class="mode-badge verified">VERIFIED INSTITUTIONAL</span>
+  </div>
+</header>
+<div id="decision-authority" class="mode-warning synthetic" hidden>
+  <strong>SYNTHETIC TEST DATA · NOT OFFICIAL</strong>
+  <span>Bu ekran yalnız seçili projenin değiştirilemez stored run kaydını gösterir.</span>
+</div>
+<main id="decision-main" class="decision-shell">
+  <section class="hero">
+    <div><p class="eyebrow">PROJE / RUN KARAR SUNUMU</p><h1 id="decision-title">Karar ekranı yükleniyor</h1><p id="decision-subtitle" class="lead">Bağlam doğrulanıyor.</p></div>
+    <div class="hero-summary"><span class="summary-label">Aktif sağlayıcı</span><strong>VERIFIED INSTITUTIONAL</strong><span id="decision-run-id">Run bekleniyor</span></div>
+  </section>
+  <p id="message" role="alert" aria-live="assertive"></p>
+  <section id="result" class="panel" hidden>
+    <div class="section-heading"><div><p class="eyebrow">SONUÇLAR</p><h2>Yönetici özeti</h2></div><span id="result-status" class="verdict"></span></div>
+    <p id="result-source-label"></p>
+    <div id="result-kpis" class="kpi-grid"></div>
+    <dl id="result-facts" class="context-grid compact-facts"></dl>
+    <div id="infeasible-banner" class="alert danger" hidden><strong>DIAGNOSTIC / UYGULANABİLİR PLAN DEĞİL</strong><span>Bu çıktı karar önerisi olarak kullanılmamalıdır.</span></div>
+    <div id="result-warnings-wrap"><h3>Uyarılar</h3><ul id="result-warnings"></ul></div>
+    <section class="result-subsection" id="water-results"><div class="section-heading compact"><div><p class="eyebrow">SU MUHASEBESİ</p><h3>Doğrulanmış su sonuçları</h3></div></div><div id="water-kpis" class="kpi-grid water"></div><p class="footnote">Kurumsal TL/m³ paydası: <strong id="efficiency-denominator">—</strong>. Tam sezon ve planlama takvim yılı değerleri birleştirilmez.</p><div id="water-validation" class="validation-grid"></div></section>
+    <section class="result-subsection"><div class="section-heading compact"><h3>Aylık talep, arz ve teslim kapasitesi</h3><span class="section-help">Backend-authoritative stored run</span></div><div id="monthly-chart" class="monthly-chart"></div><div id="monthly-table" class="table-scroll"></div></section>
+    <section class="result-subsection" id="crop-results"><div class="section-heading compact"><h3>Ürün deseni ve yoğunlaşma</h3><span id="concentration-badge" class="state-chip"></span></div><div id="crop-summary" class="crop-grid"></div><h4>Kanonik tam ürün payları</h4><div id="crop-shares" class="table-scroll"></div><div id="plan" class="table-scroll"></div></section>
+    <section class="result-subsection" id="unit-explorer"><div class="section-heading compact"><h3>Harita ve analiz birimi keşfi</h3><span class="section-help">Harita seçimi ↔ birim detayı</span></div><div class="map-layout"><div id="institutional-map" class="institutional-map"></div><div><div id="unit-list" class="unit-list"></div><dl id="unit-detail" class="unit-detail">Bir analiz birimi seçin.</dl></div></div></section>
+    <section class="result-subsection" id="economic-results"><div class="section-heading compact"><h3>Ekonomik sonuçlar</h3><span id="economics-label" class="mode-badge"></span></div><div id="economics-kpis" class="kpi-grid"></div></section>
+  </section>
+  <section class="panel" id="provenance-section"><div class="section-heading"><div><p class="eyebrow">KAYNAK & PROVENANCE</p><h2>Veri ve Hesaplama Kaynakları</h2></div></div><dl id="provenance-summary" class="context-grid empty-state">Stored run yükleniyor.</dl><details><summary>Teknik provenance ve hash ayrıntıları</summary><pre id="provenance">Stored run yükleniyor.</pre></details></section>
+</main>
+<script type="module" src="/projects/assets/decision.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "browser": "Chromium headless",
+  "viewport": "1366x900",
+  "result": "PASS",
+  "flow": ["create fresh synthetic project", "select 20 files", "20 AUTO_MATCHED rows", "explicit confirmation", "VERIFIED READY", "pinned preview", "real GA run", "open stored decision screen"],
+  "decision_checks": {
+    "provider_badge": "VERIFIED INSTITUTIONAL",
+    "synthetic_warning_visible": true,
+    "project_name": "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT",
+    "selection_hash_visible": true,
+    "engine_commit_visible": true,
+    "unit_buttons": 24,
+    "accepted_coordinate_markers": 2,
+    "akkaya_in_result_facts": false,
+    "page_errors": 0
+  },
+  "fallback_guard": {
+    "missing_project_run_fails_closed": true,
+    "legacy_parcel_requests": 0,
+    "legacy_optimize_requests": 0
+  },
+  "test": "tests/test_unified_decision_demo_browser.py::test_fresh_bulk_import_run_and_decision_bridge_in_chromium"
+}

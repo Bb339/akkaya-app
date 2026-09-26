@@ -19,6 +19,9 @@ def history(document,offset=0,limit=50):
 def overview(document):
     report=readiness(document);counts=report['counts'];extra=document.get('scientific_inputs',{})
     reference=document.get('metadata',{}).get('source_version')=='v1.0.0-thesis-final' and not extra
+    legacy_synthetic=document['project'].get('data_source_notes')=='synthetic_test_fixture'
+    synthetic=legacy_synthetic or bool(document.get('metadata',{}).get('synthetic_institutional_test')
+                                       and document.get('metadata',{}).get('not_official'))
     codes={i['code'] for s in report['scenarios'].values() for i in s['issues'] if i['severity']=='error'}
     batches=list(document['imports'].values())
     statuses={}
@@ -48,8 +51,8 @@ def overview(document):
     return dict(readiness=report,import_status=statuses,candidate_units=candidate_units,
                 last_import_at=max((b.get('uploaded_at','') for b in batches),default=None),
                 last_run=next(iter(history(document,limit=1)['items']),None),
-                synthetic=document['project'].get('data_source_notes')=='synthetic_test_fixture',
-                project_kind='reference' if reference else 'synthetic_test' if document['project'].get('data_source_notes')=='synthetic_test_fixture' else 'user_provided')
+                synthetic=synthetic,
+                project_kind='reference' if reference else 'synthetic_test' if synthetic else 'user_provided')
 
 
 def data_catalog(document):

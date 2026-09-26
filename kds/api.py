@@ -187,6 +187,55 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         result = imports.upload(project_id, request.form.get("data_type", ""), file.filename or "", content, options)
         return jsonify(result), 201
 
+    @blueprint.post("/projects/<project_id>/import-detection")
+    def detect_import(project_id):
+        file = request.files.get("file")
+        if file is None:
+            raise ValueError("A multipart file is required.")
+        content = file.stream.read(MAX_UPLOAD_BYTES + 1)
+        if len(content) > MAX_UPLOAD_BYTES:
+            raise RequestEntityTooLarge()
+        options = json.loads(request.form.get("options", "{}"))
+        return jsonify(imports.detect(project_id, file.filename or "", content, options))
+
+    @blueprint.post("/projects/<project_id>/bulk-imports")
+    def bulk_import(project_id):
+        files = request.files.getlist("files")
+        if not files:
+            raise ValueError("At least one multipart file is required.")
+        if len(files) > 40:
+            raise ValueError("At most 40 files may be inspected together.")
+        options_by_name = json.loads(request.form.get("options", "{}"))
+        if not isinstance(options_by_name, dict):
+            raise ValueError("Bulk options must be an object keyed by filename.")
+        supplied = []
+        total = 0
+        for file in files:
+            content = file.stream.read(MAX_UPLOAD_BYTES + 1)
+            total += len(content)
+            if len(content) > MAX_UPLOAD_BYTES or total > MAX_UPLOAD_BYTES:
+                raise RequestEntityTooLarge()
+            supplied.append((file.filename or "", content, options_by_name.get(file.filename or "", {})))
+        hashes = set()
+        items = []
+        for filename, content, options in supplied:
+            from hashlib import sha256
+            digest = sha256(content).hexdigest()
+            detection = imports.detect(project_id, filename, content, options)
+            if digest in hashes:
+                detection = {**detection, "state": "AMBIGUOUS", "issues": [*detection.get("issues", []),
+                    {"code": "duplicate_file", "message": "The same file appears more than once in this package."}]}
+            hashes.add(digest)
+            item = {"detection": detection, "batch": None}
+            if detection["state"] == "AUTO_MATCHED":
+                batch = imports.upload(project_id, detection["detected_data_type"], filename, content,
+                                       {**options, **({"sheet": detection["selected_sheet"]}
+                                                     if detection.get("selected_sheet") else {})})
+                item["batch"] = batch
+            items.append(item)
+        return jsonify(items=items, auto_matched=sum(item["batch"] is not None for item in items),
+                       review_required=sum(item["batch"] is None for item in items)), 201
+
     @blueprint.get("/projects/<project_id>/imports/<batch_id>")
     def get_import(project_id, batch_id):
         return jsonify(imports.get(project_id, batch_id))

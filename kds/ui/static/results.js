@@ -100,6 +100,12 @@ export function renderRun(run){
   const result=run.result||{},summary=run.summary||{},context=run.presentation_context||{};
   const synthetic=run.result_authority_label==='SYNTHETIC / NOT_OFFICIAL'||run.provenance?.data_source_notes==='synthetic_test_fixture';
   document.getElementById('result').hidden=false;
+  const decisionLink=document.getElementById('open-decision-screen');
+  if(decisionLink){
+    const verified=run.execution_profile==='VERIFIED_INSTITUTIONAL';
+    decisionLink.hidden=!verified;
+    if(verified)decisionLink.href=`/projects/decision?project_id=${encodeURIComponent(run.project_id)}&run_id=${encodeURIComponent(run.id)}&execution_profile=VERIFIED_INSTITUTIONAL`;
+  }
   const source=document.getElementById('result-source-label');source.className=synthetic?'alert danger':'alert warning';source.textContent=synthetic?'SYNTHETIC / NOT OFFICIAL · Sentetik test verisi':run.result_authority_label||'REFERENCE MODEL / DEMO DATA';
   const feasible=result.overall_feasible??result.feasible,diagnostic=feasible===false;
   const status=document.getElementById('result-status');status.textContent=feasible===true?'UYGULANABİLİR':diagnostic?'DIAGNOSTIC':'DURUM YOK';status.className=`verdict ${feasible===true?'ready':'blocked'}`;document.getElementById('infeasible-banner').hidden=!diagnostic;

@@ -1,0 +1,28 @@
+{
+  "targeted_suite": {
+    "command_scope": "imports, project API, Phase 1, Fix5, Ministry UI Fix1, result contract, unified demo and browser",
+    "result": "94 passed, 1 deselected",
+    "duration_seconds": 951.80
+  },
+  "single_broad_suite": {
+    "result": "428 passed, 15 failed, 7 deselected",
+    "duration_seconds": 1977.22,
+    "classification": {
+      "new_compatibility_regressions": 14,
+      "known_inherited_s2_high_budget_failure": 1
+    }
+  },
+  "corrective_narrow_verification": {
+    "non_browser": "12 passed",
+    "browser_final": "9 relevant tests pass after correcting one test-only frozen-index expectation and adding the fallback guard",
+    "new_unified_demo_tests": "7 passed",
+    "broad_suite_repeated": false
+  },
+  "final_milestone_suite": {
+    "scope": "tests/test_unified_decision_demo.py and tests/test_unified_decision_demo_browser.py",
+    "result": "7 passed",
+    "duration_seconds": 228.68
+  },
+  "remaining_failure": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+  "remaining_failure_status": "known inherited and unchanged; expected ok but engine returns no_feasible_two_crop_plan"
+}

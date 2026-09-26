@@ -1,0 +1,15 @@
+{
+  "browser": "Chromium headless",
+  "viewport": "1366x900",
+  "route": "/",
+  "result": "PASS",
+  "checks": {
+    "title": "Tarımsal Karar Destek Sistemi",
+    "panel_attached": true,
+    "project_workspace_navigation_visible": true,
+    "parcel_api_count": 179,
+    "meta_status_present": true,
+    "remote_requests_blocked": true
+  },
+  "test": "tests/test_unified_decision_demo_browser.py::test_akkaya_reference_thesis_screen_remains_operational_in_chromium"
+}

@@ -1,0 +1,17 @@
+crop,season,yield_value,yield_unit,price,price_unit,cost,cost_unit,net_profit,net_profit_unit,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARPA,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1000,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARPA,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1000,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+NOHUT,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1100,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+NOHUT,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1100,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MERCIMEK,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1200,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MERCIMEK,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1200,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+AYCICEGI,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1300,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+AYCICEGI,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1300,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MISIR,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MISIR,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+BUGDAY,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1500,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+BUGDAY,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1500,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ELMA,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1600,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ELMA,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1600,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARMUT,PRIMARY,2,ton/da,1000,TL/ton,400,TL/da,1700,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARMUT,SECONDARY,2,ton/da,1000,TL/ton,400,TL/da,1700,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog

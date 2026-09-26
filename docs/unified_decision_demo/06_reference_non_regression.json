@@ -1,0 +1,25 @@
+{
+  "baseline": "a6d36d099544776d0610b3c868a3675b12da5b0e",
+  "baseline_tag": "v2-ministry-final-demo-presentation-freeze-complete",
+  "tag_type": "tag",
+  "tag_peeled_target": "a6d36d099544776d0610b3c868a3675b12da5b0e",
+  "robustness_tag": "v2-scientific-robustness-sensitivity-complete",
+  "robustness_tag_peeled_target": "028f231eb774eafb53a9a76db370b663d561ce1b",
+  "robustness_evidence_tree": "f31ed96576c8cfabdd39f578cfe74e5ed6276513",
+  "robustness_unchanged": true,
+  "root_index_changed": false,
+  "reference_browser": {
+    "title": "Tarımsal Karar Destek Sistemi",
+    "panel_attached": true,
+    "api_parcels_count": 179,
+    "api_meta_status_present": true
+  },
+  "accepted_reference_values_unchanged": {
+    "analysis_units": 179,
+    "area_da": 134919,
+    "candidate_rows": 6859,
+    "crops": 58,
+    "calculated_water_m3": 100700080.81,
+    "catalog_derived_profit_tl": 1041499119.212
+  }
+}

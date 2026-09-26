@@ -1,0 +1,9 @@
+crop,cost_category,amount,unit,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARPA,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+NOHUT,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MERCIMEK,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+AYCICEGI,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MISIR,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+BUGDAY,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ELMA,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARMUT,other,400,TL/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog

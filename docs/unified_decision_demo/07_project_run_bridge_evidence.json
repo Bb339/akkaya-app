@@ -1,0 +1,19 @@
+{
+  "flow": "fresh synthetic institutional project -> 20-file bulk detection -> explicit confirmation -> pinned preview -> GA run -> stored decision screen",
+  "execution_profile": "VERIFIED_INSTITUTIONAL",
+  "scenario": "S1",
+  "algorithm": "GA",
+  "seed": 123,
+  "objective": "water_saving",
+  "detected_files": 20,
+  "auto_matched_files": 20,
+  "revision_before_confirmation": 0,
+  "readiness_after_confirmation": true,
+  "preview_ready": true,
+  "stored_result_authority": "SYNTHETIC / NOT_OFFICIAL",
+  "stored_result_classification": "SYNTHETIC_TEST_OUTPUT",
+  "presentation_units": 24,
+  "akkaya_or_P_prefixed_units": 0,
+  "provenance_fields_verified": ["selection_hash", "engine_commit", "preview_revision"],
+  "evidence_test": "tests/test_unified_decision_demo.py::test_confirmed_package_ready_run_and_decision_bridge"
+}
