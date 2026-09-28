@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: crop-kds-v2-private-staging
+    name: crop-kds-v2-free-demo
     runtime: python
-    plan: starter
+    plan: free
     numInstances: 1
     autoDeployTrigger: 'off'
     buildCommand: pip install -r requirements.txt
@@ -14,12 +14,8 @@ services:
       - key: KDS_DEPLOYMENT_MODE
         value: staging
       - key: KDS_PROJECT_STORE
-        value: /var/data/crop-kds/projects
+        value: /tmp/crop-kds/projects
       - key: KDS_BASIC_AUTH_USERNAME
         sync: false
       - key: KDS_BASIC_AUTH_PASSWORD
         sync: false
-    disk:
-      name: crop-kds-data
-      mountPath: /var/data/crop-kds
-      sizeGB: 1
