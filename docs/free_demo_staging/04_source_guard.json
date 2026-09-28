@@ -1,0 +1,16 @@
+{
+  "accepted_unified_baseline": "6a76edce875451507b865e608e23c2384ff60d67",
+  "accepted_hardening_target": "0726ac7b50a0a70dd29e3cd6b238776e51dcc321",
+  "free_branch_source": "d05abefdb029e3564f052c5959af2f7839c326b8",
+  "runtime_files_changed_for_free_variant": false,
+  "app_py_changed": false,
+  "index_html_changed": false,
+  "kds_science_changed": false,
+  "optimization_changed": false,
+  "readiness_changed": false,
+  "institutional_adapter_changed": false,
+  "data_changed": false,
+  "robustness_evidence_changed": false,
+  "candidate_or_reference_values_changed": false,
+  "result": "PASS"
+}

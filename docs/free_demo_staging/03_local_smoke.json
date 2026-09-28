@@ -1,0 +1,19 @@
+{
+  "profile": "staging with an explicit temporary writable project store and configured Basic Auth",
+  "app_imported": true,
+  "health_status": 200,
+  "health_ready": true,
+  "deployment_mode": "staging",
+  "store_configured": true,
+  "store_exists": true,
+  "store_writable": true,
+  "store_ready": true,
+  "authentication_configured": true,
+  "health_exposed_store_path": false,
+  "health_exposed_secret": false,
+  "projects_without_auth_status": 401,
+  "v1_reference_root_status": 200,
+  "reference_boundary_visible": true,
+  "smart_import_auto_matched": "20/20",
+  "focused_tests": {"passed": 3, "failed": 0}
+}

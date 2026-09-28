@@ -1,0 +1,21 @@
+{
+  "schema": "https://render.com/schema/render.yaml.json",
+  "schema_errors": 0,
+  "service_name": "crop-kds-v2-free-demo",
+  "type": "web",
+  "runtime": "python",
+  "plan": "free",
+  "plan_free_accepted_by_schema": true,
+  "python_version": "3.11.11",
+  "build_command": "pip install -r requirements.txt",
+  "start_command": "gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 360 --graceful-timeout 30 --keep-alive 5",
+  "health_check_path": "/healthz",
+  "auto_deploy_trigger": "off",
+  "instances": 1,
+  "project_store": "/tmp/crop-kds/projects",
+  "persistent_disk": false,
+  "database": false,
+  "background_worker": false,
+  "paid_resource_declared": false,
+  "secret_environment_names": ["KDS_BASIC_AUTH_USERNAME", "KDS_BASIC_AUTH_PASSWORD"]
+}
