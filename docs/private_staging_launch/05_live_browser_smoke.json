@@ -1,0 +1,7 @@
+{
+  "status": "NOT_RUN",
+  "reason": "No real staging service or URL exists yet.",
+  "target": "ACTUAL_RENDER_STAGING_URL",
+  "localhost_or_test_client_substituted": false,
+  "chromium_live_smoke": null
+}

@@ -1,0 +1,14 @@
+{
+  "status": "NOT_RUN",
+  "reason": "No deployed staging service exists.",
+  "run_id": null,
+  "execution_profile": null,
+  "scenario": null,
+  "algorithm": null,
+  "seed": null,
+  "objective": null,
+  "selection_hash": null,
+  "elapsed_seconds": null,
+  "http_result": null,
+  "timeout_result": null
+}

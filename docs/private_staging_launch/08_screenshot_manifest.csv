@@ -1,0 +1,11 @@
+sequence,artifact,path,url_context,sha256,status
+1,Akkaya reference,,, ,NOT_CAPTURED_NO_STAGING_URL
+2,Private auth boundary,,, ,NOT_CAPTURED_NO_STAGING_URL
+3,Project workspace,,, ,NOT_CAPTURED_NO_STAGING_URL
+4,Smart import detection,,, ,NOT_CAPTURED_NO_STAGING_URL
+5,Confirmation and readiness,,, ,NOT_CAPTURED_NO_STAGING_URL
+6,Pinned preview,,, ,NOT_CAPTURED_NO_STAGING_URL
+7,Analysis terminal state,,, ,NOT_CAPTURED_NO_STAGING_URL
+8,Unified decision result,,, ,NOT_CAPTURED_NO_STAGING_URL
+9,Map and unit detail,,, ,NOT_CAPTURED_NO_STAGING_URL
+10,Provenance and history,,, ,NOT_CAPTURED_NO_STAGING_URL

@@ -1,0 +1,8 @@
+{
+  "status": "DEPLOYMENT_NOT_STARTED",
+  "reason": "Authenticated Render account access is required to create the isolated service and set secrets.",
+  "staging_url": null,
+  "healthz": null,
+  "authentication_smoke": null,
+  "secrets_recorded": false
+}

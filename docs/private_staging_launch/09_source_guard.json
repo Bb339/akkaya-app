@@ -1,0 +1,13 @@
+{
+  "accepted_application_baseline": "6a76edce875451507b865e608e23c2384ff60d67",
+  "accepted_hardening_target": "0726ac7b50a0a70dd29e3cd6b238776e51dcc321",
+  "manifest_only_successor": "6d0b8ddeb31e83359dd87cfdb101f539afa28983",
+  "kds_science_object_equal": true,
+  "data_object_equal": true,
+  "readiness_object_equal": true,
+  "institutional_adapter_object_equal": true,
+  "robustness_evidence_object_equal": true,
+  "hardening_runtime_files_equal_to_accepted_tag": true,
+  "scientific_behavior_changed": false,
+  "result": "PASS"
+}
