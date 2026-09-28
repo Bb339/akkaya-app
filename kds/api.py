@@ -16,6 +16,7 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         if root.is_relative_to(Path(app.root_path).resolve()):
             raise ValueError("KDS_PROJECT_STORE must be outside the application's public source tree.")
         repository = FileProjectStore(root)
+    app.extensions["kds_project_repository"] = repository
     projects, imports = ProjectService(repository), ImportService(repository)
     from kds.application.optimization import OptimizationApplicationService
     analysis = OptimizationApplicationService(repository)

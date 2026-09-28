@@ -21,11 +21,17 @@ APP_BUILD = "v1.0-tez-prototipi-diversity-soft"
 APP_TITLE = "Tarımsal Karar Destek Sistemi"
 APP_GENERATED_AT = datetime.now(timezone.utc).isoformat()
 
+if __name__ == "__main__":
+    # Executing app.py is the explicit local-development launch profile.
+    os.environ.setdefault("KDS_DEPLOYMENT_MODE", "local-development")
+
 app = Flask(__name__, static_folder=None)
 
 from kds.science.providers import source, optional_reference
 from kds.api import register_project_api
 register_project_api(app)
+from kds.operations import register_operational_controls
+register_operational_controls(app)
 
 @app.after_request
 def add_no_cache_headers(response):

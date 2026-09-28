@@ -1,0 +1,22 @@
+{
+  "focused_deployment_command": "python -m pytest -q tests/test_deployment_hardening_fix1.py",
+  "focused_deployment_result": {"passed": 11, "failed": 0},
+  "focused_regression_command": "python -m pytest -q tests/test_deployment_hardening_fix1.py tests/test_unified_decision_demo_fix2.py tests/test_unified_decision_demo.py::test_demo_package_auto_matches_without_activation tests/test_unified_decision_demo.py::test_confirmed_package_ready_run_and_decision_bridge tests/test_akkaya_adapter.py",
+  "focused_regression_result": {"passed": 23, "failed": 0},
+  "coverage": [
+    "manifest parse, Python pin, PORT, workers, timeouts, disk",
+    "store override, writable probe, missing/unwritable fail-closed",
+    "two-process persistence and interrupted recovery",
+    "completed/failed immutability and recovery idempotency",
+    "Git present, executable absent, metadata absent",
+    "missing/invalid/valid staging authentication and explicit local bypass",
+    "health status and secret/path non-disclosure",
+    "20-file smart-import matching and confirmed workflow",
+    "unified decision server bridge",
+    "Akkaya V1 reference values"
+  ],
+  "broad_suite": "NOT_RUN",
+  "broad_suite_reason": "Focused deployment and accepted-boundary regressions passed; the milestone prohibits automatic multi-hour broad execution.",
+  "chromium": "NOT_RUN",
+  "full_demo_extra_run": "NOT_RUN"
+}

@@ -2,6 +2,7 @@
 import json
 import os
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 from kds.domain.validation import safe_id
@@ -70,3 +71,33 @@ class FileProjectStore:
             change(document)
             self._write(path, document)
         return document
+
+    def recover_interrupted_runs(self) -> list[dict[str, str]]:
+        """Terminalize runs abandoned by a previous application process."""
+        recovered: list[dict[str, str]] = []
+        if not self.root.exists():
+            return recovered
+        for state_path in sorted(self.root.glob("*/state.json")):
+            project_id = state_path.parent.name
+            try:
+                safe_id(project_id)
+            except ValueError:
+                continue
+
+            def recover(document: Document) -> None:
+                for run_id, run in document.get("runs", {}).items():
+                    if run.get("status") != "running":
+                        continue
+                    recovered_at = datetime.now(timezone.utc).isoformat()
+                    reason = {
+                        "code": "PROCESS_RESTART_INTERRUPTED",
+                        "message": "The previous process ended before the run reached a terminal state.",
+                        "recovered_at": recovered_at,
+                    }
+                    run["status"] = "interrupted"
+                    run["interruption"] = reason
+                    run["error"] = reason["code"]
+                    recovered.append({"project_id": project_id, "run_id": run_id})
+
+            self.update(project_id, recover)
+        return recovered

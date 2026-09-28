@@ -67,8 +67,11 @@ def configuration(payload, document):
 
 def engine_commit():
     root = Path(__file__).resolve().parents[2]
-    completed = subprocess.run(['git','rev-parse','HEAD'], cwd=root, text=True,
-                               capture_output=True, check=False)
+    try:
+        completed = subprocess.run(['git','rev-parse','HEAD'], cwd=root, text=True,
+                                   capture_output=True, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return None
     return completed.stdout.strip() if completed.returncode == 0 else None
 
 
@@ -186,13 +189,16 @@ class OptimizationApplicationService:
         cache_key = sha256(json.dumps([project_id,bundle.data_version,bundle.planning_year,config['scenario'],
                                       config['objective'],config['algorithm'],config_hash]).encode()).hexdigest()
         run_id = 'run-'+uuid4().hex
+        commit = engine_commit()
         input_snapshot = {
             'execution_profile': profile.value, 'planning_year': bundle.planning_year,
             'project_id': project_id, 'input_datasets': deepcopy_json(execution_plan.get('datasets', [])),
             'candidate_source': deepcopy_json(execution_plan.get('candidate_source', {})),
             'current_pattern_source': deepcopy_json(execution_plan.get('current_pattern_source', {})),
             'climate_source': deepcopy_json(execution_plan.get('climate_source', {})),
-            'engine_commit': engine_commit(), 'algorithm': config['algorithm'], 'seed': config['seed'],
+            'engine_commit': commit,
+            'engine_commit_status': 'AVAILABLE' if commit else 'UNAVAILABLE',
+            'algorithm': config['algorithm'], 'seed': config['seed'],
             'objective': config['objective'], 'scenario': config['scenario'],
             'created_at': now(), 'readiness_snapshot': deepcopy_json(_without_private(execution_plan)),
             'result_classification': result_classification(profile, synthetic=synthetic),
@@ -370,6 +376,7 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
     result['warnings'] = list(warnings or [])
     result['result_provenance'] = {
         'engine_commit': result.get('input_provenance', {}).get('engine_commit'),
+        'engine_commit_status': result.get('input_provenance', {}).get('engine_commit_status', 'UNAVAILABLE'),
         'selection_hash': execution_plan.get('selection_hash'),
         'preview_revision': execution_plan.get('preview_revision'),
         'result_classification': result.get('classification'),

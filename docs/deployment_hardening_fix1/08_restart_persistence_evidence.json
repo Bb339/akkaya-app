@@ -1,0 +1,23 @@
+{
+  "test": "actual two-interpreter-process restart using one temporary explicit KDS_PROJECT_STORE",
+  "process_a": {
+    "application_imported": true,
+    "project_created_through_http_api": true,
+    "synthetic_import_metadata_stored": true,
+    "controlled_completed_run_stored": true,
+    "controlled_running_run_stored": true,
+    "clean_exit": true
+  },
+  "process_b": {
+    "application_reimported": true,
+    "same_store_reopened": true,
+    "project_retained": true,
+    "import_hash_retained": "sha256-fixture",
+    "completed_run_unchanged": true,
+    "running_run_status_after_recovery": "interrupted",
+    "interruption_code": "PROCESS_RESTART_INTERRUPTED",
+    "fabricated_result": false
+  },
+  "result": "PASS",
+  "limitations": "The completed run is a controlled storage fixture; no scientific algorithm was executed for this operational persistence test."
+}

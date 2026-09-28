@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: crop-kds-v2-private-staging
+    runtime: python
+    plan: starter
+    numInstances: 1
+    autoDeploy: false
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 360 --graceful-timeout 30 --keep-alive 5
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: KDS_DEPLOYMENT_MODE
+        value: staging
+      - key: KDS_PROJECT_STORE
+        value: /var/data/crop-kds/projects
+      - key: KDS_BASIC_AUTH_USERNAME
+        sync: false
+      - key: KDS_BASIC_AUTH_PASSWORD
+        sync: false
+    disk:
+      name: crop-kds-data
+      mountPath: /var/data/crop-kds
+      sizeGB: 1

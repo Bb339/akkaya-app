@@ -1,0 +1,20 @@
+{
+  "comparison_base": "6a76edce875451507b865e608e23c2384ff60d67",
+  "kds_science_tree_changed": false,
+  "root_data_tree_changed": false,
+  "robustness_sensitivity_evidence_changed": false,
+  "scientific_algorithms_changed": false,
+  "candidate_matrices_changed": false,
+  "frozen_reference_values_changed": false,
+  "readiness_scientific_semantics_changed": false,
+  "institutional_scientific_data_semantics_changed": false,
+  "allowed_runtime_changes": [
+    "deployment manifest and Python pin",
+    "operational auth/readiness/startup controls",
+    "repository interrupted-run recovery",
+    "Git provenance error handling and explicit availability status",
+    "repository exposure through Flask application extensions"
+  ],
+  "verification": "git diff --quiet accepted-base -- kds/science data docs/robustness_sensitivity",
+  "result": "PASS"
+}

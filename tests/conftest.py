@@ -1,5 +1,7 @@
 import os
 
+os.environ.setdefault('KDS_DEPLOYMENT_MODE', 'local-development')
+
 
 def pytest_collection_modifyitems(config,items):
     if os.environ.get('KDS_FULL_PROJECT')=='1':return
