@@ -34,9 +34,17 @@ def register_project_pages(app):
             html = response.get_data(as_text=True)
             marker = '<div class="session-chip-row">'
             if marker in html and 'data-project-workspace-link' not in html:
+                boundary = (
+                    '<aside data-reference-mode-banner role="status" '
+                    'style="display:grid;gap:2px;padding:8px 12px;border:1px solid #f1c75b;'
+                    'border-radius:10px;background:#fff8dc;color:#4a3700;max-width:620px">'
+                    '<strong>AKKAYA REFERENCE · REFERENCE MODEL / DEMO DATA</strong>'
+                    '<span>NOT OFFICIAL / NOT FIELD VALIDATED · Resmî su tahsisi, saha doğrulaması '
+                    'veya Bakanlık onaylı öneri değildir.</span></aside>'
+                )
                 link = ('<a data-project-workspace-link class="btn-secondary header-switch-btn" '
                         'href="/projects">Projeler / Kurumsal veri</a>')
-                response.set_data(html.replace(marker, f'{marker}\n    {link}', 1))
+                response.set_data(html.replace(marker, f'{marker}\n    {boundary}\n    {link}', 1))
         return response
 
     app.register_blueprint(pages)

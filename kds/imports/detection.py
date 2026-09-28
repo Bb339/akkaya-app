@@ -60,6 +60,24 @@ FILENAME_HINTS = {
     "crop_phenology": ("crop_phenology", "phenology", "fenoloji"),
 }
 
+# Generic structural expectations only. These fields are unambiguously
+# numeric in the canonical import contracts; no agronomic threshold or
+# scientific-value judgment is applied here.
+NUMERIC_REQUIRED_FIELDS = {
+    "area_da", "year", "planning_year", "applicable_year", "observation_year",
+    "yield_per_da", "water_requirement_m3_da", "profit_per_da", "yield_ton_da",
+    "amount", "capacity", "efficiency", "kc_ini", "kc_mid", "kc_end",
+    "p_ini", "p_dev", "p_mid", "p_late", "yield_value", "price",
+    "net_profit_per_da", "gross_revenue_per_da", "total_cost_per_da",
+    "support_payment_per_da", "gross_revenue", "total_cost", "net_profit",
+    "cost",
+}
+NUMERIC_REQUIRED_BY_TYPE = {
+    "environmental_release": {"value"},
+    "perennial_irrigation_requirement": {"value"},
+}
+YEAR_FIELDS = {"year", "planning_year", "applicable_year", "observation_year"}
+
 
 def _workbook_sheets(content: bytes, extension: str) -> list[str]:
     if extension != ".xlsx":
@@ -103,6 +121,47 @@ def _mapped_values(rows: list[dict[str, Any]], mapping: dict[str, str], names: t
             if value not in (None, "") and str(value).strip() not in values:
                 values.append(str(value).strip())
     return values
+
+
+def _number(value: Any) -> float | None:
+    if isinstance(value, bool) or value in (None, ""):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    supplied = str(value).strip().replace(" ", "")
+    if "," in supplied and "." not in supplied:
+        supplied = supplied.replace(",", ".")
+    try:
+        return float(supplied)
+    except ValueError:
+        return None
+
+
+def _structural_type_issues(rows: list[dict[str, Any]], mapping: dict[str, str],
+                            required: list[str], data_type: str) -> list[dict[str, Any]]:
+    issues = []
+    numeric_fields = NUMERIC_REQUIRED_FIELDS | NUMERIC_REQUIRED_BY_TYPE.get(data_type, set())
+    for canonical in required:
+        source = mapping.get(canonical)
+        if not source or canonical not in numeric_fields:
+            continue
+        populated = [row.get("values", {}).get(source) for row in rows
+                     if row.get("values", {}).get(source) not in (None, "")]
+        if not populated:
+            continue
+        parsed = [_number(value) for value in populated]
+        invalid = sum(value is None for value in parsed)
+        if canonical in YEAR_FIELDS and invalid == len(populated):
+            issues.append({"code": "explicit_year_not_parseable",
+                           "message": "Explicit year field has no parseable numeric year.",
+                           "field": canonical, "source_column": source,
+                           "populated": len(populated), "unparseable": invalid})
+        elif invalid * 2 >= len(populated):
+            issues.append({"code": "required_numeric_field_not_parseable",
+                           "message": "A required numeric field is predominantly non-numeric.",
+                           "field": canonical, "source_column": source,
+                           "populated": len(populated), "unparseable": invalid})
+    return issues
 
 
 def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
@@ -158,6 +217,8 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
     if best["ambiguous"]:
         issues.append({"code": "ambiguous_mapping", "message": "One or more headers map ambiguously.",
                        "fields": best["ambiguous"]})
+    type_issues = _structural_type_issues(rows, best["mapping"], best["required"], best["data_type"])
+    issues.extend(type_issues)
 
     years = _mapped_values(rows, best["mapping"], ("planning_year", "applicable_year", "year", "observation_year"))
     scopes = _mapped_values(rows, best["mapping"], ("geographic_scope", "scope"))
@@ -174,7 +235,9 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
         issues.append({"code": "wrong_geographic_scope", "message": "File scope differs from project scope.",
                        "file_scopes": wrong_scopes})
 
-    hard_review = any(issue["code"] in {"wrong_planning_year", "wrong_geographic_scope"} for issue in issues)
+    hard_review = any(issue["code"] in {"wrong_planning_year", "wrong_geographic_scope",
+                                        "explicit_year_not_parseable",
+                                        "required_numeric_field_not_parseable"} for issue in issues)
     if len(tied) > 1 or best["ambiguous"]:
         state = "AMBIGUOUS"
     elif missing or hard_review:
