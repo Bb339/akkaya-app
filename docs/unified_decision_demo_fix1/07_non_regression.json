@@ -1,0 +1,27 @@
+{
+  "institutional_demo": {
+    "package_auto_matched": "20/20",
+    "verified_institutional_s1_ready": true,
+    "preview_pinned": true,
+    "algorithm": "GA",
+    "seed": 123,
+    "objective": "water_saving",
+    "stored_run": true,
+    "decision_units": 24,
+    "unit_identity_prefix": "GX-",
+    "akkaya_p_unit_contamination": false
+  },
+  "akkaya_reference": {
+    "analysis_units": 179,
+    "area_da": 134919,
+    "raw_candidate_rows": 6859,
+    "crops": 58,
+    "calculated_reference_water_m3": 100700080.81,
+    "catalog_derived_reference_profit_tl": 1041499119.212
+  },
+  "robustness": {
+    "tag_target": "028f231eb774eafb53a9a76db370b663d561ce1b",
+    "evidence_tree": "f31ed96576c8cfabdd39f578cfe74e5ed6276513",
+    "unchanged": true
+  }
+}

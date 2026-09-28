@@ -1,0 +1,28 @@
+{
+  "accepted_package_files": 20,
+  "auto_matched": 20,
+  "manual_mapping_edits_required": 0,
+  "structural_cases": {
+    "accepted_valid_file": "AUTO_MATCHED",
+    "required_numeric_text": {
+      "state": "REVIEW_REQUIRED",
+      "issue": "required_numeric_field_not_parseable"
+    },
+    "malformed_explicit_year": {
+      "state": "REVIEW_REQUIRED",
+      "issue": "explicit_year_not_parseable"
+    },
+    "missing_required": "REVIEW_REQUIRED",
+    "ambiguous_header": "AMBIGUOUS",
+    "wrong_year": "REVIEW_REQUIRED",
+    "wrong_scope": "REVIEW_REQUIRED",
+    "unsupported": "UNSUPPORTED",
+    "invalid": "INVALID"
+  },
+  "upload_before_confirmation": {
+    "data_revision": 0,
+    "active_water_datasets": 0,
+    "activated": false
+  },
+  "meaning": "AUTO_MATCHED is deterministic structural recognition only; explicit confirmation is still required."
+}

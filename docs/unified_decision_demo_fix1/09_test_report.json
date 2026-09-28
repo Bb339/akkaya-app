@@ -1,0 +1,30 @@
+{
+  "new_fix1_suite": {
+    "result": "7 passed",
+    "duration_seconds": 95.71
+  },
+  "expanded_targeted_regression_suite": {
+    "result": "124 passed, 1 deselected",
+    "duration_seconds": 1148.36,
+    "coverage": [
+      "imports", "project API", "institutional readiness and execution",
+      "Ministry UI", "result contract", "unified decision demo", "real Chromium", "Fix1"
+    ]
+  },
+  "protected_source_and_reference_guard": {
+    "result": "12 passed",
+    "duration_seconds": 121.99,
+    "coverage": ["legacy frontend hashes", "economics provenance guard", "water UI guard", "prepilot freeze", "exact reference values"]
+  },
+  "fresh_broad_suite": {
+    "run": false,
+    "reason": "The instruction explicitly reused the immediately preceding independent 443-pass broad result unless focused regression appeared. No focused regression remained."
+  },
+  "inherited_s2": {
+    "test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "expected": "ok",
+    "observed": "no_feasible_two_crop_plan",
+    "classification": "INHERITED_UNCHANGED",
+    "scientific_fix_attempted": false
+  }
+}

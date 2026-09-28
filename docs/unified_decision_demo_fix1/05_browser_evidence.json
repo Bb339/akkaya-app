@@ -1,0 +1,35 @@
+{
+  "viewport": "1366x900",
+  "browser": "Chromium headless",
+  "fix1_browser_suite": "3 passed",
+  "v1_reference": {
+    "panel_visible": true,
+    "banner_visible": true,
+    "akkaya_reference_visible": true,
+    "reference_model_demo_data_visible": true,
+    "not_official_not_field_validated_visible": true,
+    "ministry_approval_disclaimer_visible": true,
+    "projects_navigation_visible": true,
+    "projects_navigation_works": true,
+    "reference_units_api": 179,
+    "frozen_index_object": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac"
+  },
+  "decision_to_project": {
+    "originating_project": "unified-demo",
+    "originating_name": "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT",
+    "hash_restored": "#project=unified-demo",
+    "exact_card_active": true,
+    "detail_visible": true,
+    "planning_year_visible": 2025,
+    "synthetic_boundary_visible": true,
+    "same_stored_run_reopened": true,
+    "reference_fallback": false
+  },
+  "missing_project": {
+    "hashchange_tested": true,
+    "explicit_error": true,
+    "active_project_cards": 0,
+    "detail_hidden": true,
+    "silent_fallback": false
+  }
+}
