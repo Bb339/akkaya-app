@@ -1,0 +1,74 @@
+{
+  "tested_commit": "8ca6d4f4e30d0d518b6353abd5021d3d41704cb9",
+  "rule": "every populated required structural numeric/year value must parse",
+  "matrix": [
+    {
+      "case": "numeric all valid",
+      "state": "AUTO_MATCHED"
+    },
+    {
+      "case": "numeric invalid 1/1",
+      "state": "REVIEW_REQUIRED",
+      "issue": "required_numeric_field_not_parseable"
+    },
+    {
+      "case": "numeric invalid 1/3",
+      "state": "REVIEW_REQUIRED",
+      "issue": "required_numeric_field_not_parseable",
+      "parseable": 2,
+      "unparseable": 1
+    },
+    {
+      "case": "numeric invalid 1/10",
+      "state": "REVIEW_REQUIRED",
+      "issue": "required_numeric_field_not_parseable",
+      "parseable": 9,
+      "unparseable": 1
+    },
+    {
+      "case": "numeric several mixed",
+      "state": "REVIEW_REQUIRED",
+      "issue": "required_numeric_field_not_parseable",
+      "invalid_examples": [
+        "bad-a",
+        "bad-b"
+      ]
+    },
+    {
+      "case": "year all valid",
+      "state": "AUTO_MATCHED"
+    },
+    {
+      "case": "year invalid 1/3",
+      "state": "REVIEW_REQUIRED",
+      "issue": "explicit_year_not_parseable",
+      "parseable": 2,
+      "unparseable": 1
+    },
+    {
+      "case": "year invalid 1/10",
+      "state": "REVIEW_REQUIRED",
+      "issue": "explicit_year_not_parseable",
+      "parseable": 9,
+      "unparseable": 1
+    },
+    {
+      "case": "numeric-looking strings -5, 999999, 1.5 and year 2025.0",
+      "state": "AUTO_MATCHED"
+    },
+    {
+      "case": "empty optional note",
+      "structural_issue": false
+    },
+    {
+      "case": "arbitrary text in nonnumeric unit",
+      "structural_issue": false
+    },
+    {
+      "case": "accepted demo package",
+      "files": 20,
+      "auto_matched": 20
+    }
+  ],
+  "boundary": "structural deterministic recognition only; not scientific validity or official approval"
+}

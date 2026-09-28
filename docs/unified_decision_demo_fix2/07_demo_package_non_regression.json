@@ -1,0 +1,24 @@
+{
+  "tested_commit": "8ca6d4f4e30d0d518b6353abd5021d3d41704cb9",
+  "package_files": 20,
+  "auto_matched": 20,
+  "explicit_confirmation_required": true,
+  "workflow": [
+    "upload",
+    "explicit confirmation",
+    "VERIFIED_INSTITUTIONAL",
+    "S1 READY",
+    "pinned preview",
+    "GA",
+    "seed 123",
+    "water_saving",
+    "stored run",
+    "decision screen",
+    "exact project return",
+    "reopen same stored run"
+  ],
+  "decision_units": 24,
+  "unit_prefix": "GX-",
+  "akkaya_p_fixture_contamination": false,
+  "synthetic_not_official_boundary": true
+}

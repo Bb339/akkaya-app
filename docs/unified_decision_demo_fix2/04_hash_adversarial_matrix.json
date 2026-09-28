@@ -1,0 +1,69 @@
+{
+  "tested_commit": "8ca6d4f4e30d0d518b6353abd5021d3d41704cb9",
+  "authoritative_state": "URL hash",
+  "initial_navigation": [
+    {
+      "url": "/projects",
+      "classification": "missing",
+      "fail_closed": true
+    },
+    {
+      "url": "/projects#",
+      "classification": "bare_hash",
+      "fail_closed": true
+    },
+    {
+      "url": "/projects#project=",
+      "classification": "empty_project",
+      "fail_closed": true
+    },
+    {
+      "url": "/projects#foo=bar",
+      "classification": "missing_project_parameter",
+      "fail_closed": true
+    },
+    {
+      "url": "/projects#project=unknown",
+      "classification": "unknown_project",
+      "fail_closed": true
+    },
+    {
+      "url": "/projects#project=%E0%A4%A",
+      "classification": "malformed_encoding",
+      "fail_closed": true
+    }
+  ],
+  "hashchange": [
+    {
+      "transition": "project-a -> project-b",
+      "exact_project_selected": "project-b"
+    },
+    {
+      "transition": "valid -> empty",
+      "fail_closed": true
+    },
+    {
+      "transition": "empty -> unrelated parameter",
+      "fail_closed": true
+    },
+    {
+      "transition": "invalid -> unknown",
+      "fail_closed": true
+    },
+    {
+      "transition": "invalid -> project-a",
+      "recovered_exact_project": "project-a"
+    }
+  ],
+  "fail_closed_assertions": {
+    "active_cards": 0,
+    "detail_hidden": true,
+    "result_hidden": true,
+    "preview_hidden": true,
+    "stale_preview_hidden": true,
+    "project_context_cleared": true,
+    "explicit_status_visible": true,
+    "reference_fallback": false
+  },
+  "canonical_card_navigation": "#project=canonical-project"
+}

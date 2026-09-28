@@ -1,0 +1,31 @@
+{
+  "tested_commit": "8ca6d4f4e30d0d518b6353abd5021d3d41704cb9",
+  "new_fix2": {
+    "result": "11 passed",
+    "duration_seconds": 24.14
+  },
+  "expanded_focused": {
+    "result": "135 passed, 1 deselected",
+    "duration_seconds": 1307.18
+  },
+  "source_reference_guard": {
+    "result": "12 passed",
+    "duration_seconds": 163.23
+  },
+  "broad_suite": {
+    "run": false,
+    "reused": "443 passed, 1 inherited failure, 7 deselected",
+    "reason": "Focused suites passed without a regression requiring broader confidence."
+  },
+  "inherited_s2": {
+    "test": "tests/test_decision_pipeline.py::test_s2_high_budget_can_return_feasible_two_crop_plan",
+    "expected": "ok",
+    "observed": "no_feasible_two_crop_plan",
+    "classification": "INHERITED_UNCHANGED",
+    "fix_attempted": false
+  },
+  "test_stability": {
+    "initial_development_failures": "test assertions/synchronization corrected before final run",
+    "final_v1_timeout_regression": false
+  }
+}

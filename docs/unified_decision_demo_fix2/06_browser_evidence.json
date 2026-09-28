@@ -1,0 +1,32 @@
+{
+  "tested_commit": "8ca6d4f4e30d0d518b6353abd5021d3d41704cb9",
+  "browser": "Chromium headless",
+  "viewport": "1366x900",
+  "fix2_browser_tests": 2,
+  "status": "passed within 135-test focused suite",
+  "hash_matrix": {
+    "valid_exact": true,
+    "unknown": true,
+    "hash_removed": true,
+    "bare_hash": true,
+    "empty_project": true,
+    "unrelated_parameter": true,
+    "malformed_encoding": true,
+    "valid_a_to_b": true,
+    "valid_to_empty": true,
+    "valid_to_unknown": true,
+    "invalid_to_valid_recovery": true,
+    "silent_fallback": false
+  },
+  "decision_return": {
+    "exact_originating_project": true,
+    "same_stored_run_reopened": true,
+    "execution_profile": "VERIFIED_INSTITUTIONAL",
+    "reference_fallback": false
+  },
+  "test_stability": {
+    "v1_demo_target_uses_explicit_visibility_expectation": true,
+    "global_timeout_changed": false,
+    "production_behavior_changed": false
+  }
+}
