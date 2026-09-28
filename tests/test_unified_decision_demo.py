@@ -27,7 +27,7 @@ PRIORITY = {
 
 def project_payload(project_id="unified-demo"):
     return {
-        "id": project_id, "name": "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT",
+        "id": project_id, "name": "Bakanlık Sentetik Demo Projesi",
         "planning_year": 2025, "annual_water_budget": 0, "water_budget_unit": "m3",
         "province_or_region": "Synthetic Region",
         "data_source_notes": "synthetic not_official institutional integration fixture",
@@ -84,6 +84,32 @@ def test_demo_package_auto_matches_without_activation(tmp_path):
     assert document["analysis_units"] == [] and document["water_data"]["active"] == {}
 
 
+def test_project_classification_is_persisted_from_explicit_data_class_not_project_name(tmp_path):
+    _, client, repository = client_for(tmp_path)
+    response = client.post("/api/v2/projects", json=project_payload("named-by-user"))
+    assert response.status_code == 201
+    document = repository.get("named-by-user")
+    assert document["project"]["name"] == "Bakanlık Sentetik Demo Projesi"
+    assert document["metadata"] == {
+        "synthetic_institutional_test": True,
+        "not_official": True,
+        "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"],
+    }
+    overview = client.get("/api/v2/projects/named-by-user/overview").json
+    assert overview["synthetic"] is True
+    assert overview["project_kind"] == "synthetic_test"
+
+    real = project_payload("real-institutional")
+    real.update(name="Gerçek Kurumsal Proje", data_source_notes="user_provided")
+    assert client.post("/api/v2/projects", json=real).status_code == 201
+    assert repository.get("real-institutional")["metadata"] == {}
+
+    arbitrary = project_payload("arbitrary-synthetic")
+    arbitrary["data_source_notes"] = "synthetic not_official uploaded by user"
+    assert client.post("/api/v2/projects", json=arbitrary).status_code == 201
+    assert repository.get("arbitrary-synthetic")["metadata"] == {}
+
+
 def test_confirmed_package_ready_run_and_decision_bridge(tmp_path):
     _, client, repository = client_for(tmp_path)
     client.post("/api/v2/projects", json=project_payload())
@@ -110,6 +136,28 @@ def test_confirmed_package_ready_run_and_decision_bridge(tmp_path):
     assert page.status_code == 200 and b"VERIFIED INSTITUTIONAL" in page.data
     stored = client.get(f"/api/v2/projects/unified-demo/analyses/{run['id']}").json
     assert stored["id"] == run["id"] and stored["result"]["result_provenance"]["selection_hash"]
+
+
+def test_real_institutional_project_rejects_the_same_synthetic_package(tmp_path):
+    _, client, repository = client_for(tmp_path)
+    project = project_payload("real-institutional")
+    project.update(name="Gerçek Kurumsal Proje", data_source_notes="user_provided")
+    assert client.post("/api/v2/projects", json=project).status_code == 201
+    items = bulk_upload(client, "real-institutional")
+    assert len(items) == 20
+    assert all(item["detection"]["state"] == "AUTO_MATCHED" for item in items)
+    confirm_bulk(client, items, "real-institutional")
+
+    document = repository.get("real-institutional")
+    assert document["metadata"].get("synthetic_institutional_test") is None
+    assert document["metadata"].get("not_official") is None
+    readiness = client.get("/api/v2/projects/real-institutional/readiness").json
+    verified = readiness["execution_profiles"]["VERIFIED_INSTITUTIONAL"]
+    assert verified["ready"]["S1"] is False
+    assert any(domain["connection_state"] == "INVALID_AUTHORITY"
+               for domain in readiness["domains"].values())
+    assert any("synthetic" in reason.casefold()
+               for reason in verified["blocking_reasons"]["S1"])
 
 
 def test_detection_negative_states_are_fail_closed(tmp_path):

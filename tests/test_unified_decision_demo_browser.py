@@ -95,18 +95,27 @@ def test_fresh_bulk_import_run_and_decision_bridge_in_chromium(tmp_path):
             page.add_init_script(LEAFLET_STUB)
             page.route("https://**", lambda route: route.abort())
             errors = []
+            requested = []
             page.on("pageerror", lambda error: errors.append(str(error)))
+            page.on("request", lambda request: requested.append(request.url))
             page.goto(f"http://127.0.0.1:{server.server_port}/projects")
             page.locator("details.form-drawer").first.locator("summary").click()
             form = page.locator("#create-project")
             form.locator('[name="id"]').fill("browser-unified-demo")
-            form.locator('[name="name"]').fill("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
+            form.locator('[name="name"]').fill("Bakanlık Sentetik Demo Projesi")
             form.locator('[name="planning_year"]').fill("2025")
             form.locator('[name="province_or_region"]').fill("Synthetic Region")
             form.locator('[name="data_source_notes"]').select_option("synthetic not_official institutional integration fixture")
             with page.expect_response(lambda response: response.url.endswith("/api/v2/projects") and response.request.method == "POST"):
                 form.locator('button').click()
-            expect(page.locator("#synthetic-watermark")).to_be_visible()
+            expect(page.locator("#synthetic-watermark")).to_be_visible(timeout=15000)
+            expect(page.locator("#project-status-badges")).to_contain_text("SYNTHETIC / NOT OFFICIAL", timeout=15000)
+            created = page.evaluate("fetch('/api/v2/projects/browser-unified-demo').then(r => r.json())")
+            assert created["metadata"] == {
+                "synthetic_institutional_test": True,
+                "not_official": True,
+                "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"],
+            }
 
             files = [str(path) for path in sorted(PACKAGE.iterdir())
                      if path.suffix.lower() in {".csv", ".xlsx", ".geojson"}]
@@ -115,10 +124,23 @@ def test_fresh_bulk_import_run_and_decision_bridge_in_chromium(tmp_path):
                 page.locator('#bulk-upload-form button[type="submit"]').click()
             expect(page.locator("#bulk-import-body tr")).to_have_count(20)
             expect(page.locator("#bulk-import-body")).to_contain_text("AUTO_MATCHED")
+            assert page.locator("#bulk-import-body tr", has_text="AUTO_MATCHED").count() == 20
             expect(page.locator("#bulk-confirm")).to_be_enabled()
             page.locator("#bulk-confirm").click()
             expect(page.locator("#message")).to_contain_text("Toplu paket açık onayla", timeout=180000)
             expect(page.locator("#readiness-verdict")).to_contain_text("VERIFIED READY")
+            state = page.evaluate("Promise.all([fetch('/api/v2/projects/browser-unified-demo').then(r=>r.json()),fetch('/api/v2/projects/browser-unified-demo/overview').then(r=>r.json()),fetch('/api/v2/projects/browser-unified-demo/readiness').then(r=>r.json())])")
+            project_doc, overview, readiness = state
+            assert project_doc["data_revision"] == 20
+            assert project_doc["counts"]["analysis_units"] == 24
+            assert project_doc["counts"]["crops"] == 8
+            assert overview["candidate_units"] == 24
+            assert overview["synthetic"] is True
+            assert readiness["counts"]["total_area_da"] == 258
+            assert readiness["execution_profiles"]["VERIFIED_INSTITUTIONAL"]["ready"]["S1"] is True
+            assert "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT; NOT_OFFICIAL" in readiness["execution_profiles"]["VERIFIED_INSTITUTIONAL"]["warnings"]
+            assert not any("cannot support a real institutional run" in reason
+                           for reason in readiness["execution_profiles"]["VERIFIED_INSTITUTIONAL"]["blocking_reasons"]["S1"])
 
             page.locator('#analysis-form [name="execution_profile"]').select_option("VERIFIED_INSTITUTIONAL")
             page.locator('#analysis-form [name="scenario"]').select_option("S1")
@@ -133,17 +155,27 @@ def test_fresh_bulk_import_run_and_decision_bridge_in_chromium(tmp_path):
                 page.locator("#run-button").click()
             expect(page.locator("#open-decision-screen")).to_be_visible()
             expect(page.locator("#result-source-label")).to_contain_text("SYNTHETIC / NOT OFFICIAL")
+            decision_href = page.locator("#open-decision-screen").get_attribute("href")
+            assert "project_id=browser-unified-demo" in decision_href
+            run_id = decision_href.split("run_id=", 1)[1].split("&", 1)[0]
+            stored = page.evaluate(f"fetch('/api/v2/projects/browser-unified-demo/analyses/{run_id}').then(r=>r.json())")
+            assert stored["project_id"] == "browser-unified-demo"
+            assert stored["result_authority_label"] == "SYNTHETIC / NOT_OFFICIAL"
+            assert stored["result"]["classification"] == "SYNTHETIC_TEST_OUTPUT"
             page.locator("#open-decision-screen").click()
             page.wait_for_url("**/projects/decision?**")
+            assert "project_id=browser-unified-demo" in page.url
+            assert f"run_id={run_id}" in page.url
             expect(page.locator(".mode-badge.verified")).to_have_text("VERIFIED INSTITUTIONAL")
             expect(page.locator("#decision-authority")).to_be_visible()
-            expect(page.locator("#decision-title")).to_have_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
+            expect(page.locator("#decision-title")).to_have_text("Bakanlık Sentetik Demo Projesi")
             expect(page.locator("#result-source-label")).to_contain_text("SYNTHETIC / NOT OFFICIAL")
             expect(page.locator("#provenance-summary")).to_contain_text("Selection hash")
             expect(page.locator("#provenance-summary")).to_contain_text("Engine commit")
             expect(page.locator("#unit-list button")).to_have_count(24)
             expect(page.locator(".leaflet-marker-icon")).to_have_count(2)
             assert "AKKAYA" not in page.locator("#result-facts").inner_text()
+            assert not any("/api/parcels" in url or "/api/optimize" in url for url in requested)
             assert not errors
             browser.close()
     finally:

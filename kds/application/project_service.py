@@ -4,11 +4,13 @@ from kds.domain.project import Project
 from kds.domain.water_budget import WaterBudget
 
 
+SYNTHETIC_INSTITUTIONAL_DEMO_SOURCE = "synthetic not_official institutional integration fixture"
+
+
 def project_document(project: Project, water_budget: WaterBudget | None = None) -> Document:
     budget = water_budget or WaterBudget(project.id, project.annual_water_budget, project.water_budget_unit)
     synthetic_institutional = (
-        project.name == "SYNTHETIC_INSTITUTIONAL_TEST_PROJECT"
-        and "not_official" in project.data_source_notes.casefold()
+        project.data_source_notes.strip().casefold() == SYNTHETIC_INSTITUTIONAL_DEMO_SOURCE
     )
     return {"schema_version": 1, "data_revision": 0, "project": asdict(project),
             "analysis_units": [], "crops": [], "economics": [], "water_budget": asdict(budget),
