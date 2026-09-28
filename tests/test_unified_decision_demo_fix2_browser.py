@@ -100,7 +100,7 @@ def test_project_card_click_writes_canonical_hash(tmp_path):
             page.goto(f"http://127.0.0.1:{server.server_port}/projects")
             assert_closed(page)
             page.locator(f'#projects .project-card[aria-label="{project["name"]}"]').click()
-            assert page.url.endswith("/projects#project=canonical-project")
+            assert page.url.endswith("/projects#project=canonical-project&section=project")
             assert_open(page, "canonical-project", project["name"])
             browser.close()
     finally:

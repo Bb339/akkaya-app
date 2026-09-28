@@ -9,7 +9,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-<a class="skip-link" href="#main-content">Ana içeriğe geç</a>
+<a class="skip-link" href="#main-content" data-project-skip>Ana içeriğe geç</a>
 <header class="topbar">
   <a class="brand" href="/projects"><span class="brand-mark">KDS</span><span><strong>Kurumsal Karar Merkezi</strong><small>Bilimsel tarımsal planlama</small></span></a>
   <div class="topbar-actions">
@@ -31,13 +31,13 @@
   <aside class="side-nav" aria-label="Kurumsal iş akışı">
     <div class="nav-eyebrow">İŞ AKIŞI</div>
     <nav class="workflow">
-      <a href="#projects-section"><span>01</span> Proje</a>
-      <a href="#data-management"><span>02</span> Veri Yönetimi</a>
-      <a href="#readiness-section"><span>03</span> Hazırlık</a>
-      <a href="#analysis-section"><span>04</span> Analiz</a>
-      <a href="#result"><span>05</span> Sonuçlar</a>
-      <a href="#provenance-section"><span>06</span> Kaynak & Provenance</a>
-      <a href="#reference-demo"><span>07</span> Referans Demo</a>
+      <a href="#" data-project-section="project"><span>01</span> Proje</a>
+      <a href="#" data-project-section="data"><span>02</span> Veri Yönetimi</a>
+      <a href="#" data-project-section="readiness"><span>03</span> Hazırlık</a>
+      <a href="#" data-project-section="analysis"><span>04</span> Analiz</a>
+      <a href="#" data-project-section="result"><span>05</span> Sonuçlar</a>
+      <a href="#" data-project-section="provenance"><span>06</span> Kaynak & Provenance</a>
+      <a href="#" data-project-section="reference"><span>07</span> Referans Demo</a>
     </nav>
     <div class="side-note"><strong>Bilimsel sınır</strong><p>Arayüz yalnız backend sözleşmelerini gösterir; bilimsel değerleri yeniden hesaplamaz.</p></div>
   </aside>
@@ -81,7 +81,7 @@
       <section class="project-context panel">
         <div class="project-title-row"><div><p class="eyebrow">AKTİF PROJE</p><h2 id="project-name"></h2><p id="project-description" class="muted"></p></div><div id="project-status-badges" class="badge-row"></div></div>
         <dl id="facts" class="context-grid"></dl>
-        <div id="reanalysis-banner" class="alert warning" hidden><strong>YENİDEN ANALİZ GEREKİYOR</strong><span>Bu proje için daha yeni doğrulanmış veri bulunmaktadır. Mevcut sonuç önceki veri sürümüne aittir.</span><div><a href="#history-section" class="button ghost">Eski sonucu görüntüle</a><a href="#analysis-section" class="button secondary">Güncel veriyle yeni analiz hazırla</a></div></div>
+        <div id="reanalysis-banner" class="alert warning" hidden><strong>YENİDEN ANALİZ GEREKİYOR</strong><span>Bu proje için daha yeni doğrulanmış veri bulunmaktadır. Mevcut sonuç önceki veri sürümüne aittir.</span><div><a href="#" data-project-section="result" class="button ghost">Eski sonucu görüntüle</a><a href="#" data-project-section="analysis" class="button secondary">Güncel veriyle yeni analiz hazırla</a></div></div>
         <p id="reference-label" class="alert warning" hidden><strong>REFERENCE MODEL / DEMO DATA</strong> Hesaplanmış referans talep; resmî tahsis veya ölçülmüş baraj suyu değildir.</p>
       </section>
 

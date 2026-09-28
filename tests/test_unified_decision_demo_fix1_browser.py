@@ -81,7 +81,7 @@ def test_decision_back_link_restores_exact_project_and_decision_identity(tmp_pat
             expect(page.locator("#decision-authority")).to_be_visible()
             assert "AKKAYA" not in page.locator("#result-facts").inner_text()
             page.locator("#back-to-project").click()
-            page.wait_for_url("**/projects#project=unified-demo")
+            page.wait_for_url("**/projects#project=unified-demo&section=result")
             expect(page.locator('#projects .project-card[aria-label="SYNTHETIC_INSTITUTIONAL_TEST_PROJECT"]')).to_have_class(
                 "project-card active")
             expect(page.locator("#detail")).to_be_visible()

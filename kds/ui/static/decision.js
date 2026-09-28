@@ -15,7 +15,7 @@ async function loadDecision(){
   document.getElementById('decision-title').textContent=projectDocument.project.name;
   document.getElementById('decision-subtitle').textContent=`${projectDocument.project.planning_year} · ${projectDocument.project.basin_or_irrigation_area||projectDocument.project.province_or_region||'Proje kapsamı'} · ${run.scenario} · ${run.algorithm}`;
   document.getElementById('decision-run-id').textContent=`Run: ${run.id}`;
-  document.getElementById('back-to-project').href=`/projects#project=${encodeURIComponent(projectId)}`;
+  document.getElementById('back-to-project').href=`/projects#project=${encodeURIComponent(projectId)}&section=result`;
   const synthetic=run.result_authority_label==='SYNTHETIC / NOT_OFFICIAL'||run.result?.classification==='SYNTHETIC_TEST_OUTPUT';
   document.getElementById('decision-authority').hidden=!synthetic;
   renderRun(run);

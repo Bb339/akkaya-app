@@ -54,7 +54,7 @@ export function invalidatePreview(reason='Yapılandırma veya proje verisi deği
 
 export function setReadiness(report){readinessReport=report;updateMode();}
 
-export function wireAnalysis(root,safe,refresh){
+export function wireAnalysis(root,safe,refresh,onResult){
   const form=document.getElementById('analysis-form');
   const config=()=>{
     form.elements.config.value=JSON.stringify(defaults[form.elements.algorithm.value],null,2);
@@ -97,7 +97,7 @@ export function wireAnalysis(root,safe,refresh){
     try{
       const run=await post(root()+'/analyses',request),hasWarnings=(run.warnings||[]).length>0;
       setState(run.status==='completed'?(hasWarnings?'COMPLETED WITH WARNINGS':'COMPLETED'):'FAILED',run.status==='completed'?'ready':'blocked');
-      renderRun(run);await refresh();document.getElementById('result').scrollIntoView({behavior:'smooth'});
+      renderRun(run);await refresh();onResult();
       message(run.status==='completed'?'Analiz tamamlandı ve kayıtlı sonuç gösteriliyor.':`Çalışma başarısız: ${run.error}`,run.status!=='completed');
     }catch(error){
       if(/preview|revision|selection/i.test(error.message)){
