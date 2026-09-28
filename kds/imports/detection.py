@@ -151,16 +151,22 @@ def _structural_type_issues(rows: list[dict[str, Any]], mapping: dict[str, str],
             continue
         parsed = [_number(value) for value in populated]
         invalid = sum(value is None for value in parsed)
-        if canonical in YEAR_FIELDS and invalid == len(populated):
-            issues.append({"code": "explicit_year_not_parseable",
-                           "message": "Explicit year field has no parseable numeric year.",
-                           "field": canonical, "source_column": source,
-                           "populated": len(populated), "unparseable": invalid})
-        elif invalid * 2 >= len(populated):
-            issues.append({"code": "required_numeric_field_not_parseable",
-                           "message": "A required numeric field is predominantly non-numeric.",
-                           "field": canonical, "source_column": source,
-                           "populated": len(populated), "unparseable": invalid})
+        if invalid:
+            invalid_examples = list(dict.fromkeys(
+                str(value)[:120] for value, number in zip(populated, parsed) if number is None
+            ))[:5]
+            year = canonical in YEAR_FIELDS
+            issues.append({
+                "code": "explicit_year_not_parseable" if year else "required_numeric_field_not_parseable",
+                "message": ("Explicit year field contains an unparseable numeric year."
+                            if year else "A required numeric field contains a non-numeric value."),
+                "field": canonical,
+                "source_column": source,
+                "populated": len(populated),
+                "parseable": len(populated) - invalid,
+                "unparseable": invalid,
+                "invalid_examples": invalid_examples,
+            })
     return issues
 
 
