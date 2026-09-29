@@ -274,12 +274,14 @@
     setTimeout(()=>{renderMap();renderUnit();neutralizeReferenceSurface();},1200);
     if(context.run)renderRun(context.run);
     window.__V1_PROJECT_PROVIDER__={get context(){return context;},get blockedReferencePaths(){return [...blockedReferencePaths];},get selectedUnit(){return selectedUnit;}};
+    if(typeof window.syncRoleInfoBanner==='function')window.syncRoleInfoBanner();
   }
   async function initReference(){
     const shell=byId('v1-provider-shell');if(shell)shell.dataset.provider='AKKAYA_REFERENCE';
     if(requestedProvider!==null&&requestedProvider!=='AKKAYA_REFERENCE')throw new Error('Bilinmeyen provider; otomatik referans geçişi uygulanmadı.');
     if(projects.length||runs.length||units.length)throw new Error('AKKAYA_REFERENCE bağlamında project/run/unit parametresi kabul edilmez.');
     wireDrawer();setText('v1-provider-badge','AKKAYA REF');await loadProjectList();window.__V1_PROJECT_PROVIDER__={provider:'AKKAYA_REFERENCE',blockedReferencePaths:[]};
+    if(typeof window.syncRoleInfoBanner==='function')window.syncRoleInfoBanner();
   }
   document.addEventListener('DOMContentLoaded',()=>{
     const task=projectMode?initProject():initReference();task.catch(error=>fail(error.message));

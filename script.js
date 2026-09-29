@@ -10725,6 +10725,32 @@ function getVisibleUsableParcelIds(){
   return getVisibleParcels().filter(p => !p?.map_only).map(p => String(p.id));
 }
 
+function getActiveAnalysisUnitPresentation(){
+  const projectMode = document.body.classList.contains('project-provider-mode');
+  if(projectMode){
+    const value = window.__V1_PROJECT_PROVIDER__?.context?.unit_count;
+    const count = Number.isInteger(value) && value >= 0 ? value : null;
+    return { count, noun: 'analiz birimi', provider: 'PROJECT_DATA' };
+  }
+  const count = getVisibleUsableParcelIds().length;
+  return { count: count > 0 ? count : null, noun: 'parsel', provider: 'AKKAYA_REFERENCE' };
+}
+
+function syncProviderAwareParcelCopy(presentation){
+  const copy = document.querySelector('#userParcelCard .card-help.small');
+  if(!copy) return;
+  if(presentation.provider === 'PROJECT_DATA'){
+    const scope = presentation.count === null
+      ? 'Proje kapsamındaki analiz birimleri'
+      : `Proje kapsamındaki ${presentation.count} analiz birimi`;
+    copy.textContent = `${scope} provider verisiyle yönetilir. Birim seçimi, geometri ve analiz bağlamı proje kaynağından gelir.`;
+    return;
+  }
+  if(presentation.count !== null){
+    copy.textContent = `Bu panel yalnızca yönetici veri giriş/çizim modu içindir. ${presentation.count} parselin ürün, alan, çiftçi, sulama ve atama bilgileri kanonik referans verisinden gösterilir.`;
+  }
+}
+
 function metricsTitleForCurrentRole(pid){
   const user = STATE.currentUser;
   const visibleCount = getVisibleUsableParcelIds().length;
@@ -10759,12 +10785,16 @@ function syncRoleInfoBanner(){
       banner.innerHTML = `<strong>${escapeHtml(user.displayName || user.username)}</strong> hesabı ile giriş yapıldı. Bu görünümde yalnızca size tanımlı <strong>${count}</strong> parsel listelenir. Odak; mevcut ürün, önerilen ürün deseni, su tasarrufu ve gelir etkisidir.`;
     }
   }else{
-    const count = getVisibleUsableParcelIds().length;
+    const presentation = getActiveAnalysisUnitPresentation();
+    const scope = presentation.count === null
+      ? 'Proje kapsamındaki analiz birimleri için'
+      : `Bölge genelindeki <strong>${presentation.count}</strong> ${presentation.noun} için`;
     if(getInstitutionRole(user) === 'analyst'){
-      banner.innerHTML = `<strong>Kurumsal analiz görünümü</strong> aktif. Bölge genelindeki <strong>${count}</strong> parsel için ilçe özeti, su bütçesi, algoritma karşılaştırmaları ve uzun vadeli etki ekranları öne çıkar. Kullanıcı açma / pasife alma gibi işlemler yönetici hesabında tutulur.`;
+      banner.innerHTML = `<strong>Kurumsal analiz görünümü</strong> aktif. ${scope} ilçe özeti, su bütçesi, algoritma karşılaştırmaları ve uzun vadeli etki ekranları öne çıkar. Kullanıcı açma / pasife alma gibi işlemler yönetici hesabında tutulur.`;
     }else{
-      banner.innerHTML = `<strong>Kurumsal yönetim görünümü</strong> aktif. Bölge genelindeki <strong>${count}</strong> parsel için kullanıcı yönetimi, resmi özet tablolar, su bütçesi ve uzun vadeli etki ekranları birlikte kullanılabilir.`;
+      banner.innerHTML = `<strong>Kurumsal yönetim görünümü</strong> aktif. ${scope} kullanıcı yönetimi, resmi özet tablolar, su bütçesi ve uzun vadeli etki ekranları birlikte kullanılabilir.`;
     }
+    syncProviderAwareParcelCopy(presentation);
   }
   banner.classList.add('is-visible');
 }
