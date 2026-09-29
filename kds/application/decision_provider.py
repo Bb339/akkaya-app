@@ -53,6 +53,9 @@ def _project_units(document):
             "geometry": deepcopy(source.get("geometry")),
             "settlement": source.get("settlement") or source.get("village") or source.get("district"),
             "warnings": deepcopy(source.get("warnings") or []),
+            "current_water_m3": source.get("current_water_m3"),
+            "current_profit_tl": source.get("current_profit_tl"),
+            "current_efficiency_tl_per_m3": source.get("current_efficiency_tl_per_m3"),
             "source": "project.analysis_units",
         })
     return units

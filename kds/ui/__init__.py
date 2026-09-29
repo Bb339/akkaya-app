@@ -44,11 +44,14 @@ def register_project_pages(app):
                 )
                 link = ('<a data-project-workspace-link class="btn-secondary header-switch-btn" '
                         'href="/projects">Projeler / Kurumsal veri</a>')
-                provider = '''<section id="v1-provider-shell" class="v1-provider-shell" aria-label="Veri sağlayıcı bağlamı">
+                provider = '''<button id="v1-provider-toggle" class="v1-provider-toggle" type="button" aria-controls="v1-provider-shell" aria-expanded="false"><span>Veri Kaynağı</span><strong id="v1-provider-badge">AKKAYA REF</strong></button>
+<div id="v1-provider-scrim" class="v1-provider-scrim" hidden></div>
+<aside id="v1-provider-shell" class="v1-provider-shell" aria-label="Veri sağlayıcı bağlamı" aria-hidden="true">
   <div class="v1-provider-head">
     <div><span class="v1-provider-kicker">VERİ KAYNAĞI</span><strong id="v1-provider-name">AKKAYA REFERENCE</strong><span id="v1-provider-authority">REFERENCE MODEL / DEMO DATA · NOT OFFICIAL / NOT FIELD VALIDATED</span></div>
-    <div class="v1-provider-actions"><a class="btn-secondary" id="v1-reference-provider" href="/">Akkaya Reference</a><select id="v1-project-provider-select" aria-label="Kurumsal proje seç"><option value="">Kurumsal proje seç</option></select><a class="btn-secondary" id="v1-manage-project" href="/projects">Proje verilerini yönet</a></div>
+    <button id="v1-provider-close" class="v1-provider-close" type="button" aria-label="Veri kaynağı panelini kapat">×</button>
   </div>
+  <div class="v1-provider-actions"><a class="btn-secondary" id="v1-reference-provider" href="/">Akkaya Reference</a><select id="v1-project-provider-select" aria-label="Kurumsal proje seç"><option value="">Kurumsal proje seç</option></select><a class="btn-secondary" id="v1-manage-project" href="/projects">Proje verilerini yönet</a></div>
   <div id="v1-provider-error" class="v1-provider-error" hidden></div>
   <div id="v1-provider-context" class="v1-provider-context" hidden>
     <div class="v1-provider-facts" id="v1-provider-facts"></div>
@@ -67,7 +70,7 @@ def register_project_pages(app):
     </section>
     <details id="v1-project-history"><summary>Proje analiz geçmişi</summary><div id="v1-project-history-list"></div></details>
   </div>
-</section>'''
+</aside>'''
                 html = html.replace(marker, f'{marker}\n    {boundary}\n    {link}\n    {provider}', 1)
                 html = html.replace('</head>', '<link rel="stylesheet" href="/projects/assets/v1-provider.css">\n</head>', 1)
                 html = html.replace('</body>', '<script src="/projects/assets/v1-provider.js"></script>\n</body>', 1)

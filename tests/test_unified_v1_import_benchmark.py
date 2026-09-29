@@ -93,11 +93,12 @@ def test_negative_file_states_are_explicit():
     assert "wrong_planning_year" in {item["code"] for item in wrong_year["issues"]}
 
 
-def test_irrelevant_extra_file_is_ambiguous_and_cannot_join_auto_matched_package():
+def test_irrelevant_extra_file_is_ignored_without_joining_auto_matched_package():
     result = detect(b"note,owner\nmeeting agenda,office\n", "meeting_notes.csv", project=PROJECT)
-    assert result["state"] == "AMBIGUOUS"
+    assert result["state"] == "IGNORED_NOT_RELEVANT"
     assert result["confidence"] == 0
-    assert "ambiguous_data_type" in {item["code"] for item in result["issues"]}
+    assert result["detected_data_type"] is None
+    assert "ignored_not_relevant" in {item["code"] for item in result["issues"]}
 
 
 def test_geometry_unit_id_mismatch_is_invalid_and_cannot_be_confirmed(tmp_path):

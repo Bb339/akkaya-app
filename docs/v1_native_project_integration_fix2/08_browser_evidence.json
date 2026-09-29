@@ -1,0 +1,30 @@
+{
+  "engine": "Chromium via Playwright",
+  "viewports": [
+    "1366x900",
+    "1920x1080",
+    "390x844"
+  ],
+  "package": "21/21 AUTO_MATCHED",
+  "revision": 21,
+  "units": 24,
+  "area_da": 258,
+  "crops": 8,
+  "candidates": "24/24",
+  "geometry": "24/24 Polygon",
+  "verified": [
+    "compact drawer",
+    "native V1 map",
+    "map-selector sync",
+    "S1 GA seed 123 water_saving",
+    "pinned preview",
+    "stored run",
+    "provenance",
+    "no reference endpoint"
+  ],
+  "screenshots": [
+    "chromium_1366x900.png",
+    "chromium_1920x1080.png",
+    "chromium_mobile_390x844.png"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "provider": "PROJECT_DATA",
+  "blocked": [
+    "/api/parcels",
+    "/api/optimize",
+    "/api/meta",
+    "/api/water_allocation_logic",
+    "/api/defense-datasets",
+    "/api/years",
+    "/api/geojson_*",
+    "/data/*"
+  ],
+  "observed_reference_requests": [],
+  "fallback": "NONE"
+}

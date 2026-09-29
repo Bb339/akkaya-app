@@ -1,0 +1,12 @@
+{
+  "A_to_B": {
+    "A_run_hidden": true,
+    "A_units_hidden": true,
+    "A_result_hidden": true,
+    "reference_fallback": false
+  },
+  "B_to_A": {
+    "implicit_run_restore": false,
+    "explicit_run_id_required": true
+  }
+}

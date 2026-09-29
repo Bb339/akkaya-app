@@ -1,0 +1,942 @@
+{
+  "type": "FeatureCollection",
+  "name": "SYNTHETIC_NOT_OFFICIAL_KDS_24",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-001",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-001",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.41699472463824,
+              37.937939239751934
+            ],
+            [
+              34.422346976949186,
+              37.937395428019805
+            ],
+            [
+              34.423377357073214,
+              37.940715541752795
+            ],
+            [
+              34.42100175845392,
+              37.94294803202153
+            ],
+            [
+              34.417309563009475,
+              37.94177454354694
+            ],
+            [
+              34.41699472463824,
+              37.937939239751934
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-002",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-002",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.45181242411855,
+              37.941814233681285
+            ],
+            [
+              34.457489344974086,
+              37.94123743423607
+            ],
+            [
+              34.45858222813344,
+              37.94475894663844
+            ],
+            [
+              34.45606252529382,
+              37.94712686015037
+            ],
+            [
+              34.45214636063946,
+              37.94588218766333
+            ],
+            [
+              34.45181242411855,
+              37.941814233681285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-003",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-003",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.48664,
+              37.937695999999995
+            ],
+            [
+              34.492624,
+              37.937087999999996
+            ],
+            [
+              34.493776000000004,
+              37.940799999999996
+            ],
+            [
+              34.49112,
+              37.943296
+            ],
+            [
+              34.486992,
+              37.941984
+            ],
+            [
+              34.48664,
+              37.937695999999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-004",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-004",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.52147600227015,
+              37.94158354441381
+            ],
+            [
+              34.5277520744176,
+              37.940945868634124
+            ],
+            [
+              34.52896030221069,
+              37.94483904707853
+            ],
+            [
+              34.52617466590995,
+              37.94745687396357
+            ],
+            [
+              34.521845182984706,
+              37.94608083675477
+            ],
+            [
+              34.52147600227015,
+              37.94158354441381
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-005",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-005",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.55631930441357,
+              37.937476094455015
+            ],
+            [
+              34.56287444798179,
+              37.936810063825085
+            ],
+            [
+              34.56413640075428,
+              37.940876356092005
+            ],
+            [
+              34.561226898528815,
+              37.94361058709907
+            ],
+            [
+              34.55670490109405,
+              37.942173363108175
+            ],
+            [
+              34.55631930441357,
+              37.937476094455015
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-006",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-006",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.59116901057167,
+              37.94137303582057
+            ],
+            [
+              34.59799182031546,
+              37.940679809162106
+            ],
+            [
+              34.59930530240517,
+              37.94491214034007
+            ],
+            [
+              34.59627699647611,
+              37.94775801820112
+            ],
+            [
+              34.5915703523213,
+              37.94626210804339
+            ],
+            [
+              34.59116901057167,
+              37.94137303582057
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-007",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-007",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.42202439438576,
+              37.97227387043594
+            ],
+            [
+              34.42910475867017,
+              37.97155447513432
+            ],
+            [
+              34.4304678234522,
+              37.97594657276529
+            ],
+            [
+              34.42732520187142,
+              37.97889987979301
+            ],
+            [
+              34.42244088640249,
+              37.97734750045793
+            ],
+            [
+              34.42202439438576,
+              37.97227387043594
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-008",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-008",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.45799472463824,
+              37.97693923975193
+            ],
+            [
+              34.46334697694918,
+              37.9763954280198
+            ],
+            [
+              34.46437735707321,
+              37.97971554175279
+            ],
+            [
+              34.462001758453916,
+              37.98194803202153
+            ],
+            [
+              34.45830956300947,
+              37.980774543546936
+            ],
+            [
+              34.45799472463824,
+              37.97693923975193
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-009",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-009",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.492812424118554,
+              37.972814233681284
+            ],
+            [
+              34.49848934497409,
+              37.97223743423607
+            ],
+            [
+              34.49958222813344,
+              37.975758946638436
+            ],
+            [
+              34.49706252529382,
+              37.97812686015037
+            ],
+            [
+              34.493146360639464,
+              37.97688218766333
+            ],
+            [
+              34.492812424118554,
+              37.972814233681284
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-010",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-010",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.52764,
+              37.97669599999999
+            ],
+            [
+              34.533623999999996,
+              37.97608799999999
+            ],
+            [
+              34.534776,
+              37.97979999999999
+            ],
+            [
+              34.53212,
+              37.98229599999999
+            ],
+            [
+              34.527992,
+              37.98098399999999
+            ],
+            [
+              34.52764,
+              37.97669599999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-011",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-011",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.56247600227015,
+              37.97258354441381
+            ],
+            [
+              34.5687520744176,
+              37.97194586863412
+            ],
+            [
+              34.569960302210696,
+              37.97583904707853
+            ],
+            [
+              34.56717466590995,
+              37.978456873963566
+            ],
+            [
+              34.56284518298471,
+              37.977080836754766
+            ],
+            [
+              34.56247600227015,
+              37.97258354441381
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-012",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-012",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.59731930441357,
+              37.97647609445501
+            ],
+            [
+              34.60387444798179,
+              37.97581006382508
+            ],
+            [
+              34.605136400754276,
+              37.979876356092
+            ],
+            [
+              34.60222689852881,
+              37.98261058709907
+            ],
+            [
+              34.59770490109405,
+              37.98117336310817
+            ],
+            [
+              34.59731930441357,
+              37.97647609445501
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-013",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-013",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.41616901057167,
+              38.00737303582057
+            ],
+            [
+              34.42299182031546,
+              38.00667980916211
+            ],
+            [
+              34.42430530240517,
+              38.010912140340075
+            ],
+            [
+              34.42127699647611,
+              38.01375801820112
+            ],
+            [
+              34.4165703523213,
+              38.012262108043394
+            ],
+            [
+              34.41616901057167,
+              38.00737303582057
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-014",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-014",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.451024394385755,
+              38.01127387043594
+            ],
+            [
+              34.45810475867017,
+              38.01055447513432
+            ],
+            [
+              34.459467823452194,
+              38.01494657276529
+            ],
+            [
+              34.456325201871415,
+              38.01789987979301
+            ],
+            [
+              34.45144088640249,
+              38.01634750045793
+            ],
+            [
+              34.451024394385755,
+              38.01127387043594
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-015",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-015",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.486994724638244,
+              38.007939239751934
+            ],
+            [
+              34.492346976949186,
+              38.007395428019805
+            ],
+            [
+              34.493377357073214,
+              38.010715541752795
+            ],
+            [
+              34.49100175845392,
+              38.012948032021534
+            ],
+            [
+              34.487309563009475,
+              38.01177454354694
+            ],
+            [
+              34.486994724638244,
+              38.007939239751934
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-016",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-016",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.52181242411855,
+              38.011814233681285
+            ],
+            [
+              34.527489344974086,
+              38.01123743423607
+            ],
+            [
+              34.52858222813344,
+              38.01475894663844
+            ],
+            [
+              34.52606252529382,
+              38.01712686015037
+            ],
+            [
+              34.52214636063946,
+              38.01588218766333
+            ],
+            [
+              34.52181242411855,
+              38.011814233681285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-017",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-017",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.55664,
+              38.007695999999996
+            ],
+            [
+              34.562624,
+              38.007087999999996
+            ],
+            [
+              34.563776000000004,
+              38.010799999999996
+            ],
+            [
+              34.56112,
+              38.013296
+            ],
+            [
+              34.556992,
+              38.011984
+            ],
+            [
+              34.55664,
+              38.007695999999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-018",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-018",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.59147600227015,
+              38.01158354441381
+            ],
+            [
+              34.5977520744176,
+              38.010945868634124
+            ],
+            [
+              34.59896030221069,
+              38.01483904707853
+            ],
+            [
+              34.59617466590995,
+              38.01745687396357
+            ],
+            [
+              34.591845182984706,
+              38.01608083675477
+            ],
+            [
+              34.59147600227015,
+              38.01158354441381
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-019",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-019",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.42231930441357,
+              38.04247609445501
+            ],
+            [
+              34.42887444798179,
+              38.04181006382508
+            ],
+            [
+              34.43013640075428,
+              38.045876356092
+            ],
+            [
+              34.427226898528815,
+              38.04861058709907
+            ],
+            [
+              34.42270490109405,
+              38.04717336310817
+            ],
+            [
+              34.42231930441357,
+              38.04247609445501
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-020",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-020",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.45716901057167,
+              38.046373035820565
+            ],
+            [
+              34.46399182031546,
+              38.0456798091621
+            ],
+            [
+              34.46530530240517,
+              38.04991214034007
+            ],
+            [
+              34.462276996476106,
+              38.05275801820112
+            ],
+            [
+              34.4575703523213,
+              38.05126210804339
+            ],
+            [
+              34.45716901057167,
+              38.046373035820565
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-021",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-021",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.49202439438576,
+              38.04227387043594
+            ],
+            [
+              34.49910475867017,
+              38.04155447513432
+            ],
+            [
+              34.5004678234522,
+              38.04594657276529
+            ],
+            [
+              34.49732520187142,
+              38.04889987979301
+            ],
+            [
+              34.49244088640249,
+              38.04734750045793
+            ],
+            [
+              34.49202439438576,
+              38.04227387043594
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-022",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-022",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.52799472463824,
+              38.04693923975193
+            ],
+            [
+              34.53334697694918,
+              38.0463954280198
+            ],
+            [
+              34.53437735707321,
+              38.04971554175279
+            ],
+            [
+              34.532001758453916,
+              38.05194803202153
+            ],
+            [
+              34.52830956300947,
+              38.050774543546936
+            ],
+            [
+              34.52799472463824,
+              38.04693923975193
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-023",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-023",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.562812424118555,
+              38.042814233681284
+            ],
+            [
+              34.56848934497409,
+              38.04223743423607
+            ],
+            [
+              34.56958222813344,
+              38.045758946638436
+            ],
+            [
+              34.56706252529382,
+              38.04812686015037
+            ],
+            [
+              34.563146360639465,
+              38.04688218766333
+            ],
+            [
+              34.562812424118555,
+              38.042814233681284
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "external_id": "KDS-024",
+        "label": "SYNTHETIC / NOT OFFICIAL KDS-024",
+        "source": "synthetic_test_fixture_no_cadastral_authority"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.59764,
+              38.04669599999999
+            ],
+            [
+              34.603623999999996,
+              38.04608799999999
+            ],
+            [
+              34.604776,
+              38.04979999999999
+            ],
+            [
+              34.60212,
+              38.05229599999999
+            ],
+            [
+              34.597992,
+              38.05098399999999
+            ],
+            [
+              34.59764,
+              38.04669599999999
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

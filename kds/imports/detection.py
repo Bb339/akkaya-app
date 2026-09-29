@@ -285,15 +285,21 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
     hard_review = any(issue["code"] in {"wrong_planning_year", "wrong_geographic_scope",
                                         "explicit_year_not_parseable",
                                         "required_numeric_field_not_parseable"} for issue in issues)
-    if len(tied) > 1 or best["ambiguous"] or sheet_ambiguity:
+    not_relevant = best["matched"] == 0 and not any(item["hint"] for item in candidates)
+    if not_relevant:
+        state = "IGNORED_NOT_RELEVANT"
+        issues = [{"code": "ignored_not_relevant",
+                   "message": "No reliable supported-domain evidence was found; file was not staged."}]
+    elif len(tied) > 1 or best["ambiguous"] or sheet_ambiguity:
         state = "AMBIGUOUS"
     elif missing or hard_review:
         state = "REVIEW_REQUIRED"
     else:
         state = "AUTO_MATCHED"
     return {
-        **base, "state": state, "detected_data_type": best["data_type"],
-        "detected_domain": LABELS.get(best["data_type"], best["data_type"]),
+        **base, "state": state,
+        "detected_data_type": None if not_relevant else best["data_type"],
+        "detected_domain": None if not_relevant else LABELS.get(best["data_type"], best["data_type"]),
         "mapping": best["mapping"], "missing_required_fields": missing,
         "ambiguous_mapping": best["ambiguous"], "issues": issues,
         "rows": len(rows), "columns": columns, "sheet_names": sheets,

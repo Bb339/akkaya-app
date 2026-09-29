@@ -12,6 +12,8 @@ from kds.application.import_service import ImportService
 
 
 ROOT = Path(__file__).resolve().parents[1]
+FULL_VISUAL_PACKAGE = ROOT / "docs" / "unified_v1_project_provider" / "demo_full_visual_package"
+EVIDENCE = ROOT / "docs" / "v1_native_project_integration_fix2"
 LEAFLET = """
 Object.defineProperty(window,'L',{configurable:true,writable:true,value:{
  map(root){const layers=[];return{_root:root,_layers:layers,setView(){return this},fitBounds(){return this},remove(){root.replaceChildren()},eachLayer(fn){layers.forEach(fn)},invalidateSize(){return this}}},
@@ -21,6 +23,9 @@ Object.defineProperty(window,'L',{configurable:true,writable:true,value:{
  featureGroup(layers){return{getBounds(){return{pad(){return this}}}}}
 }});
 Object.defineProperty(window,'Chart',{configurable:true,writable:true,value:function(){return{destroy(){},update(){}}}});
+"""
+FULL_VISUAL_LEAFLET = LEAFLET + """
+L.esri={basemapLayer(name){window.__V1_BASEMAP_NAME__=name;return{addTo(){window.__V1_BASEMAP_ADDED__=true;return this}}}};
 """
 
 
@@ -181,6 +186,93 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
 
 
 @pytest.mark.browser
+def test_full_visual_package_native_drawer_satellite_map_and_stored_run(tmp_path):
+    assert 'L.esri.basemapLayer("Imagery").addTo(map)' in (ROOT / "script.js").read_text(encoding="utf-8")
+    assert "L.map(root)" not in (ROOT / "kds/ui/static/v1-provider.js").read_text(encoding="utf-8")
+    application, _, repository = client_for(tmp_path)
+    _serve_v1(application)
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
+    server, thread = serve(application)
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1366, "height": 900})
+            page.add_init_script(FULL_VISUAL_LEAFLET)
+            page.route("https://**", lambda route: route.abort())
+            requests = []
+            page.on("request", lambda request: requests.append(request.url))
+            page.goto(f"http://127.0.0.1:{server.server_port}/projects")
+            page.locator("details.form-drawer").first.locator("summary").click()
+            form = page.locator("#create-project")
+            form.locator('[name="id"]').fill("native-full-visual")
+            form.locator('[name="name"]').fill("KDS Tam Görsel Sentetik Demo")
+            form.locator('[name="planning_year"]').fill("2025")
+            form.locator('[name="province_or_region"]').fill("Synthetic Region")
+            form.locator('[name="data_source_notes"]').select_option(
+                "synthetic not_official institutional integration fixture")
+            form.locator("button").click()
+            files = [str(path) for path in sorted(FULL_VISUAL_PACKAGE.iterdir())
+                     if path.suffix.lower() in {".csv", ".xlsx", ".geojson"}]
+            page.locator('#bulk-upload-form input[type="file"]').set_input_files(files)
+            page.locator('#bulk-upload-form button[type="submit"]').click()
+            expect(page.locator("#bulk-import-body tr")).to_have_count(21, timeout=120000)
+            assert page.locator("#bulk-import-body tr", has_text="AUTO_MATCHED").count() == 21
+            page.locator("#bulk-confirm").click()
+            expect(page.locator("#readiness-verdict")).to_contain_text("VERIFIED READY", timeout=180000)
+            page.locator("#open-v1-project").click()
+            page.wait_for_function("typeof window.__V1_PROJECT_PROVIDER__ === 'object'")
+            page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            expect(page.locator("#v1-provider-badge")).to_have_text("PROJECT DATA")
+            page.locator("#v1-provider-toggle").click()
+            expect(page.locator("#v1-provider-shell")).to_have_attribute("aria-hidden", "false")
+            expect(page.locator("#v1-provider-authority")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#v1-geometry-status")).to_contain_text("24 birimin tamamında")
+            expect(page.locator("#parcelSelect option")).to_have_count(24)
+            assert page.locator("#parcelSelect option").first.get_attribute("value") == "KDS-001"
+            expect(page.locator(".leaflet-interactive")).to_have_count(24, timeout=30000)
+            assert page.evaluate("document.querySelector('#map') === document.getElementById('map')")
+            page.locator("#v1-provider-close").click()
+            page.locator(".leaflet-interactive").nth(11).dispatch_event("click")
+            expect(page.locator("#parcelSelect")).to_have_value("KDS-012")
+            page.locator("#parcelSelect").select_option("KDS-005")
+            expect(page.locator("#parcelSummaryTitle")).to_contain_text("KDS-005")
+            page.locator("#parcelSelect").select_option("KDS-024")
+            expect(page.locator("#parcelSummaryTitle")).to_contain_text("KDS-024")
+            page.locator("#v1-provider-toggle").click()
+            assert page.evaluate("window.__V1_PROJECT_PROVIDER__.context.capabilities.scenarios.S1.ready") is True
+            for algorithm in ("aco", "abc", "ga"):
+                page.locator("#algoSelect").select_option(algorithm)
+                page.locator("#v1-provider-preview").click()
+                expect(page.locator("#v1-provider-preview-state")).to_contain_text("PINNED", timeout=120000)
+            for objective in ("maks_kar", "su_etkin", "su_tasarruf"):
+                page.locator(f'input[name="scenario"][value="{objective}"]').check()
+                page.locator("#v1-provider-preview").click()
+                expect(page.locator("#v1-provider-preview-state")).to_contain_text("PINNED", timeout=120000)
+            page.locator("#algoSelect").select_option("ga")
+            page.locator("#seasonSourceSel").select_option("s1")
+            page.locator('input[name="scenario"][value="su_tasarruf"]').check()
+            page.locator("#v1-provider-seed").fill("123")
+            page.locator("#v1-provider-preview").click()
+            expect(page.locator("#v1-provider-preview-state")).to_contain_text("PINNED", timeout=120000)
+            page.locator("#runOptBtn").click()
+            expect(page.locator("#v1-project-result")).to_be_visible(timeout=240000)
+            expect(page.locator("#v1-project-provenance")).to_contain_text("selection_hash")
+            expect(page.locator("#activeObjectiveBadge")).to_contain_text("Su tasarrufu")
+            run_id = next(iter(repository.get("native-full-visual")["runs"]))
+            assert f"run_id={run_id}" in page.url
+            assert not any("/api/parcels" in url or "/api/optimize" in url for url in requests)
+            page.screenshot(path=str(EVIDENCE / "chromium_1366x900.png"), full_page=True)
+            page.set_viewport_size({"width": 1920, "height": 1080})
+            page.screenshot(path=str(EVIDENCE / "chromium_1920x1080.png"), full_page=True)
+            page.set_viewport_size({"width": 390, "height": 844})
+            page.screenshot(path=str(EVIDENCE / "chromium_mobile_390x844.png"), full_page=True)
+            browser.close()
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+
+
+@pytest.mark.browser
 @pytest.mark.parametrize("query", [
     "provider=PROJECT_DATA&project_id=missing",
     "provider=PROJECT_DATA&project_id=%2Fmalformed",
@@ -245,8 +337,8 @@ def test_bulk_import_primary_guidance_is_turkish_and_raw_issues_are_secondary(tm
             irrelevant_row = page.locator("#bulk-import-body tr", has_text="meeting_notes.csv")
             irrelevant_row.locator("summary", has_text="Dosya önizlemesi").click()
             expect(irrelevant_row).to_contain_text("Türkçe kullanıcı yönlendirmesi")
-            expect(irrelevant_row).to_contain_text("hangi veri türüne ait olduğunu güvenle belirleyemedi")
-            expect(irrelevant_row).to_contain_text("İlgisiz ek dosyayı paketten çıkarın")
+            expect(irrelevant_row).to_contain_text("güvenilir yapısal kanıt bulunmadı")
+            expect(irrelevant_row).to_contain_text("eksiksiz bir paketin aktivasyonunu engellemez")
             malformed_row = page.locator("#bulk-import-body tr", has_text="analysis_units.csv")
             malformed_row.locator("summary", has_text="Dosya önizlemesi").click()
             expect(malformed_row).to_contain_text("Sayısal olması gereken area_da")

@@ -1,0 +1,54 @@
+{
+  "missing_required_fields": {
+    "tr": "Zorunlu sütunları ve eşleştirmeyi kontrol edin.",
+    "blocks": true
+  },
+  "required_numeric_field_not_parseable": {
+    "tr": "Sayısal sütundaki örnek değerleri düzeltin.",
+    "blocks": true
+  },
+  "explicit_year_not_parseable": {
+    "tr": "Yılı YYYY biçiminde düzeltin.",
+    "blocks": true
+  },
+  "wrong_planning_year": {
+    "tr": "Dosya yılını proje planlama yılıyla eşleştirin.",
+    "blocks": true
+  },
+  "wrong_geographic_scope": {
+    "tr": "Dosya kapsamını proje kapsamıyla eşleştirin.",
+    "blocks": true
+  },
+  "ambiguous_mapping": {
+    "tr": "Canonical sütun eşleştirmesini açıkça seçin.",
+    "blocks": true
+  },
+  "ambiguous_data_type": {
+    "tr": "Doğru veri türünü belirleyin.",
+    "blocks": true
+  },
+  "ambiguous_workbook_sheet": {
+    "tr": "Doğru çalışma sayfasını seçin.",
+    "blocks": true
+  },
+  "unsupported_extension": {
+    "tr": "CSV, XLSX veya GeoJSON kullanın.",
+    "blocks": true
+  },
+  "invalid_file": {
+    "tr": "Dosya biçimini ve GeoJSON yapısını düzeltin.",
+    "blocks": true
+  },
+  "unknown_unit": {
+    "tr": "Geometri kimliklerini aktif analiz birimleriyle eşleştirin.",
+    "blocks": true
+  },
+  "invalid_geometry": {
+    "tr": "Geometri tipini ve kapalı halkaları düzeltin.",
+    "blocks": true
+  },
+  "ignored_not_relevant": {
+    "tr": "Dosya uygulanmadan yok sayıldı; gerçek proje verisiyse doğru şablonu kullanın.",
+    "blocks": false
+  }
+}

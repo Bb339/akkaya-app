@@ -1,0 +1,18 @@
+{
+  "focused_backend": {
+    "tests": 33,
+    "passed": 33,
+    "failed": 0
+  },
+  "chromium_provider_matrix": {
+    "tests": 9,
+    "passed": 9
+  },
+  "full_visual": {
+    "upload": "21/21 AUTO_MATCHED",
+    "polygons": "24/24",
+    "run": "S1 GA seed 123 water_saving stored"
+  },
+  "known_s2_high_budget_test": "INHERITED_UNCHANGED",
+  "broad_suite": "not run; focused milestone scope"
+}

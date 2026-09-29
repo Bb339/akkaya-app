@@ -1,0 +1,9 @@
+crop_identity,applicable_year,geographic_scope,kc_ini,kc_mid,kc_end,stage_value_mode,p_ini,p_dev,p_mid,p_late,authority_class,source,source_reference
+ARPA,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+NOHUT,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+MERCIMEK,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+AYCICEGI,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+MISIR,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+BUGDAY,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ELMA,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ARMUT,2025,project,0.4,1.0,0.5,DAYS,20,30,40,20,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture

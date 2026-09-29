@@ -1,0 +1,19 @@
+{
+  "baseline": "b0745a6138030a5131b5584d206ba35e60826055",
+  "protected_paths": [
+    "app.py",
+    "index.html",
+    "kds/science",
+    "kds/application/optimization.py",
+    "kds/application/readiness.py",
+    "kds/adapters/institutional.py",
+    "data",
+    "render.yaml",
+    "docs/experiments/robustness_sensitivity"
+  ],
+  "changed_protected_paths": [],
+  "status": "PASS",
+  "frozen_index_html": "UNCHANGED",
+  "render_yaml": "UNCHANGED",
+  "scientific_behavior": "UNCHANGED"
+}

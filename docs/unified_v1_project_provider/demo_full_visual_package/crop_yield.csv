@@ -1,0 +1,9 @@
+crop,yield_value,yield_unit,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARPA,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+NOHUT,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MERCIMEK,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+AYCICEGI,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MISIR,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+BUGDAY,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ELMA,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARMUT,2,ton/da,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog

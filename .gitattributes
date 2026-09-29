@@ -1,0 +1,4 @@
+docs/unified_v1_project_provider/demo_full_visual_package/*.csv text eol=lf
+docs/unified_v1_project_provider/demo_full_visual_package/*.geojson text eol=lf
+docs/unified_v1_project_provider/demo_full_visual_package/EVIDENCE/*.csv text eol=lf
+docs/unified_v1_project_provider/demo_full_visual_package/EVIDENCE/*.txt text eol=lf

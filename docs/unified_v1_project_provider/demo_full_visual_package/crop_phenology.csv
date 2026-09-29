@@ -1,0 +1,17 @@
+crop_identity,applicable_year,geographic_scope,season,mode,planting_date,harvest_date,authority_class,source,source_reference
+ARPA,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ARPA,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+NOHUT,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+NOHUT,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+MERCIMEK,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+MERCIMEK,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+AYCICEGI,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+AYCICEGI,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+MISIR,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+MISIR,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+BUGDAY,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+BUGDAY,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ELMA,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ELMA,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ARMUT,2025,project,PRIMARY,YEAR_SPECIFIC,2025-03-01,2025-06-30,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture
+ARMUT,2025,project,SECONDARY,YEAR_SPECIFIC,2025-07-01,2025-10-31,LOCAL_INSTITUTIONAL,Synthetic Institute,synthetic not_official institutional integration fixture

@@ -1,0 +1,9 @@
+crop,price,price_unit,price_period,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARPA,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+NOHUT,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MERCIMEK,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+AYCICEGI,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+MISIR,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+BUGDAY,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ELMA,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog
+ARMUT,1000,TL/ton,2025 average,2025,2025,LOCAL_INSTITUTIONAL_SOURCE,Synthetic Institute,synthetic not_official institutional integration fixture,TRY,project,catalog

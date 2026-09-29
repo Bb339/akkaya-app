@@ -248,7 +248,8 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
                 item["batch"] = batch
             items.append(item)
         return jsonify(items=items, auto_matched=sum(item["batch"] is not None for item in items),
-                       review_required=sum(item["batch"] is None for item in items)), 201
+                       ignored_not_relevant=sum(item["detection"]["state"] == "IGNORED_NOT_RELEVANT" for item in items),
+                       review_required=sum(item["batch"] is None and item["detection"]["state"] != "IGNORED_NOT_RELEVANT" for item in items)), 201
 
     @blueprint.get("/projects/<project_id>/imports/<batch_id>")
     def get_import(project_id, batch_id):

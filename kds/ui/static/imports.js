@@ -17,6 +17,7 @@ export function issueGuidance(issue={},detection={}){
     ambiguous_workbook_sheet:{what:'Çalışma kitabında aynı derecede uygun birden fazla sayfa bulundu.',action:`Doğru veri sayfasını seçin: ${(issue.sheets||[]).join(', ')||'sayfa adlarını kontrol edin'}.`},
     unsupported_extension:{what:'Bu dosya türü desteklenmiyor.',action:'Desteklenen biçimler: CSV, XLSX, GeoJSON.'},
     invalid_file:{what:'Dosya güvenli biçimde okunamadı.',action:detection.extension==='.geojson'?'GeoJSON geometrilerini ve analysis_unit_id eşleşmesini kontrol edin.':'Dosya biçimini, karakter kodlamasını ve tablo yapısını kontrol edin.'},
+    ignored_not_relevant:{what:'Bu dosyada desteklenen bir veri alanına ait güvenilir yapısal kanıt bulunmadı.',action:'Dosya projeye uygulanmadı ve eksiksiz bir paketin aktivasyonunu engellemez. Dosya aslında proje verisiyse doğru şablonu ve zorunlu sütunları kullanın.'},
     unknown_unit:{what:'Harita geometrisindeki birim kimliği proje analiz birimleriyle eşleşmiyor.',action:'Geometri dosyasındaki kimlikleri analiz birimi dosyasıyla karşılaştırın.'},
     invalid_geometry:{what:'Coğrafi veri geometrisi geçersiz.',action:'GeoJSON koordinatlarını, geometri tipini ve kapalı poligon halkalarını kontrol edin.'},
     duplicate_geometry:{what:'Aynı geometri birden fazla analiz birimine atanmış.',action:'Her geometrinin tek bir analysis_unit_id ile eşleştiğini doğrulayın.'},
@@ -76,7 +77,8 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   const bulkNote=document.getElementById('bulk-import-note');
   const deferredDependencyCodes=new Set(['scientific_table','economic_contract','crop_parameter_contract']);
   const hasDefinitiveBatchError=item=>(item.batch?.issues||[]).some(issue=>
-    issue.severity==='ERROR'&&!deferredDependencyCodes.has(issue.code));
+    issue.severity==='ERROR'&&!deferredDependencyCodes.has(issue.code)&&
+      !(issue.code==='unknown_unit'&&item.batch?.base_revision===0));
   const renderBulk=data=>{
     bulkItems=data.items||[];
     bulkBody.replaceChildren();
@@ -101,16 +103,16 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
         preview_rows:d.preview_rows||[],mapping:d.mapping||{},issues:[...(d.issues||[]),...(b.issues||[])],
         planned_dataset:d.detected_data_type||null,sheet_selection:d.evidence?.sheet_selection||[]
       },null,2);technical.append(technicalSummary,preview);details.append(technical);tr.firstElementChild.append(details);
-      tr.className=state==='AUTO_MATCHED'&&b.status==='ready'?'ready':state==='REVIEW_REQUIRED'?'warning':'blocked';
-      tr.title=state==='AUTO_MATCHED'?'Otomatik eşleşti; açık onay bekleniyor.':'Dosya otomatik uygulanmadı; Türkçe yönlendirmeyi açın.';
+      tr.className=state==='AUTO_MATCHED'&&b.status==='ready'?'ready':state==='IGNORED_NOT_RELEVANT'?'warning':state==='REVIEW_REQUIRED'?'warning':'blocked';
+      tr.title=state==='AUTO_MATCHED'?'Otomatik eşleşti; açık onay bekleniyor.':state==='IGNORED_NOT_RELEVANT'?'İlgisiz dosya güvenli biçimde yok sayıldı.':'Dosya otomatik uygulanmadı; Türkçe yönlendirmeyi açın.';
       bulkBody.append(tr);
     }
     bulkResults.hidden=false;
-    const applicable=bulkItems.length>0&&bulkItems.every(item=>
-      item.detection?.state==='AUTO_MATCHED'&&item.batch?.id&&!hasDefinitiveBatchError(item));
+    const applicable=bulkItems.some(item=>item.detection?.state==='AUTO_MATCHED')&&bulkItems.every(item=>
+      item.detection?.state==='IGNORED_NOT_RELEVANT'||(item.detection?.state==='AUTO_MATCHED'&&item.batch?.id&&!hasDefinitiveBatchError(item)));
     bulkConfirm.disabled=!applicable;
     bulkNote.textContent=applicable
-      ? `${bulkItems.length} dosya otomatik eşleştirildi. Bağımlı doğrulamalar açık onay sırasında güvenli sırayla yenilenir; henüz hiçbiri aktif değildir.`
+      ? `${bulkItems.filter(item=>item.detection?.state==='AUTO_MATCHED').length} dosya otomatik eşleştirildi; ${bulkItems.filter(item=>item.detection?.state==='IGNORED_NOT_RELEVANT').length} açıkça ilgisiz dosya uygulanmadan yok sayıldı. Bağımlı doğrulamalar açık onay sırasında güvenli sırayla yenilenir.`
       : 'Paket fail-closed kaldı. REVIEW_REQUIRED, AMBIGUOUS, UNSUPPORTED veya INVALID satırları çözülmeden toplu aktivasyon yapılamaz.';
   };
   document.getElementById('bulk-upload-form').onsubmit=e=>{
@@ -118,13 +120,13 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
     safe(async()=>{renderBulk(await api(root()+'/bulk-imports',{method:'POST',body:new FormData(e.target)}));await refresh();});
   };
   bulkConfirm.onclick=()=>safe(async()=>{
-    if(!bulkItems.length||bulkItems.some(item=>item.detection?.state!=='AUTO_MATCHED'||!item.batch?.id||hasDefinitiveBatchError(item)))throw new Error('Toplu paket açık onay için hazır değil.');
+    if(!bulkItems.some(item=>item.detection?.state==='AUTO_MATCHED')||bulkItems.some(item=>item.detection?.state!=='IGNORED_NOT_RELEVANT'&&(item.detection?.state!=='AUTO_MATCHED'||!item.batch?.id||hasDefinitiveBatchError(item))))throw new Error('Toplu paket açık onay için hazır değil.');
     bulkConfirm.disabled=true;
     const priority={crops:10,analysis_units:20,economics:30,water_budget:40,candidates:50,scientific_inputs:60,
       annual_water_supply:70,monthly_water_supply:71,delivery_capacity:72,environmental_release:73,conveyance_efficiency:74,
       perennial_irrigation_requirement:75,crop_yield:80,crop_sale_price:81,crop_cost_components:82,crop_net_profit:83,
       seasonal_economics:84,crop_water_parameters:90,crop_phenology:91,geometries:100};
-    const ordered=[...bulkItems].sort((a,b)=>(priority[a.detection.detected_data_type]??999)-(priority[b.detection.detected_data_type]??999));
+    const ordered=bulkItems.filter(item=>item.detection?.state==='AUTO_MATCHED').sort((a,b)=>(priority[a.detection.detected_data_type]??999)-(priority[b.detection.detected_data_type]??999));
     for(const item of ordered){
       const id=item.batch.id;
       const remapped=await post(root()+`/imports/${id}/mapping`,{mapping:item.detection.mapping});

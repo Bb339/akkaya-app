@@ -1,0 +1,30 @@
+{
+  "scenario": "S1",
+  "seed": 123,
+  "algorithms": {
+    "GA": [
+      "popSize",
+      "generations",
+      "cxRate",
+      "mutRate"
+    ],
+    "ACO": [
+      "ants",
+      "iterations",
+      "rho",
+      "q"
+    ],
+    "ABC": [
+      "foodSources",
+      "cycles",
+      "limit"
+    ]
+  },
+  "objectives": [
+    "water_saving",
+    "max_profit",
+    "water_efficiency"
+  ],
+  "preview_matrix": "9/9 READY",
+  "S2": "backend readiness only"
+}

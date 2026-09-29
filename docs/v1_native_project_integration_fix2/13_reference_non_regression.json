@@ -1,0 +1,10 @@
+{
+  "analysis_units": 179,
+  "area_da": 134919,
+  "candidate_rows": 6859,
+  "crops": 58,
+  "water_m3": 100700080.81,
+  "profit_tl": 1041499119.212,
+  "test": "tests/test_akkaya_adapter.py",
+  "status": "PASS"
+}
