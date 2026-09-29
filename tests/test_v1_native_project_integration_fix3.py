@@ -23,6 +23,8 @@ def test_reference_count_and_project_unavailable_copy_are_fail_closed():
     source = (ROOT / "script.js").read_text(encoding="utf-8")
     assert "noun: 'parsel', provider: 'AKKAYA_REFERENCE'" in source
     assert "Proje kapsamındaki analiz birimleri için" in source
+    assert "Referans kapsamındaki parseller için" in source
+    assert "Referans parsel bilgileri kanonik referans verisi hazır olduğunda gösterilir." in source
     assert "presentation.count === null" in source
     assert "Bölge genelindeki <strong>${count}</strong> parsel" not in source
 
@@ -50,7 +52,21 @@ def test_project_reference_project_banner_uses_provider_count(tmp_path):
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1366, "height": 900})
             page.add_init_script(FULL_VISUAL_LEAFLET)
+            page.add_init_script("""
+              window.__REFERENCE_TERM_LEAKS__=[];
+              new MutationObserver(()=>{
+                if(location.search)return;
+                const text=document.getElementById('roleInfoBanner')?.textContent||'';
+                if(text.includes('Proje kapsamındaki')||text.includes('analiz birimi')){
+                  window.__REFERENCE_TERM_LEAKS__.push(text);
+                }
+              }).observe(document,{subtree:true,childList:true,characterData:true});
+            """)
             page.route("https://**", lambda route: route.abort())
+            page.route("**/api/parcels", lambda route: route.fulfill(json={
+                "parcels": [{"id": f"P{index}", "map_only": False}
+                            for index in range(1, 180)]
+            }))
             requests = []
             page.on("request", lambda request: requests.append(request.url))
 
@@ -83,14 +99,19 @@ def test_project_reference_project_banner_uses_provider_count(tmp_path):
                 "typeof window.__V1_PROJECT_PROVIDER__ === 'object' && "
                 "window.__V1_PROJECT_PROVIDER__.provider === 'AKKAYA_REFERENCE'"
             )
-            # The compact browser harness does not mount legacy /api/parcels.
-            # Seed the already-verified canonical reference cardinality so this
-            # journey can validate presentation switching without network data.
-            page.evaluate("parcelData = Array.from({length:179}, (_, index) => "
-                          "({id:`P${index + 1}`, map_only:false}))")
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
-            expect(page.locator("#roleInfoBanner")).to_contain_text("179 parsel")
+            page.evaluate("window.__savedReferenceParcels=parcelData; parcelData=[]; syncRoleInfoBanner()")
+            expect(page.locator("#roleInfoBanner")).to_contain_text(
+                "Referans kapsamındaki parseller için"
+            )
             expect(page.locator("#roleInfoBanner")).not_to_contain_text("analiz birimi")
+            expect(page.locator("#userParcelCard .card-help.small").first).to_contain_text(
+                "Referans parsel bilgileri"
+            )
+            page.evaluate("parcelData=window.__savedReferenceParcels; syncRoleInfoBanner()")
+            expect(page.locator("#roleInfoBanner")).to_contain_text("179 parsel", timeout=30000)
+            expect(page.locator("#roleInfoBanner")).not_to_contain_text("analiz birimi")
+            assert page.evaluate("window.__REFERENCE_TERM_LEAKS__") == []
 
             requests.clear()
             page.goto(project_url)

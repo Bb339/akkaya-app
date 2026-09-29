@@ -2719,6 +2719,7 @@ async function loadEnhancedDataset(){
     STATE.parcelQuotaMap = Object.fromEntries(parcelData.map(p=>[String(p.id), safeNum(p.quota_m3,0)]).filter(([,q])=>q>0));
   }
   STATE.totalAreaAllParcels = (parcelData||[]).reduce((a,p)=>a+(+p.area_da||0),0);
+  try{ syncRoleInfoBanner(); }catch(_e){}
 }
 
 // --- Mevcut baraj serisi ---
@@ -10746,9 +10747,9 @@ function syncProviderAwareParcelCopy(presentation){
     copy.textContent = `${scope} provider verisiyle yönetilir. Birim seçimi, geometri ve analiz bağlamı proje kaynağından gelir.`;
     return;
   }
-  if(presentation.count !== null){
-    copy.textContent = `Bu panel yalnızca yönetici veri giriş/çizim modu içindir. ${presentation.count} parselin ürün, alan, çiftçi, sulama ve atama bilgileri kanonik referans verisinden gösterilir.`;
-  }
+  copy.textContent = presentation.count === null
+    ? 'Referans parsel bilgileri kanonik referans verisi hazır olduğunda gösterilir.'
+    : `Bu panel yalnızca yönetici veri giriş/çizim modu içindir. ${presentation.count} parselin ürün, alan, çiftçi, sulama ve atama bilgileri kanonik referans verisinden gösterilir.`;
 }
 
 function metricsTitleForCurrentRole(pid){
@@ -10787,7 +10788,9 @@ function syncRoleInfoBanner(){
   }else{
     const presentation = getActiveAnalysisUnitPresentation();
     const scope = presentation.count === null
-      ? 'Proje kapsamındaki analiz birimleri için'
+      ? (presentation.provider === 'PROJECT_DATA'
+          ? 'Proje kapsamındaki analiz birimleri için'
+          : 'Referans kapsamındaki parseller için')
       : `Bölge genelindeki <strong>${presentation.count}</strong> ${presentation.noun} için`;
     if(getInstitutionRole(user) === 'analyst'){
       banner.innerHTML = `<strong>Kurumsal analiz görünümü</strong> aktif. ${scope} ilçe özeti, su bütçesi, algoritma karşılaştırmaları ve uzun vadeli etki ekranları öne çıkar. Kullanıcı açma / pasife alma gibi işlemler yönetici hesabında tutulur.`;
