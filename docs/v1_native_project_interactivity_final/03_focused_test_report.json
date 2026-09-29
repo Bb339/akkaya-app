@@ -1,0 +1,17 @@
+{
+  "focused_tests": [
+    {"scope": "new native clickability and full 21-file Chromium E2E", "result": "1 passed"},
+    {"scope": "provider integration, full visual preview matrix, import benchmark, Akkaya adapter and static drawer guard", "result": "13 passed"},
+    {"scope": "legacy provider project/isolation Chromium", "result": "1 passed"},
+    {"scope": "legacy full-visual native provider Chromium", "result": "1 passed"}
+  ],
+  "algorithm_objective_preview_matrix": {
+    "GA": ["water_saving", "max_profit", "water_efficiency"],
+    "ACO": ["water_saving", "max_profit", "water_efficiency"],
+    "ABC": ["water_saving", "max_profit", "water_efficiency"],
+    "result": "READY"
+  },
+  "desktop_export_detector": {"file_count": 21, "AUTO_MATCHED": 21, "other_states": 0},
+  "broad_suite": "not run by instruction",
+  "known_s2_high_budget": "INHERITED_UNCHANGED"
+}

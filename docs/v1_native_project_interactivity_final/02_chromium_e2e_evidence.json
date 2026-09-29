@@ -1,0 +1,11 @@
+{
+  "viewport": "1366x900",
+  "journey": "new synthetic project -> 21 files -> confirm -> V1 PROJECT_DATA -> unit/map -> GA/S1/water_saving/seed 123 -> preview -> stored run -> reload -> AKKAYA_REFERENCE -> PROJECT_DATA",
+  "upload": {"file_count": 21, "auto_matched": 21, "analysis_units": 24, "polygons": 24},
+  "real_clicks": ["provider button", "drawer close", "unit selector", "KDS-009 polygon", "GA", "ACO", "ABC", "water_saving", "max_profit", "water_efficiency", "S1", "preview", "native optimization button", "parcel result tab", "algorithm comparison tab", "accordion", "provider button"],
+  "execution": {"algorithm": "GA", "scenario": "S1", "objective": "water_saving", "seed": 123, "preview": "PINNED", "stored_run": true},
+  "isolation": {"project_reference_endpoints": 0, "reference_parcels": 179, "project_units_after_return": 24, "implicit_run_restore_after_return": false},
+  "pageerror": 0,
+  "screenshots": ["chromium_1366x900.png", "chromium_1920x1080.png", "chromium_mobile_390x844.png"],
+  "status": "PASS"
+}
