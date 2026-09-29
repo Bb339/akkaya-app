@@ -28,7 +28,7 @@ def register_project_pages(app):
 
     @pages.after_app_request
     def reference_project_navigation(response):
-        """Expose the workspace link without mutating the frozen V1 artifact."""
+        """Inject provider controls without mutating the frozen V1 artifact."""
         if request.path == '/' and response.status_code == 200 and response.mimetype == 'text/html':
             response.direct_passthrough = False
             html = response.get_data(as_text=True)
@@ -44,7 +44,25 @@ def register_project_pages(app):
                 )
                 link = ('<a data-project-workspace-link class="btn-secondary header-switch-btn" '
                         'href="/projects">Projeler / Kurumsal veri</a>')
-                response.set_data(html.replace(marker, f'{marker}\n    {boundary}\n    {link}', 1))
+                provider = '''<section id="v1-provider-shell" class="v1-provider-shell" aria-label="Veri sağlayıcı bağlamı">
+  <div class="v1-provider-head">
+    <div><span class="v1-provider-kicker">VERİ KAYNAĞI</span><strong id="v1-provider-name">AKKAYA REFERENCE</strong><span id="v1-provider-authority">REFERENCE MODEL / DEMO DATA · NOT OFFICIAL / NOT FIELD VALIDATED</span></div>
+    <div class="v1-provider-actions"><a class="btn-secondary" id="v1-reference-provider" href="/">Akkaya Reference</a><select id="v1-project-provider-select" aria-label="Kurumsal proje seç"><option value="">Kurumsal proje seç</option></select><a class="btn-secondary" id="v1-manage-project" href="/projects">Proje verilerini yönet</a></div>
+  </div>
+  <div id="v1-provider-error" class="v1-provider-error" hidden></div>
+  <div id="v1-provider-context" class="v1-provider-context" hidden>
+    <div class="v1-provider-facts" id="v1-provider-facts"></div>
+    <div class="v1-provider-workflow"><label>Seed<input id="v1-provider-seed" type="number" min="0" value="123"></label><button class="btn-secondary" id="v1-provider-preview" type="button">Doğrulanmış önizleme</button><span id="v1-provider-preview-state">Önizleme gerekli</span></div>
+    <details id="v1-requirements"><summary>Veri yeterliliği ve gereksinimler</summary><div id="v1-requirement-list"></div></details>
+    <div id="v1-geometry-status"></div>
+    <section id="v1-project-result" hidden><div id="v1-project-result-summary"></div><div id="v1-project-monthly"></div><div id="v1-project-crops"></div><div id="v1-project-units"></div><details><summary>Provenance ve teknik bağlam</summary><pre id="v1-project-provenance"></pre></details></section>
+    <details id="v1-project-history"><summary>Proje analiz geçmişi</summary><div id="v1-project-history-list"></div></details>
+  </div>
+</section>'''
+                html = html.replace(marker, f'{marker}\n    {boundary}\n    {link}\n    {provider}', 1)
+                html = html.replace('</head>', '<link rel="stylesheet" href="/projects/assets/v1-provider.css">\n</head>', 1)
+                html = html.replace('</body>', '<script src="/projects/assets/v1-provider.js"></script>\n</body>', 1)
+                response.set_data(html)
         return response
 
     app.register_blueprint(pages)

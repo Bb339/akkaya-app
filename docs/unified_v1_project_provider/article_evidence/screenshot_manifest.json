@@ -1,0 +1,16 @@
+{
+  "viewport": "1366x900",
+  "rule": "Synthetic/not-official and provider labels must remain visible; no screenshot implies field validation.",
+  "candidates": [
+    {"id": 1, "view": "dual-provider V1 workspace", "required_labels": ["VERİ KAYNAĞI"]},
+    {"id": 2, "view": "smart upload and mapping", "required_labels": ["AUTO_MATCHED", "Dosya önizlemesi"]},
+    {"id": 3, "view": "readiness matrix", "required_labels": ["Veri yeterliliği"]},
+    {"id": 4, "view": "project unit selector and map", "required_labels": ["PROJECT DATA", "SYNTHETIC / NOT_OFFICIAL"]},
+    {"id": 5, "view": "scenario, algorithm, objective, seed and pinned preview", "required_labels": ["PINNED"]},
+    {"id": 6, "view": "stored result summary", "required_labels": ["Run ID", "Otorite"]},
+    {"id": 7, "view": "monthly water validation", "required_labels": ["Aylık su doğrulaması"]},
+    {"id": 8, "view": "crop composition", "required_labels": ["Ürün kompozisyonu", "HHI"]},
+    {"id": 9, "view": "unit-level result", "required_labels": ["Birim sonuçları"]},
+    {"id": 10, "view": "provenance", "required_labels": ["selection_hash", "project_revision", "run_id"]}
+  ]
+}

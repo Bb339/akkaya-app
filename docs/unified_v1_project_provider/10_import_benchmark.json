@@ -1,0 +1,19 @@
+{
+  "scope": "focused deterministic contract benchmark; no population accuracy claim",
+  "summary": {"cases": 13, "matched_expected": 13, "mismatched": 0},
+  "cases": [
+    {"case": "accepted 20-file package", "expected": "20 AUTO_MATCHED", "observed": "20 AUTO_MATCHED", "evidence": "browser and API package tests"},
+    {"case": "Turkish aliases + reordered columns + irrelevant column", "expected": "AUTO_MATCHED analysis_units", "observed": "AUTO_MATCHED analysis_units"},
+    {"case": "semicolon CSV + UTF-8 BOM", "expected": "AUTO_MATCHED", "observed": "AUTO_MATCHED"},
+    {"case": "1,234.56 numeric", "expected": "parseable", "observed": "AUTO_MATCHED"},
+    {"case": "1.234,56 numeric", "expected": "parseable", "observed": "AUTO_MATCHED"},
+    {"case": "partially malformed numeric", "expected": "REVIEW_REQUIRED", "observed": "REVIEW_REQUIRED"},
+    {"case": "cover + empty + one structural Excel sheet", "expected": "select structural sheet", "observed": "Analiz Birimleri selected with evidence"},
+    {"case": "two equally plausible Excel sheets", "expected": "AMBIGUOUS", "observed": "AMBIGUOUS"},
+    {"case": "missing required columns", "expected": "REVIEW_REQUIRED", "observed": "REVIEW_REQUIRED"},
+    {"case": "wrong explicit planning year", "expected": "REVIEW_REQUIRED", "observed": "REVIEW_REQUIRED"},
+    {"case": "unsupported PDF", "expected": "UNSUPPORTED", "observed": "UNSUPPORTED"},
+    {"case": "invalid GeoJSON", "expected": "INVALID", "observed": "INVALID"},
+    {"case": "duplicate project unit identity", "expected": "fail closed", "observed": "ValueError before projection"}
+  ]
+}

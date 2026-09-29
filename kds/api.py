@@ -85,6 +85,19 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         from kds.application.project_overview import overview
         return jsonify(overview(projects.get(project_id)))
 
+    @blueprint.get("/projects/<project_id>/decision-context")
+    def project_decision_context(project_id):
+        """Read-only PROJECT_DATA projection for the shared V1 workspace."""
+        from kds.application.decision_provider import project_decision_context as project_context
+        document = projects.get(project_id)
+        run_values = request.args.getlist("run_id")
+        scenario_values = request.args.getlist("scenario")
+        if len(run_values) > 1 or len(scenario_values) > 1:
+            raise ValueError("At most one run_id and scenario parameter is allowed.")
+        run = analysis.get(project_id, run_values[0]) if run_values and run_values[0] else None
+        scenario = scenario_values[0] if scenario_values and scenario_values[0] else "S1"
+        return jsonify(project_context(document, run, scenario))
+
     @blueprint.get("/projects/<project_id>/data-catalog")
     def project_data_catalog(project_id):
         from kds.application.project_overview import data_catalog

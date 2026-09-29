@@ -51,6 +51,13 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
       for(const value of [d.filename,d.detected_domain,text(d.year),text(d.scope),d.rows,mapping,text(d.authority),b.status||state]){
         const td=document.createElement('td');td.textContent=value??'—';tr.append(td);
       }
+      const details=document.createElement('details');
+      const summary=document.createElement('summary');summary.textContent='Dosya önizlemesi';details.append(summary);
+      const preview=document.createElement('pre');preview.textContent=JSON.stringify({
+        selected_sheet:d.selected_sheet||null,sheet_names:d.sheet_names||[],columns:d.columns||[],
+        preview_rows:d.preview_rows||[],mapping:d.mapping||{},issues:d.issues||[],
+        planned_dataset:d.detected_data_type||null,sheet_selection:d.evidence?.sheet_selection||[]
+      },null,2);details.append(preview);tr.firstElementChild.append(details);
       tr.className=state==='AUTO_MATCHED'&&b.status==='ready'?'ready':state==='REVIEW_REQUIRED'?'warning':'blocked';
       tr.title=[...(d.sheet_names?.length?[`Sayfalar: ${d.sheet_names.join(', ')}`]:[]),...(d.issues||[]).map(issue=>issue.message)].join(' · ');
       bulkBody.append(tr);

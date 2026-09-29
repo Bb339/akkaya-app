@@ -99,6 +99,7 @@ async function refresh(){
   document.getElementById('detail').hidden=false;
   document.getElementById('project-name').textContent=project.name;
   document.getElementById('project-description').textContent=project.description||'Proje açıklaması girilmedi.';
+  document.getElementById('open-v1-project').href=`/?provider=PROJECT_DATA&project_id=${encodeURIComponent(project.id)}`;
   document.getElementById('hero-project-name').textContent=project.name;
   document.getElementById('hero-project-meta').textContent=`${project.owner_id||'Kurum belirtilmedi'} · ${project.province_or_region||'Bölge belirtilmedi'} · ${project.planning_year}`;
   document.getElementById('synthetic-watermark').hidden=mode!=='synthetic';

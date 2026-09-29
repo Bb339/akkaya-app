@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "focused_pytest": {
+    "command_scope": [
+      "tests/test_unified_decision_demo.py",
+      "tests/test_unified_decision_demo_fix1.py",
+      "tests/test_unified_decision_demo_fix2.py",
+      "tests/test_unified_v1_project_provider.py",
+      "tests/test_unified_v1_import_benchmark.py"
+    ],
+    "passed": 31,
+    "failed": 0,
+    "elapsed_seconds": 264.02
+  },
+  "browser": {
+    "project_end_to_end_passed": 1,
+    "invalid_context_cases_passed": 5,
+    "reference_paths_passed": 2,
+    "failed": 0
+  },
+  "syntax": {
+    "node_check_v1_provider": "PASS",
+    "node_check_imports": "PASS",
+    "python_compileall_changed_modules": "PASS"
+  },
+  "accepted_package": {
+    "files": 20,
+    "AUTO_MATCHED": 20,
+    "units": 24,
+    "area_da": 258,
+    "crops": 8,
+    "candidate_coverage": "24/24"
+  },
+  "known_s2_high_budget_test": "INHERITED_UNCHANGED",
+  "broad_suite": "NOT RUN; focused tests and object guards were sufficient"
+}
+

@@ -11,12 +11,12 @@ def key(value: str) -> str:
 
 
 ALIASES = {
-    "external_id": ["analiz_birimi_id", "analiz birimi", "parsel_id", "parcel_id", "unit_id", "id"],
+    "external_id": ["analiz_birimi_id", "analiz birimi", "parsel_id", "parselno", "parsel_no", "parcel_id", "unit_id", "id"],
     "settlement": ["yerlesim", "yerleşim", "koy", "köy", "village"],
-    "area_da": ["alan_da", "alan (da)", "dekar", "area"],
-    "current_crop": ["urun", "ürün", "mevcut_urun", "mevcut ürün", "crop"],
+    "area_da": ["alan_da", "alan_dekar", "alan (da)", "dekar", "da", "area"],
+    "current_crop": ["urun", "ürün", "bitki", "mevcut_urun", "mevcut ürün", "crop"],
     "name_or_code": ["ad", "kod", "name"], "irrigation_method": ["sulama_yontemi"],
-    "latitude": ["lat", "enlem"], "longitude": ["lon", "boylam"], "notes": ["not", "notlar"],
+    "latitude": ["lat", "enlem"], "longitude": ["lon", "lng", "boylam"], "notes": ["not", "notlar"],
     "crop_name": ["urun", "ürün", "urun_adi", "ürün adı", "crop", "name"],
     "crop_group": ["urun_grubu", "ürün grubu", "kategori"],
     "perennial": ["cok_yillik", "çok yıllık", "cok_yillik_mi"],

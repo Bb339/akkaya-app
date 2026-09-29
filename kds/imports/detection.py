@@ -10,6 +10,7 @@ from collections import Counter
 from io import BytesIO
 from pathlib import PurePath
 from typing import Any
+import re
 import zipfile
 
 from openpyxl import load_workbook
@@ -129,7 +130,14 @@ def _number(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     supplied = str(value).strip().replace(" ", "")
-    if "," in supplied and "." not in supplied:
+    if "," in supplied and "." in supplied:
+        if re.fullmatch(r"[+-]?\d{1,3}(,\d{3})+(\.\d+)?", supplied):
+            supplied = supplied.replace(",", "")
+        elif re.fullmatch(r"[+-]?\d{1,3}(\.\d{3})+(,\d+)?", supplied):
+            supplied = supplied.replace(".", "").replace(",", ".")
+        else:
+            return None
+    elif "," in supplied:
         supplied = supplied.replace(",", ".")
     try:
         return float(supplied)
@@ -186,8 +194,39 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
                 "issues": [{"code": "unsupported_extension", "message": "CSV, XLSX or GeoJSON required."}]}
     try:
         sheets = _workbook_sheets(content, extension)
+        sheet_evidence = []
+        sheet_ambiguity = None
         if sheets and not options.get("sheet"):
-            options["sheet"] = sheets[0]
+            filename_key = key(PurePath(filename).stem)
+            for sheet in sheets:
+                try:
+                    sheet_columns, sheet_rows = parse(content, filename, {**options, "sheet": sheet})
+                except (ParseError, ValueError, OSError):
+                    continue
+                best_score = -1.0
+                best_type = None
+                for data_type in FIELDS:
+                    mapping, ambiguous = suggest(sheet_columns, data_type)
+                    required = REQUIRED[data_type]
+                    coverage = sum(field in mapping for field in required) / max(1, len(required))
+                    hint = any(key(token) in filename_key or key(token) in key(sheet)
+                               for token in FILENAME_HINTS.get(data_type, ()))
+                    score = coverage * 100 + (35 if hint else 0) - len(ambiguous) * 10
+                    if score > best_score:
+                        best_score, best_type = score, data_type
+                sheet_evidence.append({"sheet": sheet, "rows": len(sheet_rows),
+                                       "columns": len(sheet_columns), "best_type": best_type,
+                                       "score": round(best_score, 3)})
+            usable = [item for item in sheet_evidence if item["rows"] and item["columns"]]
+            if not usable:
+                raise ParseError("Workbook has no non-empty tabular sheet.")
+            usable.sort(key=lambda item: (-item["score"], item["sheet"]))
+            options["sheet"] = usable[0]["sheet"]
+            tied_sheets = [item["sheet"] for item in usable if item["score"] == usable[0]["score"]]
+            if len(tied_sheets) > 1:
+                sheet_ambiguity = {"code": "ambiguous_workbook_sheet",
+                                   "message": "Multiple workbook sheets have equal structural evidence.",
+                                   "sheets": tied_sheets}
         columns, rows = parse(content, filename, options)
     except (ParseError, ValueError, OSError) as exc:
         return {**base, "state": "INVALID",
@@ -214,6 +253,8 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
     tied = [item for item in candidates if item["score"] == best["score"]]
     missing = [field for field in best["required"] if field not in best["mapping"]]
     issues = []
+    if sheet_ambiguity:
+        issues.append(sheet_ambiguity)
     if len(tied) > 1:
         issues.append({"code": "ambiguous_data_type", "message": "Multiple dataset types have equal evidence.",
                        "candidates": [item["data_type"] for item in tied]})
@@ -244,7 +285,7 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
     hard_review = any(issue["code"] in {"wrong_planning_year", "wrong_geographic_scope",
                                         "explicit_year_not_parseable",
                                         "required_numeric_field_not_parseable"} for issue in issues)
-    if len(tied) > 1 or best["ambiguous"]:
+    if len(tied) > 1 or best["ambiguous"] or sheet_ambiguity:
         state = "AMBIGUOUS"
     elif missing or hard_review:
         state = "REVIEW_REQUIRED"
@@ -257,8 +298,10 @@ def detect(content: bytes, filename: str, options: dict[str, Any] | None = None,
         "ambiguous_mapping": best["ambiguous"], "issues": issues,
         "rows": len(rows), "columns": columns, "sheet_names": sheets,
         "selected_sheet": options.get("sheet"), "value_types": _value_types(rows, columns),
+        "preview_rows": [row.get("values", {}) for row in rows[:5]],
         "year": years, "scope": scopes, "authority": authorities,
         "confidence": round(min(1.0, best["coverage"] + (0.1 if best["hint"] else 0.0)), 3),
         "evidence": {"filename_hint": best["hint"], "required_matched": best["matched"],
-                     "required_total": len(best["required"]), "header_count": len(columns)},
+                     "required_total": len(best["required"]), "header_count": len(columns),
+                     "sheet_selection": sheet_evidence},
     }

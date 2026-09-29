@@ -1,0 +1,19 @@
+{
+  "baseline": "cfcc1f59c34847ee51c672ce766208bb1a8798ab",
+  "method": "git object identity plus git diff path comparison",
+  "all_protected_unchanged": true,
+  "objects": [
+    {"path": "app.py", "object": "201659676e48c7af28ec53df64afd1b174d509b3", "status": "UNCHANGED"},
+    {"path": "index.html", "object": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac", "status": "UNCHANGED"},
+    {"path": "kds/science", "object": "bc57e1a1242a72940e5f6c9930a29d1af7684715", "status": "UNCHANGED"},
+    {"path": "kds/application/optimization.py", "object": "d2972f4af1a355f518aa52fdd752ebf5700616c6", "status": "UNCHANGED"},
+    {"path": "kds/application/readiness.py", "object": "fc775a437ff491d24fa1492452818b9df2981df6", "status": "UNCHANGED"},
+    {"path": "kds/adapters", "object": "b19ff47bb11da806c405f0c42d241785fbb824b9", "status": "UNCHANGED"},
+    {"path": "data", "object": "18686e1dd328877414193c45f0f9c5663fed4a8a", "status": "UNCHANGED"},
+    {"path": "data/excel_derived/combined_parcel_candidate_matrix_2024.csv", "object": "2f1a53607673126bd9436cbcdcdcf6b57000f198", "status": "UNCHANGED"},
+    {"path": "docs/prepilot_freeze/reference_values.json", "object": "2016c107a5b9f2fcae657e29fa33bd7890390b90", "status": "UNCHANGED"},
+    {"path": "docs/experiments/robustness_sensitivity", "object": "f31ed96576c8cfabdd39f578cfe74e5ed6276513", "status": "UNCHANGED"},
+    {"path": "render.yaml", "object": "250674443400fd0397f9e18fc4c8238bf32faf0d", "status": "UNCHANGED"}
+  ],
+  "known_s2_high_budget_test": "INHERITED_UNCHANGED"
+}

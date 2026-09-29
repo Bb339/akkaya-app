@@ -1,0 +1,45 @@
+{
+  "viewport": "1366x900",
+  "chromium": "Playwright bundled Chromium",
+  "status": "PASS",
+  "demonstrations": [
+    {
+      "name": "PROJECT_DATA complete journey",
+      "test": "tests/test_unified_v1_project_provider_browser.py::test_projects_to_same_v1_workspace_full_project_flow",
+      "elapsed_seconds": 92.25,
+      "observed": [
+        "ordinary user-named synthetic project created",
+        "20 files / 20 AUTO_MATCHED and explicitly confirmed",
+        "same V1 workspace opened with PROJECT DATA and SYNTHETIC / NOT_OFFICIAL",
+        "24 GX units and 2/24 project geometry coverage",
+        "GX-001 and GX-002 selection updates existing V1 detail",
+        "S1 + GA + water_saving + seed 123",
+        "pinned preview, stored run, crop composition, monthly water, unit results and provenance",
+        "exact run_id survives reload and re-authentication",
+        "switch to AKKAYA_REFERENCE clears project query",
+        "no /api/parcels or /api/optimize network request in project mode",
+        "no unhandled project-mode page error"
+      ]
+    },
+    {
+      "name": "invalid context isolation",
+      "test": "tests/test_unified_v1_project_provider_browser.py::test_invalid_project_contexts_fail_closed_without_reference_requests",
+      "cases": 5,
+      "elapsed_seconds": 43.13,
+      "observed": "unknown provider, unknown project, malformed project, duplicate provider and duplicate project identities fail closed without reference requests"
+    },
+    {
+      "name": "AKKAYA_REFERENCE thesis workspace",
+      "test": "tests/test_unified_decision_demo_browser.py::test_akkaya_reference_thesis_screen_remains_operational_in_chromium",
+      "observed": "reference workspace loads and retains 179 parcels"
+    },
+    {
+      "name": "frozen reference boundary and project link",
+      "test": "tests/test_unified_decision_demo_fix1_browser.py::test_v1_reference_boundary_is_visible_without_mutating_frozen_index",
+      "elapsed_seconds": 45.75,
+      "observed": "passed with an isolated empty project store; frozen index object unchanged"
+    }
+  ],
+  "non_product_diagnostic": "An initial run of the old reference-boundary test inherited an invalid external project-store entry and failed in startup recovery. Re-run with an isolated store passed; no source change was made for that environment artifact."
+}
+
