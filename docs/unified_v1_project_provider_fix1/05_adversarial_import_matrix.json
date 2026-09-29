@@ -1,0 +1,24 @@
+{
+  "scope": "focused deterministic import behavior; no universal document-understanding claim",
+  "accepted_package": {"files": 20, "AUTO_MATCHED": 20, "status": "PASS"},
+  "new_cases": [
+    {
+      "test": "test_irrelevant_extra_file_is_ambiguous_and_cannot_join_auto_matched_package",
+      "input": "meeting_notes.csv",
+      "observed": "AMBIGUOUS",
+      "bulk_confirmation": "BLOCKED"
+    },
+    {
+      "test": "test_geometry_unit_id_mismatch_is_invalid_and_cannot_be_confirmed",
+      "input_identity": "GX-999 against active GX-001",
+      "observed": "invalid / unknown_unit",
+      "confirmation": "ConflictError"
+    }
+  ],
+  "preserved_cases": [
+    "Turkish aliases", "UTF-8 BOM", "semicolon CSV", "reordered columns",
+    "irrelevant extra columns", "workbook sheet ambiguity", "missing required field",
+    "malformed numeric", "partially malformed numeric", "wrong planning year",
+    "unsupported file", "invalid GeoJSON"
+  ]
+}

@@ -8,6 +8,7 @@ from playwright.sync_api import expect, sync_playwright
 
 from test_unified_decision_demo import PACKAGE, client_for
 from test_unified_decision_demo_browser import serve
+from kds.application.import_service import ImportService
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -105,6 +106,14 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
             page.locator("#runOptBtn").click()
             expect(page.locator("#v1-project-result")).to_be_visible(timeout=240000)
             expect(page.locator("#v1-project-result-summary")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#v1-project-water-accounting")).to_contain_text("Optimizer su kullanımı")
+            expect(page.locator("#v1-project-water-accounting")).to_contain_text("Doğrulanmış / otoritatif su")
+            expect(page.locator("#v1-project-water-accounting")).to_contain_text("değerler farklı olabilir")
+            expect(page.locator("#v1-project-annual-budget")).to_contain_text("PASS")
+            expect(page.locator("#v1-project-warnings")).to_contain_text("Analiz uyarıları")
+            expect(page.locator("#v1-project-warnings")).to_contain_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
+            expect(page.locator("#mWaterCurrent")).to_have_text("Mevcut su değeri sağlanmadı")
+            expect(page.locator("#mProfitCurrent")).to_have_text("Mevcut kâr değeri sağlanmadı")
             expect(page.locator("#v1-project-crops")).to_contain_text("Ürün kompozisyonu")
             expect(page.locator("#v1-project-monthly")).to_contain_text("Aylık su doğrulaması")
             expect(page.locator("#v1-project-units")).to_contain_text("GX-001")
@@ -126,6 +135,42 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
             project_errors = list(errors)
             assert not [error for error in project_errors
                         if "PROJECT_DATA" not in error and "reference endpoint engellendi" not in error]
+
+            # A stored result must never survive a project switch.  Create an
+            # ordinary second project, switch through the provider selector,
+            # then return to A and reopen the exact immutable run explicitly.
+            status = page.evaluate("""async () => {
+              const response = await fetch('/api/v2/projects', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({
+                id:'v1-provider-project-b', name:'Kurumsal Proje B', planning_year:2025,
+                annual_water_budget:0, water_budget_unit:'m3', province_or_region:'Niğde',
+                data_source_notes:'user_provided'
+              })}); return response.status;
+            }""")
+            assert status == 201
+            page.reload()
+            page.wait_for_function("typeof window.__V1_PROJECT_PROVIDER__ === 'object'")
+            page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            page.locator("#v1-project-provider-select").select_option("v1-provider-project-b")
+            page.wait_for_url("**/?provider=PROJECT_DATA&project_id=v1-provider-project-b")
+            page.wait_for_function("typeof window.__V1_PROJECT_PROVIDER__ === 'object'")
+            page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            expect(page.locator("#v1-provider-name")).to_have_text("PROJECT DATA · Kurumsal Proje B")
+            expect(page.locator("#v1-requirement-list")).to_contain_text("Analiz birimleri gerekli")
+            expect(page.locator("#v1-requirement-list")).to_contain_text(
+                "Harita geometrisi analiz için zorunlu değildir"
+            )
+            expect(page.locator("#v1-project-result")).to_be_hidden()
+            assert run_id not in page.locator("body").inner_text()
+            assert "GX-001" not in page.locator("#parcelSelect").inner_text()
+            page.locator("#v1-project-provider-select").select_option("v1-provider-demo")
+            page.wait_for_url("**/?provider=PROJECT_DATA&project_id=v1-provider-demo")
+            expect(page.locator("#v1-project-result")).to_be_hidden()
+            page.goto(f"http://127.0.0.1:{server.server_port}/?provider=PROJECT_DATA&project_id=v1-provider-demo&run_id={run_id}")
+            page.wait_for_function("typeof window.__V1_PROJECT_PROVIDER__ === 'object'")
+            page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            expect(page.locator("#v1-project-result")).to_be_visible()
+            expect(page.locator("#v1-project-provenance")).to_contain_text(run_id)
+            assert not any("/api/parcels" in url or "/api/optimize" in url for url in requests)
             page.locator("#v1-reference-provider").click()
             page.wait_for_url(f"http://127.0.0.1:{server.server_port}/")
             expect(page.locator("#v1-provider-name")).to_have_text("AKKAYA REFERENCE")
@@ -160,6 +205,97 @@ def test_invalid_project_contexts_fail_closed_without_reference_requests(tmp_pat
                 "PROJECT DATA", timeout=30000)
             expect(page.locator("#v1-provider-error")).to_contain_text("Akkaya", timeout=30000)
             assert not any("/api/parcels" in url or "/api/optimize" in url for url in requests)
+            browser.close()
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+
+
+@pytest.mark.browser
+def test_bulk_import_primary_guidance_is_turkish_and_raw_issues_are_secondary(tmp_path):
+    application, client, _ = client_for(tmp_path)
+    _serve_v1(application)
+    assert client.post("/api/v2/projects", json={
+        "id": "guidance-project", "name": "Yönlendirme Projesi", "planning_year": 2025,
+        "annual_water_budget": 0, "water_budget_unit": "m3", "province_or_region": "Niğde",
+        "data_source_notes": "user_provided",
+    }).status_code == 201
+    irrelevant = tmp_path / "meeting_notes.csv"
+    irrelevant.write_text("note,owner\nmeeting agenda,office\n", encoding="utf-8")
+    malformed = tmp_path / "analysis_units.csv"
+    malformed.write_text(
+        "external_id,settlement,area_da,current_crop\nGX-1,X,not-a-number,WHEAT\n",
+        encoding="utf-8",
+    )
+    server, thread = serve(application)
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1366, "height": 900})
+            page.goto(
+                f"http://127.0.0.1:{server.server_port}/projects"
+                "#project=guidance-project&section=data"
+            )
+            page.locator('#bulk-upload-form input[type="file"]').set_input_files(
+                [str(irrelevant), str(malformed)]
+            )
+            with page.expect_response(lambda response: response.url.endswith("/bulk-imports")):
+                page.locator('#bulk-upload-form button[type="submit"]').click()
+            expect(page.locator("#bulk-import-body tr")).to_have_count(2)
+            irrelevant_row = page.locator("#bulk-import-body tr", has_text="meeting_notes.csv")
+            irrelevant_row.locator("summary", has_text="Dosya önizlemesi").click()
+            expect(irrelevant_row).to_contain_text("Türkçe kullanıcı yönlendirmesi")
+            expect(irrelevant_row).to_contain_text("hangi veri türüne ait olduğunu güvenle belirleyemedi")
+            expect(irrelevant_row).to_contain_text("İlgisiz ek dosyayı paketten çıkarın")
+            malformed_row = page.locator("#bulk-import-body tr", has_text="analysis_units.csv")
+            malformed_row.locator("summary", has_text="Dosya önizlemesi").click()
+            expect(malformed_row).to_contain_text("Sayısal olması gereken area_da")
+            expect(malformed_row).to_contain_text("not-a-number")
+            expect(page.locator("#bulk-confirm")).to_be_disabled()
+            browser.close()
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+
+
+@pytest.mark.browser
+def test_geometry_unit_mismatch_guidance_blocks_bulk_confirmation(tmp_path):
+    application, client, repository = client_for(tmp_path)
+    _serve_v1(application)
+    assert client.post("/api/v2/projects", json={
+        "id": "geometry-guidance", "name": "Geometri Projesi", "planning_year": 2025,
+        "annual_water_budget": 0, "water_budget_unit": "m3", "province_or_region": "Niğde",
+        "data_source_notes": "user_provided",
+    }).status_code == 201
+    service = ImportService(repository)
+    units = service.upload(
+        "geometry-guidance", "analysis_units", "analysis_units.csv",
+        b"external_id,settlement,area_da,current_crop\nGX-001,X,10,WHEAT\n", {},
+    )
+    service.confirm("geometry-guidance", units["id"], True)
+    geometry = tmp_path / "geometry.geojson"
+    geometry.write_text(
+        '{"type":"FeatureCollection","features":[{"type":"Feature",'
+        '"properties":{"unit_id":"GX-999"},"geometry":{"type":"Point",'
+        '"coordinates":[34.5,38.0]}}]}', encoding="utf-8",
+    )
+    server, thread = serve(application)
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1366, "height": 900})
+            page.goto(
+                f"http://127.0.0.1:{server.server_port}/projects"
+                "#project=geometry-guidance&section=data"
+            )
+            page.locator('#bulk-upload-form input[type="file"]').set_input_files(str(geometry))
+            with page.expect_response(lambda response: response.url.endswith("/bulk-imports")):
+                page.locator('#bulk-upload-form button[type="submit"]').click()
+            row = page.locator("#bulk-import-body tr", has_text="geometry.geojson")
+            row.locator("summary", has_text="Dosya önizlemesi").click()
+            expect(row).to_contain_text("birim kimliği proje analiz birimleriyle eşleşmiyor")
+            expect(row).to_contain_text("Geometri dosyasındaki kimlikleri")
+            expect(page.locator("#bulk-confirm")).to_be_disabled()
             browser.close()
     finally:
         server.shutdown()

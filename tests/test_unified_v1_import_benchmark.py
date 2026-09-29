@@ -5,6 +5,12 @@ from io import BytesIO
 from openpyxl import Workbook
 
 from kds.imports.detection import detect
+from kds.application.import_service import ImportService
+from kds.application.project_service import ProjectService
+from kds.data.project_store import FileProjectStore
+from kds.data.repositories import ConflictError
+import json
+import pytest
 
 
 PROJECT = {"planning_year": 2025, "province_or_region": "Niğde"}
@@ -85,3 +91,35 @@ def test_negative_file_states_are_explicit():
     assert invalid_geojson["state"] == "INVALID"
     assert wrong_year["state"] == "REVIEW_REQUIRED"
     assert "wrong_planning_year" in {item["code"] for item in wrong_year["issues"]}
+
+
+def test_irrelevant_extra_file_is_ambiguous_and_cannot_join_auto_matched_package():
+    result = detect(b"note,owner\nmeeting agenda,office\n", "meeting_notes.csv", project=PROJECT)
+    assert result["state"] == "AMBIGUOUS"
+    assert result["confidence"] == 0
+    assert "ambiguous_data_type" in {item["code"] for item in result["issues"]}
+
+
+def test_geometry_unit_id_mismatch_is_invalid_and_cannot_be_confirmed(tmp_path):
+    store = FileProjectStore(tmp_path / "projects")
+    ProjectService(store).create({
+        "id": "geometry-mismatch", "name": "Geometry mismatch", "planning_year": 2025,
+        "annual_water_budget": 0, "water_budget_unit": "m3",
+    })
+    service = ImportService(store)
+    units = service.upload(
+        "geometry-mismatch", "analysis_units", "analysis_units.csv",
+        b"external_id,settlement,area_da,current_crop\nGX-001,X,10,WHEAT\n", {},
+    )
+    service.confirm("geometry-mismatch", units["id"], True)
+    geojson = json.dumps({
+        "type": "FeatureCollection", "features": [{
+            "type": "Feature", "properties": {"unit_id": "GX-999"},
+            "geometry": {"type": "Point", "coordinates": [34.5, 38.0]},
+        }],
+    }).encode()
+    batch = service.upload("geometry-mismatch", "geometries", "geometry.geojson", geojson, {})
+    assert batch["status"] == "invalid"
+    assert "unknown_unit" in {item["code"] for item in batch["issues"]}
+    with pytest.raises(ConflictError):
+        service.confirm("geometry-mismatch", batch["id"], True)

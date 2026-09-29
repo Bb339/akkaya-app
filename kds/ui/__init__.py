@@ -55,7 +55,16 @@ def register_project_pages(app):
     <div class="v1-provider-workflow"><label>Seed<input id="v1-provider-seed" type="number" min="0" value="123"></label><button class="btn-secondary" id="v1-provider-preview" type="button">Doğrulanmış önizleme</button><span id="v1-provider-preview-state">Önizleme gerekli</span></div>
     <details id="v1-requirements"><summary>Veri yeterliliği ve gereksinimler</summary><div id="v1-requirement-list"></div></details>
     <div id="v1-geometry-status"></div>
-    <section id="v1-project-result" hidden><div id="v1-project-result-summary"></div><div id="v1-project-monthly"></div><div id="v1-project-crops"></div><div id="v1-project-units"></div><details><summary>Provenance ve teknik bağlam</summary><pre id="v1-project-provenance"></pre></details></section>
+    <section id="v1-project-result" hidden>
+      <div id="v1-project-result-summary"></div>
+      <div id="v1-project-water-accounting"></div>
+      <div id="v1-project-annual-budget"></div>
+      <div id="v1-project-warnings"></div>
+      <div id="v1-project-monthly"></div>
+      <div id="v1-project-crops"></div>
+      <div id="v1-project-units"></div>
+      <details><summary>Provenance ve teknik bağlam</summary><pre id="v1-project-provenance"></pre></details>
+    </section>
     <details id="v1-project-history"><summary>Proje analiz geçmişi</summary><div id="v1-project-history-list"></div></details>
   </div>
 </section>'''

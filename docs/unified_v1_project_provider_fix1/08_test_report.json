@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "focused_python": {"passed": 98, "deselected": 1, "failed": 0, "elapsed_seconds": 322.66},
+  "project_provider_chromium": {"passed": 8, "failed": 0, "elapsed_seconds": 183.32},
+  "reference_chromium": {"passed": 2, "failed": 0, "elapsed_seconds": 38.34},
+  "total_passing_tests": 108,
+  "syntax": {"v1_provider_js": "PASS", "imports_js": "PASS", "python_ui": "PASS"},
+  "accepted_package": "20/20 AUTO_MATCHED",
+  "known_s2_high_budget_test": "INHERITED_UNCHANGED: no_feasible_two_crop_plan",
+  "broad_suite": "NOT RUN; no focused unexplained regression"
+}

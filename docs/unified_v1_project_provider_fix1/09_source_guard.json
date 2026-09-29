@@ -1,0 +1,16 @@
+{
+  "baseline": "91ad987dd1dca3f525f4cf906f4c1f3c7b364871",
+  "status": "PASS",
+  "unchanged_objects": {
+    "app.py": "201659676e48c7af28ec53df64afd1b174d509b3",
+    "index.html": "cd5ed3a62c39084105cdb43fd0d3d4b78c70d1ac",
+    "kds/science": "bc57e1a1242a72940e5f6c9930a29d1af7684715",
+    "kds/application/optimization.py": "d2972f4af1a355f518aa52fdd752ebf5700616c6",
+    "kds/application/readiness.py": "fc775a437ff491d24fa1492452818b9df2981df6",
+    "kds/adapters": "b19ff47bb11da806c405f0c42d241785fbb824b9",
+    "data": "18686e1dd328877414193c45f0f9c5663fed4a8a",
+    "docs/robustness_sensitivity": "fa5bda048104d3a1dc8d2230194a27fc5acdbd46",
+    "render.yaml": "250674443400fd0397f9e18fc4c8238bf32faf0d"
+  },
+  "note": "The complete data tree identity covers candidate matrices and frozen reference data. No protected scientific object changed."
+}

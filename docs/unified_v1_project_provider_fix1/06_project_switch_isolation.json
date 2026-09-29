@@ -1,0 +1,15 @@
+{
+  "viewport": "1366x900",
+  "test": "test_projects_to_same_v1_workspace_full_project_flow",
+  "status": "PASS",
+  "sequence": [
+    "Project A imported and confirmed 20/20",
+    "Project A stored run rendered in V1",
+    "provider selector switched to Project B",
+    "Project A run ID, GX unit and result surface absent under B",
+    "Project B identity and missing-requirement guidance visible",
+    "no Akkaya reference endpoint request",
+    "switched back to A without carrying a run",
+    "exact immutable A run reopened by explicit run_id"
+  ]
+}

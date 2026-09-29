@@ -1,0 +1,22 @@
+{
+  "viewport": "1366x900",
+  "engine": "Playwright bundled Chromium",
+  "status": "PASS",
+  "provider_suite": {"passed": 8, "failed": 0, "elapsed_seconds": 183.32},
+  "reference_suite": {"passed": 2, "failed": 0, "elapsed_seconds": 38.34},
+  "observed": [
+    "existing V1 PROJECT_DATA workspace",
+    "GX selector and project-only map",
+    "S1 GA water_saving seed 123 pinned preview and stored run",
+    "separate optimizer and authoritative water labels",
+    "annual budget backend status visible",
+    "stored backend warnings visible",
+    "explicit missing current metric text",
+    "monthly water, crop composition, unit results and provenance",
+    "Project A to B to exact A stored-run isolation",
+    "case-specific Turkish Smart Import guidance",
+    "geometry/unit mismatch Turkish guidance and disabled bulk confirmation",
+    "unknown/malformed/duplicate context fail-closed",
+    "Akkaya reference non-regression"
+  ]
+}
