@@ -11,8 +11,8 @@ from test_unified_v1_project_provider_browser import _serve_v1
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FULL_PACKAGE = ROOT / "docs" / "unified_v1_project_provider" / "demo_full_visual_package"
-EVIDENCE = ROOT / "docs" / "v1_native_project_interactivity_final"
+FULL_PACKAGE = Path(r"C:\Users\LENOVO\Desktop\CropKDS_21_Dosya_Tam_Gorsel_Demo_Paketi")
+EVIDENCE = ROOT / "docs" / "v1_native_project_results_final_fix"
 
 
 def _assert_hit_target(page, locator):
@@ -68,8 +68,8 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.goto(f"http://127.0.0.1:{server.server_port}/projects")
             page.locator("details.form-drawer").first.locator("summary").click()
             form = page.locator("#create-project")
-            form.locator('[name="id"]').fill("kds-full-visual-demo-2025")
-            form.locator('[name="name"]').fill("KDS Tam Görsel Sentetik Demo")
+            form.locator('[name="id"]').fill("kds-native-result-final-2025")
+            form.locator('[name="name"]').fill("KDS Native Result Final Demo")
             form.locator('[name="planning_year"]').fill("2025")
             form.locator('[name="province_or_region"]').fill("Synthetic Region")
             form.locator('[name="data_source_notes"]').select_option(
@@ -104,6 +104,11 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#parcelSelect option")).to_have_count(24)
             expect(page.locator(".leaflet-interactive")).to_have_count(24, timeout=30000)
             expect(page.locator("#roleInfoBanner")).to_contain_text("24 analiz birimi")
+            expect(page.locator("#setupGroup .card-title").first).to_have_text("Analiz birimi seç")
+            expect(page.locator(".map-card .card-title")).to_have_text("Analiz Birimleri Haritası")
+            visible_text = page.locator("body").inner_text()
+            for stale in ("Parsel seç", "Parsel Haritası", "Seçili parsel", "Parsel Bazlı Özet"):
+                assert stale not in visible_text
             assert "P1" not in page.locator("#parcelSelect").inner_text()
 
             provider_button = page.locator("#v1-provider-toggle")
@@ -158,8 +163,21 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             )
             expect(page.locator("#tblRecommendedFooter")).to_contain_text("water_saving")
             expect(page.locator("#businessMetricsBox")).to_contain_text("Backend birim net kârı")
-            expect(page.locator("#allParcelCompareNote")).to_contain_text("optimizer su")
-            expect(page.locator("#officialWaterNote")).to_contain_text("Yıllık bütçe")
+            expect(page.locator("#v1-project-result")).to_be_hidden()
+            assert not page.locator("#v1-project-result").inner_text().strip()
+            expect(page.locator("#v1-native-run-summary")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#v1-native-water-accounting")).to_contain_text("Optimizer su")
+            expect(page.locator("#v1-native-water-accounting")).to_contain_text("Doğrulanmış / otoritatif su")
+            expect(page.locator("#v1-native-annual-budget")).to_contain_text("Yıllık su bütçesi")
+            expect(page.locator("#globalBudgetStatus")).to_contain_text("PASS")
+            expect(page.locator("#globalBudgetBadge")).not_to_have_text("Toplam planlama su bütçesi: -")
+            expect(page.locator("#v1-native-monthly")).to_contain_text("Aylık su doğrulaması")
+            expect(page.locator("#v1-native-warnings")).to_contain_text("Analiz uyarıları")
+            expect(page.locator("#v1-native-crops")).to_contain_text("HHI")
+            expect(page.locator("#v1-native-unit-result")).to_contain_text("KDS-009")
+            monthly_violation = page.locator("#v1-native-monthly .v1-provider-explanation").inner_text()
+            values = [value.strip() for value in monthly_violation.split(":", 1)[-1].split(",")]
+            assert len(values) == len(set(values))
 
             parcel_tab = page.locator('.tab[data-tab="parcel"]')
             _assert_hit_target(page, parcel_tab)
@@ -180,17 +198,20 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#v1-provider-shell")).to_have_attribute("aria-hidden", "false")
             page.locator("#v1-provider-close").click()
 
-            run_id = next(iter(repository.get("kds-full-visual-demo-2025")["runs"]))
+            run_id = next(iter(repository.get("kds-native-result-final-2025")["runs"]))
             assert f"run_id={run_id}" in page.url
             assert not any("/api/parcels" in url or "/api/optimize" in url
                            for url in requests if "provider=PROJECT_DATA" in page.url)
             project_errors = list(errors)
             assert not project_errors
 
+            assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
             page.screenshot(path=str(EVIDENCE / "chromium_1366x900.png"), full_page=True)
             page.set_viewport_size({"width": 1920, "height": 1080})
+            assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
             page.screenshot(path=str(EVIDENCE / "chromium_1920x1080.png"), full_page=True)
             page.set_viewport_size({"width": 390, "height": 844})
+            assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
             page.screenshot(path=str(EVIDENCE / "chromium_mobile_390x844.png"), full_page=True)
             page.set_viewport_size({"width": 1366, "height": 900})
 
@@ -198,7 +219,9 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#tblRecommendedFooter")).to_contain_text("water_saving")
-            expect(page.locator("#v1-project-provenance")).to_contain_text(run_id)
+            expect(page.locator("#v1-native-provenance")).to_contain_text(run_id)
+            page.locator("#v1-native-provenance summary").click()
+            expect(page.locator("#v1-native-provenance pre")).to_contain_text("selection_hash")
 
             page.locator("#v1-provider-toggle").click()
             page.locator("#v1-reference-provider").click()
@@ -210,14 +233,14 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator("#v1-provider-toggle").click()
             project_select = page.locator("#v1-project-provider-select")
             _assert_hit_target(page, project_select)
-            project_select.select_option("kds-full-visual-demo-2025")
+            project_select.select_option("kds-native-result-final-2025")
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.unit_count === 24")
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#roleInfoBanner")).to_contain_text("24 analiz birimi")
             expect(page.locator("#parcelSelect option")).to_have_count(24)
             expect(page.locator("#v1-project-result")).to_be_hidden()
             assert "run_id=" not in page.url
-            assert run_id not in page.locator("#v1-project-provenance").inner_text()
+            assert run_id not in page.locator("#v1-native-provenance").inner_text()
             assert not [error for error in errors if error not in project_errors]
             browser.close()
     finally:
@@ -230,5 +253,22 @@ def test_runtime_keeps_results_native_and_drawer_non_blocking():
     css = (ROOT / "kds" / "ui" / "static" / "v1-provider.css").read_text(encoding="utf-8")
     assert "renderNativeRun(run)" in provider
     assert "renderNativeUnit(unit)" in provider
+    assert "sink.replaceChildren()" in provider
+    for legacy_sink in (
+        "v1-project-result-summary", "v1-project-water-accounting",
+        "v1-project-annual-budget", "v1-project-warnings",
+        "v1-project-monthly", "v1-project-crops", "v1-project-units",
+        "v1-project-provenance",
+    ):
+        assert legacy_sink not in provider
+    for native_target in (
+        "v1-native-run-summary", "v1-native-water-accounting",
+        "v1-native-annual-budget", "v1-native-monthly",
+        "v1-native-warnings", "v1-native-crops",
+        "v1-native-unit-result", "v1-native-provenance",
+    ):
+        assert native_target in provider
+    assert "new Set([...(result.monthly_supply_validation?.violating_months||[])" in provider
+    assert "Analiz Birimleri Haritası" in provider
     assert "setDrawer(true);\n    neutralizeReferenceSurface" not in provider
     assert ".v1-provider-scrim[hidden]{display:none!important;pointer-events:none!important}" in css

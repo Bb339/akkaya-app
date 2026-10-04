@@ -1,0 +1,24 @@
+{
+  "broad_suite_run": false,
+  "focused_runs": [
+    {
+      "scope": "required 21-file native PROJECT_DATA Chromium E2E",
+      "result": "1 passed",
+      "duration_seconds": 154.26
+    },
+    {
+      "scope": "provider A/B isolation, exact run reopen, reference transition Chromium",
+      "result": "1 passed",
+      "duration_seconds": 99.56
+    },
+    {
+      "scope": "provider, Fix2, Fix3 and native interactivity non-browser regressions",
+      "result": "13 passed, 2 browser tests deselected",
+      "duration_seconds": 130.0
+    }
+  ],
+  "syntax": "node --check kds/ui/static/v1-provider.js PASS",
+  "diff_check": "PASS",
+  "known_s2_high_budget": "INHERITED_UNCHANGED; no scientific or readiness implementation changed",
+  "result": "PASS"
+}

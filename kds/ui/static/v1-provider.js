@@ -36,6 +36,28 @@
   const metric=(value,digits=2,missing='SAĞLANMADI / NOT PROVIDED')=>
     value===null||value===undefined||!Number.isFinite(Number(value))?missing:number(value,digits);
   const byId=id=>document.getElementById(id);
+  const terminologyOriginal=new WeakMap();
+  function applyProviderTerminology(isProject){
+    const root=byId('panel');if(!root)return;
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:node=>
+      node.parentElement?.closest('script,style')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+    const replacements=[
+      [/Parsel Haritası/g,'Analiz Birimleri Haritası'],[/Parsel seç/g,'Analiz birimi seç'],
+      [/Seçili parsel/g,'Seçili analiz birimi'],[/Parsel Bazlı Özet/g,'Analiz Birimi Özeti'],
+      [/Parsel çizim/g,'Analiz birimi geometrisi'],[/parsel çizim/g,'analiz birimi geometrisi'],
+      [/Parseller/g,'Analiz birimleri'],[/parseller/g,'analiz birimleri'],
+      [/Parselin/g,'Analiz biriminin'],[/parselin/g,'analiz biriminin'],
+      [/Parselde/g,'Analiz biriminde'],[/parselde/g,'analiz biriminde'],
+      [/Parsele/g,'Analiz birimine'],[/parsele/g,'analiz birimine'],
+      [/Parseli/g,'Analiz birimini'],[/parseli/g,'analiz birimini'],
+      [/Parsel/g,'Analiz birimi'],[/parsel/g,'analiz birimi']
+    ];
+    for(let node=walker.nextNode();node;node=walker.nextNode()){
+      if(!terminologyOriginal.has(node))terminologyOriginal.set(node,node.nodeValue);
+      const original=terminologyOriginal.get(node);
+      node.nodeValue=isProject?replacements.reduce((value,[pattern,replacement])=>value.replace(pattern,replacement),original):original;
+    }
+  }
   function setDrawer(open,{restoreFocus=true}={}){
     const shell=byId('v1-provider-shell'),toggle=byId('v1-provider-toggle'),scrim=byId('v1-provider-scrim');
     if(!shell||!toggle)return;shell.classList.toggle('is-open',open);shell.setAttribute('aria-hidden',String(!open));
@@ -93,6 +115,7 @@
     const current=headings.find(node=>node.textContent.includes('Mevcut Ürün Deseni'));if(current)current.textContent='Proje mevcut ürün deseni';
     const business=byId('businessMetricsBox');if(business&&!context.run)business.textContent='SAĞLANMADI / NOT PROVIDED — saklanmış proje sonucu açıldığında backend ekonomik çıktısı gösterilir.';
     const waterYear=byId('waterYear');if(waterYear){waterYear.replaceChildren(new Option(`${context.project.planning_year} · proje planlama yılı`,String(context.project.planning_year),true,true));waterYear.disabled=true;}
+    applyProviderTerminology(true);
   }
   function renderFacts(){
     const s1=context.capabilities.scenarios.S1,s2=context.capabilities.scenarios.S2;
@@ -171,6 +194,18 @@
     focusGeometry(unit);
   }
   function nativeRow(values){return `<tr>${values.map(value=>`<td>${html(value??'SAĞLANMADI / NOT PROVIDED')}</td>`).join('')}</tr>`;}
+  function ensureNativeResultSurface(){
+    let surface=byId('v1-native-project-results');if(surface)return surface;
+    surface=document.createElement('section');surface.id='v1-native-project-results';surface.className='v1-native-results';
+    surface.setAttribute('aria-label','Saklanmış proje analiz sonucu');
+    surface.innerHTML='<div id="v1-native-run-summary"></div><div id="v1-native-water-accounting"></div><div id="v1-native-annual-budget"></div><div id="v1-native-monthly"></div><div id="v1-native-warnings"></div><div id="v1-native-crops"></div><div id="v1-native-unit-result"></div><details id="v1-native-provenance"><summary>Kaynak &amp; Provenance</summary><pre></pre></details>';
+    byId('basinSummaryBlock')?.insertAdjacentElement('afterend',surface);return surface;
+  }
+  function retireLegacyResultSink(){
+    const sink=byId('v1-project-result');if(!sink)return;
+    sink.replaceChildren();
+    sink.hidden=true;sink.setAttribute('aria-hidden','true');
+  }
   function renderNativeUnit(unit){
     const result=unit.result||{},selected=result.selected_crops||[];
     const currentBody=document.querySelector('#tblCurrent tbody'),recommendedBody=document.querySelector('#tblRecommended tbody');
@@ -183,6 +218,7 @@
     setText('irrigationCompareBox','SAĞLANMADI / NOT PROVIDED — proje sonucu sulama yöntemi karşılaştırması sağlamadı.');
     setText('businessMetricsBox',context.run?`Backend birim net kârı: ${metric(result.unit_profit_tl)} TL · Otoritatif birim suyu: ${metric(result.authoritative_unit_water_m3)} m³`:'HESAPLANMADI / NOT CALCULATED — saklanmış proje sonucu yok.');
     setText('irrigPlanBox','SAĞLANMADI / NOT PROVIDED — backend birim düzeyinde sulama takvimi sağlamadı.');
+    const target=byId('v1-native-unit-result');if(target)target.innerHTML=`<h4>Seçili analiz birimi sonucu</h4>${context.run?table(['Birim','Mevcut ürün','Seçilen desen','Otoritatif su (m³)','Net kâr (TL)','Uyarılar','Geometri'],[[unit.analysis_unit_id,unit.current_crop||'SAĞLANMADI / NOT PROVIDED',selected.map(value=>value.crop).join(' + ')||'HESAPLANMADI / NOT CALCULATED',metric(result.authoritative_unit_water_m3),metric(result.unit_profit_tl),(result.warnings||[]).join(' · ')||'Backend uyarısı yok',unit.geometry?'MEVCUT':(unit.latitude!=null&&unit.longitude!=null?'KOORDİNAT MEVCUT':'SAĞLANMADI / NOT PROVIDED')]]):'<p class="v1-empty-state">Henüz saklanmış proje çalışması yok.</p>'}`;
   }
   function resetMap(){
     const root=byId('map');if(!root||!window.L)return null;
@@ -217,33 +253,16 @@
     const demand=account.monthly_demand_m3||account.planning_year_monthly_demand_m3||supply.demand_m3||delivery.demand_m3||{};
     const available=supply.usable_supply_m3||supply.supply_m3||supply.available_supply_m3||{};const capacity=delivery.capacity_m3||delivery.delivery_capacity_m3||{};
     const keys=new Set([...Object.keys(demand||{}),...Object.keys(available||{}),...Object.keys(capacity||{})]);
-    return [...keys].sort().map(key=>[key,demand[key],available[key],capacity[key],(supply.violating_months||[]).includes(key)?'ARZ AŞILDI':(delivery.violating_months||[]).includes(key)?'KAPASİTE AŞILDI':'PASS']);
+    return [...keys].sort().map(key=>{const states=[];if((supply.violating_months||[]).includes(key))states.push('ARZ AŞILDI');if((delivery.violating_months||[]).includes(key))states.push('KAPASİTE AŞILDI');return [key,demand[key],available[key],capacity[key],states.join(' + ')||'PASS'];});
+  }
+  function violatingMonths(result){
+    return [...new Set([...(result.monthly_supply_validation?.violating_months||[]),...(result.monthly_delivery_validation?.violating_months||[])])].sort();
   }
   function table(headers,rows){return `<table class="v1-provider-table"><thead><tr>${headers.map(h=>`<th>${html(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(value=>`<td>${html(value??'SAĞLANMADI')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
   function renderRun(run){
     if(!run)return;const result=run.result||{},summary=run.summary||{};context.run=run;
-    const diagnostic=result.feasible===false||result.diagnostic===true;
-    byId('v1-project-result').hidden=false;
-    byId('v1-project-result-summary').innerHTML=`<h3>${diagnostic?'DIAGNOSTIC / UYGULANABİLİR ÖNERİ DEĞİL':'Saklanmış proje sonucu'}</h3><div class="v1-result-grid">${[
-      ['Run ID',run.id],['Senaryo',run.scenario],['Algoritma',run.algorithm],['Hedef',run.configuration?.objective],['Seed',run.seed],['Otorite',run.result_authority_label],['Toplam net kâr (TL)',metric(result.total_profit_tl)],['TL/m³',metric(result.efficiency_tl_per_m3,4)],['Aktif alan (da)',metric(summary.active_area_da)],['Feasibility',result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI'],['Score',metric(summary.score,5)]
-    ].map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('')}</div>`;
-    const reconciliation=result.water_reconciliation||{};
-    byId('v1-project-water-accounting').innerHTML=`<h4>Su muhasebesi ve uzlaştırma</h4><div class="v1-result-grid">${[
-      ['Optimizer su kullanımı (m³)',metric(result.optimizer_water_m3)],
-      ['Doğrulanmış / otoritatif su (m³)',metric(result.authoritative_water_m3)],
-      ['Planlama yılı suyu (m³)',metric(result.planning_year_profile_water_m3)],
-      ['Tam sezon suyu (m³)',metric(result.verified_profile_water_m3)],
-      ['Fark (m³)',metric(result.water_accounting_difference_m3??reconciliation.difference_m3)],
-      ['Fark (%)',metric(result.water_accounting_difference_pct??reconciliation.difference_pct,4)]
-    ].map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('')}</div><p class="v1-provider-explanation">Optimizer su kullanımı motorun plan çıktısıdır. Doğrulanmış / otoritatif su, backend'in saklanmış çalışma sonrası su muhasebesidir; dönem ve doğrulama kapsamları farklı olduğunda değerler farklı olabilir.</p>`;
-    const annual=result.annual_budget_validation;
-    byId('v1-project-annual-budget').innerHTML=`<h4>Yıllık su bütçesi doğrulaması</h4>${annual&&typeof annual==='object'?table(['Talep (m³)','Kullanılabilir bütçe (m³)','Durum','Backend açıklaması'],[[metric(annual.demand_m3),metric(annual.usable_supply_m3??annual.available_budget_m3),annual.status||'SAĞLANMADI',annual.reason||annual.message||'Backend ek açıklama sağlamadı.']]):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — backend yıllık bütçe doğrulaması üretmedi.</p>'}`;
-    const warnings=[...(run.warnings||[]),...(result.warnings||[])].filter((value,index,all)=>value&&all.indexOf(value)===index);
-    byId('v1-project-warnings').innerHTML=`<h4>Analiz uyarıları</h4>${warnings.length?`<ul class="v1-warning-list">${warnings.map(value=>`<li>${html(value)}</li>`).join('')}</ul>`:'<p class="v1-empty-state">Backend bu çalışma için uyarı bildirmedi.</p>'}`;
-    const monthly=monthlyRows(result);byId('v1-project-monthly').innerHTML=`<h4>Aylık su doğrulaması</h4>${monthly.length?table(['Ay','Talep','Kullanılabilir arz','Teslim kapasitesi','Durum'],monthly.map(row=>row.map((value,index)=>index>0&&index<4?metric(value):value))):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — backend aylık talep, arz veya teslim serisi üretmedi.</p>'}`;
-    const shares=result.crop_shares&&typeof result.crop_shares==='object'?Object.entries(result.crop_shares):[];byId('v1-project-crops').innerHTML=`<h4>Ürün kompozisyonu</h4>${shares.length?table(['Ürün','Pay'],shares.map(([crop,share])=>[crop,`${number(Number(share)*100)}%`])):'<p>NOT PROVIDED / NOT APPLICABLE — kanonik crop_shares üretilmedi.</p>'}<p>HHI: <strong>${number(result.hhi??result.HHI,4)}</strong></p>`;
-    const resultUnits=result.presentation_units||[];byId('v1-project-units').innerHTML=`<h4>Birim sonuçları</h4><div class="v1-provider-table-wrap">${table(['Birim','Mevcut ürün','Seçilen desen','Su (m³)','Kâr (TL)','Uyarılar'],resultUnits.map(unit=>[unit.analysis_unit_id,unit.current_crop,(unit.selected_crops||[]).map(v=>v.crop).join(' + '),metric(unit.authoritative_unit_water_m3),metric(unit.unit_profit_tl),(unit.warnings||[]).join(' · ')||'Backend uyarısı yok']))}</div>`;
-    byId('v1-project-provenance').textContent=JSON.stringify({project_id:run.project_id,project_revision:context.project_revision,run_id:run.id,execution_profile:run.execution_profile,scenario:run.scenario,algorithm:run.algorithm,objective:run.configuration?.objective,seed:run.seed,selection_hash:run.provenance?.selection_hash||run.result?.result_provenance?.selection_hash,engine_commit:run.provenance?.engine_commit||run.result?.result_provenance?.engine_commit,result_authority_label:run.result_authority_label,provenance:run.provenance,presentation_context:run.presentation_context},null,2);
+    const resultUnits=result.presentation_units||[];
+    retireLegacyResultSink();
     context.units=context.units.map(unit=>({...unit,result:resultUnits.find(row=>row.analysis_unit_id===unit.analysis_unit_id)||unit.result}));
     setText('bWaterCurrent','SAĞLANMADI / NOT PROVIDED');setText('bWaterScenario',metric(result.authoritative_water_m3));setText('bProfitCurrent','SAĞLANMADI / NOT PROVIDED');setText('bProfitScenario',metric(result.total_profit_tl));setText('bEffCurrent','SAĞLANMADI / NOT PROVIDED');setText('bEffScenario',metric(result.efficiency_tl_per_m3,4));setText('metricsTitle',`${context.project.name} · Saklanmış analiz sonucu`);
     const objectiveLabel={water_saving:'Su tasarrufu',max_profit:'Kâr',water_efficiency:'Su etkin kullanım'}[run.configuration?.objective]||run.configuration?.objective||'SAĞLANMADI';setText('activeObjectiveBadge',`Aktif hedef: ${objectiveLabel}`);
@@ -254,18 +273,27 @@
   function renderNativeRun(run){
     const result=run.result||{},summary=run.summary||{},warnings=[...(run.warnings||[]),...(result.warnings||[])].filter((value,index,all)=>value&&all.indexOf(value)===index);
     const annual=result.annual_budget_validation||{},monthly=monthlyRows(result),shares=result.crop_shares&&typeof result.crop_shares==='object'?Object.entries(result.crop_shares):[];
+    const reconciliation=result.water_reconciliation||{},diagnostic=result.feasible===false||result.diagnostic===true;
     const warningText=warnings.length?warnings.join(' · '):'Backend uyarısı yok.';
     const annualText=annual&&Object.keys(annual).length?`${annual.status||'SAĞLANMADI'} · talep ${metric(annual.demand_m3)} m³ · bütçe ${metric(annual.usable_supply_m3??annual.available_budget_m3)} m³`:'SAĞLANMADI / NOT PROVIDED';
     setText('algoStatus',`Tamamlandı · ${run.algorithm} · ${run.configuration?.objective||'hedef sağlanmadı'}`);
-    const monthlyText=monthly.length?`Aylık doğrulama: ${monthly.length} dönem · ihlal: ${[...(result.monthly_supply_validation?.violating_months||[]),...(result.monthly_delivery_validation?.violating_months||[])].join(', ')||'yok'}`:'Aylık doğrulama SAĞLANMADI / NOT PROVIDED';
+    const monthlyText=monthly.length?`Aylık doğrulama: ${monthly.length} dönem · ihlal: ${violatingMonths(result).join(', ')||'yok'}`:'Aylık doğrulama SAĞLANMADI / NOT PROVIDED';
     setText('deliveryBox',`Yıllık bütçe: ${annualText} · ${monthlyText} · Uyarılar: ${warningText}`);
+    setText('globalBudgetBadge',`Toplam planlama su bütçesi: ${metric(annual.usable_supply_m3??annual.available_budget_m3)} m³`);
+    setText('globalBudgetStatus',`bütçe durumu: ${annual.status||'SAĞLANMADI / NOT PROVIDED'}`);
     const benchmark=byId('benchmarkResults');if(benchmark)benchmark.innerHTML=table(['Run','Algoritma','Hedef','Senaryo','Seed','Su (m³)','Net kâr (TL)','Feasibility'],[[run.id,run.algorithm,run.configuration?.objective,run.scenario,run.seed,metric(result.authoritative_water_m3),metric(result.total_profit_tl),result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI']]);
     setText('benchmarkStatus','PROJECT DATA · immutable stored run');
     setText('objectiveCompareMatrix',`Aktif stored run: ${run.algorithm} × ${run.configuration?.objective||'SAĞLANMADI'} · ${run.scenario}. Diğer kombinasyonlar yalnız çalıştırılıp saklandığında karşılaştırılır.`);
     const note=byId('basinSummaryNote');if(note)note.textContent=`${context.project.name} · ${context.unit_count} analiz birimi · revision ${context.project_revision} · optimizer su ${metric(result.optimizer_water_m3)} m³ · otoritatif su ${metric(result.authoritative_water_m3)} m³ · planlama yılı ${metric(result.planning_year_profile_water_m3)} m³ · tam sezon ${metric(result.verified_profile_water_m3)} m³ · fark ${metric(result.water_accounting_difference_m3??result.water_reconciliation?.difference_m3)} m³ · net kâr ${metric(result.total_profit_tl)} TL · su verimliliği ${metric(result.efficiency_tl_per_m3,4)} TL/m³ · feasibility ${result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED'}`;
-    setText('officialWaterNote',`PROJECT DATA · Yıllık bütçe: ${annualText} · Uyarılar: ${warningText}`);
-    setText('officialScenarioNote',shares.length?`Ürün kompozisyonu: ${shares.map(([crop,share])=>`${crop} ${number(Number(share)*100)}%`).join(' · ')} · HHI ${metric(result.hhi??result.HHI,4)}`:'Ürün kompozisyonu SAĞLANMADI / NOT PROVIDED');
-    setText('allParcelCompareNote',`PROJECT DATA · ${run.id} · optimizer su ${metric(result.optimizer_water_m3)} m³ · otoritatif su ${metric(result.authoritative_water_m3)} m³ · planlama yılı ${metric(result.planning_year_profile_water_m3)} m³ · tam sezon ${metric(result.verified_profile_water_m3)} m³ · aktif alan ${metric(summary.active_area_da)} da`);
+    ensureNativeResultSurface();
+    byId('v1-native-run-summary').innerHTML=`<h3>${diagnostic?'DIAGNOSTIC / UYGULANABİLİR ÖNERİ DEĞİL':'Saklanmış proje sonucu'}</h3><div class="v1-result-grid">${[['Run ID',run.id],['Senaryo',run.scenario],['Algoritma',run.algorithm],['Hedef',run.configuration?.objective],['Seed',run.seed],['Otorite',run.result_authority_label],['Toplam net kâr (TL)',metric(result.total_profit_tl)],['TL/m³',metric(result.efficiency_tl_per_m3,4)],['Aktif alan (da)',metric(summary.active_area_da)],['Feasibility',result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED'],['Score',metric(summary.score,5)]].map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('')}</div>`;
+    byId('v1-native-water-accounting').innerHTML=`<h4>Su muhasebesi ve uzlaştırma</h4><div class="v1-result-grid">${[['Optimizer su kullanımı (m³)',metric(result.optimizer_water_m3)],['Doğrulanmış / otoritatif su (m³)',metric(result.authoritative_water_m3)],['Planlama yılı suyu (m³)',metric(result.planning_year_profile_water_m3)],['Tam sezon suyu (m³)',metric(result.verified_profile_water_m3)],['Fark (m³)',metric(result.water_accounting_difference_m3??reconciliation.difference_m3)],['Fark (%)',metric(result.water_accounting_difference_pct??reconciliation.difference_pct,4)]].map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('')}</div><p class="v1-provider-explanation">Optimizer su kullanımı motorun plan çıktısıdır. Doğrulanmış / otoritatif su, backend'in saklanmış çalışma sonrası su muhasebesidir; dönem ve doğrulama kapsamları farklı olduğunda değerler farklı olabilir.</p>`;
+    byId('v1-native-annual-budget').innerHTML=`<h4>Yıllık su bütçesi doğrulaması</h4>${Object.keys(annual).length?table(['Talep (m³)','Kullanılabilir bütçe (m³)','Durum','Backend açıklaması'],[[metric(annual.demand_m3),metric(annual.usable_supply_m3??annual.available_budget_m3),annual.status||'SAĞLANMADI / NOT PROVIDED',annual.reason||annual.message||'Backend ek açıklama sağlamadı.']]):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — backend yıllık bütçe doğrulaması üretmedi.</p>'}`;
+    byId('v1-native-monthly').innerHTML=`<h4>Aylık su doğrulaması</h4><p class="v1-provider-explanation">İhlal ayları (tekilleştirilmiş): ${html(violatingMonths(result).join(', ')||'yok')}</p>${monthly.length?table(['Ay','Talep (m³)','Kullanılabilir arz (m³)','Teslim kapasitesi (m³)','Durum'],monthly.map(row=>row.map((value,index)=>index>0&&index<4?metric(value):value))):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — backend aylık talep, arz veya teslim serisi üretmedi.</p>'}`;
+    byId('v1-native-warnings').innerHTML=`<h4>Analiz uyarıları</h4>${warnings.length?`<ul class="v1-warning-list">${warnings.map(value=>`<li>${html(value)}</li>`).join('')}</ul>`:'<p class="v1-empty-state">Backend bu çalışma için uyarı bildirmedi.</p>'}`;
+    byId('v1-native-crops').innerHTML=`<h4>Ürün kompozisyonu ve yoğunlaşma</h4>${shares.length?table(['Ürün','Pay'],shares.map(([crop,share])=>[crop,`${number(Number(share)*100)}%`])):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — kanonik crop_shares üretilmedi.</p>'}<p>HHI: <strong>${metric(result.hhi??result.HHI,4)}</strong></p>`;
+    const provenance={project_id:run.project_id,project_revision:context.project_revision,run_id:run.id,execution_profile:run.execution_profile,scenario:run.scenario,algorithm:run.algorithm,objective:run.configuration?.objective,seed:run.seed,selection_hash:run.provenance?.selection_hash||result.result_provenance?.selection_hash,engine_commit:run.provenance?.engine_commit||result.result_provenance?.engine_commit,result_authority_label:run.result_authority_label,provenance:run.provenance,presentation_context:run.presentation_context};
+    byId('v1-native-provenance').querySelector('pre').textContent=JSON.stringify(provenance,null,2);
   }
   async function createPreview(){
     preview=null;const state=byId('v1-provider-preview-state');state.textContent='Backend önizlemesi hazırlanıyor…';setText('algoStatus','Önizleme hazırlanıyor…');
@@ -305,6 +333,7 @@
   }
   async function initProject(){
     document.body.classList.add('project-provider-mode');
+    applyProviderTerminology(true);retireLegacyResultSink();ensureNativeResultSurface();
     const shell=byId('v1-provider-shell');shell.dataset.provider='PROJECT_DATA';
     if(providers.length!==1||projects.length!==1||runs.length>1||units.length>1)throw new Error('Tek bir provider, project_id, run_id ve unit parametresi gerekir.');
     const projectId=canonicalId(projects[0]);if(!projectId)throw new Error('project_id biçimi geçersiz.');
@@ -316,12 +345,13 @@
     setText('dataSourceLabel',`PROJECT DATA · ${context.project.id}`);setText('dataLoadBadge',context.authority);
     installNativeControls();renderFacts();renderRequirements();installUnits();guardProjectUnits();wireControls();renderHistory();neutralizeReferenceSurface();await loadProjectList();
     window.refreshUI=()=>{if(context)renderUnit();};
-    setTimeout(()=>{renderMap();renderUnit();neutralizeReferenceSurface();},1200);
+    setTimeout(()=>{renderMap();renderUnit();neutralizeReferenceSurface();if(context.run)renderNativeRun(context.run);},1200);
     if(context.run)renderRun(context.run);
     window.__V1_PROJECT_PROVIDER__={get context(){return context;},get blockedReferencePaths(){return [...blockedReferencePaths];},get selectedUnit(){return selectedUnit;}};
     if(typeof window.syncRoleInfoBanner==='function')window.syncRoleInfoBanner();
   }
   async function initReference(){
+    applyProviderTerminology(false);
     const shell=byId('v1-provider-shell');if(shell)shell.dataset.provider='AKKAYA_REFERENCE';
     if(requestedProvider!==null&&requestedProvider!=='AKKAYA_REFERENCE')throw new Error('Bilinmeyen provider; otomatik referans geçişi uygulanmadı.');
     if(projects.length||runs.length||units.length)throw new Error('AKKAYA_REFERENCE bağlamında project/run/unit parametresi kabul edilmez.');

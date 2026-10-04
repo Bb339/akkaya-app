@@ -1,0 +1,23 @@
+{
+  "baseline": "3508fc158443a1f0c5d1bed2d0669940a7395b7c",
+  "method": "direct git diff comparison against baseline",
+  "protected": {
+    "index.html": "UNCHANGED",
+    "app.py": "UNCHANGED",
+    "kds/science/**": "UNCHANGED",
+    "kds/application/optimization.py": "UNCHANGED",
+    "kds/application/readiness.py": "UNCHANGED",
+    "kds/adapters/**": "UNCHANGED",
+    "data/**": "UNCHANGED",
+    "candidate_matrices": "UNCHANGED through data/** guard",
+    "frozen_reference_values": "UNCHANGED",
+    "docs/experiments/robustness_sensitivity/**": "UNCHANGED",
+    "render.yaml": "UNCHANGED"
+  },
+  "protected_diff": "NONE",
+  "runtime_scope": [
+    "kds/ui/static/v1-provider.js",
+    "kds/ui/static/v1-provider.css"
+  ],
+  "result": "PASS"
+}

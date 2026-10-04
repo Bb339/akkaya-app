@@ -1,0 +1,52 @@
+{
+  "viewport_primary": "1366x900",
+  "project": {
+    "id": "kds-native-result-final-2025",
+    "name": "KDS Native Result Final Demo",
+    "classification": "synthetic general"
+  },
+  "package": {
+    "path": "C:\\Users\\LENOVO\\Desktop\\CropKDS_21_Dosya_Tam_Gorsel_Demo_Paketi",
+    "root_files": 21,
+    "auto_matched": 21,
+    "revision": 21,
+    "analysis_units": 24,
+    "candidate_coverage": "24/24",
+    "geometries": 24
+  },
+  "execution": {
+    "unit_before_map_click": "KDS-005",
+    "unit_after_map_click": "KDS-009",
+    "algorithm": "GA",
+    "scenario": "S1",
+    "objective": "water_saving",
+    "seed": 123,
+    "preview": "PINNED",
+    "stored_run": "rendered and reopened by exact run_id"
+  },
+  "visible_result_assertions": [
+    "native summary and authority",
+    "optimizer versus authoritative water",
+    "annual budget PASS and non-placeholder badges",
+    "monthly rows and unique violation months",
+    "backend warnings",
+    "crop shares and HHI",
+    "selected unit result",
+    "visible expandable provenance and selection_hash"
+  ],
+  "legacy_sink": "hidden, aria-hidden, empty, unused by assertions",
+  "provider_round_trip": "PROJECT_DATA 24 -> AKKAYA_REFERENCE 179 -> PROJECT_DATA 24",
+  "project_isolation": "A -> B clears A run/unit; return to A has no implicit run; exact run_id reopens",
+  "reference_requests_in_project_mode": 0,
+  "responsive": {
+    "1366x900": "PASS",
+    "1920x1080": "PASS, no document overflow",
+    "390x844": "PASS, no document overflow"
+  },
+  "screenshots": [
+    "chromium_1366x900.png",
+    "chromium_1920x1080.png",
+    "chromium_mobile_390x844.png"
+  ],
+  "result": "PASS"
+}
