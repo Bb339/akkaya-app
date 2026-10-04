@@ -1,0 +1,13 @@
+{
+  "sequence": [
+    {"provider":"PROJECT_DATA","visible_count":"24 analiz birimi"},
+    {"provider":"AKKAYA_REFERENCE","visible_count":"179 parsel"},
+    {"provider":"PROJECT_DATA","visible_count":"24 analiz birimi"}
+  ],
+  "stale_count": false,
+  "stale_terminology": false,
+  "stale_geometry": false,
+  "stale_result": false,
+  "blocking_backdrop": false,
+  "status": "PASS"
+}

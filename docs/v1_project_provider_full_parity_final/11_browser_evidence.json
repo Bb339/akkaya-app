@@ -1,0 +1,19 @@
+{
+  "browser": "Chromium",
+  "viewports": ["1366x900", "1920x1080", "390x844"],
+  "body_horizontal_overflow": false,
+  "page_errors": 0,
+  "real_clicks": ["provider open", "provider close", "unit selector", "map polygon", "algorithm", "objective", "scenario", "seed", "preview", "Optimizasyonu Çalıştır", "tabs", "provenance", "project switch", "reference switch"],
+  "screenshots": [
+    "project_data_before_run_1366x900.png",
+    "project_data_after_run_1366x900.png",
+    "project_data_after_run_1920x1080.png",
+    "project_data_after_run_390x844.png",
+    "project_crop_recommendation.png",
+    "project_map_unit.png",
+    "project_monthly_water.png",
+    "project_provenance.png",
+    "akkaya_reference_restored.png"
+  ],
+  "status": "PASS"
+}

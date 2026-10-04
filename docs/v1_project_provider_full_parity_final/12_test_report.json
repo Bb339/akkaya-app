@@ -1,0 +1,10 @@
+{
+  "focused_backend_import_reference": {"passed": 91, "failed": 0, "duration_seconds": 433.73},
+  "focused_browser_isolation_guidance_geometry": {"passed": 3, "failed": 0, "duration_seconds": 174.49},
+  "primary_real_chromium_e2e": {"passed": 1, "failed": 0, "duration_seconds": 199.40, "rerun_after_final_assertions": "PASS"},
+  "runtime_native_surface_regression": {"passed": 1, "failed": 0, "duration_seconds": 4.39},
+  "javascript_syntax": "PASS",
+  "diff_check": "PASS",
+  "broad_suite_run": false,
+  "known_s2_high_budget": "INHERITED_UNCHANGED"
+}

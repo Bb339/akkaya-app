@@ -1,0 +1,19 @@
+{
+  "scenario": "S1",
+  "seed": 123,
+  "backend_authoritative_preview": true,
+  "expected": 9,
+  "ready": 9,
+  "matrix": [
+    {"algorithm":"GA","objective":"water_saving","status":"PINNED"},
+    {"algorithm":"GA","objective":"max_profit","status":"PINNED"},
+    {"algorithm":"GA","objective":"water_efficiency","status":"PINNED"},
+    {"algorithm":"ACO","objective":"water_saving","status":"PINNED"},
+    {"algorithm":"ACO","objective":"max_profit","status":"PINNED"},
+    {"algorithm":"ACO","objective":"water_efficiency","status":"PINNED"},
+    {"algorithm":"ABC","objective":"water_saving","status":"PINNED"},
+    {"algorithm":"ABC","objective":"max_profit","status":"PINNED"},
+    {"algorithm":"ABC","objective":"water_efficiency","status":"PINNED"}
+  ],
+  "executed_primary": {"algorithm":"GA","objective":"water_saving","status":"STORED"}
+}

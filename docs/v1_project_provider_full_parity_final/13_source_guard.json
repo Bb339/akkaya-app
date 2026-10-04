@@ -1,0 +1,19 @@
+{
+  "baseline": "81ad486e3bbd049b1c98f53eeef1384d464029c9",
+  "protected_diff": "NONE",
+  "checked": [
+    "app.py",
+    "index.html",
+    "kds/science/**",
+    "kds/application/optimization.py",
+    "kds/application/readiness.py",
+    "kds/adapters/**",
+    "data/**",
+    "candidate matrices",
+    "frozen reference values",
+    "robustness evidence",
+    "render.yaml"
+  ],
+  "scientific_calculation_changed": false,
+  "render_manifest_changed": false
+}

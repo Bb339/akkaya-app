@@ -12,7 +12,7 @@ from test_unified_v1_project_provider_browser import _serve_v1
 
 ROOT = Path(__file__).resolve().parents[1]
 FULL_PACKAGE = Path(r"C:\Users\LENOVO\Desktop\CropKDS_21_Dosya_Tam_Gorsel_Demo_Paketi")
-EVIDENCE = ROOT / "docs" / "v1_native_project_results_final_fix"
+EVIDENCE = ROOT / "docs" / "v1_project_provider_full_parity_final"
 
 
 def _assert_hit_target(page, locator):
@@ -61,15 +61,19 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                              "area_da": 1, "current_crop": "ARPA"}
                             for index in range(1, 180)]
             }))
-            requests, errors = [], []
+            requests, errors, network = [], [], []
             page.on("request", lambda request: requests.append(request.url))
+            page.on("response", lambda response: network.append({
+                "method": response.request.method, "url": response.url,
+                "status": response.status,
+            }) if "/api/v2/projects/" in response.url else None)
             page.on("pageerror", lambda error: errors.append(str(error)))
 
             page.goto(f"http://127.0.0.1:{server.server_port}/projects")
             page.locator("details.form-drawer").first.locator("summary").click()
             form = page.locator("#create-project")
-            form.locator('[name="id"]').fill("kds-native-result-final-2025")
-            form.locator('[name="name"]').fill("KDS Native Result Final Demo")
+            form.locator('[name="id"]').fill("kds-final-provider-e2e-2025")
+            form.locator('[name="name"]').fill("KDS Kurumsal Veri E2E Demo")
             form.locator('[name="planning_year"]').fill("2025")
             form.locator('[name="province_or_region"]').fill("Synthetic Region")
             form.locator('[name="data_source_notes"]').select_option(
@@ -110,6 +114,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             for stale in ("Parsel seç", "Parsel Haritası", "Seçili parsel", "Parsel Bazlı Özet"):
                 assert stale not in visible_text
             assert "P1" not in page.locator("#parcelSelect").inner_text()
+            page.screenshot(path=str(EVIDENCE / "project_data_before_run_1366x900.png"), full_page=True)
 
             provider_button = page.locator("#v1-provider-toggle")
             _assert_hit_target(page, provider_button)
@@ -138,11 +143,15 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
 
             for algorithm in ("ga", "aco", "abc"):
                 _click_select(page, "#algoSelect", algorithm)
-            for objective in ("su_tasarruf", "maks_kar", "su_etkin"):
-                radio = page.locator(f'input[name="scenario"][value="{objective}"]')
-                _assert_hit_target(page, radio)
-                radio.click()
-                expect(radio).to_be_checked()
+                for objective in ("su_tasarruf", "maks_kar", "su_etkin"):
+                    radio = page.locator(f'input[name="scenario"][value="{objective}"]')
+                    _assert_hit_target(page, radio)
+                    radio.click()
+                    expect(radio).to_be_checked()
+                    page.locator("#v1-provider-preview").click()
+                    expect(page.locator("#v1-provider-preview-state")).to_contain_text(
+                        "PINNED", timeout=120000
+                    )
             _click_select(page, "#seasonSourceSel", "s1")
             _click_select(page, "#algoSelect", "ga")
             page.locator('input[name="scenario"][value="su_tasarruf"]').click()
@@ -175,9 +184,36 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#v1-native-warnings")).to_contain_text("Analiz uyarıları")
             expect(page.locator("#v1-native-crops")).to_contain_text("HHI")
             expect(page.locator("#v1-native-unit-result")).to_contain_text("KDS-009")
+            expect(page.locator("#v1-native-unit-result")).to_contain_text("9")
+            expect(page.locator("#v1-native-run-summary")).to_contain_text("KDS Kurumsal Veri E2E Demo")
+            expect(page.locator("#runMetaBox")).to_contain_text("revision 21")
+            expect(page.locator("#riskSeparationBox")).to_contain_text("yıllık bütçe: PASS")
+            expect(page.locator("#decisionRationale")).to_contain_text("Akkaya fallback kullanılmadı")
+            expect(page.locator("#v1-native-crops")).to_contain_text("Alan (da)")
+            polygon = page.locator(".leaflet-interactive").nth(8)
+            polygon.click()
+            expect(page.locator(".leaflet-popup-content")).to_contain_text("KDS-009")
+            expect(page.locator(".leaflet-popup-content")).to_contain_text("Alan: 9 da")
+            expect(page.locator(".leaflet-popup-content")).to_contain_text("Optimize su:")
+            expect(page.locator(".leaflet-popup-content")).to_contain_text("Otorite:")
             monthly_violation = page.locator("#v1-native-monthly .v1-provider-explanation").inner_text()
             values = [value.strip() for value in monthly_violation.split(":", 1)[-1].split(",")]
             assert len(values) == len(set(values))
+            assert page.evaluate("""() => {
+              const chart=Chart.getChart(document.getElementById('waterChart'));
+              return chart.data.datasets[0].data.length===4 && chart.data.datasets[0].data.every(Number.isFinite);
+            }""")
+            assert page.evaluate("""() => {
+              const chart=Chart.getChart(document.getElementById('profitChart'));
+              return chart.data.datasets[0].data.length===1 && Number.isFinite(chart.data.datasets[0].data[0]);
+            }""")
+            assert page.evaluate("""() => {
+              const chart=Chart.getChart(document.getElementById('v1ProjectMonthlyChart'));
+              return chart.data.labels.length===12 && chart.data.datasets.length===3;
+            }""")
+            page.locator("#v1-native-crops").screenshot(path=str(EVIDENCE / "project_crop_recommendation.png"))
+            page.locator("#map").screenshot(path=str(EVIDENCE / "project_map_unit.png"))
+            page.locator("#v1-native-monthly").screenshot(path=str(EVIDENCE / "project_monthly_water.png"))
 
             parcel_tab = page.locator('.tab[data-tab="parcel"]')
             _assert_hit_target(page, parcel_tab)
@@ -198,21 +234,24 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#v1-provider-shell")).to_have_attribute("aria-hidden", "false")
             page.locator("#v1-provider-close").click()
 
-            run_id = next(iter(repository.get("kds-native-result-final-2025")["runs"]))
+            run_id = next(iter(repository.get("kds-final-provider-e2e-2025")["runs"]))
             assert f"run_id={run_id}" in page.url
             assert not any("/api/parcels" in url or "/api/optimize" in url
                            for url in requests if "provider=PROJECT_DATA" in page.url)
             project_errors = list(errors)
             assert not project_errors
+            preview_calls = [row for row in network if row["method"] == "POST" and row["url"].endswith("/analysis-preview") and row["status"] == 200]
+            execution_calls = [row for row in network if row["method"] == "POST" and row["url"].endswith("/analyses") and row["status"] == 201]
+            assert len(preview_calls) >= 10 and len(execution_calls) == 1
 
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-            page.screenshot(path=str(EVIDENCE / "chromium_1366x900.png"), full_page=True)
+            page.screenshot(path=str(EVIDENCE / "project_data_after_run_1366x900.png"), full_page=True)
             page.set_viewport_size({"width": 1920, "height": 1080})
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-            page.screenshot(path=str(EVIDENCE / "chromium_1920x1080.png"), full_page=True)
+            page.screenshot(path=str(EVIDENCE / "project_data_after_run_1920x1080.png"), full_page=True)
             page.set_viewport_size({"width": 390, "height": 844})
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-            page.screenshot(path=str(EVIDENCE / "chromium_mobile_390x844.png"), full_page=True)
+            page.screenshot(path=str(EVIDENCE / "project_data_after_run_390x844.png"), full_page=True)
             page.set_viewport_size({"width": 1366, "height": 900})
 
             page.reload()
@@ -222,6 +261,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#v1-native-provenance")).to_contain_text(run_id)
             page.locator("#v1-native-provenance summary").click()
             expect(page.locator("#v1-native-provenance pre")).to_contain_text("selection_hash")
+            page.locator("#v1-native-provenance").screenshot(path=str(EVIDENCE / "project_provenance.png"))
 
             page.locator("#v1-provider-toggle").click()
             page.locator("#v1-reference-provider").click()
@@ -229,11 +269,12 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#roleInfoBanner")).to_contain_text("179 parsel", timeout=30000)
             expect(page.locator("#roleInfoBanner")).not_to_contain_text("analiz birimi")
+            page.screenshot(path=str(EVIDENCE / "akkaya_reference_restored.png"), full_page=True)
 
             page.locator("#v1-provider-toggle").click()
             project_select = page.locator("#v1-project-provider-select")
             _assert_hit_target(page, project_select)
-            project_select.select_option("kds-native-result-final-2025")
+            project_select.select_option("kds-final-provider-e2e-2025")
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.unit_count === 24")
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#roleInfoBanner")).to_contain_text("24 analiz birimi")

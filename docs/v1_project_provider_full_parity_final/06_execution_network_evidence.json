@@ -1,0 +1,25 @@
+{
+  "project_id": "kds-final-provider-e2e-2025",
+  "native_action": "Optimizasyonu Çalıştır",
+  "preview": {
+    "route": "POST /api/v2/projects/{project_id}/analysis-preview",
+    "expected_status": 200,
+    "observed_successful_calls": 10,
+    "purpose": "nine algorithm/objective matrix previews plus the pinned primary preview"
+  },
+  "execution": {
+    "route": "POST /api/v2/projects/{project_id}/analyses",
+    "expected_status": 201,
+    "observed_successful_calls": 1,
+    "algorithm": "ga",
+    "scenario": "S1",
+    "objective": "water_saving",
+    "seed": 123,
+    "outcome": "immutable stored run rendered in V1 and reopened by exact run_id"
+  },
+  "forbidden_project_requests": {
+    "/api/parcels": 0,
+    "/api/optimize": 0
+  },
+  "assertion_source": "tests/test_v1_native_project_interactivity_final.py"
+}

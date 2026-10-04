@@ -1,0 +1,16 @@
+{
+  "chromium_test": "test_projects_to_same_v1_workspace_full_project_flow",
+  "project_a_to_b": {
+    "a_run_hidden_in_b": true,
+    "a_run_id_removed": true,
+    "a_units_removed": true,
+    "a_geometry_removed": true,
+    "a_provenance_removed": true,
+    "reference_fallback_requests": 0
+  },
+  "return_to_a": {
+    "implicit_run_restore": false,
+    "explicit_run_id_reopens_exact_run": true
+  },
+  "status": "PASS"
+}

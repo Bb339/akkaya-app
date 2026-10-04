@@ -1,0 +1,30 @@
+{
+  "project": "KDS Kurumsal Veri E2E Demo",
+  "revision": 21,
+  "analysis_units": 24,
+  "candidate_coverage": "24/24",
+  "geometries": 24,
+  "classification": "SYNTHETIC_TEST_OUTPUT",
+  "authority": "SYNTHETIC / NOT_OFFICIAL",
+  "rendered": {
+    "stored_run_summary": true,
+    "current_and_recommended_crop": true,
+    "water_accounting": ["optimizer", "authoritative", "planning_year", "full_season"],
+    "annual_budget": "PASS",
+    "monthly_series": 12,
+    "monthly_chart_datasets": 3,
+    "warnings": true,
+    "crop_area_share_hhi": true,
+    "unit_result": true,
+    "map_popup": true,
+    "provenance": true,
+    "water_chart_values": 4,
+    "profit_chart_values": 1
+  },
+  "missing_values": {
+    "current_water": "SAĞLANMADI / NOT PROVIDED",
+    "current_profit": "SAĞLANMADI / NOT PROVIDED",
+    "current_efficiency": "SAĞLANMADI / NOT PROVIDED"
+  },
+  "parallel_result_workspace": false
+}
