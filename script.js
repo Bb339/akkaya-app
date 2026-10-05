@@ -1,6 +1,20 @@
 ﻿// Demo veri seti
 
 // --- v51 CLEAN: Fixed crop pools (Senaryo-1) ---
+function isCanonicalAkkayaReferenceBoot(){
+  const query = new URLSearchParams(window.location.search);
+  const providers = query.getAll('provider');
+  return (providers.length === 0 ||
+    (providers.length === 1 && providers[0] === 'AKKAYA_REFERENCE')) &&
+    query.getAll('project_id').length === 0 &&
+    query.getAll('run_id').length === 0 &&
+    query.getAll('unit').length === 0;
+}
+
+function isProjectProviderBoot(){
+  return !isCanonicalAkkayaReferenceBoot();
+}
+
 let S1_PRIMARY_CROPS = [];
 
 // --- v54: Mevcut 2. sezon eşleşmeleri + mevcut sulama yöntemleri (kullanıcı girdisi) ---
@@ -19470,6 +19484,22 @@ window.addEventListener("DOMContentLoaded", async () => {
   parcelSelectEl = document.getElementById("parcelSelect");
   parcelSummaryBody = document.querySelector("#parcelSummary .parcel-summary-body");
 
+  // PROJECT_DATA has a separate authoritative initialization path in
+  // v1-provider.js. Keep only provider-safe shared presentation wiring here;
+  // do not start reference dataset, metadata, map or data-binding loaders.
+  if(isProjectProviderBoot()){
+    applyPanelOpenDefaults();
+    try{ initTabs(); }catch(e){ console.error("initTabs hata:", e); }
+    try{ focusPanelDefaultTab(); }catch(e){ console.error("focusPanelDefaultTab hata:", e); }
+    if(typeof window.Chart !== "undefined"){
+      try{ initCharts(); }catch(e){ console.error("initCharts hata:", e); }
+      try{ initBenchmarkCharts(); }catch(e){ console.error("initBenchmarkCharts hata:", e); }
+    }
+    try{ initWorkspaceEnhancements(); }catch(e){ console.error("initWorkspaceEnhancements hata:", e); }
+    requestAnimationFrame(()=>{ applyPresentationPanelDefaultsFinal("project-provider-safe-boot"); });
+    return;
+  }
+
   // Veri setini backend'den yükle (tek kaynak)
   try {
     await loadEnhancedDataset();
@@ -20631,6 +20661,7 @@ async function runAutoBestOptimizationV7(idsForRun, scenarioKey){
   }
 
   async function loadDrawingRegistryV18(){
+    if(isProjectProviderBoot()) return [];
     if(REGISTRY.length) return REGISTRY;
     try{
       const j = await (await fetch(REGISTRY_URL)).json();
@@ -21354,6 +21385,7 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   async function loadWaterAllocationExplainV42(){
     const el=document.getElementById('waterAllocationExplain');
     if(!el) return;
+    if(isProjectProviderBoot()) return;
     try{
       const res=await fetch('/api/water_allocation_logic', {cache:'no-store'});
       const data=await res.json();

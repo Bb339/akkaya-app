@@ -242,7 +242,10 @@
     surface=document.createElement('section');surface.id='v1-native-project-results';surface.className='v1-native-results';
     surface.setAttribute('aria-label','Saklanmış proje analiz sonucu');
     surface.innerHTML='<div id="v1-native-run-summary"></div><div id="v1-native-water-accounting"></div><div id="v1-native-annual-budget"></div><div id="v1-native-monthly"></div><div id="v1-native-warnings"></div><div id="v1-native-crops"></div><div id="v1-native-unit-result"></div><details id="v1-native-provenance"><summary>Kaynak &amp; Provenance</summary><pre></pre></details>';
-    byId('basinSummaryBlock')?.insertAdjacentElement('afterend',surface);return surface;
+    const top=document.querySelector('.right-top');
+    if(top)top.insertAdjacentElement('afterend',surface);
+    else byId('basinSummaryBlock')?.insertAdjacentElement('afterend',surface);
+    return surface;
   }
   function retireLegacyResultSink(){
     const sink=byId('v1-project-result');if(!sink)return;
@@ -266,6 +269,16 @@
   function resetMap(){
     const root=byId('map');if(!root||!window.L)return null;
     try{providerMap=(typeof map!=='undefined'&&map)?map:null;}catch(_error){providerMap=null;}
+    if(!providerMap){
+      try{
+        providerMap=L.map(root,{zoomControl:true}).setView([37.888,34.645],12);
+        try{
+          if(L.esri&&typeof L.esri.basemapLayer==='function')L.esri.basemapLayer('Imagery').addTo(providerMap);
+          else L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap'}).addTo(providerMap);
+        }catch(_error){}
+        try{map=providerMap;}catch(_error){window.map=providerMap;}
+      }catch(_error){providerMap=null;}
+    }
     if(!providerMap)return null;
     try{if(parcelLayer)providerMap.removeLayer(parcelLayer);}catch(_error){}
     try{if(typeof customUserLayer!=='undefined'&&customUserLayer)providerMap.removeLayer(customUserLayer);}catch(_error){}
@@ -306,7 +319,7 @@
   function violatingMonths(result){
     return [...new Set([...(result.monthly_supply_validation?.violating_months||[]),...(result.monthly_delivery_validation?.violating_months||[])])].sort();
   }
-  function table(headers,rows){return `<table class="v1-provider-table"><thead><tr>${headers.map(h=>`<th>${html(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(value=>`<td>${html(value??'SAĞLANMADI')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
+  function table(headers,rows){return `<div class="v1-provider-table-wrap"><table class="v1-provider-table"><thead><tr>${headers.map(h=>`<th>${html(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(value=>`<td>${html(value??'SAĞLANMADI')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
   function chartById(id){
     const canvas=byId(id);if(!canvas||!window.Chart)return null;
     try{return Chart.getChart?.(canvas)||null;}catch(_error){return null;}
@@ -365,7 +378,10 @@
     setText('objectiveCompareMatrix',`Aktif stored run: ${run.algorithm} × ${run.configuration?.objective||'SAĞLANMADI'} · ${run.scenario}. Diğer kombinasyonlar yalnız çalıştırılıp saklandığında karşılaştırılır.`);
     const note=byId('basinSummaryNote');if(note)note.textContent=`${context.project.name} · ${context.unit_count} analiz birimi · revision ${context.project_revision} · optimizer su ${metric(result.optimizer_water_m3)} m³ · otoritatif su ${metric(result.authoritative_water_m3)} m³ · planlama yılı ${metric(result.planning_year_profile_water_m3)} m³ · tam sezon ${metric(result.verified_profile_water_m3)} m³ · fark ${metric(result.water_accounting_difference_m3??result.water_reconciliation?.difference_m3)} m³ · net kâr ${metric(result.total_profit_tl)} TL · su verimliliği ${metric(result.efficiency_tl_per_m3,4)} TL/m³ · feasibility ${result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED'}`;
     ensureNativeResultSurface();
-    byId('v1-native-run-summary').innerHTML=`<h3>${diagnostic?'DIAGNOSTIC / UYGULANABİLİR ÖNERİ DEĞİL':'Saklanmış proje sonucu'}</h3><div class="v1-result-grid">${[['Run durumu',run.status],['Classification',result.classification],['Proje',context.project.name],['Planlama yılı',context.project.planning_year],['Run ID',run.id],['Senaryo',run.scenario],['Algoritma',run.algorithm],['Hedef',run.configuration?.objective],['Seed',run.seed],['Otorite',run.result_authority_label],['Toplam net kâr (TL)',metric(result.total_profit_tl)],['TL/m³',metric(result.efficiency_tl_per_m3,4)],['Aktif alan (da)',metric(summary.active_area_da)],['Feasibility',result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED'],['Score',metric(summary.score,5)]].map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('')}</div>`;
+    const primarySummary=[['Proje',context.project.name],['Senaryo',run.scenario],['Algoritma',run.algorithm],['Hedef',run.configuration?.objective],['Toplam net kâr (TL)',metric(result.total_profit_tl)],['TL/m³',metric(result.efficiency_tl_per_m3,4)],['Feasibility',result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED']];
+    const technicalSummary=[['Run durumu',run.status],['Classification',result.classification],['Planlama yılı',context.project.planning_year],['Run ID',run.id],['Seed',run.seed],['Otorite',run.result_authority_label],['Aktif alan (da)',metric(summary.active_area_da)],['Score',metric(summary.score,5)]];
+    const summaryCards=rows=>rows.map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('');
+    byId('v1-native-run-summary').innerHTML=`<h3>${diagnostic?'DIAGNOSTIC / UYGULANABİLİR ÖNERİ DEĞİL':'Saklanmış proje sonucu'}</h3><div class="v1-result-grid">${summaryCards(primarySummary)}</div><details class="v1-result-technical"><summary>Teknik çalışma ayrıntıları</summary><div class="v1-result-grid">${summaryCards(technicalSummary)}</div></details>`;
     byId('v1-native-water-accounting').innerHTML=`<h4>Su muhasebesi ve uzlaştırma</h4><div class="v1-result-grid">${[['Optimizer su kullanımı (m³)',metric(result.optimizer_water_m3)],['Doğrulanmış / otoritatif su (m³)',metric(result.authoritative_water_m3)],['Planlama yılı suyu (m³)',metric(result.planning_year_profile_water_m3)],['Tam sezon suyu (m³)',metric(result.verified_profile_water_m3)],['Fark (m³)',metric(result.water_accounting_difference_m3??reconciliation.difference_m3)],['Fark (%)',metric(result.water_accounting_difference_pct??reconciliation.difference_pct,4)]].map(([label,value])=>`<div class="v1-result-card"><span>${html(label)}</span><strong>${html(value)}</strong></div>`).join('')}</div><p class="v1-provider-explanation">Optimizer su kullanımı motorun plan çıktısıdır. Doğrulanmış / otoritatif su, backend'in saklanmış çalışma sonrası su muhasebesidir; dönem ve doğrulama kapsamları farklı olduğunda değerler farklı olabilir.</p>`;
     byId('v1-native-annual-budget').innerHTML=`<h4>Yıllık su bütçesi doğrulaması</h4>${Object.keys(annual).length?table(['Talep (m³)','Kullanılabilir bütçe (m³)','Durum','Backend açıklaması'],[[metric(annual.demand_m3),metric(annual.usable_supply_m3??annual.available_budget_m3),annual.status||'SAĞLANMADI / NOT PROVIDED',annual.reason||annual.message||'Backend ek açıklama sağlamadı.']]):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — backend yıllık bütçe doğrulaması üretmedi.</p>'}`;
     byId('v1-native-monthly').innerHTML=`<h4>Aylık su doğrulaması</h4><p class="v1-provider-explanation">İhlal ayları (tekilleştirilmiş): ${html(violatingMonths(result).join(', ')||'yok')}</p>${monthly.length?table(['Ay','Talep (m³)','Kullanılabilir arz (m³)','Teslim kapasitesi (m³)','Durum'],monthly.map(row=>row.map((value,index)=>index>0&&index<4?metric(value):value))):'<p class="v1-missing-state">SAĞLANMADI / NOT PROVIDED — backend aylık talep, arz veya teslim serisi üretmedi.</p>'}`;
@@ -431,8 +447,9 @@
     shell.dataset.synthetic=String(context.synthetic);byId('v1-provider-context').hidden=false;setText('v1-provider-name',`PROJECT DATA · ${context.project.name}`);setText('v1-provider-authority',context.synthetic?context.authority:`${context.authority} · ${context.execution_profile}`);setText('v1-provider-badge','PROJECT DATA');byId('v1-manage-project').href=`/projects#project=${encodeURIComponent(projectId)}&section=data`;
     setText('dataSourceLabel',`PROJECT DATA · ${context.project.id}`);setText('dataLoadBadge',context.authority);
     installNativeControls();renderFacts();renderRequirements();installUnits();guardProjectUnits();wireControls();renderHistory();neutralizeReferenceSurface();renderProjectModules();await loadProjectList();
+    renderMap();renderUnit();neutralizeReferenceSurface();renderProjectModules(context.run);if(context.run)renderNativeRun(context.run);
     window.refreshUI=()=>{if(context)renderUnit();};
-    setTimeout(()=>{renderMap();renderUnit();neutralizeReferenceSurface();renderProjectModules(context.run);if(context.run)renderNativeRun(context.run);},1200);
+    setTimeout(()=>{renderMap();renderUnit();neutralizeReferenceSurface();renderProjectModules(context.run);if(context.run)renderNativeRun(context.run);providerMap?.invalidateSize?.();},1200);
     if(context.run)renderRun(context.run);
     window.__V1_PROJECT_PROVIDER__={get context(){return context;},get blockedReferencePaths(){return [...blockedReferencePaths];},get selectedUnit(){return selectedUnit;},openUnitPopup(unitId){let opened=false;providerLayers?.eachLayer?.(layer=>{if(layer.__providerUnit===unitId){layer.openPopup?.();opened=true;}});return opened;}};
     if(typeof window.syncRoleInfoBanner==='function')window.syncRoleInfoBanner();

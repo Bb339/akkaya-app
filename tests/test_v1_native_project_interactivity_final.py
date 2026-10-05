@@ -13,7 +13,7 @@ from test_unified_v1_project_provider_browser import _serve_v1
 
 ROOT = Path(__file__).resolve().parents[1]
 FULL_PACKAGE = Path(r"C:\Users\LENOVO\Desktop\CropKDS_21_Dosya_Tam_Gorsel_Demo_Paketi")
-EVIDENCE = ROOT / "docs" / "project_v1_full_parity_final" / "evidence"
+EVIDENCE = ROOT / "docs" / "project_v1_exact_ui_cleanboot_final" / "evidence"
 
 
 def _assert_hit_target(page, locator):
@@ -70,13 +70,14 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                              "area_da": 1, "current_crop": "ARPA"}
                             for index in range(1, 180)]
             }))
-            requests, errors, network = [], [], []
+            requests, errors, network, console_messages = [], [], [], []
             page.on("request", lambda request: requests.append(request.url))
             page.on("response", lambda response: network.append({
                 "method": response.request.method, "url": response.url,
                 "status": response.status,
             }) if "/api/v2/projects/" in response.url else None)
             page.on("pageerror", lambda error: errors.append(str(error)))
+            page.on("console", lambda message: console_messages.append(message.text))
 
             page.goto(f"http://127.0.0.1:{server.server_port}/projects")
             page.locator("details.form-drawer").first.locator("summary").click()
@@ -288,6 +289,18 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                            for url in requests if "provider=PROJECT_DATA" in page.url)
             project_errors = list(errors)
             assert not project_errors
+            assert page.evaluate(
+                "window.__V1_PROJECT_PROVIDER__.blockedReferencePaths"
+            ) == []
+            assert not [message for message in console_messages
+                        if "reference endpoint engellendi" in message]
+            reference_tokens = (
+                "/api/parcels", "/api/optimize", "/api/meta",
+                "/api/geojson_files", "/api/geojson_bundle",
+                "/api/water_allocation_logic", "/data/",
+            )
+            assert not [url for url in requests
+                        if any(token in url for token in reference_tokens)]
             preview_calls = [row for row in network if row["method"] == "POST" and row["url"].endswith("/analysis-preview") and row["status"] == 200]
             execution_calls = [row for row in network if row["method"] == "POST" and row["url"].endswith("/analyses") and row["status"] == 201]
             assert len(preview_calls) == len(run_matrix)
@@ -295,7 +308,14 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             assert len(repository.get("kds-final-provider-e2e-2025")["runs"]) == len(run_matrix)
 
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+            assert page.evaluate("document.querySelector('#map').getBoundingClientRect().height >= 460")
             assert page.evaluate("document.querySelector('#map').getBoundingClientRect().height <= 620")
+            assert page.evaluate("""() => {
+              const results=document.querySelector('#v1-native-project-results');
+              const values=[...document.querySelectorAll('.v1-result-card strong')];
+              return results.scrollHeight <= results.clientHeight + 1 &&
+                values.every(node => node.scrollWidth <= node.clientWidth + 1);
+            }""")
             page.screenshot(path=str(EVIDENCE / "project_data_after_run_1366x900.png"), full_page=True)
             for width, height in ((1280, 720), (1366, 768), (1536, 864), (1920, 1080), (390, 844)):
                 page.set_viewport_size({"width": width, "height": height})

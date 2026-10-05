@@ -96,6 +96,37 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
             expect(page.locator("#v1-provider-authority")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
             expect(page.locator("#parcelSelect option")).to_have_count(24)
             assert page.locator("#parcelSelect option").first.get_attribute("value").startswith("GX-")
+
+            # A genuinely fresh browser page must boot PROJECT_DATA directly
+            # without starting and then blocking any reference-only loader.
+            clean_page = browser.new_page(viewport={"width": 1366, "height": 900})
+            clean_page.add_init_script(LEAFLET)
+            clean_requests, clean_errors, clean_console = [], [], []
+            clean_page.on("request", lambda request: clean_requests.append(request.url))
+            clean_page.on("pageerror", lambda error: clean_errors.append(str(error)))
+            clean_page.on("console", lambda message: clean_console.append(message.text))
+            clean_page.goto(
+                f"http://127.0.0.1:{server.server_port}/"
+                "?provider=PROJECT_DATA&project_id=v1-provider-demo"
+            )
+            clean_page.wait_for_function(
+                "window.__V1_PROJECT_PROVIDER__?.context?.unit_count === 24"
+            )
+            reference_tokens = (
+                "/api/parcels", "/api/optimize", "/api/meta",
+                "/api/geojson_files", "/api/geojson_bundle",
+                "/api/water_allocation_logic", "/data/",
+            )
+            assert not [url for url in clean_requests
+                        if any(token in url for token in reference_tokens)]
+            assert clean_page.evaluate(
+                "window.__V1_PROJECT_PROVIDER__.blockedReferencePaths"
+            ) == []
+            assert not clean_errors
+            assert not [message for message in clean_console
+                        if "reference endpoint engellendi" in message]
+            clean_page.close()
+
             page.locator("#parcelSelect").select_option("GX-001")
             expect(page.locator("#parcelSummaryTitle")).to_contain_text("GX-001")
             page.locator("#parcelSelect").select_option("GX-002")
@@ -120,8 +151,8 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
             expect(page.locator("#v1-native-annual-budget")).to_contain_text("PASS")
             expect(page.locator("#v1-native-warnings")).to_contain_text("Analiz uyarıları")
             expect(page.locator("#v1-native-warnings")).to_contain_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
-            expect(page.locator("#mWaterCurrent")).to_have_text("Mevcut su değeri sağlanmadı")
-            expect(page.locator("#mProfitCurrent")).to_have_text("Mevcut kâr değeri sağlanmadı")
+            expect(page.locator("#mWaterCurrent")).to_have_text("855")
+            expect(page.locator("#mProfitCurrent")).to_have_text("7.200")
             expect(page.locator("#v1-native-crops")).to_contain_text("Ürün kompozisyonu")
             expect(page.locator("#v1-native-monthly")).to_contain_text("Aylık su doğrulaması")
             expect(page.locator("#v1-native-unit-result")).to_contain_text("GX-002")
@@ -129,8 +160,17 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
             assert "run_id=" in page.url
             run_id = next(iter(repository.get("v1-provider-demo")["runs"]))
             assert f"run_id={run_id}" in page.url
-            assert page.evaluate("window.__V1_PROJECT_PROVIDER__.blockedReferencePaths")
+            assert page.evaluate("window.__V1_PROJECT_PROVIDER__.blockedReferencePaths") == []
             assert not any("/api/parcels" in url or "/api/optimize" in url for url in requests)
+
+            blocked = page.evaluate("""async () => {
+              try { await fetch('/api/parcels'); return null; }
+              catch (error) { return String(error.message || error); }
+            }""")
+            assert "reference endpoint engellendi: /api/parcels" in blocked
+            assert page.evaluate(
+                "window.__V1_PROJECT_PROVIDER__.blockedReferencePaths"
+            ) == ["/api/parcels"]
 
             page.reload()
             page.wait_for_function(
