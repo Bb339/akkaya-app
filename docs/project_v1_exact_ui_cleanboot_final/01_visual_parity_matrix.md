@@ -23,7 +23,7 @@ The comparison uses the same V1 document, controls, cards, tabs, charts and map 
 | Algorithm comparison | Reference benchmark | Immutable PROJECT_DATA run history | EXPECTED_PROVIDER_DIFFERENCE | PASS |
 | Provenance | Reference files | Project revision, selection hash and run ID | EXPECTED_PROVIDER_DIFFERENCE | PASS |
 
-Responsive checks passed at 1280x720, 1366x768, 1366x900, 1536x864, 1920x1080 and 390x844. Zoom checks passed at 80%, 100% and 125%. The document had no page-level horizontal overflow, the project map stayed within its provider-specific V1-compatible bounds, and result cards had no clipped values. At 1366x900, PROJECT_DATA measured 4281 px high and AKKAYA_REFERENCE measured 4100 px; the remaining 181 px reflects project authority/provenance text and provider-specific content rather than a second result hierarchy.
+Responsive checks passed at 1280x720, 1366x768, 1366x900, 1536x864, 1920x1080 and 390x844. Zoom checks passed at 80%, 100% and 125%. The document had no page-level horizontal overflow, the project map stayed within its provider-specific V1-compatible bounds, and result cards had no clipped values. The paired 1366x900 full-page captures use the same active native parcel/analysis-unit tab. PROJECT_DATA measured 4385 px high and AKKAYA_REFERENCE measured 4100 px; the remaining 285 px reflects project authority/provenance text and provider-specific content rather than a second result hierarchy.
 
 `PARALLEL_RESULT_WORKSPACE = ABSENT`
 

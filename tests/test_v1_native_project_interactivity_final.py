@@ -247,6 +247,23 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "project_drought_1366x900.png"))
             page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "project_tabs_1366x900.png"))
 
+            expected_tabs = [
+                "users", "parcel", "institution-communication", "drawing",
+                "district", "official", "drought", "benchmark",
+            ]
+            assert page.evaluate("""expected => Array.from(
+              document.querySelectorAll('#analysisTables .tab')
+            ).filter(node => node.offsetParent !== null).map(node => node.dataset.tab)
+            .filter(value => expected.includes(value))""", expected_tabs) == expected_tabs
+            assert page.evaluate("""() => {
+              const ids=['explainBox','rotationBox','irrigationCompareBox',
+                'businessMetricsBox','deliveryBox','irrigPlanBox'];
+              const nodes=ids.map(id=>document.getElementById(id));
+              return nodes.every(node=>node && node.offsetParent!==null) &&
+                nodes.every((node,index)=>index===0 ||
+                  nodes[index-1].compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING);
+            }""")
+
             parcel_tab = page.locator('.tab[data-tab="parcel"]')
             _assert_hit_target(page, parcel_tab)
             parcel_tab.click()
@@ -263,9 +280,11 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                 expect(page.locator(f'.tab[data-tab="{tab_name}"]')).to_be_visible()
             page.locator('.tab[data-tab="district"]').click()
             expect(page.locator("#districtSummaryTable")).to_contain_text("Test West")
+            page.locator("#tab-district").screenshot(path=str(EVIDENCE / "project_district_1366x900.png"))
             page.locator('.tab[data-tab="official"]').click()
             expect(page.locator("#officialWaterNote")).to_contain_text("PROJECT DATA")
             expect(page.locator("#officialSummary")).to_contain_text("PROJECT DATA")
+            page.locator("#tab-official").screenshot(path=str(EVIDENCE / "project_official_1366x900.png"))
             page.locator('.tab[data-tab="drought"]').click()
             expect(page.locator("#tab-drought")).to_be_visible()
             expect(page.locator("#waterRiskSection")).to_contain_text("SAĞLANMADI / NOT PROVIDED")
@@ -313,6 +332,9 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
               const next=top?.nextElementSibling;
               return !next || !next.matches('[class*=native-results],[id*=project-results]');
             }""")
+            page.locator('.tab[data-tab="parcel"]').click()
+            expect(page.locator("#tab-parcel")).to_have_class("tab-panel active")
+            page.evaluate("map.closePopup()")
             page.screenshot(path=str(EVIDENCE / "project_data_after_run_1366x900.png"), full_page=True)
             project_page_height = page.evaluate("document.documentElement.scrollHeight")
             for width, height in ((1280, 720), (1366, 768), (1536, 864), (1920, 1080), (390, 844)):
@@ -347,6 +369,9 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#roleInfoBanner")).to_contain_text("179 parsel", timeout=30000)
             expect(page.locator("#roleInfoBanner")).not_to_contain_text("analiz birimi")
+            page.locator('.tab[data-tab="parcel"]').click()
+            expect(page.locator("#tab-parcel")).to_have_class("tab-panel active")
+            page.evaluate("map.closePopup()")
             page.screenshot(path=str(EVIDENCE / "akkaya_reference_restored.png"), full_page=True)
             reference_page_height = page.evaluate("document.documentElement.scrollHeight")
             assert abs(project_page_height - reference_page_height) < 600
@@ -363,6 +388,12 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator('.tab[data-tab="parcel"]').click()
             page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "reference_current_recommended_1366x900.png"))
             page.locator("#deliveryBox").screenshot(path=str(EVIDENCE / "reference_monthly_water_context_1366x900.png"))
+            page.locator('.tab[data-tab="district"]').click()
+            expect(page.locator("#districtSummaryTable")).not_to_contain_text("Test West")
+            page.locator("#tab-district").screenshot(path=str(EVIDENCE / "reference_district_1366x900.png"))
+            page.locator('.tab[data-tab="official"]').click()
+            expect(page.locator("#officialSummary")).not_to_contain_text("PROJECT DATA")
+            page.locator("#tab-official").screenshot(path=str(EVIDENCE / "reference_official_1366x900.png"))
             page.locator('.tab[data-tab="benchmark"]').click()
             page.locator("#tab-benchmark").screenshot(path=str(EVIDENCE / "reference_algorithm_comparison_1366x900.png"))
             page.locator("#activeFilesBox").screenshot(path=str(EVIDENCE / "reference_provenance_context_1366x900.png"))
