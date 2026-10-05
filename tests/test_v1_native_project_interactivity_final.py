@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from flask import send_from_directory
 from playwright.sync_api import expect, sync_playwright
 
 from test_unified_decision_demo import PACKAGE, client_for
@@ -12,7 +13,7 @@ from test_unified_v1_project_provider_browser import _serve_v1
 
 ROOT = Path(__file__).resolve().parents[1]
 FULL_PACKAGE = Path(r"C:\Users\LENOVO\Desktop\CropKDS_21_Dosya_Tam_Gorsel_Demo_Paketi")
-EVIDENCE = ROOT / "docs" / "v1_project_provider_full_parity_final"
+EVIDENCE = ROOT / "docs" / "project_v1_full_parity_final" / "evidence"
 
 
 def _assert_hit_target(page, locator):
@@ -46,10 +47,18 @@ def _click_select(page, selector: str, value: str):
     expect(locator).to_have_value(value)
 
 
+def _serve_full_v1(application):
+    @application.get("/data/<path:filename>")
+    def v1_reference_data(filename):
+        return send_from_directory(ROOT / "data", filename)
+
+    _serve_v1(application)
+
+
 @pytest.mark.browser
 def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
     application, _, repository = client_for(tmp_path)
-    _serve_v1(application)
+    _serve_full_v1(application)
     server, thread = serve(application)
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     try:
@@ -112,6 +121,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
 
             expect(page.locator("#parcelSelect option")).to_have_count(24)
             expect(page.locator(".leaflet-interactive")).to_have_count(24, timeout=30000)
+            expect(page.locator(".v1-project-map-label")).to_have_count(24, timeout=30000)
             expect(page.locator("#roleInfoBanner")).to_contain_text("24 analiz birimi")
             expect(page.locator("#setupGroup .card-title").first).to_have_text("Analiz birimi seç")
             expect(page.locator(".map-card .card-title")).to_have_text("Analiz Birimleri Haritası")
@@ -135,6 +145,13 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
 
             _click_select(page, "#parcelSelect", "KDS-005")
             expect(page.locator("#parcelSummaryTitle")).to_contain_text("KDS-005")
+            for unit_id in ("KDS-001", "KDS-008", "KDS-016", "KDS-024"):
+                _click_select(page, "#parcelSelect", unit_id)
+                expect(page.locator("#parcelSummaryTitle")).to_contain_text(unit_id)
+                expect(page.locator("#mWaterCurrent")).not_to_contain_text("sağlanmadı")
+                expect(page.locator("#mProfitCurrent")).not_to_contain_text("sağlanmadı")
+                expect(page.locator("#mEffCurrent")).not_to_contain_text("sağlanmadı")
+            _click_select(page, "#parcelSelect", "KDS-005")
             page.evaluate("""() => {
               const layers=Object.values(map._layers||{}).filter(x=>x.getBounds);
               const bounds=L.featureGroup(layers).getBounds();
@@ -146,30 +163,26 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             polygon.click()
             expect(page.locator("#parcelSelect")).to_have_value("KDS-009")
 
-            for algorithm in ("ga", "aco", "abc"):
-                _click_select(page, "#algoSelect", algorithm)
-                for objective in ("su_tasarruf", "maks_kar", "su_etkin"):
-                    radio = page.locator(f'input[name="scenario"][value="{objective}"]')
-                    _assert_hit_target(page, radio)
-                    radio.click()
-                    expect(radio).to_be_checked()
-                    page.locator("#v1-provider-preview").click()
-                    expect(page.locator("#v1-provider-preview-state")).to_contain_text(
-                        "PINNED", timeout=120000
-                    )
-            _click_select(page, "#seasonSourceSel", "s1")
-            _click_select(page, "#algoSelect", "ga")
-            page.locator('input[name="scenario"][value="su_tasarruf"]').click()
             page.locator("#v1-provider-seed").fill("123")
-
-            preview = page.locator("#v1-provider-preview")
-            _assert_hit_target(page, preview)
-            preview.click()
-            expect(page.locator("#v1-provider-preview-state")).to_contain_text("PINNED", timeout=120000)
-            run = page.locator("#runOptBtn")
-            _assert_hit_target(page, run)
-            run.click()
-            expect(page.locator("#algoStatus")).to_contain_text("Tamamlandı", timeout=240000)
+            run_matrix = [
+                ("s1", "ga", "su_tasarruf"),
+                ("s1", "aco", "maks_kar"),
+                ("s1", "abc", "su_etkin"),
+            ]
+            if page.evaluate("window.__V1_PROJECT_PROVIDER__.context.capabilities.scenarios.S2.ready"):
+                run_matrix.append(("s2", "ga", "su_tasarruf"))
+            for scenario, algorithm, objective in run_matrix:
+                _click_select(page, "#seasonSourceSel", scenario)
+                _click_select(page, "#algoSelect", algorithm)
+                radio = page.locator(f'input[name="scenario"][value="{objective}"]')
+                radio.click()
+                expect(radio).to_be_checked()
+                preview = page.locator("#v1-provider-preview")
+                preview.click()
+                expect(page.locator("#v1-provider-preview-state")).to_contain_text("PINNED", timeout=120000)
+                run = page.locator("#runOptBtn")
+                run.click()
+                expect(page.locator("#algoStatus")).to_contain_text("Tamamlandı", timeout=240000)
             expect(page.locator("#v1-provider-scrim")).to_be_hidden()
             expect(page.locator("#v1-provider-shell")).to_have_attribute("aria-hidden", "true")
             expect(page.locator("#tblRecommended tbody")).not_to_contain_text(
@@ -177,6 +190,8 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             )
             expect(page.locator("#tblRecommendedFooter")).to_contain_text("water_saving")
             expect(page.locator("#businessMetricsBox")).to_contain_text("Backend birim net kârı")
+            for metric_id in ("#bWaterCurrent", "#bProfitCurrent", "#bEffCurrent"):
+                expect(page.locator(metric_id)).not_to_contain_text("SAĞLANMADI")
             expect(page.locator("#v1-project-result")).to_be_hidden()
             assert not page.locator("#v1-project-result").inner_text().strip()
             expect(page.locator("#v1-native-run-summary")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
@@ -219,6 +234,20 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator("#v1-native-crops").screenshot(path=str(EVIDENCE / "project_crop_recommendation.png"))
             page.locator("#map").screenshot(path=str(EVIDENCE / "project_map_unit.png"))
             page.locator("#v1-native-monthly").screenshot(path=str(EVIDENCE / "project_monthly_water.png"))
+            for unit_id in ("KDS-001", "KDS-005", "KDS-009", "KDS-024"):
+                _click_select(page, "#parcelSelect", unit_id)
+                assert page.evaluate(
+                    "unitId => window.__V1_PROJECT_PROVIDER__.openUnitPopup(unitId)",
+                    unit_id,
+                )
+                expect(page.locator(".leaflet-popup-content", has_text=unit_id)).to_be_visible()
+                expect(page.locator("#tblCurrent tbody td").nth(5)).not_to_contain_text("NOT PROVIDED")
+                expect(page.locator("#tblCurrent tbody td").nth(7)).not_to_contain_text("NOT PROVIDED")
+                expect(page.locator("#v1-native-unit-result")).to_contain_text(unit_id)
+            page.locator("#basinSummaryBlock").screenshot(path=str(EVIDENCE / "project_summary_1366x900.png"))
+            page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "project_current_recommended_1366x900.png"))
+            page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "project_drought_1366x900.png"))
+            page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "project_tabs_1366x900.png"))
 
             parcel_tab = page.locator('.tab[data-tab="parcel"]')
             _assert_hit_target(page, parcel_tab)
@@ -229,6 +258,20 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             benchmark_tab.click()
             expect(page.locator("#tab-benchmark")).to_have_class("tab-panel active")
             expect(page.locator("#benchmarkResults")).to_contain_text("water_saving")
+            expect(page.locator("#benchmarkResults")).to_contain_text("max_profit")
+            expect(page.locator("#benchmarkResults")).to_contain_text("water_efficiency")
+            page.locator("#tab-benchmark").screenshot(path=str(EVIDENCE / "project_algorithm_comparison_1366x900.png"))
+            for tab_name in ("users", "drawing", "district", "official", "drought"):
+                expect(page.locator(f'.tab[data-tab="{tab_name}"]')).to_be_visible()
+            page.locator('.tab[data-tab="district"]').click()
+            expect(page.locator("#districtSummaryTable")).to_contain_text("Test West")
+            page.locator('.tab[data-tab="official"]').click()
+            expect(page.locator("#officialWaterNote")).to_contain_text("PROJECT DATA")
+            expect(page.locator("#officialSummary")).to_contain_text("PROJECT DATA")
+            page.locator('.tab[data-tab="drought"]').click()
+            expect(page.locator("#tab-drought")).to_be_visible()
+            expect(page.locator("#waterRiskSection")).to_contain_text("SAĞLANMADI / NOT PROVIDED")
+            page.locator('.tab[data-tab="benchmark"]').click()
             accordion = page.locator("#parcelGroup > summary")
             _assert_hit_target(page, accordion)
             was_open = page.locator("#parcelGroup").get_attribute("open") is not None
@@ -239,7 +282,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#v1-provider-shell")).to_have_attribute("aria-hidden", "false")
             page.locator("#v1-provider-close").click()
 
-            run_id = next(iter(repository.get("kds-final-provider-e2e-2025")["runs"]))
+            run_id = page.evaluate("window.__V1_PROJECT_PROVIDER__.context.run.id")
             assert f"run_id={run_id}" in page.url
             assert not any("/api/parcels" in url or "/api/optimize" in url
                            for url in requests if "provider=PROJECT_DATA" in page.url)
@@ -247,16 +290,28 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             assert not project_errors
             preview_calls = [row for row in network if row["method"] == "POST" and row["url"].endswith("/analysis-preview") and row["status"] == 200]
             execution_calls = [row for row in network if row["method"] == "POST" and row["url"].endswith("/analyses") and row["status"] == 201]
-            assert len(preview_calls) >= 10 and len(execution_calls) == 1
+            assert len(preview_calls) == len(run_matrix)
+            assert len(execution_calls) == len(run_matrix)
+            assert len(repository.get("kds-final-provider-e2e-2025")["runs"]) == len(run_matrix)
 
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+            assert page.evaluate("document.querySelector('#map').getBoundingClientRect().height <= 620")
             page.screenshot(path=str(EVIDENCE / "project_data_after_run_1366x900.png"), full_page=True)
-            page.set_viewport_size({"width": 1920, "height": 1080})
-            assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-            page.screenshot(path=str(EVIDENCE / "project_data_after_run_1920x1080.png"), full_page=True)
-            page.set_viewport_size({"width": 390, "height": 844})
-            assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-            page.screenshot(path=str(EVIDENCE / "project_data_after_run_390x844.png"), full_page=True)
+            for width, height in ((1280, 720), (1366, 768), (1536, 864), (1920, 1080), (390, 844)):
+                page.set_viewport_size({"width": width, "height": height})
+                page.evaluate("map.invalidateSize(); window.dispatchEvent(new Event('resize'))")
+                assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+                limit = 420 if width <= 760 else 620
+                assert page.evaluate("limit => document.querySelector('#map').getBoundingClientRect().height <= limit", limit)
+                if (width, height) == (1920, 1080):
+                    page.screenshot(path=str(EVIDENCE / "project_data_after_run_1920x1080.png"), full_page=True)
+                if (width, height) == (390, 844):
+                    page.screenshot(path=str(EVIDENCE / "project_data_after_run_390x844.png"), full_page=True)
+            page.set_viewport_size({"width": 1366, "height": 900})
+            for zoom in ("80%", "100%", "125%"):
+                page.evaluate("value => { document.body.style.zoom=value; map.invalidateSize(); }", zoom)
+                assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+            page.evaluate("document.body.style.zoom='100%'; map.invalidateSize()")
             page.set_viewport_size({"width": 1366, "height": 900})
 
             page.reload()
@@ -275,6 +330,22 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#roleInfoBanner")).to_contain_text("179 parsel", timeout=30000)
             expect(page.locator("#roleInfoBanner")).not_to_contain_text("analiz birimi")
             page.screenshot(path=str(EVIDENCE / "akkaya_reference_restored.png"), full_page=True)
+            page.locator("#map").screenshot(path=str(EVIDENCE / "reference_map_1366x900.png"))
+            reference_polygon = page.locator(".leaflet-interactive").first
+            expect(reference_polygon).to_be_visible(timeout=30000)
+            reference_polygon.click(force=True)
+            reference_popup = page.locator(".leaflet-popup").last
+            expect(reference_popup).to_be_visible(timeout=30000)
+            reference_popup.screenshot(path=str(EVIDENCE / "reference_map_unit.png"))
+            page.locator("#parcelSummaryBlock").screenshot(path=str(EVIDENCE / "reference_summary_1366x900.png"))
+            page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "reference_drought_1366x900.png"))
+            page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "reference_tabs_1366x900.png"))
+            page.locator('.tab[data-tab="parcel"]').click()
+            page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "reference_current_recommended_1366x900.png"))
+            page.locator("#deliveryBox").screenshot(path=str(EVIDENCE / "reference_monthly_water_context_1366x900.png"))
+            page.locator('.tab[data-tab="benchmark"]').click()
+            page.locator("#tab-benchmark").screenshot(path=str(EVIDENCE / "reference_algorithm_comparison_1366x900.png"))
+            page.locator("#activeFilesBox").screenshot(path=str(EVIDENCE / "reference_provenance_context_1366x900.png"))
 
             page.locator("#v1-provider-toggle").click()
             project_select = page.locator("#v1-project-provider-select")

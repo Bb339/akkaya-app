@@ -36,7 +36,17 @@ def _identity(row):
     raise ValueError("Project analysis unit has no canonical identity.")
 
 
+def _number(value):
+    if isinstance(value, bool) or value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def _project_units(document):
+    parameters = document.get("scientific_inputs", {}).get("unit_parameters", {})
     seen = set()
     units = []
     for source in document.get("analysis_units", []):
@@ -44,6 +54,10 @@ def _project_units(document):
         if unit_id in seen:
             raise ValueError(f"Duplicate project analysis-unit identity: {unit_id}.")
         seen.add(unit_id)
+        current = parameters.get(unit_id, {}) if isinstance(parameters, dict) else {}
+        current_water = _number(current.get("current_water_m3", source.get("current_water_m3")))
+        current_profit = _number(current.get("current_profit", source.get("current_profit_tl")))
+        area = _number(source.get("area_da"))
         units.append({
             "analysis_unit_id": unit_id,
             "area_da": source.get("area_da"),
@@ -53,12 +67,86 @@ def _project_units(document):
             "geometry": deepcopy(source.get("geometry")),
             "settlement": source.get("settlement") or source.get("village") or source.get("district"),
             "warnings": deepcopy(source.get("warnings") or []),
-            "current_water_m3": source.get("current_water_m3"),
-            "current_profit_tl": source.get("current_profit_tl"),
-            "current_efficiency_tl_per_m3": source.get("current_efficiency_tl_per_m3"),
-            "source": "project.analysis_units",
+            "current_water_m3": current_water,
+            "current_profit_tl": current_profit,
+            "current_efficiency_tl_per_m3": (
+                current_profit / current_water if current_water and current_profit is not None else None
+            ),
+            "current_water_m3_da": current_water / area if area and current_water is not None else None,
+            "current_profit_tl_da": current_profit / area if area and current_profit is not None else None,
+            "soil_class": current.get("soil_class"),
+            "parcel_type": current.get("parcel_type"),
+            "current_metrics_source": current.get("source"),
+            "source": "project.analysis_units + project.scientific_inputs.unit_parameters",
         })
     return units
+
+
+def _current_summary(units):
+    water = [unit["current_water_m3"] for unit in units if unit["current_water_m3"] is not None]
+    profit = [unit["current_profit_tl"] for unit in units if unit["current_profit_tl"] is not None]
+    complete = bool(units) and len(water) == len(units) and len(profit) == len(units)
+    total_water = sum(water) if len(water) == len(units) else None
+    total_profit = sum(profit) if len(profit) == len(units) else None
+    return {
+        "status": "PROVIDED" if complete else "NOT_PROVIDED",
+        "covered_units": min(len(water), len(profit)),
+        "total_units": len(units),
+        "water_m3": total_water,
+        "profit_tl": total_profit,
+        "efficiency_tl_per_m3": (
+            total_profit / total_water if total_water and total_profit is not None else None
+        ),
+        "source": "project.scientific_inputs.unit_parameters",
+    }
+
+
+def _geographic_summary(units, project):
+    groups = {}
+    fallback = project.get("province_or_region") or "Proje kapsamı"
+    for unit in units:
+        name = unit.get("settlement") or fallback
+        group = groups.setdefault(name, {
+            "name": name, "unit_count": 0, "area_da": 0.0,
+            "current_water_m3": 0.0, "current_profit_tl": 0.0,
+            "current_water_complete": True, "current_profit_complete": True,
+            "optimized_water_m3": 0.0, "optimized_profit_tl": 0.0,
+            "optimized_water_complete": True, "optimized_profit_complete": True,
+        })
+        group["unit_count"] += 1
+        group["area_da"] += _number(unit.get("area_da")) or 0.0
+        if unit.get("current_water_m3") is None:
+            group["current_water_complete"] = False
+        else:
+            group["current_water_m3"] += unit["current_water_m3"]
+        if unit.get("current_profit_tl") is None:
+            group["current_profit_complete"] = False
+        else:
+            group["current_profit_tl"] += unit["current_profit_tl"]
+        result = unit.get("result") or {}
+        if result.get("authoritative_unit_water_m3") is None:
+            group["optimized_water_complete"] = False
+        else:
+            group["optimized_water_m3"] += result["authoritative_unit_water_m3"]
+        if result.get("unit_profit_tl") is None:
+            group["optimized_profit_complete"] = False
+        else:
+            group["optimized_profit_tl"] += result["unit_profit_tl"]
+    for group in groups.values():
+        if not group.pop("current_water_complete"):
+            group["current_water_m3"] = None
+        if not group.pop("current_profit_complete"):
+            group["current_profit_tl"] = None
+        if not group.pop("optimized_water_complete"):
+            group["optimized_water_m3"] = None
+        if not group.pop("optimized_profit_complete"):
+            group["optimized_profit_tl"] = None
+    return {
+        "status": "PROVIDED" if groups else "NOT_PROVIDED",
+        "level": "settlement_or_project_scope",
+        "rows": list(groups.values()),
+        "source": "project.analysis_units + project.scientific_inputs.unit_parameters",
+    }
 
 
 def _geometry_kind(unit):
@@ -156,6 +244,8 @@ def project_decision_context(document, run=None, scenario="S1"):
         },
         "requirements": _requirements(readiness, scenario),
         "units": units,
+        "current_summary": _current_summary(units),
+        "geographic_summary": _geographic_summary(units, document["project"]),
         "unit_count": len(units),
         "total_area_da": readiness["counts"]["total_area_da"],
         "crop_count": readiness["counts"]["crops"],

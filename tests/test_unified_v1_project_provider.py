@@ -98,3 +98,47 @@ def test_conflicting_project_unit_identity_fails_closed():
     ]
     with pytest.raises(ValueError, match="Duplicate project analysis-unit identity"):
         project_decision_context(_document(deepcopy(units)))
+
+
+def test_project_current_metrics_and_geography_use_backend_project_contract():
+    document = _document([
+        {"external_id": "GX-001", "area_da": 2, "current_crop": "ARPA",
+         "settlement": "Köy A"},
+        {"external_id": "GX-002", "area_da": 3, "current_crop": "NOHUT",
+         "settlement": "Köy A"},
+    ])
+    document["scientific_inputs"] = {"unit_parameters": {
+        "GX-001": {"current_water_m3": 200, "current_profit": 1000,
+                   "soil_class": "II", "parcel_type": "field", "source": "fixture"},
+        "GX-002": {"current_water_m3": 450, "current_profit": 2700,
+                   "soil_class": "III", "parcel_type": "field", "source": "fixture"},
+    }}
+    context = project_decision_context(document)
+    assert context["units"][0]["current_water_m3_da"] == 100
+    assert context["units"][0]["current_profit_tl_da"] == 500
+    assert context["units"][0]["current_efficiency_tl_per_m3"] == 5
+    assert context["current_summary"] == {
+        "status": "PROVIDED", "covered_units": 2, "total_units": 2,
+        "water_m3": 650.0, "profit_tl": 3700.0,
+        "efficiency_tl_per_m3": 3700 / 650,
+        "source": "project.scientific_inputs.unit_parameters",
+    }
+    assert context["geographic_summary"]["rows"] == [{
+        "name": "Köy A", "unit_count": 2, "area_da": 5.0,
+        "current_water_m3": 650.0, "current_profit_tl": 3700.0,
+        "optimized_water_m3": None, "optimized_profit_tl": None,
+    }]
+
+
+def test_project_current_summary_fails_explicitly_when_values_are_incomplete():
+    document = _document([
+        {"external_id": "GX-001", "area_da": 2, "current_crop": "ARPA"},
+        {"external_id": "GX-002", "area_da": 3, "current_crop": "NOHUT"},
+    ])
+    document["scientific_inputs"] = {"unit_parameters": {
+        "GX-001": {"current_water_m3": 200, "current_profit": 1000},
+    }}
+    summary = project_decision_context(document)["current_summary"]
+    assert summary["status"] == "NOT_PROVIDED"
+    assert summary["water_m3"] is None
+    assert summary["profit_tl"] is None
