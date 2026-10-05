@@ -77,7 +77,10 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             form.locator('[name="planning_year"]').fill("2025")
             form.locator('[name="province_or_region"]').fill("Synthetic Region")
             form.locator('[name="data_source_notes"]').select_option(
-                "synthetic not_official institutional integration fixture"
+                label="Sentetik genel proje"
+            )
+            expect(form.locator('[name="data_source_notes"]')).to_have_value(
+                "synthetic_test_fixture"
             )
             form.locator("button").click()
             files = [str(path) for path in sorted(FULL_PACKAGE.iterdir())
@@ -92,6 +95,8 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator("#open-v1-project").click()
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.unit_count === 24")
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            expect(page.locator("#v1-provider-authority")).to_have_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#v1-provider-authority")).not_to_contain_text("VERIFIED_INSTITUTIONAL")
             page.evaluate("""() => {
               map.invalidateSize();
               const geometryLayers=Object.values(map._layers||{}).filter(
@@ -284,6 +289,69 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             assert run_id not in page.locator("#v1-native-provenance").inner_text()
             assert not [error for error in errors if error not in project_errors]
             browser.close()
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+
+
+@pytest.mark.browser
+def test_real_institutional_ui_project_rejects_synthetic_full_package(tmp_path):
+    application, client, repository = client_for(tmp_path)
+    _serve_v1(application)
+    server, thread = serve(application)
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1366, "height": 900})
+            page.goto(f"http://127.0.0.1:{server.server_port}/projects")
+            page.locator("details.form-drawer").first.locator("summary").click()
+            form = page.locator("#create-project")
+            form.locator('[name="id"]').fill("real-institutional-negative")
+            form.locator('[name="name"]').fill("Gerçek Kurumsal Negatif Kontrol")
+            form.locator('[name="planning_year"]').fill("2025")
+            form.locator('[name="province_or_region"]').fill("Niğde")
+            form.locator('[name="data_source_notes"]').select_option(
+                label="Kurum tarafından sağlanan veri"
+            )
+            expect(form.locator('[name="data_source_notes"]')).to_have_value("user_provided")
+            form.locator("button").click()
+
+            files = [str(path) for path in sorted(FULL_PACKAGE.iterdir())
+                     if path.suffix.lower() in {".csv", ".xlsx", ".geojson"}]
+            assert len(files) == 21
+            page.locator('#bulk-upload-form input[type="file"]').set_input_files(files)
+            page.locator('#bulk-upload-form button[type="submit"]').click()
+            expect(page.locator("#bulk-import-body tr")).to_have_count(21, timeout=120000)
+            assert page.locator("#bulk-import-body tr", has_text="AUTO_MATCHED").count() == 21
+            page.locator("#bulk-confirm").click()
+            expect(page.locator("#project-status-badges")).to_contain_text(
+                "Revizyon 21", timeout=180000
+            )
+            expect(page.locator("#readiness-verdict")).to_contain_text("BLOCKED")
+            expect(page.locator("#blocking-summary")).to_contain_text(
+                "is synthetic and cannot support a real institutional run"
+            )
+            browser.close()
+
+        document = repository.get("real-institutional-negative")
+        assert document["metadata"].get("synthetic_institutional_test") is None
+        assert document["metadata"].get("not_official") is None
+        preview = client.post(
+            "/api/v2/projects/real-institutional-negative/analysis-preview",
+            json={
+                "execution_profile": "VERIFIED_INSTITUTIONAL",
+                "scenario": "S1", "algorithm": "GA", "seed": 123,
+                "objective": "water_saving", "water_budget_ratio": 1,
+                "config": {"popSize": 12, "generations": 10,
+                           "cxRate": .7, "mutRate": .08},
+            },
+        )
+        assert preview.status_code == 200
+        assert preview.json["ready"] is False
+        assert preview.json["synthetic"] is False
+        assert "is synthetic and cannot support a real institutional run" in " ".join(
+            preview.json["blocking_reasons"]
+        )
     finally:
         server.shutdown()
         thread.join(timeout=5)

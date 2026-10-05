@@ -1,0 +1,63 @@
+{
+  "baseline": "91d07d9e1ffa65d56772c85993fe2f9285b80110",
+  "before": {
+    "ui_choice": "Sentetik genel proje",
+    "submitted_value": "synthetic_test_fixture",
+    "persisted_metadata": {},
+    "revision": 21,
+    "unit_count": 24,
+    "decision_context": {
+      "authority": "INSTITUTIONAL / NOT VERIFIED",
+      "execution_profile": "VERIFIED_INSTITUTIONAL",
+      "synthetic": false
+    },
+    "readiness_ready": false,
+    "preview_http_status": 200,
+    "preview_ready": false,
+    "observed_blocking_reason": "synthetic inputs cannot support a real institutional run"
+  },
+  "after": {
+    "ui_choice": "Sentetik genel proje",
+    "submitted_value": "synthetic_test_fixture",
+    "persisted_metadata": {
+      "synthetic_institutional_test": true,
+      "not_official": true,
+      "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"]
+    },
+    "revision": 21,
+    "unit_count": 24,
+    "crop_count": 8,
+    "decision_context": {
+      "authority": "SYNTHETIC / NOT_OFFICIAL",
+      "execution_profile": "VERIFIED_INSTITUTIONAL",
+      "synthetic": true
+    },
+    "readiness_ready": true,
+    "blocking_reasons": [],
+    "warnings": ["SYNTHETIC_INSTITUTIONAL_TEST_PROJECT; NOT_OFFICIAL"],
+    "preview_http_status": 200,
+    "preview_ready": true,
+    "analysis_http_status": 201,
+    "analysis_post_count": 1,
+    "run_id": "run-990d398d1bad466e9ef55b17a8a864f2",
+    "run_status": "completed",
+    "scenario": "S1",
+    "algorithm": "GA",
+    "objective": "water_saving",
+    "seed": 123,
+    "selection_hash": "ad670a442f97a8d70d67b2067ab624b9c85b811d992a8e98aee14cf3251c1fae",
+    "classification": "SYNTHETIC_TEST_OUTPUT",
+    "result_authority_label": "SYNTHETIC / NOT_OFFICIAL",
+    "annual_budget_validation": "PASS"
+  },
+  "institutional_negative": {
+    "ui_choice": "Kurum tarafından sağlanan veri",
+    "submitted_value": "user_provided",
+    "revision": 21,
+    "unit_count": 24,
+    "synthetic_metadata_present": false,
+    "preview_ready": false,
+    "ui_state": "BLOCKED",
+    "synthetic_authority_message_visible": true
+  }
+}

@@ -380,7 +380,7 @@
     selectedUnit=units[0]||null;
     const suffix=`?${runs[0]?`run_id=${encodeURIComponent(runs[0])}&`:''}scenario=${encodeURIComponent((byId('seasonSourceSel')?.value||'s1').toUpperCase())}`;
     context=await api(`/projects/${encodeURIComponent(projectId)}/decision-context${suffix}`);
-    shell.dataset.synthetic=String(context.synthetic);byId('v1-provider-context').hidden=false;setText('v1-provider-name',`PROJECT DATA · ${context.project.name}`);setText('v1-provider-authority',`${context.authority} · ${context.execution_profile}`);setText('v1-provider-badge','PROJECT DATA');byId('v1-manage-project').href=`/projects#project=${encodeURIComponent(projectId)}&section=data`;
+    shell.dataset.synthetic=String(context.synthetic);byId('v1-provider-context').hidden=false;setText('v1-provider-name',`PROJECT DATA · ${context.project.name}`);setText('v1-provider-authority',context.synthetic?context.authority:`${context.authority} · ${context.execution_profile}`);setText('v1-provider-badge','PROJECT DATA');byId('v1-manage-project').href=`/projects#project=${encodeURIComponent(projectId)}&section=data`;
     setText('dataSourceLabel',`PROJECT DATA · ${context.project.id}`);setText('dataLoadBadge',context.authority);
     installNativeControls();renderFacts();renderRequirements();installUnits();guardProjectUnits();wireControls();renderHistory();neutralizeReferenceSurface();await loadProjectList();
     window.refreshUI=()=>{if(context)renderUnit();};

@@ -1,0 +1,28 @@
+{
+  "baseline": "91d07d9e1ffa65d56772c85993fe2f9285b80110",
+  "protected_diff": [],
+  "protected_paths": [
+    "index.html",
+    "app.py",
+    "kds/science/**",
+    "optimization/scoring",
+    "readiness",
+    "adapters",
+    "data/**",
+    "candidate matrices",
+    "frozen Akkaya values",
+    "robustness evidence",
+    "render.yaml"
+  ],
+  "intentional_runtime_change": [
+    "kds/application/project_service.py",
+    "kds/ui/static/v1-provider.js"
+  ],
+  "intentional_tests": [
+    "tests/test_unified_decision_demo.py",
+    "tests/test_v1_native_project_interactivity_final.py"
+  ],
+  "push": false,
+  "deploy": false,
+  "tag": false
+}

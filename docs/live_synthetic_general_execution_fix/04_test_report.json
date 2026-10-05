@@ -1,0 +1,19 @@
+{
+  "focused_groups": [
+    {"tests": "tests/test_projects.py tests/test_general_project.py tests/test_general_browser.py", "result": "41 passed", "seconds": 472.47},
+    {"tests": "tests/test_unified_decision_demo.py", "result": "6 passed", "seconds": 247.38},
+    {"tests": "tests/test_v1_native_project_integration_fix2.py", "result": "3 passed", "seconds": 117.84},
+    {"tests": "selected institutional fail-closed/reference checks plus tests/test_akkaya_adapter.py", "result": "10 passed, 1 historical guard failed", "seconds": 377.44}
+  ],
+  "historical_guard": {
+    "test": "test_frozen_algorithms_and_akkaya_data_match_accepted_baseline",
+    "classification": "STALE_BASELINE / INHERITED_UNCHANGED",
+    "reason": "The test compares app.py with the much older robustness completion tag. app.py already differed at the accepted 91d07d9e baseline; this corrective change does not modify app.py.",
+    "current_baseline_object_guard": "PASS"
+  },
+  "chromium": {
+    "positive_ui_created_synthetic_general_flow": "PASS",
+    "real_institutional_same_package_negative_flow": "PASS"
+  },
+  "broad_suite_run": false
+}

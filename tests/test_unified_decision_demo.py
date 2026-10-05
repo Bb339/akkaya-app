@@ -109,6 +109,15 @@ def test_project_classification_is_persisted_from_explicit_data_class_not_projec
     assert client.post("/api/v2/projects", json=arbitrary).status_code == 201
     assert repository.get("arbitrary-synthetic")["metadata"] == {}
 
+    ui_classified = project_payload("ui-synthetic-general")
+    ui_classified["data_source_notes"] = "synthetic_test_fixture"
+    assert client.post("/api/v2/projects", json=ui_classified).status_code == 201
+    assert repository.get("ui-synthetic-general")["metadata"] == {
+        "synthetic_institutional_test": True,
+        "not_official": True,
+        "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"],
+    }
+
 
 def test_confirmed_package_ready_run_and_decision_bridge(tmp_path):
     _, client, repository = client_for(tmp_path)

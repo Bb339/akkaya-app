@@ -1,0 +1,47 @@
+{
+  "viewport": "1366x900",
+  "positive_flow": {
+    "creation_path": "/projects UI",
+    "classification_label": "Sentetik genel proje",
+    "uploaded_files": 21,
+    "confirmed_revision": 21,
+    "analysis_units": 24,
+    "geometry_coverage": "24/24",
+    "candidate_coverage": "24/24",
+    "selected_unit": "KDS-005",
+    "provider": "PROJECT_DATA",
+    "reference_requests": {"/api/parcels": 0, "/api/optimize": 0},
+    "preview_posts": 10,
+    "preview_final_status": 200,
+    "analysis_posts": 1,
+    "analysis_status": 201,
+    "stored_run_reopened_by_exact_run_id": true,
+    "recommended_crop_visible": true,
+    "monthly_water_visible": true,
+    "crop_composition_visible": true,
+    "unit_result_visible": true,
+    "provenance_visible": true,
+    "charts_populated": true,
+    "visible_authority_label": "SYNTHETIC / NOT_OFFICIAL",
+    "verified_institutional_claim_absent_from_visible_authority": true,
+    "synthetic_blocking_message_absent": true,
+    "akkaya_reference_restored_and_checked": true
+  },
+  "negative_flow": {
+    "creation_path": "/projects UI",
+    "classification_label": "Kurum tarafından sağlanan veri",
+    "same_accepted_files": 21,
+    "confirmed_revision": 21,
+    "state": "BLOCKED",
+    "reason": "synthetic authority inputs cannot support a real institutional run"
+  },
+  "screenshots": [
+    "screenshots/project_data_before_run_1366x900.png",
+    "screenshots/project_map_unit.png",
+    "screenshots/project_data_after_run_1366x900.png",
+    "screenshots/project_crop_recommendation.png",
+    "screenshots/project_monthly_water.png",
+    "screenshots/project_provenance.png",
+    "screenshots/akkaya_reference_restored.png"
+  ]
+}
