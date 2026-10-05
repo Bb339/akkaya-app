@@ -195,31 +195,28 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                 expect(page.locator(metric_id)).not_to_contain_text("SAĞLANMADI")
             expect(page.locator("#v1-project-result")).to_be_hidden()
             assert not page.locator("#v1-project-result").inner_text().strip()
-            expect(page.locator("#v1-native-run-summary")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
-            expect(page.locator("#v1-native-water-accounting")).to_contain_text("Optimizer su")
-            expect(page.locator("#v1-native-water-accounting")).to_contain_text("Doğrulanmış / otoritatif su")
-            expect(page.locator("#v1-native-annual-budget")).to_contain_text("Yıllık su bütçesi")
+            assert page.locator("#v1-native-project-results").count() == 0
+            expect(page.locator("#activeFilesBadges")).to_contain_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#basinSummaryNote")).to_contain_text("optimizer su")
+            expect(page.locator("#basinSummaryNote")).to_contain_text("otoritatif su")
             expect(page.locator("#globalBudgetStatus")).to_contain_text("PASS")
             expect(page.locator("#globalBudgetBadge")).not_to_have_text("Toplam planlama su bütçesi: -")
-            expect(page.locator("#v1-native-monthly")).to_contain_text("Aylık su doğrulaması")
-            expect(page.locator("#v1-native-warnings")).to_contain_text("Analiz uyarıları")
-            expect(page.locator("#v1-native-crops")).to_contain_text("HHI")
-            expect(page.locator("#v1-native-unit-result")).to_contain_text("KDS-009")
-            expect(page.locator("#v1-native-unit-result")).to_contain_text("9")
-            expect(page.locator("#v1-native-run-summary")).to_contain_text("KDS Kurumsal Veri E2E Demo")
+            expect(page.locator("#deliveryBox")).to_contain_text("Backend aylık talep")
+            expect(page.locator("#deliveryBox")).to_contain_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
+            expect(page.locator("#objectiveCompareMatrix")).to_contain_text("HHI")
+            expect(page.locator("#parcelSummaryTitle")).to_contain_text("KDS-009")
+            expect(page.locator("#tblCurrentFooter")).to_contain_text("9 da")
+            expect(page.locator("#metricsTitle")).to_contain_text("KDS Kurumsal Veri E2E Demo")
             expect(page.locator("#runMetaBox")).to_contain_text("revision 21")
             expect(page.locator("#riskSeparationBox")).to_contain_text("yıllık bütçe: PASS")
             expect(page.locator("#decisionRationale")).to_contain_text("Akkaya fallback kullanılmadı")
-            expect(page.locator("#v1-native-crops")).to_contain_text("Alan (da)")
+            expect(page.locator("#tblOfficialScenario")).to_contain_text("Ekim Alanı")
             polygon = page.locator(".leaflet-interactive").nth(8)
             polygon.click()
             expect(page.locator(".leaflet-popup-content")).to_contain_text("KDS-009")
             expect(page.locator(".leaflet-popup-content")).to_contain_text("Alan: 9 da")
             expect(page.locator(".leaflet-popup-content")).to_contain_text("Optimize su:")
             expect(page.locator(".leaflet-popup-content")).to_contain_text("Otorite:")
-            monthly_violation = page.locator("#v1-native-monthly .v1-provider-explanation").inner_text()
-            values = [value.strip() for value in monthly_violation.split(":", 1)[-1].split(",")]
-            assert len(values) == len(set(values))
             assert page.evaluate("""() => {
               const chart=Chart.getChart(document.getElementById('waterChart'));
               return chart.data.datasets[0].data.length===4 && chart.data.datasets[0].data.every(Number.isFinite);
@@ -232,9 +229,9 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
               const chart=Chart.getChart(document.getElementById('v1ProjectMonthlyChart'));
               return chart.data.labels.length===12 && chart.data.datasets.length===3;
             }""")
-            page.locator("#v1-native-crops").screenshot(path=str(EVIDENCE / "project_crop_recommendation.png"))
+            page.locator("#tblRecommended").screenshot(path=str(EVIDENCE / "project_crop_recommendation.png"))
             page.locator("#map").screenshot(path=str(EVIDENCE / "project_map_unit.png"))
-            page.locator("#v1-native-monthly").screenshot(path=str(EVIDENCE / "project_monthly_water.png"))
+            page.locator("#deliveryBox").screenshot(path=str(EVIDENCE / "project_monthly_water.png"))
             for unit_id in ("KDS-001", "KDS-005", "KDS-009", "KDS-024"):
                 _click_select(page, "#parcelSelect", unit_id)
                 assert page.evaluate(
@@ -244,7 +241,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                 expect(page.locator(".leaflet-popup-content", has_text=unit_id)).to_be_visible()
                 expect(page.locator("#tblCurrent tbody td").nth(5)).not_to_contain_text("NOT PROVIDED")
                 expect(page.locator("#tblCurrent tbody td").nth(7)).not_to_contain_text("NOT PROVIDED")
-                expect(page.locator("#v1-native-unit-result")).to_contain_text(unit_id)
+                expect(page.locator("#parcelSummaryTitle")).to_contain_text(unit_id)
             page.locator("#basinSummaryBlock").screenshot(path=str(EVIDENCE / "project_summary_1366x900.png"))
             page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "project_current_recommended_1366x900.png"))
             page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "project_drought_1366x900.png"))
@@ -310,13 +307,14 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
             assert page.evaluate("document.querySelector('#map').getBoundingClientRect().height >= 460")
             assert page.evaluate("document.querySelector('#map').getBoundingClientRect().height <= 620")
+            assert page.evaluate("document.querySelector('#v1-native-project-results') === null")
             assert page.evaluate("""() => {
-              const results=document.querySelector('#v1-native-project-results');
-              const values=[...document.querySelectorAll('.v1-result-card strong')];
-              return results.scrollHeight <= results.clientHeight + 1 &&
-                values.every(node => node.scrollWidth <= node.clientWidth + 1);
+              const top=document.querySelector('.right-top');
+              const next=top?.nextElementSibling;
+              return !next || !next.matches('[class*=native-results],[id*=project-results]');
             }""")
             page.screenshot(path=str(EVIDENCE / "project_data_after_run_1366x900.png"), full_page=True)
+            project_page_height = page.evaluate("document.documentElement.scrollHeight")
             for width, height in ((1280, 720), (1366, 768), (1536, 864), (1920, 1080), (390, 844)):
                 page.set_viewport_size({"width": width, "height": height})
                 page.evaluate("map.invalidateSize(); window.dispatchEvent(new Event('resize'))")
@@ -338,10 +336,10 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#tblRecommendedFooter")).to_contain_text("water_saving")
-            expect(page.locator("#v1-native-provenance")).to_contain_text(run_id)
-            page.locator("#v1-native-provenance summary").click()
-            expect(page.locator("#v1-native-provenance pre")).to_contain_text("selection_hash")
-            page.locator("#v1-native-provenance").screenshot(path=str(EVIDENCE / "project_provenance.png"))
+            expect(page.locator("#buildMetaBox")).to_contain_text(run_id)
+            page.locator("#buildMetaBox summary").click()
+            expect(page.locator("#buildMetaBox pre")).to_contain_text("selection_hash")
+            page.locator("#activeFilesBox").screenshot(path=str(EVIDENCE / "project_provenance.png"))
 
             page.locator("#v1-provider-toggle").click()
             page.locator("#v1-reference-provider").click()
@@ -350,6 +348,8 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#roleInfoBanner")).to_contain_text("179 parsel", timeout=30000)
             expect(page.locator("#roleInfoBanner")).not_to_contain_text("analiz birimi")
             page.screenshot(path=str(EVIDENCE / "akkaya_reference_restored.png"), full_page=True)
+            reference_page_height = page.evaluate("document.documentElement.scrollHeight")
+            assert abs(project_page_height - reference_page_height) < 600
             page.locator("#map").screenshot(path=str(EVIDENCE / "reference_map_1366x900.png"))
             reference_polygon = page.locator(".leaflet-interactive").first
             expect(reference_polygon).to_be_visible(timeout=30000)
@@ -377,7 +377,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#parcelSelect option")).to_have_count(24)
             expect(page.locator("#v1-project-result")).to_be_hidden()
             assert "run_id=" not in page.url
-            assert run_id not in page.locator("#v1-native-provenance").inner_text()
+            assert run_id not in page.locator("#activeFilesBox").inner_text()
             assert not [error for error in errors if error not in project_errors]
             browser.close()
     finally:
@@ -461,11 +461,13 @@ def test_runtime_keeps_results_native_and_drawer_non_blocking():
         "v1-project-provenance",
     ):
         assert legacy_sink not in provider
+    assert "v1-native-project-results" not in provider
+    assert "ensureNativeResultSurface" not in provider
+    assert ".v1-native-results" not in css
     for native_target in (
-        "v1-native-run-summary", "v1-native-water-accounting",
-        "v1-native-annual-budget", "v1-native-monthly",
-        "v1-native-warnings", "v1-native-crops",
-        "v1-native-unit-result", "v1-native-provenance",
+        "basinSummaryNote", "globalBudgetStatus", "deliveryBox",
+        "objectiveCompareMatrix", "activeFilesBadges", "buildMetaBox",
+        "activeFilesNote", "tblCurrent", "tblRecommended",
     ):
         assert native_target in provider
     assert "new Set([...(result.monthly_supply_validation?.violating_months||[])" in provider
