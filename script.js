@@ -16878,7 +16878,11 @@ function cropFullInfoHtmlV94(row, idx=0){
 
 function nativeV1UnitBadgeHtml(viewModel={}){
   const id = String(viewModel.id || viewModel.name || '');
-  return `<span class="parcel-badge ${viewModel.orchard ? 'orchard' : ''}"><span class="dot"></span><span>${escapeHtml(id)}</span><span class="hint">ⓘ</span></span>`;
+  return `<span class="parcel-badge ${viewModel.orchard ? 'orchard' : ''}"><span class="dot"></span><span class="pid">${escapeHtml(id)}</span><span class="hint">ⓘ</span></span>`;
+}
+
+function nativeV1PopupOptions(){
+  return {closeButton:false,autoClose:false,closeOnClick:false,autoPan:true,keepInView:true,autoPanPadding:[12,12],className:'parcel-popup'};
 }
 
 function nativeV1UnitPopupHtml(viewModel={}){
@@ -17124,6 +17128,7 @@ function queueMapResize(delay=180, refit=false){
 window.NativeV1Presentation = Object.freeze({
   unitBadgeHtml:nativeV1UnitBadgeHtml,
   unitPopupHtml:nativeV1UnitPopupHtml,
+  popupOptions:nativeV1PopupOptions,
   parcelStyle:nativeV1ParcelStyle,
   cropIcon:nativeV1CropIcon,
   productCardHtml:nativeV1ProductCardHtml,
@@ -17663,7 +17668,7 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
         ...(meta.assignment_status ? [['Durum',meta.assignment_status === 'geometry_ready' ? 'GeoJSON yüklü / seçilebilir' : meta.assignment_status]] : []),
       ],
     });
-    layer.bindPopup(popHtml, {closeButton:false, autoClose:false, closeOnClick:false, autoPan:false, className:'parcel-popup'});
+    layer.bindPopup(popHtml, nativeV1PopupOptions());
     layer.on('mouseover', (e)=>{
       try{ layer.openPopup(e?.latlng); }catch(_e){ try{ layer.openPopup(); }catch(__){} }
     });

@@ -1,87 +1,80 @@
-# PROJECT_DATA Native V1 Map / Selected Unit Parity Audit
+# PROJECT_DATA Popup / Badge / Golden Evidence Corrective Audit
 
-## Scope
+## Scope and identity
 
-- Baseline: `af62e044a6fae79b0d2f6ea4f21e80665db78f5d`
-- Branch: `v2-project-data-v1-map-selected-unit-parity-final`
-- Scope: presentation reuse, provider isolation, focused browser regression, and visual evidence.
-- Scientific calculation, optimization, readiness, adapter, canonical data, candidate matrix, robustness evidence, frozen `index.html`, `app.py`, and `render.yaml` are unchanged.
+- Corrective baseline: `2468bb6894d4c4055c7d78bbf469f7010470af1a`
+- Branch: `v2-project-data-v1-popup-badge-golden-fix-final`
+- Scope: provider-neutral native badge markup, standard Leaflet popup containment, focused assertions, and regenerated evidence.
+- Scientific calculation, optimization, readiness, adapters, canonical data, candidate matrices, robustness/reference evidence, frozen `index.html`, `app.py`, and `render.yaml` are unchanged.
 
-## Native V1 renderer inventory and reuse
+## Corrections
 
-The accepted reference path had its presentation logic embedded in `script.js`. The smallest provider-neutral extraction exposes the same functions through immutable `window.NativeV1Presentation`:
+The PROJECT_DATA popup binding explicitly set `autoPan:false`, so a selected geometry near the map edge could open a popup beyond the map viewport. Both providers now obtain one provider-neutral popup option object from `NativeV1Presentation.popupOptions()`. It uses standard Leaflet `autoPan:true`, `keepInView:true`, and `autoPanPadding:[12,12]`; there is no timeout, manual `panBy`, fixed-unit offset, CSS hiding, or popup replacement.
 
-| Native responsibility | Shared function | DOM family / target |
-| --- | --- | --- |
-| Unit badge, status dot, information icon | `nativeV1UnitBadgeHtml` | `.parcel-badge > .dot + .pid + .hint` |
-| Popup field/value hierarchy | `nativeV1UnitPopupHtml` | `.parcel-pop > .t + .r` |
-| Normal and selected polygon style | `nativeV1ParcelStyle` | Leaflet GeoJSON path |
-| Crop icon resolution | `nativeV1CropIcon` | `.crop-emoji` |
-| One recommendation detail card | `nativeV1ProductCardHtml` | `.crop-detail-card` |
-| Recommendation strip and cards | `nativeV1ProductCardsHtml` | `#productCards`, `.crop-strip`, `.crop-pill` |
+`nativeV1UnitBadgeHtml()` previously emitted an unclassified identity span. It now emits the required shared markup:
 
-AKKAYA_REFERENCE calls these functions in its existing render path. PROJECT_DATA maps backend decision-context and immutable stored-run fields into the same functions. Strict PROJECT_DATA product rendering does not consult the reference crop catalog and uses `SAĞLANMADI / NOT PROVIDED` for absent fields.
+```html
+<span class="parcel-badge ...">
+  <span class="dot"></span>
+  <span class="pid">ID</span>
+  <span class="hint">ⓘ</span>
+</span>
+```
 
-The native selector/map synchronization remains `parcelSelect` → `focusGeometry` → Leaflet selected style/popup → `renderUnit` → `#parcelSummaryBlock`, `.metrics-grid`, current/recommended tables, and `#productCards`. Map sizing uses `ResizeObserver`, animation frames, `invalidateSize()`, and selected-unit refit after layout settlement. Provider-only desktop height caps were removed.
+AKKAYA_REFERENCE and PROJECT_DATA still call the same `NativeV1Presentation.unitBadgeHtml()` function. The only `script.js` hunks are the `.pid` class, the provider-neutral popup options primitive/export, and replacement of the reference popup's former `autoPan:false` literal with that primitive.
 
-## Root causes and corrections
+## Geometric and responsive proof
 
-1. PROJECT_DATA created a separate simplified tooltip, popup, and recommendation presentation instead of adapting its values to the native V1 renderers. Both providers now call the same renderer functions.
-2. PROJECT_DATA CSS imposed fixed/capped map heights. The map now follows the native V1 top-row grid rule. At wide desktop width the map and metrics cards have equal top and height; compact widths use the native stacked breakpoint.
-3. A visible Leaflet popup could intercept a polygon click. In PROJECT_DATA it is informational and its popup pane has `pointer-events:none`, preserving polygon selection.
-4. Native V1 renders the official tab asynchronously after activation. That render could overwrite the PROJECT_DATA projection. `observeProjectOfficialSurface` now observes the actual official-panel mutation lifecycle and reapplies the project projection without a new timeout or arbitrary delay.
-5. Historical tests still expected the removed PROJECT_DATA badge class, plain popup markup, an obsolete title, and fixed 420/620 px height caps. Those assertions were updated to the native component and structural parity contract.
+The dedicated Chromium test reads the `#map` and `.leaflet-popup` bounding boxes and requires all popup edges to remain within the map with at most 2 px browser-rounding tolerance. It also requires the title, first information row, and final row to be visible. KDS-009 passed at 1280×720, 1366×768, 1366×900, 1536×864, 1920×1080, and 390×844, plus 80%, 100%, and 125% zoom. Document-wide horizontal overflow remained zero.
 
-## Verification results
+PROJECT_DATA produced 24 `.parcel-badge`, 24 direct `.dot`, 24 direct `.pid`, and 24 direct `.hint` children. Exact KDS-009 child order is `dot → pid → hint`. Reference P1 has two visible exact-id badges because the accepted dataset represents its dry and irrigated source geometries separately; the evidence selector asserts both matches, chooses an exact P1 badge fully contained by the map, and asserts the same child order.
 
-- Backend/provider focused regression: `12 passed` in `124.08s`.
-- Full real Chromium native workspace journey: `1 passed` in `318.18s`.
-- Dedicated map/UI parity Chromium journey: `1 passed` in `152.60s`.
-- AKKAYA adapter invariant test: `1 passed` in `1.40s`.
+## Golden evidence and logical-state classification
+
+All 15 files under `docs/project_data_v1_map_selected_unit_parity_final/evidence/` were regenerated by the corrected test. Critical evidence was visually inspected:
+
+- `03_project_native_badge.png`: complete exact KDS-009 badge.
+- `04_project_native_popup.png`: complete KDS-009 popup in map context, including title and final authority row.
+- `11_reference_native_badge.png`: complete exact P1 badge.
+- `12_reference_native_popup.png`: complete P1 popup in map context, including title and final status row.
+
+The PROJECT_DATA full workspace contains its immutable stored S2 result. The reference full workspace is not asserted to have an identical result lifecycle. Therefore:
+
+`PAIRED_GOLDEN_LOGICAL_STATE = STRUCTURAL_ONLY_WITH_EXPLICIT_CLASSIFICATION`
+
+Exact paired comparisons are restricted to the shared badge, popup, selected-summary, metric, and recommendation-card DOM families. Identity, geometry, values, authority, and unavailable fields remain provider-specific.
+
+## Verification
+
 - JavaScript syntax: `node --check script.js` and `node --check kds/ui/static/v1-provider.js` passed.
-- Patch hygiene: `git diff --check` passed.
+- Python test syntax: `python -m py_compile tests/test_v1_map_ui_parity_final.py` passed.
+- Patch hygiene: `git diff --check` passed (line-ending notices only).
+- Dedicated map/UI parity Chromium journey: `1 passed in 146.08s`.
+- Focused backend/provider/adapter regression: `13 passed in 126.11s`.
+- Full real Chromium native workspace journey: `1 passed in 211.86s`.
+- Visual inspection of regenerated badge and popup evidence: passed with no unexplained visual defect.
 
-The Chromium coverage proves:
-
-- 21/21 AUTO_MATCHED, revision 21, 24 units, 24 Polygon geometries, 24/24 candidate coverage, and 8 crops.
-- GA, ACO, ABC; `water_saving`, `max_profit`, `water_efficiency`; S1 and S2; pinned previews; HTTP 201 stored runs; explicit `run_id` reload.
-- KDS-001, KDS-005, KDS-009, and KDS-024 selector, polygon style, popup, selected summary, metrics, and recommendation synchronization.
-- S1 one-crop and S2 primary/secondary native icon/card rendering.
-- Seven-tab parity, no PROJECT_DATA drought tab, visible `SAĞLANMADI / NOT PROVIDED` drought content, and no parallel result workspace.
-- 1280×720, 1366×768, 1366×900, 1536×864, 1920×1080, and 390×844; 80%, 100%, and 125% zoom; no document-wide horizontal overflow.
-- Direct fresh PROJECT_DATA trace: `/api/parcels`, `/api/optimize`, `/api/meta`, reference GeoJSON, `/api/water_allocation_logic`, and `/data/` counters are all zero; page errors and blocked-reference errors are zero.
-- Provider round trip remains 24 PROJECT_DATA units → 179 AKKAYA_REFERENCE parcels → 24 PROJECT_DATA units.
-- AKKAYA invariant adapter values remain 179 parcels, 134919 da, 6859 candidate rows, 58 crops, 100700080.81 m³, and 1041499119.212 TL.
-
-## Golden evidence
-
-All evidence is under `docs/project_data_v1_map_selected_unit_parity_final/evidence/`:
-
-1. `01_project_top_workspace_1366x900.png`
-2. `02_project_selected_map_state.png`
-3. `03_project_native_badge.png`
-4. `04_project_native_popup.png`
-5. `05_project_selected_summary.png`
-6. `06_project_water_profit_metrics.png`
-7. `07_project_recommendation_card.png`
-8. `08_project_s2_recommendation_cards.png`
-9. `09_reference_top_workspace_1366x900.png`
-10. `10_reference_selected_map_state.png`
-11. `11_reference_native_badge.png`
-12. `12_reference_native_popup.png`
-13. `13_reference_selected_summary.png`
-14. `14_reference_water_profit_metrics.png`
-15. `15_reference_recommendation_cards.png`
-
-The permitted visual differences are identity, geometry, values, authority, and explicitly unavailable PROJECT_DATA fields. Badge, popup, selected-summary, metrics, and product-card DOM families are identical.
+The focused and full Chromium coverage preserves 21/21 AUTO_MATCHED, revision 21, 24 units, 24 Polygon geometries, 24/24 candidate coverage, 8 crops, GA/ACO/ABC, all three objectives, S1/S2, pinned previews, immutable stored runs, explicit `run_id` reload, four-unit synchronization, project isolation, provider round trip 24 → 179 → 24, seven-tab parity, project drought behavior, and absence of a parallel result workspace.
 
 ## Gates
 
 ```text
-MAP_ROW_HEIGHT_PARITY = PASS
 NATIVE_V1_UNIT_BADGES = PASS
-NATIVE_V1_CROP_ICONS = PASS
+BADGE_PID_CONTRACT = PASS
+BADGE_CHILD_ORDER_DOT_PID_HINT = PASS
 NATIVE_V1_POPUP = PASS
+PROJECT_POPUP_FULLY_INSIDE_MAP_1366x900 = PASS
+PROJECT_POPUP_TITLE_VISIBLE = PASS
+PROJECT_POPUP_FIRST_ROW_VISIBLE = PASS
+PROJECT_POPUP_LAST_ROW_VISIBLE = PASS
+RESPONSIVE_POPUP_CONTAINMENT = PASS
+PROJECT_GOLDEN_SELECTED_BADGE = KDS-009
+PROJECT_GOLDEN_POPUP = KDS-009
+REFERENCE_GOLDEN_BADGE_FULLY_VISIBLE = PASS
+REFERENCE_GOLDEN_POPUP_FULLY_VISIBLE = PASS
+PAIRED_GOLDEN_LOGICAL_STATE = STRUCTURAL_ONLY_WITH_EXPLICIT_CLASSIFICATION
+MAP_ROW_HEIGHT_PARITY = PASS
+NATIVE_V1_CROP_ICONS = PASS
 NATIVE_V1_SELECTED_SUMMARY = PASS
 NATIVE_V1_RECOMMENDATION_CARDS = PASS
 FOUR_UNIT_SELECTION_SYNC = PASS
@@ -89,6 +82,7 @@ REFERENCE_TAB_COUNT = 7
 PROJECT_TAB_COUNT = 7
 TAB_HIERARCHY_PARITY = PASS
 PROJECT_DROUGHT_NAV_TAB = ABSENT
+PROJECT_DROUGHT_CONTENT = VISIBLE_NOT_PROVIDED
 PARALLEL_RESULT_WORKSPACE = ABSENT
 VALID_PROJECT_BOOT = PASS
 LOADING_OVERLAY_RELEASE = PASS
@@ -101,7 +95,12 @@ PROJECT_DATA_REFERENCE_DATA_CALLS = 0
 BLOCKED_REFERENCE_ERRORS_NORMAL_BOOT = 0
 PAGEERROR = 0
 AKKAYA_NON_REGRESSION = PASS
-RESPONSIVE_MATRIX = PASS
+AKKAYA_PARCELS = 179
+AKKAYA_AREA_DA = 134919
+AKKAYA_CANDIDATE_ROWS = 6859
+AKKAYA_CROPS = 58
+AKKAYA_WATER_M3 = 100700080.81
+AKKAYA_PROFIT_TL = 1041499119.212
 DOCUMENT_HORIZONTAL_OVERFLOW = 0
 PROTECTED_DIFF = NONE
 UNEXPLAINED_VISUAL_BUGS = 0

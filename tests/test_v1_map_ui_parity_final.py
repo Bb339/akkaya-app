@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 import pytest
 from playwright.sync_api import expect, sync_playwright
@@ -47,6 +48,77 @@ def _family_signature(page, selector: str):
     )
 
 
+def _selected_badge(page, unit_id: str, expected_matches: int = 1):
+    pid = page.locator(".parcel-badge > .pid").filter(
+        has_text=re.compile(rf"^{re.escape(unit_id)}$")
+    )
+    expect(pid).to_have_count(expected_matches)
+    # Reference P1 is represented by separate dry/irrigated source geometries.
+    # Select deterministically inside the exact-id set, never from all badges,
+    # and require the golden target to be fully visible inside the map.
+    map_box = page.locator("#map").bounding_box()
+    assert map_box is not None
+    badge = None
+    for index in range(expected_matches):
+        candidate = pid.nth(index).locator("..")
+        box = candidate.bounding_box()
+        if box and (
+            box["x"] >= map_box["x"]
+            and box["y"] >= map_box["y"]
+            and box["x"] + box["width"] <= map_box["x"] + map_box["width"]
+            and box["y"] + box["height"] <= map_box["y"] + map_box["height"]
+        ):
+            badge = candidate
+            break
+    assert badge is not None, f"No fully visible exact badge for {unit_id}"
+    expect(badge).to_be_visible()
+    assert badge.evaluate(
+        "node => [...node.children].map(child => child.className)"
+    ) == ["dot", "pid", "hint"]
+    return badge
+
+
+def _assert_popup_contained(page, unit_id: str, tolerance: int = 2):
+    popup = page.locator(".leaflet-popup", has=page.locator(".parcel-pop", has_text=unit_id))
+    expect(popup).to_be_visible()
+    title = popup.locator(".parcel-pop .t")
+    rows = popup.locator(".parcel-pop .s")
+    expect(title).to_be_visible()
+    expect(title).to_contain_text(unit_id)
+    assert rows.count() > 1
+    expect(rows.first).to_be_visible()
+    expect(rows.last).to_be_visible()
+    page.wait_for_function(
+        """({unitId,tolerance}) => {
+          const map=document.querySelector('#map');
+          const pop=[...document.querySelectorAll('.leaflet-popup')].find(
+            node=>node.querySelector('.parcel-pop')?.textContent.includes(unitId));
+          if(!map||!pop)return false;
+          const m=map.getBoundingClientRect(),p=pop.getBoundingClientRect();
+          return p.left>=m.left-tolerance&&p.right<=m.right+tolerance&&
+            p.top>=m.top-tolerance&&p.bottom<=m.bottom+tolerance;
+        }""",
+        arg={"unitId": unit_id, "tolerance": tolerance},
+    )
+    bounds = page.evaluate(
+        """unitId => {
+          const box=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}};
+          const pop=[...document.querySelectorAll('.leaflet-popup')].find(
+            node=>node.querySelector('.parcel-pop')?.textContent.includes(unitId));
+          return {map:box(document.querySelector('#map')),popup:box(pop),
+            title:box(pop.querySelector('.parcel-pop .t')),
+            first:box(pop.querySelector('.parcel-pop .s')),
+            last:box([...pop.querySelectorAll('.parcel-pop .s')].at(-1))};
+        }""",
+        unit_id,
+    )
+    assert bounds["popup"]["left"] >= bounds["map"]["left"] - tolerance
+    assert bounds["popup"]["right"] <= bounds["map"]["right"] + tolerance
+    assert bounds["popup"]["top"] >= bounds["map"]["top"] - tolerance
+    assert bounds["popup"]["bottom"] <= bounds["map"]["bottom"] + tolerance
+    return popup
+
+
 @pytest.mark.browser
 def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path):
     application, client, repository = client_for(tmp_path)
@@ -88,7 +160,7 @@ def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path
                             for index in range(1, 180)]
             }))
             url = (f"http://127.0.0.1:{server.server_port}/?provider=PROJECT_DATA"
-                   f"&project_id={project_id}&run_id={run['id']}&unit=KDS-001")
+                   f"&project_id={project_id}&run_id={run['id']}&unit=KDS-009")
             page.goto(url)
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.unit_count === 24")
             page.wait_for_function("!document.body.classList.contains('app-booting')")
@@ -96,8 +168,10 @@ def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path
             expect(page.locator("#panel")).to_be_visible()
             page.wait_for_function("window.__V1_PROJECT_PROVIDER__.mapState().zoom >= 10")
             expect(page.locator(".parcel-badge")).to_have_count(24, timeout=30000)
-            expect(page.locator(".parcel-badge .dot")).to_have_count(24)
-            expect(page.locator(".parcel-badge .hint")).to_have_count(24)
+            expect(page.locator(".parcel-badge > .dot")).to_have_count(24)
+            expect(page.locator(".parcel-badge > .pid")).to_have_count(24)
+            expect(page.locator(".parcel-badge > .hint")).to_have_count(24)
+            project_badge = _selected_badge(page, "KDS-009")
             assert page.locator(".v1-project-map-label").count() == 0
             assert page.locator("#v1-native-project-results").count() == 0
 
@@ -110,22 +184,31 @@ def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path
             project_card_signature = _signature(page, "#productCards .crop-detail-card")
 
             page.screenshot(path=str(EVIDENCE / "01_project_top_workspace_1366x900.png"), full_page=True)
+            page.evaluate("map.closePopup()")
             page.locator("#map").screenshot(path=str(EVIDENCE / "02_project_selected_map_state.png"))
-            page.locator(".parcel-badge").first.screenshot(path=str(EVIDENCE / "03_project_native_badge.png"))
+            project_badge.screenshot(path=str(EVIDENCE / "03_project_native_badge.png"))
+            page.evaluate("window.__V1_PROJECT_PROVIDER__.openUnitPopup('KDS-009')")
+            _assert_popup_contained(page, "KDS-009")
+            page.locator("#map").screenshot(path=str(EVIDENCE / "04_project_native_popup.png"))
 
             # Capture the single-crop S1 native strip/card, then restore the S2
-            # run used for two-crop synchronization and paired evidence.
+            # run used for two-crop synchronization and paired evidence.  Keep
+            # the main page in its deterministic S2 state.
             s1_url = (f"http://127.0.0.1:{server.server_port}/?provider=PROJECT_DATA"
                       f"&project_id={project_id}&run_id={s1_run['id']}&unit=KDS-009")
-            page.goto(s1_url)
-            page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
-            page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
-            expect(page.locator("#productCards .crop-pill")).to_have_count(1)
-            expect(page.locator("#productCards .crop-emoji")).to_have_count(1)
-            page.locator("#productCards").screenshot(path=str(EVIDENCE / "07_project_recommendation_card.png"))
-            page.goto(url)
-            page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
-            page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            s1_page = context.new_page()
+            s1_page.goto(s1_url)
+            s1_page.wait_for_function(
+                "expected => window.__V1_PROJECT_PROVIDER__?.context?.run?.id === expected",
+                arg=s1_run["id"],
+            )
+            s1_page.wait_for_function("!document.body.classList.contains('app-booting')")
+            s1_page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
+            expect(s1_page.locator("#parcelSelect")).to_be_visible()
+            expect(s1_page.locator("#productCards .crop-pill")).to_have_count(1)
+            expect(s1_page.locator("#productCards .crop-emoji")).to_have_count(1)
+            s1_page.locator("#productCards").screenshot(path=str(EVIDENCE / "07_project_recommendation_card.png"))
+            s1_page.close()
 
             previous = None
             for unit_id in ("KDS-001", "KDS-005", "KDS-009", "KDS-024"):
@@ -175,9 +258,7 @@ def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path
             page.locator(".leaflet-interactive").nth(8).click()
             expect(page.locator("#parcelSelect")).to_have_value("KDS-009")
             project_popup_signature = _family_signature(page, ".leaflet-popup .parcel-pop")
-            page.locator("#map").scroll_into_view_if_needed()
-            page.evaluate("window.scrollBy(0, -180)")
-            page.locator(".leaflet-popup .parcel-pop").screenshot(path=str(EVIDENCE / "04_project_native_popup.png"))
+            _assert_popup_contained(page, "KDS-009")
             page.locator("#parcelSummaryBlock").screenshot(path=str(EVIDENCE / "05_project_selected_summary.png"))
             page.locator(".metrics-grid").screenshot(path=str(EVIDENCE / "06_project_water_profit_metrics.png"))
 
@@ -203,12 +284,15 @@ def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path
                 page.set_viewport_size({"width": width, "height": height})
                 page.evaluate("window.dispatchEvent(new Event('resize'))")
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-                expect(page.locator(".leaflet-popup .parcel-pop")).to_be_visible()
+                page.evaluate("window.__V1_PROJECT_PROVIDER__.openUnitPopup('KDS-009')")
+                _assert_popup_contained(page, "KDS-009")
                 expect(page.locator("#productCards .crop-detail-card").first).to_be_visible()
             page.set_viewport_size({"width": 1366, "height": 900})
             for zoom in ("80%", "100%", "125%"):
                 page.evaluate("value => { document.body.style.zoom=value; window.dispatchEvent(new Event('resize')); }", zoom)
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+                page.evaluate("window.__V1_PROJECT_PROVIDER__.openUnitPopup('KDS-009')")
+                _assert_popup_contained(page, "KDS-009")
             page.evaluate("document.body.style.zoom='100%'; window.dispatchEvent(new Event('resize'))")
 
             # Equivalent reference state and native-family signatures.
@@ -219,16 +303,18 @@ def test_exact_native_map_popup_selected_unit_and_recommendation_parity(tmp_path
             expect(page.locator(".parcel-badge").first).to_be_visible(timeout=30000)
             page.locator("#parcelSelect").select_option("P1")
             page.evaluate("window._focusParcel?.('P1')")
-            expect(page.locator(".leaflet-popup .parcel-pop")).to_be_visible(timeout=30000)
+            reference_badge = _selected_badge(page, "P1", expected_matches=2)
+            reference_popup = _assert_popup_contained(page, "P1")
             assert _signature(page, ".parcel-badge") == project_badge_signature
             assert _family_signature(page, ".leaflet-popup .parcel-pop") == project_popup_signature
             assert _signature(page, "#productCards .crop-detail-card") == project_card_signature
             page.screenshot(path=str(EVIDENCE / "09_reference_top_workspace_1366x900.png"), full_page=True)
-            page.locator("#map").scroll_into_view_if_needed()
-            page.evaluate("window.scrollBy(0, -180)")
+            page.evaluate("map.closePopup()")
             page.locator("#map").screenshot(path=str(EVIDENCE / "10_reference_selected_map_state.png"))
-            page.locator(".parcel-badge").first.screenshot(path=str(EVIDENCE / "11_reference_native_badge.png"))
-            page.locator(".leaflet-popup .parcel-pop").first.screenshot(path=str(EVIDENCE / "12_reference_native_popup.png"))
+            reference_badge.screenshot(path=str(EVIDENCE / "11_reference_native_badge.png"))
+            page.evaluate("window._focusParcel?.('P1')")
+            reference_popup = _assert_popup_contained(page, "P1")
+            page.locator("#map").screenshot(path=str(EVIDENCE / "12_reference_native_popup.png"))
             page.locator("#parcelSummaryBlock").screenshot(path=str(EVIDENCE / "13_reference_selected_summary.png"))
             page.locator(".metrics-grid").screenshot(path=str(EVIDENCE / "14_reference_water_profit_metrics.png"))
             page.locator("#productCards").screenshot(path=str(EVIDENCE / "15_reference_recommendation_cards.png"))

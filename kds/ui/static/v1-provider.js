@@ -347,7 +347,7 @@
         if(unit.geometry&&['Polygon','MultiPolygon'].includes(unit.geometry.type))layer=L.geoJSON({type:'Feature',properties:{id:unit.analysis_unit_id},geometry:unit.geometry},{style:nativePresentation().parcelStyle(unit.analysis_unit_id===selectedUnit)});
         else if(unit.latitude!==null&&unit.latitude!==undefined&&unit.longitude!==null&&unit.longitude!==undefined)layer=L.marker([Number(unit.latitude),Number(unit.longitude)]);
         if(layer){
-          layer.bindPopup?.(nativePresentation().unitPopupHtml(projectPopupModel(unit)),{closeButton:false,autoClose:false,closeOnClick:false,autoPan:false,className:'parcel-popup'});
+          layer.bindPopup?.(nativePresentation().unitPopupHtml(projectPopupModel(unit)),nativePresentation().popupOptions());
           layer.bindTooltip?.(nativePresentation().unitBadgeHtml({id:unit.analysis_unit_id,orchard:false}),{permanent:true,direction:'center',className:'parcel-badge-wrap',opacity:1,sticky:false});
           layer.addTo(providerLayers||current);layer.on?.('click',()=>{selectedUnit=unit.analysis_unit_id;byId('parcelSelect').value=selectedUnit;renderUnit();history.pushState(null,'',canonicalUrl({unitId:selectedUnit}));});layer.__providerUnit=unit.analysis_unit_id;layers.push(layer);
         }
