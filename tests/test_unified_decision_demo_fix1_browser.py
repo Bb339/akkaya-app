@@ -15,12 +15,14 @@ BASELINE = "a6d36d099544776d0610b3c868a3675b12da5b0e"
 
 
 @pytest.mark.browser
-def test_v1_reference_boundary_is_visible_without_mutating_frozen_index():
+def test_v1_reference_boundary_is_visible_without_mutating_frozen_index(tmp_path, monkeypatch):
     baseline_object = subprocess.check_output(
         ["git", "rev-parse", f"{BASELINE}:index.html"], text=True).strip()
     current_object = subprocess.check_output(["git", "hash-object", "index.html"], text=True).strip()
     assert current_object == baseline_object
 
+    monkeypatch.setenv("KDS_PROJECT_STORE", str(tmp_path / "projects"))
+    monkeypatch.setenv("KDS_DEPLOYMENT_MODE", "local-development")
     import app as thesis
     server, thread = serve(thesis.app)
     try:
@@ -56,8 +58,11 @@ def test_v1_reference_boundary_is_visible_without_mutating_frozen_index():
 
 
 @pytest.mark.browser
-def test_decision_back_link_restores_exact_project_and_decision_identity(tmp_path):
+def test_native_v1_exact_project_run_and_workspace_return(tmp_path):
     application, client, _ = client_for(tmp_path)
+    project_name = project_payload()["name"]
+    from test_unified_v1_project_provider_browser import LEAFLET, _serve_v1
+    _serve_v1(application)
     assert client.post("/api/v2/projects", json=project_payload()).status_code == 201
     items = bulk_upload(client)
     confirm_bulk(client, items)
@@ -66,26 +71,26 @@ def test_decision_back_link_restores_exact_project_and_decision_identity(tmp_pat
     run_payload = {**payload, **{key: preview[key]
                                 for key in ("preview_token", "preview_revision", "selection_hash")}}
     run = client.post("/api/v2/projects/unified-demo/analyses", json=run_payload).json
-
     server, thread = serve(application)
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1366, "height": 900})
+            page.add_init_script(LEAFLET)
             page.route("https://**", lambda route: route.abort())
-            decision = (f"http://127.0.0.1:{server.server_port}/projects/decision"
-                        f"?project_id=unified-demo&run_id={run['id']}"
-                        "&execution_profile=VERIFIED_INSTITUTIONAL")
+            decision = (f"http://127.0.0.1:{server.server_port}/"
+                        f"?provider=PROJECT_DATA&project_id=unified-demo&run_id={run['id']}")
             page.goto(decision)
-            expect(page.locator("#decision-title")).to_have_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
-            expect(page.locator("#decision-authority")).to_be_visible()
-            assert "AKKAYA" not in page.locator("#result-facts").inner_text()
-            page.locator("#back-to-project").click()
-            page.wait_for_url("**/projects#project=unified-demo&section=result")
-            expect(page.locator('#projects .project-card[aria-label="SYNTHETIC_INSTITUTIONAL_TEST_PROJECT"]')).to_have_class(
+            page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
+            expect(page.locator("#metricsTitle")).to_contain_text(project_name)
+            expect(page.locator("#v1-provider-authority")).to_have_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#buildMetaBox")).to_contain_text(run["id"])
+            assert page.evaluate("document.querySelector('#v1-native-project-results') === null")
+            page.goto(f"http://127.0.0.1:{server.server_port}/projects#project=unified-demo&section=result")
+            expect(page.locator(f'#projects .project-card[aria-label="{project_name}"]')).to_have_class(
                 "project-card active")
             expect(page.locator("#detail")).to_be_visible()
-            expect(page.locator("#project-name")).to_have_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
+            expect(page.locator("#project-name")).to_have_text(project_name)
             expect(page.locator("#hero-project-meta")).to_contain_text("2025")
             expect(page.locator("#synthetic-watermark")).to_be_visible()
             page.locator("#history button", has_text=run["id"]).click()
@@ -94,7 +99,9 @@ def test_decision_back_link_restores_exact_project_and_decision_identity(tmp_pat
             assert f"run_id={run['id']}" in reopen.get_attribute("href")
             reopen.click()
             page.wait_for_url(f"**run_id={run['id']}**")
-            expect(page.locator("#decision-title")).to_have_text("SYNTHETIC_INSTITUTIONAL_TEST_PROJECT")
+            page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
+            expect(page.locator("#metricsTitle")).to_contain_text(project_name)
+            expect(page.locator("#buildMetaBox")).to_contain_text(run["id"])
             browser.close()
     finally:
         server.shutdown(); thread.join(timeout=5)

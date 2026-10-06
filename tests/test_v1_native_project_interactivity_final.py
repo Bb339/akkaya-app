@@ -245,16 +245,18 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator("#basinSummaryBlock").screenshot(path=str(EVIDENCE / "project_summary_1366x900.png"))
             page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "project_current_recommended_1366x900.png"))
             page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "project_drought_1366x900.png"))
-            page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "project_tabs_1366x900.png"))
 
             expected_tabs = [
                 "users", "parcel", "institution-communication", "drawing",
-                "district", "official", "drought", "benchmark",
+                "district", "official", "benchmark",
             ]
-            assert page.evaluate("""expected => Array.from(
+            project_tabs = page.evaluate("""() => Array.from(
               document.querySelectorAll('#analysisTables .tab')
-            ).filter(node => node.offsetParent !== null).map(node => node.dataset.tab)
-            .filter(value => expected.includes(value))""", expected_tabs) == expected_tabs
+            ).filter(node => node.offsetParent !== null).map(node => node.dataset.tab)""")
+            assert project_tabs == expected_tabs
+            assert page.locator('.tab[data-tab="drought"]').count() == 0
+            expect(page.locator("#waterRiskSection")).to_be_visible()
+            expect(page.locator("#waterRiskSection")).to_contain_text("SAĞLANMADI / NOT PROVIDED")
             assert page.evaluate("""() => {
               const ids=['explainBox','rotationBox','irrigationCompareBox',
                 'businessMetricsBox','deliveryBox','irrigPlanBox'];
@@ -268,6 +270,8 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             _assert_hit_target(page, parcel_tab)
             parcel_tab.click()
             assert "active" in (parcel_tab.get_attribute("class") or "").split()
+            page.evaluate("document.getElementById('analysisTables').scrollLeft=0")
+            page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "project_tabs_1366x900.png"))
             benchmark_tab = page.locator('.tab[data-tab="benchmark"]')
             _assert_hit_target(page, benchmark_tab)
             benchmark_tab.click()
@@ -276,7 +280,7 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#benchmarkResults")).to_contain_text("max_profit")
             expect(page.locator("#benchmarkResults")).to_contain_text("water_efficiency")
             page.locator("#tab-benchmark").screenshot(path=str(EVIDENCE / "project_algorithm_comparison_1366x900.png"))
-            for tab_name in ("users", "drawing", "district", "official", "drought"):
+            for tab_name in ("users", "drawing", "district", "official"):
                 expect(page.locator(f'.tab[data-tab="{tab_name}"]')).to_be_visible()
             page.locator('.tab[data-tab="district"]').click()
             expect(page.locator("#districtSummaryTable")).to_contain_text("Test West")
@@ -285,9 +289,6 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#officialWaterNote")).to_contain_text("PROJECT DATA")
             expect(page.locator("#officialSummary")).to_contain_text("PROJECT DATA")
             page.locator("#tab-official").screenshot(path=str(EVIDENCE / "project_official_1366x900.png"))
-            page.locator('.tab[data-tab="drought"]').click()
-            expect(page.locator("#tab-drought")).to_be_visible()
-            expect(page.locator("#waterRiskSection")).to_contain_text("SAĞLANMADI / NOT PROVIDED")
             page.locator('.tab[data-tab="benchmark"]').click()
             accordion = page.locator("#parcelGroup > summary")
             _assert_hit_target(page, accordion)
@@ -375,17 +376,27 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.screenshot(path=str(EVIDENCE / "akkaya_reference_restored.png"), full_page=True)
             reference_page_height = page.evaluate("document.documentElement.scrollHeight")
             assert abs(project_page_height - reference_page_height) < 600
+            page.wait_for_load_state("networkidle", timeout=120000)
             page.locator("#map").screenshot(path=str(EVIDENCE / "reference_map_1366x900.png"))
+            page.locator("#parcelSelect").select_option("P1")
+            page.wait_for_timeout(500)
             reference_polygon = page.locator(".leaflet-interactive").first
             expect(reference_polygon).to_be_visible(timeout=30000)
-            reference_polygon.click(force=True)
-            reference_popup = page.locator(".leaflet-popup").last
+            reference_popup = page.locator(".leaflet-popup-content").last
             expect(reference_popup).to_be_visible(timeout=30000)
-            reference_popup.screenshot(path=str(EVIDENCE / "reference_map_unit.png"))
+            selected_reference_id = page.locator("#parcelSelect").input_value()
+            expect(reference_popup).to_contain_text(selected_reference_id)
+            page.locator("#map").screenshot(path=str(EVIDENCE / "reference_map_unit.png"))
             page.locator("#parcelSummaryBlock").screenshot(path=str(EVIDENCE / "reference_summary_1366x900.png"))
             page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "reference_drought_1366x900.png"))
-            page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "reference_tabs_1366x900.png"))
             page.locator('.tab[data-tab="parcel"]').click()
+            reference_tabs = page.evaluate("""() => Array.from(
+              document.querySelectorAll('#analysisTables .tab')
+            ).filter(node => node.offsetParent !== null).map(node => node.dataset.tab)""")
+            assert reference_tabs == expected_tabs == project_tabs
+            assert page.locator('.tab[data-tab="drought"]').count() == 0
+            page.evaluate("document.getElementById('analysisTables').scrollLeft=0")
+            page.locator("#analysisTables").screenshot(path=str(EVIDENCE / "reference_tabs_1366x900.png"))
             page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "reference_current_recommended_1366x900.png"))
             page.locator("#deliveryBox").screenshot(path=str(EVIDENCE / "reference_monthly_water_context_1366x900.png"))
             page.locator('.tab[data-tab="district"]').click()

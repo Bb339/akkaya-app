@@ -117,13 +117,8 @@
     const waterYear=byId('waterYear');if(waterYear){waterYear.replaceChildren(new Option(`${context.project.planning_year} · proje planlama yılı`,String(context.project.planning_year),true,true));waterYear.disabled=true;}
     applyProviderTerminology(true);
   }
-  function ensureProjectTabs(){
+  function bindProjectTabRefresh(){
     const tabs=byId('analysisTables');
-    if(tabs&&!tabs.querySelector('[data-tab="drought"]')){
-      const button=document.createElement('button');button.className='tab';button.dataset.tab='drought';button.textContent='Kuraklık göstergeleri';
-      tabs.querySelector('[data-tab="benchmark"]')?.insertAdjacentElement('beforebegin',button);
-      button.addEventListener('click',()=>{document.querySelectorAll('#analysisTables .tab').forEach(node=>node.classList.remove('active'));document.querySelectorAll('.tab-panels>.tab-panel').forEach(node=>node.classList.remove('active'));button.classList.add('active');byId('tab-drought')?.classList.add('active');});
-    }
     if(tabs&&!tabs.dataset.projectParityBound){
       tabs.dataset.projectParityBound='1';
       tabs.addEventListener('click',event=>{
@@ -136,7 +131,7 @@
     for(const id of ['btnExportWaterCsv','btnExportScenarioCsv','btnExportParcelsCsv','btnExportAllParcelCompareCsv']){const button=byId(id);if(button){button.disabled=true;button.title='PROJECT DATA dışa aktarımı bu stored-run sözleşmesinde sağlanmadı.';}}
   }
   function renderProjectModules(run=context?.run){
-    if(!context)return;ensureProjectTabs();
+    if(!context)return;bindProjectTabRefresh();
     const current=context.current_summary||{},geo=context.geographic_summary||{rows:[]},result=run?.result||{};
     setText('bWaterCurrent',metric(current.water_m3));setText('bProfitCurrent',metric(current.profit_tl));setText('bEffCurrent',metric(current.efficiency_tl_per_m3,4));
     const districtRows=(geo.rows||[]).map(row=>[row.name,row.unit_count,metric(row.area_da),metric(row.current_water_m3),metric(row.current_profit_tl)]);

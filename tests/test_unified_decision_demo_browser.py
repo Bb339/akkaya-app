@@ -34,7 +34,9 @@ def serve(application):
 
 
 @pytest.mark.browser
-def test_akkaya_reference_thesis_screen_remains_operational_in_chromium():
+def test_akkaya_reference_thesis_screen_remains_operational_in_chromium(tmp_path, monkeypatch):
+    monkeypatch.setenv("KDS_PROJECT_STORE", str(tmp_path / "projects"))
+    monkeypatch.setenv("KDS_DEPLOYMENT_MODE", "local-development")
     import app as thesis
     server, thread = serve(thesis.app)
     try:
@@ -87,12 +89,14 @@ def test_fresh_bulk_import_run_and_decision_bridge_in_chromium(tmp_path):
     application = Flask("unified-demo-browser")
     application.config["TESTING"] = True
     register_project_api(application, repository)
+    from test_unified_v1_project_provider_browser import LEAFLET, _serve_v1
+    _serve_v1(application)
     server, thread = serve(application)
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1366, "height": 900})
-            page.add_init_script(LEAFLET_STUB)
+            page.add_init_script(LEAFLET)
             page.route("https://**", lambda route: route.abort())
             errors = []
             requested = []
@@ -163,18 +167,18 @@ def test_fresh_bulk_import_run_and_decision_bridge_in_chromium(tmp_path):
             assert stored["result_authority_label"] == "SYNTHETIC / NOT_OFFICIAL"
             assert stored["result"]["classification"] == "SYNTHETIC_TEST_OUTPUT"
             page.locator("#open-decision-screen").click()
-            page.wait_for_url("**/projects/decision?**")
+            page.wait_for_url("**/?provider=PROJECT_DATA**")
             assert "project_id=browser-unified-demo" in page.url
             assert f"run_id={run_id}" in page.url
-            expect(page.locator(".mode-badge.verified")).to_have_text("VERIFIED INSTITUTIONAL")
-            expect(page.locator("#decision-authority")).to_be_visible()
-            expect(page.locator("#decision-title")).to_have_text("Bakanlık Sentetik Demo Projesi")
-            expect(page.locator("#result-source-label")).to_contain_text("SYNTHETIC / NOT OFFICIAL")
-            expect(page.locator("#provenance-summary")).to_contain_text("Selection hash")
-            expect(page.locator("#provenance-summary")).to_contain_text("Engine commit")
-            expect(page.locator("#unit-list button")).to_have_count(24)
-            expect(page.locator(".leaflet-marker-icon")).to_have_count(2)
-            assert "AKKAYA" not in page.locator("#result-facts").inner_text()
+            page.wait_for_function("window.__V1_PROJECT_PROVIDER__?.context?.run?.id")
+            page.evaluate(
+                "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
+            )
+            expect(page.locator("#roleInfoBanner")).to_contain_text("24 analiz birimi")
+            expect(page.locator("#v1-provider-authority")).to_have_text("SYNTHETIC / NOT_OFFICIAL")
+            expect(page.locator("#buildMetaBox")).to_contain_text(run_id)
+            expect(page.locator("#parcelSelect option")).to_have_count(24)
+            assert page.evaluate("document.querySelector('#v1-native-project-results') === null")
             assert not any("/api/parcels" in url or "/api/optimize" in url for url in requested)
             assert not errors
             browser.close()
