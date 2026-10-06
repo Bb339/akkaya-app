@@ -12,7 +12,7 @@
   const projectMode=!canonicalReference;
   const initialSearch=location.search;
   const canonicalId=value=>typeof value==='string'&&/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(value)?value:null;
-  let context=null,preview=null,providerMap=null,providerLayers=null,selectedUnit=null,installingUnits=false,unitObserver=null,providerMonthlyChart=null;
+  let context=null,preview=null,providerMap=null,providerLayers=null,selectedUnit=null,installingUnits=false,unitObserver=null,officialObserver=null,providerMonthlyChart=null,providerResizeObserver=null,providerLayoutFrame=0;
   const blockedReferencePaths=[];
   const nativeFetch=window.fetch.bind(window);
 
@@ -99,6 +99,11 @@
     wireDrawer();setDrawer(true);
   }
   function setText(id,value){const node=byId(id);if(node)node.textContent=value??'—';}
+  function nativePresentation(){
+    const renderer=window.NativeV1Presentation;
+    if(!renderer)throw new Error('Native V1 presentation renderer yüklenemedi.');
+    return renderer;
+  }
   function installNativeControls(){
     const workflow=document.querySelector('.v1-provider-workflow'),anchor=byId('sideRunOptimizeRow');
     if(!workflow||!anchor)return;workflow.classList.add('v1-native-project-workflow');anchor.insertAdjacentElement('afterend',workflow);
@@ -123,12 +128,21 @@
       tabs.dataset.projectParityBound='1';
       tabs.addEventListener('click',event=>{
         if(!event.target.closest('.tab'))return;
-        setTimeout(()=>{neutralizeReferenceSurface();renderProjectModules(context?.run);},50);
+        requestAnimationFrame(()=>{neutralizeReferenceSurface();renderProjectModules(context?.run);settleMapLayout();});
       });
     }
     const drawing=byId('tab-drawing');
     if(drawing&&!byId('v1-project-drawing-state'))drawing.querySelector('.drawing-tab-shell')?.insertAdjacentHTML('afterbegin','<div id="v1-project-drawing-state" class="v1-provider-explanation">PROJECT DATA geometrileri yüklenen proje dosyalarından gelir. Bu çalışma alanı geometriyi değiştirmeden gösterir; ekleme veya düzeltme için Projeler → Veri Yönetimi alanını kullanın.</div>');
     for(const id of ['btnExportWaterCsv','btnExportScenarioCsv','btnExportParcelsCsv','btnExportAllParcelCompareCsv']){const button=byId(id);if(button){button.disabled=true;button.title='PROJECT DATA dışa aktarımı bu stored-run sözleşmesinde sağlanmadı.';}}
+  }
+  function observeProjectOfficialSurface(){
+    const panel=byId('tab-official');
+    if(!panel||officialObserver)return;
+    officialObserver=new MutationObserver(()=>{
+      if(!context||byId('officialWaterNote')?.textContent?.startsWith('PROJECT DATA'))return;
+      queueMicrotask(()=>{neutralizeReferenceSurface();renderProjectModules(context?.run);});
+    });
+    officialObserver.observe(panel,{subtree:true,childList:true,characterData:true});
   }
   function renderProjectModules(run=context?.run){
     if(!context)return;bindProjectTabRefresh();
@@ -218,12 +232,28 @@
   function renderUnit(){
     const unit=context.units.find(value=>value.analysis_unit_id===selectedUnit);if(!unit)return;
     const result=unit.result||{};
-    setText('parcelSummaryTitle',`${unit.analysis_unit_id} · Proje analiz birimi`);
-    setText('parcelSummaryNote',`${unit.current_crop||'Mevcut ürün sağlanmadı'} · ${number(unit.area_da)} da`);
+    setText('metricsTitle',`Analiz Birimi Karar Özeti (${unit.analysis_unit_id})`);
+    setText('parcelSummaryTitle',`Analiz Birimi Su-Kâr Metrikleri (${unit.analysis_unit_id})`);
+    setText('parcelSummaryNote','Aşağıdaki kartlar yalnızca seçili analiz biriminin backend-authoritative değerlerini gösterir.');
     setText('mWaterCurrent',unit.current_water_m3==null?'Mevcut su değeri sağlanmadı':metric(unit.current_water_m3));setText('mWaterScenario',metric(result.authoritative_unit_water_m3));
     setText('mProfitCurrent',unit.current_profit_tl==null?'Mevcut kâr değeri sağlanmadı':metric(unit.current_profit_tl));setText('mProfitScenario',metric(result.unit_profit_tl));
     setText('mEffCurrent',unit.current_efficiency_tl_per_m3==null?'Mevcut etkinlik değeri sağlanmadı':metric(unit.current_efficiency_tl_per_m3,4));setText('mEffScenario',metric(result.efficiency_tl_per_m3,4,'SAĞLANMADI / NOT PROVIDED'));
-    const cards=byId('productCards');if(cards)cards.innerHTML=(result.selected_crops||[]).length?(result.selected_crops||[]).map((row,index)=>`<article class="product-card"><strong>${html(row.crop)}</strong><span>${html(row.season||'')}</span>${index===0?`<small>${metric(result.authoritative_unit_water_m3)} m³ · ${metric(result.unit_profit_tl)} TL</small>`:''}</article>`).join(''):'<div class="small muted">Bu birim için henüz saklanmış optimizasyon deseni yok.</div>';
+    const cards=byId('productCards');if(cards){
+      const selected=result.selected_crops||[];
+      const cardRows=selected.map((row,index)=>({
+        name:row.crop,season:row.season||'SAĞLANMADI / NOT PROVIDED',
+        area:row.area_da,area_share_pct:row.area_share_pct,
+        waterPerDa:row.water_m3_da,profitPerDa:row.profit_tl_da,
+        totalWater:row.total_water_m3??(selected.length===1&&index===0?result.authoritative_unit_water_m3:null),
+        totalProfit:row.total_profit_tl??(selected.length===1&&index===0?result.unit_profit_tl:null),
+        calendar:row.period||row.calendar||'SAĞLANMADI / NOT PROVIDED'
+      }));
+      cards.innerHTML=nativePresentation().productCardsHtml(cardRows,{
+        strict:true,prettyNames:true,parcelArea:unit.area_da,missing:'SAĞLANMADI / NOT PROVIDED',
+        note:selected.length?`Immutable ${context.run?.id||'stored run'} · PROJECT DATA önerisi`:'',
+        emptyMessage:'Bu analiz birimi için henüz saklanmış optimizasyon deseni yok.'
+      });
+    }
     renderNativeUnit(unit);
     document.querySelectorAll('[data-v1-provider-unit]').forEach(node=>node.classList.toggle('v1-project-unit-active',node.dataset.v1ProviderUnit===selectedUnit));
     if(!unit.geometry&&!(unit.latitude!==null&&unit.latitude!==undefined&&unit.longitude!==null&&unit.longitude!==undefined)){
@@ -270,6 +300,43 @@
     try{providerLayers=L.featureGroup().addTo(providerMap);}catch(_error){providerLayers=null;}
     return providerMap;
   }
+  function settleMapLayout({refit=false,refitSelected=false}={}){
+    if(providerLayoutFrame)cancelAnimationFrame(providerLayoutFrame);
+    providerLayoutFrame=requestAnimationFrame(()=>{
+      providerLayoutFrame=requestAnimationFrame(()=>{
+        providerLayoutFrame=0;
+        try{
+          providerMap?.invalidateSize?.({pan:false,animate:false});
+          if(refit&&providerLayers?.getBounds){const bounds=providerLayers.getBounds();if(bounds?.isValid?.())providerMap.fitBounds(bounds.pad(.15),{animate:false});}
+          if(refitSelected&&selectedUnit)providerLayers?.eachLayer?.(layer=>{if(layer.__providerUnit!==selectedUnit)return;if(layer.getBounds)providerMap.fitBounds(layer.getBounds().pad(.3),{animate:false});else if(layer.getLatLng)providerMap.setView(layer.getLatLng(),14,{animate:false});});
+        }catch(_error){}
+      });
+    });
+  }
+  function observeMapLayout(){
+    providerResizeObserver?.disconnect?.();
+    const row=byId('overviewSection');
+    if(window.ResizeObserver&&row){providerResizeObserver=new ResizeObserver(()=>settleMapLayout({refitSelected:true}));providerResizeObserver.observe(row);}
+    window.addEventListener('resize',()=>settleMapLayout({refitSelected:true}),{passive:true});
+    settleMapLayout({refitSelected:true});
+  }
+  function projectPopupModel(unit){
+    const result=unit.result||{},selected=(result.selected_crops||[]).map(value=>value.crop).join(' + ');
+    return {
+      id:unit.analysis_unit_id,tag:'Analiz birimi',orchard:false,areaDa:unit.area_da,
+      district:unit.district,place:unit.settlement||context.project.province_or_region,
+      source:unit.source||context.authority,crop:unit.current_crop,
+      irrigation:unit.irrigation_method,owner:unit.owner||unit.grower,
+      missing:'SAĞLANMADI / NOT PROVIDED',additionalRows:[
+        ['Mevcut su',unit.current_water_m3==null?null:`${metric(unit.current_water_m3)} m³`],
+        ['Mevcut net kâr',unit.current_profit_tl==null?null:`${metric(unit.current_profit_tl)} TL`],
+        ['Önerilen',selected||null],
+        ['Optimize su',result.authoritative_unit_water_m3==null?null:`${metric(result.authoritative_unit_water_m3)} m³`],
+        ['Optimize net kâr',result.unit_profit_tl==null?null:`${metric(result.unit_profit_tl)} TL`],
+        ['Otorite',context.authority],
+      ]
+    };
+  }
   function renderMap(){
     byId('v1-geometry-status').textContent=geometryMessage();
     const current=resetMap();if(!current)return;
@@ -277,21 +344,22 @@
     for(const unit of context.units){
       let layer=null;
       try{
-        if(unit.geometry&&['Polygon','MultiPolygon'].includes(unit.geometry.type))layer=L.geoJSON({type:'Feature',properties:{id:unit.analysis_unit_id},geometry:unit.geometry},{style:{color:'#176b57',weight:2,opacity:.95,fillColor:'#63b39d',fillOpacity:.24}});
+        if(unit.geometry&&['Polygon','MultiPolygon'].includes(unit.geometry.type))layer=L.geoJSON({type:'Feature',properties:{id:unit.analysis_unit_id},geometry:unit.geometry},{style:nativePresentation().parcelStyle(unit.analysis_unit_id===selectedUnit)});
         else if(unit.latitude!==null&&unit.latitude!==undefined&&unit.longitude!==null&&unit.longitude!==undefined)layer=L.marker([Number(unit.latitude),Number(unit.longitude)]);
         if(layer){
-          const result=unit.result||{},recommended=(result.selected_crops||[]).map(value=>value.crop).join(' + ')||'Henüz saklanmış öneri yok';
-          layer.bindPopup?.(`<strong>${html(unit.analysis_unit_id)}</strong><br>${html(unit.settlement||context.project.province_or_region||'Proje kapsamı')}<br>Alan: ${html(metric(unit.area_da))} da<br>Mevcut ürün: ${html(unit.current_crop||'SAĞLANMADI / NOT PROVIDED')}<br>Mevcut su: ${html(metric(unit.current_water_m3))} m³<br>Mevcut net kâr: ${html(metric(unit.current_profit_tl))} TL<br>Önerilen: ${html(recommended)}<br>Optimize su: ${html(metric(result.authoritative_unit_water_m3))} m³<br>Optimize net kâr: ${html(metric(result.unit_profit_tl))} TL<br>Otorite: ${html(context.authority)}`,{className:'parcel-popup'});
-          layer.bindTooltip?.(`<span class="parcel-badge-wrap">${html(unit.analysis_unit_id)}</span>`,{permanent:true,direction:'center',className:'v1-project-map-label'});
+          layer.bindPopup?.(nativePresentation().unitPopupHtml(projectPopupModel(unit)),{closeButton:false,autoClose:false,closeOnClick:false,autoPan:false,className:'parcel-popup'});
+          layer.bindTooltip?.(nativePresentation().unitBadgeHtml({id:unit.analysis_unit_id,orchard:false}),{permanent:true,direction:'center',className:'parcel-badge-wrap',opacity:1,sticky:false});
           layer.addTo(providerLayers||current);layer.on?.('click',()=>{selectedUnit=unit.analysis_unit_id;byId('parcelSelect').value=selectedUnit;renderUnit();history.pushState(null,'',canonicalUrl({unitId:selectedUnit}));});layer.__providerUnit=unit.analysis_unit_id;layers.push(layer);
         }
       }catch(_error){}
     }
     if(layers.length){try{const group=L.featureGroup(layers);current.fitBounds(group.getBounds().pad(.15));}catch(_error){}}
+    settleMapLayout();
   }
   function focusGeometry(unit){
     if(!providerMap)return;
-    try{(providerLayers||providerMap).eachLayer?.(layer=>{if(layer.__providerUnit===unit.analysis_unit_id){if(layer.setStyle)layer.setStyle({color:'#f59f00',weight:4,fillOpacity:.28});if(layer.getBounds)providerMap.fitBounds(layer.getBounds().pad(.3));else if(layer.getLatLng)providerMap.setView(layer.getLatLng(),14);}else if(layer.setStyle)layer.setStyle({color:'#176b57',weight:2,fillOpacity:.16});});}catch(_error){}
+    try{(providerLayers||providerMap).eachLayer?.(layer=>{const selected=layer.__providerUnit===unit.analysis_unit_id;if(layer.setStyle)layer.setStyle(nativePresentation().parcelStyle(selected));if(selected){if(layer.getBounds)providerMap.fitBounds(layer.getBounds().pad(.3));else if(layer.getLatLng)providerMap.setView(layer.getLatLng(),14);layer.openPopup?.();}else layer.closePopup?.();});}catch(_error){}
+    settleMapLayout();
   }
   function monthlyRows(result){
     const supply=result.monthly_supply_validation||{},delivery=result.monthly_delivery_validation||{},account=result.water_profile_accounting||{};
@@ -422,12 +490,17 @@
     context=await api(`/projects/${encodeURIComponent(projectId)}/decision-context${suffix}`);
     shell.dataset.synthetic=String(context.synthetic);byId('v1-provider-context').hidden=false;setText('v1-provider-name',`PROJECT DATA · ${context.project.name}`);setText('v1-provider-authority',context.synthetic?context.authority:`${context.authority} · ${context.execution_profile}`);setText('v1-provider-badge','PROJECT DATA');byId('v1-manage-project').href=`/projects#project=${encodeURIComponent(projectId)}&section=data`;
     setText('dataSourceLabel',`PROJECT DATA · ${context.project.id}`);setText('dataLoadBadge',context.authority);
-    installNativeControls();renderFacts();renderRequirements();installUnits();guardProjectUnits();wireControls();renderHistory();neutralizeReferenceSurface();renderProjectModules();await loadProjectList();
-    renderMap();renderUnit();neutralizeReferenceSurface();renderProjectModules(context.run);if(context.run)renderNativeRun(context.run);
+    installNativeControls();renderFacts();renderRequirements();installUnits();guardProjectUnits();wireControls();renderHistory();neutralizeReferenceSurface();renderProjectModules();observeProjectOfficialSurface();await loadProjectList();
+    renderMap();renderUnit();neutralizeReferenceSurface();renderProjectModules(context.run);if(context.run)renderNativeRun(context.run);observeMapLayout();
     window.refreshUI=()=>{if(context)renderUnit();};
-    setTimeout(()=>{renderMap();renderUnit();neutralizeReferenceSurface();renderProjectModules(context.run);if(context.run)renderNativeRun(context.run);providerMap?.invalidateSize?.();},1200);
     if(context.run)renderRun(context.run);
-    window.__V1_PROJECT_PROVIDER__={get context(){return context;},get blockedReferencePaths(){return [...blockedReferencePaths];},get selectedUnit(){return selectedUnit;},openUnitPopup(unitId){let opened=false;providerLayers?.eachLayer?.(layer=>{if(layer.__providerUnit===unitId){layer.openPopup?.();opened=true;}});return opened;}};
+    window.__V1_PROJECT_PROVIDER__={
+      get context(){return context;},get blockedReferencePaths(){return [...blockedReferencePaths];},get selectedUnit(){return selectedUnit;},
+      openUnitPopup(unitId){let opened=false;providerLayers?.eachLayer?.(layer=>{if(layer.__providerUnit===unitId){layer.openPopup?.();opened=true;}});return opened;},
+      unitLayerState(unitId){let state=null;providerLayers?.eachLayer?.(layer=>{if(layer.__providerUnit!==unitId)return;const drawable=layer.getLayers?.()[0]||layer;state={style:{color:drawable.options?.color,weight:drawable.options?.weight,fillColor:drawable.options?.fillColor,fillOpacity:drawable.options?.fillOpacity},popupOpen:!!layer.isPopupOpen?.(),popupHtml:layer.getPopup?.()?.getContent?.()||'',tooltipHtml:layer.getTooltip?.()?.getContent?.()||''};});return state;},
+      mapRowState(){const mapCard=byId('map')?.closest('.map-card')?.getBoundingClientRect(),metrics=byId('metricsTitle')?.closest('.metrics-card')?.getBoundingClientRect(),row=byId('overviewSection')?.getBoundingClientRect();return {mapCard,metrics,row};},
+      mapState(){return {zoom:providerMap?.getZoom?.(),center:providerMap?.getCenter?.(),size:providerMap?.getSize?.()};}
+    };
     if(typeof window.syncRoleInfoBanner==='function')window.syncRoleInfoBanner();
   }
   async function initReference(){

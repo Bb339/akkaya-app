@@ -36,7 +36,12 @@ def _serve_v1(application):
 
     @application.get("/<path:filename>")
     def asset(filename):
-        if filename not in {"script.js", "style.css", "favicon.ico"}:
+        target = (ROOT / filename).resolve()
+        try:
+            target.relative_to(ROOT.resolve())
+        except ValueError:
+            return "missing", 404
+        if not target.is_file():
             return "missing", 404
         return send_from_directory(ROOT, filename)
 

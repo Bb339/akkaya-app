@@ -16876,22 +16876,93 @@ function cropFullInfoHtmlV94(row, idx=0){
     </div>`;
 }
 
-function cropInfoCardHtmlV93(row, idx=0){
+function nativeV1UnitBadgeHtml(viewModel={}){
+  const id = String(viewModel.id || viewModel.name || '');
+  return `<span class="parcel-badge ${viewModel.orchard ? 'orchard' : ''}"><span class="dot"></span><span>${escapeHtml(id)}</span><span class="hint">ⓘ</span></span>`;
+}
+
+function nativeV1UnitPopupHtml(viewModel={}){
+  const missing = String(viewModel.missing || '-');
+  const value = (input)=> String(input ?? '').trim() || missing;
+  const areaDa = Number(viewModel.areaDa);
+  const areaText = Number.isFinite(areaDa) ? (Math.round(areaDa * 10) / 10).toFixed(1) : missing;
+  const areaM2Text = Number.isFinite(areaDa) ? Math.round(areaDa * 1000).toLocaleString('tr-TR') : missing;
+  const rows = [
+    ['Alan', `${areaText} da`],
+    ['Alan (m²)', `${areaM2Text} m²`],
+    ['İlçe', value(viewModel.district)],
+    ['Yer', value(viewModel.place)],
+    ['Kaynak', value(viewModel.source), 'right source-file'],
+    ['Ürün', value(viewModel.crop)],
+    ['Sulama', value(viewModel.irrigation)],
+    ['Çiftçi', value(viewModel.owner)],
+  ];
+  for(const row of (viewModel.additionalRows || [])){
+    if(!Array.isArray(row) || !row[0]) continue;
+    rows.push([row[0], value(row[1]), row[2] || '']);
+  }
+  return `
+      <div class="parcel-pop">
+        <div class="t">
+          <span>${escapeHtml(String(viewModel.id || ''))}</span>
+          <span class="tag ${viewModel.orchard ? 'orchard' : ''}">${escapeHtml(value(viewModel.tag))}</span>
+        </div>
+        ${rows.map(([label,rowValue,extraClass=''])=>`<div class="s"><span class="k">${escapeHtml(label)}</span><span class="v${extraClass ? ` ${extraClass}` : ''}">${escapeHtml(rowValue)}</span></div>`).join('')}
+      </div>
+    `;
+}
+
+function nativeV1ParcelStyle(isSelected){
+  return {
+    color: isSelected ? '#0b74c4' : '#2b2b2b',
+    weight: isSelected ? 3 : 2,
+    opacity: 0.9,
+    fillColor: isSelected ? '#3aa0ff' : '#9bb7d1',
+    fillOpacity: isSelected ? 0.35 : 0.0,
+  };
+}
+
+function nativeV1CropIcon(name){
+  const n = String(name||'').toLowerCase();
+  if(n.includes('bugday') || n.includes('arpa') || n.includes('cavdar')) return '\u{1F33E}';
+  if(n.includes('misir')) return '\u{1F33D}';
+  if(n.includes('patates')) return '\u{1F954}';
+  if(n.includes('sogan')) return '\u{1F9C5}';
+  if(n.includes('nohut') || n.includes('mercimek') || n.includes('fasulye') || n.includes('fiy')) return '\u{1FAD8}';
+  if(n.includes('aycicegi')) return '\u{1F33B}';
+  if(n.includes('kabak')) return '\u{1F383}';
+  if(n.includes('pancar')) return '\u{1F360}';
+  if(n.includes('marul') || n.includes('ispanak') || n.includes('lahana')) return '\u{1F96C}';
+  if(n.includes('biber')) return '\u{1F336}\uFE0F';
+  if(n.includes('turp')) return '\u{1F955}';
+  if(n.includes('bag') || n.includes('uzum')) return '\u{1F347}';
+  if(n.includes('yonca') || n.includes('fig')) return '\u{1F33F}';
+  if(n.includes('nadas')) return '\u{1F7EB}';
+  return '\u{1F331}';
+}
+
+function nativeV1ProductCardHtml(row, idx=0, options={}){
+  const strict = !!options.strict;
+  const missing = options.missing || 'SAĞLANMADI / NOT PROVIDED';
   const name = prettyCropName(row?.name || '');
-  const meta = cropMetaByName(row?.name || '') || (STATE.cropCatalog || {})[normCropName(row?.name || '')] || {};
+  const meta = strict ? {} : (cropMetaByName(row?.name || '') || (STATE.cropCatalog || {})[normCropName(row?.name || '')] || {});
   const area = safeNum(row?.area, 0);
-  const selectedParcel = (parcelData || []).find((x) => String(x.id) === String(selectedParcelId)) || {};
-  const parcelArea = safeNum(selectedParcel.area_da ?? selectedParcel.area ?? selectedParcel.alan_da ?? selectedParcel.areaDa, 0);
-  const sharePct = safeNum(row?.area_share_pct, 0) > 0 ? Math.round(safeNum(row.area_share_pct, 0)) : (parcelArea > 0 && area > 0 ? Math.round((area / parcelArea) * 100) : 0);
-  const waterDa = safeNum(row?.waterPerDa, meta.waterPerDa || 0);
+  const selectedParcel = strict ? {} : ((parcelData || []).find((x) => String(x.id) === String(selectedParcelId)) || {});
+  const parcelArea = safeNum(options.parcelArea ?? selectedParcel.area_da ?? selectedParcel.area ?? selectedParcel.alan_da ?? selectedParcel.areaDa, 0);
+  const explicitShare = row?.area_share_pct === null || row?.area_share_pct === undefined || row?.area_share_pct === '' ? NaN : Number(row.area_share_pct);
+  const sharePct = Number.isFinite(explicitShare) && explicitShare > 0 ? Math.round(explicitShare) : (parcelArea > 0 && area > 0 ? Math.round((area / parcelArea) * 100) : 0);
+  const explicitWaterDa = row?.waterPerDa === null || row?.waterPerDa === undefined || row?.waterPerDa === '' ? NaN : Number(row.waterPerDa);
+  const waterDa = Number.isFinite(explicitWaterDa) ? explicitWaterDa : (strict ? NaN : safeNum(meta.waterPerDa, 0));
   const fallbackWater = area * waterDa;
-  const profitDa = safeNum(row?.profitPerDa, meta.profitPerDa || 0);
+  const explicitProfitDa = row?.profitPerDa === null || row?.profitPerDa === undefined || row?.profitPerDa === '' ? NaN : Number(row.profitPerDa);
+  const profitDa = Number.isFinite(explicitProfitDa) ? explicitProfitDa : (strict ? NaN : safeNum(meta.profitPerDa, 0));
   const fallbackProfit = area * profitDa;
-  const totalWaterRaw = safeNum(row?.totalWater, 0);
-  const totalProfitRaw = safeNum(row?.totalProfit, 0);
-  const totalWater = totalWaterRaw > 0 ? totalWaterRaw : fallbackWater;
-  const totalProfit = totalProfitRaw !== 0 ? totalProfitRaw : fallbackProfit;
-  const season = row?.season || inferSeasonFromCropName(row?.name || '') || 'Dönem verisi yok';
+  const totalWaterRaw = row?.totalWater === null || row?.totalWater === undefined || row?.totalWater === '' ? NaN : Number(row.totalWater);
+  const totalProfitRaw = row?.totalProfit === null || row?.totalProfit === undefined || row?.totalProfit === '' ? NaN : Number(row.totalProfit);
+  const totalWater = Number.isFinite(totalWaterRaw) && totalWaterRaw > 0 ? totalWaterRaw : fallbackWater;
+  const totalProfit = Number.isFinite(totalProfitRaw) && totalProfitRaw !== 0 ? totalProfitRaw : fallbackProfit;
+  const season = row?.season || (strict ? missing : inferSeasonFromCropName(row?.name || '')) || 'Dönem verisi yok';
+  const calendar = row?.calendar || (strict ? missing : cropProductionWindowLabel(row?.name || ''));
   const role = idx === 0 ? 'Ana ürün' : '2. ürün / tamamlayıcı';
   return `<article class="crop-detail-card crop-detail-card--compact">
     <div class="crop-detail-summary">
@@ -16899,13 +16970,31 @@ function cropInfoCardHtmlV93(row, idx=0){
       <button type="button" class="crop-detail-open" data-crop-detail-index="${idx}">Detay</button>
     </div>
     <div class="crop-detail-grid crop-detail-grid--compact">
-      <div><span>Su</span><strong>${waterDa.toFixed(1)} m³/da</strong></div>
-      <div><span>Oran</span><strong>${sharePct ? `%${sharePct}` : '-'}</strong></div>
-      <div><span>Toplam su</span><strong>${Math.round(totalWater).toLocaleString('tr-TR')} m³</strong></div>
-      <div><span>Net kâr</span><strong>${Math.round(totalProfit).toLocaleString('tr-TR')} TL</strong></div>
-      <div><span>Takvim</span><strong>${escapeHtml(cropProductionWindowLabel(row?.name || ''))}</strong></div>
+      <div><span>Su</span><strong>${Number.isFinite(waterDa) ? `${waterDa.toFixed(1)} m³/da` : escapeHtml(missing)}</strong></div>
+      <div><span>Oran</span><strong>${sharePct ? `%${sharePct}` : escapeHtml(strict ? missing : '-')}</strong></div>
+      <div><span>Toplam su</span><strong>${Number.isFinite(totalWater) ? `${Math.round(totalWater).toLocaleString('tr-TR')} m³` : escapeHtml(missing)}</strong></div>
+      <div><span>Net kâr</span><strong>${Number.isFinite(totalProfit) ? `${Math.round(totalProfit).toLocaleString('tr-TR')} TL` : escapeHtml(missing)}</strong></div>
+      <div><span>Takvim</span><strong>${escapeHtml(calendar)}</strong></div>
     </div>
   </article>`;
+}
+
+function cropInfoCardHtmlV93(row, idx=0){
+  return nativeV1ProductCardHtml(row, idx);
+}
+
+function nativeV1ProductCardsHtml(rows, options={}){
+  const normalized = Array.isArray(rows) ? rows.filter(row=>String(row?.name || '').trim()) : [];
+  const detailRows = Array.isArray(options.detailRows) ? options.detailRows.filter(row=>String(row?.name || '').trim()) : normalized;
+  if(!normalized.length) return `<div class="product-empty">${escapeHtml(options.emptyMessage || 'Ürün önerisi henüz oluşmadı. Optimizasyonu çalıştırın.')}</div>`;
+  const pills = normalized.map((row,index)=>{
+    const name=escapeHtml(options.prettyNames ? prettyCropName(row.name) : row.name);
+    const season=escapeHtml(row.season || '');
+    const label=season && season!=='-' ? `${name} <span class="pill-season">${season}</span>` : name;
+    return `<span class="crop-pill"><span class="crop-emoji">${nativeV1CropIcon(row.name)}</span><span class="pill-name">${label}</span></span>${index<normalized.length-1?'<span class="crop-sep">/</span>':''}`;
+  }).join('');
+  const note = options.noteHtml !== undefined ? options.noteHtml : `<div class="crop-note">${escapeHtml(options.note || '')}</div>`;
+  return `<div class="crop-strip">${pills}</div>${note}<div class="crop-detail-list">${detailRows.slice(0,4).map((row,index)=>nativeV1ProductCardHtml(row,index,options)).join('')}</div>`;
 }
 
 function ensureCropDetailModalV94(){
@@ -17001,44 +17090,13 @@ function updateProductCards(){
     return;
   }
 
-  const emojiFor = (name)=>{
-    const n = String(name||'').toLowerCase();
-    if(n.includes('bugday') || n.includes('arpa') || n.includes('cavdar')) return '\u{1F33E}';
-    if(n.includes('misir')) return '\u{1F33D}';
-    if(n.includes('patates')) return '\u{1F954}';
-    if(n.includes('sogan')) return '\u{1F9C5}';
-    if(n.includes('nohut') || n.includes('mercimek') || n.includes('fasulye') || n.includes('fiy')) return '\u{1FAD8}';
-    if(n.includes('aycicegi')) return '\u{1F33B}';
-    if(n.includes('kabak')) return '\u{1F383}';
-    if(n.includes('pancar')) return '\u{1F360}';
-    if(n.includes('marul') || n.includes('ispanak') || n.includes('lahana')) return '\u{1F96C}';
-    if(n.includes('biber')) return '\u{1F336}\uFE0F';
-    if(n.includes('turp')) return '\u{1F955}';
-    if(n.includes('bag') || n.includes('uzum')) return '\u{1F347}';
-    if(n.includes('yonca') || n.includes('fig')) return '\u{1F33F}';
-    if(n.includes('nadas')) return '\u{1F7EB}';
-    return '\u{1F331}';
-  };
-
   const hasMultiProductRecommendation = topRows.length > 1;
   const pillRows = orchardLockedUi && current && current.length && !hasMultiProductRecommendation ? current.slice(0,1) : topRows;
-  const pills = pillRows.map((r, idx)=>{
-    const name = escapeHtml(r.name);
-    const season = escapeHtml(r.season || '');
-    const label = season && season !== '-' ? `${name} <span class="pill-season">${season}</span>` : name;
-    const sep = (idx < pillRows.length-1) ? `<span class="crop-sep">/</span>` : '';
-    return `<span class="crop-pill"><span class="crop-emoji">${emojiFor(r.name)}</span><span class="pill-name">${label}</span></span>${sep}`;
-  }).join('');
-
   const orchardAlternativesCompact = orchardLockedUi ? orchardAlternativeListFallback(current, rec, STATE.lastRecMeta || null).slice(0,4).map(x=>prettyCropName(x.name)).join(', ') : '';
   const orchardMainNameUi = prettyCropName(current[0]?.name || topRows[0]?.name || '');
   const altPatternCompact = (()=>{ const list = Array.isArray(STATE.lastRecMeta?.alternativePatterns) ? STATE.lastRecMeta.alternativePatterns.slice(0,4).map(x=>x.patternName).join(' • ') : ''; return list; })();
   const orchardNote = orchardLockedUi ? `<div class="crop-note"><strong>Ana ürün korunur:</strong> ${escapeHtml(orchardMainNameUi)}. ${orchardAlternativesCompact ? `Alt / sıra arası alternatifler: ${escapeHtml(orchardAlternativesCompact)}.` : 'Ürün sökülüp yerine başka ana ürün önerilmez.'}${altPatternCompact ? ` <span class="muted">İlk alternatifler: ${escapeHtml(altPatternCompact)}.</span>` : ''}</div>` : `<div class="crop-note">${_seasonModeKey()==='s2' ? 'Çift ürün / desen bazlı senaryoda ana öneri ve diğer alternatifler birlikte değerlendirilir.' : 'Tek ürünlü senaryoda en iyi ana öneri ve diğer güçlü alternatifler listelenir.'}${altPatternCompact ? ` <span class="muted">İlk alternatifler: ${escapeHtml(altPatternCompact)}.</span>` : ''}</div>`;
-  box.innerHTML = `
-    <div class="crop-strip">${pills}</div>
-    ${orchardNote}
-    <div class="crop-detail-list">${topRows.slice(0,4).map((r,i)=>cropInfoCardHtmlV93(r,i)).join('')}</div>
-  `;
+  box.innerHTML = nativeV1ProductCardsHtml(pillRows, {noteHtml:orchardNote,detailRows:topRows});
   box.querySelectorAll('.crop-detail-open').forEach(btn=>{
     btn.addEventListener('click', ()=> openCropDetailModalV94(Number(btn.dataset.cropDetailIndex || 0)));
   });
@@ -17059,6 +17117,18 @@ function queueMapResize(delay=180, refit=false){
     }catch(_e){}
   }, delay);
 }
+
+// Provider-neutral presentation primitives. AKKAYA_REFERENCE and PROJECT_DATA
+// both render through these functions; provider adapters supply identities and
+// authoritative values, while this shared layer owns the native V1 DOM grammar.
+window.NativeV1Presentation = Object.freeze({
+  unitBadgeHtml:nativeV1UnitBadgeHtml,
+  unitPopupHtml:nativeV1UnitPopupHtml,
+  parcelStyle:nativeV1ParcelStyle,
+  cropIcon:nativeV1CropIcon,
+  productCardHtml:nativeV1ProductCardHtml,
+  productCardsHtml:nativeV1ProductCardsHtml,
+});
 
 function clearCustomDrawPreview(){
   customDrawPoints = [];
@@ -17496,13 +17566,7 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
   const style = (feature) => {
     const fid = feature?.properties?.id || feature?.properties?.name;
     const isSel = (fid && String(fid) === String(selectedParcelId));
-    return {
-      color: isSel ? '#0b74c4' : '#2b2b2b',
-      weight: isSel ? 3 : 2,
-      opacity: 0.9,
-      fillColor: isSel ? '#3aa0ff' : '#9bb7d1',
-      fillOpacity: isSel ? 0.35 : 0.0
-    };
+    return nativeV1ParcelStyle(isSel);
   };
 
   // Parcel area lookup (da). Used for hover popups.
@@ -17560,7 +17624,7 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
     }
 
     // Küçük, sade P etiketi.
-    const badgeHtml = `<span class="parcel-badge ${meta.orchard ? 'orchard' : ''}"><span class="dot"></span><span>${escapeHtml(String(fid))}</span><span class="hint">ⓘ</span></span>`;
+    const badgeHtml = nativeV1UnitBadgeHtml({id:fid,orchard:meta.orchard});
     layer.bindTooltip(badgeHtml, {
       permanent: true,
       direction: 'center',
@@ -17590,25 +17654,15 @@ GEOJSON_FILES = (GEOJSON_FILES||[]).filter(f => !/(^|\/)boundaries\//i.test(Stri
     feature.properties.water_mode = feature.properties.water_mode || waterMode;
     const srcFile = prettySourceLabel(feature?.properties?.source_file || geoFile || '');
 
-    const popHtml = `
-      <div class="parcel-pop">
-        <div class="t">
-          <span>${escapeHtml(String(fid))}</span>
-          <span class="tag ${meta.orchard ? 'orchard' : ''}">${escapeHtml(tagText)}</span>
-        </div>
-        <div class="s"><span class="k">Alan</span><span class="v">${escapeHtml(fmtDa(areaDa))} da</span></div>
-        <div class="s"><span class="k">Alan (m²)</span><span class="v">${escapeHtml(Number.isFinite(areaDa) ? Math.round(areaDa * 1000).toLocaleString('tr-TR') : '-')} m²</span></div>
-        <div class="s"><span class="k">İlçe</span><span class="v">${escapeHtml(districtText || '-')}</span></div>
-        <div class="s"><span class="k">Yer</span><span class="v">${escapeHtml(villageText || '-')}</span></div>
-        <div class="s"><span class="k">Kaynak</span><span class="v right source-file">${escapeHtml(srcFile || '-')}</span></div>
-        <div class="s"><span class="k">Ürün</span><span class="v">${escapeHtml(meta.crop)}</span></div>
-        <div class="s"><span class="k">Sulama</span><span class="v">${escapeHtml(meta.irr)}</span></div>
-        <div class="s"><span class="k">Çiftçi</span><span class="v">${escapeHtml(meta.farmer)}</span></div>
-        ${meta.selected_pattern ? `<div class="s"><span class="k">Atanan desen</span><span class="v">${escapeHtml(meta.selected_pattern)}</span></div>` : ''}
-        ${meta.selected_alternative_label ? `<div class="s"><span class="k">Alternatif</span><span class="v">${escapeHtml(meta.selected_alternative_label)}</span></div>` : ''}
-        ${meta.assignment_status ? `<div class="s"><span class="k">Durum</span><span class="v">${escapeHtml(meta.assignment_status === 'geometry_ready' ? 'GeoJSON yüklü / seçilebilir' : meta.assignment_status)}</span></div>` : ''}
-      </div>
-    `;
+    const popHtml = nativeV1UnitPopupHtml({
+      id:fid,tag:tagText,orchard:meta.orchard,areaDa,district:districtText,
+      place:villageText,source:srcFile,crop:meta.crop,irrigation:meta.irr,owner:meta.farmer,
+      additionalRows:[
+        ...(meta.selected_pattern ? [['Atanan desen',meta.selected_pattern]] : []),
+        ...(meta.selected_alternative_label ? [['Alternatif',meta.selected_alternative_label]] : []),
+        ...(meta.assignment_status ? [['Durum',meta.assignment_status === 'geometry_ready' ? 'GeoJSON yüklü / seçilebilir' : meta.assignment_status]] : []),
+      ],
+    });
     layer.bindPopup(popHtml, {closeButton:false, autoClose:false, closeOnClick:false, autoPan:false, className:'parcel-popup'});
     layer.on('mouseover', (e)=>{
       try{ layer.openPopup(e?.latlng); }catch(_e){ try{ layer.openPopup(); }catch(__){} }

@@ -122,7 +122,11 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
 
             expect(page.locator("#parcelSelect option")).to_have_count(24)
             expect(page.locator(".leaflet-interactive")).to_have_count(24, timeout=30000)
-            expect(page.locator(".v1-project-map-label")).to_have_count(24, timeout=30000)
+            # Fix milestone deliberately replaces the obsolete PROJECT_DATA-only
+            # tooltip class with the shared native V1 badge DOM.
+            expect(page.locator(".parcel-badge")).to_have_count(24, timeout=30000)
+            expect(page.locator(".parcel-badge .dot")).to_have_count(24)
+            expect(page.locator(".parcel-badge .hint")).to_have_count(24)
             expect(page.locator("#roleInfoBanner")).to_contain_text("24 analiz birimi")
             expect(page.locator("#setupGroup .card-title").first).to_have_text("Analiz birimi seç")
             expect(page.locator(".map-card .card-title")).to_have_text("Analiz Birimleri Haritası")
@@ -206,17 +210,19 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             expect(page.locator("#objectiveCompareMatrix")).to_contain_text("HHI")
             expect(page.locator("#parcelSummaryTitle")).to_contain_text("KDS-009")
             expect(page.locator("#tblCurrentFooter")).to_contain_text("9 da")
-            expect(page.locator("#metricsTitle")).to_contain_text("KDS Kurumsal Veri E2E Demo")
+            expect(page.locator("#metricsTitle")).to_have_text("Analiz Birimi Karar Özeti (KDS-009)")
             expect(page.locator("#runMetaBox")).to_contain_text("revision 21")
             expect(page.locator("#riskSeparationBox")).to_contain_text("yıllık bütçe: PASS")
             expect(page.locator("#decisionRationale")).to_contain_text("Akkaya fallback kullanılmadı")
             expect(page.locator("#tblOfficialScenario")).to_contain_text("Ekim Alanı")
             polygon = page.locator(".leaflet-interactive").nth(8)
             polygon.click()
-            expect(page.locator(".leaflet-popup-content")).to_contain_text("KDS-009")
-            expect(page.locator(".leaflet-popup-content")).to_contain_text("Alan: 9 da")
-            expect(page.locator(".leaflet-popup-content")).to_contain_text("Optimize su:")
-            expect(page.locator(".leaflet-popup-content")).to_contain_text("Otorite:")
+            native_popup = page.locator(".leaflet-popup-content")
+            expect(native_popup).to_contain_text("KDS-009")
+            expect(native_popup).to_contain_text("Alan")
+            expect(native_popup).to_contain_text("9.0 da")
+            expect(native_popup).to_contain_text("Optimize su")
+            expect(native_popup).to_contain_text("Otorite")
             assert page.evaluate("""() => {
               const chart=Chart.getChart(document.getElementById('waterChart'));
               return chart.data.datasets[0].data.length===4 && chart.data.datasets[0].data.every(Number.isFinite);
@@ -342,8 +348,13 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
                 page.set_viewport_size({"width": width, "height": height})
                 page.evaluate("map.invalidateSize(); window.dispatchEvent(new Event('resize'))")
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-                limit = 420 if width <= 760 else 620
-                assert page.evaluate("limit => document.querySelector('#map').getBoundingClientRect().height <= limit", limit)
+                # The native V1 top row owns map height.  A former PROJECT_DATA-only
+                # 420/620 px cap is intentionally absent; require a usable finite map
+                # while the dedicated parity test compares native row geometry.
+                assert page.evaluate("""() => {
+                  const rect=document.querySelector('#map').getBoundingClientRect();
+                  return Number.isFinite(rect.height) && rect.height >= 360;
+                }""")
                 if (width, height) == (1920, 1080):
                     page.screenshot(path=str(EVIDENCE / "project_data_after_run_1920x1080.png"), full_page=True)
                 if (width, height) == (390, 844):
