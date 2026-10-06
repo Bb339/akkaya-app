@@ -438,8 +438,16 @@
     wireDrawer();setText('v1-provider-badge','AKKAYA REF');await loadProjectList();window.__V1_PROJECT_PROVIDER__={provider:'AKKAYA_REFERENCE',blockedReferencePaths:[]};
     if(typeof window.syncRoleInfoBanner==='function')window.syncRoleInfoBanner();
   }
+  function completeProviderBoot(){
+    if(typeof window.finishAppBoot==='function')window.finishAppBoot();
+  }
   document.addEventListener('DOMContentLoaded',()=>{
-    const task=projectMode?initProject():initReference();task.catch(error=>fail(error.message));
+    const task=projectMode?initProject():initReference();
+    if(projectMode){
+      task.then(completeProviderBoot,error=>{fail(error.message);completeProviderBoot();});
+    }else{
+      task.catch(error=>fail(error.message));
+    }
     // V1 authentication and panel navigation use hash-only history entries.
     // Reload only when the authoritative provider query state changed.
     window.addEventListener('popstate',()=>{if(projectMode&&location.search!==initialSearch)location.reload();});

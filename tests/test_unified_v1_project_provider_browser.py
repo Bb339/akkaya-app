@@ -112,6 +112,17 @@ def test_projects_to_same_v1_workspace_full_project_flow(tmp_path):
             clean_page.wait_for_function(
                 "window.__V1_PROJECT_PROVIDER__?.context?.unit_count === 24"
             )
+            clean_page.wait_for_function(
+                "!document.body.classList.contains('app-booting')"
+            )
+            expect(clean_page.locator("#authScreen")).to_be_visible()
+            clean_page.evaluate(
+                "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
+            )
+            expect(clean_page.locator("#panel")).to_be_visible()
+            expect(clean_page.locator("#v1-provider-name")).to_have_text(
+                "PROJECT DATA · Kurumsal Veri Demo Projesi"
+            )
             reference_tokens = (
                 "/api/parcels", "/api/optimize", "/api/meta",
                 "/api/geojson_files", "/api/geojson_bundle",
@@ -266,6 +277,10 @@ def test_full_visual_package_native_drawer_satellite_map_and_stored_run(tmp_path
             expect(page.locator("#readiness-verdict")).to_contain_text("VERIFIED READY", timeout=180000)
             page.locator("#open-v1-project").click()
             page.wait_for_function("typeof window.__V1_PROJECT_PROVIDER__ === 'object'")
+            page.wait_for_function(
+                "!document.body.classList.contains('app-booting')"
+            )
+            expect(page.locator("#authScreen")).to_be_visible()
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             expect(page.locator("#v1-provider-badge")).to_have_text("PROJECT DATA")
             page.locator("#v1-provider-toggle").click()
@@ -340,8 +355,16 @@ def test_invalid_project_contexts_fail_closed_without_reference_requests(tmp_pat
             page.on("request", lambda request: requests.append(request.url))
             page.route("https://**", lambda route: route.abort())
             page.goto(f"http://127.0.0.1:{server.server_port}/?{query}")
+            page.wait_for_function(
+                "!document.body.classList.contains('app-booting')"
+            )
+            expect(page.locator("#authScreen")).to_be_visible()
+            page.evaluate(
+                "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
+            )
             expect(page.locator("#v1-provider-name")).to_contain_text(
                 "PROJECT DATA", timeout=30000)
+            expect(page.locator("#v1-provider-error")).to_be_visible(timeout=30000)
             expect(page.locator("#v1-provider-error")).to_contain_text("Akkaya", timeout=30000)
             assert not any("/api/parcels" in url or "/api/optimize" in url for url in requests)
             browser.close()
