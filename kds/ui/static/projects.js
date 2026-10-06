@@ -119,6 +119,7 @@ function showImports(imports){document.getElementById('imports').textContent=JSO
 
 function clearProjectContext(container,reason){
   projectId=null;
+  importControls.clearProjectContext();
   syncNavigationLinks();
   container.querySelectorAll('.project-card.active').forEach(card=>card.classList.remove('active'));
   document.getElementById('detail').hidden=true;
@@ -131,6 +132,7 @@ function clearProjectContext(container,reason){
 
 async function openProject(id,{writeHash=false,scroll=true,section=DEFAULT_SECTION}={}){
   const changed=projectId!==id;
+  if(changed)importControls.clearProjectContext();
   projectId=id;
   syncNavigationLinks();
   if(writeHash)history.replaceState(null,'',canonicalHash(id,section));
@@ -168,7 +170,7 @@ document.getElementById('create-project').onsubmit=event=>{event.preventDefault(
 document.getElementById('budget-form').onsubmit=event=>{event.preventDefault();safe(async()=>{const data=Object.fromEntries(new FormData(event.target));data.amount=Number(data.amount);data.unit='m3';await post(root()+'/water-budget',data);invalidatePreview('Su bütçesi değişti; yeni önizleme gerekli.');await refresh();message('Su bütçesi güncellendi.');});};
 document.querySelector('[data-project-skip]').onclick=event=>{event.preventDefault();document.getElementById('main-content').scrollIntoView();};
 for(const link of document.querySelectorAll('[data-project-section]'))link.onclick=event=>{event.preventDefault();navigateToSection(link.dataset.projectSection);};
-wireImports(root,refresh,safe,()=>invalidatePreview('Proje verisi değişti; yeni önizleme gerekli.'));
+const importControls=wireImports(root,refresh,safe,()=>invalidatePreview('Proje verisi değişti; yeni önizleme gerekli.'));
 wireAnalysis(root,safe,refresh,()=>navigateToSection('result'));
 renderTemplates();
 syncNavigationLinks();

@@ -39,11 +39,14 @@ function guidancePanel(detection,batch){
 
 export function wireImports(root,refresh,safe,onMutation=()=>{}){
   let batch=null;
+  let batchRoot=null;
   let bulkItems=[];
+  let bulkRoot=null;
   const steps=[...document.querySelectorAll('.stepper li')];
   const stage=n=>steps.forEach((item,i)=>{item.classList.toggle('done',i<n);item.classList.toggle('active',i===n);});
-  const render=data=>{
+  const render=(data,contextRoot=batchRoot)=>{
     batch=data.id||data.batch_id;
+    batchRoot=contextRoot;
     document.getElementById('import-preview').hidden=false;
     showJSON('preview',data);
     document.getElementById('mapping').value=JSON.stringify(data.mapping||{},null,2);
@@ -57,17 +60,21 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
 
   document.getElementById('upload-form').onsubmit=e=>{
     e.preventDefault();
-    safe(async()=>{render(await api(root()+'/imports',{method:'POST',body:new FormData(e.target)}));stage(1);await refresh();});
+    safe(async()=>{const contextRoot=root();render(await api(contextRoot+'/imports',{method:'POST',body:new FormData(e.target)}),contextRoot);stage(1);await refresh();});
   };
   document.getElementById('map-import').onclick=()=>safe(async()=>{
-    render(await post(root()+`/imports/${batch}/mapping`,{mapping:JSON.parse(document.getElementById('mapping').value)}));stage(3);
+    const contextRoot=root();
+    if(!batchRoot||contextRoot!==batchRoot)throw new Error('Aktarım önizlemesi başka bir projeye ait. Dosyayı bu proje için yeniden yükleyin.');
+    render(await post(contextRoot+`/imports/${batch}/mapping`,{mapping:JSON.parse(document.getElementById('mapping').value)}),contextRoot);stage(3);
   });
   document.getElementById('confirm-import').onclick=()=>safe(async()=>{
-    render(await post(root()+`/imports/${batch}/confirm`,{
+    const contextRoot=root();
+    if(!batchRoot||contextRoot!==batchRoot)throw new Error('Aktarım önizlemesi başka bir projeye ait. Dosyayı bu proje için yeniden yükleyin.');
+    render(await post(contextRoot+`/imports/${batch}/confirm`,{
       confirm:true,acknowledge_warnings:document.getElementById('acknowledge').checked,
       acknowledge_authority_override:document.getElementById('authority-override').checked,
       override_reason:document.getElementById('override-reason').value,
-    }));
+    }),contextRoot);
     stage(5);onMutation();await refresh();message('Aktarım onaylandı.');
   });
 
@@ -79,8 +86,9 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   const hasDefinitiveBatchError=item=>(item.batch?.issues||[]).some(issue=>
     issue.severity==='ERROR'&&!deferredDependencyCodes.has(issue.code)&&
       !(issue.code==='unknown_unit'&&item.batch?.base_revision===0));
-  const renderBulk=data=>{
+  const renderBulk=(data,contextRoot=bulkRoot)=>{
     bulkItems=data.items||[];
+    bulkRoot=contextRoot;
     bulkBody.replaceChildren();
     for(const item of bulkItems){
       const d=item.detection||{},b=item.batch||{};
@@ -117,9 +125,11 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   };
   document.getElementById('bulk-upload-form').onsubmit=e=>{
     e.preventDefault();
-    safe(async()=>{renderBulk(await api(root()+'/bulk-imports',{method:'POST',body:new FormData(e.target)}));await refresh();});
+    safe(async()=>{const contextRoot=root();renderBulk(await api(contextRoot+'/bulk-imports',{method:'POST',body:new FormData(e.target)}),contextRoot);await refresh();});
   };
   bulkConfirm.onclick=()=>safe(async()=>{
+    const contextRoot=root();
+    if(!bulkRoot||contextRoot!==bulkRoot)throw new Error('Toplu paket önizlemesi başka bir projeye ait. Dosyaları bu proje için yeniden yükleyin.');
     if(!bulkItems.some(item=>item.detection?.state==='AUTO_MATCHED')||bulkItems.some(item=>item.detection?.state!=='IGNORED_NOT_RELEVANT'&&(item.detection?.state!=='AUTO_MATCHED'||!item.batch?.id||hasDefinitiveBatchError(item))))throw new Error('Toplu paket açık onay için hazır değil.');
     bulkConfirm.disabled=true;
     const priority={crops:10,analysis_units:20,economics:30,water_budget:40,candidates:50,scientific_inputs:60,
@@ -129,15 +139,21 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
     const ordered=bulkItems.filter(item=>item.detection?.state==='AUTO_MATCHED').sort((a,b)=>(priority[a.detection.detected_data_type]??999)-(priority[b.detection.detected_data_type]??999));
     for(const item of ordered){
       const id=item.batch.id;
-      const remapped=await post(root()+`/imports/${id}/mapping`,{mapping:item.detection.mapping});
+      const remapped=await post(contextRoot+`/imports/${id}/mapping`,{mapping:item.detection.mapping});
       if(remapped.status!=='ready')throw new Error(`${item.detection.filename}: doğrulama READY üretmedi.`);
-      item.batch=await post(root()+`/imports/${id}/confirm`,{confirm:true,acknowledge_warnings:true});
+      item.batch=await post(contextRoot+`/imports/${id}/confirm`,{confirm:true,acknowledge_warnings:true});
     }
-    onMutation();await refresh();renderBulk({items:bulkItems});message('Toplu paket açık onayla projeye uygulandı.');
+    onMutation();await refresh();renderBulk({items:bulkItems},contextRoot);message('Toplu paket açık onayla projeye uygulandı.');
   });
 
   document.getElementById('scientific-form').onsubmit=e=>{
     e.preventDefault();
     safe(async()=>{const file=new FormData(e.target).get('file');await post(root()+'/scientific-inputs',JSON.parse(await file.text()));onMutation();await refresh();message('Bilimsel girdiler kaydedildi; hazırlık raporu yenilendi.');});
   };
+
+  return {clearProjectContext(){
+    batch=null;batchRoot=null;bulkItems=[];bulkRoot=null;
+    document.getElementById('import-preview').hidden=true;
+    bulkBody.replaceChildren();bulkResults.hidden=true;bulkConfirm.disabled=true;bulkNote.textContent='';
+  }};
 }
