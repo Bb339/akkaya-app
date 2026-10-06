@@ -47,6 +47,51 @@ def _click_select(page, selector: str, value: str):
     expect(locator).to_have_value(value)
 
 
+def _select_project_unit(page, unit_id: str):
+    locator = page.locator("#parcelSelect")
+    _assert_hit_target(page, locator)
+    changed = page.evaluate(
+        """unitId => {
+          const select=document.querySelector('#parcelSelect');
+          if(!select||select.disabled||![...select.options].some(option=>option.value===unitId))return false;
+          select.value=unitId;
+          select.dispatchEvent(new Event('change',{bubbles:true}));
+          return select.value===unitId;
+        }""",
+        unit_id,
+    )
+    assert changed is True
+
+
+def _wait_for_project_unit_sync(page, unit_id: str, previous_unit: str | None = None):
+    page.wait_for_function(
+        """({unitId,previousUnit}) => {
+          const provider=window.__V1_PROJECT_PROVIDER__;
+          const text=selector=>document.querySelector(selector)?.textContent?.trim()||'';
+          const unit=provider?.context?.units?.find(row=>row.analysis_unit_id===unitId);
+          if(!provider||!unit)return false;
+          const selected=(unit.result?.selected_crops||[]).map(row=>row.crop).filter(Boolean);
+          const popup=[...document.querySelectorAll('.leaflet-popup .parcel-pop')]
+            .find(node=>node.offsetParent!==null);
+          const surface=[text('#parcelSummaryTitle'),text('#metricsTitle'),
+            text('#tblCurrentFooter'),popup?.textContent||''].join('\\n');
+          const current=text('#tblCurrent tbody');
+          const recommended=text('#tblRecommended tbody');
+          const cards=text('#productCards');
+          const layer=provider.unitLayerState?.(unitId);
+          return document.querySelector('#parcelSelect')?.value===unitId &&
+            provider.selectedUnit===unitId &&
+            surface.includes(unitId) &&
+            (!previousUnit||!surface.includes(previousUnit)) &&
+            layer?.style?.color==='#0b74c4' && layer?.style?.weight===3 &&
+            layer?.style?.fillColor==='#3aa0ff' && layer?.style?.fillOpacity===.35 &&
+            (!unit.current_crop||current.includes(unit.current_crop)) &&
+            selected.every(crop=>recommended.includes(crop)&&cards.includes(crop));
+        }""",
+        arg={"unitId": unit_id, "previousUnit": previous_unit},
+    )
+
+
 def _serve_full_v1(application):
     @application.get("/data/<path:filename>")
     def v1_reference_data(filename):
@@ -238,16 +283,19 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             page.locator("#tblRecommended").screenshot(path=str(EVIDENCE / "project_crop_recommendation.png"))
             page.locator("#map").screenshot(path=str(EVIDENCE / "project_map_unit.png"))
             page.locator("#deliveryBox").screenshot(path=str(EVIDENCE / "project_monthly_water.png"))
+            previous_unit = None
             for unit_id in ("KDS-001", "KDS-005", "KDS-009", "KDS-024"):
-                _click_select(page, "#parcelSelect", unit_id)
+                _select_project_unit(page, unit_id)
                 assert page.evaluate(
                     "unitId => window.__V1_PROJECT_PROVIDER__.openUnitPopup(unitId)",
                     unit_id,
                 )
+                _wait_for_project_unit_sync(page, unit_id, previous_unit)
                 expect(page.locator(".leaflet-popup-content", has_text=unit_id)).to_be_visible()
                 expect(page.locator("#tblCurrent tbody td").nth(5)).not_to_contain_text("NOT PROVIDED")
                 expect(page.locator("#tblCurrent tbody td").nth(7)).not_to_contain_text("NOT PROVIDED")
                 expect(page.locator("#parcelSummaryTitle")).to_contain_text(unit_id)
+                previous_unit = unit_id
             page.locator("#basinSummaryBlock").screenshot(path=str(EVIDENCE / "project_summary_1366x900.png"))
             page.locator("#tab-parcel").screenshot(path=str(EVIDENCE / "project_current_recommended_1366x900.png"))
             page.locator("#waterRiskSection").screenshot(path=str(EVIDENCE / "project_drought_1366x900.png"))
