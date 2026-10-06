@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -50,20 +51,28 @@ def _click_select(page, selector: str, value: str):
 def _select_project_unit(page, unit_id: str):
     locator = page.locator("#parcelSelect")
     _assert_hit_target(page, locator)
-    changed = page.evaluate(
-        """unitId => {
-          const select=document.querySelector('#parcelSelect');
-          if(!select||select.disabled||![...select.options].some(option=>option.value===unitId))return false;
-          select.value=unitId;
-          select.dispatchEvent(new Event('change',{bubbles:true}));
-          return select.value===unitId;
-        }""",
-        unit_id,
+    unit_ids = page.evaluate(
+        "() => window.__V1_PROJECT_PROVIDER__.context.units.map(unit=>unit.analysis_unit_id)"
     )
-    assert changed is True
+    assert unit_id in unit_ids
+    page.evaluate("""() => {
+      map.invalidateSize();
+      const geometryLayers=Object.values(map._layers||{}).filter(
+        layer => layer.__providerUnit && typeof layer.getBounds === 'function'
+      );
+      const bounds=L.featureGroup(geometryLayers).getBounds();
+      if(bounds?.isValid?.())map.fitBounds(bounds.pad(.15),{animate:false});
+    }""")
+    polygon = page.locator(".leaflet-overlay-pane path.leaflet-interactive").nth(
+        unit_ids.index(unit_id)
+    )
+    expect(polygon).to_be_visible()
+    print(f"{datetime.now(timezone.utc).isoformat()} UNIT_MAP_CLICK {unit_id}", flush=True)
+    polygon.click()
 
 
 def _wait_for_project_unit_sync(page, unit_id: str, previous_unit: str | None = None):
+    print(f"{datetime.now(timezone.utc).isoformat()} UNIT_SYNC_WAIT {unit_id}", flush=True)
     page.wait_for_function(
         """({unitId,previousUnit}) => {
           const provider=window.__V1_PROJECT_PROVIDER__;
@@ -71,10 +80,9 @@ def _wait_for_project_unit_sync(page, unit_id: str, previous_unit: str | None = 
           const unit=provider?.context?.units?.find(row=>row.analysis_unit_id===unitId);
           if(!provider||!unit)return false;
           const selected=(unit.result?.selected_crops||[]).map(row=>row.crop).filter(Boolean);
-          const popup=[...document.querySelectorAll('.leaflet-popup .parcel-pop')]
-            .find(node=>node.offsetParent!==null);
           const surface=[text('#parcelSummaryTitle'),text('#metricsTitle'),
-            text('#tblCurrentFooter'),popup?.textContent||''].join('\\n');
+            text('#tblCurrentFooter'),text('#tblCurrent tbody'),
+            text('#tblRecommended tbody'),text('#productCards')].join('\\n');
           const current=text('#tblCurrent tbody');
           const recommended=text('#tblRecommended tbody');
           const cards=text('#productCards');
@@ -90,6 +98,7 @@ def _wait_for_project_unit_sync(page, unit_id: str, previous_unit: str | None = 
         }""",
         arg={"unitId": unit_id, "previousUnit": previous_unit},
     )
+    print(f"{datetime.now(timezone.utc).isoformat()} UNIT_SYNC_COMPLETE {unit_id}", flush=True)
 
 
 def _serve_full_v1(application):
@@ -286,12 +295,15 @@ def test_full_native_project_workspace_clickability_and_e2e(tmp_path):
             previous_unit = None
             for unit_id in ("KDS-001", "KDS-005", "KDS-009", "KDS-024"):
                 _select_project_unit(page, unit_id)
+                _wait_for_project_unit_sync(page, unit_id, previous_unit)
                 assert page.evaluate(
                     "unitId => window.__V1_PROJECT_PROVIDER__.openUnitPopup(unitId)",
                     unit_id,
                 )
-                _wait_for_project_unit_sync(page, unit_id, previous_unit)
-                expect(page.locator(".leaflet-popup-content", has_text=unit_id)).to_be_visible()
+                popup = page.locator(".leaflet-popup-content", has_text=unit_id)
+                expect(popup).to_be_visible()
+                popup_text = popup.inner_text()
+                assert previous_unit is None or previous_unit not in popup_text
                 expect(page.locator("#tblCurrent tbody td").nth(5)).not_to_contain_text("NOT PROVIDED")
                 expect(page.locator("#tblCurrent tbody td").nth(7)).not_to_contain_text("NOT PROVIDED")
                 expect(page.locator("#parcelSummaryTitle")).to_contain_text(unit_id)
