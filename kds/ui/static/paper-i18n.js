@@ -182,6 +182,17 @@
     'Mevcut su': 'Current Water Use',
     'Mevcut net kâr': 'Current Net Profit',
     'Otoritatif su': 'Authoritative Water',
+    'Otoritatif değer': 'Authoritative Value',
+    'PROJECT DATA · BAĞLAM GEÇERSİZ': 'PROJECT DATA · INVALID CONTEXT',
+    'CSV bağlanmadı': 'CSV Not Connected',
+    'Genel Baraj ve Havza Özeti': 'Overall Reservoir and Basin Summary',
+    'Analysis Unit Özeti': 'Analysis Unit Summary',
+    'Selected analysis unitin özeti': 'Selected Analysis Unit Summary',
+    'KRİTİK': 'CRITICAL',
+    'Akkaya Sulama Alanı Kuraklık ve Su Bütçesi Göstergeleri (2000-2025)': 'Akkaya Irrigation Area Drought and Water-Budget Indicators (2000–2025)',
+    'Grafik üzerinde gezerek yıllık değerleri görebilirsiniz. Selected "Su yılı" vurgulanır; kritik yıllarda panel dikkat çekici biçimde öne çıkar.': 'Hover over the chart to view annual values. The selected water year is highlighted; the panel is emphasized in critical years.',
+    'Kuraklık Alarmı': 'Drought Alert',
+    'İpucu: Grafikteki noktalara gelerek yıllık değerleri görebilirsiniz.': 'Tip: Hover over chart points to view annual values.',
     'Su verimliliği': 'Water Productivity',
     'Aktif alan': 'Active Area',
     'Doğrulanmış tam sezon': 'Verified Full-Season Water',
@@ -438,9 +449,223 @@
     'SAĞLANMADI': 'NOT PROVIDED',
     'HESAPLANMADI': 'NOT CALCULATED',
     'UYGULANAMAZ': 'NOT APPLICABLE'
+    ,'Aday kapsamı': 'Candidate Coverage'
+    ,'Aç / kapa': 'Expand / Collapse'
+    ,'Tamamlandı': 'Completed'
+    ,'Manuel yüklenen CSV/GeoJSON dosyaları bu oturumda aktif analize alınır ve optimizasyon yerel hesap motoruyla yeniden çalışır. Kalıcı kurumsal kullanım ve Python backend çıktısı için aynı dosyalar backend/data klasörüne aktarılmalıdır.': 'Manually uploaded CSV/GeoJSON files are included in the active analysis for this session, and optimization is rerun with the local computation engine. For persistent institutional use and Python backend output, transfer the same files to the backend/data directory.'
+    ,'Henüz manuel dosya seçilmedi.': 'No manual files have been selected.'
+    ,'Dosya seçildiğinde satır, kolon, parsel eşleşmesi ve aktif analize katılım durumu burada gösterilir.': 'After a file is selected, its rows, columns, parcel matching, and active-analysis inclusion status are shown here.'
+    ,'Dosya seçildiğinde satır, kolon, analiz birimi eşleşmesi ve aktif analize katılım durumu burada gösterilir.': 'After a file is selected, its rows, columns, analysis-unit matching, and active-analysis inclusion status are shown here.'
+    ,'Yapay Arı Kolonisi Algoritması (ABC)': 'Artificial Bee Colony Algorithm (ABC)'
+    ,'Karınca Koloni Optimizasyonu (ACO)': 'Ant Colony Optimization (ACO)'
+    ,'Senaryo 1 - Tek ürünlü parsel (en iyi 1-2 ürün + alternatifler)': 'Scenario 1 – Single-Crop Parcel (Best 1–2 Crops + Alternatives)'
+    ,'Senaryo 2 - Çift ürünlü / desen bazlı parsel (1+1 ürün / bahçede sıra arası)': 'Scenario 2 – Two-Crop / Pattern-Based Parcel (1+1 Crop / Orchard Inter-Row)'
+    ,'Senaryo 1 - Tek ürünlü analiz birimi (en iyi 1-2 ürün + alternatifler)': 'Scenario 1 – Single-Crop Analysis Unit (Best 1–2 Crops + Alternatives)'
+    ,'Senaryo 2 - Çift ürünlü / desen bazlı analiz birimi (1+1 ürün / bahçede sıra arası)': 'Scenario 2 – Two-Crop / Pattern-Based Analysis Unit (1+1 Crop / Orchard Inter-Row)'
+    ,'Plan yılı': 'Planning Year'
+    ,'Korundu; çizim modunda ayrı sekmeden açılır': 'Retained; opens in a separate tab in drawing mode'
+    ,'İlçe': 'District'
+    ,'Çiftçi': 'Farmer'
+    ,'bütçe durumu: -': 'budget status: –'
+    ,'Havza genel referansı': 'Basin-Wide Reference'
+    ,'Rotasyon / 2. Ürün Önerisi (basit kurallar)': 'Rotation / Secondary-Crop Recommendation (Rule-Based)'
+    ,'Suyunu koruyamayan bir tarım, toprağını; toprağını koruyamayan bir millet, geleceğini kaybeder.': 'Agriculture that cannot protect its water loses its soil; a nation that cannot protect its soil loses its future.'
+    ,'Hazırlayan: Betül Demir • Yüksek Lisans Tezi': 'Prepared by: Betül Demir • Master’s Thesis'
+    ,'Ziraat Marşı': 'Agricultural March'
+    ,'GENEL': 'GENERAL'
+    ,'GÖRÜNÜM': 'OVERVIEW'
+    ,'Genel görünüm': 'Overview'
+    ,'tamamlayıcı': 'Complementary Crop'
+    ,'tamamlayıcı · SECONDARY': 'Complementary Crop · SECONDARY'
+    ,'Arayüz yalnız backend sözleşmelerini gösterir; bilimsel değerleri yeniden hesaplamaz.': 'The interface only presents backend contracts; it does not recalculate scientific values.'
+    ,'Kurum belirtilmedi': 'Institution Not Specified'
+    ,'Bölge belirtilmedi': 'Region Not Specified'
+    ,'Proje açıklaması girilmedi.': 'No project description was provided.'
+    ,'Bütçe türü': 'Budget Type'
+    ,'Ekonomi kapsamı': 'Economics Coverage'
+    ,'Aday birim kapsamı': 'Candidate-Unit Coverage'
+    ,'Seçim, bütünlük, geçerlilik ve motor bağlantısı ayrı değerlendirilir.': 'Selection, integrity, validity, and engine connectivity are assessed separately.'
+    ,'Aktif sürüm seçilmedi': 'No Active Version Selected'
+    ,'CSV / XLSX / GeoJSON dosyaları': 'CSV / XLSX / GeoJSON Files'
+    ,'Doğrula ve önizle': 'Validate and Preview'
+    ,'Dosya yükle': 'Upload File'
+    ,'Sütun eşleştir': 'Map Columns'
+    ,'Doğrula': 'Validate'
+    ,'Önizle': 'Preview'
+    ,'Aktif sürüm': 'Active Version'
+    ,'Açık bilimsel aday ve sezon girdileri': 'Explicit Scientific Candidate and Seasonal Inputs'
+    ,'Aktarım kayıtları': 'Import Records'
+    ,'Ekonomi': 'Economics'
+    ,'Senaryo ve makine durumları': 'Scenario and Machine Statuses'
+    ,'REFERENCE DEMO · model gösterimi': 'REFERENCE DEMO · model demonstration'
+    ,'REFERENCE DEMO — model gösterimi': 'REFERENCE DEMO — model demonstration'
+    ,'Resmî kurum verileri gelmeden önce eğitim, ekran görüntüsü ve bilimsel model gösterimi için kullanılabilir.': 'May be used for training, screenshots, and scientific model demonstration before official institutional data are available.'
+    ,'ACO · Karınca Kolonisi Optimizasyonu': 'ACO · Ant Colony Optimization'
+    ,'ACO — Karınca Kolonisi Optimizasyonu': 'ACO — Ant Colony Optimization'
+    ,'ABC · Yapay Arı Kolonisi': 'ABC · Artificial Bee Colony'
+    ,'ABC — Yapay Arı Kolonisi': 'ABC — Artificial Bee Colony'
+    ,'Üretilmedi': 'Not Produced'
+    ,'yıl yok': 'year unavailable'
+    ,'kapsam yok': 'scope unavailable'
+    ,'otorite yok': 'authority unavailable'
+    ,'yok': 'none'
+    ,'Motor bu metrik için değer üretmedi': 'The engine did not produce a value for this metric'
+    ,'DIAGNOSTIC / UYGULANABİLİR PLAN DEĞİL': 'DIAGNOSTIC / NOT A FEASIBLE PLAN'
+    ,'HHI 0,221 · ORTA YOĞUNLAŞMA': 'HHI 0.221 · MODERATE CONCENTRATION'
+    ,'TEŞHİS': 'DIAGNOSTIC'
+    ,'DIAGNOSTIC / ÖNERİ DEĞİL': 'DIAGNOSTIC / NOT A RECOMMENDATION'
+    ,'İkinci': 'Secondary'
+    ,'DIAGNOSTIC / UYGULANABİLİR ÖNERİ DEĞİL': 'DIAGNOSTIC / NOT A FEASIBLE RECOMMENDATION'
+    ,'Eksik sunum metadatası': 'Missing Presentation Metadata'
+    ,'Eski input snapshotına sabitlenmiş': 'Pinned to an Older Input Snapshot'
+    ,'Revision ilişkisi': 'Revision Relationship'
+    ,'Sınıflandırma': 'Classification'
+    ,'Analiz birimleri / analiz birimleri': 'Analysis Units / Analysis Units'
+    ,'REQUIRED · Analiz birimleri sağlandı.': 'REQUIRED · Analysis units provided.'
+    ,'REQUIRED · Veri doğrulandı ve yürütme sözleşmesine bağlı.': 'REQUIRED · Data validated and bound to the execution contract.'
+    ,'Aylık teslim kapasitesi': 'Monthly Delivery Capacity'
+    ,'OPTIONAL · Bu veri seçilen senaryoda zorunlu değil.': 'OPTIONAL · This dataset is not required for the selected scenario.'
+    ,'Mevcut crop deseni': 'Current Cropping Pattern'
+    ,'Harita geometrisi': 'Map Geometry'
+    ,'OPTIONAL · Harita geometrisi sağlandı.': 'OPTIONAL · Map geometry provided.'
+    ,'Kaçın / azalt': 'Avoid / Reduce'
+    ,'NOT PROVIDED · proje paketi kuraklık gösterge serisi içermiyor; Akkaya reference verisi kullanılmadı.': 'NOT PROVIDED · The project package does not include a drought-indicator series; Akkaya reference data were not used.'
+    ,'NOT PROVIDED — proje paketi kuraklık gösterge serisi içermiyor; Akkaya reference verisi kullanılmadı.': 'NOT PROVIDED — The project package does not include a drought-indicator series; Akkaya reference data were not used.'
+    ,'Tarayıcınız ses oynatmayı desteklemiyor.': 'Your browser does not support audio playback.'
+    ,'Parcel seç': 'Select Parcel'
+    ,'Parcel Haritası': 'Parcel Map'
+    ,'Parcel çizim ve bilgi atama': 'Parcel Geometry and Information Assignment'
+    ,'Parcel özeti': 'Parcel Summary'
+    ,'Tercih et': 'Prefer'
+    ,'Henüz sürümlenmiş kurumsal veri yok.': 'No versioned institutional data are available yet.'
+    ,'Henüz sürümlenmiş kurumsal veri none.': 'No versioned institutional data are available yet.'
+    ,'Tür': 'Type'
+    ,'Dosya': 'File'
+    ,'Algılanan alan': 'Detected Domain'
+    ,'Yıl': 'Year'
+    ,'Kapsam': 'Scope'
+    ,'Satır': 'Rows'
+    ,'Eşleşme': 'Match'
+    ,'Doğrulama': 'Validation'
+    ,'Dosya önizlemesi': 'File Preview'
+    ,'Seçilen sayfa': 'Selected Sheet'
+    ,'Sayfalar': 'Sheets'
+    ,'Sütunlar': 'Columns'
+    ,'İlk satırlar': 'First Rows'
+    ,'Önerilen eşleşme': 'Suggested Mapping'
+    ,'Recommended eşleşme': 'Suggested Mapping'
+    ,'Türkçe kullanıcı yönlendirmesi': 'User Guidance'
+    ,'Dosya otomatik olarak uygulanamadı.': 'The file could not be applied automatically.'
+    ,'Teknik ayrıntıdaki hata kodunu inceleyin ve dosyayı onaylamadan önce düzeltin.': 'Review the error code in the technical details and correct the file before approval.'
+    ,'Teknik ayrıntı': 'Technical Details'
+    ,'Ham önizleme JSON': 'Raw Preview JSON'
+    ,'Açıkça onayla ve projeye uygula': 'Explicitly Confirm and Apply to Project'
+    ,'Birim × ürün adayları, iklim ve mevcut desen girdileri. Yalnız proje kapsamındaki doğrulanmış JSON kullanılmalıdır.': 'Analysis-unit × crop candidates, climate data, and current-pattern inputs. Use only verified JSON within the project scope.'
+    ,'Analiz birimi bulunmuyor; alan ve mevcut ürün verisi yükleyin.': 'No analysis units are available; upload analysis-unit area and current-crop data.'
+    ,'Miktarı ve türü belirlenmiş su bütçesi gerekli.': 'A water budget with a specified amount and type is required.'
+    ,'Birim × ürün düzeyinde açık aday su/kâr verileri gerekli; otomatik değer üretilmez.': 'Explicit candidate water/profit data are required at analysis-unit × crop level; values are not generated automatically.'
+    ,'S2 için ürün aileleri ve rotasyon kısıtları gerekli.': 'Crop families and rotation constraints are required for S2.'
+    ,'Veri hazırlık rehberi': 'Data Readiness Guide'
+    ,'Durumlar backend readiness raporundan türetilir. Geometri analiz için isteğe bağlı, proje haritası için önerilir.': 'Statuses are derived from the backend readiness report. Geometry is optional for analysis and recommended for the project map.'
+    ,'Beklenen: İlgili veri şablonundaki zorunlu alanlar': 'Expected: Required fields from the relevant data template'
+    ,'Henüz analiz çalışması yok.': 'No analysis runs yet.'
+    ,'Harita geometrisindeki birim kimliği proje analiz birimleriyle eşleşmiyor.': 'A unit identifier in the map geometry does not match the project analysis units.'
+    ,'Geometri dosyasındaki kimlikleri analiz birimi dosyasıyla karşılaştırın.': 'Compare the identifiers in the geometry file with the analysis-unit file.'
+    ,'Yıllık su arzı': 'Annual Water Supply'
+    ,'Sürüm': 'Version'
+    ,'Seçim': 'Selection'
+    ,'Kayıt': 'Record'
+    ,'AKTİF': 'ACTIVE'
+    ,'Virgül/nokta biçimini ve sayı alanlarında metin içeren hücreleri kontrol edin.': 'Check decimal separators and cells containing text in numeric fields.'
+    ,'Yıl değerini 2025 gibi dört haneli bir sayı olarak girin.': 'Enter the year as a four-digit number such as 2025.'
+    ,'Doğru planlama yılına ait dosyayı yükleyin veya proje yılını doğrulayın.': 'Upload the file for the correct planning year or verify the project year.'
+    ,'Dosya kapsamını proje/bölge kimliğiyle aynı olacak şekilde kontrol edin.': 'Ensure the file scope matches the project/region identifier.'
+    ,'Önerilen sütun eşleştirmelerini inceleyip doğru canonical alanı seçin.': 'Review the suggested column mappings and select the correct canonical field.'
+    ,'Sistem bu dosyanın hangi veri türüne ait olduğunu güvenle belirleyemedi.': 'The system could not reliably determine the data type of this file.'
+    ,'Çalışma kitabında aynı derecede uygun birden fazla sayfa bulundu.': 'Multiple equally suitable sheets were found in the workbook.'
+    ,'Bu dosya türü desteklenmiyor.': 'This file type is not supported.'
+    ,'Desteklenen biçimler: CSV, XLSX, GeoJSON.': 'Supported formats: CSV, XLSX, and GeoJSON.'
+    ,'Dosya güvenli biçimde okunamadı.': 'The file could not be read safely.'
+    ,'GeoJSON geometrilerini ve analysis_unit_id eşleşmesini kontrol edin.': 'Check the GeoJSON geometries and analysis_unit_id matching.'
+    ,'Dosya biçimini, karakter kodlamasını ve tablo yapısını kontrol edin.': 'Check the file format, character encoding, and table structure.'
+    ,'Bu dosyada desteklenen bir veri alanına ait güvenilir yapısal kanıt bulunmadı.': 'No reliable structural evidence for a supported data domain was found in this file.'
+    ,'Dosya projeye uygulanmadı ve eksiksiz bir paketin aktivasyonunu engellemez. Dosya aslında proje verisiyse doğru şablonu ve zorunlu sütunları kullanın.': 'The file was not applied to the project and does not block activation of a complete package. If it is project data, use the correct template and required columns.'
+    ,'Coğrafi veri geometrisi geçersiz.': 'The geospatial geometry is invalid.'
+    ,'GeoJSON koordinatlarını, geometri tipini ve kapalı poligon halkalarını kontrol edin.': 'Check the GeoJSON coordinates, geometry type, and closed polygon rings.'
+    ,'Aynı geometri birden fazla analiz birimine atanmış.': 'The same geometry is assigned to multiple analysis units.'
+    ,'Her geometrinin tek bir analysis_unit_id ile eşleştiğini doğrulayın.': 'Verify that each geometry matches exactly one analysis_unit_id.'
   }));
 
   const replacements = [
+    [/^Ne oldu\? /g, 'What happened? '],
+    [/^Ne yapmalısınız\? /g, 'What should you do? '],
+    [/Zorunlu sütun bulunamadı/g, 'Required columns are missing'],
+    [/Dosyanızdaki parsel\/birim kimliği ve diğer zorunlu sütunları kontrol edin veya sütun eşleştirme adımından doğru alanları seçin\./g, 'Check the parcel/unit identifier and other required columns in your file, or select the correct fields in the column-mapping step.'],
+    [/Sayısal olması gereken (.+) okunamayan değer bulundu/g, 'An unreadable value was found in $1, which must be numeric'],
+    [/Planlama yılı okunamadı/g, 'The planning year could not be read'],
+    [/Dosyadaki planlama yılı proje yılıyla uyuşmuyor\. Proje yılı: (.+); dosya yılı: (.+)\./g, 'The planning year in the file does not match the project year. Project year: $1; file year: $2.'],
+    [/Dosyanın coğrafi kapsamı projeyle uyuşmuyor: (.+)\./g, 'The geographic scope in the file does not match the project: $1.'],
+    [/Bazı sütunlar birden fazla alana eşleşebilir/g, 'Some columns may match more than one field'],
+    [/Olası türleri kontrol edin: (.+)\. İlgisiz ek dosyayı paketten çıkarın veya doğru veri dosyasını yükleyin\./g, 'Check the possible types: $1. Remove an unrelated attachment from the package or upload the correct data file.'],
+    [/Doğru veri sayfasını seçin: (.+)\./g, 'Select the correct data sheet: $1.'],
+    [/Harita geometrisindeki birim kimliği proje analiz birimleriyle eşleşmiyor\./g, 'A unit identifier in the map geometry does not match the project analysis units.'],
+    [/Geometri dosyasındaki kimlikleri (?:analiz birimi|analysis unit) dosyasıyla karşılaştırın\./g, 'Compare the identifiers in the geometry file with the analysis-unit file.'],
+    [/Dosya otomatik olarak uygulanamadı\./g, 'The file could not be applied automatically.'],
+    [/Teknik ayrıntıdaki hata kodunu inceleyin ve dosyayı onaylamadan önce düzeltin\./g, 'Review the error code in the technical details and correct the file before approval.'],
+    [/(\d+) dosya otomatik eşleştirildi; (\d+) açıkça ilgisiz dosya uygulanmadan (?:yok|none) sayıldı\. Bağımlı doğrulamalar açık onay sırasında güvenli sırayla yenilenir\./g, '$1 files were automatically matched; $2 explicitly irrelevant files were ignored without being applied. Dependent validations are safely refreshed during explicit confirmation.'],
+    [/Analiz (?:birimi|Unit) bulunmuyor; alan ve mevcut (?:ürün|crop) verisi yükleyin\./g, 'No analysis units are available; upload analysis-unit area and current-crop data.'],
+    [/Mevcut (?:ürün|crop)\/katalog eşleşmesi eksik:([^·]*)/g, 'Current crop/catalog matching is incomplete:$1'],
+    [/Planlama yılı ekonomik verisi eksik:([^·]*)/g, 'Planning-year economic data are missing:$1'],
+    [/Miktarı ve türü belirlenmiş su bütçesi gerekli\./g, 'A water budget with a specified amount and type is required.'],
+    [/Birim\s*[×x]\s*(?:ürün|crop) düzeyinde açık aday su\/(?:kâr|profit) verileri gerekli; otomatik değer üretilmez\./g, 'Explicit candidate water/profit data are required at analysis-unit × crop level; values are not generated automatically.'],
+    [/S2 için ([A-Za-z0-9_]+) bilimsel tablosu gerekli\./g, 'The $1 scientific table is required for S2.'],
+    [/S2 için (?:ürün|crop) aileleri ve rotasyon kısıtları gerekli\./g, 'Crop families and rotation constraints are required for S2.'],
+    [/([A-Za-z0-9_.]+): planlama yılına ait 12 benzersiz ay ve pozitif ([A-Za-z0-9_]+) gerekli\./g, '$1: 12 unique months for the planning year and positive $2 values are required.'],
+    [/([A-Za-z0-9_.]+): birim ([A-Za-z0-9_/]+) ve (?:dönem|periods) calendar_month olmalıdır\./g, '$1: the unit must be $2 and the period must be calendar_month.'],
+    [/integrity: hayır/g, 'integrity: no'],
+    [/Henüz analiz (?:çalışması|runsı) (?:yok|none)\./g, 'No analysis runs yet.'],
+    [/Beklenen: İlgili veri şablonundaki zorunlu alanlar/g, 'Expected: Required fields from the relevant data template'],
+    [/NADAS \/ BOŞ/gi, 'FALLOW / UNALLOCATED'],
+    [/Mevcut crop deseni/g, 'Current Cropping Pattern'],
+    [/NOT PROVIDED\s*[—–·•-]\s*proje paketi kuraklık gösterge serisi içermiyor; Akkaya reference verisi kullanılmadı\./g, 'NOT PROVIDED — The project package does not include a drought-indicator series; Akkaya reference data were not used.'],
+    [/Motor bu metrik için değer üretmedi/g, 'The engine did not produce a value for this metric'],
+    [/DIAGNOSTIC \/ UYGULANABİLİR PLAN DEĞİL/g, 'DIAGNOSTIC / NOT A FEASIBLE PLAN'],
+    [/DIAGNOSTIC \/ UYGULANABİLİR ÖNERİ DEĞİL/g, 'DIAGNOSTIC / NOT A FEASIBLE RECOMMENDATION'],
+    [/DIAGNOSTIC \/ ÖNERİ DEĞİL/g, 'DIAGNOSTIC / NOT A RECOMMENDATION'],
+    [/OTORİTATİF DEĞER/gi, 'AUTHORITATIVE VALUE'],
+    [/YÜKSEK YOĞUNLAŞMA/g, 'HIGH CONCENTRATION'],
+    [/ORTA YOĞUNLAŞMA/g, 'MODERATE CONCENTRATION'],
+    [/DAĞITILMIŞ/g, 'DIVERSIFIED'],
+    [/ÜRETİLMEDİ/g, 'NOT PRODUCED'],
+    [/TEŞHİS/g, 'DIAGNOSTIC'],
+    [/\bPay:/g, 'Share:'],
+    [/\bİkinci\b/g, 'Secondary'],
+    [/Eksik sunum metadatası/g, 'Missing Presentation Metadata'],
+    [/Eski input snapshotına sabitlenmiş/g, 'Pinned to an Older Input Snapshot'],
+    [/Revision ilişkisi/g, 'Revision Relationship'],
+    [/Sınıflandırma/g, 'Classification'],
+    [/Kurum belirtilmedi/g, 'Institution Not Specified'],
+    [/Bölge belirtilmedi/g, 'Region Not Specified'],
+    [/Aktif sürüm seçilmedi/g, 'No Active Version Selected'],
+    [/\byıl yok\b/g, 'year unavailable'],
+    [/\bkapsam yok\b/g, 'scope unavailable'],
+    [/\botorite yok\b/g, 'authority unavailable'],
+    [/\byok\b/g, 'none'],
+    [/Üretilmedi/g, 'Not Produced'],
+    [/model gösterimi/g, 'model demonstration'],
+    [/^Tamamlandı · ([A-Z]+) · (.+)$/g, 'Completed · $1 · $2'],
+    [/^bütçe durumu: (.+)$/g, 'budget status: $1'],
+    [/^Immutable (.+) · PROJECT DATA önerisi$/g, 'Immutable $1 · PROJECT DATA recommendation'],
+    [/^Secondary Crop \/ tamamlayıcı\s*[·•]\s*SECONDARY$/g, 'Secondary / Complementary Crop · SECONDARY'],
+    [/^Rotation \/ Secondary Crop önerisi \(basit kurallar\)$/g, 'Rotation / Secondary-Crop Recommendation (Rule-Based)'],
+    [/^Backend birim net profitı: (.+) TL · Otoritatif birim suyu: (.+) m³$/g, 'Backend Unit Net Profit: $1 TRY · Authoritative Unit Water: $2 m³'],
+    [/^Backend birim net kârı: (.+) TL · Otoritatif birim suyu: (.+) m³$/g, 'Backend Unit Net Profit: $1 TRY · Authoritative Unit Water: $2 m³'],
+    [/Senaryo 1 - Tek croplü analysis unit \(en iyi 1-2 crop \+ alternatifler\)/g, 'Scenario 1 – Single-Crop Analysis Unit (Best 1–2 Crops + Alternatives)'],
+    [/Senaryo 2 - Çift croplü \/ desen bazlı analysis unit \(1\+1 crop \/ bahçede sıra arası\)/g, 'Scenario 2 – Two-Crop / Pattern-Based Analysis Unit (1+1 Crop / Orchard Inter-Row)'],
+    [/GENEL GÖRÜNÜM/g, 'OVERVIEW'],
+    [/Suyunu koruyamayan bir tarım, toprağını; toprağını koruyamayan bir millet, geleceğini[\s\u00a0]*kaybeder\./g, 'Agriculture that cannot protect its water loses its soil; a nation that cannot protect its soil loses its future.'],
+    [/Hazırlayan: Betül Demir · Yüksek Lisans Tezi/g, 'Prepared by: Betül Demir · Master’s Thesis'],
+    [/Hazırlayan: Betül Demir • Yüksek Lisans Tezi/g, 'Prepared by: Betül Demir • Master’s Thesis'],
     [/(\d+) parsel/g, '$1 parcels'],
     [/KULLANICI/g, 'USER'],
     [/SEÇ[Iİ]L[Iİ] DETAY/g, 'SELECTED UNIT'],
@@ -574,6 +799,7 @@
     [/Ana Ürün/g, 'Primary Crop'],
     [/2\. ürün \/ tamamlayıcı/g, 'Secondary / Complementary Crop'],
     [/2\. Ürün \/ tamamlayıcı/g, 'Secondary / Complementary Crop'],
+    [/tamamlayıcı/g, 'complementary crop'],
     [/çalışma/g, 'run'],
     [/Doğrulanmış veri, açık hazırlık denetimi ve sürümlenmiş analiz sonuçları için tek run alanı\./g, 'A unified workspace for verified data, transparent readiness assessment, and versioned analysis results.'],
     [/^(\d+) birimin tamamında proje geometrisi mevcut\.$/g, '$1 project geometries are available for all analysis units.'],
@@ -674,7 +900,82 @@
     [/Doğrulanmış veri, açık hazırlık denetimi ve sürümlenmiş analiz sonuçları için tek çalışma alanı\./g, 'A unified workspace for verified data, transparent readiness assessment, and versioned analysis results.'],
     [/^Not: Senaryo 1, her analysis unitni .*sulama yönetiminden gelir\.$/g, 'Note: Scenario 1 treats each analysis unit primarily as single-crop and ranks the main recommendation with strong alternatives. Scenario 2 evaluates a 1+1 crop/pattern approach; for orchards and perennial units, the main crop is retained and differences arise from inter-row cropping and irrigation management.'],
     [/^Not: Bu plan, seçili analysis unitnin .*çalışır\.$/g, 'Note: This schedule uses an approximate ETc calculation based on the selected analysis unit’s climate series and crop calendar. It uses daily meteorology when available and monthly climate averages otherwise.'],
-    [/^Not: Bu plan, .*ETc hesabıyla üretilir\..*çalışır\.$/g, 'Note: This schedule uses an approximate ETc calculation based on the selected unit’s climate series and crop calendar. It uses daily meteorology when available and monthly climate averages otherwise.']
+    [/^Not: Bu plan, .*ETc hesabıyla üretilir\..*çalışır\.$/g, 'Note: This schedule uses an approximate ETc calculation based on the selected unit’s climate series and crop calendar. It uses daily meteorology when available and monthly climate averages otherwise.'],
+    [/^Parcel seç$/g, 'Select Parcel'],
+    [/^Analysis Unit Özeti$/g, 'Analysis Unit Summary'],
+    [/^Selected analysis unitin özeti$/g, 'Selected Analysis Unit Summary'],
+    [/^Parcel Bazlı Özet$/g, 'Parcel-Based Summary'],
+    [/^Selected parcelin [Öö]zeti$/g, 'Selected Parcel Summary'],
+    [/^Hazır ([·•]) (.+)$/g, 'Ready $1 $2'],
+    [/^CSV bağlandı$/g, 'CSV Connected'],
+    [/^Projeden CSV yükle$/g, 'Load CSV from Project'],
+    [/^Önbelleği temizle$/g, 'Clear Cache'],
+    [/^15 Alan Denge SuluKirac$/g, '15 Irrigated/Rainfed Area Balance'],
+    [/^16 Aylik Kayip Analizi$/g, '16 Monthly Loss Analysis'],
+    [/^4 Urun Aylik SuButcesi$/g, '4 Monthly Crop Water Budget'],
+    [/^8 Karma Sulama Senaryo$/g, '8 Mixed Irrigation Scenario'],
+    [/^ARAZİ DAĞILIMI$/g, 'LAND DISTRIBUTION'],
+    [/^HAYVAN VARLIĞI$/g, 'LIVESTOCK INVENTORY'],
+    [/^MEYVE cropsİ$/g, 'FRUIT CROPS'],
+    [/^SEBZE cropsİ$/g, 'VEGETABLE CROPS'],
+    [/^TARIMSAL ARAÇ VARLIĞI$/g, 'AGRICULTURAL MACHINERY INVENTORY'],
+    [/^TARLA BİTKİLERİ$/g, 'FIELD CROPS'],
+    [/^Yerleşim düzeyindeki toplulaştırılmış hayvan varlığını göstermek\.$/g, 'Shows aggregated livestock inventory at settlement level.'],
+    [/^Yerleşim düzeyindeki toplulaştırılmış mekanizasyon kapasitesini göstermek\.$/g, 'Shows aggregated mechanization capacity at settlement level.'],
+    [/^Sürüm: (.+)$/g, 'Version: $1'],
+    [/^(\d+) aday parcel: (\d+)$/g, '$1 candidate parcels: $2'],
+    [/^Haritada yalnızca yüklenmiş gerçek GeoJSON sınırları gösterilir\..*üretilmez\.$/g, 'Only uploaded real GeoJSON boundaries are shown on the map. Other village/parcel records in Excel are used in numerical analysis; no representative rectangle is generated without a real GeoJSON boundary.'],
+    [/^doluluk: (.+) \| baraj riski: (.+) \| plan riski: (.+)$/g, 'occupancy: $1 | reservoir risk: $2 | plan risk: $3'],
+    [/\byüksek\b/g, 'high'],
+    [/\bdüşük\b/g, 'low'],
+    [/^Ana kota modeli: Dekar bazlı adil kota$/g, 'Primary Quota Model: Fair Per-Decare Quota'],
+    [/^(\d+) köy ([·•]) (\d+) parcels ([·•]) (.+)$/g, '$1 villages $2 $3 parcels $4 $5'],
+    [/^Optimizasyonda kullanılacak kota modeli$/g, 'Quota Model Used in Optimization'],
+    [/^Karşılaştırma: eşit köy$/g, 'Comparison: Equal Village'],
+    [/^(.*) m³\/köy$/g, '$1 m³/village'],
+    [/^Eşit köyde en fazla artan$/g, 'Largest Increase under Equal-Village Model'],
+    [/^Eşit köyde en fazla azalan$/g, 'Largest Decrease under Equal-Village Model'],
+    [/^Current Total Water Use önce toplam alana bölünür ve (.+) genel hakkı hesaplanır\. Ana öneri bu değere göre yapılır\.$/g, 'Current total water use is first divided by total area to calculate the general entitlement of $1. The primary recommendation uses this value.'],
+    [/^Baraj serisi bağlamı: (.+) ortalama çekiş, (.+) ortalama doluluk\.$/g, 'Reservoir-series context: $1 average withdrawal, $2 average occupancy.'],
+    [/^Toplam köy alanı$/g, 'Total Village Area'],
+    [/^Eşit köy payı$/g, 'Equal-Village Share'],
+    [/^Dekar bazlı adil pay$/g, 'Fair Per-Decare Share'],
+    [/^Eşit köy farkı: (.+)$/g, 'Equal-Village Difference: $1'],
+    [/^Dekar bazlı fark: (.+)$/g, 'Per-Decare Difference: $1'],
+    [/^Parcel özeti$/g, 'Parcel Summary'],
+    [/^Parcel Haritası$/g, 'Parcel Map'],
+    [/^GeoJSON yüklü \/ seçilebilir$/g, 'GeoJSON Loaded / Selectable'],
+    [/^Çizim zemini$/g, 'Drawing Layer'],
+    [/^Tüm parceller$/g, 'All Parcels'],
+    [/^Köy sınırı$/g, 'Village Boundary'],
+    [/^Baraj alanı$/g, 'Reservoir Area'],
+    [/^Kuru tarım$/g, 'Rainfed Agriculture'],
+    [/^Sulu tarım$/g, 'Irrigated Agriculture'],
+    [/^Köy$/g, 'Village'],
+    [/^Tüm parceller: (.+)$/g, 'All Parcels: $1'],
+    [/yeniden çalıştırma gerekli/g, 'rerun required'],
+    [/^Yeniden çalıştırma gerekli$/g, 'Rerun Required'],
+    [/^Koşu bilgisi: Beklemede$/g, 'Run Information: Pending'],
+    [/^Yeni seçim yapıldı\. Bu seçim için optimizasyon henüz çalıştırılmadı\.$/g, 'A new selection was made. Optimization has not yet run for this selection.'],
+    [/^Yeni seçim yapıldı$/g, 'New Selection Made'],
+    [/^Bu seçim için optimizasyon henüz çalıştırılmadı\..*beklemede tutulur\.$/g, 'Optimization has not yet run for this selection. The scenario result, budget, and feasibility fields in the right panel remain pending until a new backend result arrives.'],
+    [/^Silajlık mısır$/g, 'Silage Maize'],
+    [/^Şeker pancarı$/g, 'Sugar Beet'],
+    [/^Yonca \(tam alan\)$/g, 'Alfalfa (Full Area)'],
+    [/^Aşırı sulama isteyen sebzeler$/g, 'Vegetables Requiring Excessive Irrigation'],
+    [/^Bağ \/ badem \(uygunsa\)$/g, 'Vineyard / Almond (If Suitable)'],
+    [/^Nadas\/yeşil gübre rotasyonu$/g, 'Fallow / Green-Manure Rotation'],
+    [/^Bu liste, optimizasyon sonucunu complementary crop bir karar destek notudur:.*ağırlık verin\.$/g, 'This list is a complementary-crop decision-support note for the optimization result: crops with high water demand carry more risk under drought. The crop pool may vary by parcel soil class and irrigation efficiency; because the objective is always water saving, prioritize low-water-use options.'],
+    [/^Grafik üzerinde gezerek yıllık değerleri görebilirsiniz\..*öne çıkar\.$/g, 'Hover over the chart to view annual values. The selected water year is highlighted; the panel is emphasized in critical years.'],
+    [/^Sulama sezonunda kritik minimumlar görülebilir .*$/g, 'Critical minimum levels may occur during the irrigation season (min < 10%). Water-intensive crops and surface irrigation carry high risk.'],
+    [/^Kışlık \/ serin periods$/g, 'Winter / Cool-Season Period'],
+    [/^Tek croplü senaryoda en iyi ana öneri ve diğer güçlü alternatifler listelenir\.$/g, 'The single-crop scenario lists the best primary recommendation and other strong alternatives.'],
+    [/^Ana crop ([·•]) Kışlık \/ serin periods$/g, 'Primary Crop $1 Winter / Cool-Season Period'],
+    [/\((\d+) gün\)$/g, '($1 days)'],
+    [/^Parcel düzeyi desen$/g, 'Parcel-Level Pattern'],
+    [/^Parcel çizim \/ bilgi atama$/g, 'Parcel Geometry and Information Assignment'],
+    [/^Yağmurlama$/g, 'Sprinkler'],
+    [/^Öneriler ve kısıt değerlendirmesi, optimizasyon çalıştırıldıktan sonra gösterilir\.$/g, 'Recommendations and constraint assessment are shown after optimization runs.']
   ];
 
   function translate(value) {
@@ -682,6 +983,7 @@
     const leading = value.match(/^\s*/)[0];
     const trailing = value.match(/\s*$/)[0];
     const core = value.slice(leading.length, value.length - trailing.length);
+    if (/\.(?:xlsx|xls|csv|geojson|json)\b/i.test(core)) return leading + core + trailing;
     let result = exact.get(core) || core;
     if (result === core) {
       for (let pass = 0; pass < 8; pass += 1) {

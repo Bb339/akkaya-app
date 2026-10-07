@@ -9,7 +9,7 @@ from playwright.sync_api import expect, sync_playwright
 from test_unified_decision_demo import analysis_payload, client_for, project_payload
 from test_unified_decision_demo_browser import serve
 from test_unified_v1_project_provider_browser import _serve_v1
-from test_v1_native_project_integration_fix2 import _confirm, _upload
+from test_v1_native_project_integration_fix2 import PACKAGE, _confirm, _upload
 
 
 ROOT = __import__('pathlib').Path(__file__).resolve().parents[1]
@@ -41,19 +41,65 @@ def _prepare_run(client, repository):
     return project_id, response.json
 
 
+TURKISH_CHARACTERS = re.compile(r'[ıİğĞşŞçÇöÖüÜ]')
+
 TURKISH_UI_TERMS = re.compile(
-    r'\b(?:Proje|Veri|Analiz|Birimi|birimi|Mevcut|Önerilen|Ürün|Su|Kâr|Karar|Harita|'
-    r'Seçili|Seçin|Kaynak|Hazırlık|Kuraklık|Sağlanmadı|Çalıştır|Çalışma|Hedef|'
-    r'Planlama|Aylık|Yıllık|Sulama|Ekonomik|Uyarı|Durum|Kullanıcı|Yönetim|'
-    r'Gerekçe|Geometri|Kapsam|Alan|Arz|Talep|Kayıt|Doğrulanmış|Resmî)\b',
+    r'\b(?:aktif|açıklama|aday|alan|analiz|arz|aylık|belirtilmedi|'
+    r'bekleniyor|birim|birimi|bütçe|çalışma|çalıştır|doğrula|dosya|durum|ekonomi|'
+    r'eksik|geçersiz|geometri|gerekçe|harita|hazır|hedef|için|karar|kapsam|kaynak|'
+    r'kayıt|kullanıcı|kurum|mevcut|oluştur|önizleme|öneri|önerilen|parsel|planlama|'
+    r'proje|sağlanmadı|seç|seçili|seçilmedi|sulama|sürüm|talep|uyarı|uygulanabilir|'
+    r'veri|yükle|yükleme|yıllık|yok|yönetim|ürün)\b',
     re.IGNORECASE,
 )
 
+ALLOWED_NON_ENGLISH = re.compile(
+    r'\b(?:Niğde|Akkaya|Sazlıca|Bahçeli|Kemerhisar|Kaynarca|Bor|Betül Demir|'
+    r'Yeşim Dokuz|Burak Şen|İlçe Merkezi)\b',
+    re.IGNORECASE,
+)
+
+ALLOWED_PROPER_NOUN_LINES = {
+    'Niğde Ömer Halisdemir Üniversitesi',
+    'Tarım Bilimleri ve Teknolojileri Fakültesi',
+    'ÖNAP',
+    'Betül Demir',
+    'Doç. Dr. Yeşim Dokuz',
+    'Doç. Dr. Burak Şen',
+    'Bakanlık Sentetik Demo Projesi',
+}
+
 
 def _untranslated_visible_lines(page):
-    text = page.locator('body').inner_text()
-    return [line.strip() for line in text.splitlines()
-            if line.strip() and TURKISH_UI_TERMS.search(line)]
+    lines = page.evaluate("""() => {
+      const output=[];
+      const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+      let node;
+      while((node=walker.nextNode())){
+        const parent=node.parentElement;
+        if(!parent || parent.closest('script,style,pre,code,[hidden]'))continue;
+        const style=getComputedStyle(parent);
+        if(style.display==='none' || style.visibility==='hidden' || !parent.getClientRects().length)continue;
+        const value=node.data.trim();
+        if(value)output.push(value);
+      }
+      return output;
+    }""")
+    result = []
+    for raw_line in lines:
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line in ALLOWED_PROPER_NOUN_LINES:
+            continue
+        if re.fullmatch(r'\S+ / demo123', line):
+            continue
+        if re.search(r'\.(?:xlsx|xls|csv|geojson|json)\b', line, re.IGNORECASE):
+            continue
+        candidate = ALLOWED_NON_ENGLISH.sub('', line)
+        if TURKISH_CHARACTERS.search(candidate) or TURKISH_UI_TERMS.search(candidate):
+            result.append(line)
+    return result
 
 
 def _assert_toggle_layout(page, parent_selector):
@@ -90,6 +136,8 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
 
     _serve_v1(application)
     project_id, run = _prepare_run(client, repository)
+    upload_preview_id = 'paper-upload-preview'
+    assert client.post('/api/v2/projects', json=project_payload(upload_preview_id)).status_code == 201
     stored_before = client.get(f'/api/v2/projects/{project_id}/analyses/{run["id"]}').json
     server, thread = serve(application)
     requests, page_errors = [], []
@@ -192,7 +240,9 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 } : null;
               })
             )""")
-            assert not TURKISH_UI_TERMS.search(chart_labels), chart_labels
+            assert not (
+                TURKISH_CHARACTERS.search(chart_labels) or TURKISH_UI_TERMS.search(chart_labels)
+            ), chart_labels
             assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
             untranslated = _untranslated_visible_lines(page)
             assert not untranslated, '\n'.join(untranslated)
@@ -252,6 +302,26 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('h1')).to_have_text('Institutional Agricultural Decision Workflow')
             expect(page.locator('#project-status-badges')).to_contain_text('Revision 21')
             _assert_toggle_layout(page, '.topbar-actions')
+            page.goto(
+                f'http://127.0.0.1:{server.server_port}/projects'
+                f'#project={upload_preview_id}&section=data'
+            )
+            expect(page.locator('#project-status-badges')).to_contain_text('Revision 0')
+            package_files = [
+                str(path) for path in sorted(PACKAGE.iterdir())
+                if path.suffix.lower() in {'.csv', '.xlsx', '.geojson'}
+            ]
+            page.locator('#bulk-upload-form input[type="file"]').set_input_files(package_files)
+            page.locator('#bulk-upload-form button[type="submit"]').click()
+            expect(page.locator('#bulk-import-results')).to_be_visible(timeout=30000)
+            expect(page.locator('#bulk-import-body tr')).to_have_count(21)
+            untranslated = _untranslated_visible_lines(page)
+            assert not untranslated, 'bulk-preview: ' + '\n'.join(untranslated)
+            page.goto(
+                f'http://127.0.0.1:{server.server_port}/projects'
+                f'#project={project_id}&section=result'
+            )
+            expect(page.locator('#project-status-badges')).to_contain_text('Revision 21')
             for section in ('project', 'data', 'readiness', 'analysis', 'result', 'provenance', 'reference'):
                 page.locator(f'[data-project-section="{section}"]').first.click()
                 page.wait_for_function(
