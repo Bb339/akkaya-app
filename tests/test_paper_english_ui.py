@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import re
 from flask import send_from_directory
 import pytest
 from playwright.sync_api import expect, sync_playwright
@@ -22,6 +24,7 @@ def _prepare_run(client, repository):
     assert package['auto_matched'] == len(package['items']) == 21
     _confirm(client, project_id, package['items'])
     request = analysis_payload()
+    request['scenario'] = 'S2'
     preview = client.post(f'/api/v2/projects/{project_id}/analysis-preview', json=request)
     assert preview.status_code == 200 and preview.json['ready'] is True
     response = client.post(f'/api/v2/projects/{project_id}/analyses', json={
@@ -38,6 +41,21 @@ def _prepare_run(client, repository):
     return project_id, response.json
 
 
+TURKISH_UI_TERMS = re.compile(
+    r'\b(?:Proje|Veri|Analiz|Birimi|birimi|Mevcut|Önerilen|Ürün|Su|Kâr|Karar|Harita|'
+    r'Seçili|Seçin|Kaynak|Hazırlık|Kuraklık|Sağlanmadı|Çalıştır|Çalışma|Hedef|'
+    r'Planlama|Aylık|Yıllık|Sulama|Ekonomik|Uyarı|Durum|Kullanıcı|Yönetim|'
+    r'Gerekçe|Geometri|Kapsam|Alan|Arz|Talep|Kayıt|Doğrulanmış|Resmî)\b',
+    re.IGNORECASE,
+)
+
+
+def _untranslated_visible_lines(page):
+    text = page.locator('body').inner_text()
+    return [line.strip() for line in text.splitlines()
+            if line.strip() and TURKISH_UI_TERMS.search(line)]
+
+
 @pytest.mark.browser
 def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_path):
     application, client, repository = client_for(tmp_path)
@@ -48,6 +66,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
 
     _serve_v1(application)
     project_id, run = _prepare_run(client, repository)
+    stored_before = client.get(f'/api/v2/projects/{project_id}/analyses/{run["id"]}').json
     server, thread = serve(application)
     requests, page_errors = [], []
     try:
@@ -64,6 +83,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 'runId => window.__V1_PROJECT_PROVIDER__?.context?.run?.id === runId',
                 arg=run['id'],
             )
+            expect(page.locator('html')).to_have_attribute('lang', 'tr')
             page.evaluate(
                 "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
             )
@@ -101,7 +121,20 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
               revision:window.__V1_PROJECT_PROVIDER__.context.project_revision,
               selected:window.__V1_PROJECT_PROVIDER__.selectedUnit,
               units:window.__V1_PROJECT_PROVIDER__.context.units.map(x=>x.analysis_unit_id),
+              selectedGeometry:JSON.stringify(window.__V1_PROJECT_PROVIDER__.context.units.find(
+                x=>x.analysis_unit_id===window.__V1_PROJECT_PROVIDER__.selectedUnit
+              )?.geometry),
+              popupLatLng:map._popup?.getLatLng?.() ? [map._popup.getLatLng().lat,map._popup.getLatLng().lng] : null,
               geometry:document.querySelectorAll('.leaflet-overlay-pane path.leaflet-interactive').length,
+              numeric:Object.fromEntries([
+                'mWaterCurrent','mWaterScenario','mProfitCurrent','mProfitScenario',
+                'mEffCurrent','mEffScenario'
+              ].map(id=>[id,document.getElementById(id)?.textContent.match(/-?[0-9]+(?:[.,][0-9]+)*/)?.[0]||null])),
+              chartData:JSON.stringify(Array.from(document.querySelectorAll('canvas')).map(canvas => {
+                const chart=window.Chart?.getChart?.(canvas);
+                return chart ? (chart.data.datasets||[]).map(dataset=>dataset.data) : null;
+              })),
+              navigationEntries:performance.getEntriesByType('navigation').length,
               result:JSON.stringify(window.__V1_PROJECT_PROVIDER__.context.run.result)
             })""")
             api_requests_before = [url for url in requests if '/api/v2/' in url]
@@ -115,6 +148,22 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('#parcelSummaryTitle')).to_contain_text('KDS-009')
             expect(page.locator('#tblCurrent')).to_contain_text('Current')
             expect(page.locator('#tblRecommended')).to_contain_text('Recommended')
+            expect(page.locator('#tblRecommended')).to_contain_text('APPLE')
+            chart_labels = page.evaluate("""() => JSON.stringify(
+              Array.from(document.querySelectorAll('canvas')).map(canvas => {
+                const chart=window.Chart?.getChart?.(canvas);
+                return chart ? {
+                  labels:chart.data.labels,
+                  datasets:(chart.data.datasets||[]).map(dataset=>dataset.label),
+                  title:chart.options?.plugins?.title?.text,
+                  axes:Object.values(chart.options?.scales||{}).map(axis=>axis?.title?.text)
+                } : null;
+              })
+            )""")
+            assert not TURKISH_UI_TERMS.search(chart_labels), chart_labels
+            assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+            untranslated = _untranslated_visible_lines(page)
+            assert not untranslated, '\n'.join(untranslated)
             assert [url for url in requests if '/api/v2/' in url] == api_requests_before
             after = page.evaluate("""() => ({
               project:window.__V1_PROJECT_PROVIDER__.context.project.id,
@@ -122,7 +171,20 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
               revision:window.__V1_PROJECT_PROVIDER__.context.project_revision,
               selected:window.__V1_PROJECT_PROVIDER__.selectedUnit,
               units:window.__V1_PROJECT_PROVIDER__.context.units.map(x=>x.analysis_unit_id),
+              selectedGeometry:JSON.stringify(window.__V1_PROJECT_PROVIDER__.context.units.find(
+                x=>x.analysis_unit_id===window.__V1_PROJECT_PROVIDER__.selectedUnit
+              )?.geometry),
+              popupLatLng:map._popup?.getLatLng?.() ? [map._popup.getLatLng().lat,map._popup.getLatLng().lng] : null,
               geometry:document.querySelectorAll('.leaflet-overlay-pane path.leaflet-interactive').length,
+              numeric:Object.fromEntries([
+                'mWaterCurrent','mWaterScenario','mProfitCurrent','mProfitScenario',
+                'mEffCurrent','mEffScenario'
+              ].map(id=>[id,document.getElementById(id)?.textContent.match(/-?[0-9]+(?:[.,][0-9]+)*/)?.[0]||null])),
+              chartData:JSON.stringify(Array.from(document.querySelectorAll('canvas')).map(canvas => {
+                const chart=window.Chart?.getChart?.(canvas);
+                return chart ? (chart.data.datasets||[]).map(dataset=>dataset.data) : null;
+              })),
+              navigationEntries:performance.getEntriesByType('navigation').length,
               result:JSON.stringify(window.__V1_PROJECT_PROVIDER__.context.run.result)
             })""")
             assert after == before
@@ -139,11 +201,32 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('#metricsTitle')).to_have_text(
                 'Analiz Birimi Karar Özeti (KDS-009)'
             )
+            tr_return = page.evaluate("""() => ({
+              project:window.__V1_PROJECT_PROVIDER__.context.project.id,
+              run:window.__V1_PROJECT_PROVIDER__.context.run.id,
+              revision:window.__V1_PROJECT_PROVIDER__.context.project_revision,
+              selected:window.__V1_PROJECT_PROVIDER__.selectedUnit,
+              selectedGeometry:JSON.stringify(window.__V1_PROJECT_PROVIDER__.context.units.find(
+                x=>x.analysis_unit_id===window.__V1_PROJECT_PROVIDER__.selectedUnit
+              )?.geometry),
+              result:JSON.stringify(window.__V1_PROJECT_PROVIDER__.context.run.result)
+            })""")
+            for key in ('project', 'run', 'revision', 'selected', 'selectedGeometry', 'result'):
+                assert tr_return[key] == before[key]
+            assert [url for url in requests if '/api/v2/' in url] == api_requests_before
             page.locator('[data-paper-lang="en"]').click()
             page.goto(f'http://127.0.0.1:{server.server_port}/projects#project={project_id}&section=result')
             expect(page.locator('html')).to_have_attribute('lang', 'en')
             expect(page.locator('h1')).to_have_text('Institutional Agricultural Decision Workflow')
             expect(page.locator('#project-status-badges')).to_contain_text('Revision 21')
+            for section in ('project', 'data', 'readiness', 'analysis', 'result', 'provenance', 'reference'):
+                page.locator(f'[data-project-section="{section}"]').first.click()
+                page.wait_for_function(
+                    "section => location.hash.includes(`section=${section}`)", arg=section
+                )
+                assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+                untranslated = _untranslated_visible_lines(page)
+                assert not untranslated, f'{section}: ' + '\n'.join(untranslated)
             page.goto(
                 f'http://127.0.0.1:{server.server_port}/projects/decision'
                 f'?project_id={project_id}&run_id={run["id"]}'
@@ -152,6 +235,25 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('html')).to_have_attribute('lang', 'en')
             expect(page.locator('#decision-title')).to_contain_text('English Paper UI Parity Project')
             expect(page.locator('#result')).to_contain_text('Verified Water Results')
+            assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+            untranslated = _untranslated_visible_lines(page)
+            assert not untranslated, '\n'.join(untranslated)
+            page.goto(
+                f'http://127.0.0.1:{server.server_port}/?provider=PROJECT_DATA'
+                '&project_id=missing-paper-project'
+            )
+            page.wait_for_function(
+                "!document.body.classList.contains('app-booting')"
+            )
+            page.evaluate(
+                "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
+            )
+            expect(page.locator('html')).to_have_attribute('lang', 'en')
+            expect(page.locator('#v1-provider-error')).to_be_visible()
+            expect(page.locator('#v1-provider-error')).to_contain_text(
+                'Project context could not be opened:'
+            )
+            assert not _untranslated_visible_lines(page)
             assert not page_errors
             reference_tokens = (
                 '/api/parcels', '/api/optimize', '/api/meta', '/api/geojson_files',
@@ -159,7 +261,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             )
             assert not [url for url in requests if any(token in url for token in reference_tokens)]
             stored = client.get(f'/api/v2/projects/{project_id}/analyses/{run["id"]}').json
-            assert stored == run
+            assert json.dumps(stored, sort_keys=True) == json.dumps(stored_before, sort_keys=True)
             browser.close()
     finally:
         server.shutdown()
