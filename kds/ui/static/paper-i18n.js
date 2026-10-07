@@ -594,7 +594,153 @@
     ,'GeoJSON koordinatlarını, geometri tipini ve kapalı poligon halkalarını kontrol edin.': 'Check the GeoJSON coordinates, geometry type, and closed polygon rings.'
     ,'Aynı geometri birden fazla analiz birimine atanmış.': 'The same geometry is assigned to multiple analysis units.'
     ,'Her geometrinin tek bir analysis_unit_id ile eşleştiğini doğrulayın.': 'Verify that each geometry matches exactly one analysis_unit_id.'
+    ,'Miktar (m³)': 'Amount (m³)'
+    ,'Kaydet': 'Save'
+    ,'Onayla': 'Approve'
+    ,'Dosyaları Seç': 'Choose Files'
+    ,'Dosya Seç': 'Choose File'
+    ,'Dosya seçilmedi': 'No file selected'
+    ,'Dosya Önizlemesi': 'File Preview'
+    ,'Otomatik eşleşti; açık onay bekleniyor.': 'Automatically matched; explicit confirmation is pending.'
+    ,'Uzman ve kurum yazışma akışı': 'Expert and Institutional Correspondence'
+    ,'Çiftçi alternatif talepleri, yazışmalar, onay/revizyon/iptal kararları bu sekmede tutulur.': 'Farmer alternative requests, correspondence, and approval/revision/cancellation decisions are managed in this tab.'
+    ,'Kurum gelen talepler / yazışma': 'Incoming Institutional Requests / Correspondence'
+    ,'Görülenleri okundu say': 'Mark Viewed as Read'
+    ,'Okunan bildirimleri temizle': 'Clear Read Notifications'
+    ,'Tüm bildirimleri temizle': 'Clear All Notifications'
+    ,'Gelen mesajlar / yazışma': 'Incoming Messages / Correspondence'
+    ,'Seçilen alternatif:': 'Selected Alternative:'
+    ,'Revizyon iste': 'Request Revision'
+    ,'İptal / reddet': 'Cancel / Reject'
+    ,'Sil': 'Delete'
+    ,'Mesaj gönder': 'Send Message'
+    ,'Bekleyen talep yok.': 'No Pending Requests.'
+    ,'Gelen mesaj yok.': 'No Incoming Messages.'
+    ,'Bu konuşma için mesaj geçmişi yok.': 'No message history exists for this conversation.'
+    ,'Detayı görmek için talep veya mesaj seçin.': 'Select a request or message to view details.'
+    ,'Çiftçiye yanıt / revizyon açıklaması yazın': 'Write a reply / revision explanation to the farmer'
+    ,'Alternatif talebi': 'Alternative Request'
+    ,'Mesaj': 'Message'
+    ,'Sistem': 'System'
+    ,'Kullanıcı': 'User'
+    ,'çiftçi': 'farmer'
+    ,'Çiftçi': 'Farmer'
+    ,'Parsel bildirimi': 'Parcel Notification'
+    ,'Parsel düzeltme / çizim talebi': 'Parcel Correction / Drawing Request'
+    ,'Çiftçiden gelen alternatif onay talebi': 'Alternative Approval Request from Farmer'
+    ,'Çiftçi bu alternatifi uzman onayı için seçti.': 'The farmer selected this alternative for expert approval.'
+    ,'PROJECT DATA geometrileri yüklenen proje dosyalarından gelir. Bu çalışma alanı geometriyi değiştirmeden gösterir; ekleme veya düzeltme için Projeler → Veri Yönetimi alanını kullanın.': 'PROJECT DATA geometries are loaded from the uploaded project files. This run view displays the geometry without modifying it; use Projects → Data Management to add or correct geometry.'
+    ,'Resmî parsel kaydını seçip sınır çizimi, GeoJSON/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu çalışma alanından yönetin. Sol panel yalnız analiz kurulumu ve hızlı özet için sade bırakıldı.': 'Select the official parcel record to manage boundary drawing, GeoJSON/KML upload, farmer assignment, and the selected alternative cropping-pattern record. The left panel remains simplified for analysis setup and quick summary.'
+    ,'İlçe / köy düzeyi karar özeti': 'District / Village-Level Decision Summary'
+    ,'Bu bölüm artık temsili sabit grafik yerine seçili kapsamdan hesaplanan gerçek özetleri gösterir. Amaç; hangi köyde ne kadar alan, mevcut ve önerilen su/kâr farkı ve su tahsis baskısı olduğunu ilk bakışta anlaşılır biçimde sunmaktır.': 'This section presents actual summaries calculated from the selected scope instead of representative fixed charts. It shows each village’s area, current and recommended water/profit differences, and water-allocation pressure at a glance.'
+    ,'Köy bazında toplam alan ve parsel sayısı': 'Total Area and Parcel Count by Village'
+    ,'Köy bazında mevcut ve önerilen toplam su': 'Current and Recommended Total Water by Village'
+    ,'Köy bazında mevcut ve önerilen net kâr': 'Current and Recommended Net Profit by Village'
+    ,'Havza Su Bütçesi - Resmî Özet': 'Basin Water Budget — Official Summary'
+    ,'Planlama su bütçesi, 2024 mevcut ürün deseninden hesaplanan toplam sulama suyu talebi referans alınarak tanımlanmıştır. Su yılı seçimi kuraklık ve gösterge panellerinde bağlamsal analiz için kullanılır.': 'The planning water budget is defined using total irrigation-water demand calculated from the 2024 current cropping pattern. The water-year selection provides context for drought and indicator panels.'
+    ,'Gösterge': 'Indicator'
+    ,'Değer': 'Value'
+    ,'Birim': 'Unit'
+    ,'CSV indir': 'Download CSV'
+    ,'Seçili Senaryoya Göre Optimum Bitki Deseni - Resmî': 'Optimal Crop Pattern for the Selected Scenario — Official'
+    ,'Seçili kapsam / 5 köy parselleri için ürün bazında ekim alanı (sezon/dönem bazında), su ve kâr toplulaştırması. Rotasyon/2. ürün varsa aynı parsel alanı yıl içinde birden fazla ürünle değerlendirilebilir.': 'Crop-level planted-area, water, and profit aggregation by season/period for the selected scope across five villages. With rotation/secondary crops, the same parcel area may support more than one crop during the year.'
+    ,'Ekim Alanı (da - sezon)': 'Planted Area (da – season)'
+    ,'Toplam Su (m³)': 'Total Water (m³)'
+    ,'Toplam Kâr (TL)': 'Total Net Profit (TRY)'
+    ,'Su Verimliliği (TL/m³)': 'Water Productivity (TRY/m³)'
+    ,'Parsel Bazlı Özet - Resmî': 'Parcel Summary — Official'
+    ,'Her parsel için seçili senaryo+algoritma sonucunun su/kâr özeti (küresel su bütçesi sonrası).': 'Water/profit summary of the selected scenario and algorithm result for each parcel after the global water budget is applied.'
+    ,'Not: Bu tablolar, rapora doğrudan eklenebilir/Excel\'e aktarılabilir formatta üretilir.': 'Note: These tables are produced in a format suitable for direct report inclusion or Excel export.'
+    ,'Tüm Parseller - Mevcut vs Önerilen (Şeffaf Karşılaştırma)': 'All Parcels — Current vs Recommended (Transparent Comparison)'
+    ,'Çiftçi için: Her parselde mevcut ekim deseni ile seçili senaryo+algoritma sonucu önerilen desen yan yana. Her parsel satırında "Kıyasla" ile alternatif ürünlerin su/kâr karşılaştırması görülebilir.': 'For farmers: the current cropping pattern and the pattern recommended by the selected scenario and algorithm are shown side by side for each parcel. Use Compare in each row to view water/profit comparisons for alternative crops.'
+    ,'Not: Öneriler, son "Optimizasyonu Çalıştır" sonucuyla senkron tutulur.': 'Note: Recommendations remain synchronized with the latest Run Optimization result.'
+    ,'Mevcut Desen (mevsim)': 'Current Pattern (season)'
+    ,'Mevcut Su (m³)': 'Current Water (m³)'
+    ,'Mevcut Kâr (TL)': 'Current Net Profit (TRY)'
+    ,'Önerilen Desen (mevsim)': 'Recommended Pattern (season)'
+    ,'Öneri Su (m³)': 'Recommended Water (m³)'
+    ,'Öneri Kâr (TL)': 'Recommended Net Profit (TRY)'
+    ,'Neden?': 'Why?'
+    ,'Köy / İlçe bazlı resmî ekim desenleri (paketten özet)': 'Official Village / District Cropping Patterns (Package Summary)'
+    ,'Bu bölüm, veri paketindeki Excel tablolarından türetilen özetleri gösterir (kullanılan bonuslar buradan gelir).': 'This section presents summaries derived from the Excel tables in the data package; the applied bonuses originate here.'
+    ,'Benchmark sekmesi yüklendi.': 'Benchmark Tab Loaded.'
+    ,'Bu bölüm yalnızca backend benchmark sonucunu kullanır. Aynı veri, aynı su bütçesi ve aynı tekrar sayısı altında GA/ABC/ACO algoritmalarının ortalama-medyan-min/max-oynaklık-uygulanabilir çözüm oranı ve süre metrikleri birlikte raporlanır.': 'This section uses only the backend benchmark result. Under the same data, water budget, and repeat count, it jointly reports mean, median, minimum/maximum, variability, feasible-solution rate, and runtime metrics for GA/ABC/ACO.'
+    ,'Karşılaştırma senaryosu': 'Comparison Scenario'
+    ,'Seçili (soldaki Sezon veri seti)': 'Selected (Season Dataset on the Left)'
+    ,'Senaryo-1 (tek ürün)': 'Scenario 1 (Single Crop)'
+    ,'Senaryo-2 (çift ürün / desen)': 'Scenario 2 (Two Crops / Pattern)'
+    ,'İkisini de çalıştır (karşılaştır)': 'Run Both (Compare)'
+    ,'Benchmark modu': 'Benchmark Mode'
+    ,'Detaylı / akademik karşılaştırma': 'Detailed / Academic Comparison'
+    ,'Hızlı ön izleme': 'Quick Preview'
+    ,'Tekrar sayısı': 'Repeat Count'
+    ,'Seed (opsiyonel)': 'Seed (Optional)'
+    ,'boş = rastgele': 'blank = random'
+    ,'Karşılaştırmayı Çalıştır': 'Run Comparison'
+    ,'Tekrar sayısı kararlılık analizi': 'Repeat-Count Stability Analysis'
+    ,'En uygun tekrar sayısı yalnızca en yüksek tekil sonuca göre değil; çözüm kararlılığı, uygulanabilirlik oranı, marjinal iyileşme ve çalışma süresi birlikte değerlendirilerek seçilir.': 'The most suitable repeat count is selected by jointly evaluating solution stability, feasibility rate, marginal improvement, and runtime rather than only the highest single result.'
+    ,'GA, ACO ve ABC stokastik/sezgisel algoritmalar olduğundan tek koşu yerine bağımsız tekrarlar üzerinden değerlendirilmiştir. Varsayılan 30 koşu, ortalama performans ve kararlılık göstergelerinin hesaplanabilmesi için kullanılır. 50 ve 100 koşu seçenekleri ek kararlılık analizi amacı taşır.': 'Because GA, ACO, and ABC are stochastic/heuristic algorithms, they are evaluated over independent repeats instead of a single run. The default 30 runs support calculation of average performance and stability indicators; 50 and 100 runs provide additional stability analysis.'
+    ,'Kurum görünümünde hedef modu × algoritma karşılaştırma özeti burada gösterilir.': 'The objective-mode × algorithm comparison summary is shown here in the institutional view.'
+    ,'Net kâr dağılımı (ort / min / max)': 'Net Profit Distribution (mean / min / max)'
+    ,'Toplam su dağılımı (ort / min / max)': 'Total Water Distribution (mean / min / max)'
+    ,'Algoritma kalite profili (TL/m³ - uygulanabilirlik - plan farkı)': 'Algorithm Quality Profile (TRY/m³ – feasibility – plan difference)'
+    ,'Sure - oynaklik - desen cesitliligi profili': 'Runtime – Variability – Pattern Diversity Profile'
+    ,'UYGULANAMAZ / NOT APPLICABLE — S1 tek sezon bağlamı.': 'NOT APPLICABLE — S1 single-season context.'
+    ,'Analiz Birimi Özeti - Resmî': 'Analysis-Unit Summary — Official'
+    ,'Tüm seçili parseller': 'All Selected Parcels'
+    ,'Tüm seçili analiz birimleri': 'All Selected Analysis Units'
+    ,'Seçili kapsam:': 'Selected Scope:'
+    ,'Hedef:': 'Objective:'
+    ,'Köy özeti': 'Village Summary'
+    ,'İlçe özeti': 'District Summary'
+    ,'Not': 'Note'
+    ,'Bu tablolar yalnızca seçili kapsamdan hesaplanır. Tek parsel seçiliyse tüm ilçe toplamı değil, o parselin ait olduğu kapsam görünür. Böylece NaN ve yanıltıcı toplamlar oluşmaz.': 'These tables are calculated only from the selected scope. When one parcel is selected, its scope is shown instead of the entire district total, preventing NaN values and misleading totals.'
+    ,'Bu tablolar yalnızca seçili kapsamdan hesaplanır. Tek analiz birimi seçiliyse tüm ilçe toplamı değil, o analiz biriminin ait olduğu kapsam görünür. Böylece NaN ve yanıltıcı toplamlar oluşmaz.': 'These tables are calculated only from the selected scope. When one analysis unit is selected, its scope is shown instead of the entire district total, preventing NaN values and misleading totals.'
+    ,'Bilinmeyen köy': 'Unknown Village'
+    ,'Seçili köy': 'Selected Villages'
+    ,'Kapsamda özetlenen yerleşim adedi': 'Settlements Summarized in Scope'
+    ,'Toplam alan': 'Total Area'
+    ,'Seçili kapsamın toplam ekili alanı': 'Total Planted Area in the Selected Scope'
+    ,'Öneri su farkı': 'Recommended Water Difference'
+    ,'Mevcut desene göre toplam fark': 'Total Difference from Current Pattern'
+    ,'Karar özeti:': 'Decision Summary:'
+    ,'Kapsam': 'Scope'
+    ,'Seçili plan yılı': 'Selected Planning Year'
+    ,'Kapsam kullanılabilir su': 'Available Water for Scope'
+    ,'Önerilen toplam talep': 'Total Recommended Demand'
+    ,'Su dengesi (kalan / açık)': 'Water Balance (remaining / deficit)'
+    ,'Su durumu': 'Water Status'
+    ,'Uygun': 'Compliant'
+    ,'Aşım': 'Exceeded'
+    ,'yıl': 'year'
+    ,'Toplam:': 'Total:'
+    ,'alan': 'area'
+    ,'su': 'water'
+    ,'kâr': 'net profit'
+    ,'Mevcut desen': 'Current Pattern'
+    ,'Su Tasarrufu': 'Water Saving'
+    ,'Kâr': 'Profit'
+    ,'Su Etkin Kullanım': 'Water-Use Efficiency'
+    ,'Hazır': 'Ready'
+    ,'NOT APPLICABLE — S1 tek sezon bağlamı': 'NOT APPLICABLE — S1 single-season context'
+    ,'UYGULANMAZ': 'NOT APPLICABLE'
+    ,'Bilimsel girdileri kaydet': 'Save Scientific Inputs'
+    ,'Algoritma karşılaştırması (Benchmark)': 'Algorithm Comparison (Benchmark)'
+    ,'Bu bölüm yalnızca': 'This section uses only the'
+    ,'Proje planning-year water': 'Project Planning-Year Water'
+    ,'Proje su bütçesi': 'Project Water Budget'
+    ,'Mevcut desen suyu': 'Current Cropping-Pattern Water'
+    ,'Yıllık bütçe durumu': 'Annual Budget Status'
+    ,'durum': 'status'
+    ,'PROJECT DATA · backend-authoritative proje ve saklanmış run değerleri': 'PROJECT DATA · Backend-Authoritative Project and Stored-Run Values'
   }));
+
+  function isProjectDataProvider() {
+    return window.__V1_PROJECT_PROVIDER__?.provider === 'PROJECT_DATA' ||
+      new URLSearchParams(location.search).get('provider') === 'PROJECT_DATA';
+  }
+
+  const providerNoun = (parcelText, unitText) => isProjectDataProvider() ? unitText : parcelText;
 
   const replacements = [
     [/^Ne oldu\? /g, 'What happened? '],
@@ -839,6 +985,10 @@
     [/\bBUĞDAY\b/g, 'WHEAT'],
     [/\bELMA\b/g, 'APPLE'],
     [/\bARMUT\b/g, 'PEAR'],
+    [/\bKIMYON\b/g, 'CUMIN'],
+    [/\bDANE\b/g, 'GRAIN'],
+    [/\bSu Tasarrufu\b/g, 'Water Saving'],
+    [/\bTL\b/g, 'TRY'],
     [/Analiz Birimi Karar Özeti/g, 'Analysis Unit Decision Summary'],
     [/Analiz Birimi Su-Kâr Metrikleri/g, 'Analysis Unit Water–Profit Metrics'],
     [/Analiz Birimleri Haritası/g, 'Analysis Unit Map'],
@@ -975,7 +1125,75 @@
     [/^Parcel düzeyi desen$/g, 'Parcel-Level Pattern'],
     [/^Parcel çizim \/ bilgi atama$/g, 'Parcel Geometry and Information Assignment'],
     [/^Yağmurlama$/g, 'Sprinkler'],
-    [/^Öneriler ve kısıt değerlendirmesi, optimizasyon çalıştırıldıktan sonra gösterilir\.$/g, 'Recommendations and constraint assessment are shown after optimization runs.']
+    [/^Öneriler ve kısıt değerlendirmesi, optimizasyon çalıştırıldıktan sonra gösterilir\.$/g, 'Recommendations and constraint assessment are shown after optimization runs.'],
+    [/(\d+) engelleyici bulgu:/g, '$1 blocking findings:'],
+    [/^Engelleyici bulgu (?:yok|none)\.$/g, 'No blocking findings.'],
+    [/^Kurumsal analiz görünümü aktif\.(.*)$/g, (_match, rest) => `Institutional Analysis View is active.${translate(rest)}`],
+    [/^Kurumsal analiz görünümü$/g, 'Institutional Analysis View'],
+    [/^(\d+) bekleyen talep ([·•]) (\d+) bildirim$/g, '$1 pending requests $2 $3 notifications'],
+    [/^(\d+) konuşma$/g, '$1 conversations'],
+    [/^(\d+) bildirim$/g, '$1 notifications'],
+    [/^(\d+) mesaj$/g, '$1 messages'],
+    [/^Seçili (talep|konuşma):/g, (_m, kind) => `Selected ${kind === 'talep' ? 'request' : 'conversation'}:`],
+    [/^Parsel: (.+) ([·•]) (\d+) mesaj$/g, 'Parcel: $1 $2 $3 messages'],
+    [/^(.+) (P[A-Za-z0-9_-]+) parseli için mesaj gönderdi\.$/g, '$1 sent a message for parcel $2.'],
+    [/^(.+) (P[A-Za-z0-9_-]+) parcelsi için mesaj gönderdi\.$/g, '$1 sent a message for parcel $2.'],
+    [/^(.+) (P[A-Za-z0-9_-]+) parseli için alternatif talebi gönderdi\.$/g, '$1 submitted an alternative request for parcel $2.'],
+    [/^(.+) (P[A-Za-z0-9_-]+) parcelsi için alternatif talebi gönderdi\.$/g, '$1 submitted an alternative request for parcel $2.'],
+    [/^Talebiniz uzman tarafından onaylandı\. (?:Seçilen|Selected) alternatif onaylı güncel plan sekmesine eklendi\.$/g, 'Your request was approved by the expert. The selected alternative was added to the approved current-plan tab.'],
+    [/^Uzman\/kurum size bir mesaj gönderdi\.$/g, 'The expert/institution sent you a message.'],
+    [/^Yönetici size bir mesaj gönderdi\.$/g, 'The administrator sent you a message.'],
+    [/^(.+) yeni bir mesaj bıraktı\.$/g, '$1 left a new message.'],
+    [/^(.+) sonra (.+) alternatifini seçmek istiyorum\. Su: (.+), net (?:kâr|profit): (.+)\. Uzman onayı rica ediyorum\.$/g, 'I would like to select $2 after $1. Water: $3, net profit: $4. Expert approval is requested.'],
+    [/^(.+) tek ürün alternatifini talep ediyorum\. Hedef: (.+)\. Algoritma: (.+)\. Su: (.+), net kâr: (.+)\. Uzman onayı ve parselime atanmasını rica ediyorum\.$/g, 'I request the single-crop $1 alternative. Objective: $2. Algorithm: $3. Water: $4, net profit: $5. I request expert approval and assignment to my parcel.'],
+    [/^(.+) tek crop alternatifini talep ediyorum\. Hedef: (.+)\. Algoritma: (.+)\. Su: (.+), net (?:kâr|profit): (.+)\. Uzman onayı ve parcelime atanmasını rica ediyorum\.$/g, 'I request the single-crop $1 alternative. Objective: $2. Algorithm: $3. Water: $4, net profit: $5. I request expert approval and assignment to my parcel.'],
+    [/^PROJECT DATA geometrileri yüklenen proje dosyalarından gelir\..*kullanın\.$/g, 'PROJECT DATA geometries are loaded from the uploaded project files. This run view displays the geometry without modifying it; use Projects → Data Management to add or correct geometry.'],
+    [/^Resmî (?:parsel|analiz birimi) kaydını seçip sınır çizimi, GeoJSON\/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu çalışma alanından yönetin\..*$/g, 'Select the official analysis-unit record to manage boundary drawing, GeoJSON/KML upload, farmer assignment, and the selected alternative cropping-pattern record. The left panel remains simplified for analysis setup and quick summary.'],
+    [/^Resmî (?:analysis unit|parsel|analiz birimi) kaydını seçip sınır çizimi, GeoJSON\/KML yükleme, çiftçi ataması ve seçilen alternatif desen kaydını bu (?:run|çalışma) alanından yönetin\..*$/g, 'Select the official analysis-unit record to manage boundary drawing, GeoJSON/KML upload, farmer assignment, and the selected alternative cropping-pattern record. The left panel remains simplified for analysis setup and quick summary.'],
+    [/^Proje kapsamı (.+) Akkaya özeti kullanılmadı\.$/g, 'Project scope: $1. The Akkaya summary was not used.'],
+    [/^(.+) ([·•]) backend karar bağlamından (\d+) (?:analysis unit|analiz birimi)\. Akkaya özeti kullanılmadı\.$/g, '$1 $2 $3 analysis units from the backend decision context. The Akkaya summary was not used.'],
+    [/^Köy bazında toplam alan ve (?:analysis unit|parsel) sayısı$/g, 'Total Area and Analysis-Unit Count by Village'],
+    [/^Seçili kapsamda özet üretilecek (?:parsel|analysis unit) bulunamadı\.$/g, 'No analysis units are available for a summary in the selected scope.'],
+    [/^Seçili köy$/g, 'Selected Villages'],
+    [/^Kapsamda özetlenen yerleşim adedi$/g, 'Settlements Summarized in Scope'],
+    [/^Toplam (?:parsel|analysis unit)$/g, () => providerNoun('Total Parcels', 'Total Analysis Units')],
+    [/^Analitik temsilde hesaba katılan (?:parseller|analysis units)$/g, () => providerNoun('Parcels Included in the Analytical Representation', 'Analysis Units Included in the Analytical Representation')],
+    [/^Seçili kapsamın toplam ekili alanı$/g, 'Total Planted Area in the Selected Scope'],
+    [/^Öneri su farkı$/g, 'Recommended Water Difference'],
+    [/^Mevcut desene göre toplam fark$/g, 'Total Difference from Current Pattern'],
+    [/^Karar özeti:$/g, 'Decision Summary:'],
+    [/^Suda en güçlü değişim$/g, 'Strongest Water Change'],
+    [/^Kâr etkisi en yüksek köy$/g, 'Village with the Highest Profit Impact'],
+    [/^Baskın ürünler$/g, 'Dominant Crops'],
+    [/^Mevcut su$/g, 'Current Water'],
+    [/^Öneri su$/g, 'Recommended Water'],
+    [/^Mevcut kâr$/g, 'Current Net Profit'],
+    [/^Öneri kâr$/g, 'Recommended Net Profit'],
+    [/^Seçili plan yılı$/g, 'Selected Planning Year'],
+    [/^Kapsam kullanılabilir su$/g, 'Available Water for Scope'],
+    [/^(?:Parsel|Analysis Unit) kullanılabilir su payı$/g, () => providerNoun('Available Parcel Water Share', 'Available Analysis-Unit Water Share')],
+    [/^Önerilen toplam talep$/g, 'Total Recommended Demand'],
+    [/^Su dengesi \(kalan \/ açık\)$/g, 'Water Balance (remaining / deficit)'],
+    [/^Su durumu$/g, 'Water Status'],
+    [/^Uygun$/g, 'Compliant'],
+    [/^Aşım$/g, 'Exceeded'],
+    [/^Toplam: alan (.+) da ([·•]) su (.+) m³ ([·•]) kâr (.+) TL$/g, 'Total: area $1 da $2 water $3 m³ $4 net profit $5 TRY'],
+    [/^(.+) ([·•]) Hedef: (.+)\. Tekil (?:parsel|analysis unit)de su bütçesi havza toplamından değil, (?:parselin|analysis unitin) alan payı\/kotasından hesaplanır\.$/g, '$1 $2 Objective: $3. For a single analysis unit, the water budget is calculated from its area share/quota rather than the basin total.'],
+    [/^Analiz Birimi Özeti - Resmî$/g, 'Analysis-Unit Summary — Official'],
+    [/^Tüm Analiz birimleri - Mevcut vs Recommended \(Şeffaf Karşılaştırma\)$/g, 'All Analysis Units — Current vs Recommended (Transparent Comparison)'],
+    [/^Selected kapsam \/ 5 köy analiz birimlerii için crop bazında ekim alanı .*$/g, 'Crop-level planted-area, water, and profit aggregation by season/period for the selected scope across five villages. With rotation/secondary crops, the same analysis-unit area may support more than one crop during the year.'],
+    [/^Immutable run (run-[A-Za-z0-9]+) ([·•]) backend crop bazında su\/kâr dağılımı sağlamadığı için bu hücreler açıkça boş bırakıldı\.$/g, 'Immutable run $1 $2 These cells are explicitly left blank because the backend did not provide crop-level water/profit allocation.'],
+    [/^Her analysis unit için seçili senaryo\+algoritma sonucunun su\/kâr özeti \(küresel su bütçesi sonrası\)\.$/g, 'Water/profit summary of the selected scenario and algorithm result for each analysis unit after the global water budget is applied.'],
+    [/^Çiftçi için: Her analysis unitnde mevcut ekim deseni ile seçili senaryo\+algoritma sonucu önerilen desen yan yana\..*$/g, 'For farmers: the current cropping pattern and the pattern recommended by the selected scenario and algorithm are shown side by side for each analysis unit. Use Compare in each row to view water/profit comparisons for alternative crops.'],
+    [/^Not: Öneriler, seçili senaryo \+ algoritma ile anlık üretilir \(henüz toplu optimizasyon çalıştırılmadı\)\.$/g, 'Note: Recommendations are generated live from the selected scenario and algorithm; batch optimization has not yet run.'],
+    [/^Bu özet yalnız yüklenmiş PROJECT DATA, doğrulanmış revision ve seçili immutable run bağlamını kullanır\..*$/g, 'This summary uses only uploaded PROJECT DATA, the verified revision, and the selected immutable-run context. Because the package contains no separately published official table, it makes no separate official-authority claim.'],
+    [/^NOT APPLICABLE — S1 tek sezon bağlamı\.$/g, 'NOT APPLICABLE — S1 single-season context.'],
+    [/^Not: "Mevcut desen" seçiliyken algoritma kıyası anlamlı değildir; kıyas için (.+)$/g, 'Note: Algorithm comparison is not meaningful when Current Pattern is selected; choose one of $1 for comparison.'],
+    [/^Note: Algorithm comparison is not meaningful when Current Pattern is selected;.*for comparison\.$/g, 'Note: Algorithm comparison is not meaningful when Current Pattern is selected; choose Water Saving, Profit Maximization, or Water-Use Efficiency for comparison.'],
+    [/^sonucunu kullanır\. Aynı veri, aynı su bütçesi ve aynı tekrar sayısı altında.*$/g, 'result. Under the same data, water budget, and repeat count, it jointly reports mean, median, minimum/maximum, variability, feasible-solution rate, and runtime metrics for GA/ABC/ACO.'],
+    [/^Aktif stored run: (.+)\. Diğer kombinasyonlar yalnız çalıştırılıp saklandığında karşılaştırılır\.$/g, 'Active stored run: $1. Other combinations are compared only after they are executed and stored.'],
+    [/^Algoritma karşılaştırması için birden fazla PROJECT_DATA stored run gerekli; Akkaya benchmark değeri gösterilmedi\.$/g, 'Algorithm comparison requires multiple PROJECT_DATA stored runs; no Akkaya benchmark value is displayed.'],
+    [/^Bu bölüm yalnızca backend benchmark sonucunu kullanır\.(.*)$/g, (_m, rest) => `This section uses only the backend benchmark result.${translate(rest)}`]
   ];
 
   function translate(value) {
@@ -984,13 +1202,13 @@
     const trailing = value.match(/\s*$/)[0];
     const core = value.slice(leading.length, value.length - trailing.length);
     if (/\.(?:xlsx|xls|csv|geojson|json)\b/i.test(core)) return leading + core + trailing;
-    let result = exact.get(core) || core;
-    if (result === core) {
-      for (let pass = 0; pass < 8; pass += 1) {
-        const before = result;
-        replacements.forEach(([pattern, replacement]) => { result = result.replace(pattern, replacement); });
-        if (result === before) break;
-      }
+    const normalizedCore = core.replace(/\s+/g, ' ');
+    let result = exact.get(core) || exact.get(normalizedCore) || normalizedCore;
+    for (let pass = 0; pass < 8; pass += 1) {
+      const before = result;
+      result = exact.get(result) || result;
+      replacements.forEach(([pattern, replacement]) => { result = result.replace(pattern, replacement); });
+      if (result === before) break;
     }
     return leading + result + trailing;
   }
@@ -1004,7 +1222,10 @@
     }
     names.forEach(name => {
       if (!element.hasAttribute?.(name)) return;
-      if (refresh || !(name in values)) values[name] = element.getAttribute(name);
+      const current = element.getAttribute(name);
+      const translatedEcho = refresh && language === 'en' && name in values &&
+        translate(values[name]) === current;
+      if ((!translatedEcho && refresh) || !(name in values)) values[name] = current;
       element.setAttribute(name, language === 'en' ? translate(values[name]) : values[name]);
     });
   }
@@ -1025,7 +1246,9 @@
     nodes.forEach(node => {
       const parent = node.parentElement;
       if (!parent || /^(SCRIPT|STYLE|PRE|CODE)$/.test(parent.tagName)) return;
-      if (refresh || !originalText.has(node)) originalText.set(node, node.data);
+      const translatedEcho = refresh && language === 'en' && originalText.has(node) &&
+        translate(originalText.get(node)) === node.data;
+      if ((!translatedEcho && refresh) || !originalText.has(node)) originalText.set(node, node.data);
       const source = originalText.get(node);
       node.data = language === 'en' ? translate(source) : source;
       if (language === 'en' && parent.closest?.('#roleInfoBanner')) {
@@ -1087,6 +1310,40 @@
     });
   }
 
+  function refreshFileControl(input) {
+    const control = input.nextElementSibling?.classList?.contains('paper-file-control')
+      ? input.nextElementSibling : null;
+    if (!control) return;
+    const button = control.querySelector('.paper-file-button');
+    const status = control.querySelector('.paper-file-status');
+    const count = input.files?.length || 0;
+    if (button) button.textContent = language === 'en'
+      ? (input.multiple ? 'Choose Files' : 'Choose File')
+      : (input.multiple ? 'Dosyaları Seç' : 'Dosya Seç');
+    if (!status) return;
+    if (!count) status.textContent = language === 'en' ? 'No file selected' : 'Dosya seçilmedi';
+    else if (input.multiple) status.textContent = language === 'en'
+      ? `${count} files selected` : `${count} dosya seçildi`;
+    else status.textContent = input.files[0]?.name || (language === 'en' ? '1 file selected' : '1 dosya seçildi');
+  }
+
+  function installFileControls(root=document) {
+    const inputs = [];
+    if (root?.matches?.('input[type="file"]')) inputs.push(root);
+    root?.querySelectorAll?.('input[type="file"]').forEach(input => inputs.push(input));
+    inputs.forEach(input => {
+      if (!input.classList.contains('paper-native-file-input')) {
+        input.classList.add('paper-native-file-input');
+        const control = document.createElement('span');
+        control.className = 'paper-file-control';
+        control.innerHTML = '<span class="paper-file-button"></span><span class="paper-file-status" aria-live="polite"></span>';
+        input.insertAdjacentElement('afterend', control);
+        input.addEventListener('change', () => refreshFileControl(input));
+      }
+      refreshFileControl(input);
+    });
+  }
+
   function switchHost() {
     if (document.body.classList.contains('auth-pending')) {
       return document.querySelector('.auth-card-head') || document.querySelector('.auth-card');
@@ -1131,6 +1388,7 @@
     document.documentElement.lang = language;
     observer?.disconnect();
     applyNode(document);
+    installFileControls(document);
     applyCharts();
     document.title = language === 'en' ? translate(document.title) : (originalTitle || document.title);
     updateSwitch();
@@ -1143,7 +1401,7 @@
   language = supported.has(queryLanguage) ? queryLanguage : (supported.has(localStorage.getItem(STORAGE_KEY)) ? localStorage.getItem(STORAGE_KEY) : 'tr');
   installSwitch();
   const style = document.createElement('style');
-  style.textContent = '.paper-language-switch{position:static;z-index:auto;display:inline-flex;flex:0 0 auto;align-items:center;align-self:center;gap:2px;min-width:max-content;padding:3px;border:1px solid rgba(255,255,255,.42);border-radius:999px;background:rgba(7,42,34,.72);box-shadow:0 3px 12px rgba(0,0,0,.14)}.paper-language-switch button{min-height:30px;min-width:38px;padding:4px 10px;border:0;border-radius:999px;background:transparent;color:#dcebe5;font:700 12px/1.2 Inter,"Segoe UI",Arial,sans-serif;cursor:pointer}.paper-language-switch button.active{background:#fff;color:#164f40}.paper-language-switch button:focus-visible{outline:3px solid #7cc7ff;outline-offset:2px}.paper-language-switch--auth{align-self:flex-start;margin-top:12px;background:#102f28}.paper-language-switch--v1{height:44px;margin-left:2px}.topbar-actions{flex-wrap:wrap}.paper-language-switch--topbar{order:3}@media(max-width:1050px){.paper-language-switch button{min-width:36px;padding-inline:8px}.paper-language-switch--v1{margin-left:0}}@media(max-width:650px){.paper-language-switch--topbar{justify-self:end}.paper-language-switch--auth{margin-top:10px}}@media print{.paper-language-switch{display:none!important}}';
+  style.textContent = '.paper-language-switch{position:static;z-index:auto;display:inline-flex;flex:0 0 auto;align-items:center;align-self:center;gap:2px;min-width:max-content;padding:3px;border:1px solid rgba(255,255,255,.42);border-radius:999px;background:rgba(7,42,34,.72);box-shadow:0 3px 12px rgba(0,0,0,.14)}.paper-language-switch button{min-height:30px;min-width:38px;padding:4px 10px;border:0;border-radius:999px;background:transparent;color:#dcebe5;font:700 12px/1.2 Inter,"Segoe UI",Arial,sans-serif;cursor:pointer}.paper-language-switch button.active{background:#fff;color:#164f40}.paper-language-switch button:focus-visible{outline:3px solid #7cc7ff;outline-offset:2px}.paper-language-switch--auth{align-self:flex-start;margin-top:12px;background:#102f28}.paper-language-switch--v1{height:44px;margin-left:2px}.topbar-actions{flex-wrap:wrap}.paper-language-switch--topbar{order:3}.paper-native-file-input{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}.paper-file-control{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}.paper-file-button{display:inline-flex;align-items:center;min-height:38px;padding:7px 12px;border:1px solid #9fb7ae;border-radius:8px;background:#f7fbf9;color:#164f40;font-weight:700;cursor:pointer}.paper-file-status{color:#52645e;font-size:13px;font-weight:500}@media(max-width:1050px){.paper-language-switch button{min-width:36px;padding-inline:8px}.paper-language-switch--v1{margin-left:0}}@media(max-width:650px){.paper-language-switch--topbar{justify-self:end}.paper-language-switch--auth{margin-top:10px}}@media print{.paper-language-switch{display:none!important}}';
   document.head.append(style);
   placementObserver = new MutationObserver(installSwitch);
   placementObserver.observe(document.body, {attributes:true, attributeFilter:['class']});
@@ -1152,7 +1410,7 @@
     mutations.forEach(mutation => {
       if (mutation.type === 'characterData') applyNode(mutation.target, true);
       else if (mutation.type === 'attributes') rememberAttributes(mutation.target, true);
-      else mutation.addedNodes.forEach(node => applyNode(node));
+      else mutation.addedNodes.forEach(node => { applyNode(node); installFileControls(node); });
     });
     installSwitch();
     updateSwitch();

@@ -53,6 +53,16 @@ TURKISH_UI_TERMS = re.compile(
     re.IGNORECASE,
 )
 
+FORBIDDEN_EN_UI = re.compile(
+    r'(?:Dosyaları?\s+Seç|Dosya seçilmedi|Kaydet|Miktar|Engelleyici|\bbulgu\b|'
+    r'Uygulanmaz|Kurumsal analiz|Uzman|Kurum gelen|Görülenleri|bildirimleri|'
+    r'Onayla|Revizyon iste|İptal|reddet|\bSil\b|Mesaj gönder|geometrileri|'
+    r'Resmî|\bKöy\b|Havza|Bitki Deseni|Toplam Kâr|Su Verimliliği|CSV indir|'
+    r'Benchmark sekmesi|Bu bölüm|Mevcut desen|tek sezon bağlamı|'
+    r'\b(?:gonderdi|sec|urun|onay|talep|parseli|uygulanmaz)\b)',
+    re.IGNORECASE,
+)
+
 ALLOWED_NON_ENGLISH = re.compile(
     r'\b(?:Niğde|Akkaya|Sazlıca|Bahçeli|Kemerhisar|Kaynarca|Bor|Betül Demir|'
     r'Yeşim Dokuz|Burak Şen|İlçe Merkezi)\b',
@@ -97,7 +107,8 @@ def _untranslated_visible_lines(page):
         if re.search(r'\.(?:xlsx|xls|csv|geojson|json)\b', line, re.IGNORECASE):
             continue
         candidate = ALLOWED_NON_ENGLISH.sub('', line)
-        if TURKISH_CHARACTERS.search(candidate) or TURKISH_UI_TERMS.search(candidate):
+        if (TURKISH_CHARACTERS.search(candidate) or TURKISH_UI_TERMS.search(candidate)
+                or FORBIDDEN_EN_UI.search(candidate)):
             result.append(line)
     return result
 
@@ -279,6 +290,61 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 'geometry': 24,
             }
 
+            tab_leaks = {}
+            for tab_key in (
+                'institution-communication', 'drawing', 'district', 'official', 'benchmark'
+            ):
+                assert page.evaluate('key => switchTabByKey(key)', tab_key)
+                page.wait_for_timeout(150)
+                page.evaluate("window.__CROP_KDS_I18N__.setLanguage('en')")
+                assert page.locator(f'#tab-{tab_key}').is_visible()
+                untranslated = _untranslated_visible_lines(page)
+                if untranslated:
+                    tab_leaks[tab_key] = untranslated
+                assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
+            assert not tab_leaks, '\n'.join(
+                f'{tab}: {line}' for tab, lines in tab_leaks.items() for line in lines
+            )
+            dynamic_chart_labels = page.evaluate("""() => {
+              window.__CROP_KDS_I18N__.applyCharts();
+              return JSON.stringify(Array.from(document.querySelectorAll('canvas')).map(canvas => {
+                const chart=window.Chart?.getChart?.(canvas);
+                return chart ? {
+                  labels:chart.data.labels,
+                  datasets:(chart.data.datasets||[]).map(dataset=>dataset.label),
+                  title:chart.options?.plugins?.title?.text,
+                  axes:Object.values(chart.options?.scales||{}).map(axis=>axis?.title?.text)
+                } : null;
+              }));
+            }""")
+            assert not (
+                TURKISH_CHARACTERS.search(dynamic_chart_labels)
+                or TURKISH_UI_TERMS.search(dynamic_chart_labels)
+                or FORBIDDEN_EN_UI.search(dynamic_chart_labels)
+            ), dynamic_chart_labels
+            expect(page.locator('#tab-official')).to_contain_text(
+                'Analysis-Unit Summary — Official'
+            )
+            translated_templates = page.evaluate("""() => [
+              'Betül Demir P23 parseli için mesaj gönderdi.',
+              'Betül Demir P23 parseli için alternatif talebi gönderdi.',
+              'Talebiniz uzman tarafından onaylandı. Seçilen alternatif onaylı güncel plan sekmesine eklendi.',
+              'ARPA (DANE) sonra KIMYON alternatifini seçmek istiyorum. Su: 4,327,129 m³, net kâr: 39,229,300 TL. Uzman onayı rica ediyorum.',
+              'MERCIMEK tek ürün alternatifini talep ediyorum. Hedef: Su Tasarrufu. Algoritma: GA. Su: 792,511 m³, net kâr: 18,770,000 TL. Uzman onayı ve parselime atanmasını rica ediyorum.'
+              ,'aaaa'
+              ,'hhhhh'
+            ].map(value => window.__CROP_KDS_I18N__.translate(value))""")
+            assert translated_templates == [
+                'Betül Demir sent a message for parcel P23.',
+                'Betül Demir submitted an alternative request for parcel P23.',
+                'Your request was approved by the expert. The selected alternative was added to the approved current-plan tab.',
+                'I would like to select CUMIN after BARLEY (GRAIN). Water: 4,327,129 m³, net profit: 39,229,300 TRY. Expert approval is requested.',
+                'I request the single-crop LENTIL alternative. Objective: Water Saving. Algorithm: GA. Water: 792,511 m³, net profit: 18,770,000 TRY. I request expert approval and assignment to my parcel.',
+                'aaaa',
+                'hhhhh',
+            ]
+            assert page.evaluate("key => switchTabByKey(key)", 'parcel')
+
             page.locator('[data-paper-lang="tr"]').click()
             expect(page.locator('#metricsTitle')).to_have_text(
                 'Analiz Birimi Karar Özeti (KDS-009)'
@@ -307,16 +373,29 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 f'#project={upload_preview_id}&section=data'
             )
             expect(page.locator('#project-status-badges')).to_contain_text('Revision 0')
+            file_input = page.locator('#bulk-upload-form input[type="file"]')
+            file_control = page.locator('#bulk-upload-form .paper-file-control')
+            expect(file_control).to_be_visible()
+            expect(file_control.locator('.paper-file-button')).to_have_text('Choose Files')
+            expect(file_control.locator('.paper-file-status')).to_have_text('No file selected')
+            assert file_input.evaluate(
+                "node => node.getBoundingClientRect().width <= 1 && node.getBoundingClientRect().height <= 1"
+            )
             package_files = [
                 str(path) for path in sorted(PACKAGE.iterdir())
                 if path.suffix.lower() in {'.csv', '.xlsx', '.geojson'}
             ]
-            page.locator('#bulk-upload-form input[type="file"]').set_input_files(package_files)
+            file_input.set_input_files(package_files)
+            expect(file_control.locator('.paper-file-status')).to_have_text('21 files selected')
             page.locator('#bulk-upload-form button[type="submit"]').click()
             expect(page.locator('#bulk-import-results')).to_be_visible(timeout=30000)
             expect(page.locator('#bulk-import-body tr')).to_have_count(21)
             untranslated = _untranslated_visible_lines(page)
             assert not untranslated, 'bulk-preview: ' + '\n'.join(untranslated)
+            page.locator('[data-project-section="readiness"]').first.click()
+            page.wait_for_function("location.hash.includes('section=readiness')")
+            untranslated = _untranslated_visible_lines(page)
+            assert not untranslated, 'blocked-readiness: ' + '\n'.join(untranslated)
             page.goto(
                 f'http://127.0.0.1:{server.server_port}/projects'
                 f'#project={project_id}&section=result'
@@ -327,6 +406,12 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 page.wait_for_function(
                     "section => location.hash.includes(`section=${section}`)", arg=section
                 )
+                if section == 'data':
+                    page.locator('#budget-form').evaluate(
+                        "form => { form.closest('details').open = true; }"
+                    )
+                    expect(page.locator('#budget-form')).to_contain_text('Amount (m³)')
+                    expect(page.locator('#budget-form button')).to_have_text('Save')
                 assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
                 untranslated = _untranslated_visible_lines(page)
                 assert not untranslated, f'{section}: ' + '\n'.join(untranslated)
