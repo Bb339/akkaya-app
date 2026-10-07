@@ -8,6 +8,7 @@
   const originalCharts = new WeakMap();
   let language = 'tr';
   let observer = null;
+  let placementObserver = null;
 
   const exact = new Map(Object.entries({
     'Tarımsal Karar Destek Sistemi': 'Agricultural Decision Support System',
@@ -378,9 +379,41 @@
     'Hazırlayan': 'Prepared by',
     'Danışman': 'Supervisor',
     'Eş danışman': 'Co-Supervisor',
+    'Lisansüstü tez prototipi': 'Graduate Thesis Prototype',
+    'Disiplinlerarası Dijital Tarım Anabilim Dalı': 'Interdisciplinary Digital Agriculture Graduate Program',
+    'Bir havzada yıllık su miktarına göre optimum bitki deseni sisteminin geliştirilmesi': 'Development of an Optimal Cropping Pattern System Based on Annual Water Availability in a Basin',
+    'Bu giriş paneli, tez kapsamında geliştirilen karar destek sistemini akademik, kurumsal ve anlaşılır bir arayüzle sunar. Sistem; çiftçi kullanıcıları için parsel bazlı öneri ekranlarına, kurum kullanıcıları için ise havza ölçeğinde analiz, karşılaştırma ve izleme panellerine dönüşür.': 'This sign-in page presents the decision support system developed as part of the thesis through a clear academic and institutional interface. The system provides parcel-level recommendation views for farmers and basin-scale analysis, comparison, and monitoring dashboards for institutional users.',
     'Çiftçi paneli': 'Farmer Dashboard',
     'Kurum paneli': 'Institutional Dashboard',
     'Karar çıktıları': 'Decision Outputs',
+    'Kendi parselleri, mevcut ürün bilgisi, önerilen desen, su tasarrufu ve gelir etkisi.': 'Their own parcels, current crop information, recommended pattern, water savings, and income impact.',
+    'Havza geneli harita, senaryo karşılaştırması, su bütçesi ve uzun vadeli etki analizleri.': 'Basin-wide map, scenario comparison, water budget, and long-term impact analyses.',
+    'Su kısıtı altında optimum bitki deseni, ekonomik etki ve uygulanabilir önerilerin birlikte sunulması.': 'A combined presentation of the optimal cropping pattern under water constraints, its economic impact, and actionable recommendations.',
+    'Sisteme erişim': 'System Access',
+    'Yönetim tarafından açılan hesabınızla giriş yapın': 'Sign in with the account created by the administration',
+    'Bu prototipte açık kayıt yerine': 'This prototype uses',
+    'kurumsal ön kayıt': 'institutional preregistration',
+    'akışı kullanılır. Çiftçi hesapları yönetim panelinde açılır; kullanıcı ilk girişte bilgi tamamlama adımını tamamlayarak kendi paneline geçer.': 'instead of open registration. Farmer accounts are created in the administration dashboard; on first sign-in, the user completes the required profile information before entering their dashboard.',
+    'Giriş ve bilgilendirme sekmeleri': 'Sign-in and information tabs',
+    'Çiftçi demo (aktif)': 'Farmer Demo (Active)',
+    'Çiftçi demo (ilk kurulum)': 'Farmer Demo (Initial Setup)',
+    'Her girişte doğrulama ekranı yeniden açılır': 'The verification screen opens again at every sign-in',
+    'Kurum demo (yönetici)': 'Institution Demo (Administrator)',
+    'Kurum demo (uzman)': 'Institution Demo (Specialist)',
+    'Kullanıcı adı': 'Username',
+    'Örn. betul.demir': 'e.g., betul.demir',
+    'Şifre': 'Password',
+    'Bu sürümde açık kayıt yok': 'Open registration is unavailable in this version',
+    'Çiftçi hesapları yönetim tarafından tek tek açılır. Böylece her kullanıcı için önceden kullanıcı adı, geçici şifre, varsa resmi parseller ve yetkiler tanımlanabilir.': 'Farmer accounts are created individually by the administration. This allows a username, temporary password, official parcels when available, and permissions to be defined in advance for each user.',
+    '1. Yönetim ön kayıt açar': '1. Administration creates a preregistration',
+    'Çiftçi bilgileri, kullanıcı adı, geçici şifre ve varsa çizili arazi kaydı tanımlanır.': 'Farmer details, username, temporary password, and any mapped land records are defined.',
+    '2. Çiftçi ilk giriş yapar': '2. Farmer signs in for the first time',
+    'Kullanıcı kendisine verilen bilgilerle giriş yapar ve ana panele geçmeden önce bilgi tamamlama ekranını görür.': 'The user signs in with the credentials provided and sees the profile completion screen before entering the main dashboard.',
+    '3. Bilgi tamamlama yapılır': '3. Required information is completed',
+    'Çiftçi iletişim bilgilerini doğrular; eksikse parsel yükler, haritada çizer veya mevcut kayıtlarını kontrol eder.': 'The farmer verifies their contact details and, if needed, uploads parcels, draws them on the map, or reviews existing records.',
+    '4. Çiftçi paneli aktif olur': '4. Farmer dashboard is activated',
+    'Kurulum tamamlanınca kullanıcı kendi bitki deseni planı, su ve kâr karşılaştırmalarını görür.': 'After setup is complete, the user can view their cropping pattern plan and water and profit comparisons.',
+    'Bu ekran tez sunumu için hazırlanmış prototip girişidir. Açık kayıt yerine yönetim ön kayıt + çiftçi ilk kurulum + rol bazlı parsel yetkilendirme mantığı gösterilmektedir.': 'This is a prototype sign-in screen prepared for the thesis presentation. It demonstrates administration-led preregistration, farmer initial setup, and role-based parcel authorization instead of open registration.',
     'PANEL': 'DASHBOARD',
     'KULLANICI': 'USER',
     'Analiz kurulumu': 'Analysis Setup',
@@ -752,18 +785,34 @@
     });
   }
 
+  function switchHost() {
+    if (document.body.classList.contains('auth-pending')) {
+      return document.querySelector('.auth-card-head') || document.querySelector('.auth-card');
+    }
+    return document.querySelector('.topbar-actions') ||
+      document.querySelector('.session-chip-row') ||
+      document.querySelector('.app-header') ||
+      document.body;
+  }
+
   function installSwitch() {
-    if (document.querySelector('.paper-language-switch')) return;
-    const wrapper = document.createElement('div');
-    wrapper.className = 'paper-language-switch';
-    wrapper.setAttribute('role', 'group');
-    wrapper.setAttribute('aria-label', 'Interface language');
-    wrapper.innerHTML = '<button type="button" data-paper-lang="tr">TR</button><button type="button" data-paper-lang="en">EN</button>';
-    wrapper.addEventListener('click', event => {
-      const selected = event.target.closest('[data-paper-lang]')?.dataset.paperLang;
-      if (supported.has(selected)) setLanguage(selected);
-    });
-    document.body.append(wrapper);
+    let wrapper = document.querySelector('.paper-language-switch');
+    if (!wrapper) {
+      wrapper = document.createElement('div');
+      wrapper.className = 'paper-language-switch';
+      wrapper.setAttribute('role', 'group');
+      wrapper.setAttribute('aria-label', 'Interface language');
+      wrapper.innerHTML = '<button type="button" data-paper-lang="tr">TR</button><button type="button" data-paper-lang="en">EN</button>';
+      wrapper.addEventListener('click', event => {
+        const selected = event.target.closest('[data-paper-lang]')?.dataset.paperLang;
+        if (supported.has(selected)) setLanguage(selected);
+      });
+    }
+    const host = switchHost();
+    if (host && wrapper.parentElement !== host) host.append(wrapper);
+    wrapper.classList.toggle('paper-language-switch--auth', Boolean(wrapper.closest('.auth-card')));
+    wrapper.classList.toggle('paper-language-switch--topbar', Boolean(wrapper.closest('.topbar-actions')));
+    wrapper.classList.toggle('paper-language-switch--v1', Boolean(wrapper.closest('.session-chip-row')));
   }
 
   function updateSwitch() {
@@ -792,8 +841,10 @@
   language = supported.has(queryLanguage) ? queryLanguage : (supported.has(localStorage.getItem(STORAGE_KEY)) ? localStorage.getItem(STORAGE_KEY) : 'tr');
   installSwitch();
   const style = document.createElement('style');
-  style.textContent = '.paper-language-switch{position:fixed;right:14px;top:12px;z-index:4000;display:inline-flex;gap:2px;padding:3px;border:1px solid rgba(255,255,255,.45);border-radius:999px;background:#102f28;box-shadow:0 4px 16px rgba(0,0,0,.18)}.paper-language-switch button{min-height:28px;padding:3px 9px;border:0;border-radius:999px;background:transparent;color:#dcebe5;font:700 12px/1.2 Inter,"Segoe UI",Arial,sans-serif;cursor:pointer}.paper-language-switch button.active{background:#fff;color:#164f40}.paper-language-switch button:focus-visible{outline:3px solid #7cc7ff;outline-offset:2px}@media print{.paper-language-switch{display:none!important}}';
+  style.textContent = '.paper-language-switch{position:static;z-index:auto;display:inline-flex;flex:0 0 auto;align-items:center;align-self:center;gap:2px;min-width:max-content;padding:3px;border:1px solid rgba(255,255,255,.42);border-radius:999px;background:rgba(7,42,34,.72);box-shadow:0 3px 12px rgba(0,0,0,.14)}.paper-language-switch button{min-height:30px;min-width:38px;padding:4px 10px;border:0;border-radius:999px;background:transparent;color:#dcebe5;font:700 12px/1.2 Inter,"Segoe UI",Arial,sans-serif;cursor:pointer}.paper-language-switch button.active{background:#fff;color:#164f40}.paper-language-switch button:focus-visible{outline:3px solid #7cc7ff;outline-offset:2px}.paper-language-switch--auth{align-self:flex-start;margin-top:12px;background:#102f28}.paper-language-switch--v1{height:44px;margin-left:2px}.topbar-actions{flex-wrap:wrap}.paper-language-switch--topbar{order:3}@media(max-width:1050px){.paper-language-switch button{min-width:36px;padding-inline:8px}.paper-language-switch--v1{margin-left:0}}@media(max-width:650px){.paper-language-switch--topbar{justify-self:end}.paper-language-switch--auth{margin-top:10px}}@media print{.paper-language-switch{display:none!important}}';
   document.head.append(style);
+  placementObserver = new MutationObserver(installSwitch);
+  placementObserver.observe(document.body, {attributes:true, attributeFilter:['class']});
   observer = new MutationObserver(mutations => {
     observer.disconnect();
     mutations.forEach(mutation => {

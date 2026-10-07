@@ -56,6 +56,30 @@ def _untranslated_visible_lines(page):
             if line.strip() and TURKISH_UI_TERMS.search(line)]
 
 
+def _assert_toggle_layout(page, parent_selector):
+    expect(page.locator(f'{parent_selector} > .paper-language-switch')).to_be_visible()
+    for width in (1366, 1024):
+        page.set_viewport_size({'width': width, 'height': 900})
+        layout = page.evaluate("""parentSelector => {
+          const toggle=document.querySelector('.paper-language-switch');
+          const parent=document.querySelector(parentSelector);
+          const rect=toggle?.getBoundingClientRect();
+          const overlaps=Array.from(parent?.children||[]).filter(node => {
+            if(node===toggle || node.hidden || node.offsetParent===null)return false;
+            const other=node.getBoundingClientRect();
+            return rect.left < other.right && rect.right > other.left &&
+              rect.top < other.bottom && rect.bottom > other.top;
+          }).length;
+          return {
+            overlaps,
+            contained:Boolean(rect && parent && rect.left>=0 && rect.right<=innerWidth),
+            overflow:document.documentElement.scrollWidth>innerWidth
+          };
+        }""", parent_selector)
+        assert layout == {'overlaps': 0, 'contained': True, 'overflow': False}
+    page.set_viewport_size({'width': 1366, 'height': 900})
+
+
 @pytest.mark.browser
 def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_path):
     application, client, repository = client_for(tmp_path)
@@ -84,9 +108,17 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 arg=run['id'],
             )
             expect(page.locator('html')).to_have_attribute('lang', 'tr')
+            _assert_toggle_layout(page, '.auth-card-head')
+            page.locator('[data-paper-lang="en"]').click()
+            assert not _untranslated_visible_lines(page)
+            page.locator('[data-auth-tab="register"]').click()
+            assert not _untranslated_visible_lines(page)
+            page.locator('[data-auth-tab="login"]').click()
+            page.locator('[data-paper-lang="tr"]').click()
             page.evaluate(
                 "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
             )
+            _assert_toggle_layout(page, '.session-chip-row')
             page.locator('#parcelSelect').select_option('KDS-009')
             page.wait_for_function(
                 "document.querySelector('#metricsTitle')?.textContent.includes('KDS-009')"
@@ -219,6 +251,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('html')).to_have_attribute('lang', 'en')
             expect(page.locator('h1')).to_have_text('Institutional Agricultural Decision Workflow')
             expect(page.locator('#project-status-badges')).to_contain_text('Revision 21')
+            _assert_toggle_layout(page, '.topbar-actions')
             for section in ('project', 'data', 'readiness', 'analysis', 'result', 'provenance', 'reference'):
                 page.locator(f'[data-project-section="{section}"]').first.click()
                 page.wait_for_function(
@@ -235,6 +268,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('html')).to_have_attribute('lang', 'en')
             expect(page.locator('#decision-title')).to_contain_text('English Paper UI Parity Project')
             expect(page.locator('#result')).to_contain_text('Verified Water Results')
+            _assert_toggle_layout(page, '.topbar-actions')
             assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
             untranslated = _untranslated_visible_lines(page)
             assert not untranslated, '\n'.join(untranslated)

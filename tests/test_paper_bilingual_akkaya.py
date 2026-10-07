@@ -7,7 +7,7 @@ import pytest
 from playwright.sync_api import expect, sync_playwright
 
 from test_unified_decision_demo_browser import serve
-from test_paper_english_ui import _untranslated_visible_lines
+from test_paper_english_ui import _assert_toggle_layout, _untranslated_visible_lines
 
 
 @pytest.mark.browser
@@ -33,6 +33,7 @@ def test_akkaya_reference_tr_en_tr_preserves_parcel_and_values(tmp_path, monkeyp
             page.evaluate(
                 "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
             )
+            _assert_toggle_layout(page, '.session-chip-row')
             expect(page.locator('#roleInfoBanner')).to_contain_text('179 parsel', timeout=30000)
             page.locator('#parcelSelect').select_option('P1')
             page.evaluate("window._focusParcel?.('P1')")
