@@ -73,7 +73,12 @@ def register_project_pages(app):
 </aside>'''
                 html = html.replace(marker, f'{marker}\n    {boundary}\n    {link}\n    {provider}', 1)
                 html = html.replace('</head>', '<link rel="stylesheet" href="/projects/assets/v1-provider.css">\n</head>', 1)
-                html = html.replace('</body>', '<script src="/projects/assets/v1-provider.js"></script>\n</body>', 1)
+                html = html.replace(
+                    '</body>',
+                    '<script src="/projects/assets/v1-provider.js"></script>\n'
+                    '<script src="/projects/assets/paper-i18n.js"></script>\n</body>',
+                    1,
+                )
                 response.set_data(html)
         return response
 
