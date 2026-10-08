@@ -536,6 +536,124 @@
     ,'Parcel Haritası': 'Parcel Map'
     ,'Parcel çizim ve bilgi atama': 'Parcel Geometry and Information Assignment'
     ,'Parcel özeti': 'Parcel Summary'
+    ,'Parsel çizim ve bilgi atama': 'Parcel Geometry and Information Assignment'
+    ,'Parsel çizim ve bilgi atama paneli': 'Parcel Geometry and Information Assignment Panel'
+    ,'Analiz birimi geometrisi ve bilgi atama paneli': 'Analysis Unit Geometry and Information Assignment Panel'
+    ,'Parsel özeti': 'Parcel Summary'
+    ,'Parsel Özeti': 'Parcel Summary'
+    ,'Bu panel yalnızca yönetici veri giriş/çizim modu için sadeleştirildi. 180 parselin ürün, alan, çiftçi, sulama ve atama bilgileri sisteme hazır girildi. Bu sürümde Bor İlçe Merkezi P79-P121 kayıtları çizim/düzenleme için öne alınmıştır; diğer köyler de aynı mantıkla seçilebilir.': 'This panel is streamlined for administrator data-entry and drawing. Crop, area, farmer, irrigation, and assignment information for 180 parcels is preloaded. Bor İlçe Merkezi records P79–P121 are prioritized for drawing and editing in this version; other villages can be selected in the same way.'
+    ,'Bu panel yalnızca yönetici veri giriş/çizim modu için sadeleştirildi. 180 analiz biriminin ürün, alan, çiftçi, sulama ve atama bilgileri sisteme hazır girildi. Bu sürümde Bor İlçe Merkezi P79-P121 kayıtları çizim/düzenleme için öne alınmıştır; diğer köyler de aynı mantıkla seçilebilir.': 'This panel is streamlined for administrator data-entry and drawing. Crop, area, farmer, irrigation, and assignment information for 180 analysis units is preloaded. Bor İlçe Merkezi records P79–P121 are prioritized for drawing and editing in this version; other villages can be selected in the same way.'
+    ,'Haritada çiz': 'Draw on Map'
+    ,'Çizimi bitir': 'Finish Drawing'
+    ,'Çizimi temizle': 'Clear Drawing'
+    ,'Çizimle eklenenleri sil': 'Delete Drawn Parcels'
+    ,'Haritada yalnızca yüklenmiş gerçek GeoJSON sınırları görünür. Excel kayıtları sayısal analizde kullanılır; gerçek sınır yoksa temsili dikdörtgen üretilmez. Yeni sınır için GeoJSON/KML yükleyebilir veya panelde çizim yapabilirsiniz.': 'Only uploaded, actual GeoJSON boundaries appear on the map. Excel records are used for numerical analysis; no representative rectangle is generated when an actual boundary is unavailable. Upload GeoJSON/KML or draw in the panel to add a boundary.'
+    ,'Çizim yapılacak hazır parsel kaydı': 'Preloaded Parcel Record for Drawing'
+    ,'Çizim yapılacak hazır analiz birimi kaydı': 'Preloaded Analysis Unit Record for Drawing'
+    ,'Parseli seçin; bilgiler otomatik dolsun. Siz yalnızca polygon sınırını çizin veya GeoJSON/KML içe aktarın.': 'Select a parcel to populate its information automatically. Draw only the polygon boundary or import GeoJSON/KML.'
+    ,'Analiz birimini seçin; bilgiler otomatik dolsun. Siz yalnızca polygon sınırını çizin veya GeoJSON/KML içe aktarın.': 'Select an analysis unit to populate its information automatically. Draw only the polygon boundary or import GeoJSON/KML.'
+    ,'Çizim köy filtresi': 'Drawing Village Filter'
+    ,'Tüm köyler': 'All Villages'
+    ,'Bor İlçe Merkezi çizimine geç': 'Switch to Bor İlçe Merkezi Drawing'
+    ,'Kemerhisar çizimine geç': 'Switch to Kemerhisar Drawing'
+    ,'Parsel kaydı': 'Parcel Record'
+    ,'Analiz birimi kaydı': 'Analysis Unit Record'
+    ,'Kayıtlar yükleniyor...': 'Loading records...'
+    ,'Kayıt seçilmedi': 'No Record Selected'
+    ,'Kayıt seçtiğinizde parselin ürün, çiftçi, alan, kota ve atama bilgileri burada görünecek.': 'The parcel crop, farmer, area, quota, and assignment details will appear here after you select a record.'
+    ,'Kayıt seçtiğinizde analiz biriminin ürün, çiftçi, alan, kota ve atama bilgileri burada görünecek.': 'The analysis unit’s crop, farmer, area, quota, and assignment details will appear here after you select a record.'
+    ,'Parsel adı': 'Parcel Name'
+    ,'Analiz birimi adı': 'Analysis Unit Name'
+    ,'Örn. Çiftçi Parseli 1': 'e.g., Farmer Parcel 1'
+    ,'Harita veya dosyadan otomatik gelir': 'Populated automatically from the map or file'
+    ,'Alanı elle düzenle': 'Edit Area Manually'
+    ,'Köy / mevki': 'Village / Locality'
+    ,'Merkez': 'Central District'
+    ,'Çiftçi / işletme': 'Farmer / Holding'
+    ,'Örn. Mehmet Demir': 'e.g., Mehmet Demir'
+    ,'Kayıtlı çiftçi listesinden atama yapmak için aşağıdaki atama panelini kullanın.': 'Use the assignment panel below to assign a registered farmer.'
+    ,'Arazi tipi': 'Land Type'
+    ,'Otomatik algıla': 'Detect Automatically'
+    ,'Tarla / Yem': 'Field / Forage'
+    ,'Sebze': 'Vegetable'
+    ,'Meyve / Bağ / çok yıllık': 'Fruit / Vineyard / Perennial'
+    ,'Mevcut sulama': 'Current Irrigation'
+    ,'Yüzey / Karık / Salma': 'Surface / Furrow / Flood'
+    ,'Yağmurlama': 'Sprinkler'
+    ,'Damla': 'Drip'
+    ,'Pivot / Lineer': 'Pivot / Linear'
+    ,'Yağışa bağlı / Kuru': 'Rainfed / Dryland'
+    ,'Parsel atama ve çiftçi tercihi': 'Parcel Assignment and Farmer Preference'
+    ,'Analiz birimi atama ve çiftçi tercihi': 'Analysis Unit Assignment and Farmer Preference'
+    ,'Çizilen/yüklenen parseli çiftçiye ve seçilen alternatif desene bağlar.': 'Links the drawn or uploaded parcel to a farmer and the selected alternative cropping pattern.'
+    ,'Çizilen/yüklenen analiz birimini çiftçiye ve seçilen alternatif desene bağlar.': 'Links the drawn or uploaded analysis unit to a farmer and the selected alternative cropping pattern.'
+    ,'Atama yok': 'No Assignment'
+    ,'Kayıtlı çiftçi': 'Registered Farmer'
+    ,'Çiftçi seçilmedi': 'No Farmer Selected'
+    ,'Çiftçinin seçtiği alternatif': 'Farmer-Selected Alternative'
+    ,'Alternatif yok': 'No Alternative'
+    ,'Alternatif none': 'No Alternative'
+    ,'Onay durumu': 'Approval Status'
+    ,'Taslak': 'Draft'
+    ,'Çiftçi tercih etti': 'Selected by Farmer'
+    ,'Teknik onay bekliyor': 'Awaiting Technical Approval'
+    ,'Onaylandı': 'Approved'
+    ,'Uygulamada': 'In Progress'
+    ,'Atama notu': 'Assignment Note'
+    ,'Örn. Çiftçi ikinci ürünü tercih etti': 'e.g., The farmer selected the secondary crop'
+    ,'Seçili parsel için alternatifler hazırlanıyor.': 'Preparing alternatives for the selected parcel.'
+    ,'Seçili analiz birimi için alternatifler hazırlanıyor.': 'Preparing alternatives for the selected analysis unit.'
+    ,'Alternatifi parsele ata': 'Assign Alternative to Parcel'
+    ,'Alternatifi analiz birimine ata': 'Assign Alternative to Analysis Unit'
+    ,'Atanan GeoJSON indir': 'Download Assigned GeoJSON'
+    ,'Parsel bilgisini kaydet': 'Save Parcel Information'
+    ,'Analiz birimi bilgisini kaydet': 'Save Analysis Unit Information'
+    ,'Akış: 1) Hazır parsel kaydını seçin. 2) Haritada doğru sınırı çizin veya GeoJSON/KML yükleyin. 3) Sistem seçili kaydın çiftçi, ürün, sulama, kota ve atama bilgilerini otomatik bağlar. 4) Popup ve seçim davranışı kaydedilen geometri üzerinden çalışır.': 'Workflow: 1) Select the preloaded parcel record. 2) Draw the correct boundary on the map or upload GeoJSON/KML. 3) The system automatically links the selected record’s farmer, crop, irrigation, quota, and assignment details. 4) Popup and selection behavior use the saved geometry.'
+    ,'Akış: 1) Hazır analiz birimi kaydını seçin. 2) Haritada doğru sınırı çizin veya GeoJSON/KML yükleyin. 3) Sistem seçili kaydın çiftçi, ürün, sulama, kota ve atama bilgilerini otomatik bağlar. 4) Popup ve seçim davranışı kaydedilen geometri üzerinden çalışır.': 'Workflow: 1) Select the preloaded analysis-unit record. 2) Draw the correct boundary on the map or upload GeoJSON/KML. 3) The system automatically links the selected record’s farmer, crop, irrigation, quota, and assignment details. 4) Popup and selection behavior use the saved geometry.'
+    ,'Seçili parsel için hızlı durum görünümü': 'Quick Status View for the Selected Parcel'
+    ,'Seçili analiz birimi için hızlı durum görünümü': 'Quick Status View for the Selected Analysis Unit'
+    ,'Parsel kaydı seçin...': 'Select a Parcel Record...'
+    ,'Ürün yok': 'No Crop'
+    ,'çizim bekliyor': 'drawing pending'
+    ,'Çizim bekliyor': 'Drawing Pending'
+    ,'GeoJSON hazır': 'GeoJSON Ready'
+    ,'Parsel': 'Parcel'
+    ,'Atanan desen': 'Assigned Cropping Pattern'
+    ,'Mevcut kâr': 'Current Net Profit'
+    ,'Parsel kotası': 'Parcel Quota'
+    ,'Haritada göster': 'Show on Map'
+    ,'Bilgileri forma doldur': 'Populate Form'
+    ,'Mevcut desen / Excel referansı': 'Current Pattern / Excel Reference'
+    ,'Alternatif 1 - Su verimliliği': 'Alternative 1 – Water Saving'
+    ,'Alternatif 2 - Kâr odaklı': 'Alternative 2 – Profit Maximization'
+    ,'Alternatif 3 - Su etkin kullanım': 'Alternative 3 – Water-Use Efficiency'
+    ,'Bilgiler hazır; geometri panel çizimiyle bağlanacak.': 'Information is ready; geometry will be linked through the panel drawing.'
+    ,'Panel çizimi': 'Panel Drawing'
+    ,'Panelde çizildi': 'Drawn in Panel'
+    ,'Alternatif': 'Alternative'
+    ,'Yer': 'Location'
+    ,'Çizilen alan': 'Drawn Area'
+    ,'Bildirimler': 'Notifications'
+    ,'Detay': 'Details'
+    ,'Oran': 'Share'
+    ,'Takvim': 'Calendar'
+    ,'Proje aylık su doğrulama grafiği': 'Project Monthly Water Validation Chart'
+    ,'Niğde Ömer Halisdemir Üniversitesi logosu': 'Niğde Ömer Halisdemir University logo'
+    ,'Ahmet Şahenk Tarım Bilimleri ve Teknolojileri Fakültesi logosu': 'Ahmet Şahenk Faculty of Agricultural Sciences and Technologies logo'
+    ,'Tarım Bilimleri ve Teknolojileri logosu': 'Agricultural Sciences and Technologies logo'
+    ,'Veri sağlayıcı bağlamı': 'Data Provider Context'
+    ,'Veri kaynağı panelini kapat': 'Close Data Source Panel'
+    ,'Örn. Patates': 'e.g., Potato'
+    ,'Tez ve kurumsal bilgi alanı': 'Thesis and Institutional Information'
+    ,'PROJECT DATA dışa aktarımı bu stored-run sözleşmesinde sağlanmadı.': 'PROJECT DATA export is unavailable under this stored-run contract.'
+    ,'ornek-proje': 'example-project'
+    ,'İl Müdürlüğü / Sulama Birliği': 'Provincial Directorate / Irrigation Association'
+    ,'Akkaya Sulama Alanı': 'Akkaya Irrigation Area'
+    ,'Veri yükleme adımları': 'Data Upload Steps'
+    ,'Altlık haritayı aç/kapat': 'Toggle Basemap'
+    ,'Yerel önbelleği temizle ve sayfayı yenile': 'Clear Local Cache and Reload the Page'
+    ,'Önbelleği temizle': 'Clear Cache'
+    ,'Veri kümesi türü': 'Dataset Type'
     ,'Tercih et': 'Prefer'
     ,'Henüz sürümlenmiş kurumsal veri yok.': 'No versioned institutional data are available yet.'
     ,'Henüz sürümlenmiş kurumsal veri none.': 'No versioned institutional data are available yet.'
@@ -772,6 +890,19 @@
   ].forEach(([source, target]) => exact.set(source, target));
 
   const replacements = [
+    [/^Proje kapsamındaki (\d+) (?:analiz birimi|analysis unit) provider verisiyle yönetilir\. Birim seçimi, geometri ve analiz bağlamı proje kaynağından gelir\.$/g, 'The $1 analysis units in this project are managed through project-provider data. Unit selection, geometry, and analysis context come from the project source.'],
+    [/^Önce bir (?:parsel|analiz birimi|analysis unit) seçin, çizin veya GeoJSON\/KML yükleyin\.$/g, 'First select an analysis unit, draw it, or upload GeoJSON/KML.'],
+    [/^Beklenen:\s*/g, 'Expected: '],
+    [/^(\d+) kayıt$/g, '$1 records'],
+    [/^(.+): (\d+)\/(\d+) kayıt • (\d+) GeoJSON • (\d+) çizim$/g, '$1: $2/$3 records • $4 GeoJSON • $5 drawings'],
+    [/^(\d+)\/(\d+) kayıt • (\d+) GeoJSON • (\d+) çizim$/g, '$1/$2 records • $3 GeoJSON • $4 drawings'],
+    [/Ürün yok/g, 'No Crop'],
+    [/Ana crop/g, 'Primary Crop'],
+    [/çizim bekliyor/g, 'drawing pending'],
+    [/GeoJSON hazır/g, 'GeoJSON ready'],
+    [/^(.+) bilgileri forma yüklendi\. Şimdi sınırı çizip "Çizimi bitir" butonuna basın\.$/g, '$1 information was loaded into the form. Draw the boundary, then select Finish Drawing.'],
+    [/^(.+) çizimi kaydedildi • Resmî alan: (.+) da • Çizilen alan: (.+) da$/g, '$1 drawing saved • Official area: $2 da • Drawn area: $3 da'],
+    [/^(.+) ataması kaydedildi • (.+) • (.+)$/g, '$1 assignment saved • $2 • $3'],
     [/^Across the region, (\d+) analysis unit i\u00e7in il\u00e7e \u00f6zeti, su b\u00fct\u00e7esi, algoritma kar\u015f\u0131la\u015ft\u0131rmalar\u0131 ve uzun vadeli etki ekranlar\u0131 \u00f6ne \u00e7\u0131kar\. Kullan\u0131c\u0131 a\u00e7ma \/ pasife alma gibi i\u015flemler y\u00f6netici hesab\u0131nda tutulur\.$/g, 'Across the region, $1 analysis units support district summaries, water-budget assessment, algorithm comparisons, and long-term impact views. User activation and deactivation remain under the administrator account.'],
     [/^B\u00f6lge genelindeki (\d+) analiz birimi i\u00e7in il\u00e7e \u00f6zeti, su b\u00fct\u00e7esi, algoritma kar\u015f\u0131la\u015ft\u0131rmalar\u0131 ve uzun vadeli etki ekranlar\u0131 \u00f6ne \u00e7\u0131kar\. Kullan\u0131c\u0131 a\u00e7ma \/ pasife alma gibi i\u015flemler y\u00f6netici hesab\u0131nda tutulur\.$/g, 'Across the region, $1 analysis units support district summaries, water-budget assessment, algorithm comparisons, and long-term impact views. User activation and deactivation remain under the administrator account.'],
     [/^Aktif hedef: K\u00e2r odakl\u0131$/g, 'Active objective: Profit Maximization'],
@@ -1252,7 +1383,7 @@
   }
 
   function rememberAttributes(element, refresh) {
-    const names = ['aria-label', 'title', 'placeholder'];
+    const names = ['aria-label', 'title', 'placeholder', 'alt'];
     let values = originalAttributes.get(element);
     if (!values) {
       values = {};
@@ -1433,7 +1564,7 @@
     applyCharts();
     document.title = language === 'en' ? translate(document.title) : (originalTitle || document.title);
     updateSwitch();
-    observer?.observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['aria-label','title','placeholder']});
+    observer?.observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['aria-label','title','placeholder','alt']});
     window.dispatchEvent(new CustomEvent('cropkds:languagechange', {detail:{language}}));
   }
 
@@ -1456,7 +1587,7 @@
     installSwitch();
     updateSwitch();
     requestAnimationFrame(applyCharts);
-    observer.observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['aria-label','title','placeholder']});
+    observer.observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:['aria-label','title','placeholder','alt']});
   });
   setLanguage(language);
   window.__CROP_KDS_I18N__ = Object.freeze({get language(){return language;}, setLanguage, translate, applyCharts});

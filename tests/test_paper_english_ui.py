@@ -59,13 +59,14 @@ FORBIDDEN_EN_UI = re.compile(
     r'Resmî|\bKöy\b|Havza|Bitki Deseni|Toplam Kâr|Su Verimliliği|CSV indir|'
     r'Benchmark sekmesi|Bu bölüm|Mevcut desen|tek sezon bağlamı|'
     r'\b(?:Fark|Senaryo|Genetik|Kurumsal|Otorite|doluluk|hedefi|altında|paneli|'
-    r'Algoritma|Profil|Engeller)\b|'
+    r'Algoritma|Profil|Engeller|Beklenen|Haritada|Taslak|Atama|Alternatifi|'
+    r'Kemerhisar çizimine|Bilgileri forma|Kayıt seçilmedi)\b|'
     r'\b(?:gonderdi|sec|urun|onay|talep|parseli|uygulanmaz)\b)',
     re.IGNORECASE,
 )
 
 ALLOWED_NON_ENGLISH = re.compile(
-    r'\b(?:Niğde|Akkaya|Sazlıca|Bahçeli|Kemerhisar|Kaynarca|Bor|Betül Demir|'
+    r'\b(?:Niğde Ömer Halisdemir|Ahmet Şahenk|Niğde|Akkaya|Sazlıca|Bahçeli|Kemerhisar|Kaynarca|Bor|Betül Demir|'
     r'Yeşim Dokuz|Burak Şen|İlçe Merkezi)\b',
     re.IGNORECASE,
 )
@@ -94,6 +95,14 @@ def _untranslated_visible_lines(page):
         const value=node.data.trim();
         if(value)output.push(value);
       }
+      document.querySelectorAll('[aria-label],[title],[placeholder],img[alt]').forEach(node=>{
+        const style=getComputedStyle(node);
+        if(style.display==='none' || style.visibility==='hidden' || !node.getClientRects().length)return;
+        for(const name of ['aria-label','title','placeholder','alt']){
+          const value=(node.getAttribute(name)||'').trim();
+          if(value)output.push(value);
+        }
+      });
       return output;
     }""")
     result = []
@@ -253,6 +262,37 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             expect(page.locator('#tblCurrent')).to_contain_text('Current')
             expect(page.locator('#tblRecommended')).to_contain_text('Recommended')
             expect(page.locator('#tblRecommended')).to_contain_text('WHEAT')
+            page.locator('#parcelGroup').evaluate('node => { node.open = true; }')
+            expect(page.locator('#userParcelCard .card-title')).to_have_text(
+                'Analysis Unit Geometry and Information Assignment Panel'
+            )
+            expect(page.locator('#startDrawParcelBtn')).to_have_text('Draw on Map')
+            expect(page.locator('#finishDrawParcelBtn')).to_have_text('Finish Drawing')
+            expect(page.locator('#clearDrawParcelBtn')).to_have_text('Clear Drawing')
+            expect(page.locator('#drawingVillageFilter').locator('option').first).to_have_text(
+                'All Villages'
+            )
+            expect(page.locator('label', has_text='Registered Farmer')).to_be_visible()
+            expect(page.locator('#assignmentFarmerSelect option:checked')).to_have_text(
+                'No Farmer Selected'
+            )
+            expect(page.locator('#assignmentAlternativeSelect option:checked')).to_have_text(
+                'No Alternative'
+            )
+            expect(page.locator('#assignmentApprovalStatus option[value="draft"]')).to_have_text(
+                'Draft'
+            )
+            expect(page.locator('#applyParcelAssignmentBtn')).to_have_text(
+                'Assign Alternative to Analysis Unit'
+            )
+            expect(page.locator('#exportAssignedGeojsonBtn')).to_have_text(
+                'Download Assigned GeoJSON'
+            )
+            expect(page.locator('#saveUserParcelBtn')).to_have_text(
+                'Save Analysis Unit Information'
+            )
+            lower_panel_leaks = _untranslated_visible_lines(page)
+            assert not lower_panel_leaks, 'lower-panel: ' + '\n'.join(lower_panel_leaks)
             translated_application_families = page.evaluate("""() => [
               'Senaryo, su bütçesi ve etki analizi odaklı kurumsal görünüm',
               'Kurumsal analiz paneli',
@@ -263,7 +303,10 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
               'Senaryo tipi',
               'GA, water_efficiency hedefi altında project candidate matrix kullanılarak çalıştırıldı.',
               'doluluk: 50 | baraj riski: düşük | plan riski: düşük',
-              'Otorite'
+              'Otorite',
+              '180 kayıt',
+              'Bor İlçe Merkezi: 43/180 kayıt • 12 GeoJSON • 31 çizim',
+              'KDS-001 bilgileri forma yüklendi. Şimdi sınırı çizip "Çizimi bitir" butonuna basın.'
             ].map(value => window.__CROP_KDS_I18N__.translate(value))""")
             assert translated_application_families == [
                 'Institutional view focused on scenarios, water budgets, and impact analysis',
@@ -276,6 +319,9 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 'GA was run using the project candidate matrix under the Water-Use Efficiency objective.',
                 'storage level: 50 | reservoir risk: low | plan risk: low',
                 'Authority',
+                '180 records',
+                'Bor İlçe Merkezi: 43/180 records • 12 GeoJSON • 31 drawings',
+                'KDS-001 information was loaded into the form. Draw the boundary, then select Finish Drawing.',
             ]
             preserved_user_text = 'Bugün sulama planım yok; uzman görüşü bekliyorum.'
             page.evaluate("""value => {
