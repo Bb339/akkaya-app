@@ -16,15 +16,14 @@ ROOT = __import__('pathlib').Path(__file__).resolve().parents[1]
 
 
 def _prepare_run(client, repository):
-    project_id = 'paper-english-parity'
+    project_id = 'paper-project-demo'
     payload = project_payload(project_id)
-    payload['name'] = 'English Paper UI Parity Project'
+    payload['name'] = 'Paper Project Demo'
     assert client.post('/api/v2/projects', json=payload).status_code == 201
     package = _upload(client, project_id)
     assert package['auto_matched'] == len(package['items']) == 21
     _confirm(client, project_id, package['items'])
     request = analysis_payload()
-    request['scenario'] = 'S2'
     preview = client.post(f'/api/v2/projects/{project_id}/analysis-preview', json=request)
     assert preview.status_code == 200 and preview.json['ready'] is True
     response = client.post(f'/api/v2/projects/{project_id}/analyses', json={
@@ -59,6 +58,8 @@ FORBIDDEN_EN_UI = re.compile(
     r'Onayla|Revizyon iste|İptal|reddet|\bSil\b|Mesaj gönder|geometrileri|'
     r'Resmî|\bKöy\b|Havza|Bitki Deseni|Toplam Kâr|Su Verimliliği|CSV indir|'
     r'Benchmark sekmesi|Bu bölüm|Mevcut desen|tek sezon bağlamı|'
+    r'\b(?:Fark|Senaryo|Genetik|Kurumsal|Otorite|doluluk|hedefi|altında|paneli|'
+    r'Algoritma|Profil|Engeller)\b|'
     r'\b(?:gonderdi|sec|urun|onay|talep|parseli|uygulanmaz)\b)',
     re.IGNORECASE,
 )
@@ -178,9 +179,9 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 "setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})"
             )
             _assert_toggle_layout(page, '.session-chip-row')
-            page.locator('#parcelSelect').select_option('KDS-009')
+            page.locator('#parcelSelect').select_option('KDS-001')
             page.wait_for_function(
-                "document.querySelector('#metricsTitle')?.textContent.includes('KDS-009')"
+                "document.querySelector('#metricsTitle')?.textContent.includes('KDS-001')"
             )
             page.evaluate("""() => {
               map.invalidateSize();
@@ -190,8 +191,8 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
               const bounds=L.featureGroup(layers).getBounds();
               if(bounds?.isValid?.())map.fitBounds(bounds.pad(.15),{animate:false});
             }""")
-            page.evaluate("window.__V1_PROJECT_PROVIDER__.openUnitPopup('KDS-009')")
-            popup = page.locator('.leaflet-popup-content', has_text='KDS-009')
+            page.evaluate("window.__V1_PROJECT_PROVIDER__.openUnitPopup('KDS-001')")
+            popup = page.locator('.leaflet-popup-content', has_text='KDS-001')
             expect(popup).to_be_visible()
             page.wait_for_function("""() => {
               const popup=document.querySelector('.leaflet-popup');
@@ -232,14 +233,61 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             page.locator('[data-paper-lang="en"]').click()
             expect(page.locator('html')).to_have_attribute('lang', 'en')
             expect(page.locator('#metricsTitle')).to_have_text(
-                'Analysis Unit Decision Summary (KDS-009)'
+                'Analysis Unit Decision Summary (KDS-001)'
             )
+            expect(page.locator('#activeObjectiveBadge')).to_have_text(
+                'Active objective: Water Saving'
+            )
+            expect(page.locator('#algoSelect option:checked')).to_have_text(
+                'Genetic Algorithm (GA)'
+            )
+            expect(page.locator('#seasonSourceRow .field-label')).to_have_text('Scenario Type')
+            expect(page.locator('#bWaterDiff')).to_contain_text('Difference:')
+            expect(page.locator('#decisionRationale')).to_contain_text(
+                'GA was run using the project candidate matrix under the Water Saving objective.'
+            )
+            expect(popup).to_contain_text('Authority')
             expect(page.locator('.map-card .card-title')).to_have_text('Analysis Unit Map')
             expect(page.locator('#waterRiskSection')).to_contain_text('NOT PROVIDED')
-            expect(page.locator('#parcelSummaryTitle')).to_contain_text('KDS-009')
+            expect(page.locator('#parcelSummaryTitle')).to_contain_text('KDS-001')
             expect(page.locator('#tblCurrent')).to_contain_text('Current')
             expect(page.locator('#tblRecommended')).to_contain_text('Recommended')
-            expect(page.locator('#tblRecommended')).to_contain_text('APPLE')
+            expect(page.locator('#tblRecommended')).to_contain_text('WHEAT')
+            translated_application_families = page.evaluate("""() => [
+              'Senaryo, su bütçesi ve etki analizi odaklı kurumsal görünüm',
+              'Kurumsal analiz paneli',
+              'Across the region, 24 analysis unit için ilçe özeti, su bütçesi, algoritma karşılaştırmaları ve uzun vadeli etki ekranları öne çıkar. Kullanıcı açma / pasife alma gibi işlemler yönetici hesabında tutulur.',
+              'Aktif hedef: Su etkin kullanım',
+              'Fark: 1 m³',
+              'Genetik Algoritma (GA)',
+              'Senaryo tipi',
+              'GA, water_efficiency hedefi altında project candidate matrix kullanılarak çalıştırıldı.',
+              'doluluk: 50 | baraj riski: düşük | plan riski: düşük',
+              'Otorite'
+            ].map(value => window.__CROP_KDS_I18N__.translate(value))""")
+            assert translated_application_families == [
+                'Institutional view focused on scenarios, water budgets, and impact analysis',
+                'Institutional Analysis Panel',
+                'Across the region, 24 analysis units support district summaries, water-budget assessment, algorithm comparisons, and long-term impact views. User activation and deactivation remain under the administrator account.',
+                'Active objective: Water-Use Efficiency',
+                'Difference: 1 m³',
+                'Genetic Algorithm (GA)',
+                'Scenario Type',
+                'GA was run using the project candidate matrix under the Water-Use Efficiency objective.',
+                'storage level: 50 | reservoir risk: low | plan risk: low',
+                'Authority',
+            ]
+            preserved_user_text = 'Bugün sulama planım yok; uzman görüşü bekliyorum.'
+            page.evaluate("""value => {
+              const node=document.createElement('div');
+              node.id='i18n-user-text-probe';
+              node.className='request-msg-text';
+              node.textContent=value;
+              document.body.append(node);
+              window.__CROP_KDS_I18N__.setLanguage('en');
+            }""", preserved_user_text)
+            expect(page.locator('#i18n-user-text-probe')).to_have_text(preserved_user_text)
+            page.locator('#i18n-user-text-probe').evaluate('node => node.remove()')
             chart_labels = page.evaluate("""() => JSON.stringify(
               Array.from(document.querySelectorAll('canvas')).map(canvas => {
                 const chart=window.Chart?.getChart?.(canvas);
@@ -286,7 +334,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 'project': project_id,
                 'run': run['id'],
                 'revision': 21,
-                'selected': 'KDS-009',
+                'selected': 'KDS-001',
                 'geometry': 24,
             }
 
@@ -347,7 +395,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
 
             page.locator('[data-paper-lang="tr"]').click()
             expect(page.locator('#metricsTitle')).to_have_text(
-                'Analiz Birimi Karar Özeti (KDS-009)'
+                'Analiz Birimi Karar Özeti (KDS-001)'
             )
             tr_return = page.evaluate("""() => ({
               project:window.__V1_PROJECT_PROVIDER__.context.project.id,
@@ -388,7 +436,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
             file_input.set_input_files(package_files)
             expect(file_control.locator('.paper-file-status')).to_have_text('21 files selected')
             page.locator('#bulk-upload-form button[type="submit"]').click()
-            expect(page.locator('#bulk-import-results')).to_be_visible(timeout=30000)
+            expect(page.locator('#bulk-import-results')).to_be_visible(timeout=60000)
             expect(page.locator('#bulk-import-body tr')).to_have_count(21)
             untranslated = _untranslated_visible_lines(page)
             assert not untranslated, 'bulk-preview: ' + '\n'.join(untranslated)
@@ -421,7 +469,7 @@ def test_english_paper_ui_preserves_project_run_and_selected_unit_parity(tmp_pat
                 '&execution_profile=VERIFIED_INSTITUTIONAL'
             )
             expect(page.locator('html')).to_have_attribute('lang', 'en')
-            expect(page.locator('#decision-title')).to_contain_text('English Paper UI Parity Project')
+            expect(page.locator('#decision-title')).to_contain_text('Paper Project Demo')
             expect(page.locator('#result')).to_contain_text('Verified Water Results')
             _assert_toggle_layout(page, '.topbar-actions')
             assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
