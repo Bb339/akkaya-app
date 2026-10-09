@@ -1,8 +1,17 @@
 export async function api(path, options={}) {
   const response = await fetch('/api/v2'+path, options);
   const contentType=response.headers.get('content-type')||'';
-  const data=contentType.includes('json')?await response.json():{error:await response.text()};
-  if (!response.ok) { const error=new Error(data.error || `HTTP ${response.status}`); error.status=response.status; throw error; }
+  let data={};
+  if(contentType.includes('json')){
+    try{data=await response.json();}catch(_error){data={};}
+  }else{
+    await response.text();
+  }
+  if (!response.ok) {
+    const detail=typeof data.error==='string'?data.error:typeof data.message==='string'?data.message:null;
+    const error=new Error(detail||`Request failed (${response.status} ${response.statusText||'Unknown Error'}).`);
+    error.status=response.status;error.statusText=response.statusText||'Unknown Error';throw error;
+  }
   return data;
 }
 export const post = (path, data) => api(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});

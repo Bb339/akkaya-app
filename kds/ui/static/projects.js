@@ -189,7 +189,11 @@ document.getElementById('confirm-project-delete').onclick=event=>{
   const project=pendingDeleteProject;
   if(!project)return;
   safe(async()=>{
-    await api(`/projects/${encodeURIComponent(project.id)}`,{method:'DELETE'});
+    try{await api(`/projects/${encodeURIComponent(project.id)}`,{method:'DELETE'});}
+    catch(error){
+      if(error.status)throw new Error(`Project deletion failed (${error.status} ${error.statusText}).`);
+      throw error;
+    }
     deleteDialog.close();
     if(projectId===project.id){
       history.replaceState(null,'',location.pathname+location.search);
