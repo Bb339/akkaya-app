@@ -29,6 +29,7 @@
     'Açıklama': 'Description',
     'Veri sınıfı': 'Data Classification',
     'Başlangıç su bütçesi (m³)': 'Initial Water Budget (m³)',
+    'Hesaplanmış referans suyu / Başlangıç planlama suyu (m³)': 'Calculated Reference Water / Initial Planning Water (m³)',
     'Kurum tarafından sağlanan veri': 'Institution-Provided Data',
     'Sentetik genel proje': 'Synthetic General Project',
     'Aktif proje': 'Active Project',
