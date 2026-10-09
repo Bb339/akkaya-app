@@ -42,6 +42,10 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
     def missing(error):
         return jsonify(error=str(error)), 404
 
+    @blueprint.errorhandler(PermissionError)
+    def forbidden(error):
+        return jsonify(error=str(error)), 403
+
     @blueprint.errorhandler(RequestEntityTooLarge)
     def too_large(error):
         return jsonify(error="Upload exceeds the 10 MiB file limit."), 413
@@ -79,6 +83,11 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         return jsonify(project=document["project"], water_budget=document["water_budget"],
                        data_revision=document["data_revision"], metadata=document["metadata"],
                        counts={name: len(document[name]) for name in ("analysis_units", "crops", "economics", "imports")})
+
+    @blueprint.delete("/projects/<project_id>")
+    def delete_project(project_id):
+        project = projects.delete(project_id)
+        return jsonify(deleted=True, project={"id": project["id"], "name": project["name"]})
 
     @blueprint.get("/projects/<project_id>/overview")
     def project_overview(project_id):

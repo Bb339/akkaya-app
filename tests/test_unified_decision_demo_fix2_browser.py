@@ -7,14 +7,17 @@ from test_unified_decision_demo import client_for, project_payload
 from test_unified_decision_demo_browser import serve
 
 
-def assert_closed(page):
+def assert_closed(page, message_required=True):
     expect(page.locator("#projects .project-card.active")).to_have_count(0)
     expect(page.locator("#detail")).to_be_hidden()
     expect(page.locator("#result")).to_be_hidden()
     expect(page.locator("#analysis-preview-card")).to_be_hidden()
     expect(page.locator("#stale-preview-alert")).to_be_hidden()
-    expect(page.locator("#message")).to_be_visible()
-    assert page.locator("#message").inner_text().strip()
+    if message_required:
+        expect(page.locator("#message")).to_be_visible()
+        assert page.locator("#message").inner_text().strip()
+    else:
+        expect(page.locator("#message")).to_be_hidden()
 
 
 def assert_open(page, project_id: str, name: str):
@@ -47,10 +50,13 @@ def test_project_hash_is_authoritative_and_all_missing_invalid_states_fail_close
             ))
             base = f"http://127.0.0.1:{server.server_port}/projects"
 
-            for suffix in ("", "#", "#project=", "#foo=bar", "#project=unknown", "#project=%E0%A4%A"):
+            for suffix in ("#project=", "#foo=bar", "#project=unknown", "#project=%E0%A4%A"):
                 page.goto(base + suffix)
                 assert_closed(page)
                 assert not reference_requests
+
+            page.goto(base)
+            assert_closed(page, message_required=False)
 
             page.goto(base + "#project=project-a")
             assert_open(page, "project-a", first["name"])
@@ -65,8 +71,7 @@ def test_project_hash_is_authoritative_and_all_missing_invalid_states_fail_close
                 document.getElementById('analysis-preview-card').hidden = false;
                 location.hash = '';
             """)
-            expect(page.locator("#message")).to_contain_text("proje bağlamı eksik")
-            assert_closed(page)
+            assert_closed(page, message_required=False)
 
             page.evaluate("location.hash = 'foo=bar'")
             expect(page.locator("#message")).to_contain_text("project parametresi gerekli")
@@ -98,7 +103,7 @@ def test_project_card_click_writes_canonical_hash(tmp_path):
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1366, "height": 900})
             page.goto(f"http://127.0.0.1:{server.server_port}/projects")
-            assert_closed(page)
+            assert_closed(page, message_required=False)
             page.locator(f'#projects .project-card[aria-label="{project["name"]}"]').click()
             assert page.url.endswith("/projects#project=canonical-project&section=project")
             assert_open(page, "canonical-project", project["name"])

@@ -24,7 +24,7 @@ function decodeHashPart(value){return decodeURIComponent(value.replace(/\+/g,' '
 
 function hashProjectContext(){
   const fragment=location.hash.replace(/^#/,'');
-  if(!fragment)return {id:null,error:'URL hash içinde proje bağlamı eksik.'};
+  if(!fragment)return {id:null,section:DEFAULT_SECTION,sectionIssue:null,error:null};
   const projects=[],sections=[];
   let sectionIssue=null;
   for(const part of fragment.split('&')){
@@ -118,7 +118,7 @@ async function refresh(){
 
 function showImports(imports){document.getElementById('imports').textContent=JSON.stringify(imports,null,2);}
 
-function clearProjectContext(container,reason){
+function clearProjectContext(container,reason=null){
   projectId=null;
   importControls.clearProjectContext();
   syncNavigationLinks();
@@ -128,7 +128,9 @@ function clearProjectContext(container,reason){
   invalidatePreview(reason);
   document.getElementById('analysis-preview-card').hidden=true;
   document.getElementById('stale-preview-alert').hidden=true;
-  message(reason,true);
+  document.getElementById('hero-project-name').textContent='Proje seçilmedi';
+  document.getElementById('hero-project-meta').textContent='Başlamak için aşağıdan bir proje seçin.';
+  if(reason)message(reason,true);else message('');
 }
 
 async function openProject(id,{writeHash=false,scroll=true,section=DEFAULT_SECTION}={}){
@@ -151,21 +153,52 @@ async function list(restoreHash=true){
   container.replaceChildren();
   if(!data.projects.length)container.textContent='Henüz proje yok. Yeni proje oluşturarak başlayın.';
   for(const project of data.projects){
+    const shell=document.createElement('div');shell.className='project-card-shell';
     const button=document.createElement('button');
     button.type='button';button.className=`project-card${project.id===projectId?' active':''}`;button.setAttribute('aria-label',project.name);
     const title=document.createElement('strong'),meta=document.createElement('small');
     title.textContent=project.name;meta.textContent=`${project.owner_id||'Kurum belirtilmedi'} · ${project.planning_year}`;
-    button.append(title,meta);button.onclick=()=>safe(()=>openProject(project.id,{writeHash:true}));container.append(button);
+    button.append(title,meta);button.onclick=()=>safe(()=>openProject(project.id,{writeHash:true}));
+    const remove=document.createElement('button');remove.type='button';remove.className='project-delete-trigger';
+    remove.textContent='Projeyi Sil';remove.setAttribute('aria-label',`Projeyi Sil: ${project.name}`);
+    remove.title='Projeyi Sil';remove.onclick=event=>{event.stopPropagation();openDeleteDialog(project);};
+    shell.append(button,remove);container.append(shell);
   }
   if(!restoreHash)return;
   const requested=hashProjectContext();
   if(requested.error){clearProjectContext(container,requested.error);return;}
+  if(requested.id===null){clearProjectContext(container);return;}
   const found=data.projects.some(project=>project.id===requested.id);
   if(!found){clearProjectContext(container,`Hash bağlamındaki proje bulunamadı: ${requested.id}`);return;}
   if(projectId!==requested.id)await openProject(requested.id,{writeHash:false,scroll:false,section:requested.section});
   syncNavigationLinks();
   applySection(requested.section,{issue:requested.sectionIssue});
 }
+
+const deleteDialog=document.getElementById('delete-project-dialog');
+let pendingDeleteProject=null;
+function openDeleteDialog(project){
+  pendingDeleteProject=project;
+  document.getElementById('delete-project-name').textContent=project.name;
+  document.getElementById('delete-project-id').textContent=project.id;
+  deleteDialog.showModal();
+}
+deleteDialog.addEventListener('close',()=>{pendingDeleteProject=null;});
+document.getElementById('confirm-project-delete').onclick=event=>{
+  event.preventDefault();
+  const project=pendingDeleteProject;
+  if(!project)return;
+  safe(async()=>{
+    await api(`/projects/${encodeURIComponent(project.id)}`,{method:'DELETE'});
+    deleteDialog.close();
+    if(projectId===project.id){
+      history.replaceState(null,'',location.pathname+location.search);
+      clearProjectContext(document.getElementById('projects'));
+    }
+    await list(true);
+    message(`Proje silindi: ${project.name}`);
+  });
+};
 
 document.getElementById('create-project').onsubmit=event=>{event.preventDefault();safe(async()=>{const values=Object.fromEntries(new FormData(event.target));values.planning_year=Number(values.planning_year);values.annual_water_budget=values.annual_water_budget?Number(values.annual_water_budget):0;values.water_budget_unit='m3';const data=await post('/projects',values);await openProject(data.project.id,{writeHash:true});message('Proje oluşturuldu.');});};
 document.getElementById('budget-form').onsubmit=event=>{event.preventDefault();safe(async()=>{const data=Object.fromEntries(new FormData(event.target));data.amount=Number(data.amount);data.unit='m3';await post(root()+'/water-budget',data);invalidatePreview('Su bütçesi değişti; yeni önizleme gerekli.');await refresh();message('Su bütçesi güncellendi.');});};

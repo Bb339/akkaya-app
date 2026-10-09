@@ -7,6 +7,11 @@ from kds.domain.water_budget import WaterBudget
 SYNTHETIC_INSTITUTIONAL_DEMO_SOURCE = "synthetic not_official institutional integration fixture"
 SYNTHETIC_GENERAL_PROJECT_CLASSIFICATION = "synthetic_test_fixture"
 REFERENCE_DEMO_CLASSIFICATION = "reference_demo"
+BUILT_IN_REFERENCE_IDS = frozenset({
+    "akkaya-reference-demo",
+    "akkaya-reference-model",
+    "accepted-akkaya-reference-model",
+})
 
 
 def is_explicit_synthetic_demo(project: Project) -> bool:
@@ -43,6 +48,8 @@ class ProjectService:
         self.repository = repository
 
     def create(self, values: Document) -> Document:
+        if str(values.get("id", "")).casefold() in BUILT_IN_REFERENCE_IDS:
+            raise ValueError("This project ID is reserved for the built-in reference demo.")
         project = Project(**values)
         return self.repository.create(project_document(project))["project"]
 
@@ -51,3 +58,8 @@ class ProjectService:
 
     def get(self, project_id: str) -> Document:
         return self.repository.get(project_id)
+
+    def delete(self, project_id: str) -> Document:
+        if project_id.casefold() in BUILT_IN_REFERENCE_IDS:
+            raise PermissionError("This built-in reference demo cannot be deleted.")
+        return self.repository.delete(project_id)["project"]

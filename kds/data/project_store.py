@@ -1,6 +1,7 @@
 """One UTF-8 atomic document per project, including import audit records."""
 import json
 import os
+import shutil
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -70,6 +71,15 @@ class FileProjectStore:
             document = self.get(project_id)
             change(document)
             self._write(path, document)
+        return document
+
+    def delete(self, project_id: str) -> Document:
+        """Remove one complete project aggregate without touching shared source data."""
+        path = self._path(project_id)
+        folder = path.parent
+        with exclusive_lock(self._lock_path(project_id)):
+            document = self.get(project_id)
+            shutil.rmtree(folder)
         return document
 
     def recover_interrupted_runs(self) -> list[dict[str, str]]:

@@ -34,6 +34,14 @@
     'Sentetik genel proje': 'Synthetic General Project',
     'Aktif proje': 'Active Project',
     'Proje seçilmedi': 'No Project Selected',
+    'Projeyi Sil': 'Delete Project',
+    'Projeyi sil?': 'Delete project?',
+    'Proje': 'Project',
+    'Proje kimliği': 'Project ID',
+    'Bu işlem proje verilerini, revizyonlarını ve kayıtlı analiz çalışmalarını kalıcı olarak silecektir.': 'This action will permanently delete the project data, revisions, and stored analysis runs.',
+    'İptal': 'Cancel',
+    'Proje silindi.': 'Project deleted.',
+    'Bu referans demo silinemez.': 'This built-in reference demo cannot be deleted.',
     'Başlamak için aşağıdan bir proje seçin.': 'Select a project below to begin.',
     'Profil seçimi proje değiştirildiğinde korunur.': 'The execution profile is preserved when the project changes.',
     'Henüz proje yok. Yeni proje oluşturarak başlayın.': 'No projects are available. Create a project to begin.',
@@ -891,6 +899,8 @@
   ].forEach(([source, target]) => exact.set(source, target));
 
   const replacements = [
+    [/^Projeyi Sil: (.+)$/g, 'Delete Project: $1'],
+    [/^Proje silindi: (.+)$/g, 'Project deleted: $1'],
     [/^Proje kapsamındaki (\d+) (?:analiz birimi|analysis unit) provider verisiyle yönetilir\. Birim seçimi, geometri ve analiz bağlamı proje kaynağından gelir\.$/g, 'The $1 analysis units in this project are managed through project-provider data. Unit selection, geometry, and analysis context come from the project source.'],
     [/^Önce bir (?:parsel|analiz birimi|analysis unit) seçin, çizin veya GeoJSON\/KML yükleyin\.$/g, 'First select an analysis unit, draw it, or upload GeoJSON/KML.'],
     [/^Beklenen:\s*/g, 'Expected: '],

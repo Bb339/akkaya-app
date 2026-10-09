@@ -181,6 +181,20 @@
     </section>
   </main>
 </div>
+<dialog id="delete-project-dialog" class="project-delete-dialog" aria-labelledby="delete-project-title">
+  <form method="dialog">
+    <h2 id="delete-project-title">Projeyi sil?</h2>
+    <dl class="delete-project-facts">
+      <dt>Proje</dt><dd id="delete-project-name"></dd>
+      <dt>Proje kimliği</dt><dd id="delete-project-id"></dd>
+    </dl>
+    <p>Bu işlem proje verilerini, revizyonlarını ve kayıtlı analiz çalışmalarını kalıcı olarak silecektir.</p>
+    <div class="action-row delete-project-actions">
+      <button class="button secondary" id="cancel-project-delete" value="cancel">İptal</button>
+      <button class="button danger" id="confirm-project-delete" value="delete">Projeyi Sil</button>
+    </div>
+  </form>
+</dialog>
 <script type="module" src="/projects/assets/projects.js"></script>
 <script src="/projects/assets/paper-i18n.js"></script>
 </body></html>
