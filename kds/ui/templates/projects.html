@@ -99,7 +99,7 @@
               <summary>Toplu veri yükle</summary>
               <p>Sistem dosya yapısını ve kolon semantiğini otomatik analiz ederek veri türünü ve alan eşleştirmelerini belirler. Belirsiz veya eksik eşleşmeler fail-closed kalır.</p>
               <form id="bulk-upload-form" class="upload-form">
-                <label>CSV / XLSX / GeoJSON dosyaları<input type="file" name="files" multiple required accept=".csv,.xlsx,.geojson"></label>
+                <label>CSV / XLSX / GeoJSON dosyaları<input id="bulk-upload-files" type="file" name="files" multiple required accept=".csv,.xlsx,.xls,.geojson,.json"></label>
                 <button class="button secondary" type="submit">Doğrula ve önizle</button>
               </form>
               <div id="bulk-import-results" hidden>

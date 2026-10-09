@@ -82,6 +82,13 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   const bulkBody=document.getElementById('bulk-import-body');
   const bulkConfirm=document.getElementById('bulk-confirm');
   const bulkNote=document.getElementById('bulk-import-note');
+  const bulkForm=document.getElementById('bulk-upload-form');
+  const bulkInput=bulkForm.querySelector('input[name="files"]');
+  // Keep this contract explicit at runtime as well as in the template. This
+  // protects the bulk control from stale/customized markup while leaving the
+  // separate verified single-file upload unchanged.
+  bulkInput.multiple=true;
+  bulkInput.accept='.csv,.xlsx,.xls,.geojson,.json';
   const deferredDependencyCodes=new Set(['scientific_table','economic_contract','crop_parameter_contract']);
   const hasDefinitiveBatchError=item=>(item.batch?.issues||[]).some(issue=>
     issue.severity==='ERROR'&&!deferredDependencyCodes.has(issue.code)&&
@@ -123,9 +130,17 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
       ? `${bulkItems.filter(item=>item.detection?.state==='AUTO_MATCHED').length} dosya otomatik eşleştirildi; ${bulkItems.filter(item=>item.detection?.state==='IGNORED_NOT_RELEVANT').length} açıkça ilgisiz dosya uygulanmadan yok sayıldı. Bağımlı doğrulamalar açık onay sırasında güvenli sırayla yenilenir.`
       : 'Paket fail-closed kaldı. REVIEW_REQUIRED, AMBIGUOUS, UNSUPPORTED veya INVALID satırları çözülmeden toplu aktivasyon yapılamaz.';
   };
-  document.getElementById('bulk-upload-form').onsubmit=e=>{
+  bulkForm.onsubmit=e=>{
     e.preventDefault();
-    safe(async()=>{const contextRoot=root();renderBulk(await api(contextRoot+'/bulk-imports',{method:'POST',body:new FormData(e.target)}),contextRoot);await refresh();});
+    safe(async()=>{
+      const contextRoot=root();
+      const selectedFiles=Array.from(bulkInput.files||[]);
+      if(!selectedFiles.length)throw new Error('En az bir dosya seçin.');
+      const payload=new FormData();
+      for(const file of selectedFiles)payload.append('files',file,file.name);
+      renderBulk(await api(contextRoot+'/bulk-imports',{method:'POST',body:payload}),contextRoot);
+      await refresh();
+    });
   };
   bulkConfirm.onclick=()=>safe(async()=>{
     const contextRoot=root();
