@@ -1,0 +1,180 @@
+external_id,settlement,area_da,current_crop,name_or_code,irrigation_method,latitude,longitude,notes
+P1,Sazlıca,2700.0,BUĞDAY (Dane),P1,irrigated,37.887,34.663,V1 thesis-model reference/demo source; not official; not field validated
+P10,Sazlıca,20.0,BUĞDAY (YEŞİLOT),P10,irrigated,37.886,34.672,V1 thesis-model reference/demo source; not official; not field validated
+P100,Bor İlçe Merkezi,7.0,KABAK (SAKIZ),P100,drip,37.89,34.569,V1 thesis-model reference/demo source; not official; not field validated
+P101,Bor İlçe Merkezi,50.0,KABAK (ÇEREZLİK),P101,drip,37.891,34.57,V1 thesis-model reference/demo source; not official; not field validated
+P102,Bor İlçe Merkezi,30.0,ISPANAK,P102,sprinkler,37.892,34.571,V1 thesis-model reference/demo source; not official; not field validated
+P103,Bor İlçe Merkezi,750.0,KARPUZ,P103,drip,37.893,34.572,V1 thesis-model reference/demo source; not official; not field validated
+P104,Bor İlçe Merkezi,520.0,KAVUN,P104,drip,37.894,34.56,V1 thesis-model reference/demo source; not official; not field validated
+P105,Bor İlçe Merkezi,240.0,LAHANA (BEYAZ),P105,sprinkler,37.895,34.561,V1 thesis-model reference/demo source; not official; not field validated
+P106,Bor İlçe Merkezi,35.0,MARUL,P106,sprinkler,37.896,34.562,V1 thesis-model reference/demo source; not official; not field validated
+P107,Bor İlçe Merkezi,30.0,PIRASA,P107,sprinkler,37.897,34.563,V1 thesis-model reference/demo source; not official; not field validated
+P108,Bor İlçe Merkezi,1190.0,SOĞAN (KURU),P108,sprinkler,37.898,34.564,V1 thesis-model reference/demo source; not official; not field validated
+P109,Bor İlçe Merkezi,30.0,SOĞAN (TAZE),P109,sprinkler,37.899,34.565,V1 thesis-model reference/demo source; not official; not field validated
+P11,Sazlıca,20.0,ARPA (YEŞİLOT),P11,irrigated,37.887,34.673,V1 thesis-model reference/demo source; not official; not field validated
+P110,Bor İlçe Merkezi,30.0,TURP (KIRMIZI),P110,sprinkler,37.89,34.566,V1 thesis-model reference/demo source; not official; not field validated
+P111,Bor İlçe Merkezi,40.0,MAYDONOZ,P111,sprinkler,37.891,34.567,V1 thesis-model reference/demo source; not official; not field validated
+P112,Bor İlçe Merkezi,700.0,BAĞ,P112,drip,37.892,34.568,V1 thesis-model reference/demo source; not official; not field validated
+P113,Bor İlçe Merkezi,20.0,ARMUT,P113,drip,37.893,34.569,V1 thesis-model reference/demo source; not official; not field validated
+P114,Bor İlçe Merkezi,4940.0,ELMA,P114,drip,37.894,34.57,V1 thesis-model reference/demo source; not official; not field validated
+P115,Bor İlçe Merkezi,13.0,ERİK,P115,drip,37.895,34.571,V1 thesis-model reference/demo source; not official; not field validated
+P116,Bor İlçe Merkezi,170.0,KAYSI,P116,drip,37.896,34.572,V1 thesis-model reference/demo source; not official; not field validated
+P117,Bor İlçe Merkezi,24.0,KİRAZ,P117,drip,37.897,34.56,V1 thesis-model reference/demo source; not official; not field validated
+P118,Bor İlçe Merkezi,4.0,NEKTAR,P118,drip,37.898,34.561,V1 thesis-model reference/demo source; not official; not field validated
+P119,Bor İlçe Merkezi,15.0,ŞEFTALİ,P119,drip,37.899,34.562,V1 thesis-model reference/demo source; not official; not field validated
+P12,Sazlıca,350.0,ÇAVDAR (YEŞİLOT),P12,irrigated,37.888,34.674,V1 thesis-model reference/demo source; not official; not field validated
+P120,Bor İlçe Merkezi,3.0,BADEM,P120,drip,37.89,34.563,V1 thesis-model reference/demo source; not official; not field validated
+P121,Bor İlçe Merkezi,258.0,CEVİZ,P121,drip,37.891,34.564,V1 thesis-model reference/demo source; not official; not field validated
+P122,Kemerhisar,7110.0,BUĞDAY (Dane),P122,rainfed,37.827,34.58,V1 thesis-model reference/demo source; not official; not field validated
+P123,Kemerhisar,5540.0,ARPA (Dane),P123,rainfed,37.828,34.581,V1 thesis-model reference/demo source; not official; not field validated
+P124,Kemerhisar,40.0,ÇAVDAR (Dane),P124,rainfed,37.829,34.582,V1 thesis-model reference/demo source; not official; not field validated
+P125,Kemerhisar,11.0,MISIR (Dane),P125,sprinkler,37.83,34.583,V1 thesis-model reference/demo source; not official; not field validated
+P126,Kemerhisar,75.0,KURU FASULYE,P126,sprinkler,37.831,34.584,V1 thesis-model reference/demo source; not official; not field validated
+P127,Kemerhisar,650.0,NOHUT,P127,rainfed,37.832,34.585,V1 thesis-model reference/demo source; not official; not field validated
+P128,Kemerhisar,153.0,AYÇİÇEĞİ,P128,sprinkler,37.833,34.586,V1 thesis-model reference/demo source; not official; not field validated
+P129,Kemerhisar,630.0,PATATES,P129,sprinkler,37.834,34.587,V1 thesis-model reference/demo source; not official; not field validated
+P13,Sazlıca,70.0,TRİTİKALE (YEŞİLOT),P13,irrigated,37.889,34.662,V1 thesis-model reference/demo source; not official; not field validated
+P130,Kemerhisar,2800.0,ŞEKER PANCARI,P130,surface,37.825,34.575,V1 thesis-model reference/demo source; not official; not field validated
+P131,Kemerhisar,130.0,ÇAVDAR (YEŞİLOT),P131,sprinkler,37.826,34.576,V1 thesis-model reference/demo source; not official; not field validated
+P132,Kemerhisar,350.0,FİĞ (YEŞİLOT),P132,sprinkler,37.827,34.577,V1 thesis-model reference/demo source; not official; not field validated
+P133,Kemerhisar,2765.0,YONCA (YEŞİLOT),P133,sprinkler,37.828,34.578,V1 thesis-model reference/demo source; not official; not field validated
+P134,Kemerhisar,850.0,SİLAJLIK MISIR,P134,sprinkler,37.829,34.579,V1 thesis-model reference/demo source; not official; not field validated
+P135,Kemerhisar,7.0,LAVANTA,P135,drip,37.83,34.58,V1 thesis-model reference/demo source; not official; not field validated
+P136,Kemerhisar,5.0,SİVRİ BİBER,P136,drip,37.831,34.581,V1 thesis-model reference/demo source; not official; not field validated
+P137,Kemerhisar,590.0,SALÇALIK BİBER,P137,drip,37.832,34.582,V1 thesis-model reference/demo source; not official; not field validated
+P138,Kemerhisar,120.0,SOFRALIK DOMATES,P138,,37.833,34.583,V1 thesis-model reference/demo source; not official; not field validated
+P139,Kemerhisar,5400.0,SALÇALIK DOMATES,P139,drip,37.834,34.584,V1 thesis-model reference/demo source; not official; not field validated
+P14,Sazlıca,10.0,YULAF (YEŞİLOT),P14,irrigated,37.89,34.663,V1 thesis-model reference/demo source; not official; not field validated
+P140,Kemerhisar,5.0,FASULYE (TAZE),P140,drip,37.825,34.585,V1 thesis-model reference/demo source; not official; not field validated
+P141,Kemerhisar,1.0,HIYAR (SOFRALIK),P141,drip,37.826,34.586,V1 thesis-model reference/demo source; not official; not field validated
+P142,Kemerhisar,4.0,KABAK (ÇEREZLİK),P142,drip,37.827,34.587,V1 thesis-model reference/demo source; not official; not field validated
+P143,Kemerhisar,100.0,KARPUZ,P143,drip,37.828,34.575,V1 thesis-model reference/demo source; not official; not field validated
+P144,Kemerhisar,200.0,KAVUN,P144,drip,37.829,34.576,V1 thesis-model reference/demo source; not official; not field validated
+P145,Kemerhisar,65.0,LAHANA (BEYAZ),P145,sprinkler,37.83,34.577,V1 thesis-model reference/demo source; not official; not field validated
+P146,Kemerhisar,40.0,SOĞAN (KURU),P146,sprinkler,37.831,34.578,V1 thesis-model reference/demo source; not official; not field validated
+P147,Kemerhisar,2800.0,BAĞ,P147,drip,37.832,34.579,V1 thesis-model reference/demo source; not official; not field validated
+P148,Kemerhisar,50.0,ARMUT,P148,drip,37.833,34.58,V1 thesis-model reference/demo source; not official; not field validated
+P149,Kemerhisar,9546.0,ELMA,P149,drip,37.834,34.581,V1 thesis-model reference/demo source; not official; not field validated
+P15,Sazlıca,70.0,FİĞ (YEŞİLOT),P15,irrigated,37.891,34.664,V1 thesis-model reference/demo source; not official; not field validated
+P150,Kemerhisar,30.0,ERİK,P150,drip,37.825,34.582,V1 thesis-model reference/demo source; not official; not field validated
+P151,Kemerhisar,356.0,KAYSI,P151,drip,37.826,34.583,V1 thesis-model reference/demo source; not official; not field validated
+P152,Kemerhisar,15.0,KİRAZ,P152,drip,37.827,34.584,V1 thesis-model reference/demo source; not official; not field validated
+P153,Kemerhisar,16.0,NEKTAR,P153,drip,37.828,34.585,V1 thesis-model reference/demo source; not official; not field validated
+P154,Kemerhisar,8.0,ŞEFTALİ,P154,drip,37.829,34.586,V1 thesis-model reference/demo source; not official; not field validated
+P155,Kemerhisar,43.0,BADEM,P155,drip,37.83,34.587,V1 thesis-model reference/demo source; not official; not field validated
+P156,Kemerhisar,597.0,CEVİZ,P156,drip,37.831,34.575,V1 thesis-model reference/demo source; not official; not field validated
+P157,Kaynarca,725.0,ARPA (Dane),P157,rainfed,37.81,34.621,V1 thesis-model reference/demo source; not official; not field validated
+P158,Kaynarca,878.0,BUĞDAY (Dane),P158,rainfed,37.811,34.622,V1 thesis-model reference/demo source; not official; not field validated
+P159,Kaynarca,25.0,PATATES,P159,sprinkler,37.812,34.61,V1 thesis-model reference/demo source; not official; not field validated
+P16,Sazlıca,1650.0,YONCA (YEŞİLOT),P16,irrigated,37.892,34.665,V1 thesis-model reference/demo source; not official; not field validated
+P160,Kaynarca,15.0,SORGUM,P160,sprinkler,37.813,34.611,V1 thesis-model reference/demo source; not official; not field validated
+P161,Kaynarca,30.0,SİLAJLIK MISIR,P161,sprinkler,37.814,34.612,V1 thesis-model reference/demo source; not official; not field validated
+P162,Kaynarca,145.0,YONCA (YEŞİLOT),P162,sprinkler,37.815,34.613,V1 thesis-model reference/demo source; not official; not field validated
+P163,Kaynarca,30.0,ÇAVDAR (YEŞİLOT),P163,sprinkler,37.816,34.614,V1 thesis-model reference/demo source; not official; not field validated
+P164,Kaynarca,70.0,KARPUZ,P164,drip,37.817,34.615,V1 thesis-model reference/demo source; not official; not field validated
+P165,Kaynarca,250.0,KAVUN,P165,drip,37.818,34.616,V1 thesis-model reference/demo source; not official; not field validated
+P166,Kaynarca,5150.0,LAHANA (BEYAZ),P166,sprinkler,37.819,34.617,V1 thesis-model reference/demo source; not official; not field validated
+P167,Kaynarca,10.0,SALÇALIK BİBER,P167,drip,37.81,34.618,V1 thesis-model reference/demo source; not official; not field validated
+P168,Kaynarca,2148.0,SALÇALIK DOMATES,P168,drip,37.811,34.619,V1 thesis-model reference/demo source; not official; not field validated
+P169,Kaynarca,60.0,SOFRALIK DOMATES,P169,drip,37.812,34.62,V1 thesis-model reference/demo source; not official; not field validated
+P17,Sazlıca,650.0,SİLAJLIK MISIR,P17,irrigated,37.893,34.666,V1 thesis-model reference/demo source; not official; not field validated
+P170,Kaynarca,2.0,SİVRİ BİBER,P170,drip,37.813,34.621,V1 thesis-model reference/demo source; not official; not field validated
+P171,Kaynarca,11.0,ARMUT,P171,drip,37.814,34.622,V1 thesis-model reference/demo source; not official; not field validated
+P172,Kaynarca,2.0,BADEM,P172,drip,37.815,34.61,V1 thesis-model reference/demo source; not official; not field validated
+P173,Kaynarca,350.0,BAĞ,P173,drip,37.816,34.611,V1 thesis-model reference/demo source; not official; not field validated
+P174,Kaynarca,79.0,CEVİZ,P174,drip,37.817,34.612,V1 thesis-model reference/demo source; not official; not field validated
+P175,Kaynarca,130.0,ELMA,P175,drip,37.818,34.613,V1 thesis-model reference/demo source; not official; not field validated
+P176,Kaynarca,40.0,KAYSI,P176,drip,37.819,34.614,V1 thesis-model reference/demo source; not official; not field validated
+P177,Kaynarca,3.0,KİRAZ,P177,drip,37.81,34.615,V1 thesis-model reference/demo source; not official; not field validated
+P178,Kaynarca,6.0,NEKTAR,P178,drip,37.811,34.616,V1 thesis-model reference/demo source; not official; not field validated
+P179,Kaynarca,32.0,ŞEFTALİ,P179,drip,37.812,34.617,V1 thesis-model reference/demo source; not official; not field validated
+P18,Sazlıca,20.0,SORGUM,P18,irrigated,37.894,34.667,V1 thesis-model reference/demo source; not official; not field validated
+P19,Sazlıca,2.0,BARBUNYA FASULYE (TAZE),P19,irrigated,37.895,34.668,V1 thesis-model reference/demo source; not official; not field validated
+P2,Sazlıca,1000.0,ARPA (Dane),P2,rainfed,37.888,34.664,V1 thesis-model reference/demo source; not official; not field validated
+P20,Sazlıca,17.0,SİVRİ BİBER,P20,irrigated,37.886,34.669,V1 thesis-model reference/demo source; not official; not field validated
+P21,Sazlıca,60.0,SALÇALIK BİBER,P21,irrigated,37.887,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P22,Sazlıca,1248.0,SOFRALIK DOMATES,P22,irrigated,37.888,34.671,V1 thesis-model reference/demo source; not official; not field validated
+P23,Sazlıca,3754.0,SALÇALIK DOMATES,P23,irrigated,37.889,34.672,V1 thesis-model reference/demo source; not official; not field validated
+P24,Sazlıca,11.0,FASULYE (TAZE),P24,irrigated,37.89,34.673,V1 thesis-model reference/demo source; not official; not field validated
+P25,Sazlıca,2.0,HIYAR (SOFRALIK),P25,irrigated,37.891,34.674,V1 thesis-model reference/demo source; not official; not field validated
+P26,Sazlıca,11.0,KABAK (SAKIZ),P26,irrigated,37.892,34.662,V1 thesis-model reference/demo source; not official; not field validated
+P27,Sazlıca,1.0,KABAK (BAL),P27,irrigated,37.893,34.663,V1 thesis-model reference/demo source; not official; not field validated
+P28,Sazlıca,9.0,KABAK (ÇEREZLİK),P28,irrigated,37.894,34.664,V1 thesis-model reference/demo source; not official; not field validated
+P29,Sazlıca,106.0,KARPUZ,P29,irrigated,37.895,34.665,V1 thesis-model reference/demo source; not official; not field validated
+P3,Sazlıca,40.0,ÇAVDAR (Dane),P3,rainfed,37.889,34.665,V1 thesis-model reference/demo source; not official; not field validated
+P30,Sazlıca,90.0,KAVUN,P30,irrigated,37.886,34.666,V1 thesis-model reference/demo source; not official; not field validated
+P31,Sazlıca,7300.0,LAHANA (BEYAZ),P31,irrigated,37.887,34.667,V1 thesis-model reference/demo source; not official; not field validated
+P32,Sazlıca,700.0,LAHANA (KIRMIZI),P32,irrigated,37.888,34.668,V1 thesis-model reference/demo source; not official; not field validated
+P33,Sazlıca,67.0,SOĞAN (KURU),P33,irrigated,37.889,34.669,V1 thesis-model reference/demo source; not official; not field validated
+P34,Sazlıca,1.0,SARIMSAK (KURU),P34,irrigated,37.89,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P35,Sazlıca,1.0,SOĞAN (TAZE),P35,irrigated,37.891,34.671,V1 thesis-model reference/demo source; not official; not field validated
+P36,Sazlıca,63.0,BAĞ,P36,irrigated,37.892,34.672,V1 thesis-model reference/demo source; not official; not field validated
+P37,Sazlıca,86.0,ARMUT,P37,irrigated,37.893,34.673,V1 thesis-model reference/demo source; not official; not field validated
+P38,Sazlıca,3826.0,ELMA,P38,irrigated,37.894,34.674,V1 thesis-model reference/demo source; not official; not field validated
+P39,Sazlıca,126.0,ERİK,P39,irrigated,37.895,34.662,V1 thesis-model reference/demo source; not official; not field validated
+P4,Sazlıca,70.0,TRTİKALE (Dane),P4,rainfed,37.89,34.666,V1 thesis-model reference/demo source; not official; not field validated
+P40,Sazlıca,456.0,KAYSI,P40,irrigated,37.886,34.663,V1 thesis-model reference/demo source; not official; not field validated
+P41,Sazlıca,129.0,KİRAZ,P41,irrigated,37.887,34.664,V1 thesis-model reference/demo source; not official; not field validated
+P42,Sazlıca,2525.0,NEKTAR,P42,irrigated,37.888,34.665,V1 thesis-model reference/demo source; not official; not field validated
+P43,Sazlıca,596.0,ŞEFTALİ,P43,irrigated,37.889,34.666,V1 thesis-model reference/demo source; not official; not field validated
+P44,Sazlıca,2.0,VİŞNE,P44,irrigated,37.89,34.667,V1 thesis-model reference/demo source; not official; not field validated
+P45,Sazlıca,71.0,BADEM,P45,irrigated,37.891,34.668,V1 thesis-model reference/demo source; not official; not field validated
+P46,Sazlıca,251.0,CEVİZ,P46,irrigated,37.892,34.669,V1 thesis-model reference/demo source; not official; not field validated
+P47,Sazlıca,12.0,ÇİLEK,P47,irrigated,37.893,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P48,Bahçeli,2190.0,BUĞDAY (Dane),P48,rainfed,37.913,34.679,V1 thesis-model reference/demo source; not official; not field validated
+P49,Bahçeli,3380.0,ARPA (Dane),P49,rainfed,37.914,34.68,V1 thesis-model reference/demo source; not official; not field validated
+P5,Sazlıca,50.0,YULAF (Dane),P5,rainfed,37.891,34.667,V1 thesis-model reference/demo source; not official; not field validated
+P50,Bahçeli,170.0,ÇAVDAR (Dane),P50,rainfed,37.905,34.681,V1 thesis-model reference/demo source; not official; not field validated
+P51,Bahçeli,50.0,KURU FASULYE,P51,sprinkler,37.906,34.682,V1 thesis-model reference/demo source; not official; not field validated
+P52,Bahçeli,360.0,NOHUT,P52,rainfed,37.907,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P53,Bahçeli,140.0,PATATES,P53,sprinkler,37.908,34.671,V1 thesis-model reference/demo source; not official; not field validated
+P54,Bahçeli,100.0,YULAF (YEŞİLOT),P54,sprinkler,37.909,34.672,V1 thesis-model reference/demo source; not official; not field validated
+P55,Bahçeli,20.0,FİĞ (YEŞİLOT),P55,sprinkler,37.91,34.673,V1 thesis-model reference/demo source; not official; not field validated
+P56,Bahçeli,510.0,YONCA (YEŞİLOT),P56,sprinkler,37.911,34.674,V1 thesis-model reference/demo source; not official; not field validated
+P57,Bahçeli,125.0,SİLAJLIK MISIR,P57,sprinkler,37.912,34.675,V1 thesis-model reference/demo source; not official; not field validated
+P58,Bahçeli,2.0,SİVRİ BİBER,P58,drip,37.913,34.676,V1 thesis-model reference/demo source; not official; not field validated
+P59,Bahçeli,40.0,SALÇALIK BİBER,P59,drip,37.914,34.677,V1 thesis-model reference/demo source; not official; not field validated
+P6,Sazlıca,80.0,KURU FASULYE,P6,irrigated,37.892,34.668,V1 thesis-model reference/demo source; not official; not field validated
+P60,Bahçeli,30.0,SOFRALIK DOMATES,P60,drip,37.905,34.678,V1 thesis-model reference/demo source; not official; not field validated
+P61,Bahçeli,870.0,SALÇALIK DOMATES,P61,drip,37.906,34.679,V1 thesis-model reference/demo source; not official; not field validated
+P62,Bahçeli,10.0,FASULYE (TAZE),P62,drip,37.907,34.68,V1 thesis-model reference/demo source; not official; not field validated
+P63,Bahçeli,16.0,HIYAR (SOFRALIK),P63,drip,37.908,34.681,V1 thesis-model reference/demo source; not official; not field validated
+P64,Bahçeli,10.0,KARPUZ,P64,drip,37.909,34.682,V1 thesis-model reference/demo source; not official; not field validated
+P65,Bahçeli,120.0,KAVUN,P65,drip,37.91,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P66,Bahçeli,457.0,LAHANA (BEYAZ),P66,sprinkler,37.911,34.671,V1 thesis-model reference/demo source; not official; not field validated
+P67,Bahçeli,10.0,SOĞAN (KURU),P67,sprinkler,37.912,34.672,V1 thesis-model reference/demo source; not official; not field validated
+P68,Bahçeli,1500.0,BAĞ,P68,drip,37.913,34.673,V1 thesis-model reference/demo source; not official; not field validated
+P69,Bahçeli,222.0,ARMUT,P69,drip,37.914,34.674,V1 thesis-model reference/demo source; not official; not field validated
+P7,Sazlıca,80.0,NOHUT,P7,rainfed,37.893,34.669,V1 thesis-model reference/demo source; not official; not field validated
+P70,Bahçeli,53.0,AYVA,P70,drip,37.905,34.675,V1 thesis-model reference/demo source; not official; not field validated
+P71,Bahçeli,8438.0,ELMA,P71,drip,37.906,34.676,V1 thesis-model reference/demo source; not official; not field validated
+P72,Bahçeli,41.0,ERİK,P72,drip,37.907,34.677,V1 thesis-model reference/demo source; not official; not field validated
+P73,Bahçeli,480.0,KAYSI,P73,drip,37.908,34.678,V1 thesis-model reference/demo source; not official; not field validated
+P74,Bahçeli,20.0,KİRAZ,P74,drip,37.909,34.679,V1 thesis-model reference/demo source; not official; not field validated
+P75,Bahçeli,98.0,NEKTAR,P75,drip,37.91,34.68,V1 thesis-model reference/demo source; not official; not field validated
+P76,Bahçeli,25.0,ŞEFTALİ,P76,drip,37.911,34.681,V1 thesis-model reference/demo source; not official; not field validated
+P77,Bahçeli,2.0,BADEM,P77,drip,37.912,34.682,V1 thesis-model reference/demo source; not official; not field validated
+P78,Bahçeli,203.0,CEVİZ,P78,drip,37.913,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P79,Bor İlçe Merkezi,4441.0,BUĞDAY (Dane),P79,rainfed,37.899,34.561,V1 thesis-model reference/demo source; not official; not field validated
+P8,Sazlıca,20.0,AYÇİÇEĞİ,P8,irrigated,37.894,34.67,V1 thesis-model reference/demo source; not official; not field validated
+P80,Bor İlçe Merkezi,2540.0,ARPA (Dane),P80,rainfed,37.89,34.562,V1 thesis-model reference/demo source; not official; not field validated
+P81,Bor İlçe Merkezi,85.0,ÇAVDAR (Dane),P81,rainfed,37.891,34.563,V1 thesis-model reference/demo source; not official; not field validated
+P82,Bor İlçe Merkezi,9.0,MISIR (Dane),P82,sprinkler,37.892,34.564,V1 thesis-model reference/demo source; not official; not field validated
+P83,Bor İlçe Merkezi,50.0,TRTİKALE (Dane),P83,rainfed,37.893,34.565,V1 thesis-model reference/demo source; not official; not field validated
+P84,Bor İlçe Merkezi,160.0,KURU FASULYE,P84,sprinkler,37.894,34.566,V1 thesis-model reference/demo source; not official; not field validated
+P85,Bor İlçe Merkezi,140.0,NOHUT,P85,rainfed,37.895,34.567,V1 thesis-model reference/demo source; not official; not field validated
+P86,Bor İlçe Merkezi,250.0,PATATES,P86,sprinkler,37.896,34.568,V1 thesis-model reference/demo source; not official; not field validated
+P87,Bor İlçe Merkezi,2960.0,ŞEKER PANCARI,P87,surface,37.897,34.569,V1 thesis-model reference/demo source; not official; not field validated
+P88,Bor İlçe Merkezi,570.0,ÇAVDAR (YEŞİLOT),P88,sprinkler,37.898,34.57,V1 thesis-model reference/demo source; not official; not field validated
+P89,Bor İlçe Merkezi,40.0,TRİTİKALE (YEŞİLOT),P89,sprinkler,37.899,34.571,V1 thesis-model reference/demo source; not official; not field validated
+P9,Sazlıca,475.0,PATATES,P9,irrigated,37.895,34.671,V1 thesis-model reference/demo source; not official; not field validated
+P90,Bor İlçe Merkezi,900.0,FİĞ (YEŞİLOT),P90,sprinkler,37.89,34.572,V1 thesis-model reference/demo source; not official; not field validated
+P91,Bor İlçe Merkezi,2900.0,YONCA (YEŞİLOT),P91,sprinkler,37.891,34.56,V1 thesis-model reference/demo source; not official; not field validated
+P92,Bor İlçe Merkezi,5340.0,SİLAJLIK MISIR,P92,sprinkler,37.892,34.561,V1 thesis-model reference/demo source; not official; not field validated
+P93,Bor İlçe Merkezi,183.0,SORGUM,P93,sprinkler,37.893,34.562,V1 thesis-model reference/demo source; not official; not field validated
+P94,Bor İlçe Merkezi,16.0,SİVRİ BİBER,P94,drip,37.894,34.563,V1 thesis-model reference/demo source; not official; not field validated
+P95,Bor İlçe Merkezi,191.0,SALÇALIK BİBER,P95,drip,37.895,34.564,V1 thesis-model reference/demo source; not official; not field validated
+P96,Bor İlçe Merkezi,180.0,SOFRALIK DOMATES,P96,drip,37.896,34.565,V1 thesis-model reference/demo source; not official; not field validated
+P97,Bor İlçe Merkezi,4960.0,SALÇALIK DOMATES,P97,drip,37.897,34.566,V1 thesis-model reference/demo source; not official; not field validated
+P98,Bor İlçe Merkezi,10.0,FASULYE (TAZE),P98,drip,37.898,34.567,V1 thesis-model reference/demo source; not official; not field validated
+P99,Bor İlçe Merkezi,12.0,HIYAR (SOFRALIK),P99,drip,37.899,34.568,V1 thesis-model reference/demo source; not official; not field validated

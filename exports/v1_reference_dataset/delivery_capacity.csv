@@ -1,0 +1,13 @@
+planning_year,month,capacity,source_unit,canonical_unit,capacity_basis,source_institution,source_reference,geographic_scope,authority_class
+2024,2024-01,471457.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-02,445234.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-03,788331.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-04,791792.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-05,1187142.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-06,2306329.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-07,2297254.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-08,1742557.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-09,1102808.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-10,1091672.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-11,649934.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE
+2024,2024-12,416917.0,m3/month,m3/month,DERIVED_PROXY,V1 thesis-model reference sources,repository source manifest,project,CALCULATED_REFERENCE

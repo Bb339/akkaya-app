@@ -9,18 +9,18 @@ from pathlib import PurePath
 from typing import Any
 from openpyxl import load_workbook
 from openpyxl.utils.exceptions import InvalidFileException
-from kds.config import MAX_ROWS, MAX_COLUMNS, MAX_EXPANDED_XLSX_BYTES
+from kds.config import MAX_ROWS, MAX_SCIENTIFIC_INPUT_ROWS, MAX_COLUMNS, MAX_EXPANDED_XLSX_BYTES
 
 
 class ParseError(ValueError):
     pass
 
 
-def table(headers: list[Any], records: list[list[Any]]) -> tuple[list[str], list[dict[str, Any]]]:
+def table(headers: list[Any], records: list[list[Any]], max_rows: int = MAX_ROWS) -> tuple[list[str], list[dict[str, Any]]]:
     columns = [str(v).strip() if v is not None else "" for v in headers]
     if not columns or any(not c for c in columns) or len(set(columns)) != len(columns):
         raise ParseError("Headers must be non-empty and unique.")
-    if len(columns) > MAX_COLUMNS or len(records) > MAX_ROWS:
+    if len(columns) > MAX_COLUMNS or len(records) > max_rows:
         raise ParseError("Table exceeds row/column limit.")
     rows = []
     for index, record in enumerate(records, 2):
@@ -46,13 +46,16 @@ def parse_csv(content: bytes, options: dict[str, Any]) -> tuple[list[str], list[
                 delimiter = ","
         reader = csv.reader(io.StringIO(text), delimiter=delimiter, strict=True)
         records = []
+        max_rows = MAX_ROWS
         for row in reader:
             records.append(row)
-            if len(records) > MAX_ROWS + 1:
+            if len(records) == 1 and set(row) == {"section", "record_id", "field", "value_type", "value", "source"}:
+                max_rows = MAX_SCIENTIFIC_INPUT_ROWS
+            if len(records) > max_rows + 1:
                 raise ParseError("Row limit exceeded.")
         if not records:
             raise ParseError("Empty CSV.")
-        return table(records[0], records[1:])
+        return table(records[0], records[1:], max_rows=max_rows)
     except (UnicodeDecodeError, csv.Error) as exc:
         raise ParseError(f"Invalid UTF-8 CSV: {exc}") from exc
 

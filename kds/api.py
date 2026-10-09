@@ -92,11 +92,13 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         document = projects.get(project_id)
         run_values = request.args.getlist("run_id")
         scenario_values = request.args.getlist("scenario")
-        if len(run_values) > 1 or len(scenario_values) > 1:
-            raise ValueError("At most one run_id and scenario parameter is allowed.")
+        revision_values = request.args.getlist("revision")
+        if len(run_values) > 1 or len(scenario_values) > 1 or len(revision_values) > 1:
+            raise ValueError("At most one run_id, scenario and revision parameter is allowed.")
         run = analysis.get(project_id, run_values[0]) if run_values and run_values[0] else None
         scenario = scenario_values[0] if scenario_values and scenario_values[0] else "S1"
-        return jsonify(project_context(document, run, scenario))
+        revision = revision_values[0] if revision_values and revision_values[0] else None
+        return jsonify(project_context(document, run, scenario, revision))
 
     @blueprint.get("/projects/<project_id>/data-catalog")
     def project_data_catalog(project_id):

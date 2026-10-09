@@ -47,6 +47,9 @@ def _number(value):
 
 def _project_units(document):
     parameters = document.get("scientific_inputs", {}).get("unit_parameters", {})
+    candidate_rows = {}
+    for candidate in document.get("scientific_inputs", {}).get("candidates", []):
+        candidate_rows.setdefault(str(candidate.get("analysis_unit_id")), []).append(candidate)
     seen = set()
     units = []
     for source in document.get("analysis_units", []):
@@ -58,6 +61,7 @@ def _project_units(document):
         current_water = _number(current.get("current_water_m3", source.get("current_water_m3")))
         current_profit = _number(current.get("current_profit", source.get("current_profit_tl")))
         area = _number(source.get("area_da"))
+        candidates = sorted(candidate_rows.get(unit_id, []), key=lambda item: str(item.get("crop")))
         units.append({
             "analysis_unit_id": unit_id,
             "area_da": source.get("area_da"),
@@ -77,6 +81,9 @@ def _project_units(document):
             "soil_class": current.get("soil_class"),
             "parcel_type": current.get("parcel_type"),
             "current_metrics_source": current.get("source"),
+            "candidate_count": len(candidates),
+            "candidate_crops": sorted({str(candidate.get("crop")) for candidate in candidates}),
+            "candidate_options": deepcopy(candidates),
             "source": "project.analysis_units + project.scientific_inputs.unit_parameters",
         })
     return units
@@ -158,8 +165,9 @@ def _geometry_kind(unit):
     return None
 
 
-def _requirements(report, scenario):
+def _requirements(report, scenario, execution_profile="VERIFIED_INSTITUTIONAL"):
     verified = report["execution_profiles"]["VERIFIED_INSTITUTIONAL"]
+    reference_state = report["scenarios"][scenario]
     rows = [
         {
             "key": "analysis_units",
@@ -200,17 +208,22 @@ def _requirements(report, scenario):
     })
     return {
         "scenario": scenario,
-        "ready": verified["ready"][scenario],
-        "blocking_reasons": deepcopy(verified["blocking_reasons"][scenario]),
+        "ready": (reference_state["status"] != "NOT_READY" if execution_profile == "REFERENCE_DEMO"
+                  else verified["ready"][scenario]),
+        "blocking_reasons": ([item["message"] for item in reference_state["issues"] if item["severity"] == "error"]
+                             if execution_profile == "REFERENCE_DEMO"
+                             else deepcopy(verified["blocking_reasons"][scenario])),
         "warnings": deepcopy(verified["warnings"]),
         "items": rows,
     }
 
 
-def project_decision_context(document, run=None, scenario="S1"):
+def project_decision_context(document, run=None, scenario="S1", expected_revision=None):
     """Create the backend-authoritative PROJECT_DATA view consumed by V1."""
     if scenario not in {"S1", "S2"}:
         raise ValueError("scenario must be S1 or S2.")
+    if expected_revision is not None and int(expected_revision) != int(document.get("data_revision", 0)):
+        raise ValueError("Requested project revision is not the active project revision.")
     report = overview(document)
     readiness = report["readiness"]
     units = _project_units(document)
@@ -223,26 +236,36 @@ def project_decision_context(document, run=None, scenario="S1"):
     geometry_count = sum(_geometry_kind(unit) is not None for unit in units)
     metadata = document.get("metadata", {})
     synthetic = bool(metadata.get("synthetic_institutional_test") and metadata.get("not_official"))
+    reference_demo = bool(metadata.get("reference_demo"))
+    execution_profile = "REFERENCE_DEMO" if reference_demo else "VERIFIED_INSTITUTIONAL"
     verified = readiness["execution_profiles"]["VERIFIED_INSTITUTIONAL"]
-    scenarios = {
-        name: {
-            "ready": verified["ready"][name],
-            "blocking_reasons": deepcopy(verified["blocking_reasons"][name]),
-        } for name in ("S1", "S2")
-    }
+    scenarios = ({name: {"ready": readiness["scenarios"][name]["status"] != "NOT_READY",
+                         "blocking_reasons": [item["message"] for item in readiness["scenarios"][name]["issues"]
+                                              if item["severity"] == "error"]}
+                  for name in ("S1", "S2")} if reference_demo else
+                 {name: {"ready": verified["ready"][name],
+                         "blocking_reasons": deepcopy(verified["blocking_reasons"][name])}
+                  for name in ("S1", "S2")})
+    if reference_demo:
+        units = [{**unit, "latitude": unit.get("latitude") if unit.get("geometry") else None,
+                  "longitude": unit.get("longitude") if unit.get("geometry") else None,
+                  "geometry_status": "PROVIDED" if unit.get("geometry") else "NOT_PROVIDED"}
+                 for unit in units]
+        geometry_count = sum(bool(unit.get("geometry")) for unit in units)
     return {
         "provider": "PROJECT_DATA",
         "project": deepcopy(document["project"]),
         "project_revision": document.get("data_revision", 0),
         "authority": ("SYNTHETIC / NOT_OFFICIAL" if synthetic else
+                      "REFERENCE / DEMO DATA" if reference_demo else
                       "VERIFIED INSTITUTIONAL" if verified["ready"][scenario] else
                       "INSTITUTIONAL / NOT VERIFIED"),
         "synthetic": synthetic,
-        "execution_profile": "VERIFIED_INSTITUTIONAL",
+        "execution_profile": execution_profile,
         "capabilities": {
             "algorithms": list(ALGORITHMS), "objectives": list(OBJECTIVES), "scenarios": scenarios,
         },
-        "requirements": _requirements(readiness, scenario),
+        "requirements": _requirements(readiness, scenario, execution_profile),
         "units": units,
         "current_summary": _current_summary(units),
         "geographic_summary": _geographic_summary(units, document["project"]),

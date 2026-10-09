@@ -1,0 +1,59 @@
+crop_name,crop_group,perennial,kc_initial,kc_mid,kc_end,stage_initial_days,stage_development_days,stage_mid_days,stage_late_days,source,confidence_level,active
+ARMUT,Meyve/Bag,True,0.55,0.97,0.71,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ARPA (Dane),Tarla/Yem,False,0.53,1.16,0.25,30,60,120,60,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ARPA (YEŞİLOT),Tarla/Yem,False,0.53,1.16,0.25,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+AYVA,Meyve/Bag,True,0.55,0.97,0.71,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+AYÇİÇEĞİ,Tarla/Yem,False,0.42,1.17,0.36,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+BADEM,Meyve/Bag,True,0.55,0.97,0.71,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+BARBUNYA FASULYE (TAZE),Sebze,False,0.46,1.07,0.92,15,25,40,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+BAĞ,Meyve/Bag,True,0.39,0.88,0.47,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+BUĞDAY (Dane),Tarla/Yem,False,0.53,1.16,0.27,30,60,120,60,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+BUĞDAY (YEŞİLOT),Tarla/Yem,False,0.53,1.16,0.27,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+CEVİZ,Meyve/Bag,True,0.55,0.97,0.71,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+DUT,Meyve/Bag,True,0.51,0.97,0.74,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+ELMA,Meyve/Bag,True,0.58,0.97,0.74,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ERİK,Meyve/Bag,True,0.51,0.97,0.74,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+FASULYE (TAZE),Sebze,False,0.46,1.07,0.92,15,25,40,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+FİĞ (YEŞİLOT),Tarla/Yem,False,0.48,1.0,0.7,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+HIYAR (SOFRALIK),Sebze,False,0.46,1.02,0.77,15,25,40,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ISPANAK,Sebze,False,0.5,1.1,0.95,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+KABAK (BAL),Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+KABAK (SAKIZ),Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+KABAK (ÇEREZLİK),Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+KARPUZ,Sebze,False,0.42,1.03,0.77,15,25,40,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+KAVUN,Sebze,False,0.45,1.07,0.77,15,25,40,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+KAYSI,Meyve/Bag,True,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+KURU FASULYE,Tarla/Yem,False,0.46,1.07,0.92,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+KİMYON,Tarla/Yem,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+KİRAZ,Meyve/Bag,True,0.51,0.97,0.74,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+LAHANA (BEYAZ),Sebze,False,0.4,1.04,0.93,20,30,50,25,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+LAHANA (KIRMIZI),Sebze,False,0.4,1.04,0.93,15,25,40,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+LAVANTA,Tarla/Yem,False,0.35,0.8,0.6,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+MARUL,Sebze,False,0.7,1.0,0.95,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+MAYDONOZ,Sebze,False,0.7,1.07,0.97,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+MISIR (Dane),Tarla/Yem,False,0.3,1.2,0.6,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+NEKTAR,Meyve/Bag,True,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+NOHUT,Tarla/Yem,False,0.41,1.02,0.37,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+PATATES,Tarla/Yem,False,0.43,1.18,0.77,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+PIRASA,Sebze,False,0.7,1.05,0.95,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+SALÇALIK BİBER,Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+SALÇALIK DOMATES,Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+SARIMSAK (KURU),Sebze,False,0.59,1.0,0.7,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+SOFRALIK DOMATES,Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+SORGUM,Tarla/Yem,False,0.34,1.15,0.55,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+SOĞAN (KURU),Sebze,False,0.6,1.07,0.77,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+SOĞAN (TAZE),Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+SİLAJLIK MISIR,Tarla/Yem,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+SİVRİ BİBER,Sebze,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+TRTİKALE (Dane),Tarla/Yem,False,0.6,1.0,0.8,0.2,0.3,0.3,0.2,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+TRİTİKALE  (YEŞİLOT),Tarla/Yem,False,0.53,1.16,0.25,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+TURP (KIRMIZI),Sebze,False,0.5,1.1,0.95,20,25,45,20,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True
+VİŞNE,Meyve/Bag,True,0.51,0.97,0.74,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+YONCA  (YEŞİLOT),Tarla/Yem,False,0.4,1.23,1.17,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+YULAF (Dane),Tarla/Yem,False,0.4,1.16,1.13,30,60,120,60,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+YULAF (YEŞİLOT),Tarla/Yem,False,0.4,1.16,1.13,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ÇAVDAR   (YEŞİLOT),Tarla/Yem,False,0.58,1.14,0.24,20,30,120,30,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ÇAVDAR (Dane),Tarla/Yem,False,0.58,1.14,0.24,30,60,120,60,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ÇİLEK,Meyve/Bag,True,0.4,0.85,0.75,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ŞEFTALİ,Meyve/Bag,True,0.51,0.97,0.74,30,45,120,45,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi old_catalog,reference_assumed,True
+ŞEKER PANCARI,Tarla/Yem,False,0.35,1.2,0.7,20,35,60,35,2026 güncelleme: 6 yerleşim Excel türevi + ekonomi manual_proxy,reference_assumed,True

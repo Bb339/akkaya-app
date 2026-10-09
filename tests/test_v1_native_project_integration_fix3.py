@@ -99,6 +99,11 @@ def test_project_reference_project_banner_uses_provider_count(tmp_path):
                 "typeof window.__V1_PROJECT_PROVIDER__ === 'object' && "
                 "window.__V1_PROJECT_PROVIDER__.provider === 'AKKAYA_REFERENCE'"
             )
+            page.wait_for_function(
+                "Array.isArray(parcelData) && "
+                "parcelData.filter(item => !item?.map_only).length === 179",
+                timeout=30000,
+            )
             page.evaluate("setAuthenticatedUser(getAuthUserByUsername('kurum.nigde'), {focus:false})")
             page.evaluate("window.__savedReferenceParcels=parcelData; parcelData=[]; syncRoleInfoBanner()")
             expect(page.locator("#roleInfoBanner")).to_contain_text(

@@ -1,0 +1,58 @@
+crop,yield_value,yield_unit,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARMUT,1.8117999999999999,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ARPA (Dane),0.4566,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ARPA (YEŞİLOT),1.75,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+AYVA,0.5226000000000001,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+AYÇİÇEĞİ,0.25,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BADEM,0.13390000000000002,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BARBUNYA FASULYE (TAZE),1.2,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BAĞ,0.4,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BUĞDAY (Dane),0.3964,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BUĞDAY (YEŞİLOT),2.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+CEVİZ,0.32780000000000004,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ELMA,1.9566,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ERİK,0.655,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+FASULYE (TAZE),1.2,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+FİĞ (YEŞİLOT),1.95,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+HIYAR (SOFRALIK),2.5,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ISPANAK,1.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KABAK (BAL),3.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KABAK (SAKIZ),3.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KABAK (ÇEREZLİK),0.12,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KARPUZ,6.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KAVUN,4.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KAYSI,1.0243,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KURU FASULYE,0.3,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KİMYON,0.07,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KİRAZ,0.9639,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+LAHANA (BEYAZ),7.5,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+LAHANA (KIRMIZI),6.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+LAVANTA,0.175,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+MARUL,1.5,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+MAYDONOZ,2.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+MISIR (Dane),1.3,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+NEKTAR,0.8844,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+NOHUT,0.12,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+PATATES,4.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+PIRASA,2.7,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SALÇALIK BİBER,4.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SALÇALIK DOMATES,10.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SARIMSAK (KURU),1.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SOFRALIK DOMATES,5.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SORGUM,6.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SOĞAN (KURU),6.5,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SOĞAN (TAZE),1.625,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SİLAJLIK MISIR,6.4,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SİVRİ BİBER,1.5,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+TRTİKALE (Dane),0.4,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+TRİTİKALE  (YEŞİLOT),1.95,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+TURP (KIRMIZI),2.5,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+VİŞNE,2.94,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+YONCA  (YEŞİLOT),5.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+YULAF (Dane),0.3,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+YULAF (YEŞİLOT),1.625,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ÇAVDAR   (YEŞİLOT),1.95,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ÇAVDAR (Dane),0.325,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ÇİLEK,2.375,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ŞEFTALİ,1.26,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ŞEKER PANCARI,6.0,ton/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog

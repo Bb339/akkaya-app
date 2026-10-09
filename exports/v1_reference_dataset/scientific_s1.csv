@@ -1,0 +1,891 @@
+section,record_id,field,value_type,value,source
+unit_parameters,P1,current_water_m3,number,1654641.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P1,current_profit,number,7254999.9,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P1,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P1,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P10,current_water_m3,number,9152.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P10,current_profit,number,70000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P10,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P10,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P100,current_water_m3,number,4383.33,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P100,current_profit,number,45500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P100,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P100,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P101,current_water_m3,number,29872.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P101,current_profit,number,225000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P101,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P101,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P102,current_water_m3,number,11081.7,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P102,current_profit,number,90000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P102,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P102,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P103,current_water_m3,number,482385.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P103,current_profit,number,3375000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P103,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P103,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P104,current_water_m3,number,341941.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P104,current_profit,number,2444000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P104,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P104,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P105,current_water_m3,number,99477.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P105,current_profit,number,1193459.52,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P105,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P105,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P106,current_water_m3,number,12100.55,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P106,current_profit,number,175000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P106,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P106,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P107,current_water_m3,number,23672.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P107,current_profit,number,135000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P107,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P107,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P108,current_water_m3,number,1194760.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P108,current_profit,number,15207945.34,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P108,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P108,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P109,current_water_m3,number,25084.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P109,current_profit,number,210000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P109,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P109,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P11,current_water_m3,number,8857.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P11,current_profit,number,84000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P11,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P11,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P110,current_water_m3,number,8966.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P110,current_profit,number,120000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P110,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P110,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P111,current_water_m3,number,18322.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P111,current_profit,number,180000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P111,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P111,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P112,current_water_m3,number,449764.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P112,current_profit,number,5600000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P112,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P112,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P113,current_water_m3,number,16959.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P113,current_profit,number,200000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P113,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P113,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P114,current_water_m3,number,4016269.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P114,current_profit,number,54340000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P114,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P114,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P115,current_water_m3,number,10179.26,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P115,current_profit,number,117000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P115,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P115,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P116,current_water_m3,number,136093.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P116,current_profit,number,1615000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P116,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P116,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P117,current_water_m3,number,19453.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P117,current_profit,number,276000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P117,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P117,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P118,current_water_m3,number,3391.96,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P118,current_profit,number,40000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P118,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P118,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P119,current_water_m3,number,12719.85,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P119,current_profit,number,147000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P119,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P119,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P12,current_water_m3,number,170499.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P12,current_profit,number,1365000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P12,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P12,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P120,current_water_m3,number,1974.63,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P120,current_profit,number,27000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P120,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P120,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P121,current_water_m3,number,209756.58,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P121,current_profit,number,2580000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P121,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P121,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P122,current_water_m3,number,4356794.7,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P122,current_profit,number,19104833.07,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P122,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P122,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P123,current_water_m3,number,2855039.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P123,current_profit,number,14404000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P123,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P123,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P124,current_water_m3,number,20557.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P124,current_profit,number,100000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P124,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P124,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P125,current_water_m3,number,10990.87,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P125,current_profit,number,44000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P125,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P125,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P126,current_water_m3,number,62583.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P126,current_profit,number,412500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P126,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P126,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P127,current_water_m3,number,432107.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P127,current_profit,number,2080000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P127,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P127,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P128,current_water_m3,number,97390.62,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P128,current_profit,number,642600.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P128,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P128,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P129,current_water_m3,number,560385.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P129,current_profit,number,1462240.71,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P129,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P129,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P13,current_water_m3,number,33063.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P13,current_profit,number,245000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P13,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P13,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P130,current_water_m3,number,4183788.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P130,current_profit,number,18200000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P130,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P130,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P131,current_water_m3,number,59489.3,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P131,current_profit,number,507000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P131,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P131,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P132,current_water_m3,number,212579.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P132,current_profit,number,1575000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P132,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P132,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P133,current_water_m3,number,3082228.45,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P133,current_profit,number,17972500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P133,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P133,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P134,current_water_m3,number,710608.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P134,current_profit,number,5270000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P134,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P134,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P135,current_water_m3,number,2772.98,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P135,current_profit,number,49000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P135,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P135,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P136,current_water_m3,number,3490.45,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P136,current_profit,number,35000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P136,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P136,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P137,current_water_m3,number,411873.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P137,current_profit,number,5401981.59,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P137,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P137,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P138,current_water_m3,number,94593.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P138,current_profit,number,1041563.76,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P138,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P138,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P139,current_water_m3,number,4256712.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P139,current_profit,number,86355282.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P139,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P139,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P14,current_water_m3,number,4576.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P14,current_profit,number,38000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P14,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P14,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P140,current_water_m3,number,2902.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P140,current_profit,number,2878.175,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P140,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P140,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P141,current_water_m3,number,626.19,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P141,current_profit,number,5200.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P141,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P141,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P142,current_water_m3,number,2389.76,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P142,current_profit,number,18000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P142,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P142,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P143,current_water_m3,number,64318.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P143,current_profit,number,450000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P143,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P143,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P144,current_water_m3,number,131516.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P144,current_profit,number,940000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P144,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P144,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P145,current_water_m3,number,26941.85,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P145,current_profit,number,323228.62,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P145,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P145,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P146,current_water_m3,number,40160.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P146,current_profit,number,511191.44,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P146,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P146,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P147,current_water_m3,number,1799056.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P147,current_profit,number,22400000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P147,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P147,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P148,current_water_m3,number,42399.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P148,current_profit,number,500000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P148,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P148,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P149,current_water_m3,number,7760993.46,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P149,current_profit,number,105006000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P149,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P149,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P15,current_water_m3,number,42515.9,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P15,current_profit,number,315000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P15,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P15,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P150,current_water_m3,number,23490.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P150,current_profit,number,270000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P150,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P150,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P151,current_water_m3,number,284995.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P151,current_profit,number,3382000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P151,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P151,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P152,current_water_m3,number,12158.25,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P152,current_profit,number,172500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P152,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P152,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P153,current_water_m3,number,13567.84,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P153,current_profit,number,160000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P153,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P153,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P154,current_water_m3,number,6783.92,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P154,current_profit,number,78400.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P154,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P154,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P155,current_water_m3,number,28303.03,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P155,current_profit,number,387000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P155,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P155,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P156,current_water_m3,number,485366.97,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P156,current_profit,number,5970000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P156,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P156,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P157,current_water_m3,number,373628.75,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P157,current_profit,number,1885000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P157,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P157,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P158,current_water_m3,number,538012.06,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P158,current_profit,number,2359218.486,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P158,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P158,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P159,current_water_m3,number,22237.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P159,current_profit,number,58025.425,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P159,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P159,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P16,current_water_m3,number,1839304.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P16,current_profit,number,10725000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P16,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P16,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P160,current_water_m3,number,14610.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P160,current_profit,number,57000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P160,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P160,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P161,current_water_m3,number,25080.3,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P161,current_profit,number,186000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P161,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P161,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P162,current_water_m3,number,161635.85,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P162,current_profit,number,942500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P162,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P162,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P163,current_water_m3,number,13728.3,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P163,current_profit,number,117000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P163,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P163,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P164,current_water_m3,number,45022.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P164,current_profit,number,315000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P164,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P164,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P165,current_water_m3,number,164395.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P165,current_profit,number,1175000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P165,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P165,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P166,current_water_m3,number,2134623.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P166,current_profit,number,25609652.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P166,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P166,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P167,current_water_m3,number,6980.9,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P167,current_profit,number,91559.01,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P167,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P167,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P168,current_water_m3,number,1693225.44,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P168,current_profit,number,34350212.412,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P168,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P168,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P169,current_water_m3,number,47296.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P169,current_profit,number,520781.88,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P169,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P169,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P17,current_water_m3,number,543452.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P17,current_profit,number,4030000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P17,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P17,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P170,current_water_m3,number,1396.18,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P170,current_profit,number,14000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P170,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P170,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P171,current_water_m3,number,9327.89,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P171,current_profit,number,110000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P171,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P171,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P172,current_water_m3,number,1316.42,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P172,current_profit,number,18000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P172,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P172,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P173,current_water_m3,number,224882.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P173,current_profit,number,2800000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P173,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P173,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P174,current_water_m3,number,64227.79,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P174,current_profit,number,790000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P174,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P174,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P175,current_water_m3,number,105691.3,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P175,current_profit,number,1430000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P175,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P175,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P176,current_water_m3,number,32022.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P176,current_profit,number,380000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P176,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P176,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P177,current_water_m3,number,2431.65,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P177,current_profit,number,34500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P177,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P177,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P178,current_water_m3,number,5087.94,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P178,current_profit,number,60000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P178,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P178,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P179,current_water_m3,number,27135.68,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P179,current_profit,number,313600.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P179,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P179,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P18,current_water_m3,number,16093.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P18,current_profit,number,76000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P18,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P18,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P19,current_water_m3,number,1160.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P19,current_profit,number,3600.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P19,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P19,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P2,current_water_m3,number,515350.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P2,current_profit,number,2600000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P2,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P2,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P20,current_water_m3,number,11868.21,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P20,current_profit,number,119000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P20,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P20,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P21,current_water_m3,number,41887.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P21,current_profit,number,549354.06,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P21,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P21,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P22,current_water_m3,number,983748.48,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P22,current_profit,number,10832263.104,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P22,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P22,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P23,current_water_m3,number,2959128.04,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P23,current_profit,number,60032913.126,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P23,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P23,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P24,current_water_m3,number,6384.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P24,current_profit,number,6331.985,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P24,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P24,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P25,current_water_m3,number,1252.38,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P25,current_profit,number,10400.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P25,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P25,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P26,current_water_m3,number,7089.17,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P26,current_profit,number,71500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P26,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P26,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P27,current_water_m3,number,657.58,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P27,current_profit,number,7000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P27,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P27,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P28,current_water_m3,number,5095.26,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P28,current_profit,number,40500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P28,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P28,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P29,current_water_m3,number,68177.08,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P29,current_profit,number,477000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P29,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P29,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P3,current_water_m3,number,20557.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P3,current_profit,number,100000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P3,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P3,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P30,current_water_m3,number,59183.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P30,current_profit,number,423000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P30,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P30,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P31,current_water_m3,number,3025777.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P31,current_profit,number,36301060.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P31,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P31,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P32,current_water_m3,number,290143.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P32,current_profit,number,3640000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P32,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P32,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P33,current_water_m3,number,67268.67,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P33,current_profit,number,856245.662,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P33,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P33,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P34,current_water_m3,number,914.56,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P34,current_profit,number,10046.808,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P34,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P34,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P35,current_water_m3,number,616.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P35,current_profit,number,7000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P35,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P35,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P36,current_water_m3,number,40478.76,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P36,current_profit,number,504000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P36,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P36,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P37,current_water_m3,number,72922.84,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P37,current_profit,number,860000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P37,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P37,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P38,current_water_m3,number,3110423.22,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P38,current_profit,number,42086000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P38,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P38,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P39,current_water_m3,number,98656.74,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P39,current_profit,number,1134000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P39,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P39,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P4,current_water_m3,number,37950.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P4,current_profit,number,189000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P4,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P4,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P40,current_water_m3,number,365050.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P40,current_profit,number,4332000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P40,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P40,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P41,current_water_m3,number,104560.95,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P41,current_profit,number,1483500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P41,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P41,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P42,current_water_m3,number,2141048.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P42,current_profit,number,25250000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P42,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P42,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P43,current_water_m3,number,505372.24,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P43,current_profit,number,5840800.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P43,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P43,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P44,current_water_m3,number,1621.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P44,current_profit,number,19000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P44,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P44,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P45,current_water_m3,number,46737.17,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P45,current_profit,number,639000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P45,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P45,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P46,current_water_m3,number,204055.47,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P46,current_profit,number,2510000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P46,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P46,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P47,current_water_m3,number,7890.96,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P47,current_profit,number,180000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P47,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P47,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P48,current_water_m3,number,1342097.7,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P48,current_profit,number,5884611.03,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P48,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P48,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P49,current_water_m3,number,1741883.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P49,current_profit,number,8788000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P49,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P49,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P5,current_water_m3,number,24641.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P5,current_profit,number,125000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P5,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P5,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P50,current_water_m3,number,87369.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P50,current_profit,number,425000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P50,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P50,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P51,current_water_m3,number,41725.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P51,current_profit,number,275000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P51,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P51,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P52,current_water_m3,number,239349.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P52,current_profit,number,1152000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P52,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P52,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P53,current_water_m3,number,124532.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P53,current_profit,number,324942.38,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P53,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P53,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P54,current_water_m3,number,45761.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P54,current_profit,number,380000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P54,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P54,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P55,current_water_m3,number,12147.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P55,current_profit,number,90000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P55,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P55,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P56,current_water_m3,number,568512.3,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P56,current_profit,number,3315000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P56,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P56,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P57,current_water_m3,number,104510.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P57,current_profit,number,775000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P57,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P57,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P58,current_water_m3,number,1396.26,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P58,current_profit,number,14000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P58,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P58,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P59,current_water_m3,number,27925.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P59,current_profit,number,366236.04,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P59,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P59,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P6,current_water_m3,number,66760.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P6,current_profit,number,440000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P6,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P6,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P60,current_water_m3,number,23647.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P60,current_profit,number,260390.94,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P60,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P60,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P61,current_water_m3,number,685786.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P61,current_profit,number,13912795.53,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P61,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P61,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P62,current_water_m3,number,5804.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P62,current_profit,number,5756.35,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P62,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P62,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P63,current_water_m3,number,10019.04,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P63,current_profit,number,83200.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P63,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P63,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P64,current_water_m3,number,6431.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P64,current_profit,number,45000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P64,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P64,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P65,current_water_m3,number,78910.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P65,current_profit,number,564000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P65,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P65,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P66,current_water_m3,number,189421.93,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P66,current_profit,number,2272545.836,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P66,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P66,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P67,current_water_m3,number,10040.1,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P67,current_profit,number,127797.86,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P67,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P67,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P68,current_water_m3,number,963780.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P68,current_profit,number,12000000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P68,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P68,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P69,current_water_m3,number,188242.68,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P69,current_profit,number,2220000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P69,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P69,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P7,current_water_m3,number,53188.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P7,current_profit,number,256000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P7,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P7,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P70,current_water_m3,number,44940.82,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P70,current_profit,number,503500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P70,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P70,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P71,current_water_m3,number,6859840.86,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P71,current_profit,number,92818000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P71,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P71,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P72,current_water_m3,number,32102.59,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P72,current_profit,number,369000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P72,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P72,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P73,current_water_m3,number,384264.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P73,current_profit,number,4560000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P73,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P73,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P74,current_water_m3,number,16211.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P74,current_profit,number,230000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P74,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P74,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P75,current_water_m3,number,83098.12,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P75,current_profit,number,980000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P75,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P75,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P76,current_water_m3,number,21198.5,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P76,current_profit,number,245000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P76,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P76,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P77,current_water_m3,number,1316.54,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P77,current_profit,number,18000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P77,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P77,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P78,current_water_m3,number,165032.91,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P78,current_profit,number,2030000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P78,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P78,parcel_type,text,orchard,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P79,current_water_m3,number,2721311.57,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P79,current_profit,number,11933131.317,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P79,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P79,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P8,current_water_m3,number,19418.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P8,current_profit,number,84000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P8,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P8,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P80,current_water_m3,number,1308989.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P80,current_profit,number,6604000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P80,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P80,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P81,current_water_m3,number,43684.9,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P81,current_profit,number,212500.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P81,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P81,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P82,current_water_m3,number,8992.53,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P82,current_profit,number,36000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P82,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P82,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P83,current_water_m3,number,27105.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P83,current_profit,number,135000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P83,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P83,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P84,current_water_m3,number,133510.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P84,current_profit,number,880000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P84,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P84,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P85,current_water_m3,number,93069.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P85,current_profit,number,448000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P85,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P85,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P86,current_water_m3,number,222375.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P86,current_profit,number,580254.25,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P86,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P86,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P87,current_water_m3,number,4422861.6,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P87,current_profit,number,19240000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P87,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P87,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P88,current_water_m3,number,260837.7,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P88,current_profit,number,2223000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P88,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P88,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P89,current_water_m3,number,24294.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P89,current_profit,number,140000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P89,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P89,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P9,current_water_m3,number,422522.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P9,current_profit,number,1102483.075,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P9,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P9,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P90,current_water_m3,number,546633.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P90,current_profit,number,4050000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P90,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P90,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P91,current_water_m3,number,3232717.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P91,current_profit,number,18850000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P91,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P91,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P92,current_water_m3,number,4464293.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P92,current_profit,number,33108000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P92,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P92,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P93,current_water_m3,number,178249.32,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P93,current_profit,number,695400.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P93,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P93,parcel_type,text,field,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P94,current_water_m3,number,11169.44,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P94,current_profit,number,112000.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P94,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P94,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P95,current_water_m3,number,133335.19,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P95,current_profit,number,1748777.091,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P95,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P95,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P96,current_water_m3,number,141890.4,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P96,current_profit,number,1562345.64,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P96,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P96,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P97,current_water_m3,number,3909868.8,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P97,current_profit,number,79318926.24,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P97,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P97,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P98,current_water_m3,number,5804.2,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P98,current_profit,number,5756.35,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P98,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P98,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P99,current_water_m3,number,7514.28,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P99,current_profit,number,62400.0,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P99,soil_class,text,Veri yok,V1 thesis-model reference/demo source; not official; not field validated
+unit_parameters,P99,parcel_type,text,vegetable,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARMUT,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARMUT,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARMUT,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARPA (Dane),default,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARPA (Dane),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARPA (Dane),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARPA (YEŞİLOT),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARPA (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ARPA (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,AYVA,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,AYVA,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,AYVA,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,AYÇİÇEĞİ,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,AYÇİÇEĞİ,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,AYÇİÇEĞİ,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BADEM,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BADEM,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BADEM,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BARBUNYA FASULYE (TAZE),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BARBUNYA FASULYE (TAZE),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BARBUNYA FASULYE (TAZE),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BAĞ,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BAĞ,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BAĞ,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BUĞDAY (Dane),default,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BUĞDAY (Dane),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BUĞDAY (Dane),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BUĞDAY (YEŞİLOT),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BUĞDAY (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,BUĞDAY (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,CEVİZ,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,CEVİZ,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,CEVİZ,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,DUT,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,DUT,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,DUT,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ELMA,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ELMA,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ELMA,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ERİK,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ERİK,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ERİK,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,FASULYE (TAZE),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,FASULYE (TAZE),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,FASULYE (TAZE),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,FİĞ (YEŞİLOT),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,FİĞ (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,FİĞ (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,HIYAR (SOFRALIK),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,HIYAR (SOFRALIK),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,HIYAR (SOFRALIK),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ISPANAK,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ISPANAK,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ISPANAK,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (BAL),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (BAL),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (BAL),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (SAKIZ),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (SAKIZ),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (SAKIZ),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (ÇEREZLİK),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (ÇEREZLİK),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KABAK (ÇEREZLİK),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KARPUZ,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KARPUZ,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KARPUZ,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KAVUN,default,text,surface,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KAVUN,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KAVUN,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KAYSI,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KAYSI,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KAYSI,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KURU FASULYE,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KURU FASULYE,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KURU FASULYE,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KİMYON,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KİMYON,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KİMYON,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KİRAZ,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KİRAZ,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,KİRAZ,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAHANA (BEYAZ),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAHANA (BEYAZ),recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAHANA (BEYAZ),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAHANA (KIRMIZI),default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAHANA (KIRMIZI),recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAHANA (KIRMIZI),efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAVANTA,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAVANTA,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,LAVANTA,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MARUL,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MARUL,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MARUL,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MAYDONOZ,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MAYDONOZ,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MAYDONOZ,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MISIR (Dane),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MISIR (Dane),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,MISIR (Dane),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,NEKTAR,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,NEKTAR,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,NEKTAR,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,NOHUT,default,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,NOHUT,recommended,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,NOHUT,efficiency,number,0.637,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,PATATES,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,PATATES,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,PATATES,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,PIRASA,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,PIRASA,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,PIRASA,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SALÇALIK BİBER,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SALÇALIK BİBER,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SALÇALIK BİBER,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SALÇALIK DOMATES,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SALÇALIK DOMATES,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SALÇALIK DOMATES,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SARIMSAK (KURU),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SARIMSAK (KURU),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SARIMSAK (KURU),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOFRALIK DOMATES,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOFRALIK DOMATES,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOFRALIK DOMATES,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SORGUM,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SORGUM,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SORGUM,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOĞAN (KURU),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOĞAN (KURU),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOĞAN (KURU),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOĞAN (TAZE),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOĞAN (TAZE),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SOĞAN (TAZE),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SİLAJLIK MISIR,default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SİLAJLIK MISIR,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SİLAJLIK MISIR,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SİVRİ BİBER,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SİVRİ BİBER,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,SİVRİ BİBER,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TRTİKALE (Dane),default,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TRTİKALE (Dane),recommended,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TRTİKALE (Dane),efficiency,number,0.637,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TRİTİKALE  (YEŞİLOT),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TRİTİKALE  (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TRİTİKALE  (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TURP (KIRMIZI),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TURP (KIRMIZI),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,TURP (KIRMIZI),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,VİŞNE,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,VİŞNE,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,VİŞNE,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YONCA  (YEŞİLOT),default,text,surface,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YONCA  (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YONCA  (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YULAF (Dane),default,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YULAF (Dane),recommended,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YULAF (Dane),efficiency,number,0.637,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YULAF (YEŞİLOT),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YULAF (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,YULAF (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇAVDAR   (YEŞİLOT),default,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇAVDAR   (YEŞİLOT),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇAVDAR   (YEŞİLOT),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇAVDAR (Dane),default,text,rainfed,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇAVDAR (Dane),recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇAVDAR (Dane),efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇİLEK,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇİLEK,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ÇİLEK,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ŞEFTALİ,default,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ŞEFTALİ,recommended,text,drip,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ŞEFTALİ,efficiency,number,0.83,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ŞEKER PANCARI,default,text,surface,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ŞEKER PANCARI,recommended,text,sprinkler,V1 thesis-model reference/demo source; not official; not field validated
+irrigation,ŞEKER PANCARI,efficiency,number,0.68,V1 thesis-model reference/demo source; not official; not field validated

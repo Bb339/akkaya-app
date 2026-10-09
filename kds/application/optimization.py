@@ -79,6 +79,25 @@ def stable_hash(value):
     return sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, allow_nan=False).encode()).hexdigest()
 
 
+def _reference_input_facts(document):
+    facts = []
+    for batch in document.get('imports', {}).values():
+        if batch.get('status') == 'applied':
+            facts.append({'import_batch_id': batch.get('id'), 'data_type': batch.get('data_type'),
+                          'source_file_name': batch.get('filename'), 'source_file_sha256': batch.get('file_hash'),
+                          'applied_revision': batch.get('applied_revision')})
+    for store_name in ('water_data', 'economic_data', 'crop_parameter_data'):
+        store = document.get(store_name, {})
+        active = set(store.get('active', {}).values())
+        for dataset_id in sorted(active):
+            dataset = store.get('datasets', {}).get(dataset_id, {})
+            facts.append({'dataset_version_id': dataset_id, 'data_type': dataset.get('data_type'),
+                          'version': dataset.get('version'), 'authority_class': dataset.get('authority_class'),
+                          'source_file_name': (dataset.get('source') or {}).get('uploaded_filename'),
+                          'source_file_sha256': (dataset.get('source') or {}).get('file_hash')})
+    return sorted(facts, key=lambda item: (str(item.get('data_type')), str(item.get('import_batch_id') or item.get('dataset_version_id'))))
+
+
 def _selection_contract(document, config, plan):
     selected = {
         'project_id': document['project']['id'], 'data_revision': document['data_revision'],
@@ -132,9 +151,11 @@ class OptimizationApplicationService:
                 'ready': state['status'] != 'NOT_READY',
                 'blocking_reasons': [i['message'] for i in state['issues'] if i['severity']=='error'],
                 'warnings': [i['message'] for i in state['issues'] if i['severity']=='warning'],
-                'datasets': [], 'candidate_source': {'source': 'accepted reference/project-explicit demo path',
+                'datasets': _reference_input_facts(document), 'candidate_source': {'source': 'confirmed reference project imports',
                     'candidate_count': report['scientific_data']['raw_candidate_count'],
                     'analysis_unit_count': report['counts']['analysis_units']},
+                'current_pattern_source': {'source': 'confirmed scientific_inputs import',
+                    'project_revision': document['data_revision']},
                 'algorithm': config['algorithm'], 'objective': config['objective'], 'scenario': config['scenario'],
             }
             response.update(_selection_contract(document, config, response))
@@ -190,9 +211,23 @@ class OptimizationApplicationService:
                                       config['objective'],config['algorithm'],config_hash]).encode()).hexdigest()
         run_id = 'run-'+uuid4().hex
         commit = engine_commit()
+        started_at = now()
+        input_datasets = deepcopy_json(execution_plan.get('datasets', []))
+        import_batch_ids = sorted({item['import_batch_id'] for item in input_datasets if item.get('import_batch_id')})
+        dataset_version_ids = sorted({item['dataset_version_id'] for item in input_datasets if item.get('dataset_version_id')})
+        source_file_names = sorted({item['source_file_name'] for item in input_datasets if item.get('source_file_name')})
+        source_file_sha256 = sorted({item['source_file_sha256'] for item in input_datasets if item.get('source_file_sha256')})
+        geometry_hash = stable_hash([
+            {'external_id': unit['external_id'], 'geometry': unit.get('geometry')}
+            for unit in sorted(document['analysis_units'], key=lambda value: value['external_id'])
+        ])
         input_snapshot = {
             'execution_profile': profile.value, 'planning_year': bundle.planning_year,
-            'project_id': project_id, 'input_datasets': deepcopy_json(execution_plan.get('datasets', [])),
+            'project_id': project_id, 'project_revision': document['data_revision'],
+            'input_datasets': input_datasets,
+            'import_batch_ids': import_batch_ids, 'dataset_version_ids': dataset_version_ids,
+            'source_file_names': source_file_names, 'source_file_sha256': source_file_sha256,
+            'geometry_hash': geometry_hash,
             'candidate_source': deepcopy_json(execution_plan.get('candidate_source', {})),
             'current_pattern_source': deepcopy_json(execution_plan.get('current_pattern_source', {})),
             'climate_source': deepcopy_json(execution_plan.get('climate_source', {})),
@@ -200,7 +235,9 @@ class OptimizationApplicationService:
             'engine_commit_status': 'AVAILABLE' if commit else 'UNAVAILABLE',
             'algorithm': config['algorithm'], 'seed': config['seed'],
             'objective': config['objective'], 'scenario': config['scenario'],
-            'created_at': now(), 'readiness_snapshot': deepcopy_json(_without_private(execution_plan)),
+            'started_at': started_at, 'completed_at': None,
+            'classification': result_classification(profile, synthetic=synthetic),
+            'readiness_snapshot': deepcopy_json(_without_private(execution_plan)),
             'result_classification': result_classification(profile, synthetic=synthetic),
             'preview_revision': execution_plan.get('preview_revision'),
             'preview_token': execution_plan.get('preview_token'),
@@ -218,7 +255,7 @@ class OptimizationApplicationService:
                       scenario=config['scenario'],algorithm=config['algorithm'],seed=config['seed'],
                       execution_profile=profile.value,
                       result_authority_label=authority_label(profile, synthetic=synthetic),
-                      started_at=now(),completed_at=None,status='running',result=None,error=None,
+                      started_at=started_at,completed_at=None,status='running',result=None,error=None,
                       provenance=provenance,warnings=[i['message'] for i in state['issues'] if i['severity']=='warning']
                       + list(execution_plan.get('warnings', []))))
         provenance=record['provenance']
@@ -255,6 +292,7 @@ class OptimizationApplicationService:
             record['status']='failed'
             record['error']=str(exc)
         record['completed_at']=now()
+        record['provenance']['input_snapshot']['completed_at'] = record['completed_at']
         def finish(d):
             d['runs'][run_id] = record
             if record['status'] == 'completed':

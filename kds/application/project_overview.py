@@ -18,7 +18,7 @@ def history(document,offset=0,limit=50):
 
 def overview(document):
     report=readiness(document);counts=report['counts'];extra=document.get('scientific_inputs',{})
-    reference=document.get('metadata',{}).get('source_version')=='v1.0.0-thesis-final' and not extra
+    reference=(document.get('metadata',{}).get('source_version')=='v1.0.0-thesis-final' and not extra) or bool(document.get('metadata',{}).get('reference_demo'))
     legacy_synthetic=document['project'].get('data_source_notes')=='synthetic_test_fixture'
     synthetic=legacy_synthetic or bool(document.get('metadata',{}).get('synthetic_institutional_test')
                                        and document.get('metadata',{}).get('not_official'))

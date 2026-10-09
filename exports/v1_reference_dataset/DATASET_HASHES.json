@@ -1,0 +1,86 @@
+{
+  "analysis_units.csv": {
+    "sha256": "eabe8d67e165a14e28b2f2eeb6ee55bb21bb03b1537790a52078ce6c62fec593",
+    "bytes": 23992
+  },
+  "annual_water_supply.csv": {
+    "sha256": "3dc42c06d9f3718ff56114091ec6c4e34b38452c0d2fb89f1217959270e313ac",
+    "bytes": 213
+  },
+  "candidates.csv": {
+    "sha256": "40b5e87e6b0bb57575655ff1187207116cf91455130e7544c5dea3bc51b7e8c3",
+    "bytes": 813661
+  },
+  "conveyance_efficiency.csv": {
+    "sha256": "ac9dde893f6f899294fda4d40cd92cbe4150893bf7fd73d84bff54070f8069d4",
+    "bytes": 233
+  },
+  "crop_cost_components.csv": {
+    "sha256": "f7211468795998cc32067afb67d973ecb2e723e095fb866f8626353bfd90e67c",
+    "bytes": 9006
+  },
+  "crop_net_profit.csv": {
+    "sha256": "be9ddbe41e34cd3e7fc11a1186df0bacff3204f41dcbabc7e8d665f153482976",
+    "bytes": 13136
+  },
+  "crop_phenology.csv": {
+    "sha256": "7cab24a07508f5c8fedccf01afbcb6f1bdb92b6e5f519248479cad3453c12bda",
+    "bytes": 12268
+  },
+  "crop_sale_price.csv": {
+    "sha256": "778fe3071af9497f120cf137f90d9edf2962f57d5bc76f871fb0997b8ad14477",
+    "bytes": 9581
+  },
+  "crop_water_parameters.csv": {
+    "sha256": "0410dbf4d2fbefbd63849e3538266c9215a881d9736215319459624fae320ad7",
+    "bytes": 11116
+  },
+  "crop_yield.csv": {
+    "sha256": "53f243c65936eb57eb90bb1f48292cecdd4245ced758bc0c3d96a0dc917df178",
+    "bytes": 8369
+  },
+  "crops.csv": {
+    "sha256": "b5fe7b5aea2c826340140b118d74fa1bbb7c15c0dc1a423230213b99ecd854ea",
+    "bytes": 8517
+  },
+  "delivery_capacity.csv": {
+    "sha256": "9e5f8e516039458f3e21a63435e90f7cf183bf6edf7753569752a3e587dc0fec",
+    "bytes": 1887
+  },
+  "economics.csv": {
+    "sha256": "dce9c006adc6fa1785246c8a42691e9f611b4be3662eb4516b2cee89abf53dc5",
+    "bytes": 3254
+  },
+  "environmental_release.csv": {
+    "sha256": "0cf4f12da8a6469ad2d1b0e94a99eb124df102ea11afb0df9516c336c299652c",
+    "bytes": 248
+  },
+  "geometries.geojson": {
+    "sha256": "bf2ff3067fae3a715efa490d0f5f391c77b55bbdefd98716549b7ce1cc821627",
+    "bytes": 548946
+  },
+  "monthly_water_supply.csv": {
+    "sha256": "aad24b4736eaec5c8621053828cd12fba8ea84f19ec8e4d2f12814130b7b84cb",
+    "bytes": 1675
+  },
+  "perennial_irrigation_requirement.csv": {
+    "sha256": "aa60af0fa702352fb70fe94579c54d2d45def27be8cc0ea3d741afdcaefad37c",
+    "bytes": 2581
+  },
+  "scientific_s1.csv": {
+    "sha256": "95136eb8ae6a7e912c9e695b3ed94041ffa57cd6f3754eef5c7a6cc6b666d314",
+    "bytes": 108938
+  },
+  "scientific_s2.csv": {
+    "sha256": "ab678eeba7990cb4264b54491c0f7de9b9c2d7fd08e7d800b96f1cda052f9a48",
+    "bytes": 7693792
+  },
+  "seasonal_economics.csv": {
+    "sha256": "5d45acae5a6160cd2a8fc53ce734e3a9861cdc87ad26c220eeb402b6d680bc57",
+    "bytes": 57268
+  },
+  "water_budget.csv": {
+    "sha256": "038f769229a51306604454b035a7deb74c5af72e242d9bab3179e467f80d7c6f",
+    "bytes": 86
+  }
+}

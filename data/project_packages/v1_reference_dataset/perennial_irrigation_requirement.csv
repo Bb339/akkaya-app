@@ -1,0 +1,15 @@
+planning_year,crop,value,source_unit,canonical_unit,geographic_scope,confidence,method,authority_class,source_institution,source_reference
+2024,ARMUT,847.99,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,AYVA,847.94,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,BADEM,658.21,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,BAĞ,642.52,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,CEVİZ,812.99,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,DUT,713.08,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,ELMA,812.99,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,ERİK,783.0,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,KAYSI,800.55,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,KİRAZ,810.55,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,NEKTAR,847.97,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,VİŞNE,810.55,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,ÇİLEK,657.58,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv
+2024,ŞEFTALİ,847.99,m3/da,m3/da,project,REFERENCE_ASSUMED,V1 catalog gross requirement,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv

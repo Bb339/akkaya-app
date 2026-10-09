@@ -153,6 +153,7 @@ def readiness(document):
     year = document['project']['planning_year']
     budget = document['water_budget']
     extra = document.get('scientific_inputs', {})
+    imported_reference = bool(document.get('metadata', {}).get('reference_demo') and extra)
     issues = []
     def issue(code, message, scenarios=('S1', 'S2'), severity='error'):
         issues.append(dict(code=code, message=message, scenarios=list(scenarios), severity=severity))
@@ -190,11 +191,12 @@ def readiness(document):
         issue('reference_assumptions', 'Tez referansı proxy Kc/toprak/iklim, bölgesel aday genişletme ve sezon tamamlama kurallarını içerir; davranış eşitliği amacıyla açıkça korunur.', severity='warning')
     else:
         import app
-        from kds.adapters.project_catalog import project_catalog_scope
-        with project_catalog_scope(crops):
-            unsupported=[c for c in names if not app.is_annual_field_vegetable_candidate(c) and app.canonical_crop_key(c) not in app.PERENNIAL_CROPS]
-        if unsupported:
-            issue('crop_rules', 'Mevcut motorun ürün grubu kuralları bu adlar için doğrulanmamış: '+', '.join(sorted(unsupported)))
+        if not imported_reference:
+            from kds.adapters.project_catalog import project_catalog_scope
+            with project_catalog_scope(crops):
+                unsupported=[c for c in names if not app.is_annual_field_vegetable_candidate(c) and app.canonical_crop_key(c) not in app.PERENNIAL_CROPS]
+            if unsupported:
+                issue('crop_rules', 'Mevcut motorun ürün grubu kuralları bu adlar için doğrulanmamış: '+', '.join(sorted(unsupported)))
         candidates = extra.get('candidates', [])
         if not candidates:
             issue('candidates', 'Birim × ürün düzeyinde açık aday su/kâr verileri gerekli; otomatik değer üretilmez.')
@@ -204,8 +206,10 @@ def readiness(document):
         required = {(u['external_id'], c) for u in units for c in names}
         current={(u['external_id'],u['current_crop']) for u in units}
         approved={(c.get('analysis_unit_id'),c.get('crop')) for c in candidates if c.get('allowed') is True}
-        if pairs-required or current-approved:
+        if pairs-required or (not imported_reference and current-approved):
             issue('candidate_coverage', f'Mevcut ürünün onaylı adayı her birimde gerekli: {len(current-approved)} eksik; {len(pairs-required)} bilinmeyen eşleşme.')
+        if imported_reference and len(candidates) != 6859:
+            issue('reference_candidate_count', f'Accepted V1 reference candidate matrix must contain 6859 rows; found {len(candidates)}.')
         if len(pairs) != len(candidates):
             issue('duplicate_candidates', 'Tekrarlanan birim/ürün adayı var.')
         for c in candidates:
@@ -233,13 +237,17 @@ def readiness(document):
         if not extra.get('rotation_rules') or not extra.get('crop_families'):
             issue('rotation', 'S2 için ürün aileleri ve rotasyon kısıtları gerekli.', ('S2',))
         seasonal = env.get('s2', [])
-        coverage = {(r.get('parcel_id'), r.get('crop'), r.get('season')) for r in seasonal if r.get('year') == year}
-        expected = {(u['external_id'], c, s) for u in units for c in names for s in ('primary', 'secondary')}
-        if coverage != expected or any(not all(positive(r.get(k)) for k in ('area_da', 'water_m3_calib_gross', 'profit_tl')) for r in seasonal):
-            issue('seasonal_coverage', 'S2: planlama yılında her birim/ürün için primary ve secondary alan/su/kâr gözlemi gerekir; başka sezondan veya bölge ortalamasından tamamlanmaz.', ('S2',))
-        from kds.science.validation import seasonal_issues
-        for message in seasonal_issues(document):
-            issue('seasonal_validation', message, ('S2',))
+        if imported_reference:
+            if not seasonal or any(not all(positive(r.get(k)) for k in ('area_da', 'water_m3_calib_gross', 'profit_tl')) for r in seasonal):
+                issue('seasonal_reference_coverage', 'S2 reference replay requires the complete accepted V1 seasonal source table.', ('S2',))
+        else:
+            coverage = {(r.get('parcel_id'), r.get('crop'), r.get('season')) for r in seasonal if r.get('year') == year}
+            expected = {(u['external_id'], c, s) for u in units for c in names for s in ('primary', 'secondary')}
+            if coverage != expected or any(not all(positive(r.get(k)) for k in ('area_da', 'water_m3_calib_gross', 'profit_tl')) for r in seasonal):
+                issue('seasonal_coverage', 'S2: planlama yılında her birim/ürün için primary ve secondary alan/su/kâr gözlemi gerekir; başka sezondan veya bölge ortalamasından tamamlanmaz.', ('S2',))
+            from kds.science.validation import seasonal_issues
+            for message in seasonal_issues(document):
+                issue('seasonal_validation', message, ('S2',))
     scenarios = {}
     for scenario in ('S1', 'S2'):
         relevant = [i for i in issues if scenario in i['scenarios']]

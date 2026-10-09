@@ -6,6 +6,7 @@ from kds.domain.water_budget import WaterBudget
 
 SYNTHETIC_INSTITUTIONAL_DEMO_SOURCE = "synthetic not_official institutional integration fixture"
 SYNTHETIC_GENERAL_PROJECT_CLASSIFICATION = "synthetic_test_fixture"
+REFERENCE_DEMO_CLASSIFICATION = "reference_demo"
 
 
 def is_explicit_synthetic_demo(project: Project) -> bool:
@@ -20,6 +21,7 @@ def is_explicit_synthetic_demo(project: Project) -> bool:
 def project_document(project: Project, water_budget: WaterBudget | None = None) -> Document:
     budget = water_budget or WaterBudget(project.id, project.annual_water_budget, project.water_budget_unit)
     synthetic_institutional = is_explicit_synthetic_demo(project)
+    reference_demo = project.data_source_notes.strip().casefold() == REFERENCE_DEMO_CLASSIFICATION
     return {"schema_version": 1, "data_revision": 0, "project": asdict(project),
             "analysis_units": [], "crops": [], "economics": [], "water_budget": asdict(budget),
             "imports": {}, "water_data": {"datasets": {}, "active": {}},
@@ -29,7 +31,11 @@ def project_document(project: Project, water_budget: WaterBudget | None = None) 
             "analysis_state": {"requires_reanalysis": False}, "runs": {},
             "metadata": ({"synthetic_institutional_test": True, "not_official": True,
                           "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"]}
-                         if synthetic_institutional else {})}
+                         if synthetic_institutional else
+                         {"reference_demo": True, "not_official": True,
+                          "display_labels": ["REFERENCE", "DEMO DATA"],
+                          "classification": "REFERENCE_DEMO"}
+                         if reference_demo else {})}
 
 
 class ProjectService:

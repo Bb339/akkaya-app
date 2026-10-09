@@ -159,8 +159,17 @@ def validate_crop_parameter_table(batch: dict[str, Any], document: dict[str, Any
                     else:
                         raise ValueError("Planting and harvest windows overlap or have an impossible seasonal chronology.")
                     record.update(values, season_year_semantics=semantics)
+                elif mode == "REFERENCE_RULE":
+                    if any(_text(data, field) for field in (
+                        "planting_date", "harvest_date", "planting_window_start",
+                        "planting_window_end", "harvest_window_start", "harvest_window_end",
+                    )):
+                        raise ValueError("REFERENCE_RULE must not fabricate date or window fields.")
+                    if record["authority_class"] not in {"ASSUMED", "FALLBACK", "UNKNOWN"}:
+                        raise ValueError("REFERENCE_RULE is limited to non-verified proxy authority.")
+                    record["season_year_semantics"] = "REFERENCE_LABEL_ONLY"
                 else:
-                    raise ValueError("mode must be YEAR_SPECIFIC or CLIMATOLOGICAL_WINDOW.")
+                    raise ValueError("mode must be YEAR_SPECIFIC, CLIMATOLOGICAL_WINDOW or REFERENCE_RULE.")
             identity = (record["runtime_crop_id"], record["season"]) if kind == "crop_phenology" else record["runtime_crop_id"]
             if identity in seen:
                 raise ValueError("Duplicate runtime crop identity in upload.")

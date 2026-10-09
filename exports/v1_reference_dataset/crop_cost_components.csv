@@ -1,0 +1,59 @@
+crop,cost_category,amount,unit,planning_year,observation_year,authority_class,source_institution,source_reference,currency,geographic_scope,crop_scope
+ARMUT,other,13809.524,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ARPA (Dane),other,4622.222,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ARPA (YEŞİLOT),other,7466.667,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+AYVA,other,14500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+AYÇİÇEĞİ,other,2050.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BADEM,other,12428.571,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BARBUNYA FASULYE (TAZE),other,3200.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BAĞ,other,6000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BUĞDAY (Dane),other,4776.955,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+BUĞDAY (YEŞİLOT),other,8500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+CEVİZ,other,13809.524,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+DUT,other,12000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ELMA,other,15190.476,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ERİK,other,18300.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+FASULYE (TAZE),other,4424.365,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+FİĞ (YEŞİLOT),other,8000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+HIYAR (SOFRALIK),other,9244.444,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ISPANAK,other,9000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KABAK (BAL),other,18000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KABAK (SAKIZ),other,12000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KABAK (ÇEREZLİK),other,7000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KARPUZ,other,13500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KAVUN,other,9300.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KAYSI,other,13119.048,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KURU FASULYE,other,3300.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KİMYON,other,9000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+KİRAZ,other,15880.952,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+LAHANA (BEYAZ),other,23027.252,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+LAHANA (KIRMIZI),other,18800.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+LAVANTA,other,7000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+MARUL,other,10000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+MAYDONOZ,other,9000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+MISIR (Dane),other,9500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+NEKTAR,other,13809.524,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+NOHUT,other,2500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+PATATES,other,14000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+PIRASA,other,11000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SALÇALIK BİBER,other,16277.157,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SALÇALIK DOMATES,other,28429.723,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SARIMSAK (KURU),other,14953.192,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SOFRALIK DOMATES,other,15430.574,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SORGUM,other,32200.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SOĞAN (KURU),other,22719.62,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SOĞAN (TAZE),other,15000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SİLAJLIK MISIR,other,32800.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+SİVRİ BİBER,other,12444.444,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+TRTİKALE (Dane),other,4800.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+TRİTİKALE  (YEŞİLOT),other,8500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+TURP (KIRMIZI),other,9000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+VİŞNE,other,13119.048,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+YONCA  (YEŞİLOT),other,26500.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+YULAF (Dane),other,4444.444,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+YULAF (YEŞİLOT),other,6755.556,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ÇAVDAR   (YEŞİLOT),other,8100.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ÇAVDAR (Dane),other,4444.444,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ÇİLEK,other,20714.286,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ŞEFTALİ,other,13533.333,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog
+ŞEKER PANCARI,other,12000.0,TRY/da,2024,2024,CALCULATED_REFERENCE,V1 thesis-model reference sources,data/urun_parametreleri_demo.csv,TRY,project,catalog

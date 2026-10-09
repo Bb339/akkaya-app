@@ -1,16 +1,16 @@
 (function(){
   'use strict';
   const query=new URLSearchParams(location.search);
-  const providers=query.getAll('provider'),projects=query.getAll('project_id'),runs=query.getAll('run_id'),units=query.getAll('unit');
+  const providers=query.getAll('provider'),projects=query.getAll('project_id'),runs=query.getAll('run_id'),units=query.getAll('unit'),revisions=query.getAll('revision');
   const requestedProvider=providers.length===0?'AKKAYA_REFERENCE':providers.length===1?providers[0]:null;
   // Only the absent/default provider and one explicit AKKAYA_REFERENCE value
   // may boot reference data. Every other provider-shaped context is isolated
   // before validity is evaluated.
   const canonicalReference=(providers.length===0||
     (providers.length===1&&providers[0]==='AKKAYA_REFERENCE'))&&
-    projects.length===0&&runs.length===0&&units.length===0;
+    projects.length===0&&runs.length===0&&units.length===0&&revisions.length===0;
   const projectMode=!canonicalReference;
-  const initialSearch=location.search;
+  let canonicalSearch=location.search;
   const canonicalId=value=>typeof value==='string'&&/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(value)?value:null;
   let context=null,preview=null,providerMap=null,providerLayers=null,selectedUnit=null,installingUnits=false,unitObserver=null,officialObserver=null,providerMonthlyChart=null,providerResizeObserver=null,providerLayoutFrame=0;
   const blockedReferencePaths=[];
@@ -85,10 +85,11 @@
     const selected=document.querySelector('input[name="scenario"]:checked')?.value||'su_tasarruf';
     const objective={su_tasarruf:'water_saving',maks_kar:'max_profit',su_etkin:'water_efficiency'}[selected]||'water_saving';
     const configs={GA:{popSize:12,generations:10,cxRate:.7,mutRate:.08},ACO:{ants:10,iterations:10,rho:.25,q:1},ABC:{foodSources:10,cycles:10,limit:4}};
-    return {execution_profile:'VERIFIED_INSTITUTIONAL',scenario,algorithm,objective,seed:Number(byId('v1-provider-seed')?.value||123),water_budget_ratio:1,config:configs[algorithm]};
+    return {execution_profile:context?.execution_profile||'VERIFIED_INSTITUTIONAL',scenario,algorithm,objective,seed:Number(byId('v1-provider-seed')?.value||123),water_budget_ratio:1,config:configs[algorithm]};
   };
   function canonicalUrl({projectId=context?.project?.id,runId=context?.run?.id,unitId=selectedUnit}={}){
     const next=new URL('/',location.origin);next.searchParams.set('provider','PROJECT_DATA');next.searchParams.set('project_id',projectId);
+    if(context?.project_revision!==undefined)next.searchParams.set('revision',String(context.project_revision));
     if(runId)next.searchParams.set('run_id',runId);if(unitId)next.searchParams.set('unit',unitId);return next.pathname+next.search;
   }
   function fail(message){
@@ -482,12 +483,15 @@
     document.body.classList.add('project-provider-mode');
     applyProviderTerminology(true);retireLegacyResultSink();
     const shell=byId('v1-provider-shell');shell.dataset.provider='PROJECT_DATA';
-    if(providers.length!==1||projects.length!==1||runs.length>1||units.length>1)throw new Error('Tek bir provider, project_id, run_id ve unit parametresi gerekir.');
+    if(providers.length!==1||projects.length!==1||runs.length>1||units.length>1||revisions.length>1)throw new Error('Tek bir provider, project_id, revision, run_id ve unit parametresi gerekir.');
     const projectId=canonicalId(projects[0]);if(!projectId)throw new Error('project_id biçimi geçersiz.');
     if(requestedProvider!=='PROJECT_DATA')throw new Error('Bilinmeyen provider.');
     selectedUnit=units[0]||null;
-    const suffix=`?${runs[0]?`run_id=${encodeURIComponent(runs[0])}&`:''}scenario=${encodeURIComponent((byId('seasonSourceSel')?.value||'s1').toUpperCase())}`;
+    const suffix=`?${runs[0]?`run_id=${encodeURIComponent(runs[0])}&`:''}${revisions[0]?`revision=${encodeURIComponent(revisions[0])}&`:''}scenario=${encodeURIComponent((byId('seasonSourceSel')?.value||'s1').toUpperCase())}`;
     context=await api(`/projects/${encodeURIComponent(projectId)}/decision-context${suffix}`);
+    if(revisions[0]&&String(context.project_revision)!==String(revisions[0]))throw new Error('Project data is incomplete; analysis was not executed. Active revision mismatch.');
+    history.replaceState(null,'',canonicalUrl({projectId,runId:runs[0]||null,unitId:selectedUnit}));
+    canonicalSearch=location.search;
     shell.dataset.synthetic=String(context.synthetic);byId('v1-provider-context').hidden=false;setText('v1-provider-name',`PROJECT DATA · ${context.project.name}`);setText('v1-provider-authority',context.synthetic?context.authority:`${context.authority} · ${context.execution_profile}`);setText('v1-provider-badge','PROJECT DATA');byId('v1-manage-project').href=`/projects#project=${encodeURIComponent(projectId)}&section=data`;
     setText('dataSourceLabel',`PROJECT DATA · ${context.project.id}`);setText('dataLoadBadge',context.authority);
     installNativeControls();renderFacts();renderRequirements();installUnits();guardProjectUnits();wireControls();renderHistory();neutralizeReferenceSurface();renderProjectModules();observeProjectOfficialSurface();await loadProjectList();
@@ -523,6 +527,6 @@
     }
     // V1 authentication and panel navigation use hash-only history entries.
     // Reload only when the authoritative provider query state changed.
-    window.addEventListener('popstate',()=>{if(projectMode&&location.search!==initialSearch)location.reload();});
+    window.addEventListener('popstate',()=>{if(projectMode&&location.search!==canonicalSearch)location.reload();});
   });
 })();

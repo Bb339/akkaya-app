@@ -107,6 +107,7 @@ def generic_resources(document):
                   irrigation_map=irrigation,irrigation_annotations=irrigation,
                   calendar=extra.get('calendar',{}),calendar_annotations=extra.get('calendar',{}),
                   orchard_interrow=pd.DataFrame(),suitability_map={
-                      (str(r['land_capability_class']).upper(),app.normalize_crop_key(r['crop'])):r['suitability_score']
+                      (str(r['land_capability_class']).upper(),app.normalize_crop_key(r['crop'])):
+                          r.get('suitability_score', r.get('suitability_score_assumed'))
                       for r in extra.get('seasonal_resources',{}).get('crop_suitability',[])})
     return {k:FrozenValue.of(v) for k,v in values.items()}, tuple(candidates)

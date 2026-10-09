@@ -88,6 +88,6 @@ def normalize(row: dict[str, Any], mapping: dict[str, str], data_type: str,
         if isinstance(year_value, float) and not year_value.is_integer():
             raise ValidationError("year", "Year must be an integer.")
         metadata["yield_unit"] = text("yield_unit") or None
-        return asdict(Economics(project_id, text("crop_name"), int(year_value), num("yield_per_da"),
+        return asdict(Economics(project_id, text("crop_name"), int(year_value), num("yield_per_da", True),
                                 num("net_profit_per_da"), text("currency") or None, text("source"), metadata))
     raise ValueError("Unsupported import data type.")

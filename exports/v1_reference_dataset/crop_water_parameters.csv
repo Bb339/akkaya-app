@@ -1,0 +1,59 @@
+crop_identity,applicable_year,geographic_scope,kc_ini,kc_mid,kc_end,stage_value_mode,p_ini,p_dev,p_mid,p_late,authority_class,source,source_reference
+ARMUT,2024,project,0.55,0.97,0.71,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | cok_yillik_proxy | faz_proxy_2026-04-12
+ARPA (Dane),2024,project,0.53,1.16,0.25,DAYS,30,60,120,60,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | kislik_tarla_proxy | faz_proxy_2026-04-12
+ARPA (YEŞİLOT),2024,project,0.53,1.16,0.25,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,arpa_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+AYVA,2024,project,0.55,0.97,0.71,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,armut_pome_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+AYÇİÇEĞİ,2024,project,0.42,1.17,0.36,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+BADEM,2024,project,0.55,0.97,0.71,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,armut_badem_agac_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+BARBUNYA FASULYE (TAZE),2024,project,0.46,1.07,0.92,DAYS,15,25,40,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fasulye_taze_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+BAĞ,2024,project,0.39,0.88,0.47,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde_uzum_sofralik | cok_yillik_proxy | faz_proxy_2026-04-12
+BUĞDAY (Dane),2024,project,0.53,1.16,0.27,DAYS,30,60,120,60,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | kislik_tarla_proxy | faz_proxy_2026-04-12
+BUĞDAY (YEŞİLOT),2024,project,0.53,1.16,0.27,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bugday_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+CEVİZ,2024,project,0.55,0.97,0.71,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,armut_ceviz_agac_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+DUT,2024,project,0.51,0.97,0.74,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,kiraz_dut_agac_grubu_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+ELMA,2024,project,0.58,0.97,0.74,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | cok_yillik_proxy | faz_proxy_2026-04-12
+ERİK,2024,project,0.51,0.97,0.74,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+FASULYE (TAZE),2024,project,0.46,1.07,0.92,DAYS,15,25,40,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nevsehir | yazlik_sebze_proxy | faz_proxy_2026-04-12
+FİĞ (YEŞİLOT),2024,project,0.48,1.0,0.7,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yem_bitkisi_proxy | faz_proxy_2026-04-12
+HIYAR (SOFRALIK),2024,project,0.46,1.02,0.77,DAYS,15,25,40,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+ISPANAK,2024,project,0.5,1.1,0.95,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao_genel_ispanak_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+KABAK (BAL),2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+KABAK (SAKIZ),2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+KABAK (ÇEREZLİK),2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+KARPUZ,2024,project,0.42,1.03,0.77,DAYS,15,25,40,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+KAVUN,2024,project,0.45,1.07,0.77,DAYS,15,25,40,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_sebze_proxy | faz_proxy_2026-04-12
+KAYSI,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+KURU FASULYE,2024,project,0.46,1.07,0.92,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+KİMYON,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+KİRAZ,2024,project,0.51,0.97,0.74,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | cok_yillik_proxy | faz_proxy_2026-04-12
+LAHANA (BEYAZ),2024,project,0.4,1.04,0.93,DAYS,20,30,50,25,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_ulukisla | kislik_sebze_proxy | faz_proxy_2026-04-12
+LAHANA (KIRMIZI),2024,project,0.4,1.04,0.93,DAYS,15,25,40,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,lahana_beyaz_turetimi | yazlik_sebze_proxy | faz_proxy_2026-04-12
+LAVANTA,2024,project,0.35,0.8,0.6,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,resmi_veri_yok | lavanta_dusuk_su_aromatik_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+MARUL,2024,project,0.7,1.0,0.95,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao_genel_marul_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+MAYDONOZ,2024,project,0.7,1.07,0.97,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+MISIR (Dane),2024,project,0.3,1.2,0.6,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao56_misir_dane_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
+NEKTAR,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+NOHUT,2024,project,0.41,1.02,0.37,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+PATATES,2024,project,0.43,1.18,0.77,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yazlik_tarla_proxy | faz_proxy_2026-04-12
+PIRASA,2024,project,0.7,1.05,0.95,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao_genel_pirasa_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+SALÇALIK BİBER,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+SALÇALIK DOMATES,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+SARIMSAK (KURU),2024,project,0.59,1.0,0.7,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_tomarza_sarimsak | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+SOFRALIK DOMATES,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+SORGUM,2024,project,0.34,1.15,0.55,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_ulukisla | yazlik_tarla_proxy | faz_proxy_2026-04-12
+SOĞAN (KURU),2024,project,0.6,1.07,0.77,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+SOĞAN (TAZE),2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+SİLAJLIK MISIR,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+SİVRİ BİBER,2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+TRTİKALE (Dane),2024,project,0.6,1.0,0.8,FRACTIONS,0.2,0.3,0.3,0.2,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,explicit replay of existing V1 generic parameter fallback
+TRİTİKALE  (YEŞİLOT),2024,project,0.53,1.16,0.25,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,tritikale_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+TURP (KIRMIZI),2024,project,0.5,1.1,0.95,DAYS,20,25,45,20,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao_genel_turp_kc_ve_nigde_eto_turetim | serin_iklim_sebze_proxy | faz_proxy_2026-04-12
+VİŞNE,2024,project,0.51,0.97,0.74,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+YONCA  (YEŞİLOT),2024,project,0.4,1.23,1.17,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde | yem_bitkisi_proxy | faz_proxy_2026-04-12
+YULAF (Dane),2024,project,0.4,1.16,1.13,DAYS,30,60,120,60,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_nigde_ot | kislik_tarla_proxy | faz_proxy_2026-04-12
+YULAF (YEŞİLOT),2024,project,0.4,1.16,1.13,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,yulaf_ot_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+ÇAVDAR   (YEŞİLOT),2024,project,0.58,1.14,0.24,DAYS,20,30,120,30,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,cavdar_dane_turetimi | yem_bitkisi_proxy | faz_proxy_2026-04-12
+ÇAVDAR (Dane),2024,project,0.58,1.14,0.24,DAYS,30,60,120,60,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,bitki_su_tuketimi_ocr_ulukisla | kislik_tarla_proxy | faz_proxy_2026-04-12
+ÇİLEK,2024,project,0.4,0.85,0.75,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao56_genel_cilek_kc_ve_nigde_eto_turetim | cok_yillik_proxy | faz_proxy_2026-04-12
+ŞEFTALİ,2024,project,0.51,0.97,0.74,DAYS,30,45,120,45,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,kiraz_tas_cekirdekli_turetimi | cok_yillik_proxy | faz_proxy_2026-04-12
+ŞEKER PANCARI,2024,project,0.35,1.2,0.7,DAYS,20,35,60,35,ASSUMED,data/enhanced_dataset/csv/crop_params_assumed.csv,fao56_seker_pancari_proxy | kc_proxy_2026-04-12 | yazlik_tarla_proxy | faz_proxy_2026-04-12
