@@ -105,7 +105,11 @@
               <div id="bulk-import-results" hidden>
                 <div class="table-scroll"><table class="bulk-import-table"><thead><tr><th>Dosya</th><th>Algılanan alan</th><th>Yıl</th><th>Kapsam</th><th>Satır</th><th>Eşleşme</th><th>Otorite</th><th>Doğrulama</th></tr></thead><tbody id="bulk-import-body"></tbody></table></div>
                 <p id="bulk-import-note" class="muted"></p>
-                <button id="bulk-confirm" class="button primary" type="button" disabled>Açıkça onayla ve projeye uygula</button>
+                <div class="action-row">
+                  <button id="bulk-resume" class="button secondary" type="button" hidden>Mevcut aktarımı sürdür</button>
+                  <button id="bulk-discard" class="button danger" type="button" hidden>Aktarımı sil</button>
+                  <button id="bulk-confirm" class="button primary" type="button" disabled>Açıkça onayla ve projeye uygula</button>
+                </div>
               </div>
             </details>
             <h3>Doğrulanmış veri yükleme</h3>
@@ -125,7 +129,7 @@
           <aside class="template-library"><h3>Veri şablonları</h3><p class="template-warning">ÖRNEK / ŞABLON VERİ — RESMÎ VERİ DEĞİLDİR</p><div id="template-links"></div></aside>
         </div>
         <details class="form-drawer"><summary>Açık bilimsel aday ve sezon girdileri</summary><p>Birim × ürün adayları, iklim ve mevcut desen girdileri. Yalnız proje kapsamındaki doğrulanmış JSON kullanılmalıdır.</p><form id="scientific-form"><label>Bilimsel girdiler JSON<input name="file" type="file" accept=".json" required></label><button class="button primary">Bilimsel girdileri kaydet</button></form></details>
-        <details><summary>Aktarım kayıtları</summary><pre id="imports"></pre></details>
+        <details><summary>Aktarım kayıtları</summary><div id="imports" class="table-scroll"></div></details>
       </section>
 
       <section class="panel screen-anchor" id="readiness-section" data-screen="3">

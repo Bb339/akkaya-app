@@ -42,6 +42,7 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   let batchRoot=null;
   let bulkItems=[];
   let bulkRoot=null;
+  let bulkPackageId=null;
   const steps=[...document.querySelectorAll('.stepper li')];
   const stage=n=>steps.forEach((item,i)=>{item.classList.toggle('done',i<n);item.classList.toggle('active',i===n);});
   const render=(data,contextRoot=batchRoot)=>{
@@ -81,6 +82,8 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   const bulkResults=document.getElementById('bulk-import-results');
   const bulkBody=document.getElementById('bulk-import-body');
   const bulkConfirm=document.getElementById('bulk-confirm');
+  const bulkResume=document.getElementById('bulk-resume');
+  const bulkDiscard=document.getElementById('bulk-discard');
   const bulkNote=document.getElementById('bulk-import-note');
   const bulkForm=document.getElementById('bulk-upload-form');
   const bulkInput=bulkForm.querySelector('input[name="files"]');
@@ -96,6 +99,7 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
   const renderBulk=(data,contextRoot=bulkRoot)=>{
     bulkItems=data.items||[];
     bulkRoot=contextRoot;
+    bulkPackageId=data.id||bulkPackageId;
     bulkBody.replaceChildren();
     for(const item of bulkItems){
       const d=item.detection||{},b=item.batch||{};
@@ -125,10 +129,13 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
     bulkResults.hidden=false;
     const applicable=bulkItems.some(item=>item.detection?.state==='AUTO_MATCHED')&&bulkItems.every(item=>
       item.detection?.state==='IGNORED_NOT_RELEVANT'||(item.detection?.state==='AUTO_MATCHED'&&item.batch?.id&&!hasDefinitiveBatchError(item)));
-    bulkConfirm.disabled=!applicable;
-    bulkNote.textContent=applicable
+    const terminal=data.status==='APPLIED'||data.status==='DISCARDED';
+    bulkConfirm.disabled=!applicable||terminal;
+    bulkResume.hidden=!data.duplicate||terminal;
+    bulkDiscard.hidden=!bulkPackageId||terminal;
+    bulkNote.textContent=data.message|| (applicable
       ? `${bulkItems.filter(item=>item.detection?.state==='AUTO_MATCHED').length} dosya otomatik eşleştirildi; ${bulkItems.filter(item=>item.detection?.state==='IGNORED_NOT_RELEVANT').length} açıkça ilgisiz dosya uygulanmadan yok sayıldı. Bağımlı doğrulamalar açık onay sırasında güvenli sırayla yenilenir.`
-      : 'Paket fail-closed kaldı. REVIEW_REQUIRED, AMBIGUOUS, UNSUPPORTED veya INVALID satırları çözülmeden toplu aktivasyon yapılamaz.';
+      : 'Paket fail-closed kaldı. REVIEW_REQUIRED, AMBIGUOUS, UNSUPPORTED veya INVALID satırları çözülmeden toplu aktivasyon yapılamaz.');
   };
   bulkForm.onsubmit=e=>{
     e.preventDefault();
@@ -138,10 +145,25 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
       if(!selectedFiles.length)throw new Error('En az bir dosya seçin.');
       const payload=new FormData();
       for(const file of selectedFiles)payload.append('files',file,file.name);
-      renderBulk(await api(contextRoot+'/bulk-imports',{method:'POST',body:payload}),contextRoot);
+      const result=await api(contextRoot+'/bulk-imports',{method:'POST',body:payload});
+      renderBulk(result,contextRoot);
+      if(result.message)message(result.message);
       await refresh();
     });
   };
+  bulkResume.onclick=()=>safe(async()=>{
+    if(!bulkPackageId||!bulkRoot)throw new Error('Sürdürülecek toplu aktarım bulunamadı.');
+    renderBulk(await api(bulkRoot+`/bulk-imports/${bulkPackageId}`),bulkRoot);
+  });
+  bulkDiscard.onclick=()=>safe(async()=>{
+    const contextRoot=root();
+    if(!bulkPackageId||!bulkRoot||contextRoot!==bulkRoot)throw new Error('Silinecek toplu aktarım bu projeye ait değil.');
+    await api(contextRoot+`/bulk-imports/${bulkPackageId}`,{method:'DELETE'});
+    bulkItems=[];bulkPackageId=null;bulkBody.replaceChildren();bulkResults.hidden=true;
+    bulkConfirm.disabled=true;bulkResume.hidden=true;bulkDiscard.hidden=true;
+    message('Pending import discarded.');
+    await refresh();
+  });
   bulkConfirm.onclick=()=>safe(async()=>{
     const contextRoot=root();
     if(!bulkRoot||contextRoot!==bulkRoot)throw new Error('Toplu paket önizlemesi başka bir projeye ait. Dosyaları bu proje için yeniden yükleyin.');
@@ -158,7 +180,8 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
       if(remapped.status!=='ready')throw new Error(`${item.detection.filename}: doğrulama READY üretmedi.`);
       item.batch=await post(contextRoot+`/imports/${id}/confirm`,{confirm:true,acknowledge_warnings:true});
     }
-    onMutation();await refresh();renderBulk({items:bulkItems},contextRoot);message('Toplu paket açık onayla projeye uygulandı.');
+    const applied=await api(contextRoot+`/bulk-imports/${bulkPackageId}`);
+    onMutation();await refresh();renderBulk(applied,contextRoot);message('Toplu paket açık onayla projeye uygulandı.');
   });
 
   document.getElementById('scientific-form').onsubmit=e=>{
@@ -166,9 +189,30 @@ export function wireImports(root,refresh,safe,onMutation=()=>{}){
     safe(async()=>{const file=new FormData(e.target).get('file');await post(root()+'/scientific-inputs',JSON.parse(await file.text()));onMutation();await refresh();message('Bilimsel girdiler kaydedildi; hazırlık raporu yenilendi.');});
   };
 
-  return {clearProjectContext(){
-    batch=null;batchRoot=null;bulkItems=[];bulkRoot=null;
+  const renderRecords=(packages,legacyImports={})=>{
+    const host=document.getElementById('imports');host.replaceChildren();
+    if(!packages.length){host.textContent=Object.keys(legacyImports||{}).length?'Henüz paket yaşam döngüsü kaydı yok. Eski tekil aktarım kayıtları korunuyor.':'Henüz aktarım kaydı yok.';return;}
+    const table=document.createElement('table');
+    const head=document.createElement('tr');
+    for(const label of ['Batch ID','Created','File count','Auto-matched','Unsupported','Status','Actions']){const th=document.createElement('th');th.textContent=label;head.append(th);}table.append(head);
+    for(const record of packages){
+      const tr=document.createElement('tr');
+      for(const value of [record.id,record.created_at,record.file_count,record.auto_matched,record.unsupported,record.status]){const td=document.createElement('td');td.textContent=value??'—';tr.append(td);}
+      const actions=document.createElement('td');
+      if(!['APPLIED','DISCARDED'].includes(record.status)){
+        const resume=document.createElement('button');resume.type='button';resume.className='button secondary';resume.textContent='Resume';resume.onclick=()=>safe(async()=>{const contextRoot=root();renderBulk(await api(contextRoot+`/bulk-imports/${record.id}`),contextRoot);document.getElementById('bulk-import-results').scrollIntoView({behavior:'smooth'});});
+        const discard=document.createElement('button');discard.type='button';discard.className='button danger';discard.textContent='Discard';discard.onclick=()=>safe(async()=>{await api(root()+`/bulk-imports/${record.id}`,{method:'DELETE'});await refresh();message('Pending import discarded.');});
+        actions.append(resume,discard);
+      }
+      tr.append(actions);table.append(tr);
+    }
+    host.append(table);
+  };
+
+  return {renderRecords,clearProjectContext(){
+    batch=null;batchRoot=null;bulkItems=[];bulkRoot=null;bulkPackageId=null;
     document.getElementById('import-preview').hidden=true;
-    bulkBody.replaceChildren();bulkResults.hidden=true;bulkConfirm.disabled=true;bulkNote.textContent='';
+    bulkBody.replaceChildren();bulkResults.hidden=true;bulkConfirm.disabled=true;bulkResume.hidden=true;bulkDiscard.hidden=true;bulkNote.textContent='';
+    document.getElementById('imports').replaceChildren();
   }};
 }

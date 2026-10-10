@@ -7,7 +7,7 @@ from kds.config import MAX_UPLOAD_BYTES, project_store_path
 from kds.data.project_store import FileProjectStore
 from kds.data.repositories import ProjectRepository, ConflictError, NotFoundError
 from kds.application.project_service import ProjectService
-from kds.application.import_service import ImportService
+from kds.application.import_service import BulkImportService, ImportService
 
 
 def register_project_api(app: Flask, repository: ProjectRepository | None = None) -> None:
@@ -18,6 +18,7 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         repository = FileProjectStore(root)
     app.extensions["kds_project_repository"] = repository
     projects, imports = ProjectService(repository), ImportService(repository)
+    bulk_imports = BulkImportService(repository)
     from kds.application.optimization import OptimizationApplicationService
     analysis = OptimizationApplicationService(repository)
     blueprint = Blueprint("projects", __name__, url_prefix="/api/v2")
@@ -223,6 +224,10 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         options = json.loads(request.form.get("options", "{}"))
         return jsonify(imports.detect(project_id, file.filename or "", content, options))
 
+    @blueprint.get("/projects/<project_id>/bulk-imports")
+    def list_bulk_imports(project_id):
+        return jsonify(items=bulk_imports.list(project_id))
+
     @blueprint.post("/projects/<project_id>/bulk-imports")
     def bulk_import(project_id):
         files = request.files.getlist("files")
@@ -240,12 +245,19 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
             total += len(content)
             if len(content) > MAX_UPLOAD_BYTES or total > MAX_UPLOAD_BYTES:
                 raise RequestEntityTooLarge()
-            supplied.append((file.filename or "", content, options_by_name.get(file.filename or "", {})))
+            from hashlib import sha256
+            filename = file.filename or ""
+            supplied.append((filename, content, options_by_name.get(filename, {}), sha256(content).hexdigest()))
+        manifest_hash = bulk_imports.manifest_hash([
+            {"filename": filename, "file_hash": digest, "options": options}
+            for filename, _content, options, digest in supplied
+        ])
+        existing = bulk_imports.find(project_id, manifest_hash)
+        if existing is not None:
+            return jsonify(existing)
         hashes = set()
         items = []
-        for filename, content, options in supplied:
-            from hashlib import sha256
-            digest = sha256(content).hexdigest()
+        for filename, content, options, digest in supplied:
             detection = imports.detect(project_id, filename, content, options)
             if digest in hashes:
                 detection = {**detection, "state": "AMBIGUOUS", "issues": [*detection.get("issues", []),
@@ -253,14 +265,26 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
             hashes.add(digest)
             item = {"detection": detection, "batch": None}
             if detection["state"] == "AUTO_MATCHED":
-                batch = imports.upload(project_id, detection["detected_data_type"], filename, content,
-                                       {**options, **({"sheet": detection["selected_sheet"]}
-                                                     if detection.get("selected_sheet") else {})})
+                upload_options = {**options, **({"sheet": detection["selected_sheet"]}
+                                                if detection.get("selected_sheet") else {})}
+                batch = imports.duplicate(project_id, detection["detected_data_type"], digest, upload_options)
+                reused = batch is not None
+                if batch is None:
+                    batch = imports.upload(project_id, detection["detected_data_type"], filename, content,
+                                           upload_options)
                 item["batch"] = batch
+                item["reused"] = reused
             items.append(item)
-        return jsonify(items=items, auto_matched=sum(item["batch"] is not None for item in items),
-                       ignored_not_relevant=sum(item["detection"]["state"] == "IGNORED_NOT_RELEVANT" for item in items),
-                       review_required=sum(item["batch"] is None and item["detection"]["state"] != "IGNORED_NOT_RELEVANT" for item in items)), 201
+        reopened = any(item.get("reused") for item in items)
+        return jsonify(bulk_imports.create(project_id, manifest_hash, items, duplicate=reopened)), 200 if reopened else 201
+
+    @blueprint.get("/projects/<project_id>/bulk-imports/<package_id>")
+    def get_bulk_import(project_id, package_id):
+        return jsonify(bulk_imports.get(project_id, package_id))
+
+    @blueprint.delete("/projects/<project_id>/bulk-imports/<package_id>")
+    def discard_bulk_import(project_id, package_id):
+        return jsonify(bulk_imports.discard(project_id, package_id))
 
     @blueprint.get("/projects/<project_id>/imports/<batch_id>")
     def get_import(project_id, batch_id):

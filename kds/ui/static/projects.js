@@ -93,7 +93,7 @@ function projectMode(project,overview){return overview.synthetic?'synthetic':ove
 async function refresh(){
   if(!projectId)return;
   const selected=projectId;
-  const [projectDoc,overview,catalog]=await Promise.all([api(root()),api(root()+'/overview'),api(root()+'/data-catalog')]);
+  const [projectDoc,overview,catalog,bulkCatalog]=await Promise.all([api(root()),api(root()+'/overview'),api(root()+'/data-catalog'),api(root()+'/bulk-imports')]);
   if(selected!==projectId)return;
   const report=overview.readiness,project=projectDoc.project,mode=projectMode(project,overview);
   document.getElementById('detail').hidden=false;
@@ -112,11 +112,9 @@ async function refresh(){
   renderData(overview.import_status,catalog);
   renderReadiness(report,document.querySelector('#analysis-form [name=scenario]').value);
   setReadiness(report);
-  showImports(report.imports);
+  importControls.renderRecords(bulkCatalog.items||[],report.imports);
   await refreshHistory(root(),safe,renderRun,()=>navigateToSection('result'));
 }
-
-function showImports(imports){document.getElementById('imports').textContent=JSON.stringify(imports,null,2);}
 
 function clearProjectContext(container,reason=null){
   projectId=null;

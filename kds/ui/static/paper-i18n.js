@@ -42,6 +42,8 @@
     'İptal': 'Cancel',
     'Proje silindi.': 'Project deleted.',
     'Bu referans demo silinemez.': 'This built-in reference demo cannot be deleted.',
+    'Mevcut aktarımı sürdür': 'Resume Existing Import',
+    'Aktarımı sil': 'Discard Import',
     'Başlamak için aşağıdan bir proje seçin.': 'Select a project below to begin.',
     'Profil seçimi proje değiştirildiğinde korunur.': 'The execution profile is preserved when the project changes.',
     'Henüz proje yok. Yeni proje oluşturarak başlayın.': 'No projects are available. Create a project to begin.',

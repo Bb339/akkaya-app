@@ -34,6 +34,7 @@ def project_document(project: Project, water_budget: WaterBudget | None = None) 
             "crop_parameter_data": {"datasets": {}, "active": {}, "reanalysis": {},
                                     "identity_resolution_revision": "phase7-reviewed-relations-v1"},
             "analysis_state": {"requires_reanalysis": False}, "runs": {},
+            "bulk_imports": {},
             "metadata": ({"synthetic_institutional_test": True, "not_official": True,
                           "display_labels": ["SYNTHETIC", "NOT_OFFICIAL"]}
                          if synthetic_institutional else

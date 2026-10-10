@@ -1,6 +1,7 @@
 """Explicit confirmation is the only operation that changes active imported data."""
 from dataclasses import asdict
 from hashlib import sha256
+import json
 from pathlib import PurePath
 from typing import Any
 from uuid import uuid4
@@ -72,6 +73,15 @@ class ImportService:
             document["imports"][batch["id"]] = batch
         document = self.repository.update(project_id, add)
         return preview(batch, document)
+
+    def duplicate(self, project_id: str, data_type: str, file_hash: str,
+                  options: dict[str, Any] | None = None) -> Document | None:
+        document = self.repository.get(project_id)
+        opts = options or {}
+        for existing in document["imports"].values():
+            if (existing["file_hash"], existing["data_type"], existing["options"]) == (file_hash, data_type, opts):
+                return preview(existing, document)
+        return None
 
     def get(self, project_id: str, batch_id: str) -> Document:
         document = self.repository.get(project_id)
@@ -167,3 +177,153 @@ class ImportService:
             transition(batch, "applied")
         document = self.repository.update(project_id, apply)
         return preview(document["imports"][batch_id], document)
+
+
+class BulkImportService:
+    """Manifest-scoped lifecycle for recoverable multi-file previews."""
+
+    def __init__(self, repository: ProjectRepository):
+        self.repository = repository
+
+    @staticmethod
+    def manifest_hash(files: list[dict[str, Any]]) -> str:
+        canonical = sorted(
+            ({"filename": item["filename"], "file_hash": item["file_hash"],
+              "options": item.get("options", {})} for item in files),
+            key=lambda item: (item["filename"], item["file_hash"],
+                              json.dumps(item["options"], sort_keys=True)),
+        )
+        return sha256(json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+    def find(self, project_id: str, manifest_hash: str) -> Document | None:
+        document = self.repository.get(project_id)
+        matches = [package for package in document.get("bulk_imports", {}).values()
+                   if package["manifest_hash"] == manifest_hash and package.get("status") != "DISCARDED"]
+        if not matches:
+            return None
+        package = max(matches, key=lambda item: (item["created_at"], item["id"]))
+        return self._present(package, document, duplicate=True)
+
+    def create(self, project_id: str, manifest_hash: str, items: list[Document],
+               duplicate: bool = False) -> Document:
+        package_id = uuid4().hex
+        created_at = utc_now()
+        record = {
+            "id": package_id,
+            "project_id": project_id,
+            "manifest_hash": manifest_hash,
+            "created_at": created_at,
+            "status": "PREVIEW",
+            "items": [{
+                "detection": item["detection"],
+                "batch_id": (item.get("batch") or {}).get("id"),
+                "batch_snapshot": item.get("batch"),
+            } for item in items],
+        }
+
+        def add(document: Document) -> None:
+            document.setdefault("bulk_imports", {})[package_id] = record
+
+        document = self.repository.update(project_id, add)
+        return self._present(record, document, duplicate=duplicate)
+
+    def list(self, project_id: str) -> list[Document]:
+        document = self.repository.get(project_id)
+        packages = sorted(document.get("bulk_imports", {}).values(),
+                          key=lambda item: (item["created_at"], item["id"]), reverse=True)
+        return [self._summary(package, document) for package in packages]
+
+    def get(self, project_id: str, package_id: str) -> Document:
+        safe_id(package_id)
+        document = self.repository.get(project_id)
+        package = document.get("bulk_imports", {}).get(package_id)
+        if package is None:
+            raise NotFoundError("Bulk import not found in this project.")
+        return self._present(package, document)
+
+    def discard(self, project_id: str, package_id: str) -> Document:
+        safe_id(package_id)
+
+        def remove(document: Document) -> None:
+            package = document.get("bulk_imports", {}).get(package_id)
+            if package is None:
+                raise NotFoundError("Bulk import not found in this project.")
+            batch_ids = [item.get("batch_id") for item in package["items"] if item.get("batch_id")]
+            if any(document.get("imports", {}).get(batch_id, {}).get("status") == "applied"
+                   for batch_id in batch_ids):
+                raise ConflictError("Applied bulk imports cannot be discarded.")
+            other_references = {
+                item.get("batch_id")
+                for other_id, other in document.get("bulk_imports", {}).items()
+                if other_id != package_id and other.get("status") != "DISCARDED"
+                for item in other.get("items", [])
+            }
+            for batch_id in batch_ids:
+                if batch_id not in other_references:
+                    document.get("imports", {}).pop(batch_id, None)
+            package["status"] = "DISCARDED"
+            package["discarded_at"] = utc_now()
+
+        document = self.repository.update(project_id, remove)
+        return self._present(document["bulk_imports"][package_id], document)
+
+    @staticmethod
+    def _stored_batch(package_item: Document, document: Document) -> Document | None:
+        batch_id = package_item.get("batch_id")
+        batch = document.get("imports", {}).get(batch_id) if batch_id else None
+        return batch or package_item.get("batch_snapshot")
+
+    @classmethod
+    def _batch(cls, package_item: Document, document: Document) -> Document | None:
+        batch_id = package_item.get("batch_id")
+        batch = document.get("imports", {}).get(batch_id) if batch_id else None
+        if batch is not None:
+            result = {key: value for key, value in batch.items() if key != "rows"}
+            result["row_count"] = len(batch.get("rows", []))
+            result["preview_rows"] = batch.get("rows", [])[:20]
+            result["stale"] = batch["status"] != "applied" and batch["base_revision"] != document["data_revision"]
+            return result
+        return package_item.get("batch_snapshot")
+
+    def _status(self, package: Document, document: Document) -> str:
+        if package.get("status") == "DISCARDED":
+            return "DISCARDED"
+        batches = [self._stored_batch(item, document) for item in package["items"] if item.get("batch_id")]
+        if batches and all(batch and batch.get("status") == "applied" for batch in batches):
+            return "APPLIED"
+        states = [item["detection"].get("state") for item in package["items"]]
+        if batches and all(state in {"AUTO_MATCHED", "IGNORED_NOT_RELEVANT"} for state in states):
+            return "READY"
+        return "PREVIEW"
+
+    def _summary(self, package: Document, document: Document) -> Document:
+        status = self._status(package, document)
+        detections = [item["detection"] for item in package["items"]]
+        batches = [self._stored_batch(item, document) for item in package["items"] if item.get("batch_id")]
+        revisions = [batch.get("applied_revision") for batch in batches if batch and batch.get("applied_revision")]
+        return {
+            "id": package["id"], "project_id": package["project_id"],
+            "created_at": package["created_at"], "manifest_hash": package["manifest_hash"],
+            "file_count": len(detections),
+            "auto_matched": sum(item.get("state") == "AUTO_MATCHED" for item in detections),
+            "unsupported": sum(item.get("state") == "UNSUPPORTED" for item in detections),
+            "ignored_not_relevant": sum(item.get("state") == "IGNORED_NOT_RELEVANT" for item in detections),
+            "review_required": sum(item.get("state") not in {"AUTO_MATCHED", "IGNORED_NOT_RELEVANT"}
+                                   for item in detections),
+            "detected_domains": sorted({item.get("detected_domain") for item in detections if item.get("detected_domain")}),
+            "status": status, "applied": status == "APPLIED",
+            "applied_revision": max(revisions) if revisions else None,
+            "discarded_at": package.get("discarded_at"),
+        }
+
+    def _present(self, package: Document, document: Document, duplicate: bool = False) -> Document:
+        summary = self._summary(package, document)
+        items = [{"detection": item["detection"], "batch": self._batch(item, document)}
+                 for item in package["items"]]
+        status = summary["status"]
+        message = ("This dataset package has already been applied to the project."
+                   if status == "APPLIED" else
+                   "An identical validated import already exists. The existing import has been reopened."
+                   if duplicate else None)
+        return {**summary, "items": items, "duplicate": duplicate, "message": message,
+                "active_revision": document.get("data_revision")}
