@@ -13,7 +13,7 @@ from kds.science.execution import execute
 from kds.science.results import RESULT_CONTRACT_VERSION, present_stored_run, project_result, summarize
 from kds.domain.analysis_run import AnalysisRun
 from kds.domain.execution_profile import (
-    ExecutionProfile, authority_label, execution_profile, result_classification,
+    ExecutionProfile, authority_label, effective_execution_profile, execution_profile, result_classification,
 )
 from kds.science.institutional_water import validate_verified_result
 
@@ -61,7 +61,10 @@ def configuration(payload, document):
                    scenarioType='single' if scenario=='S1' else 'double', twoSeason=scenario=='S2',
                    simpleMode=False, envFlowRatio=.10, enforceDeliveryCaps=True,
                    waterModel='calib', riskMode='none', riskLambda=0., riskSamples=120, waterQualityFilter=True)
-    profile = execution_profile(payload.get('execution_profile', ExecutionProfile.REFERENCE_DEMO.value))
+    effective = effective_execution_profile(document)
+    profile = execution_profile(payload.get('execution_profile', effective.value))
+    if effective is ExecutionProfile.REFERENCE_DEMO and profile is not effective:
+        raise ValueError('Reference-demo projects require execution_profile REFERENCE_DEMO.')
     return {**payload, 'execution_profile': profile.value, 'selected_ids':ids, 'options':options}
 
 
@@ -145,12 +148,16 @@ class OptimizationApplicationService:
         report = readiness(document)
         if profile is ExecutionProfile.REFERENCE_DEMO:
             state = report['scenarios'][config['scenario']]
+            reference = report['execution_profiles']['REFERENCE_DEMO']
             response = {
                 'execution_profile': profile.value, 'result_authority_label': authority_label(profile, synthetic=False),
                 'project_id': project_id, 'planning_year': document['project']['planning_year'],
-                'ready': state['status'] != 'NOT_READY',
-                'blocking_reasons': [i['message'] for i in state['issues'] if i['severity']=='error'],
-                'warnings': [i['message'] for i in state['issues'] if i['severity']=='warning'],
+                'ready': reference['ready'][config['scenario']],
+                'blocking_reasons': list(dict.fromkeys(
+                    reference['blocking_reasons'][config['scenario']] +
+                    [i['message'] for i in state['issues'] if i['severity']=='error'])),
+                'warnings': list(dict.fromkeys(
+                    [i['message'] for i in state['issues'] if i['severity']=='warning'] + reference['warnings'])),
                 'datasets': _reference_input_facts(document), 'candidate_source': {'source': 'confirmed reference project imports',
                     'candidate_count': report['scientific_data']['raw_candidate_count'],
                     'analysis_unit_count': report['counts']['analysis_units']},
@@ -186,10 +193,10 @@ class OptimizationApplicationService:
         report = readiness(document)
         state = report['scenarios'][config['scenario']]
         if profile is ExecutionProfile.REFERENCE_DEMO:
-            if state['status']=='NOT_READY':
-                raise ValueError('NOT_READY: '+'; '.join(i['message'] for i in state['issues'] if i['severity']=='error'))
-            bundle = build_bundle(document, config)
             execution_plan = self.preview(project_id, payload)
+            if not execution_plan['ready']:
+                raise ValueError('NOT_READY: '+'; '.join(execution_plan['blocking_reasons']))
+            bundle = build_bundle(document, config)
             effective_config = config
             synthetic = False
             execution_context = None

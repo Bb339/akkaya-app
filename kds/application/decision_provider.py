@@ -236,8 +236,10 @@ def project_decision_context(document, run=None, scenario="S1", expected_revisio
     geometry_count = sum(_geometry_kind(unit) is not None for unit in units)
     metadata = document.get("metadata", {})
     synthetic = bool(metadata.get("synthetic_institutional_test") and metadata.get("not_official"))
-    reference_demo = bool(metadata.get("reference_demo"))
-    execution_profile = "REFERENCE_DEMO" if reference_demo else "VERIFIED_INSTITUTIONAL"
+    from kds.domain.execution_profile import ExecutionProfile, effective_execution_profile
+    profile = effective_execution_profile(document)
+    reference_demo = profile is ExecutionProfile.REFERENCE_DEMO
+    execution_profile = profile.value
     verified = readiness["execution_profiles"]["VERIFIED_INSTITUTIONAL"]
     scenarios = ({name: {"ready": readiness["scenarios"][name]["status"] != "NOT_READY",
                          "blocking_reasons": [item["message"] for item in readiness["scenarios"][name]["issues"]

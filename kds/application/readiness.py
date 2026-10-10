@@ -1,7 +1,9 @@
 """Fail closed before invoking any legacy fallback branch."""
+from copy import deepcopy
 import math
 from collections import Counter
 from kds.imports.mapping import key as identity_key
+from kds.domain.execution_profile import ExecutionProfile, effective_execution_profile
 from kds.domain.water_data import authority_snapshot
 from kds.domain.economic_data import authority_snapshot as economic_authority_snapshot
 from kds.domain.crop_parameters import (
@@ -12,6 +14,175 @@ from kds.domain.crop_parameters import (
 
 def positive(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
+
+
+REFERENCE_AUTHORITIES = {'CALCULATED_REFERENCE', 'ASSUMED'}
+
+
+def _reference_climate_mode(document):
+    """Resolve the legacy reference package's explicit dated climate rows without mutating them."""
+    rows = document.get('scientific_inputs', {}).get('seasonal_resources', {}).get('monthly_climate', [])
+    if not rows:
+        return None
+    explicit = {str(row.get('climate_mode') or '').strip().upper() for row in rows}
+    explicit.discard('')
+    if len(explicit) == 1:
+        return next(iter(explicit))
+    if explicit:
+        return None
+    year = int(document['project']['planning_year'])
+    row_years = {int(row['year']) for row in rows if row.get('year') is not None}
+    periods = {str(row.get('month') or '')[:4] for row in rows}
+    return 'YEAR_SPECIFIC' if row_years == {year} and periods == {str(year)} else None
+
+
+def _reference_demo_projection(document):
+    projected = deepcopy(document)
+    original_authorities = {}
+    replacements = {
+        'water_data': 'MEASURED',
+        'economic_data': 'OFFICIAL_STATISTICS',
+        'crop_parameter_data': 'EXPERT_VALIDATED',
+    }
+    warnings = ['REFERENCE MODEL / DEMO DATA; not official or verified institutional evidence.']
+    for store_name, replacement in replacements.items():
+        original_store = document.get(store_name, {})
+        projected_store = projected.get(store_name, {})
+        active_ids = set(original_store.get('active', {}).values())
+        for dataset_id in active_ids:
+            original = original_store.get('datasets', {}).get(dataset_id)
+            candidate = projected_store.get('datasets', {}).get(dataset_id)
+            if not original or not candidate:
+                continue
+            authority = str(original.get('authority_class') or '').upper()
+            original_authorities[str(dataset_id)] = authority
+            if authority in REFERENCE_AUTHORITIES:
+                candidate['authority_class'] = replacement
+                warnings.append(f"{original.get('data_type')} uses {authority} authority in REFERENCE_DEMO.")
+
+    climate = projected.get('scientific_inputs', {}).get('seasonal_resources', {}).get('monthly_climate', [])
+    climate_mode = _reference_climate_mode(document)
+    if climate and climate_mode:
+        required_scope = (document.get('project', {}).get('pilot_geographic_scope') or
+                          document.get('metadata', {}).get('pilot_geographic_scope') or 'project')
+        expected_units = {str(unit['external_id']) for unit in document.get('analysis_units', [])}
+        climate_units = {str(row.get('parcel_id')) for row in climate}
+        if climate_units == expected_units:
+            for row in climate:
+                row.setdefault('climate_mode', climate_mode)
+                row.setdefault('geographic_scope', required_scope)
+            warnings.append(f"Reference climate mode resolved as {climate_mode} from explicit planning-year dates.")
+
+    return projected, original_authorities, warnings, climate_mode
+
+
+def _reference_demo_authority_readiness(document, scenario, projection=None):
+    """Validate reference data structurally while preserving its non-verified authority labels."""
+    from kds.adapters.institutional import verified_readiness
+
+    projected, original_authorities, base_warnings, climate_mode = (
+        projection or _reference_demo_projection(document))
+    warnings = list(base_warnings)
+    climate = projected.get('scientific_inputs', {}).get('seasonal_resources', {}).get('monthly_climate', [])
+
+    result = verified_readiness(projected, scenario)
+
+    # The reference model's annual planning budget and monthly operational series
+    # are separate accepted demo quantities.  Their mismatch is disclosed, but it
+    # is not a verified-allocation reconciliation blocker in REFERENCE_DEMO.
+    reconciliation = [message for message in result['blocking_reasons']
+                      if message.startswith('Annual/monthly water supply mismatch:')]
+    if reconciliation:
+        result['blocking_reasons'] = [message for message in result['blocking_reasons']
+                                      if message not in reconciliation]
+        warnings.extend(f"Reference/demo limitation: {message}" for message in reconciliation)
+        for name in ('annual_water', 'monthly_supply'):
+            result['domains'][name].update(
+                status='READY', dataset_valid=True, engine_connected=True,
+                connection_state='CONNECTED', blocking_reason=None, blocking_reasons=[])
+
+    # Reference climate has explicit planning-year dates but the accepted legacy
+    # package predates the institutional climate_mode/scope columns.  Resolve the
+    # mode only when every project unit has a complete 12-month planning-year set.
+    if climate and climate_mode == 'YEAR_SPECIFIC':
+        periods = {}
+        for row in climate:
+            periods.setdefault(str(row.get('parcel_id')), set()).add(str(row.get('month') or '')[:7])
+        expected_periods = {f"{document['project']['planning_year']}-{month:02d}" for month in range(1, 13)}
+        expected_units = {str(unit['external_id']) for unit in document.get('analysis_units', [])}
+        climate_complete = (set(periods) == expected_units and
+                            all(values == expected_periods for values in periods.values()) and
+                            all(row.get('source') for row in climate))
+        if climate_complete:
+            climate_reason = result['domains'].get('climate', {}).get('blocking_reason')
+            if climate_reason in result['blocking_reasons']:
+                result['blocking_reasons'].remove(climate_reason)
+            result['domains']['climate'].update(
+                status='READY', dataset_selected=True, dataset_valid=True,
+                engine_connected=True, connection_state='CONNECTED',
+                blocking_reason=None, blocking_reasons=[], mode=climate_mode,
+                geographic_scope=(document.get('project', {}).get('pilot_geographic_scope') or
+                                  document.get('metadata', {}).get('pilot_geographic_scope') or 'project'),
+                coverage=sorted({period for values in periods.values() for period in values}))
+        else:
+            warnings.append('Reference climate dates do not provide complete planning-year coverage.')
+
+    # The accepted V1 S2 replay carries its seasonal schedule in scientific_s2;
+    # the separate phenology contract is an explicitly ASSUMED reference label
+    # set.  Do not recast it as verified dual-season evidence, but keep it as a
+    # visible warning once the strict resolver has already proven identity/scope.
+    s2_phenology = [message for message in result['blocking_reasons']
+                    if message.startswith('S2 verified phenology requires PRIMARY and SECONDARY records')]
+    phenology_facts = result.get('domains', {}).get('phenology', {}).get('datasets', [])
+    assumed_phenology = any(original_authorities.get(str(fact.get('dataset_id'))) == 'ASSUMED'
+                            for fact in phenology_facts)
+    if s2_phenology and assumed_phenology:
+        result['blocking_reasons'] = [message for message in result['blocking_reasons']
+                                      if message not in s2_phenology]
+        warnings.append('S2 phenology uses the accepted ASSUMED reference rules; seasonal timing remains sourced from the reference scientific package.')
+        result['domains']['phenology'].update(
+            status='READY', dataset_valid=True, engine_connected=True,
+            connection_state='CONNECTED', blocking_reason=None, blocking_reasons=[])
+
+    result['ready'] = not result['blocking_reasons']
+
+    def restore(fact):
+        if not isinstance(fact, dict):
+            return
+        dataset_id = str(fact.get('dataset_id') or '')
+        if dataset_id in original_authorities:
+            fact['authority_class'] = original_authorities[dataset_id]
+
+    for domain in result.get('domains', {}).values():
+        restore(domain)
+        restore(domain.get('dataset'))
+        for fact in domain.get('datasets', []):
+            restore(fact)
+        domain_warnings = []
+        facts = [domain.get('dataset'), *domain.get('datasets', [])]
+        for fact in facts:
+            if isinstance(fact, dict) and fact.get('authority_class') in REFERENCE_AUTHORITIES:
+                domain_warnings.append(
+                    f"{fact.get('data_type')} authority {fact.get('authority_class')} is accepted with warning for REFERENCE_DEMO only."
+                )
+        if domain_warnings:
+            domain['authority_warning'] = True
+            domain['warnings'] = list(dict.fromkeys(domain_warnings))
+
+    def reference_wording(message):
+        return (str(message)
+                .replace('VERIFIED_INSTITUTIONAL', 'REFERENCE_DEMO')
+                .replace('Verified ', 'Reference demo ')
+                .replace('verified ', 'reference-demo '))
+
+    result['blocking_reasons'] = [reference_wording(message) for message in result['blocking_reasons']]
+    for domain in result.get('domains', {}).values():
+        if domain.get('blocking_reason'):
+            domain['blocking_reason'] = reference_wording(domain['blocking_reason'])
+            domain['blocking_reasons'] = [domain['blocking_reason']]
+    result['warnings'] = list(dict.fromkeys([*warnings, *result.get('warnings', [])]))
+    result['climate_mode'] = climate_mode
+    return result
 
 
 def _active_contract_datasets(document, data_type):
@@ -256,22 +427,51 @@ def readiness(document):
     parameter_readiness, phenology_readiness, pilot_readiness = _parameter_and_phenology_readiness(document, demo)
     from kds.adapters.institutional import verified_readiness
     verified = {scenario: verified_readiness(document, scenario) for scenario in ('S1', 'S2')}
+    profile = effective_execution_profile(document)
+    if profile is ExecutionProfile.REFERENCE_DEMO:
+        reference_projection = _reference_demo_projection(document)
+        reference = {scenario: _reference_demo_authority_readiness(
+            document, scenario, reference_projection) for scenario in ('S1', 'S2')}
+    else:
+        reference = verified
     reference_available = {scenario: state['status'] != 'NOT_READY' for scenario,state in scenarios.items()}
-    selected_verified = verified['S1']
+    selected = reference['S1'] if profile is ExecutionProfile.REFERENCE_DEMO else verified['S1']
+    profile_states = reference if profile is ExecutionProfile.REFERENCE_DEMO else verified
+    profile_blockers = list(dict.fromkeys(
+        [message for state in profile_states.values() for message in state['blocking_reasons']] +
+        [item['message'] for state in scenarios.values() for item in state['issues']
+         if item['severity'] == 'error']))
+    profile_warnings = list(dict.fromkeys(
+        [message for state in profile_states.values() for message in state['warnings']] +
+        [item['message'] for state in scenarios.values() for item in state['issues']
+         if item['severity'] == 'warning']))
+    profile_ready = not profile_blockers and all(state['status'] != 'NOT_READY' for state in scenarios.values())
+    global_status = ('NOT_READY' if not profile_ready else
+                     'READY_WITH_WARNINGS' if profile_warnings else 'READY')
     return dict(project_id=document['project']['id'], planning_year=year, scenarios=scenarios,
+        effective_execution_profile=profile.value, status=global_status, ready=profile_ready,
+        blocking_reasons=profile_blockers, warnings=profile_warnings,
         execution_profiles={
             'REFERENCE_DEMO': {
                 'available': any(reference_available.values()),
                 'scenario_availability': reference_available,
-                'warnings': ['REFERENCE MODEL / DEMO DATA; not official or verified institutional evidence.'],
+                'ready': {scenario: reference[scenario]['ready'] and reference_available[scenario]
+                          for scenario in ('S1', 'S2')},
+                'blocking_reasons': {scenario: reference[scenario]['blocking_reasons']
+                                     for scenario in ('S1', 'S2')},
+                'warnings': sorted({warning for value in reference.values()
+                                    for warning in value['warnings']}),
+                'domains': {scenario: reference[scenario]['domains'] for scenario in ('S1', 'S2')},
+                'climate_mode': reference['S1'].get('climate_mode'),
             },
             'VERIFIED_INSTITUTIONAL': {
                 'ready': {scenario: value['ready'] for scenario,value in verified.items()},
                 'blocking_reasons': {scenario: value['blocking_reasons'] for scenario,value in verified.items()},
                 'warnings': sorted({warning for value in verified.values() for warning in value['warnings']}),
+                'domains': {scenario: verified[scenario]['domains'] for scenario in ('S1', 'S2')},
             },
         },
-        domains=selected_verified.get('domains', {}),
+        domains=selected.get('domains', {}),
         requires_reanalysis=bool(document.get('analysis_state', {}).get('requires_reanalysis', False)),
         scientific_data=dict(catalog_kc_complete=sum(all(positive(c.get(k)) for k in ('kc_initial','kc_mid','kc_end')) for c in crops),
                              catalog_phenology_complete=sum(all(positive(c.get(k)) for k in ('stage_initial_days','stage_development_days','stage_mid_days','stage_late_days')) for c in crops),
