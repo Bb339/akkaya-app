@@ -13,7 +13,30 @@
 .pattern-area-summary-v154 small{font-size:10px;color:#66758a}.pattern-area-summary-v154 b{font-size:12px;color:#1d3550}
 .pattern-category-v154{margin:7px 0;padding:7px 9px;border-radius:9px;background:#f3f7fb;color:#42546a;font-size:11px}
 .alternative-preview-notice-v154{margin:9px 0;padding:10px 12px;border:1px solid #93c5fd;border-radius:10px;background:#eff6ff;color:#1e3a5f;font-size:12px;line-height:1.5}.pattern-card-v94.is-preview-selected-v154{outline:2px solid #60a5fa;outline-offset:2px}
-#benchmarkSeasonSourceSel,#benchmarkSeasonSourceSel option,#benchmarkModeSel,#benchmarkModeSel option{color:#172033!important;background:#fff!important;color-scheme:light}
+#tab-benchmark #benchmarkSeasonSourceSel,
+#tab-benchmark #benchmarkModeSel{
+  color:#172033!important;
+  background-color:#fff!important;
+  -webkit-text-fill-color:#172033!important;
+  font-size:14px!important;
+  opacity:1!important;
+  color-scheme:light;
+}
+#tab-benchmark #benchmarkSeasonSourceSel option,
+#tab-benchmark #benchmarkModeSel option{
+  color:#172033!important;
+  background-color:#fff!important;
+  -webkit-text-fill-color:#172033!important;
+  font-size:14px!important;
+  font-weight:400!important;
+  opacity:1!important;
+}
+#tab-benchmark #benchmarkSeasonSourceSel option:checked,
+#tab-benchmark #benchmarkModeSel option:checked{
+  color:#fff!important;
+  background-color:#2563eb!important;
+  -webkit-text-fill-color:#fff!important;
+}
 .benchmark-chart-state-v154{display:grid;place-items:center;min-height:230px;padding:18px;text-align:center;color:#536277;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;font-weight:700;line-height:1.5}
 .benchmark-chart-state-v154[hidden]{display:none!important;min-height:0!important;height:0!important;padding:0!important;border:0!important}
 .benchmark-chart-state-v154[data-state="working"]{color:#1d4ed8;background:#eff6ff;border-color:#93c5fd}
