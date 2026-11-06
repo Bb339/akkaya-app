@@ -4,6 +4,23 @@
   box-sizing: border-box;
 }
 
+/* v154: authoritative plan summaries, benchmark states and accessible controls */
+.metric-pill.metric-delta-positive{background:#e8f7ef!important;color:#126b45!important;border-color:#b8e3cd!important}
+.metric-pill.metric-delta-negative{background:#fff0f0!important;color:#a53030!important;border-color:#f0c2c2!important}
+.metric-pill.metric-delta-neutral{background:#eef3f8!important;color:#526174!important;border-color:#d8e0e9!important}
+.pattern-area-summary-v154{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:9px 0}
+.pattern-area-summary-v154>span{display:grid;gap:2px;padding:7px 8px;border:1px solid #e3eaf2;border-radius:9px;background:#f8fbfe}
+.pattern-area-summary-v154 small{font-size:10px;color:#66758a}.pattern-area-summary-v154 b{font-size:12px;color:#1d3550}
+.pattern-category-v154{margin:7px 0;padding:7px 9px;border-radius:9px;background:#f3f7fb;color:#42546a;font-size:11px}
+.alternative-preview-notice-v154{margin:9px 0;padding:10px 12px;border:1px solid #93c5fd;border-radius:10px;background:#eff6ff;color:#1e3a5f;font-size:12px;line-height:1.5}.pattern-card-v94.is-preview-selected-v154{outline:2px solid #60a5fa;outline-offset:2px}
+#benchmarkSeasonSourceSel,#benchmarkSeasonSourceSel option,#benchmarkModeSel,#benchmarkModeSel option{color:#172033!important;background:#fff!important;color-scheme:light}
+.benchmark-chart-state-v154{display:grid;place-items:center;min-height:230px;padding:18px;text-align:center;color:#536277;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;font-weight:700;line-height:1.5}
+.benchmark-chart-state-v154[hidden]{display:none!important;min-height:0!important;height:0!important;padding:0!important;border:0!important}
+.benchmark-chart-state-v154[data-state="working"]{color:#1d4ed8;background:#eff6ff;border-color:#93c5fd}
+.benchmark-chart-state-v154[data-state="error"]{color:#a53030;background:#fff5f5;border-color:#f0b7b7}
+#tab-benchmark .chart-card:has(.benchmark-chart-state-v154:not([hidden])) canvas{display:none!important}
+@media(max-width:720px){.pattern-area-summary-v154{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 :root {
   --bg: #f3f7fb;
   --card: #ffffff;
@@ -570,6 +587,18 @@ body {
   padding:10px 12px;
   font-weight:700;
   line-height:1.45;
+}
+
+.benchmark-effective-conditions{
+  grid-column:1 / -1;
+  border:1px solid #bfdbfe;
+  background:#eff6ff;
+  color:#1e3a5f;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:12px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
 }
 
 .benchmark-tag{
@@ -13988,5 +14017,163 @@ body.role-farmer #waterRiskSection .drought-main-container{
   .pattern-card-metrics-v150,
   .pattern-card-metrics-compact-v150{
     grid-template-columns:1fr;
+  }
+}
+
+/* v151: COP31 decision-first recommendation, allocation and chart presentation. */
+
+.pattern-card-grid-v94{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));
+}
+.pattern-card-v94.pattern-card-simple-v150{
+  min-height:0;
+}
+.pattern-card-metrics-summary-v151{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.pattern-card-metrics-summary-v151 > div:first-child,
+.pattern-card-metrics-summary-v151 > div:nth-child(2){
+  grid-column:auto;
+  background:#f8fbff;
+  border-color:#bfdbfe;
+}
+.pattern-card-metrics-summary-v151 span{
+  white-space:normal;
+  line-height:1.25;
+}
+.pattern-card-metrics-summary-v151 b{
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+.pattern-card-simple-v150 .pattern-component-list span{
+  overflow:visible;
+  text-overflow:clip;
+  white-space:normal;
+}
+.pattern-card-actions-v151{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  margin-top:2px;
+}
+.pattern-card-actions-v151 .btn-primary{
+  width:100%;
+}
+.pattern-card-details-v150 > small{
+  display:block;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+.decision-chart-state{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:150px;
+  margin:8px 0;
+  padding:18px;
+  border:1px dashed #cbd5e1;
+  border-radius:12px;
+  background:#f8fafc;
+  color:#475569;
+  text-align:center;
+  line-height:1.45;
+}
+.decision-chart-state[hidden],
+#waterChart[hidden],
+#profitChart[hidden]{
+  display:none !important;
+}
+.decision-chart-state--with-data-v152{
+  justify-content:flex-start;
+  min-height:0;
+  margin:8px 0 4px;
+  padding:9px 11px;
+  text-align:left;
+}
+.right-middle > .small-chart-card.has-chart-message-v152{
+  height:auto !important;
+  max-height:none;
+  overflow:visible;
+}
+.allocation-v42-model-row{
+  grid-template-columns:1fr;
+  align-items:start;
+}
+.allocation-v42-model-row .select-input{
+  width:100%;
+  min-width:0;
+  white-space:normal;
+}
+.allocation-v42-summary-grid-v151{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.left-col .allocation-v42-summary-grid-v151{
+  grid-template-columns:1fr !important;
+}
+.left-col .allocation-v42-summary-grid-v151 span{
+  font-size:12px !important;
+}
+.left-col .allocation-v42-summary-grid-v151 strong{
+  font-size:15px !important;
+}
+.allocation-disclosure-v151,
+.result-disclosure-v151{
+  margin-top:8px;
+  border:1px solid rgba(100,116,139,.22);
+  border-radius:10px;
+  background:rgba(255,255,255,.86);
+  overflow:hidden;
+}
+.allocation-disclosure-v151 > summary,
+.result-disclosure-v151 > summary{
+  padding:9px 11px;
+  color:#1e3a5f;
+  cursor:pointer;
+  font-weight:750;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+.allocation-disclosure-v151[open] > summary,
+.result-disclosure-v151[open] > summary{
+  border-bottom:1px solid rgba(100,116,139,.18);
+}
+.allocation-disclosure-v151 > :not(summary),
+.result-disclosure-v151 > :not(summary){
+  margin:10px;
+}
+.result-disclosure-v151 ul{
+  margin:6px 0 0 18px;
+  padding:0;
+}
+.result-disclosure-warning-v151{
+  border-color:#f59e0b;
+  background:#fffbeb;
+}
+.result-disclosure-warning-v151 > summary{
+  color:#92400e;
+}
+.allocation-v42-comparison-grid-v151{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.allocation-villages-disclosure-v151 .allocation-village-list{
+  min-width:0;
+}
+@media (max-width: 900px){
+  .allocation-v42-summary-grid-v151,
+  .allocation-v42-comparison-grid-v151{
+    grid-template-columns:1fr;
+  }
+}
+@media (max-width: 560px){
+  .pattern-card-metrics-summary-v151{
+    grid-template-columns:1fr;
+  }
+  .pattern-card-metrics-summary-v151 > div:first-child,
+  .pattern-card-metrics-summary-v151 > div:nth-child(2){
+    grid-column:auto;
+  }
+  .allocation-v40-head{
+    align-items:flex-start;
+    flex-direction:column;
   }
 }

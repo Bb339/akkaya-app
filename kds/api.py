@@ -1,7 +1,9 @@
 """Project/import HTTP boundary. The scientific API remains unchanged."""
 import json
+import csv
+from io import StringIO
 from pathlib import Path
-from flask import Blueprint, Flask, jsonify, request
+from flask import Blueprint, Flask, Response, jsonify, request
 from werkzeug.exceptions import RequestEntityTooLarge
 from kds.config import MAX_UPLOAD_BYTES, project_store_path
 from kds.data.project_store import FileProjectStore
@@ -140,6 +142,19 @@ def register_project_api(app: Flask, repository: ProjectRepository | None = None
         from kds.application.result_presentation import present_run_for_ui
         document = projects.get(project_id)
         return jsonify(present_run_for_ui(analysis.get(project_id, run_id), document))
+
+    @blueprint.get("/projects/<project_id>/analyses/<run_id>/export.csv")
+    def analysis_result_csv(project_id, run_id):
+        from kds.application.result_presentation import analysis_csv_rows
+        document = projects.get(project_id)
+        rows = analysis_csv_rows(analysis.get(project_id, run_id), document)
+        stream = StringIO(newline="")
+        fields = list(rows[0]) if rows else []
+        writer = csv.DictWriter(stream, fieldnames=fields, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+        return Response('\ufeff' + stream.getvalue(), content_type="text/csv; charset=utf-8",
+                        headers={"Content-Disposition": f'attachment; filename="{run_id}-water-area.csv"'})
 
     @blueprint.get("/projects/<project_id>/analyses/<run_id>/provenance")
     def analysis_provenance(project_id, run_id):

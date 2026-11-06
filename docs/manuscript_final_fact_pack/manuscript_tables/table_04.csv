@@ -1,0 +1,4 @@
+﻿algorithm,population_or_agents,iterations_or_cycles,selection_or_choice,crossover,mutation_or_neighbor,retention_update,stopping,implementation
+GA,12,10,4-way tournament,one-point; p=0.70,per-gene random reassignment; p=0.08,top two copied,fixed 10 generations,app.py:_matrix_ga_optimize
+ACO,10,10,pheromone^1.0 × localUtility^2.1,not applicable,not applicable,evaporation rho=0.25; q=1.0; best-ant deposit,fixed 10 iterations,app.py:_matrix_aco_optimize
+ABC,10,10,fitness-proportional onlooker choice,not applicable,1–4 unlocked-unit neighbor moves,employed/onlooker/scout; limit=4,fixed 10 cycles,app.py:_matrix_abc_optimize

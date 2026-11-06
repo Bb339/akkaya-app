@@ -22,6 +22,7 @@ def _metrics(details, total_area, feasible=None):
     active_by_unit = {}
     distribution = {}
     seasonal_fallow = 0.0
+    seasonal_planted = 0.0
     for row in details:
         row_area = float(row.get("area_da", 0.0) or 0.0)
         planted_areas = []
@@ -35,6 +36,7 @@ def _metrics(details, total_area, feasible=None):
             name = _crop_name(crop.get("crop"))
             if _is_planted(name):
                 planted_areas.append(area)
+                seasonal_planted += area
                 distribution[name] = distribution.get(name, 0.0) + area
             else:
                 seasonal_fallow += area
@@ -44,13 +46,15 @@ def _metrics(details, total_area, feasible=None):
         total_area_da=float(total_area),
         active_area_da=active,
         fallow_area_da=max(0.0, float(total_area) - active),
+        physical_planted_area_da=active,
+        seasonal_planted_area_da=seasonal_planted,
         seasonal_fallow_area_da=seasonal_fallow,
         total_water_m3=water,
         total_profit_tl=profit,
         efficiency_tl_per_m3=profit / water if water > 0 else 0.0,
         feasible=feasible,
         crop_distribution_da=distribution,
-        distribution_basis="seasonal cropped area; S2 can count land twice",
+        distribution_basis="seasonal cropped area; physical area is counted once per analysis unit",
     )
 
 
@@ -225,7 +229,8 @@ def summarize(result, bundle):
         score=params.get("bestScore"),
         score_note="S2 raw engine output does not expose final fitness." if config["scenario"] == "S2" else None,
         crop_distribution_da=distribution,
-        distribution_basis="seasonal cropped area; S2 can count land twice",
+        seasonal_planted_area_da=(result.get("area_accounting") or {}).get("seasonal_planted_area_da"),
+        distribution_basis="seasonal cropped area; physical area is counted once per analysis unit",
         plan_difference=result.get("delta"),
         diversity=params.get("diversity"),
         effective_run_parameters=params,
@@ -242,7 +247,7 @@ def present_stored_run(run, document):
     metrics = presented["result"].get("final_metrics")
     if metrics:
         summary = deepcopy(presented.get("summary") or {})
-        for key in ("total_area_da", "active_area_da", "fallow_area_da", "total_water_m3", "total_profit_tl", "efficiency_tl_per_m3", "feasible", "crop_distribution_da", "distribution_basis"):
+        for key in ("total_area_da", "active_area_da", "fallow_area_da", "physical_planted_area_da", "seasonal_planted_area_da", "total_water_m3", "total_profit_tl", "efficiency_tl_per_m3", "feasible", "crop_distribution_da", "distribution_basis"):
             if key in metrics:
                 summary[key] = deepcopy(metrics[key])
         presented["summary"] = summary

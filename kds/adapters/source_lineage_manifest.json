@@ -1,0 +1,326 @@
+{
+  "schema_version": "agrocore-source-lineage-v1",
+  "classification": "REFERENCE_DEMO",
+  "authority_notice": "Traceability and hash checks do not constitute institutional, field or scientific validation.",
+  "target_contracts": [
+    {
+      "dataset": "units",
+      "fields": ["id", "area_da", "village", "current_crop"],
+      "transformation": "app.load_parcels"
+    },
+    {
+      "dataset": "candidate_options",
+      "fields": ["water_m3_da", "net_water_m3_da", "area_da", "yield_ton_da", "production_ton", "profit_tl_da", "profit_tl_total"],
+      "transformation": "app.load_matrix_candidates"
+    },
+    {
+      "dataset": "reference-analysis-units",
+      "fields": ["local_id", "crop", "crop_group", "area_da", "production_ton", "irrigation", "candidate_rows"],
+      "transformation": "tools.scientific_audit.source_contract_original_workbooks.audit"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "active:parcel-assumptions",
+      "source_type": "csv",
+      "portable_path": "data/enhanced_dataset/csv/parcel_assumptions.csv",
+      "sha256": "1cc6a7927ba7521afc4f5650a4dda65bd8521da3093a9f533eee39188b1a3256",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": true
+    },
+    {
+      "source_id": "active:parcel-summary",
+      "source_type": "csv",
+      "portable_path": "data/parsel_su_kar_ozet.csv",
+      "sha256": "3f3f994729f2d79baee9bca3c9663638ee032deb4037fff50fea5f28211839d9",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": true
+    },
+    {
+      "source_id": "active:area-overrides",
+      "source_type": "csv",
+      "portable_path": "data/excel_derived/parcel_area_overrides.csv",
+      "sha256": "8e6eb48b477d56c7a874c6b50422aee9f19b5dcb06e7d62659ba3fb44d0798a6",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": true
+    },
+    {
+      "source_id": "active:candidate-matrix",
+      "source_type": "csv",
+      "portable_path": "data/excel_derived/combined_parcel_candidate_matrix_2024.csv",
+      "sha256": "022669d634b29ed551ed6e6344c212c1e60e47db1efc41a157c4073c4424df6b",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": true
+    },
+    {
+      "source_id": "audit:settlement-alignment",
+      "source_type": "csv",
+      "portable_path": "data/excel_derived/input_excel_alignment_report.csv",
+      "sha256": "a24c148245e575b466eaa3873bb50f4406ac0ae72389e9c0f72511b94e83df21",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": false
+    },
+    {
+      "source_id": "evidence:bahceli-method-sheet",
+      "source_type": "csv",
+      "portable_path": "data/presentation_excel_previews/bahceli_2024_dogruluk_odakli.csv",
+      "sha256": "7a77b592c905922ac8d597122d69bd3a152ab50823bbe2bfba22c4433af846c6",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": false
+    },
+    {
+      "source_id": "evidence:sazlica-method-sheet",
+      "source_type": "csv",
+      "portable_path": "data/presentation_excel_previews/sazlica_2024_profesyonel.csv",
+      "sha256": "b2d3bad119eba41e4821e01c6b42e5f4bb7d8c59681229df70d53b9054520276",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": false
+    },
+    {
+      "source_id": "evidence:kaynarca-method-sheet",
+      "source_type": "csv",
+      "portable_path": "data/presentation_excel_previews/kaynarca_2024_duzeltilmis.csv",
+      "sha256": "b49ca52c59e2fe3ab6445876ed279ce9b5e880d02dbb79d6f9fdb97f537544f1",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": false
+    },
+    {
+      "source_id": "evidence:bor-method-sheet",
+      "source_type": "csv",
+      "portable_path": "data/presentation_excel_previews/bor_ilce_merkezi_2024.csv",
+      "sha256": "4646554e128b66991019c34dbc8ee882367fc2fc5ab5201822cd67f869bd4721",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": false
+    },
+    {
+      "source_id": "evidence:kemerhisar-method-sheet",
+      "source_type": "csv",
+      "portable_path": "data/presentation_excel_previews/kemerhisar_2024_duzeltilmis.csv",
+      "sha256": "085621a4f8187cc4556d379327838d6f5888efd19c338541bd3a1d456cfdbdab",
+      "version": "reference-manifest@7d47d296",
+      "required_for_execution": false
+    },
+    {
+      "source_id": "original:bahceli-2024-workbook",
+      "source_type": "xlsx",
+      "portable_path": null,
+      "original_filename": "bahceli_2024_dogruluk_odakli_son_guncel_v6.xlsx",
+      "sha256": "586ac5a9b7969ea94ce534a0f224e6cc6ff68ddeee5694d519149d1eca595c3e",
+      "version": "filename-v6; content-addressed by sha256",
+      "verification_evidence": {
+        "portable_path": "docs/audits/source_contract_package2/original_workbook_audit.json",
+        "sha256": "b4d36bd405b9c16be797d4603cb47cabb645c7ad0a73b7910dc026453f934c8c"
+      },
+      "required_for_execution": false
+    },
+    {
+      "source_id": "original:sazlica-2024-workbook",
+      "source_type": "xlsx",
+      "portable_path": null,
+      "original_filename": "sazlica_2024_profesyonel_guncel_v12_profesyonel_duzenli (1).xlsx",
+      "sha256": "054925c518524908f1b9387aa51e233e409835b5b31df0047f92ab9ac2206cfd",
+      "version": "filename-v12; content-addressed by sha256",
+      "verification_evidence": {
+        "portable_path": "docs/audits/source_contract_package2/original_workbook_audit.json",
+        "sha256": "b4d36bd405b9c16be797d4603cb47cabb645c7ad0a73b7910dc026453f934c8c"
+      },
+      "required_for_execution": false
+    },
+    {
+      "source_id": "original:kaynarca-2024-workbook",
+      "source_type": "xlsx",
+      "portable_path": null,
+      "original_filename": "kaynarca_2024_duzeltilmis_v5.xlsx",
+      "sha256": "79a42fd019e35f15c98735095cf762773c071c2be4726c1a2dd60be331c89310",
+      "version": "filename-v5; content-addressed by sha256",
+      "verification_evidence": {
+        "portable_path": "docs/audits/source_contract_package2/original_workbook_audit.json",
+        "sha256": "b4d36bd405b9c16be797d4603cb47cabb645c7ad0a73b7910dc026453f934c8c"
+      },
+      "required_for_execution": false
+    },
+    {
+      "source_id": "original:bor-2024-workbook",
+      "source_type": "xlsx",
+      "portable_path": null,
+      "original_filename": "bor_ilce_merkezi_2024_duzeltilmis_v4.xlsx",
+      "sha256": "93b2fe3ba03c68f0e1dbf320c84447bb3ce9286fe0da1d2e791291a2fdf4c742",
+      "version": "filename-v4; content-addressed by sha256",
+      "verification_evidence": {
+        "portable_path": "docs/audits/source_contract_package2/original_workbook_audit.json",
+        "sha256": "b4d36bd405b9c16be797d4603cb47cabb645c7ad0a73b7910dc026453f934c8c"
+      },
+      "required_for_execution": false
+    },
+    {
+      "source_id": "original:kemerhisar-2024-workbook",
+      "source_type": "xlsx",
+      "portable_path": null,
+      "original_filename": "kemerhisar_2024_duzeltilmis_v5.xlsx",
+      "sha256": "1278b91b14fb3a878eafbdffacbcca8fc36b14bf5c35bd61449e2dc9d5f80824",
+      "version": "filename-v5; content-addressed by sha256",
+      "verification_evidence": {
+        "portable_path": "docs/audits/source_contract_package2/original_workbook_audit.json",
+        "sha256": "b4d36bd405b9c16be797d4603cb47cabb645c7ad0a73b7910dc026453f934c8c"
+      },
+      "required_for_execution": false
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "reference-analysis-units",
+      "source_id": "active:parcel-summary",
+      "definition": "A model analysis unit is a settlement-product representative row; it is not asserted to be a cadastral parcel.",
+      "validation_contract": {
+        "source_id": "active:parcel-summary",
+        "id_field": "parsel_id",
+        "area_field": "alan_da",
+        "area_unit": "da",
+        "settlement_field": "koy",
+        "data_year": 2024,
+        "geographic_scope": ["Bahçeli", "Bor İlçe Merkezi", "Kaynarca", "Kemerhisar", "Sazlıca"],
+        "area_tolerance_da": 0.000001,
+        "expected": {
+          "used_row_count": 179,
+          "unique_unit_count": 179,
+          "total_area_da": 134919.0
+        }
+      }
+    }
+  ],
+  "lineage": [
+    {
+      "lineage_id": "units:identity-area-baseline",
+      "source_ids": ["active:parcel-assumptions", "active:parcel-summary", "active:area-overrides"],
+      "source_locator": {
+        "kind": "csv",
+        "by_source": {
+          "active:parcel-assumptions": {
+            "kind": "csv",
+            "columns": ["parcel_id", "area_da", "village", "current_crop"],
+            "record_key": "parcel_id"
+          },
+          "active:parcel-summary": {
+            "kind": "csv",
+            "columns": ["parsel_id", "alan_da", "koy", "crop"],
+            "record_key": "parsel_id"
+          },
+          "active:area-overrides": {
+            "kind": "csv",
+            "columns": ["parcel_id", "area_da"],
+            "record_key": "parcel_id"
+          }
+        }
+      },
+      "target": {"dataset": "units", "field": "id, area_da, village, current_crop"},
+      "transformation": {"function": "app.load_parcels", "description": "outer merge, ID normalization and declared area override"},
+      "source_unit": "da",
+      "target_unit": "da",
+      "unit_required": true,
+      "data_period": "2024",
+      "period_required": true,
+      "geographic_scope": "five declared Bor-area settlements",
+      "data_nature": "REPORTED_OBSERVATION_TRANSCRIBED",
+      "validation_status": "DERIVED_COPY_HASH_VERIFIED"
+    },
+    {
+      "lineage_id": "candidate:water-requirement",
+      "source_ids": ["active:candidate-matrix"],
+      "source_locator": {
+        "kind": "csv",
+        "columns": ["parcel_id", "candidate_crop", "water_m3_da", "net_water_m3_da", "source_workbook"],
+        "record_key": "parcel_id + candidate_crop"
+      },
+      "target": {"dataset": "candidate_options", "field": "water_m3_da, net_water_m3_da"},
+      "transformation": {"function": "app.load_matrix_candidates", "description": "type normalization only; numeric water values are unchanged"},
+      "source_unit": "m3/da",
+      "target_unit": "m3/da",
+      "unit_required": true,
+      "data_period": "2024",
+      "period_required": true,
+      "geographic_scope": "five declared Bor-area settlements",
+      "data_nature": "FORMULA_DERIVED",
+      "water_value_semantics": "MODELED_FULL_IRRIGATION_REQUIREMENT_NOT_OBSERVED_USE",
+      "validation_status": "HASH_AND_INTERNAL_ARITHMETIC_CHECKED"
+    },
+    {
+      "lineage_id": "candidate:production-profit",
+      "source_ids": ["active:candidate-matrix"],
+      "source_locator": {
+        "kind": "csv",
+        "columns": ["parcel_id", "candidate_crop", "area_da", "yield_ton_da", "production_ton", "profit_tl_da", "profit_tl_total"],
+        "record_key": "parcel_id + candidate_crop"
+      },
+      "target": {"dataset": "candidate_options", "field": "area_da, yield_ton_da, production_ton, profit_tl_da, profit_tl_total"},
+      "transformation": {"function": "app.load_matrix_candidates", "description": "type normalization; source formulas remain formula-derived"},
+      "source_unit": "da; ton/da; ton; TL/da; TL",
+      "target_unit": "da; ton/da; ton; TL/da; TL",
+      "unit_required": true,
+      "data_period": "2024",
+      "period_required": true,
+      "geographic_scope": "five declared Bor-area settlements",
+      "data_nature": "FORMULA_DERIVED",
+      "validation_status": "HASH_AND_INTERNAL_ARITHMETIC_CHECKED"
+    },
+    {
+      "lineage_id": "original:sazlica-analysis-units",
+      "source_ids": ["original:sazlica-2024-workbook"],
+      "source_locator": {"kind": "excel", "sheet": "5_Parsel_Proxy", "range": "A5:N52", "record_key": "parsel_id"},
+      "additional_ranges": {"product_area_production": "3_Urun_Referans!A5:T52", "candidate_rows": "6_ParselxUrun_Kota!A5:AF2214"},
+      "target": {"dataset": "reference-analysis-units", "field": "local_id, crop, crop_group, area_da, production_ton, irrigation, candidate_rows"},
+      "transformation": {"function": "tools.scientific_audit.source_contract_original_workbooks.audit", "description": "source_workbook + local_parcel_id maps to the global parcel_id; repeated whitespace in seven labels is normalized only for comparison"},
+      "source_unit": "da; ton", "target_unit": "da; ton", "unit_required": true,
+      "data_period": "2024", "period_required": true, "geographic_scope": "Sazlıca",
+      "data_nature": "REPORTED_OBSERVATION_TRANSCRIBED_AND_FORMULA_DERIVED_OUTPUTS",
+      "validation_status": "WORKBOOK_HASH_AND_RECORD_LINK_VERIFIED"
+    },
+    {
+      "lineage_id": "original:bahceli-analysis-units",
+      "source_ids": ["original:bahceli-2024-workbook"],
+      "source_locator": {"kind": "excel", "sheet": "5_Parsel_Proxy", "range": "A5:N36", "record_key": "parsel_id"},
+      "additional_ranges": {"product_area_production": "3_Urun_Referans!A5:T36", "candidate_rows": "6_ParselxUrun_Kota!A5:Q966"},
+      "target": {"dataset": "reference-analysis-units", "field": "local_id, crop, crop_group, area_da, production_ton, irrigation, candidate_rows"},
+      "transformation": {"function": "tools.scientific_audit.source_contract_original_workbooks.audit", "description": "source_workbook + local_parcel_id maps to the global parcel_id"},
+      "source_unit": "da; ton", "target_unit": "da; ton", "unit_required": true,
+      "data_period": "2024", "period_required": true, "geographic_scope": "Bahçeli",
+      "data_nature": "REPORTED_OBSERVATION_TRANSCRIBED_AND_FORMULA_DERIVED_OUTPUTS",
+      "validation_status": "WORKBOOK_HASH_AND_RECORD_LINK_VERIFIED"
+    },
+    {
+      "lineage_id": "original:bor-analysis-units",
+      "source_ids": ["original:bor-2024-workbook"],
+      "source_locator": {"kind": "excel", "sheet": "5_Parsel_Proxy", "range": "A5:N48", "record_key": "parsel_id"},
+      "additional_ranges": {"product_area_production": "3_Urun_Referans!A5:T50", "candidate_rows": "6_ParselxUrun_Kota!A5:R1940"},
+      "target": {"dataset": "reference-analysis-units", "field": "local_id, crop, crop_group, area_da, production_ton, irrigation, candidate_rows"},
+      "transformation": {"function": "tools.scientific_audit.source_contract_original_workbooks.audit", "description": "45 product rows produce 43 positive-area analysis units; U42 and U43 remain explicit zero-area positive-production errors"},
+      "source_unit": "da; ton", "target_unit": "da; ton", "unit_required": true,
+      "data_period": "2024", "period_required": true, "geographic_scope": "Bor İlçe Merkezi",
+      "data_nature": "REPORTED_OBSERVATION_TRANSCRIBED_AND_FORMULA_DERIVED_OUTPUTS",
+      "validation_status": "WORKBOOK_HASH_AND_RECORD_LINK_VERIFIED_WITH_DATA_ERRORS"
+    },
+    {
+      "lineage_id": "original:kaynarca-analysis-units",
+      "source_ids": ["original:kaynarca-2024-workbook"],
+      "source_locator": {"kind": "excel", "sheet": "5_Parsel_Proxy", "range": "A5:N28", "record_key": "parsel_id"},
+      "additional_ranges": {"product_area_production": "3_Urun_Referans!A5:T28", "candidate_rows_used": "6_ParselxUrun_Kota!A5:R534", "excluded_bor_template_tail": "6_ParselxUrun_Kota!A701:R1940"},
+      "target": {"dataset": "reference-analysis-units", "field": "local_id, crop, crop_group, area_da, production_ton, irrigation, candidate_rows"},
+      "transformation": {"function": "tools.scientific_audit.source_contract_original_workbooks.audit", "description": "529 Kaynarca candidate rows are retained; 1,240 trailing rows identical to the Bor workbook are excluded"},
+      "source_unit": "da; ton", "target_unit": "da; ton", "unit_required": true,
+      "data_period": "2024", "period_required": true, "geographic_scope": "Kaynarca",
+      "data_nature": "REPORTED_OBSERVATION_TRANSCRIBED_AND_FORMULA_DERIVED_OUTPUTS",
+      "validation_status": "WORKBOOK_HASH_AND_RECORD_LINK_VERIFIED_WITH_EXCLUSION"
+    },
+    {
+      "lineage_id": "original:kemerhisar-analysis-units",
+      "source_ids": ["original:kemerhisar-2024-workbook"],
+      "source_locator": {"kind": "excel", "sheet": "5_Parsel_Proxy", "range": "A5:N40", "record_key": "parsel_id"},
+      "additional_ranges": {"product_area_production": "3_Urun_Referans!A5:T40", "candidate_rows": "6_ParselxUrun_Kota!A5:R1230"},
+      "target": {"dataset": "reference-analysis-units", "field": "local_id, crop, crop_group, area_da, production_ton, irrigation, candidate_rows"},
+      "transformation": {"function": "tools.scientific_audit.source_contract_original_workbooks.audit", "description": "source_workbook + local_parcel_id maps to the global parcel_id"},
+      "source_unit": "da; ton", "target_unit": "da; ton", "unit_required": true,
+      "data_period": "2024", "period_required": true, "geographic_scope": "Kemerhisar",
+      "data_nature": "REPORTED_OBSERVATION_TRANSCRIBED_AND_FORMULA_DERIVED_OUTPUTS",
+      "validation_status": "WORKBOOK_HASH_AND_RECORD_LINK_VERIFIED"
+    }
+  ]
+}

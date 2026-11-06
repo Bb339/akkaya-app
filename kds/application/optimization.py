@@ -27,7 +27,7 @@ def now():
 
 def configuration(payload, document):
     required = {'scenario','algorithm','seed','objective','water_budget_ratio','config'}
-    if not isinstance(payload,dict) or not required <= payload.keys() or payload.keys() - (required | {'selected_ids','execution_profile'} | PREVIEW_FIELDS):
+    if not isinstance(payload,dict) or not required <= payload.keys() or payload.keys() - (required | {'selected_ids','execution_profile','area_policy'} | PREVIEW_FIELDS):
         raise ValueError('Explicit scenario, algorithm, seed, objective, water_budget_ratio and config are required.')
     if payload['scenario'] not in ('S1','S2') or payload['algorithm'] not in ('GA','ACO','ABC'):
         raise ValueError('Use S1/S2 and GA/ACO/ABC.')
@@ -56,16 +56,20 @@ def configuration(payload, document):
     ids = payload.get('selected_ids', [])
     if not isinstance(ids,list) or any(not isinstance(i,str) or i not in known for i in ids) or len(ids)!=len(set(ids)):
         raise ValueError('selected_ids must contain unique project analysis unit identifiers.')
+    area_policy = str(payload.get('area_policy') or 'partial_planting').strip().lower().replace('-', '_')
+    if area_policy not in {'partial_planting', 'full_area'}:
+        raise ValueError('area_policy must be partial_planting or full_area.')
     scenario = payload['scenario']
     options = dict(params, seed=payload['seed'], seasonSource=scenario.lower(),
                    scenarioType='single' if scenario=='S1' else 'double', twoSeason=scenario=='S2',
+                   areaPolicy=area_policy,
                    simpleMode=False, envFlowRatio=.10, enforceDeliveryCaps=True,
                    waterModel='calib', riskMode='none', riskLambda=0., riskSamples=120, waterQualityFilter=True)
     effective = effective_execution_profile(document)
     profile = execution_profile(payload.get('execution_profile', effective.value))
     if effective is ExecutionProfile.REFERENCE_DEMO and profile is not effective:
         raise ValueError('Reference-demo projects require execution_profile REFERENCE_DEMO.')
-    return {**payload, 'execution_profile': profile.value, 'selected_ids':ids, 'options':options}
+    return {**payload, 'area_policy': area_policy, 'execution_profile': profile.value, 'selected_ids':ids, 'options':options}
 
 
 def engine_commit():
@@ -275,6 +279,8 @@ class OptimizationApplicationService:
         self.repository.update(project_id, lambda d: d.setdefault('runs',{}).__setitem__(run_id,record))
         try:
             engine_result = self.executor(bundle)
+            if not isinstance(engine_result, dict) or engine_result.get('status') != 'OK':
+                raise RuntimeError('Motor başarılı bir sonuç döndürmedi; koşum tamamlanamadı.')
             record['result'] = project_result(engine_result, effective_config, document['analysis_units'])
             record['result'].update(
                 execution_profile=profile.value, project_id=project_id, planning_year=bundle.planning_year,
@@ -297,14 +303,18 @@ class OptimizationApplicationService:
         except Exception as exc:
             # Persist failed runs; callers never receive a fabricated successful result.
             record['status']='failed'
+            record['result']=None
+            record.pop('summary', None)
             record['error']=str(exc)
         record['completed_at']=now()
         record['provenance']['input_snapshot']['completed_at'] = record['completed_at']
         def finish(d):
             d['runs'][run_id] = record
-            if record['status'] == 'completed':
+            # update() holds the store lock: compare the input revision atomically.
+            if (record['status'] == 'completed' and
+                    d['data_revision'] == input_snapshot['project_revision']):
                 d['analysis_state'] = {'requires_reanalysis': False, 'latest_run_id': run_id,
-                                       'resolved_data_revision': d['data_revision'],
+                                       'resolved_data_revision': input_snapshot['project_revision'],
                                        'resolved_at': record['completed_at']}
         self.repository.update(project_id, finish)
         return record
@@ -320,14 +330,18 @@ def _distribution_and_units(result, scenario):
         if scenario == 'S1':
             crop = row.get('chosenCrop') or row.get('crop')
             if crop and str(crop).upper() not in {'NADAS', 'FALLOW'}:
-                selections.append({'crop': str(crop), 'season': 'PRIMARY'})
+                selections.append({'crop': str(crop), 'season': 'PRIMARY',
+                                   'area_da': area, 'total_water_m3': row.get('water_m3'),
+                                   'total_profit_tl': row.get('profit_tl')})
                 areas[str(crop)] = areas.get(str(crop), 0.0) + area
         else:
             for name, season in (('primary', 'PRIMARY'), ('secondary', 'SECONDARY')):
                 crop = row.get(name)
                 if crop and crop.get('crop') and str(crop['crop']).upper() not in {'NADAS', 'FALLOW'}:
                     crop_area = float(crop.get('area_da', area) or area)
-                    selections.append({'crop': str(crop['crop']), 'season': season})
+                    selections.append({'crop': str(crop['crop']), 'season': season,
+                                       'area_da': crop_area, 'total_water_m3': crop.get('water_m3'),
+                                       'total_profit_tl': crop.get('profit_tl')})
                     areas[str(crop['crop'])] = areas.get(str(crop['crop']), 0.0) + crop_area
         units.append({'analysis_unit_id': unit_id, 'area_da': area, 'selected_crops': selections})
     total = sum(areas.values())
@@ -345,7 +359,8 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
     result['HHI'] = sum(share * share for share in shares.values())
     result['hhi'] = result['HHI']
     if execution_context is not None:
-        optimizer_water = float(result.get('total_water_m3', 0.0) or 0.0)
+        optimizer_value = result.get('total_water_m3')
+        optimizer_water = float(optimizer_value) if optimizer_value is not None else None
         validation = validate_verified_result(
             result, scenario, execution_context['monthly_profiles'],
             execution_context['annual_supply_m3'], execution_context['monthly_supply_m3'],
@@ -355,7 +370,7 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
         accounting = validation['water_profile_accounting']
         verified_water = float(accounting['full_profile_water_m3'])
         planning_year_water = float(accounting['planning_year_profile_water_m3'])
-        difference = optimizer_water - verified_water
+        difference = optimizer_water - verified_water if optimizer_water is not None else None
         tolerance = max(1.0, verified_water * 0.001)
         result.update(
             optimizer_water_m3=optimizer_water,
@@ -364,17 +379,22 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
             authoritative_water_m3=verified_water,
             total_water_m3=verified_water,
             water_accounting_difference_m3=difference,
-            water_accounting_difference_pct=(difference / verified_water * 100.0 if verified_water else 0.0),
+            water_accounting_difference_pct=(difference / verified_water * 100.0
+                                               if difference is not None and verified_water else None),
             water_reconciliation={
                 'optimizer_water_m3': optimizer_water,
                 'verified_profile_water_m3': verified_water,
                 'planning_year_profile_water_m3': planning_year_water,
                 'difference_m3': difference,
-                'difference_pct': difference / verified_water * 100.0 if verified_water else 0.0,
+                'difference_pct': difference / verified_water * 100.0
+                                  if difference is not None and verified_water else None,
                 'tolerance_m3': tolerance,
                 'comparison_scope': 'FULL_SELECTED_SEASON',
-                'status': 'PASS' if abs(difference) <= tolerance else 'DIFFERENT_DEFINITIONS',
-                'explanation': ('Optimizer aggregate and verified calendar-profile accounting agree within tolerance.'
+                'status': ('NOT_CALCULATED' if difference is None else
+                           'PASS' if abs(difference) <= tolerance else 'DIFFERENT_DEFINITIONS'),
+                'explanation': ('Optimizer aggregate was not calculated because no feasible plan was produced.'
+                                if difference is None else
+                                'Optimizer aggregate and verified calendar-profile accounting agree within tolerance.'
                                 if abs(difference) <= tolerance else
                                 'Optimizer internal aggregate differs from authoritative verified calendar-profile accounting.'),
             },
@@ -386,15 +406,19 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
             annual_budget_period_end=accounting['annual_budget_period_end'],
             efficiency_tl_per_m3_denominator='AUTHORITATIVE_VERIFIED_FULL_SEASON_WATER',
         )
-        result['efficiency_tl_per_m3'] = (float(result.get('total_profit_tl', 0.0)) / verified_water
-                                          if verified_water else 0.0)
+        profit_value = result.get('total_profit_tl')
+        result['efficiency_tl_per_m3'] = (float(profit_value) / verified_water
+                                          if profit_value is not None and verified_water else None)
         result['engine_feasible'] = bool(result.get('feasible'))
         result['feasible'] = result['overall_feasible']
     else:
-        budget = float(result.get('water_budget_m3', 0.0) or 0.0)
-        demand = float(result.get('total_water_m3', 0.0) or 0.0)
+        budget_value = result.get('water_budget_m3')
+        demand_value = result.get('total_water_m3')
+        budget = float(budget_value) if budget_value is not None else None
+        demand = float(demand_value) if demand_value is not None else None
         result['annual_budget_validation'] = {
-            'status': 'PASS' if budget and demand <= budget + 1e-6 else 'FAIL',
+            'status': ('NOT_CALCULATED' if demand is None or budget is None else
+                       'PASS' if budget > 0 and demand <= budget + 1e-6 else 'FAIL'),
             'demand_m3': demand, 'usable_supply_m3': budget, 'unit': 'm3/year'}
         result['monthly_supply_validation'] = {
             'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
@@ -403,22 +427,28 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
                 'status': 'NOT_APPLICABLE', 'reason': 'REFERENCE_DEMO preserves the frozen reference validation path.'}
         result['overall_feasible'] = bool(result.get('feasible'))
         result['unit_results'] = fallback_units
-        optimizer_water = float(result.get('total_water_m3', 0.0) or 0.0)
+        optimizer_water = demand
         result.update(optimizer_water_m3=optimizer_water, verified_profile_water_m3=None,
                       planning_year_profile_water_m3=None,
                       authoritative_water_m3=optimizer_water,
-                      water_accounting_difference_m3=0.0, water_accounting_difference_pct=0.0,
+                      water_accounting_difference_m3=None, water_accounting_difference_pct=None,
                       water_reconciliation={'optimizer_water_m3': optimizer_water,
-                          'verified_profile_water_m3': None, 'difference_m3': 0.0,
+                          'verified_profile_water_m3': None, 'difference_m3': None,
                           'planning_year_profile_water_m3': None,
-                          'difference_pct': 0.0, 'tolerance_m3': None,
+                          'difference_pct': None, 'tolerance_m3': None,
                           'status': 'NOT_APPLICABLE',
                           'comparison_scope': 'NOT_APPLICABLE',
                           'explanation': 'REFERENCE_DEMO preserves the accepted reference water semantics.'})
         result['verified_profile_water_scope'] = 'NOT_APPLICABLE'
         result['planning_year_water_scope'] = 'NOT_APPLICABLE'
         result['efficiency_tl_per_m3_denominator'] = 'REFERENCE_DEMO_ACCEPTED_WATER'
-    result['warnings'] = list(warnings or [])
+    _complete_area_water_semantics(result, bundle, execution_plan, execution_context)
+    semantic_warnings = []
+    if result.get('area_accounting', {}).get('warning'):
+        semantic_warnings.append(result['area_accounting']['warning'])
+    result['warnings'] = list(dict.fromkeys([
+        *list(result.get('warnings') or []), *list(warnings or []), *semantic_warnings
+    ]))
     result['result_provenance'] = {
         'engine_commit': result.get('input_provenance', {}).get('engine_commit'),
         'engine_commit_status': result.get('input_provenance', {}).get('engine_commit_status', 'UNAVAILABLE'),
@@ -438,6 +468,121 @@ def complete_result_contract(result, bundle, execution_plan, execution_context, 
         },
     }
     return result
+
+
+def _complete_area_water_semantics(result, bundle, execution_plan, execution_context):
+    """Extend new runs with explicit area and water meanings; do not migrate old records."""
+    config = bundle.algorithm_configuration.copy()
+    area_policy = str(config.get('area_policy') or config.get('options', {}).get('areaPolicy') or
+                      result.get('area_policy') or 'partial_planting')
+    selected = set(config.get('selected_ids') or [])
+    bundle_units = bundle.analysis_units.copy() if hasattr(bundle, 'analysis_units') else []
+    units = [unit for unit in bundle_units
+             if not selected or str(unit.get('external_id')) in selected]
+    physical_area = sum(float(unit.get('area_da', 0.0) or 0.0) for unit in units)
+    if not units:
+        physical_area = sum(float(row.get('physical_area_da', row.get('area_da', 0.0)) or 0.0)
+                            for row in result.get('details', []) or [])
+    explicit_no_feasible = (str(result.get('solution_status') or '').lower() == 'no_feasible'
+                            or str(result.get('recommendation_status') or '').lower() == 'not_feasible')
+
+    seasonal_area = 0.0
+    physical_planted_by_unit = {}
+    if not explicit_no_feasible:
+        for row in result.get('details', []) or []:
+            unit_id = str(row.get('parcelId') or row.get('analysis_unit_id') or '')
+            row_area = float(row.get('physical_area_da', row.get('area_da', 0.0)) or 0.0)
+            planted = []
+            if config.get('scenario') == 'S2':
+                for key in ('primary', 'secondary'):
+                    crop = row.get(key)
+                    if not isinstance(crop, dict) or not crop.get('crop'):
+                        continue
+                    crop_area = float(crop.get('area_da', row_area) or 0.0)
+                    seasonal_area += crop_area
+                    if str(crop.get('crop')).upper() not in {'NADAS', 'FALLOW'}:
+                        planted.append(crop_area)
+            else:
+                crop = row.get('chosenCrop') or row.get('crop')
+                if crop and str(crop).upper() not in {'NADAS', 'FALLOW'}:
+                    planted.append(float(row.get('planted_area_da', row.get('area_da', 0.0)) or 0.0))
+                    seasonal_area += planted[-1]
+            physical_planted_by_unit[unit_id] = min(row_area, max(planted, default=0.0))
+    proposed_planted = (sum(physical_planted_by_unit.values()) if not explicit_no_feasible else None)
+    area = dict(result.get('area_accounting') or {})
+    area.update(
+        policy=area_policy,
+        reference_physical_area_da=physical_area,
+        proposed_planted_area_da=proposed_planted,
+        unplanted_area_da=(max(0.0, physical_area - proposed_planted)
+                           if proposed_planted is not None else None),
+        area_utilization_ratio=(proposed_planted / physical_area
+                                if proposed_planted is not None and physical_area > 0 else None),
+        seasonal_planted_area_da=(seasonal_area if not explicit_no_feasible else None),
+        physical_area_counting='UNIQUE_ANALYSIS_UNIT_AREA',
+        seasonal_area_counting='SUM_OF_CROP_SEASONS; MAY EXCEED PHYSICAL AREA IN S2',
+        comparison_uses_same_physical_area=(
+            bool(proposed_planted is not None and abs(proposed_planted - physical_area) <= 1e-6)
+        ),
+    )
+    if proposed_planted is not None and abs(proposed_planted - physical_area) > 1e-6:
+        area['warning'] = ('Referans ve öneri farklı ekim alanları içerir; hesaplanan ihtiyaç azalması '
+                           'yalnız ürün değişimine atfedilemez.')
+    result['area_policy'] = area_policy
+    result['area_accounting'] = area
+
+    water = dict(result.get('water_accounting') or {})
+    existing_budget_source = water.get('scenario_budget_source')
+    reference_need = water.get('reference_calculated_need_m3')
+    if reference_need is None and isinstance(result.get('baseline'), dict):
+        reference_need = result['baseline'].get('total_water_m3')
+    proposed_need = None if explicit_no_feasible else result.get('authoritative_water_m3', result.get('total_water_m3'))
+    budget = result.get('water_budget_m3')
+    source_dataset = next((item for item in execution_plan.get('datasets', [])
+                           if item.get('data_type') == 'annual_water_supply'), None)
+    documented_supply = (execution_context.get('annual_supply_m3')
+                         if execution_context is not None else None)
+    planning_year = (getattr(bundle, 'planning_year', None)
+                     or (execution_context or {}).get('planning_year')
+                     or result.get('year'))
+    difference = (float(reference_need) - float(proposed_need)
+                  if reference_need is not None and proposed_need is not None else None)
+    gap_basis = proposed_need
+    if gap_basis is None:
+        gap_basis = water.get('budget_gap_basis_value_m3')
+    water.update(
+        value_semantics='CALCULATED_IRRIGATION_REQUIREMENT_NOT_OBSERVED_OR_APPLIED_WATER',
+        unit='m3',
+        year=planning_year,
+        reference_calculated_need_m3=reference_need,
+        proposed_calculated_need_m3=proposed_need,
+        calculated_need_reduction_m3=difference,
+        calculated_need_reduction_pct=(difference / float(reference_need) * 100.0
+                                       if difference is not None and float(reference_need) != 0.0 else None),
+        scenario_budget_m3=budget,
+        scenario_budget_nature=('DOCUMENTED_SUPPLY_DERIVED_USABLE_SCENARIO_BUDGET'
+                                if execution_context is not None else
+                                water.get('scenario_budget_nature') or 'CALCULATED_REFERENCE_SCENARIO_CEILING'),
+        scenario_budget_source={
+            'source_identity': existing_budget_source,
+            'dataset_id': (source_dataset or {}).get('dataset_id') or (source_dataset or {}).get('id'),
+            'source_file_name': (source_dataset or {}).get('source_file_name'),
+            'authority_class': (source_dataset or {}).get('authority_class'),
+            'period': str(planning_year) if planning_year is not None else None,
+            'quality': ('DOCUMENTED_INPUT' if source_dataset else 'CALCULATED_REFERENCE'),
+        },
+        documented_annual_supply_m3=documented_supply,
+        documented_allocation_m3=None,
+        documented_allocation_status='NOT_EXPLICITLY_IDENTIFIED_AS_ALLOCATION',
+        budget_gap_m3=(max(0.0, float(gap_basis) - float(budget))
+                       if gap_basis is not None and budget is not None else water.get('budget_gap_m3')),
+        interpretation_warning=('Hesaplanan sulama ihtiyacı fiilî tüketim, uygulanan su veya '
+                                'gerçekleşmiş su tasarrufu değildir.'),
+    )
+    if explicit_no_feasible:
+        water['calculated_need_reduction_m3'] = None
+        water['calculated_need_reduction_pct'] = None
+    result['water_accounting'] = water
 
 
 def deepcopy_json(value):

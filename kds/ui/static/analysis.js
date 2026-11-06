@@ -1,5 +1,6 @@
 import {facts,message,post,showJSON,table} from './api.js';
 import {renderRun} from './results.js';
+import {scenarioReady,renderReadiness} from './readiness.js';
 
 let previewEvidence=null, readinessReport=null, executionState=null;
 const defaults={GA:{popSize:12,generations:10,cxRate:.7,mutRate:.08},ACO:{ants:10,iterations:10,rho:.25,q:1},ABC:{foodSources:10,cycles:10,limit:4}};
@@ -19,9 +20,7 @@ function setState(text,kind=''){
 
 function readinessState(){
   const form=document.getElementById('analysis-form');
-  const verified=form.elements.execution_profile.value==='VERIFIED_INSTITUTIONAL';
-  const scenario=form.elements.scenario.value;
-  return verified?Boolean(readinessReport?.execution_profiles?.VERIFIED_INSTITUTIONAL?.ready?.[scenario]):readinessReport?.scenarios?.[scenario]?.status!=='NOT_READY';
+  return scenarioReady(readinessReport,form.elements.execution_profile.value,form.elements.scenario.value);
 }
 
 function syncReadinessState(force=false){
@@ -38,6 +37,7 @@ function updateMode({resetState=false}={}){
   badge.className=`mode-badge ${verified?'verified':'reference'}`;warning.hidden=verified;
   if(resetState)executionState=null;
   const ready=syncReadinessState(resetState);
+  if(readinessReport)renderReadiness(readinessReport,form.elements.scenario.value,profile);
   document.getElementById('run-button').disabled=verified?!previewEvidence?.ready:!ready;
 }
 
@@ -76,7 +76,7 @@ export function wireAnalysis(root,safe,refresh,onResult){
       showJSON('analysis-preview',preview);
       const ready=document.getElementById('preview-ready-badge');
       ready.textContent=preview.ready?'ÇALIŞTIRILABİLİR':'ENGELLENDİ';ready.className=`state-chip ${preview.ready?'ready':'blocked'}`;
-      facts('preview-facts',[['Proje',preview.project_id],['Profil',preview.execution_profile],['Sonuç otoritesi',preview.result_authority_label],['Senaryo',preview.scenario],['Algoritma',preview.algorithm],['Hedef',preview.objective],['Planlama yılı',preview.planning_year],['Coğrafi kapsam',preview.geographic_scope],['İklim modu/kaynağı',preview.climate_source?.mode||preview.climate_source?.source],['Çevresel akış',preview.environmental_release?.form||preview.environmental_release_form],['İletim randımanı',preview.conveyance_efficiency],['Mevcut desen kaynağı',preview.current_pattern_source?.source],['Veri revizyonu',preview.preview_revision??preview.data_revision],['Aday sayısı',preview.candidate_source?.candidate_count],['Birim sayısı',preview.candidate_source?.analysis_unit_count],['Selection hash',preview.selection_hash]]);
+      facts('preview-facts',[['Proje',preview.project_id],['Profil',preview.execution_profile],['Sonuç otoritesi',preview.result_authority_label],['Senaryo',preview.scenario],['Algoritma',preview.algorithm],['Hedef',preview.objective],['Alan politikası',form.elements.area_policy.value],['Planlama yılı',preview.planning_year],['Coğrafi kapsam',preview.geographic_scope],['İklim modu/kaynağı',preview.climate_source?.mode||preview.climate_source?.source],['Çevresel akış',preview.environmental_release?.form||preview.environmental_release_form],['İletim randımanı',preview.conveyance_efficiency],['Mevcut desen kaynağı',preview.current_pattern_source?.source],['Veri revizyonu',preview.preview_revision??preview.data_revision],['Aday sayısı',preview.candidate_source?.candidate_count],['Birim sayısı',preview.candidate_source?.analysis_unit_count],['Selection hash',preview.selection_hash]]);
       const rows=(preview.datasets||[]).map(d=>[d.data_type||d.role,d.dataset_id||d.id||d.version,d.authority_class||d.source?.authority_class||'—',d.consumer_role||d.role||'—']);
       document.getElementById('preview-datasets').replaceChildren(rows.length?table(['Veri','Sürüm / ID','Otorite','Tüketim rolü'],rows):document.createTextNode('Bu çalışma yolunda sürümlenmiş dataset seçimi yok.'));
       const blockers=document.getElementById('preview-blockers');blockers.replaceChildren();

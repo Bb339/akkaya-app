@@ -1,0 +1,58 @@
+{
+  "repository_head": "7d5152f99aaa400a739d6a2e4234b96d1f314271",
+  "study_area": {
+    "planning_year": 2024,
+    "analysis_units": 179,
+    "area_da": 134919.0,
+    "settlements": [
+      "Sazlıca",
+      "Bahçeli",
+      "Kemerhisar",
+      "Kaynarca",
+      "Bor Merkez"
+    ],
+    "current_gross_demand_m3": 100700080.81,
+    "current_catalog_profit_tl": 1041499119.212,
+    "classification": "CALCULATED/DERIVED planning baseline"
+  },
+  "candidate_matrix": {
+    "rows": 6859,
+    "runtime_crop_catalog_rows": 58
+  },
+  "water_supply": {
+    "engine_annual_budget_m3": 10401986.556,
+    "authority": "SCENARIO; official allocation NOT ESTABLISHED",
+    "environmental_flow_ratio": 0.1,
+    "classification": "ASSUMED"
+  },
+  "robustness": {
+    "active_publication_runs": 54,
+    "selected_seeds": [
+      101,
+      211,
+      307,
+      401,
+      503
+    ],
+    "S1": "SAFE WITH LIMITATION",
+    "S2": "DIAGNOSTIC ONLY"
+  },
+  "project_data": {
+    "files": 21,
+    "revision": 21,
+    "analysis_units": 24,
+    "geometries": 24,
+    "candidate_coverage": "24/24",
+    "crops": 8,
+    "classification": "SYNTHETIC_DEMO; NOT OFFICIAL; not field validation"
+  },
+  "generated": {
+    "tables": 9,
+    "main_figures": 8,
+    "supplementary_figures": 0,
+    "manual_screenshots_needed": 2,
+    "unsupported_figures": [
+      "Figure 8 settlement-level optimized results"
+    ]
+  }
+}

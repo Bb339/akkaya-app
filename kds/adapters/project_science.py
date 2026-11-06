@@ -28,9 +28,17 @@ def verify_reference_document(document):
 
 def candidate_from_row(row):
     water, profit = float(row['water_m3_da']), float(row['profit_tl_da'])
+    metadata = dict(row)
+    metadata['_source_lineage'] = {
+        'source_id': 'active:candidate-matrix',
+        'record_key': f"{row.get('parcel_id')} + {row.get('candidate_crop')}",
+        'lineage_id': 'candidate:water-requirement',
+        'water_value_semantics': 'MODELED_FULL_IRRIGATION_REQUIREMENT_NOT_OBSERVED_USE',
+        'data_nature': 'FORMULA_DERIVED',
+    }
     return CandidateOption(str(row['parcel_id']), str(row['candidate_crop']), water, profit,
                            profit/water if water else 0., bool(row['is_feasible_under_current_quota']),
-                           None, None, None, None, FrozenValue.of(row))
+                           None, None, None, None, FrozenValue.of(metadata))
 
 
 def build_bundle(document, configuration):
@@ -45,10 +53,15 @@ def build_bundle(document, configuration):
     else:
         resources, candidates = generic_resources(document)
     env = resources['environment'].copy()
+    source_validation = resources['source_audit'].copy() if 'source_audit' in resources else {
+        'status': 'UNTRACED', 'issues': [], 'pilot_validation_status': 'NOT_EVALUATED',
+        'institutional_validation_status': 'NOT_EVALUATED'}
     provenance = dict(source_version=document['metadata'].get('source_version', 'project-explicit'),
                       source_commit=document['metadata'].get('source_commit'),
                       scientific_engine_hash=sha256(Path(app.__file__).read_bytes()).hexdigest(),
-                      resource_hashes={k:v.digest for k,v in resources.items()})
+                      resource_hashes={k:v.digest for k,v in resources.items()},
+                      source_validation=source_validation,
+                      source_lineage_manifest_sha256=source_validation.get('manifest_sha256'))
     return ScientificInputBundle(document['project']['id'], document['project']['planning_year'], data_hash(document),
         FrozenValue.of(document['analysis_units']), FrozenValue.of(document['crops']), FrozenValue.of(document['economics']),
         FrozenValue.of(document['water_budget']), candidates, resources['irrigation_map'],
@@ -61,6 +74,7 @@ def generic_resources(document):
     import app
     import pandas as pd
     from .scientific_reference import READERS, OPTIONAL, PARAMETERS
+    from kds.science.source_contract import audit_project_document_sources
     extra = document['scientific_inputs']
     unit_map = {u['external_id']:u for u in document['analysis_units']}
     total_area = sum(u['area_da'] for u in unit_map.values())
@@ -85,7 +99,14 @@ def generic_resources(document):
         if c['allowed']:
             rows.append(row)
         candidates.append(CandidateOption(u['external_id'],c['crop'],water,profit,profit/water,water*area<=quota,
-                          c['allowed'],c['rotation_status'],c['suitability'],c.get('risk'),FrozenValue.of({'source':c.get('source','project-explicit')})))
+                           c['allowed'],c['rotation_status'],c['suitability'],c.get('risk'),FrozenValue.of({
+                               'source': c.get('source', 'project-explicit'),
+                               'source_locator_status': 'TRACEABLE' if c.get('source') else 'UNTRACED',
+                               'data_nature': c.get('data_nature', 'UNSPECIFIED'),
+                               'water_value_semantics': c.get(
+                                   'water_value_semantics',
+                                   'REQUIREMENT_NOT_OBSERVED_USE'),
+                           })))
     env = {k:pd.DataFrame(v) for k,v in extra.get('seasonal_resources',{}).items()}
     env['climate'] = env.get('monthly_climate', pd.DataFrame()).copy()
     catalog = {app.normalize_crop_key(c['name']):dict(name=c['name'],category=c.get('crop_group','')) for c in document['crops']}
@@ -100,6 +121,7 @@ def generic_resources(document):
         settlements=sorted({u.get('settlement','') for u in document['analysis_units']}),
         interpretation='Project-supplied budget and units. Applied analysis budget is reported by the engine.')
     values['candidate_provenance'] = 'project-explicit-candidates'
+    values['source_audit'] = audit_project_document_sources(document)
     values['regional_candidate_options'] = pd.DataFrame()
     values.update(units=units,crop_catalog=catalog,candidate_options=pd.DataFrame(rows),environment=env,
                   crop_table=pd.DataFrame(document['crops']),unit_summary=pd.DataFrame(),

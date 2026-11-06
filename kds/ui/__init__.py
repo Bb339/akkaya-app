@@ -35,18 +35,16 @@ def register_project_pages(app):
             marker = '<div class="session-chip-row">'
             if marker in html and 'data-project-workspace-link' not in html:
                 boundary = (
-                    '<aside data-reference-mode-banner role="status" '
-                    'style="display:grid;gap:2px;padding:8px 12px;border:1px solid #f1c75b;'
-                    'border-radius:10px;background:#fff8dc;color:#4a3700;max-width:620px">'
-                    '<strong>AKKAYA REFERENCE · REFERENCE MODEL / DEMO DATA</strong>'
-                    '<span>NOT OFFICIAL / NOT FIELD VALIDATED · Resmî su tahsisi, saha doğrulaması '
-                    'veya Bakanlık onaylı öneri değildir.</span></aside>'
+                    '<details data-reference-mode-banner class="reference-data-disclosure">'
+                    '<summary>Referans veri</summary>'
+                    '<span>Referans/model verileriyle çalışır. Resmî su tahsisi veya saha doğrulaması '
+                    'yerine geçmez.</span></details>'
                 )
                 link = ('<a data-project-workspace-link class="btn-secondary header-switch-btn" '
                         'href="/projects">Projeler / Kurumsal veri</a>')
                 provider = '''<button id="v1-provider-toggle" class="v1-provider-toggle" type="button" aria-controls="v1-provider-shell" aria-expanded="false"><span>Veri Kaynağı</span><strong id="v1-provider-badge">AKKAYA REF</strong></button>
 <div id="v1-provider-scrim" class="v1-provider-scrim" hidden></div>
-<aside id="v1-provider-shell" class="v1-provider-shell" aria-label="Veri sağlayıcı bağlamı" aria-hidden="true">
+<aside id="v1-provider-shell" class="v1-provider-shell" aria-label="Veri sağlayıcı bağlamı" aria-hidden="true" hidden inert>
   <div class="v1-provider-head">
     <div><span class="v1-provider-kicker">VERİ KAYNAĞI</span><strong id="v1-provider-name">AKKAYA REFERENCE</strong><span id="v1-provider-authority">REFERENCE MODEL / DEMO DATA · NOT OFFICIAL / NOT FIELD VALIDATED</span></div>
     <button id="v1-provider-close" class="v1-provider-close" type="button" aria-label="Veri kaynağı panelini kapat">×</button>
@@ -72,11 +70,11 @@ def register_project_pages(app):
   </div>
 </aside>'''
                 html = html.replace(marker, f'{marker}\n    {boundary}\n    {link}\n    {provider}', 1)
-                html = html.replace('</head>', '<link rel="stylesheet" href="/projects/assets/v1-provider.css">\n</head>', 1)
+                html = html.replace('</head>', '<link rel="stylesheet" href="/projects/assets/v1-provider.css?v=ui-v155-provider-drawer">\n</head>', 1)
                 html = html.replace(
                     '</body>',
-                    '<script src="/projects/assets/v1-provider.js"></script>\n'
-                    '<script src="/projects/assets/paper-i18n.js"></script>\n</body>',
+                    '<script src="/projects/assets/v1-provider.js?v=ui-v155-provider-drawer"></script>\n'
+                    '<script src="/projects/assets/paper-i18n.js?v=dynamic-chart-v153"></script>\n</body>',
                     1,
                 )
                 response.set_data(html)

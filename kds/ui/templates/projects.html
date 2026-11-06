@@ -148,6 +148,7 @@
           <label>Hedef<select name="objective"><option value="water_saving">Su Tasarrufu</option><option value="max_profit">Kâr Odaklı</option><option value="water_efficiency">Su Etkin Kullanım</option></select></label>
           <label>Seed<input name="seed" type="number" min="0" value="123" required></label>
           <label>Su bütçe oranı<input name="water_budget_ratio" type="number" min="0.01" max="10" step="0.01" value="1" required></label>
+          <label>Alan karşılaştırma politikası<select name="area_policy"><option value="partial_planting" selected>Kısmi ekim — mevcut varsayılan</option><option value="full_area">Tam alan — aynı fiziksel alan</option></select></label>
           <label class="span-2 advanced-config">Algoritma parametreleri<textarea name="config" rows="4" required></textarea></label>
           <div class="span-2 action-row"><button id="preview-analysis" class="button secondary" type="button">Önizleme oluştur</button><button id="run-button" class="button primary" disabled>Analizi çalıştır ve kaydet</button></div>
         </form>
@@ -156,7 +157,7 @@
       </section>
 
       <section id="result" class="panel screen-anchor" data-screen="5" hidden>
-        <div class="section-heading"><div><p class="eyebrow">SONUÇLAR</p><h2>Yönetici özeti</h2></div><div class="action-row"><a id="open-decision-screen" class="button primary" hidden>KARAR EKRANINDA AÇ</a><span id="result-status" class="verdict"></span></div></div>
+        <div class="section-heading"><div><p class="eyebrow">SONUÇLAR</p><h2>Yönetici özeti</h2></div><div class="action-row"><a id="export-result-csv" class="button secondary" hidden>CSV indir</a><a id="open-decision-screen" class="button primary" hidden>KARAR EKRANINDA AÇ</a><span id="result-status" class="verdict"></span></div></div>
         <p id="result-source-label"></p>
         <div id="result-kpis" class="kpi-grid"></div>
         <dl id="result-facts" class="context-grid compact-facts"></dl>
@@ -200,5 +201,5 @@
   </form>
 </dialog>
 <script type="module" src="/projects/assets/projects.js"></script>
-<script src="/projects/assets/paper-i18n.js"></script>
+<script src="/projects/assets/paper-i18n.js?v=dynamic-chart-v153"></script>
 </body></html>

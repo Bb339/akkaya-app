@@ -1,6 +1,6 @@
 """One fresh process per run isolates legacy Python/NumPy RNG and caches."""
 import multiprocessing
-import traceback
+import logging
 
 
 def stable(value):
@@ -25,7 +25,9 @@ def _worker(bundle, connection):
         connection.send(('ok', stable(result)))
     except Exception as exc:
         # Process boundary: preserve failure details, never substitute a scientific result.
-        connection.send(('error', f'{type(exc).__name__}: {exc}\n{traceback.format_exc()}'))
+        logging.getLogger(__name__).exception('Scientific worker failed')
+        connection.send(('error', getattr(exc, 'public_message',
+            'Bilimsel analiz tamamlanamadı. Teknik ayrıntılar uygulama günlüğündedir.')))
     finally:
         connection.close()
 

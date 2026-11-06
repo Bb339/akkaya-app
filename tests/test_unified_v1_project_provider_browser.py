@@ -369,6 +369,8 @@ def test_invalid_project_contexts_fail_closed_without_reference_requests(tmp_pat
             )
             expect(page.locator("#v1-provider-name")).to_contain_text(
                 "PROJECT DATA", timeout=30000)
+            expect(page.locator("#v1-provider-shell")).to_be_hidden()
+            page.locator("#v1-provider-toggle").click()
             expect(page.locator("#v1-provider-error")).to_be_visible(timeout=30000)
             expect(page.locator("#v1-provider-error")).to_contain_text("Akkaya", timeout=30000)
             assert not any("/api/parcels" in url or "/api/optimize" in url for url in requests)

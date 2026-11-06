@@ -60,18 +60,27 @@
   }
   function setDrawer(open,{restoreFocus=true}={}){
     const shell=byId('v1-provider-shell'),toggle=byId('v1-provider-toggle'),scrim=byId('v1-provider-scrim');
-    if(!shell||!toggle)return;shell.classList.toggle('is-open',open);shell.setAttribute('aria-hidden',String(!open));
-    toggle.setAttribute('aria-expanded',String(open));if(scrim){scrim.hidden=!open;scrim.setAttribute('aria-hidden',String(!open));}
-    document.body.classList.toggle('v1-provider-drawer-open',open);
-    if(open)queueMicrotask(()=>byId('v1-provider-close')?.focus());
+    if(!shell||!toggle)return;
+    const shouldOpen=open===true;
+    if(shouldOpen){shell.hidden=false;shell.inert=false;}
+    shell.classList.toggle('is-open',shouldOpen);shell.setAttribute('aria-hidden',String(!shouldOpen));
+    toggle.setAttribute('aria-expanded',String(shouldOpen));if(scrim){scrim.hidden=!shouldOpen;scrim.setAttribute('aria-hidden',String(!shouldOpen));}
+    document.body.classList.toggle('v1-provider-drawer-open',shouldOpen);
+    if(!shouldOpen){shell.hidden=true;shell.inert=true;}
+    if(shouldOpen)queueMicrotask(()=>byId('v1-provider-close')?.focus());
     else if(restoreFocus)queueMicrotask(()=>toggle.focus());
   }
   function wireDrawer(){
-    byId('v1-provider-toggle')?.addEventListener('click',()=>setDrawer(!byId('v1-provider-shell')?.classList.contains('is-open')));
+    const toggle=byId('v1-provider-toggle');
+    if(!toggle||toggle.dataset.drawerBound==='true')return;
+    toggle.dataset.drawerBound='true';
+    setDrawer(false,{restoreFocus:false});
+    toggle.addEventListener('click',()=>setDrawer(!byId('v1-provider-shell')?.classList.contains('is-open')));
     byId('v1-provider-close')?.addEventListener('click',()=>setDrawer(false));
     byId('v1-provider-scrim')?.addEventListener('click',()=>setDrawer(false));
     byId('v1-project-provider-select').onchange=event=>{if(event.target.value)location.assign(`/?provider=PROJECT_DATA&project_id=${encodeURIComponent(event.target.value)}`);};
     document.addEventListener('keydown',event=>{if(event.key==='Escape')setDrawer(false);});
+    window.addEventListener('pageshow',()=>setDrawer(false,{restoreFocus:false}));
   }
   const api=async(path,options={})=>{
     const response=await nativeFetch(`/api/v2${path}`,options);
@@ -82,8 +91,8 @@
   const payload=()=>{
     const algorithm=(byId('algoSelect')?.value||'ga').toUpperCase();
     const scenario=(byId('seasonSourceSel')?.value||'s1').toUpperCase();
-    const selected=document.querySelector('input[name="scenario"]:checked')?.value||'su_tasarruf';
-    const objective={su_tasarruf:'water_saving',maks_kar:'max_profit',su_etkin:'water_efficiency'}[selected]||'water_saving';
+    const selected=document.querySelector('input[name="scenario"]:checked')?.value||'su_etkin';
+    const objective={su_tasarruf:'water_saving',maks_kar:'max_profit',su_etkin:'water_efficiency'}[selected]||'water_efficiency';
     const configs={GA:{popSize:12,generations:10,cxRate:.7,mutRate:.08},ACO:{ants:10,iterations:10,rho:.25,q:1},ABC:{foodSources:10,cycles:10,limit:4}};
     return {execution_profile:context?.execution_profile||'VERIFIED_INSTITUTIONAL',scenario,algorithm,objective,seed:Number(byId('v1-provider-seed')?.value||123),water_budget_ratio:1,config:configs[algorithm]};
   };
@@ -97,7 +106,7 @@
     const target=byId('v1-provider-error');if(target){target.hidden=false;target.textContent=`Proje bağlamı açılamadı: ${message} Akkaya verisine otomatik geçiş yapılmadı.`;}
     const name=byId('v1-provider-name');if(name)name.textContent='PROJECT DATA · BAĞLAM GEÇERSİZ';
     for(const id of ['runOptBtn','runOptBtnSecondary','v1-provider-preview']){const button=byId(id);if(button)button.disabled=true;}
-    wireDrawer();setDrawer(true);
+    wireDrawer();
   }
   function setText(id,value){const node=byId(id);if(node)node.textContent=value??'—';}
   function nativePresentation(){
@@ -134,7 +143,12 @@
     }
     const drawing=byId('tab-drawing');
     if(drawing&&!byId('v1-project-drawing-state'))drawing.querySelector('.drawing-tab-shell')?.insertAdjacentHTML('afterbegin','<div id="v1-project-drawing-state" class="v1-provider-explanation">PROJECT DATA geometrileri yüklenen proje dosyalarından gelir. Bu çalışma alanı geometriyi değiştirmeden gösterir; ekleme veya düzeltme için Projeler → Veri Yönetimi alanını kullanın.</div>');
-    for(const id of ['btnExportWaterCsv','btnExportScenarioCsv','btnExportParcelsCsv','btnExportAllParcelCompareCsv']){const button=byId(id);if(button){button.disabled=true;button.title='PROJECT DATA dışa aktarımı bu stored-run sözleşmesinde sağlanmadı.';}}
+    for(const id of ['btnExportWaterCsv','btnExportScenarioCsv','btnExportParcelsCsv','btnExportAllParcelCompareCsv']){
+      const button=byId(id);if(!button)continue;
+      button.disabled=!context?.run;
+      button.title=context?.run?'Alan ve su anlamlarıyla kanonik stored-run CSV dışa aktarımı.':'CSV için önce saklanmış bir proje çalışması açın.';
+      if(!button.dataset.projectCsvBound){button.dataset.projectCsvBound='1';button.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();if(context?.run)location.assign(`/api/v2/projects/${encodeURIComponent(context.project.id)}/analyses/${encodeURIComponent(context.run.id)}/export.csv`);},{capture:true});}
+    }
   }
   function observeProjectOfficialSurface(){
     const panel=byId('tab-official');
@@ -406,10 +420,16 @@
   }
   function renderRun(run){
     if(!run)return;const result=run.result||{},summary=run.summary||{};context.run=run;
+    const storedObjective={water_saving:'su_tasarruf',max_profit:'maks_kar',water_efficiency:'su_etkin'}[run.configuration?.objective];
+    if(storedObjective)document.querySelectorAll('input[name="scenario"]').forEach(input=>{input.checked=input.value===storedObjective;});
+    const storedAlgorithm=String(run.algorithm||'').toLowerCase();if(storedAlgorithm&&byId('algoSelect'))byId('algoSelect').value=storedAlgorithm;
+    const storedScenario=String(run.scenario||'').toLowerCase();if(['s1','s2'].includes(storedScenario)&&byId('seasonSourceSel'))byId('seasonSourceSel').value=storedScenario;
+    const storedCategory=run.configuration?.crop_category_mode||run.configuration?.cropCategoryMode;if(storedCategory&&byId('cropCategoryModeSel'))byId('cropCategoryModeSel').value=storedCategory;
+    const water=result.water_accounting||{},area=result.area_accounting||{};
     const resultUnits=result.presentation_units||[];
     retireLegacyResultSink();
     context.units=context.units.map(unit=>({...unit,result:resultUnits.find(row=>row.analysis_unit_id===unit.analysis_unit_id)||unit.result}));
-    setText('bWaterScenario',metric(result.authoritative_water_m3));setText('bProfitScenario',metric(result.total_profit_tl));setText('bEffScenario',metric(result.efficiency_tl_per_m3,4));setText('metricsTitle',`${context.project.name} · Saklanmış analiz sonucu`);
+    setText('bWaterScenario',metric(water.proposed_calculated_need_m3));setText('bProfitScenario',metric(result.total_profit_tl));setText('bEffScenario',metric(result.efficiency_tl_per_m3,4));setText('metricsTitle',`${context.project.name} · Saklanmış analiz sonucu · alan politikası ${result.area_policy||'unknown_legacy'}`);
     const objectiveLabel={water_saving:'Su tasarrufu',max_profit:'Kâr',water_efficiency:'Su etkin kullanım'}[run.configuration?.objective]||run.configuration?.objective||'SAĞLANMADI';setText('activeObjectiveBadge',`Aktif hedef: ${objectiveLabel}`);
     neutralizeReferenceSurface();
     renderNativeRun(run);
@@ -419,17 +439,17 @@
   }
   function renderNativeRun(run){
     const result=run.result||{},warnings=[...(run.warnings||[]),...(result.warnings||[])].filter((value,index,all)=>value&&all.indexOf(value)===index);
-    const annual=result.annual_budget_validation||{},monthly=monthlyRows(result);
+    const water=result.water_accounting||{},area=result.area_accounting||{},annual=result.annual_budget_validation||{},monthly=monthlyRows(result);
     const warningText=warnings.length?warnings.join(' · '):'Backend uyarısı yok.';
     const annualText=annual&&Object.keys(annual).length?`${annual.status||'SAĞLANMADI'} · talep ${metric(annual.demand_m3)} m³ · bütçe ${metric(annual.usable_supply_m3??annual.available_budget_m3)} m³`:'SAĞLANMADI / NOT PROVIDED';
     setText('algoStatus',`Tamamlandı · ${run.algorithm} · ${run.configuration?.objective||'hedef sağlanmadı'}`);
     const monthlyText=monthly.length?`Aylık doğrulama: ${monthly.length} dönem · ihlal: ${violatingMonths(result).join(', ')||'yok'}`:'Aylık doğrulama SAĞLANMADI / NOT PROVIDED';
     setText('deliveryBox',`Yıllık bütçe: ${annualText} · ${monthlyText} · Uyarılar: ${warningText}`);
-    setText('globalBudgetBadge',`Toplam planlama su bütçesi: ${metric(annual.usable_supply_m3??annual.available_budget_m3)} m³`);
+    setText('globalBudgetBadge',`Senaryo su bütçesi (${water.scenario_budget_nature||'nitelik sağlanmadı'}): ${metric(water.scenario_budget_m3)} m³`);
     setText('globalBudgetStatus',`bütçe durumu: ${annual.status||'SAĞLANMADI / NOT PROVIDED'}`);
     renderProjectBenchmark(run);
     setText('objectiveCompareMatrix',`Aktif stored run: ${run.algorithm} × ${run.configuration?.objective||'SAĞLANMADI'} · ${run.scenario} · HHI ${metric(result.hhi??result.HHI,4)}. Diğer kombinasyonlar yalnız çalıştırılıp saklandığında karşılaştırılır.`);
-    const note=byId('basinSummaryNote');if(note)note.textContent=`${context.project.name} · ${context.unit_count} analiz birimi · revision ${context.project_revision} · optimizer su ${metric(result.optimizer_water_m3)} m³ · otoritatif su ${metric(result.authoritative_water_m3)} m³ · planlama yılı ${metric(result.planning_year_profile_water_m3)} m³ · tam sezon ${metric(result.verified_profile_water_m3)} m³ · fark ${metric(result.water_accounting_difference_m3??result.water_reconciliation?.difference_m3)} m³ · net kâr ${metric(result.total_profit_tl)} TL · su verimliliği ${metric(result.efficiency_tl_per_m3,4)} TL/m³ · feasibility ${result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED'}`;
+    const note=byId('basinSummaryNote');if(note)note.textContent=`${context.project.name} · ${context.unit_count} analiz birimi · revision ${context.project_revision} · alan politikası ${result.area_policy||'unknown_legacy'} · fiziksel alan ${metric(area.reference_physical_area_da)} da · önerilen ekim alanı ${metric(area.proposed_planted_area_da)} da · referans hesaplanan ihtiyaç ${metric(water.reference_calculated_need_m3)} m³ · öneri hesaplanan ihtiyaç ${metric(water.proposed_calculated_need_m3)} m³ · senaryo bütçesi ${metric(water.scenario_budget_m3)} m³ · bütçe açığı ${metric(water.budget_gap_m3)} m³ · belgeli gerçek tahsis ${water.documented_allocation_m3==null?'tanımlı değil':metric(water.documented_allocation_m3)+' m³'} · feasibility ${result.feasible===true?'PASS':result.feasible===false?'FAIL':'SAĞLANMADI / NOT PROVIDED'}`;
     const provenance={project_id:run.project_id,project_revision:context.project_revision,run_id:run.id,status:run.status,started_at:run.started_at,completed_at:run.completed_at,execution_profile:run.execution_profile,classification:result.classification,synthetic_not_official:context.synthetic,scenario:run.scenario,algorithm:run.algorithm,objective:run.configuration?.objective,seed:run.seed,selection_hash:run.provenance?.selection_hash||result.result_provenance?.selection_hash,engine_commit:run.provenance?.engine_commit||result.result_provenance?.engine_commit,result_authority_label:run.result_authority_label,input_datasets:run.provenance?.input_snapshot?.input_datasets,provenance:run.provenance,presentation_context:run.presentation_context};
     const badges=byId('activeFilesBadges');if(badges)badges.innerHTML=[`PROJECT DATA`,`revision ${context.project_revision}`,run.algorithm,run.scenario,run.configuration?.objective,run.result_authority_label].filter(Boolean).map(value=>`<span class="badge badge-info">${html(value)}</span>`).join('');
     const build=byId('buildMetaBox');if(build)build.innerHTML=`<details><summary>Çalışma provenance ayrıntıları</summary><pre>${html(JSON.stringify(provenance,null,2))}</pre></details>`;
@@ -438,7 +458,7 @@
     setText('riskSeparationBox',`Backend feasibility: ${result.feasible===true?'PASS':'FAIL'} · yıllık bütçe: ${annual.status||'SAĞLANMADI'} · aylık arz: ${result.monthly_supply_validation?.status||'SAĞLANMADI'} · aylık teslim: ${result.monthly_delivery_validation?.status||'SAĞLANMADI'}`);byId('riskSeparationBox').style.display='block';
     setText('decisionRationale',`Karar açıklaması: ${run.algorithm}, ${run.configuration?.objective} hedefi altında project candidate matrix kullanılarak çalıştırıldı. Sonuç ${result.feasible===true?'uygulanabilir':'aylık/teslim kısıtları nedeniyle diagnostic'} durumdadır; Akkaya fallback kullanılmadı.`);byId('decisionRationale').style.display='block';
     const current=context.current_summary||{};
-    setText('bWaterDiff',current.water_m3==null?'Mevcut proje suyu sağlanmadı':`Fark: ${metric(result.authoritative_water_m3-current.water_m3)} m³`);setText('bProfitDiff',current.profit_tl==null?'Mevcut proje kârı sağlanmadı':`Fark: ${metric(result.total_profit_tl-current.profit_tl)} TL`);setText('bEffDiff',current.efficiency_tl_per_m3==null?'Mevcut proje etkinliği sağlanmadı':`Fark: ${metric(result.efficiency_tl_per_m3-current.efficiency_tl_per_m3,4)} TL/m³`);
+    setText('bWaterDiff',water.calculated_need_reduction_m3==null?'Hesaplanan ihtiyaç farkı sağlanmadı':`Hesaplanan ihtiyaç azalması: ${metric(water.calculated_need_reduction_m3)} m³`);setText('bProfitDiff',current.profit_tl==null||result.total_profit_tl==null?'Kâr farkı sağlanmadı':`Fark: ${metric(result.total_profit_tl-current.profit_tl)} TL`);setText('bEffDiff',current.efficiency_tl_per_m3==null||result.efficiency_tl_per_m3==null?'Etkinlik farkı sağlanmadı':`Fark: ${metric(result.efficiency_tl_per_m3-current.efficiency_tl_per_m3,4)} TL/m³`);
     const active=context.units.find(unit=>unit.analysis_unit_id===selectedUnit),activeResult=active?.result||{};
     setText('mWaterDiff',active?.current_water_m3==null?'Mevcut birim suyu sağlanmadı':`Fark: ${metric(activeResult.authoritative_unit_water_m3-active.current_water_m3)} m³`);setText('mProfitDiff',active?.current_profit_tl==null?'Mevcut birim kârı sağlanmadı':`Fark: ${metric(activeResult.unit_profit_tl-active.current_profit_tl)} TL`);setText('mEffDiff',active?.current_efficiency_tl_per_m3==null?'Mevcut birim etkinliği sağlanmadı':`Fark: ${metric(activeResult.efficiency_tl_per_m3-active.current_efficiency_tl_per_m3,4)} TL/m³`);
     renderNativeCharts(run);
@@ -451,7 +471,7 @@
   }
   async function runProject(){
     if(document.querySelector('input[name="scenario"]:checked')?.value==='mevcut'){
-      preview=null;const state=byId('v1-provider-preview-state');state.className='v1-empty-state';state.textContent='Mevcut görünüm yalnız proje girdilerini gösterir; optimizasyon çalıştırmaz.';setDrawer(true);return;
+      preview=null;const state=byId('v1-provider-preview-state');state.className='v1-empty-state';state.textContent='Mevcut görünüm yalnız proje girdilerini gösterir; optimizasyon çalıştırmaz.';return;
     }
     const buttons=['runOptBtn','runOptBtnSecondary'].map(byId).filter(Boolean);buttons.forEach(button=>button.disabled=true);setText('algoStatus','Backend optimizasyonu çalışıyor…');
     try{

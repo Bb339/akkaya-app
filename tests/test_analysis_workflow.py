@@ -43,8 +43,35 @@ def example(project_id='sample-a', multiplier=1):
 
 
 def request_body(scenario='S1'):
+    # The fixture exercises generic project orchestration; strict institutional
+    # preview/import behavior is covered by dedicated institutional fixtures.
     return dict(scenario=scenario,algorithm='GA',seed=123,objective='water_saving',water_budget_ratio=1.,
+                execution_profile='REFERENCE_DEMO',
                 config=dict(popSize=8,generations=4,cxRate=.7,mutRate=.08))
+
+
+def use_general_workflow_preflight(monkeypatch):
+    """Keep orchestration tests focused on generic scientific readiness.
+
+    Institutional and accepted-reference authority preflights have their own
+    fixtures and contract suites; this helper never changes production code.
+    """
+    def preview(service, project_id, payload):
+        document = service.repository.get(project_id)
+        config = configuration(payload, document)
+        state = readiness(document)['scenarios'][config['scenario']]
+        blockers = [item['message'] for item in state['issues'] if item['severity'] == 'error']
+        warnings = [item['message'] for item in state['issues'] if item['severity'] == 'warning']
+        return {
+            'ready': state['status'] != 'NOT_READY',
+            'blocking_reasons': blockers,
+            'warnings': warnings,
+            'datasets': [],
+            'candidate_source': {'source': 'explicit synthetic test candidates'},
+            'current_pattern_source': {'source': 'explicit synthetic test unit parameters'},
+            'climate_source': {},
+        }
+    monkeypatch.setattr(OptimizationApplicationService, 'preview', preview)
 
 
 def with_seasons(d):
@@ -98,7 +125,8 @@ def test_warning_is_not_a_missing_data_substitute():
 
 
 @pytest.mark.parametrize('section', ['analysis_units','crops','economics'])
-def test_missing_data_prevents_execution(section,repository):
+def test_missing_data_prevents_execution(section,repository,monkeypatch):
+    use_general_workflow_preflight(monkeypatch)
     repository.update('sample-a',lambda d:d.__setitem__(section,[]))
     service=OptimizationApplicationService(repository,lambda b:pytest.fail('Engine must not run'))
     with pytest.raises(ValueError,match='NOT_READY'):
@@ -130,7 +158,8 @@ def test_data_hash_and_configuration_include_scientific_changes():
     a['scientific_inputs']['candidates'][0]['profit_per_da']+=1;assert data_hash(a)!=previous
 
 
-def test_run_failure_is_persisted(repository):
+def test_run_failure_is_persisted(repository,monkeypatch):
+    use_general_workflow_preflight(monkeypatch)
     def fail(bundle):raise RuntimeError('explicit execution failure')
     service=OptimizationApplicationService(repository,fail)
     run=service.run('sample-a',request_body())
@@ -161,7 +190,8 @@ def test_api_readiness_budget_and_bad_inputs(client):
     assert response.status_code==200 and response.json['water_budget']['amount']==11000
 
 
-def test_api_run_storage_and_cross_project_retrieval(client,repository):
+def test_api_run_storage_and_cross_project_retrieval(client,repository,monkeypatch):
+    use_general_workflow_preflight(monkeypatch)
     response=client.post('/api/v2/projects/sample-a/analyses',json=request_body())
     assert response.status_code==201, response.json
     run=response.json;assert run['result']['total_profit_tl']>0

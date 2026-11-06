@@ -110,12 +110,20 @@
     'Optimizasyonu Çalıştır': 'Run Optimization',
     'Optimizasyon algoritması': 'Optimization Algorithm',
     'Hedef ve plan modu': 'Objective and Planning Mode',
+    'Referans veri': 'Reference Data',
+    'Referans/model verileriyle çalışır. Resmî su tahsisi veya saha doğrulaması yerine geçmez.': 'Uses reference/model data. It does not replace official water allocation or field validation.',
     'Mevcut görünüm': 'Current Baseline',
     'Mevcut görünüm (referans)': 'Current Baseline (Reference)',
     'Mevcut': 'Current',
+    'Mevcut desen': 'Current Pattern',
     'Su tasarrufu': 'Water Saving',
     'Kâr odaklı': 'Profit Maximization',
     'Su etkin kullanım': 'Water-Use Efficiency',
+    'Öneri · Su tasarrufu': 'Recommendation · Water Saving',
+    'Öneri · Kâr odaklı': 'Recommendation · Profit Maximization',
+    'Öneri · Su etkin kullanım': 'Recommendation · Water-Use Efficiency',
+    'Mevcut ve Önerilen Desen — Hesaplanan Sulama İhtiyacı': 'Current and Recommended Pattern — Calculated Irrigation Requirement',
+    'Mevcut ve Önerilen Desen — Hesaplanan Net Getiri': 'Current and Recommended Pattern — Calculated Net Return',
     'Su kullanımı (m³)': 'Water Use (m³)',
     'Net kâr (TL)': 'Net Profit (TRY)',
     'Mevcut su (m³)': 'Current Water (m³)',
@@ -1447,6 +1455,8 @@
 
   function applyCharts() {
     if (!window.Chart?.getChart) return;
+    const sameLabels = (left, right) => Array.isArray(left) && Array.isArray(right) &&
+      left.length === right.length && left.every((value, index) => Object.is(value, right[index]));
     document.querySelectorAll('canvas').forEach(canvas => {
       const chart = window.Chart.getChart(canvas);
       if (!chart?.data) return;
@@ -1455,6 +1465,8 @@
         originalCharts.set(chart, {
           labels: Array.isArray(chart.data.labels) ? [...chart.data.labels] : null,
           datasets: (chart.data.datasets || []).map(dataset => dataset.label),
+          renderedLabels: Array.isArray(chart.data.labels) ? [...chart.data.labels] : null,
+          renderedDatasets: (chart.data.datasets || []).map(dataset => dataset.label),
           title: chart.options?.plugins?.title?.text,
           axisTitles: Object.fromEntries(Object.entries(chart.options?.scales || {}).map(
             ([key, axis]) => [key, axis?.title?.text]
@@ -1465,14 +1477,28 @@
         });
       }
       const source = originalCharts.get(chart);
+      const currentLabels = Array.isArray(chart.data.labels) ? [...chart.data.labels] : null;
+      // Chart data is dynamic. If the application has supplied a new result,
+      // promote those labels to the translation source instead of restoring the
+      // labels captured when the empty chart was first initialized.
+      if (currentLabels && !sameLabels(currentLabels, source.renderedLabels)) {
+        source.labels = currentLabels;
+      }
       if (source.labels) {
         chart.data.labels = source.labels.map(label =>
           language === 'en' && typeof label === 'string' ? translate(label) : label
         );
+        source.renderedLabels = [...chart.data.labels];
       }
       (chart.data.datasets || []).forEach((dataset, index) => {
+        if (typeof dataset.label === 'string' && dataset.label !== source.renderedDatasets[index]) {
+          source.datasets[index] = dataset.label;
+        }
         const label = source.datasets[index];
-        if (typeof label === 'string') dataset.label = language === 'en' ? translate(label) : label;
+        if (typeof label === 'string') {
+          dataset.label = language === 'en' ? translate(label) : label;
+          source.renderedDatasets[index] = dataset.label;
+        }
       });
       if (chart.options?.plugins?.title && typeof source.title === 'string') {
         chart.options.plugins.title.text = language === 'en' ? translate(source.title) : source.title;

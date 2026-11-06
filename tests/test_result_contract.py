@@ -5,7 +5,7 @@ from kds.application.optimization import OptimizationApplicationService, configu
 from kds.application.project_overview import history
 from kds.data.project_store import FileProjectStore
 from kds.science.results import RESULT_CONTRACT_VERSION, project_result
-from test_analysis_workflow import example, request_body, with_seasons
+from test_analysis_workflow import example, request_body, use_general_workflow_preflight, with_seasons
 
 
 def engine_result():
@@ -78,7 +78,8 @@ def test_s1_result_contract_is_pass_through_copy():
     assert projected == result and projected is not result
 
 
-def test_service_persists_final_defaults_and_consistent_summary(tmp_path):
+def test_service_persists_final_defaults_and_consistent_summary(tmp_path, monkeypatch):
+    use_general_workflow_preflight(monkeypatch)
     repository = FileProjectStore(tmp_path / "projects")
     document = with_seasons(example())
     repository.create(document)

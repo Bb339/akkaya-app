@@ -100,14 +100,21 @@ def presentation_units(run, document):
         status = next((row.get(key) for row in (water_row, detail, metadata) if row
                        for key in ("status", "assignment_status", "validation_status")
                        if row.get(key) not in (None, "")), None)
-        area = next((row.get("area_da") for row in (water_row, detail, metadata)
+        area = next((row.get("area_da") for row in (metadata, water_row, detail)
                      if row and row.get("area_da") is not None), None)
+        planted_area = next((detail.get(key) for key in ("planted_area_da", "area_da")
+                             if detail and detail.get(key) is not None), None)
         water_value = (water_row or {}).get("total_water_m3")
         if water_value is None and detail:
             water_value = detail.get("total_water_m3", detail.get("water_m3"))
         unit = {
             "analysis_unit_id": unit_id,
             "area_da": area,
+            "physical_area_da": area,
+            "proposed_planted_area_da": planted_area,
+            "unplanted_area_da": (max(0.0, float(area) - float(planted_area))
+                                   if area is not None and planted_area is not None else None),
+            "area_policy": result.get("area_policy", "unknown_legacy"),
             "current_crop": (metadata or {}).get("current_crop"),
             "selected_crops": selected,
             "authoritative_unit_water_m3": water_value,
@@ -147,10 +154,19 @@ def present_run_for_ui(run, document):
     presented = deepcopy(run)
     result = presented.get("result")
     if isinstance(result, dict):
+        if not result.get("area_policy"):
+            result["area_policy"] = "unknown_legacy"
+            result["area_accounting"] = {
+                **(result.get("area_accounting") or {}),
+                "policy": "unknown_legacy",
+                "warning": "Eski sonuçta alan politikası kayıtlı değildir; tam alan varsayılmadı.",
+            }
         result["presentation_units"] = presentation_units(presented, document)
     current_revision = document.get("data_revision")
     snapshot = (presented.get("provenance") or {}).get("input_snapshot") or {}
-    run_revision = snapshot.get("preview_revision")
+    run_revision = snapshot.get("project_revision")
+    if run_revision is None:
+        run_revision = snapshot.get("preview_revision")
     if run_revision is None and isinstance(result, dict):
         run_revision = (result.get("result_provenance") or {}).get("preview_revision")
     older = (isinstance(current_revision, int) and isinstance(run_revision, int)
@@ -167,3 +183,42 @@ def present_run_for_ui(run, document):
         "latest_run_id": state.get("latest_run_id"),
     }
     return presented
+
+
+def analysis_csv_rows(run, document):
+    """Read-only CSV projection using the same semantic fields as the JSON/UI view."""
+    presented = present_run_for_ui(run, document)
+    result = presented.get("result") or {}
+    area = result.get("area_accounting") or {}
+    water = result.get("water_accounting") or {}
+    base = {
+        "run_id": presented.get("id"),
+        "solution_status": result.get("solution_status") or result.get("recommendation_status"),
+        "feasible": result.get("overall_feasible", result.get("feasible")),
+        "area_policy": result.get("area_policy", "unknown_legacy"),
+        "reference_physical_area_da": area.get("reference_physical_area_da"),
+        "proposed_planted_area_da": area.get("proposed_planted_area_da"),
+        "unplanted_area_da": area.get("unplanted_area_da"),
+        "seasonal_planted_area_da": area.get("seasonal_planted_area_da"),
+        "area_utilization_ratio": area.get("area_utilization_ratio"),
+        "water_value_semantics": water.get("value_semantics"),
+        "reference_calculated_need_m3": water.get("reference_calculated_need_m3"),
+        "proposed_calculated_need_m3": water.get("proposed_calculated_need_m3"),
+        "scenario_budget_m3": water.get("scenario_budget_m3"),
+        "scenario_budget_nature": water.get("scenario_budget_nature"),
+        "documented_allocation_m3": water.get("documented_allocation_m3"),
+        "calculated_need_reduction_m3": water.get("calculated_need_reduction_m3"),
+        "budget_gap_m3": water.get("budget_gap_m3"),
+    }
+    units = result.get("presentation_units") or []
+    if not units:
+        return [{"record_type": "run_summary", "analysis_unit_id": None, **base}]
+    return [{
+        "record_type": "analysis_unit",
+        "analysis_unit_id": unit.get("analysis_unit_id"),
+        **base,
+        "physical_area_da": unit.get("physical_area_da"),
+        "unit_proposed_planted_area_da": unit.get("proposed_planted_area_da"),
+        "unit_unplanted_area_da": unit.get("unplanted_area_da"),
+        "unit_calculated_need_m3": unit.get("authoritative_unit_water_m3"),
+    } for unit in units]

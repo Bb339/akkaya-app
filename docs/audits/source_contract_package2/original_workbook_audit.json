@@ -1,0 +1,125 @@
+{
+  "audit_schema": "agrocore-original-workbook-audit-v1",
+  "audit_date": "2026-10-31",
+  "mode": "read_only",
+  "status": "SOURCE_CHAIN_VERIFIED_WITH_DATA_EXCEPTIONS",
+  "authority_notice": "Workbook identity and record lineage do not constitute field, pilot or institutional validation.",
+  "summary": {
+    "workbooks_matched": 5,
+    "analysis_unit_source_records": 179,
+    "analysis_unit_unique_records": 179,
+    "analysis_unit_area_da": 134919.0,
+    "normalized_label_differences": 7,
+    "unresolved_analysis_unit_mismatches": 0,
+    "error_count": 2,
+    "warning_count": 2
+  },
+  "workbooks": [
+    {
+      "source_id": "original:sazlica-2024-workbook",
+      "filename": "sazlica_2024_profesyonel_guncel_v12_profesyonel_duzenli (1).xlsx",
+      "sha256": "054925c518524908f1b9387aa51e233e409835b5b31df0047f92ab9ac2206cfd",
+      "identity_status": "MATCHED",
+      "year": 2024,
+      "settlement": "Sazlıca",
+      "sheet_ranges": {
+        "method_identity": "0_Yontem_Kaynak!A1:G16",
+        "product_area_production": "3_Urun_Referans!A5:T52",
+        "analysis_units": "5_Parsel_Proxy!A5:N52",
+        "candidate_rows_used": "6_ParselxUrun_Kota!A5:AF2214"
+      },
+      "analysis_units": {"source_records": 47, "used_records": 47, "excluded_records": 9, "unique_local_ids": 47, "area_total_da": 28898.0, "record_level_mismatch_count": 0},
+      "product_area_production": {"source_records": 47, "zero_area_positive_production": []},
+      "candidate_rows": {"excel_source_rows": 2209, "used_rows": 2209, "active_csv_rows": 2209, "excluded_rows": 0, "record_level_mismatch_count": 0},
+      "formulas": {"formula_cells_total": 43, "with_cached_value": 43, "without_cached_value": 0, "source_chain_sheets_are_literal_values": true}
+    },
+    {
+      "source_id": "original:bahceli-2024-workbook",
+      "filename": "bahceli_2024_dogruluk_odakli_son_guncel_v6.xlsx",
+      "sha256": "586ac5a9b7969ea94ce534a0f224e6cc6ff68ddeee5694d519149d1eca595c3e",
+      "identity_status": "MATCHED",
+      "year": 2024,
+      "settlement": "Bahçeli",
+      "sheet_ranges": {
+        "method_identity": "0_Yontem_Kaynak!A1:G16",
+        "product_area_production": "3_Urun_Referans!A5:T36",
+        "analysis_units": "5_Parsel_Proxy!A5:N36",
+        "candidate_rows_used": "6_ParselxUrun_Kota!A5:Q966"
+      },
+      "analysis_units": {"source_records": 31, "used_records": 31, "excluded_records": 0, "unique_local_ids": 31, "area_total_da": 19692.0, "record_level_mismatch_count": 0},
+      "product_area_production": {"source_records": 31, "zero_area_positive_production": []},
+      "candidate_rows": {"excel_source_rows": 961, "used_rows": 961, "active_csv_rows": 961, "excluded_rows": 0, "record_level_mismatch_count": 0},
+      "formulas": {"formula_cells_total": 50, "with_cached_value": 50, "without_cached_value": 0, "source_chain_sheets_are_literal_values": true}
+    },
+    {
+      "source_id": "original:bor-2024-workbook",
+      "filename": "bor_ilce_merkezi_2024_duzeltilmis_v4.xlsx",
+      "sha256": "93b2fe3ba03c68f0e1dbf320c84447bb3ce9286fe0da1d2e791291a2fdf4c742",
+      "identity_status": "MATCHED",
+      "year": 2024,
+      "settlement": "Bor İlçe Merkezi",
+      "sheet_ranges": {
+        "method_identity": "0_Yontem_Kaynak!A1:G16",
+        "product_area_production": "3_Urun_Referans!A5:T50",
+        "analysis_units": "5_Parsel_Proxy!A5:N48",
+        "candidate_rows_used": "6_ParselxUrun_Kota!A5:R1940"
+      },
+      "analysis_units": {"source_records": 43, "used_records": 43, "excluded_records": 0, "unique_local_ids": 43, "area_total_da": 35036.0, "record_level_mismatch_count": 0},
+      "product_area_production": {
+        "source_records": 45,
+        "zero_area_positive_production": [
+          {"row": 47, "product_id": "U42", "crop": "VİŞNE", "area_da": 0.0, "production_ton": 6.0},
+          {"row": 48, "product_id": "U43", "crop": "DUT", "area_da": 0.0, "production_ton": 6.0}
+        ]
+      },
+      "candidate_rows": {"excel_source_rows": 1935, "used_rows": 1935, "active_csv_rows": 1935, "excluded_rows": 0, "record_level_mismatch_count": 0},
+      "formulas": {"formula_cells_total": 0, "with_cached_value": 0, "without_cached_value": 0, "source_chain_sheets_are_literal_values": true}
+    },
+    {
+      "source_id": "original:kaynarca-2024-workbook",
+      "filename": "kaynarca_2024_duzeltilmis_v5.xlsx",
+      "sha256": "79a42fd019e35f15c98735095cf762773c071c2be4726c1a2dd60be331c89310",
+      "identity_status": "MATCHED",
+      "year": 2024,
+      "settlement": "Kaynarca",
+      "sheet_ranges": {
+        "method_identity": "0_Yontem_Kaynak!A1:G16",
+        "product_area_production": "3_Urun_Referans!A5:T28",
+        "analysis_units": "5_Parsel_Proxy!A5:N28",
+        "candidate_rows_used": "6_ParselxUrun_Kota!A5:R534",
+        "candidate_rows_excluded_as_bor_template_tail": "6_ParselxUrun_Kota!A701:R1940"
+      },
+      "analysis_units": {"source_records": 23, "used_records": 23, "excluded_records": 0, "unique_local_ids": 23, "area_total_da": 10191.0, "record_level_mismatch_count": 0},
+      "product_area_production": {"source_records": 23, "zero_area_positive_production": []},
+      "candidate_rows": {"excel_source_rows": 1769, "used_rows": 529, "active_csv_rows": 529, "excluded_rows": 1240, "record_level_mismatch_count": 0},
+      "formulas": {"formula_cells_total": 74, "with_cached_value": 0, "without_cached_value": 74, "source_chain_sheets_are_literal_values": true}
+    },
+    {
+      "source_id": "original:kemerhisar-2024-workbook",
+      "filename": "kemerhisar_2024_duzeltilmis_v5.xlsx",
+      "sha256": "1278b91b14fb3a878eafbdffacbcca8fc36b14bf5c35bd61449e2dc9d5f80824",
+      "identity_status": "MATCHED",
+      "year": 2024,
+      "settlement": "Kemerhisar",
+      "sheet_ranges": {
+        "method_identity": "0_Yontem_Kaynak!A1:G16",
+        "product_area_production": "3_Urun_Referans!A5:T40",
+        "analysis_units": "5_Parsel_Proxy!A5:N40",
+        "candidate_rows_used": "6_ParselxUrun_Kota!A5:R1230"
+      },
+      "analysis_units": {"source_records": 35, "used_records": 35, "excluded_records": 0, "unique_local_ids": 35, "area_total_da": 41102.0, "record_level_mismatch_count": 0},
+      "product_area_production": {"source_records": 35, "zero_area_positive_production": []},
+      "candidate_rows": {"excel_source_rows": 1225, "used_rows": 1225, "active_csv_rows": 1225, "excluded_rows": 0, "record_level_mismatch_count": 0},
+      "formulas": {"formula_cells_total": 0, "with_cached_value": 0, "without_cached_value": 0, "source_chain_sheets_are_literal_values": true}
+    }
+  ],
+  "issues": [
+    {"code": "zero_area_positive_production", "severity": "ERROR", "source_id": "original:bor-2024-workbook", "unit_id": "U42", "field": "3_Urun_Referans!F47:G47", "message": "VİŞNE has 0 da area and 6 ton production; it is not an analysis unit."},
+    {"code": "zero_area_positive_production", "severity": "ERROR", "source_id": "original:bor-2024-workbook", "unit_id": "U43", "field": "3_Urun_Referans!F48:G48", "message": "DUT has 0 da area and 6 ton production; it is not an analysis unit."},
+    {"code": "stale_template_tail_excluded", "severity": "WARNING", "source_id": "original:kaynarca-2024-workbook", "field": "6_ParselxUrun_Kota!A701:R1940", "message": "1,240 trailing rows are cell-for-cell identical to the Bor workbook and were not used."},
+    {"code": "whitespace_normalization", "severity": "INFO", "source_id": "original-workbooks", "field": "crop", "message": "Seven crop labels differ only by repeated whitespace; no semantic substitution was used."},
+    {"code": "formula_cache_missing_outside_source_chain", "severity": "WARNING", "source_id": "original:kaynarca-2024-workbook", "field": "20_Fiyat_Kar_Senaryo; 22_Toprak_Su_Arz_Detayi; 23_SuluSusuz_ve_Alan_Etkisi", "message": "Seventy-four formula cells without cached results exist outside the three source-chain sheets; no recalculation was attempted."}
+  ],
+  "pilot_validation_status": "NOT_EVALUATED",
+  "institutional_validation_status": "NOT_EVALUATED"
+}

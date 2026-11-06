@@ -1,0 +1,57 @@
+{
+  "audit_schema": "agrocore-source-audit-v1",
+  "audit_date": "2026-10-31",
+  "mode": "read_only",
+  "status": "READY",
+  "authority_notice": "Traceability and hash checks do not constitute institutional, field, pilot or scientific validation.",
+  "manifest": {
+    "path": "kds/adapters/source_lineage_manifest.json",
+    "sha256": "e348475eb7edc13c0ff87fc3f071f332dff50ea06d12a4fe9d80991cdd756845"
+  },
+  "active_source_checks": {
+    "required_source_count": 4,
+    "hash_match_count": 4,
+    "missing_count": 0,
+    "hash_mismatch_count": 0,
+    "fallback_selected": false
+  },
+  "original_source_checks": {
+    "declared_workbook_count": 5,
+    "external_audit_verified_count": 5,
+    "missing_count": 0,
+    "untraced_location_count": 0,
+    "evidence": "docs/audits/source_contract_package2/original_workbook_audit.json"
+  },
+  "analysis_units": {
+    "definition": "Settlement-product representative model unit; not asserted to be a cadastral parcel.",
+    "source": "data/parsel_su_kar_ozet.csv",
+    "source_row_count": 179,
+    "used_row_count": 179,
+    "unique_unit_count": 179,
+    "excluded_row_count": 0,
+    "total_area_da": 134919.0,
+    "settlement_subtotals": {
+      "Bahçeli": {"row_count": 31, "unique_unit_count": 31, "total_area_da": 19692.0},
+      "Bor İlçe Merkezi": {"row_count": 43, "unique_unit_count": 43, "total_area_da": 35036.0},
+      "Kaynarca": {"row_count": 23, "unique_unit_count": 23, "total_area_da": 10191.0},
+      "Kemerhisar": {"row_count": 35, "unique_unit_count": 35, "total_area_da": 41102.0},
+      "Sazlıca": {"row_count": 47, "unique_unit_count": 47, "total_area_da": 28898.0}
+    }
+  },
+  "candidate_matrix_cross_check": {
+    "source": "data/excel_derived/combined_parcel_candidate_matrix_2024.csv",
+    "row_count": 6859,
+    "unique_analysis_unit_count": 179,
+    "unique_unit_area_da": 134919.0,
+    "difference_from_analysis_unit_total_da": 0.0
+  },
+  "issues": {
+    "errors": 0,
+    "warnings": 0,
+    "missing_original_workbooks": [],
+    "untraced_checks": null,
+    "data_exceptions_reported_separately": "The original-workbook audit records two zero-area/positive-production errors and two non-blocking warnings; source identity and cell lineage are nevertheless verified."
+  },
+  "pilot_validation_status": "NOT_EVALUATED",
+  "institutional_validation_status": "NOT_EVALUATED"
+}

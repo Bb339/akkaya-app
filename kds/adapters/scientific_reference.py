@@ -82,14 +82,23 @@ def _reference_values(source_digest):
             process.terminate();process.join(timeout=5)
 
 
-def snapshot():
+def snapshot(*, source_root=None, lineage_path=None):
     # Reading legacy loaders can mutate their JSON cache. Keep that preparation
     # outside the serving process as well as the optimization itself.
     import app
     manifest=json.loads(Path(__file__).with_name('reference_manifest.json').read_text(encoding='utf8'))
+    from kds.science.source_contract import audit_source_manifest, raise_for_source_errors
+    root = Path(source_root).resolve() if source_root is not None else Path(app.__file__).parent
+    lineage_path = (Path(lineage_path) if lineage_path is not None else
+                    Path(__file__).with_name(manifest.get('lineage_manifest', 'source_lineage_manifest.json')))
+    source_audit = audit_source_manifest(root, lineage_path)
+    raise_for_source_errors(source_audit)
     hashes={name:hashlib.sha256((Path(app.__file__).parent/name).read_bytes()).hexdigest()
             for name in manifest['input_hashes']}
     hashes['engine']=hashlib.sha256(Path(app.__file__).read_bytes()).hexdigest()
     hashes['reference_parameters']=hashlib.sha256(Path(__file__).with_name('reference_parameters.json').read_bytes()).hexdigest()
+    hashes['source_lineage_manifest']=source_audit['manifest_sha256']
     digest=hashlib.sha256(json.dumps(hashes,sort_keys=True).encode()).hexdigest()
-    return dict(_reference_values(digest))
+    values = dict(_reference_values(digest))
+    values['source_audit'] = FrozenValue.of(source_audit)
+    return values
