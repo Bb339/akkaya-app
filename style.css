@@ -17,25 +17,9 @@
 #tab-benchmark #benchmarkModeSel{
   color:#172033!important;
   background-color:#fff!important;
-  -webkit-text-fill-color:#172033!important;
   font-size:14px!important;
   opacity:1!important;
   color-scheme:light;
-}
-#tab-benchmark #benchmarkSeasonSourceSel option,
-#tab-benchmark #benchmarkModeSel option{
-  color:#172033!important;
-  background-color:#fff!important;
-  -webkit-text-fill-color:#172033!important;
-  font-size:14px!important;
-  font-weight:400!important;
-  opacity:1!important;
-}
-#tab-benchmark #benchmarkSeasonSourceSel option:checked,
-#tab-benchmark #benchmarkModeSel option:checked{
-  color:#fff!important;
-  background-color:#2563eb!important;
-  -webkit-text-fill-color:#fff!important;
 }
 .benchmark-chart-state-v154{display:grid;place-items:center;min-height:230px;padding:18px;text-align:center;color:#536277;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;font-weight:700;line-height:1.5}
 .benchmark-chart-state-v154[hidden]{display:none!important;min-height:0!important;height:0!important;padding:0!important;border:0!important}
