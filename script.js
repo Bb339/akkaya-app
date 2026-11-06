@@ -3590,6 +3590,157 @@ function updateDroughtAlarmCard(){
   if(noteEl) noteEl.textContent = note;
 })();
 
+/* Benchmark-only accessible listbox enhancement. The original selects remain authoritative. */
+(()=>{
+  const SELECT_IDS = ['benchmarkSeasonSourceSel', 'benchmarkModeSel'];
+  let openControl = null;
+
+  function closeControl(control, restoreFocus=false){
+    if(!control) return;
+    control.list.hidden = true;
+    control.trigger.setAttribute('aria-expanded', 'false');
+    control.options.forEach(option => option.classList.remove('is-active'));
+    if(openControl === control) openControl = null;
+    if(restoreFocus) control.trigger.focus();
+  }
+
+  function setActive(control, index){
+    const safeIndex = Math.max(0, Math.min(control.options.length - 1, index));
+    control.activeIndex = safeIndex;
+    control.options.forEach((option, optionIndex) => option.classList.toggle('is-active', optionIndex === safeIndex));
+    const active = control.options[safeIndex];
+    control.list.setAttribute('aria-activedescendant', active.id);
+    active.focus({preventScroll:true});
+    active.scrollIntoView({block:'nearest'});
+  }
+
+  function openList(control, preferredIndex){
+    if(openControl && openControl !== control) closeControl(openControl);
+    control.list.hidden = false;
+    control.trigger.setAttribute('aria-expanded', 'true');
+    openControl = control;
+    const selectedIndex = control.select.selectedIndex >= 0 ? control.select.selectedIndex : 0;
+    setActive(control, Number.isInteger(preferredIndex) ? preferredIndex : selectedIndex);
+  }
+
+  function syncFromSelect(control){
+    const selected = control.select.options[control.select.selectedIndex] || control.select.options[0];
+    control.triggerText.textContent = selected?.label || selected?.text || '';
+    control.options.forEach((option, index) => {
+      option.setAttribute('aria-selected', String(index === control.select.selectedIndex));
+    });
+  }
+
+  function choose(control, index){
+    const sourceOption = control.select.options[index];
+    if(!sourceOption) return;
+    control.select.value = sourceOption.value;
+    control.select.dispatchEvent(new Event('input', {bubbles:true}));
+    control.select.dispatchEvent(new Event('change', {bubbles:true}));
+    syncFromSelect(control);
+    closeControl(control, true);
+  }
+
+  function enhance(select){
+    if(!select || select.dataset.benchmarkListboxEnhanced === 'true' || select.dataset.benchmarkListboxMounted === 'true') return;
+    select.dataset.benchmarkListboxEnhanced = 'true';
+    select.classList.add('benchmark-native-select-source');
+
+    const fieldLabel = select.closest('.field-row')?.querySelector('.field-label');
+    if(fieldLabel && !fieldLabel.id) fieldLabel.id = `${select.id}Label`;
+
+    const root = document.createElement('div');
+    root.className = 'benchmark-listbox';
+    root.dataset.selectId = select.id;
+
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'benchmark-listbox-trigger';
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    if(fieldLabel?.id) trigger.setAttribute('aria-labelledby', `${fieldLabel.id} ${select.id}TriggerText`);
+
+    const triggerText = document.createElement('span');
+    triggerText.id = `${select.id}TriggerText`;
+    const caret = document.createElement('span');
+    caret.className = 'benchmark-listbox-caret';
+    caret.setAttribute('aria-hidden', 'true');
+    caret.textContent = '▾';
+    trigger.append(triggerText, caret);
+
+    const list = document.createElement('div');
+    list.id = `${select.id}Listbox`;
+    list.className = 'benchmark-listbox-options';
+    list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-labelledby', fieldLabel?.id || triggerText.id);
+    list.hidden = true;
+    trigger.setAttribute('aria-controls', list.id);
+
+    const optionNodes = Array.from(select.options).map((sourceOption, index) => {
+      const option = document.createElement('div');
+      option.id = `${select.id}Option${index}`;
+      option.className = 'benchmark-listbox-option';
+      option.setAttribute('role', 'option');
+      option.setAttribute('tabindex', '-1');
+      option.dataset.value = sourceOption.value;
+      option.textContent = sourceOption.label || sourceOption.text;
+      option.addEventListener('pointerdown', event => event.preventDefault());
+      option.addEventListener('click', () => choose(control, index));
+      option.addEventListener('keydown', event => {
+        if(event.key === 'ArrowDown' || event.key === 'ArrowUp'){
+          event.preventDefault();
+          const delta = event.key === 'ArrowDown' ? 1 : -1;
+          setActive(control, (control.activeIndex + delta + control.options.length) % control.options.length);
+        }else if(event.key === 'Home' || event.key === 'End'){
+          event.preventDefault();
+          setActive(control, event.key === 'Home' ? 0 : control.options.length - 1);
+        }else if(event.key === 'Enter' || event.key === ' '){
+          event.preventDefault();
+          choose(control, control.activeIndex);
+        }else if(event.key === 'Escape'){
+          event.preventDefault();
+          closeControl(control, true);
+        }else if(event.key === 'Tab'){
+          closeControl(control);
+        }
+      });
+      list.appendChild(option);
+      return option;
+    });
+
+    root.append(trigger, list);
+    select.insertAdjacentElement('afterend', root);
+
+    const control = {select, root, trigger, triggerText, list, options:optionNodes, activeIndex:0};
+    trigger.addEventListener('click', () => list.hidden ? openList(control) : closeControl(control));
+    trigger.addEventListener('keydown', event => {
+      if(event.key === 'ArrowDown' || event.key === 'ArrowUp'){
+        event.preventDefault();
+        const selectedIndex = select.selectedIndex >= 0 ? select.selectedIndex : 0;
+        openList(control, event.key === 'ArrowDown' ? selectedIndex : selectedIndex);
+      }else if(event.key === 'Enter' || event.key === ' '){
+        event.preventDefault();
+        list.hidden ? openList(control) : choose(control, control.activeIndex);
+      }else if(event.key === 'Escape' && !list.hidden){
+        event.preventDefault();
+        closeControl(control, true);
+      }
+    });
+    select.addEventListener('change', () => syncFromSelect(control));
+    syncFromSelect(control);
+  }
+
+  function initBenchmarkListboxes(){
+    SELECT_IDS.forEach(id => enhance(document.getElementById(id)));
+  }
+
+  document.addEventListener('pointerdown', event => {
+    if(openControl && !openControl.root.contains(event.target)) closeControl(openControl);
+  }, true);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initBenchmarkListboxes);
+  else initBenchmarkListboxes();
+})();
+
 /* ============================================================
    v102 karar hedefleri, ciftci talep akisi ve alternatif cesitliligi
    ============================================================ */
@@ -24089,4 +24240,131 @@ async function savePanelGeojsonToServerV21(parcelOrFeature, rec=null){
   window.addEventListener('load', renderApprovedDeepPlan);
   if(document.readyState !== 'loading') renderApprovedDeepPlan();
   else document.addEventListener('DOMContentLoaded', renderApprovedDeepPlan);
+})();
+
+/* Mounted at top level: benchmark listboxes keep the original select values authoritative. */
+(()=>{
+  const controls = new Set();
+
+  function mount(select){
+    if(!select || select.dataset.benchmarkListboxMounted === 'true') return;
+    select.dataset.benchmarkListboxMounted = 'true';
+    select.classList.add('benchmark-native-select-source');
+    const label = select.closest('.field-row')?.querySelector('.field-label');
+    if(label && !label.id) label.id = `${select.id}Label`;
+
+    const root = document.createElement('div');
+    root.className = 'benchmark-listbox';
+    root.dataset.selectId = select.id;
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'benchmark-listbox-trigger';
+    trigger.setAttribute('aria-haspopup', 'listbox');
+    trigger.setAttribute('aria-expanded', 'false');
+    const text = document.createElement('span');
+    text.id = `${select.id}TriggerText`;
+    const caret = document.createElement('span');
+    caret.className = 'benchmark-listbox-caret';
+    caret.setAttribute('aria-hidden', 'true');
+    caret.textContent = '▾';
+    trigger.append(text, caret);
+    if(label?.id) trigger.setAttribute('aria-labelledby', `${label.id} ${text.id}`);
+
+    const list = document.createElement('div');
+    list.id = `${select.id}Listbox`;
+    list.className = 'benchmark-listbox-options';
+    list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-labelledby', label?.id || text.id);
+    list.hidden = true;
+    trigger.setAttribute('aria-controls', list.id);
+
+    const control = {select, root, trigger, text, list, optionNodes:[], active:0};
+    const sync = () => {
+      const selected = select.options[select.selectedIndex] || select.options[0];
+      text.textContent = selected?.label || selected?.text || '';
+      control.optionNodes.forEach((node, index) => node.setAttribute('aria-selected', String(index === select.selectedIndex)));
+    };
+    const focusAt = index => {
+      const count = control.optionNodes.length;
+      control.active = ((index % count) + count) % count;
+      control.optionNodes.forEach((node, nodeIndex) => node.classList.toggle('is-active', nodeIndex === control.active));
+      const active = control.optionNodes[control.active];
+      list.setAttribute('aria-activedescendant', active.id);
+      active.focus({preventScroll:true});
+      active.scrollIntoView({block:'nearest'});
+    };
+    const close = restoreFocus => {
+      list.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      control.optionNodes.forEach(node => node.classList.remove('is-active'));
+      if(restoreFocus) trigger.focus();
+    };
+    const open = () => {
+      controls.forEach(other => { if(other !== control){ other.list.hidden = true; other.trigger.setAttribute('aria-expanded', 'false'); } });
+      list.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      focusAt(Math.max(0, select.selectedIndex));
+    };
+    const choose = index => {
+      const source = select.options[index];
+      if(!source) return;
+      select.value = source.value;
+      select.dispatchEvent(new Event('input', {bubbles:true}));
+      select.dispatchEvent(new Event('change', {bubbles:true}));
+      sync();
+      close(true);
+    };
+
+    Array.from(select.options).forEach((source, index) => {
+      const option = document.createElement('div');
+      option.id = `${select.id}Option${index}`;
+      option.className = 'benchmark-listbox-option';
+      option.setAttribute('role', 'option');
+      option.setAttribute('tabindex', '-1');
+      option.dataset.value = source.value;
+      option.textContent = source.label || source.text;
+      option.addEventListener('click', () => choose(index));
+      option.addEventListener('keydown', event => {
+        if(event.key === 'ArrowDown' || event.key === 'ArrowUp'){
+          event.preventDefault();
+          focusAt(control.active + (event.key === 'ArrowDown' ? 1 : -1));
+        }else if(event.key === 'Home' || event.key === 'End'){
+          event.preventDefault();
+          focusAt(event.key === 'Home' ? 0 : control.optionNodes.length - 1);
+        }else if(event.key === 'Enter' || event.key === ' '){
+          event.preventDefault(); choose(control.active);
+        }else if(event.key === 'Escape'){
+          event.preventDefault(); close(true);
+        }else if(event.key === 'Tab') close(false);
+      });
+      list.append(option);
+      control.optionNodes.push(option);
+    });
+
+    trigger.addEventListener('click', () => list.hidden ? open() : close(false));
+    trigger.addEventListener('keydown', event => {
+      if(event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Enter' || event.key === ' '){
+        event.preventDefault();
+        if(list.hidden) open();
+        else if(event.key === 'Enter' || event.key === ' ') choose(control.active);
+      }else if(event.key === 'Escape' && !list.hidden){
+        event.preventDefault(); close(true);
+      }
+    });
+    select.addEventListener('change', sync);
+    root.append(trigger, list);
+    select.insertAdjacentElement('afterend', root);
+    controls.add(control);
+    sync();
+  }
+
+  function init(){
+    mount(document.getElementById('benchmarkSeasonSourceSel'));
+    mount(document.getElementById('benchmarkModeSel'));
+  }
+  document.addEventListener('pointerdown', event => {
+    controls.forEach(control => { if(!control.root.contains(event.target)){ control.list.hidden = true; control.trigger.setAttribute('aria-expanded', 'false'); } });
+  }, true);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();

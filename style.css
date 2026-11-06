@@ -13766,6 +13766,87 @@ body.role-farmer #waterRiskSection .drought-main-container{
   }
 }
 
+/* Benchmark-only accessible listboxes; native selects remain the value source. */
+#tab-benchmark .benchmark-native-select-source{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  clip-path:inset(50%)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+#tab-benchmark .benchmark-listbox{
+  position:relative;
+  width:100%;
+}
+#tab-benchmark .benchmark-listbox-trigger{
+  width:100%;
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border:1px solid rgba(148,163,184,.28);
+  border-radius:12px;
+  background:#fff;
+  color:#172033;
+  font:inherit;
+  font-size:14px;
+  text-align:left;
+  cursor:pointer;
+}
+#tab-benchmark .benchmark-listbox-trigger:focus-visible{
+  outline:none;
+  border-color:rgba(37,99,235,.55);
+  box-shadow:0 0 0 4px rgba(37,99,235,.14);
+}
+#tab-benchmark .benchmark-listbox-caret{
+  flex:0 0 auto;
+  color:#334155;
+}
+#tab-benchmark .benchmark-listbox-options{
+  position:absolute;
+  z-index:1000;
+  top:calc(100% + 4px);
+  left:0;
+  right:0;
+  max-height:240px;
+  overflow:auto;
+  padding:4px;
+  border:1px solid #94a3b8;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 14px 30px rgba(15,23,42,.18);
+}
+#tab-benchmark .benchmark-listbox-options[hidden]{
+  display:none!important;
+}
+#tab-benchmark .benchmark-listbox-option{
+  display:block;
+  width:100%;
+  padding:10px 12px;
+  border-radius:7px;
+  background:#fff;
+  color:#172033;
+  font-size:14px;
+  line-height:1.35;
+  cursor:pointer;
+}
+#tab-benchmark .benchmark-listbox-option[aria-selected="true"],
+#tab-benchmark .benchmark-listbox-option.is-active{
+  background:#2563eb;
+  color:#fff;
+}
+#tab-benchmark .benchmark-listbox-option:focus-visible{
+  outline:2px solid #60a5fa;
+  outline-offset:-2px;
+}
+
 /* Optimization result cards: keep the two charts and recommendation card balanced. */
 .right-middle{
   align-items:stretch;
